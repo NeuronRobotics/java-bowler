@@ -200,7 +200,8 @@ public class SerialConnection extends BowlerAbstractConnection {
 			Log.error("Port is alreay in use by: " + e.getMessage());
 			setConnected(false);
 		}catch (Exception e) {
-			Log.error("Failed to connect on port:"+port+" exception: "+e);
+			Log.error("Failed to connect on port: "+port+" exception: ");
+			e.printStackTrace();
 			setConnected(false);
 		}
 		
@@ -272,9 +273,9 @@ public class SerialConnection extends BowlerAbstractConnection {
             	available.add(com.getName());
             }
         }
-        //FIXME THis NEEDS to be her to work on Linux systems
+        //FIXME THis NEEDS to be here to work on Linux systems
         //NO NOT REMOVE unless the RXTX bug has been fixed to make this un-necessary
-        if(SDKInfo.isLinux){
+        if((System.getProperty("os.name").toLowerCase().indexOf("linux")!=-1)){
         	String root="/dev/";
         	File dir = new File(root);
         	String[] children = dir.list(); 
