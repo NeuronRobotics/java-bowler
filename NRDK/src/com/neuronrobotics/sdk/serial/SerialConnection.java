@@ -156,8 +156,10 @@ public class SerialConnection extends BowlerAbstractConnection {
 		{
 			CommPort comm = null;
 			CommPortIdentifier ident = null;
-			if (port.contains("rfcomm") || port.contains("ACM") || port.contains("Neuron_Robotics")||port.contains("NR")||port.contains("FTDI")||port.contains("ftdi")){
-				System.setProperty("gnu.io.rxtx.SerialPorts", port);
+			if(SDKInfo.isLinux){
+				if (port.contains("rfcomm")||port.contains("ttyUSB") ||port.contains("ttyS")|| port.contains("ACM") || port.contains("Neuron_Robotics")||port.contains("NR")||port.contains("FTDI")||port.contains("ftdi")){
+					System.setProperty("gnu.io.rxtx.SerialPorts", port);
+				}
 			}
 			
 			ident = CommPortIdentifier.getPortIdentifier(port);
@@ -278,8 +280,18 @@ public class SerialConnection extends BowlerAbstractConnection {
         	String[] children = dir.list(); 
         	if (children != null) { // Either dir does not exist or is not a directory 
     			for (String filename :children){ // Get filename of file or directory 
-    				if (filename.contains("ACM") || filename.contains("rfcomm"))
-    					available.add(root+filename);
+    				if (filename.contains("ttyACM") || filename.contains("rfcomm") || filename.contains("ttyS")|| filename.contains("ttyUSB") ){
+    					boolean exists = false;
+    					for(String s: available){
+    						if(s.contains(filename)){
+    							exists = true;
+    						}
+    					}
+    					if(!exists)
+    						available.add(root+filename);
+    					
+    				}
+    				
     			} 
         		
         	}
