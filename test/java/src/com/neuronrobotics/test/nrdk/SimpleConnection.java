@@ -9,15 +9,17 @@ public class SimpleConnection {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		SerialConnection s = null;
 		//Windows
-		//DyIO dyio = new DyIO(new SerialConnection("COM5"));
+		//s=new SerialConnection("COM5");
 		
 		//OSX
-		//DyIO dyio = new DyIO(new SerialConnection("/dev/tty.usbmodem.4321"));
+		//s=new SerialConnection("/dev/tty.usbmodem.4321");
 		
 		//Linux
-		DyIO dyio = new DyIO(new SerialConnection("/dev/ACM0"));
+		s=new SerialConnection("/dev/ACM0");
 		
+		DyIO dyio = new DyIO(s);
 		dyio.connect();
         dyio.ping();
 		System.exit(0);
