@@ -10,6 +10,7 @@ public class SimpleConnection {
 	 */
 	public static void main(String[] args) {
 		SerialConnection s = null;
+		
 		//Windows
 		//s=new SerialConnection("COM5");
 		
