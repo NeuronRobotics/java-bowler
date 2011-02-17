@@ -13,7 +13,7 @@ public class SimpleConnection {
 		//DyIO dyio = new DyIO(new SerialConnection("COM5"));
 		
 		//OSX
-		//DyIO dyio = new DyIO(new SerialConnection("/dev/ttyusbmodem.54321"));
+		//DyIO dyio = new DyIO(new SerialConnection("/dev/tty.usbmodem.4321"));
 		
 		//Linux
 		DyIO dyio = new DyIO(new SerialConnection("/dev/ACM0"));
