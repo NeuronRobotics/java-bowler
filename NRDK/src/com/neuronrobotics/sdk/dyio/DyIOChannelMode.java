@@ -47,7 +47,8 @@ public enum DyIOChannelMode implements ISendable {
 	COUNT_OUT_DIR (0x12, "Counter Out Dir"),
 	COUNT_OUT_HOME(0x13, "Counter Out Home"),
 	DC_MOTOR_VEL  (0x14, "DC Motor Velocity"),
-	DC_MOTOR_DIR  (0x15, "DC Motor Direction");
+	DC_MOTOR_DIR  (0x15, "DC Motor Direction"),
+	PPM_IN  	  (0x16, "PPM Reader");
 	
 	private static final Map<Byte,DyIOChannelMode> lookup = new HashMap<Byte,DyIOChannelMode>();
 	private byte value;

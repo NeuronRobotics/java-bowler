@@ -189,6 +189,14 @@ public class DyIOChannel implements IDyIOChannel {
 		current = DyIOChannelMode.get(bd.getData().getByte(0));
 	}
 	
+	public boolean canBeMode(DyIOChannelMode m) {
+		Collection<DyIOChannelMode> modes = getAvailableModes();
+		for(DyIOChannelMode mo:modes) {
+			if(mo == m)
+				return true;
+		}
+		return false;
+	}
 	
 	public Collection<DyIOChannelMode> getAvailableModes() {
 		Collection<DyIOChannelMode> modes = new ArrayList<DyIOChannelMode>();
@@ -202,6 +210,8 @@ public class DyIOChannel implements IDyIOChannel {
 		if(number > 11 && device.getBankBState() != DyIOPowerState.REGULATED) {
 			modes.add(DyIOChannelMode.SERVO_OUT);	
 		}
+		
+		
 		
 		switch(number) {
 		case 0:
@@ -264,7 +274,9 @@ public class DyIOChannel implements IDyIOChannel {
 			modes.add(DyIOChannelMode.COUNT_OUT_INT);
 			break;
 		}
-		
+		if(number == 23) {
+			modes.add(DyIOChannelMode.PPM_IN);
+		}
 		return modes;
 	}
 	
