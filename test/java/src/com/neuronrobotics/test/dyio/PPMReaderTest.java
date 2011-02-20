@@ -4,6 +4,7 @@ import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.peripherals.IPPMReaderListener;
 import com.neuronrobotics.sdk.dyio.peripherals.PPMReaderChannel;
+import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 
 public class PPMReaderTest implements IPPMReaderListener{
@@ -12,12 +13,22 @@ public class PPMReaderTest implements IPPMReaderListener{
 		if (!ConnectionDialog.getBowlerDevice(dyio)){
 			System.exit(1);
 		}
+		
 		PPMReaderChannel ppm = new PPMReaderChannel(dyio.getChannel(23));
 		ppm.addPPMReaderListener(this);
+		
+		new ServoChannel(dyio.getChannel(0));//Sets up the output channel for PPM cross link
+		
+		int [] cross = ppm.getCrossLink();
+		cross[0]=PPMReaderChannel.NO_CROSSLINK;//shut of the cross link for a channel
+		cross[1]=0;//link ppm signal 0 to DyIO channel 0
+		ppm.setCrossLink(cross);
+		
 		while (true){
 			Thread.sleep(100);
 		}
 	}
+
 	/**
 	 * @param args
 	 * @throws InterruptedException 
