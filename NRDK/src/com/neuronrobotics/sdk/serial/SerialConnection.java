@@ -281,7 +281,9 @@ public class SerialConnection extends BowlerAbstractConnection {
         	String[] children = dir.list(); 
         	if (children != null) { // Either dir does not exist or is not a directory 
     			for (String filename :children){ // Get filename of file or directory 
-    				if (filename.contains("ttyACM") || filename.contains("rfcomm") || filename.contains("ttyS")|| filename.contains("ttyUSB") ){
+    				if (filename.contains("ttyACM") || filename.contains("rfcomm") || 
+    						//filename.contains("ttyS")|| 
+    						filename.contains("ttyUSB") ){
     					boolean exists = false;
     					for(String s: available){
     						if(s.contains(filename)){

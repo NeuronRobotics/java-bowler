@@ -123,7 +123,31 @@ public class SetChannelValueCommand extends BowlerAbstractCommand {
 			throw new InvalidChannelOperationException();
 		}
 	}
-	
+	/**
+	 * SetChannelValueCommand.
+	 * 
+	 * @param channel
+	 *            the DyIO pin to use
+	 * @param value
+	 *            the value to set the pin to
+	 * @param mode
+	 *            the mode the channel is in
+	 * @param saveTheValue
+	 *            if true, the value is saved as the starting position for the
+	 *            channel
+	 */
+	public SetChannelValueCommand(int channel, int [] value, DyIOChannelMode mode) {
+		switch(mode) {
+		case PPM_IN:
+			setMethod(BowlerMethod.POST);
+			setOpCode("schv");
+			getCallingDataStorage().add(channel);
+			getCallingDataStorage().add(value);
+			break;
+		default:
+			throw new InvalidChannelOperationException();
+		}
+	}
 	
 	
 	/* (non-Javadoc)
