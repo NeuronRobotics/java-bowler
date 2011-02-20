@@ -78,7 +78,7 @@ public class PPMReaderChannel  extends DyIOAbstractPeripheral implements IChanne
 	}
 	@Override
 	public void onChannelEvent(DyIOChannelEvent e) {
-		int [] values= new int[e.getData().size()];
+		int [] values= new int[6];
 		if(crossLinks == null){
 			crossLinks = new int[6];
 			ByteList data =new ByteList( e.getData().getBytes(6, 6));
