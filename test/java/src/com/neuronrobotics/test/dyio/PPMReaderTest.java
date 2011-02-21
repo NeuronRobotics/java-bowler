@@ -17,11 +17,13 @@ public class PPMReaderTest implements IPPMReaderListener{
 		PPMReaderChannel ppm = new PPMReaderChannel(dyio.getChannel(23));
 		ppm.addPPMReaderListener(this);
 		
-		new ServoChannel(dyio.getChannel(0));//Sets up the output channel for PPM cross link
+		int servoChan = 4;
+		
+		new ServoChannel(dyio.getChannel(servoChan));//Sets up the output channel for PPM cross link
 		
 		int [] cross = ppm.getCrossLink();
-		cross[0]=PPMReaderChannel.NO_CROSSLINK;//shut of the cross link for a channel
-		cross[1]=0;//link ppm signal 0 to DyIO channel 0
+		cross[0]=PPMReaderChannel.NO_CROSSLINK;//shut off the cross link for a channel
+		cross[1]=servoChan;//link ppm signal 0 to DyIO channel servoChan 
 		ppm.setCrossLink(cross);
 		
 		while (true){
