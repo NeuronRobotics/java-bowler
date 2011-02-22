@@ -1,13 +1,10 @@
 package com.neuronrobotics.test.dyio;
 
-import java.util.ArrayList;
 
-import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.peripherals.AnalogInputChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.DigitalOutputChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.IAnalogInputListener;
-import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 

@@ -1,6 +1,5 @@
 package com.neuronrobotics.test.dyio;
 
-import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.peripherals.IPPMReaderListener;
 import com.neuronrobotics.sdk.dyio.peripherals.PPMReaderChannel;
