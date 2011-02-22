@@ -42,9 +42,12 @@ public class PPMReaderChannel  extends DyIOAbstractPeripheral implements IChanne
 		if(crossLinks == null){
 			throw new RuntimeException("Must get cross link state before setting a new one");
 		}
+		System.out.print("\nSetting cross link map: [");
 		for(int i=0;i<crossLinks.length;i++) {
 			crossLinks[i] = links[i];
+			System.out.print(" , "+crossLinks[i]);
 		}
+		System.out.print("]");
 		getChannel().getDevice().send(new SetChannelValueCommand(getChannel().getNumber(),crossLinks,myMode));
 	}
 	
