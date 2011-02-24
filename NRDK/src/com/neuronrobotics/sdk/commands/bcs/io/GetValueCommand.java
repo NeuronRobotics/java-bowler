@@ -52,9 +52,11 @@ public class GetValueCommand extends BowlerAbstractCommand {
 	public BowlerDatagram validate(BowlerDatagram data) throws InvalidResponseException {
 		super.validate(data);
 		if (data == null){
+			System.err.println("Failed!!\n"+data);
 			throw new InvalidResponseException("Get Channel Value did not respond.");
 		}
 		if(!data.getRPC().equals(getOpCode())) {
+			System.err.println("Failed!!\n"+data);
 			throw new InvalidResponseException("Get Channel Value did not return with 'gchv'.\n"+data);
 		}
 		

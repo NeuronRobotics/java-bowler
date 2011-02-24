@@ -6,6 +6,7 @@ import com.neuronrobotics.sdk.commands.bcs.io.GetValueCommand;
 import com.neuronrobotics.sdk.commands.bcs.io.SetChannelValueCommand;
 import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.common.ByteList;
+import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIOChannelEvent;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.dyio.IChannelEventListener;
@@ -16,12 +17,13 @@ public class PPMReaderChannel  extends DyIOAbstractPeripheral implements IChanne
 	private static final DyIOChannelMode myMode = DyIOChannelMode.PPM_IN;
 
 	private int [] crossLinks =null;
+	int [] values=null;
 	public static final int NO_CROSSLINK = 0xff;
 	
 	public PPMReaderChannel(IDyIOChannel channel) {
 		super(channel);
 		if(!getChannel().canBeMode(myMode)) {
-			throw new DyIOPeripheralException("Could not set channel " + channel + " to " + myMode +  " mode");
+			throw new DyIOPeripheralException("Could not ever be " + channel + " to " + myMode +  " mode");
 		}
 		if(!setMode(myMode)) {
 			throw new DyIOPeripheralException("Could not set channel " + channel + " to " + myMode +  " mode");
@@ -48,30 +50,26 @@ public class PPMReaderChannel  extends DyIOAbstractPeripheral implements IChanne
 			System.out.print(" , "+crossLinks[i]);
 		}
 		System.out.print("]");
-		getChannel().getDevice().send(new SetChannelValueCommand(getChannel().getNumber(),crossLinks,myMode));
+		getChannel().getDevice().send(new SetChannelValueCommand(23,crossLinks,myMode));
 	}
 	
 	public int [] getCrossLink(){
 		if(crossLinks == null){
-			BowlerDatagram b = getChannel().getDevice().send(new GetValueCommand(getChannel().getNumber()));
 			crossLinks = new int[6];
-			ByteList data =new ByteList( b.getData().getBytes(7, 6));
 			for(int i=0;i<crossLinks.length;i++) {
-				crossLinks[i] = data.getUnsigned(i);
+				crossLinks[i] = NO_CROSSLINK;
 			}
 		}
 		return crossLinks;
 	}
 	public int [] getValues(){
-		if(crossLinks == null){
-			BowlerDatagram b = getChannel().getDevice().send(new GetValueCommand(getChannel().getNumber()));
-			crossLinks = new int[6];
-			ByteList data =new ByteList( b.getData().getBytes(1, 6));
-			for(int i=0;i<crossLinks.length;i++) {
-				crossLinks[i] = data.getUnsigned(i);
+		if(values == null){
+			values= new int[6];
+			for(int i=0;i<values.length;i++) {
+				values[i] = 127;
 			}
 		}
-		return crossLinks;
+		return values;
 	}
 	
 	ArrayList<IPPMReaderListener> listeners = new 	ArrayList<IPPMReaderListener> ();
@@ -81,7 +79,7 @@ public class PPMReaderChannel  extends DyIOAbstractPeripheral implements IChanne
 	}
 	@Override
 	public void onChannelEvent(DyIOChannelEvent e) {
-		int [] values= new int[6];
+		getValues();
 		if(crossLinks == null){
 			crossLinks = new int[6];
 			ByteList data =new ByteList( e.getData().getBytes(6, 6));
