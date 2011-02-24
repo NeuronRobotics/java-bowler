@@ -41,10 +41,10 @@ public class AnalogInputChannel extends DyIOAbstractPeripheral implements IChann
 	 * @param async - boolean to determine if this is an async analog channel
 	 */
 	public AnalogInputChannel(DyIOChannel channel, boolean async){
-		super(channel);
+		super(channel,DyIOChannelMode.ANALOG_IN);
 		channel.addChannelEventListener(this);
 		
-		if(!setMode(DyIOChannelMode.ANALOG_IN, async)) {
+		if(!setMode(async)) {
 			throw new DyIOPeripheralException("Could not set channel " + getChannel() + " to " + DyIOChannelMode.ANALOG_IN +  " mode.");
 		}	
 	}
@@ -56,10 +56,10 @@ public class AnalogInputChannel extends DyIOAbstractPeripheral implements IChann
 	 * @param channel - the channel object requested from the DyIO
 	 */
 	public AnalogInputChannel(DyIOChannel channel){
-		super(channel);
+		super(channel,DyIOChannelMode.ANALOG_IN);
 		channel.addChannelEventListener(this);
 		
-		if(!setMode(DyIOChannelMode.ANALOG_IN, false)) {
+		if(!setMode( false)) {
 			throw new DyIOPeripheralException("Could not set channel " + getChannel() + " to " + DyIOChannelMode.ANALOG_IN +  " mode.");
 		}	
 	}

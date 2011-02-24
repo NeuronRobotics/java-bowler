@@ -33,11 +33,11 @@ public class CounterOutputChannel extends DyIOAbstractPeripheral {
 	 *            The channel object to set up as counter
 	 */
 	public CounterOutputChannel(DyIOChannel channel) {
-		super(channel);
+		super(channel,DyIOChannelMode.COUNT_OUT_INT);
 		
 		DyIOChannelMode mode = DyIOChannelMode.COUNT_OUT_INT;
 		
-		if(!channel.setMode(mode)) {
+		if(!setMode()) {
 			throw new DyIOPeripheralException("Could not set channel " + channel + " to " + mode + " mode.");
 		}
 

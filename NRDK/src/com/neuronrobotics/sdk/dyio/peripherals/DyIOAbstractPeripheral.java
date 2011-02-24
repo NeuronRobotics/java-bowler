@@ -27,16 +27,21 @@ import com.neuronrobotics.sdk.dyio.IDyIOChannel;
 public abstract class DyIOAbstractPeripheral implements IDyIOChannel {
 	private IDyIOChannel channel;
 	private boolean enabled = false;
-	
+	private DyIOChannelMode myMode = null;
 	/**
 	 * DyIOAbstractPeripheral.
 	 * 
 	 * @param channel
 	 *            The channel object to set up as whatever peripheral is needed
 	 */
-	public DyIOAbstractPeripheral(IDyIOChannel channel) {
+	public DyIOAbstractPeripheral(IDyIOChannel channel, DyIOChannelMode myMode) {
 		this.channel = channel;
 		this.enabled = true;
+		this.myMode=myMode;
+	}
+	
+	public  DyIOChannelMode getClassMode() {
+		return myMode;
 	}
 	
 	/**
@@ -56,8 +61,8 @@ public abstract class DyIOAbstractPeripheral implements IDyIOChannel {
 	 * @return if the set worked. Not all channels have all peripherals
 	 * @throws InvalidResponseException
 	 */
-	public boolean setMode(DyIOChannelMode mode)throws InvalidResponseException {
-		return setMode(mode, false);
+	public boolean setMode()throws InvalidResponseException {
+		return setMode( false);
 	}
 	
 	/**
@@ -70,9 +75,24 @@ public abstract class DyIOAbstractPeripheral implements IDyIOChannel {
 	 * @return if the set worked. Not all channels have all peripherals
 	 * @throws InvalidResponseException
 	 */
-	@Override
-	public boolean setMode(DyIOChannelMode mode, boolean async)throws InvalidResponseException {
-		return channel.setMode(mode, async);
+	public boolean setMode( boolean async)throws InvalidResponseException {
+		return channel.setMode(getClassMode(), async);
+	}
+	
+	/**
+	 * setMode.
+	 * 
+	 * @param mode
+	 *            the DyIO mode to set the channel to
+	 * @param async
+	 *            If the channel should be set into async mode
+	 * @return if the set worked. Not all channels have all peripherals
+	 * @throws InvalidResponseException
+	 */
+	public boolean setMode(DyIOChannelMode mode, boolean async) {
+		if(mode != getClassMode())
+			throw new RuntimeException("The mode being set does not match the defined channel mode: "+mode+" is not"+getClassMode());
+		return channel.setMode(getClassMode(), async);
 	}
 	
 	/**

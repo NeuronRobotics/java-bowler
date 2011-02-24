@@ -21,11 +21,11 @@ public class PPMReaderChannel  extends DyIOAbstractPeripheral implements IChanne
 	public static final int NO_CROSSLINK = 0xff;
 	
 	public PPMReaderChannel(IDyIOChannel channel) {
-		super(channel);
+		super(channel,myMode);
 		if(!getChannel().canBeMode(myMode)) {
 			throw new DyIOPeripheralException("Could not ever be " + channel + " to " + myMode +  " mode");
 		}
-		if(!setMode(myMode)) {
+		if(!setMode()) {
 			throw new DyIOPeripheralException("Could not set channel " + channel + " to " + myMode +  " mode");
 		}
 		getChannel().addChannelEventListener(this);

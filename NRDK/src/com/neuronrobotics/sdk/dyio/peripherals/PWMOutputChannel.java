@@ -30,9 +30,9 @@ public class PWMOutputChannel extends DyIOAbstractPeripheral {
 	 *            The channel object to set up as a full duty, hardware PWM
 	 */
 	public PWMOutputChannel(DyIOChannel channel) {
-		super(channel);
+		super(channel,DyIOChannelMode.PWM_OUT);
 	
-		if(!setMode(DyIOChannelMode.PWM_OUT)) {
+		if(!setMode()) {
 			throw new DyIOPeripheralException("Could not set channel " + channel + " to PWM output mode");
 		}
 	}

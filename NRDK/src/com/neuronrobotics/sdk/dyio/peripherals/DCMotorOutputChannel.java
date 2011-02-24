@@ -30,9 +30,9 @@ public class DCMotorOutputChannel extends DyIOAbstractPeripheral {
 	 *            The channel object to set up as a full duty, hardware PWM
 	 */
 	public DCMotorOutputChannel(DyIOChannel channel) {
-		super(channel);
+		super(channel,DyIOChannelMode.DC_MOTOR_VEL);
 	
-		if(!setMode(DyIOChannelMode.DC_MOTOR_VEL)) {
+		if(!setMode()) {
 			throw new DyIOPeripheralException("Could not set channel " + channel + " to DC motor output mode");
 		}
 	}

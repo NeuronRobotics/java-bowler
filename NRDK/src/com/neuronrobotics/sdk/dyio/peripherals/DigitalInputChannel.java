@@ -37,10 +37,10 @@ public class DigitalInputChannel extends DyIOAbstractPeripheral implements IChan
 	 *            if this should be in async mode
 	 */
 	public DigitalInputChannel(DyIOChannel channel, boolean async){
-		super(channel);
+		super(channel,DyIOChannelMode.DIGITAL_IN);
 		channel.addChannelEventListener(this);
 		 
-		if(!setMode(DyIOChannelMode.DIGITAL_IN, async)) {
+		if(!setMode( async)) {
 			throw new DyIOPeripheralException("Could not set channel " + getChannel() + " to " + DyIOChannelMode.DIGITAL_IN + " mode.");
 		}	
 	}
@@ -52,10 +52,10 @@ public class DigitalInputChannel extends DyIOAbstractPeripheral implements IChan
 	 *            The channel object to set up as a Digital Input
 	 */
 	public DigitalInputChannel(DyIOChannel channel){
-		super(channel);
+		super(channel,DyIOChannelMode.DIGITAL_IN);
 		channel.addChannelEventListener(this);
 		
-		if(!setMode(DyIOChannelMode.DIGITAL_IN, false)) {
+		if(!setMode( false)) {
 			throw new DyIOPeripheralException("Could not set channel " + getChannel() + " to " + DyIOChannelMode.DIGITAL_IN + " mode.");
 		}	
 	}
