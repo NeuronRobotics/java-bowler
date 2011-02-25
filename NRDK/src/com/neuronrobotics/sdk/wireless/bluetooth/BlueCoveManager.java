@@ -81,7 +81,7 @@ public class BlueCoveManager implements DiscoveryListener {
 			try {
 				Log.info("Device name: " + d.getFriendlyName(false)+" address: " + d.getBluetoothAddress());
 			} catch (IOException e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 		}
 		if(deviceList.size()==0)
@@ -137,10 +137,10 @@ public class BlueCoveManager implements DiscoveryListener {
 			try {
 				tmp=d.getFriendlyName(false);
 				if (tmp == "")
-					tmp = "No_Name";
+					tmp = "No Name";
 				s[i]=tmp+"_"+d.getBluetoothAddress();
 			} catch (Exception e) {
-				s[i]="Failed_Name_"+d.getBluetoothAddress();
+				s[i]="Failed Name"+"_"+d.getBluetoothAddress();
 			}
 			i++;
 		}
@@ -154,10 +154,20 @@ public class BlueCoveManager implements DiscoveryListener {
 	 * @return
 	 */
 	public synchronized RemoteDevice getDevice(String name){
+		String addr = name.substring(name.indexOf('_')+1);
+		//System.out.println("Getting device with address: "+addr);
 		String [] s=getAvailableSerialDevices(false);
 		for (int i=0;i<s.length;i++){
-			if(s[i].contains(name)){
-				return deviceList.get(i);
+			if(s[i].contains(addr)){
+				try {
+					RemoteDevice dev =  deviceList.get(i);
+					//System.out.println("Found device: "+s[i]);
+					return dev;
+				}catch(Exception e) {
+					e.printStackTrace();
+				}
+			}else {
+				System.out.println("Non matching device: "+s[i]);
 			}
 		}
 		return null;
@@ -225,24 +235,11 @@ public class BlueCoveManager implements DiscoveryListener {
 		synchronized (this) {
 			records.clear();
 			try {
-				//int[] attrSet = new int[] { 0x0100, 0x0101, 0x0A0, 0x0A1, 0x0A2, 0x0A3, 0x0A4 };
 				int[] attrSet = null;
 				UUID[] id =new UUID[] { uuid };
 				if(searchId != 0xffff)
 					LocalDevice.getLocalDevice().getDiscoveryAgent().cancelServiceSearch(searchId);
 				searchId=LocalDevice.getLocalDevice().getDiscoveryAgent().searchServices(attrSet,id, getDevice(selected), this);
-				/*
-				long start = System.currentTimeMillis() ;
-				while(true){
-					if(System.currentTimeMillis()> (start + 20000)){
-						System.err.println("Took too long: "+start+" till: "+System.currentTimeMillis());
-						break;
-					}
-					if(records.size()>0)
-						break;
-					try {Thread.sleep(10);} catch (InterruptedException e) {}
-				}
-				*/
 				try {wait();} catch (InterruptedException e) {e.printStackTrace();}
 
 			} catch (BluetoothStateException e) {
