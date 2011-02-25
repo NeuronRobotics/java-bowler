@@ -55,21 +55,35 @@ public class PPMReaderChannel  extends DyIOAbstractPeripheral implements IChanne
 	
 	public int [] getCrossLink(){
 		if(crossLinks == null){
-			crossLinks = new int[6];
-			for(int i=0;i<crossLinks.length;i++) {
-				crossLinks[i] = NO_CROSSLINK;
-			}
+			updateValues();
 		}
 		return crossLinks;
 	}
 	public int [] getValues(){
 		if(values == null){
-			values= new int[6];
-			for(int i=0;i<values.length;i++) {
-				values[i] = 127;
-			}
+			updateValues();
 		}
 		return values;
+	}
+	
+	private void updateValues() {
+		BowlerDatagram b=null;
+		System.out.println("Updating value map");
+		try {
+			b= getChannel().getDevice().send(new GetValueCommand(23));
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		if(b != null) {
+			crossLinks = new int[6];
+			values= new int[6];
+			for(int i=0;i<values.length;i++) {
+				values[i] = b.getData().getUnsigned(1+i);
+			}
+			for(int i=0;i<crossLinks.length;i++) {
+				crossLinks[i] = b.getData().getUnsigned(1+6+i);
+			}
+		}
 	}
 	
 	ArrayList<IPPMReaderListener> listeners = new 	ArrayList<IPPMReaderListener> ();
