@@ -256,6 +256,7 @@ public class SerialConnection extends BowlerAbstractConnection {
         try{
         	ports = CommPortIdentifier.getPortIdentifiers();
         }catch( UnsatisfiedLinkError e){
+        	e.printStackTrace();
         	throw new MissingNativeLibraryException(e.getMessage());
         }
         while (ports.hasMoreElements()) {
