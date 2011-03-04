@@ -2,6 +2,8 @@ package com.neuronrobotics.test.nrdk;
 
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
+import com.neuronrobotics.sdk.wireless.bluetooth.BlueCoveManager;
+import com.neuronrobotics.sdk.wireless.bluetooth.BluetoothSerialConnection;
 
 public class BluetoothConector {
 
@@ -9,30 +11,21 @@ public class BluetoothConector {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		DyIO dyio=new DyIO();
-		try{
-			if (!ConnectionDialog.getBowlerDevice(dyio)){
-				System.exit(1);
-				System.err.println("No port!");
-			}
-		}catch (Exception e){
-			e.printStackTrace();
+		DyIO dyio;
+		BlueCoveManager manager = new BlueCoveManager();
+		String devices[] = manager.getAvailableSerialDevices(true);
+		System.out.println("Devices: ");
+		for (String d: devices) {
+			System.out.println(d);
 		}
-		if(dyio.ping() != null){
-			System.out.println("Ping OK!!");
-			for (int i=0;i<100;i++){
-				try{
-					System.out.println("Value: "+dyio.getValue(0));
-				}catch (Exception e){
-					e.printStackTrace();
-					System.err.println("Failed after: "+i+" Pings");
-					//break;
-				}
-	
-			}
+		if (devices.length > 0) {
+			System.out.println("Connecting to : "+devices[0]);
+			dyio = new DyIO(new BluetoothSerialConnection(manager, devices[0]));
+			dyio.connect();
+			if(dyio.ping() != null)
+				System.out.println("All OK!");
+			
 		}
-		System.out.println("Finished with all communication OK!");
-		dyio.disconnect();
 		System.exit(0);
 	}
 
