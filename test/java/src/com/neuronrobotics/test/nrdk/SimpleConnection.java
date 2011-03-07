@@ -26,6 +26,7 @@ public class SimpleConnection {
 		Log.enableDebugPrint(true);
 		dyio.connect();
         dyio.ping();
+        dyio.disconnect();
 		System.exit(0);
 	}
 
