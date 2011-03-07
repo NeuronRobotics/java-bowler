@@ -9,6 +9,8 @@ public class ConnectionDialogTest {
 		if (!ConnectionDialog.getBowlerDevice(dyio)){
 			System.exit(1);
 		}
+		dyio.ping();
+        dyio.disconnect();
 		System.out.println("Connection OK!");
 		System.exit(0);
 	}
