@@ -12,8 +12,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-
 import net.miginfocom.swing.MigLayout;
 
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;

@@ -16,8 +16,6 @@ package com.neuronrobotics.sdk.ui;
 
 import java.io.IOException;
 
-import javax.swing.ImageIcon;
-
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;

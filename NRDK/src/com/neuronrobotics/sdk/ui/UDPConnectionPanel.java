@@ -19,7 +19,6 @@ import java.awt.event.ActionListener;
 import java.net.InetAddress;
 import java.util.ArrayList;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
