@@ -31,7 +31,6 @@
  */
 package com.neuronrobotics.sdk.common;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import com.neuronrobotics.sdk.commands.bcs.core.NamespaceCommand;
