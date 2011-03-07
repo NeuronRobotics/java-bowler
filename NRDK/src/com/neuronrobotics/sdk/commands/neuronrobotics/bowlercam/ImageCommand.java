@@ -2,8 +2,6 @@ package com.neuronrobotics.sdk.commands.neuronrobotics.bowlercam;
 
 import com.neuronrobotics.sdk.common.BowlerAbstractCommand;
 import com.neuronrobotics.sdk.common.BowlerMethod;
-import com.neuronrobotics.sdk.common.ByteList;
-import com.neuronrobotics.sdk.common.Log;
 
 public class ImageCommand extends BowlerAbstractCommand {
 
