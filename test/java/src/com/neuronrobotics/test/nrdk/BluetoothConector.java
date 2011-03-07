@@ -1,7 +1,6 @@
 package com.neuronrobotics.test.nrdk;
 
 import com.neuronrobotics.sdk.dyio.DyIO;
-import com.neuronrobotics.sdk.ui.ConnectionDialog;
 import com.neuronrobotics.sdk.wireless.bluetooth.BlueCoveManager;
 import com.neuronrobotics.sdk.wireless.bluetooth.BluetoothSerialConnection;
 
