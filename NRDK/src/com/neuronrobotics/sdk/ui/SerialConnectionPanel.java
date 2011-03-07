@@ -100,20 +100,27 @@ public class SerialConnectionPanel extends AbstractConnectionPanel {
 	@Override
 	public void refresh() {		
 		connectionCbo.removeAllItems();
-		
+		String m = "NRSDK not installed properly, native library not found\n\n" +
+		"librxtxSerial.so       in Linux\n" +
+		"librxtxSerial.jnilib   in OSX\n" +
+		"rxtxSerial.dll           in Windows\n\n"+
+		"This must be in your JVM or system library path. See:\n"+
+		"http://neuronrobotics.com/wiki/Installing_The_Native_Serial_Library";
 		try {
 			for(String s: SerialConnection.getAvailableSerialPorts()) {
 				connectionCbo.addItem(s);
 			}
 		} catch(MissingNativeLibraryException e) {
-			String m = "NRSDK not installed properly, native library not found\n\n" +
-					"librxtxSerial.so       in Linux\n" +
-					"librxtxSerial.jnilib   in OSX\n" +
-					"rxtxSerial.dll           in Windows\n\n"+
-					"This must be in your JVM or system library path. See:\n"+
-					"http://neuronrobotics.com/wiki/Installing_The_Native_Serial_Library";
 			JOptionPane.showMessageDialog(this, m,"NRSDK not installed properly", JOptionPane.ERROR_MESSAGE);
 			throw new MissingNativeLibraryException(m);
+		}catch (Exception e){
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(this, m,"NRSDK not installed properly", JOptionPane.ERROR_MESSAGE);
+			throw new MissingNativeLibraryException(m);		
+		}catch (Error e){
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(this, m,"NRSDK not installed properly", JOptionPane.ERROR_MESSAGE);
+			throw new MissingNativeLibraryException(m);		
 		}
 	}
 }
