@@ -22,7 +22,7 @@
   <target name="clean"
    description="Delete old build and dist directories">
     <delete dir="${build.home}"/>
-    <delete dir="${dist.home}"/>
+    
   </target>
 
   <target name="prepare" description="Create the file structure for assembly">
