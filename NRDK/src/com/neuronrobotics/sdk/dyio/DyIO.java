@@ -244,20 +244,19 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 		}
 		Log.info("Re-syncing...");
 		BowlerDatagram response;
-		if (!haveFirmware()){
-			firmware = getRevisions().get(0).getBytes();
-			/*
-			response = send(new InfoFirmwareRevisionCommand());
-			if (response != null && response.getData().size() > 2) {
-				firmware = response.getData().getBytes(0, 3);
+		try{
+			if (!haveFirmware()){
+				
+				firmware = getRevisions().get(0).getBytes();
 			}
-			*/
-		}
-		if(info.contains("Unknown")){
-			response = send(new InfoCommand());
-			if (response != null) {
-				info = response.getData().asString();
+			if(info.contains("Unknown")){
+				response = send(new InfoCommand());
+				if (response != null) {
+					info = response.getData().asString();
+				}
 			}
+		}catch (Exception e){
+			throw new DyIOCommunicationException("DyIO failed to report during initialization. Could not determine DyIO configuration");
 		}
 		
 		try {
@@ -275,7 +274,8 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 			else
 				return false;
 		}
-		
+		if(response == null)
+			throw new DyIOCommunicationException("DyIO failed to report during initialization. Could not determine DyIO configuration");
 		if(getAddress().equals(new MACAddress(MACAddress.BROADCAST))) {
 			setAddress(response.getAddress());
 		}
