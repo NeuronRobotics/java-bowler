@@ -254,6 +254,9 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	public void stopHeartBeat(){
 		beater=null;
 	}
+	private BowlerAbstractDevice getInstance(){
+		return this;
+	}
 	private class HeartBeat extends Thread{
 		public void run(){
 			while (connection.isConnected()){
@@ -261,6 +264,9 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 					ping();
 				}
 				ThreadUtil.wait(10);
+				if(getInstance() == null){
+					connection.disconnect();
+				}
 			}
 		}
 	}
