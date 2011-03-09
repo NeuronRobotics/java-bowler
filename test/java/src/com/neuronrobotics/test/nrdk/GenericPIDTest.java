@@ -23,6 +23,7 @@ public class GenericPIDTest {
 			pid.GetAllPIDPosition();
 			pid.GetPIDPosition(4);
 			pid.disconnect();
+			System.out.println("All OK!");
 			System.exit(0);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
