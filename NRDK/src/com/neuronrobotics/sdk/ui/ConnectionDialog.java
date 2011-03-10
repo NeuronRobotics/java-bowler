@@ -173,17 +173,17 @@ public class ConnectionDialog extends JDialog {
 		}
 		BowlerAbstractConnection connection = null;
 		while(connection == null) {
-			//System.out.println("Select connection:");
+			Log.info("Select connection:");
 			connection = ConnectionDialog.promptConnection(panel);
 			if (connection == null) {
-				//System.out.println("No connection selected...");
+				Log.info("No connection selected...");
 				return false;
 			}
-			//System.out.println("setting connection");
+			Log.info("setting connection");
 			try {
 				dev.setConnection(connection);
 				dev.connect();
-				//System.out.println("Connected");
+				Log.info("Connected");
 			} catch(DyIOCommunicationException e1) {
 				String m = "The DyIO has not reported back to the library. \nCheck your connection and ensure you are attempting to talk to a DyIO, not another Bowler Device\nThis program will now exit.";
 				JOptionPane.showMessageDialog(null, m, "DyIO Not Responding", JOptionPane.ERROR_MESSAGE);
@@ -194,9 +194,9 @@ public class ConnectionDialog extends JDialog {
 				fudge=null;
 				return false;
 			}
-			//System.out.println("Attempting to ping");
+			Log.info("Attempting to ping");
 			if(dev.ping() != null){
-				//System.out.println("Ping OK!");
+				Log.info("Ping OK!");
 				break;
 			}else{
 				connection = null;
