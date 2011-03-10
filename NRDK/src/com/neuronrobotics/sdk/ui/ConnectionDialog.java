@@ -29,7 +29,7 @@ public class ConnectionDialog extends JDialog {
 	private static final long serialVersionUID = 1L;
 	
 	private SerialConnection connection = null;
-	private boolean isCancled;
+	private boolean isCancled = true;
 	private JPanel panel;
 	private JButton connectBtn;
 	private JButton refresh;
@@ -51,6 +51,7 @@ public class ConnectionDialog extends JDialog {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
 					Log.info("Using connection" + getConnection() + "\n");
+					isCancled = false;
 				} catch(Exception e) {
 					JOptionPane.showMessageDialog(null, "Error connecting with the given connection.", "Connection Error", JOptionPane.ERROR_MESSAGE);
 				} finally {
@@ -147,6 +148,7 @@ public class ConnectionDialog extends JDialog {
 	 * @return
 	 */
 	public BowlerAbstractConnection getConnection() {
+		
 		BowlerAbstractConnection c = ((AbstractConnectionPanel) connectionPanels.getSelectedComponent()).getConnection();
 		if(c == null) {
 			JOptionPane.showMessageDialog(null, "Unable to create connection.", "Invalid Connection", JOptionPane.ERROR_MESSAGE);
@@ -173,6 +175,10 @@ public class ConnectionDialog extends JDialog {
 		while(connection == null) {
 			System.out.println("Select connection:");
 			connection = ConnectionDialog.promptConnection(panel);
+			if (connection == null) {
+				System.out.println("No connection selected...");
+				return false;
+			}
 			System.out.println("setting connection");
 			try {
 				dev.setConnection(connection);
