@@ -11,7 +11,10 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.LookAndFeel;
 import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+
 import net.miginfocom.swing.MigLayout;
 
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
@@ -33,12 +36,9 @@ public class ConnectionDialog extends JDialog {
 	private JButton cancelBtn;
 	private JTabbedPane connectionPanels;
 	private static Packer fudge;
+	private  LookAndFeel laf;
 	public ConnectionDialog() {
-		try {
-		    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (Exception ex) {
-			
-		} 
+		
 		setModal(true);	
 		
 		connectionPanels = new JTabbedPane();
@@ -126,9 +126,18 @@ public class ConnectionDialog extends JDialog {
 	 * @return - Did the user cancel
 	 */
 	public boolean showDialog() {
+		try {
+			laf = UIManager.getLookAndFeel();
+		    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Exception ex) {
+			
+		} 
 		setLocationRelativeTo(null); 
 	    setVisible(true);
-	    
+	    try {
+			UIManager.setLookAndFeel(laf);
+		} catch (UnsupportedLookAndFeelException e) {
+		}
 	    return !isCancled;
 	}
 	
