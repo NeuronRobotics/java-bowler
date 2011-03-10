@@ -26,6 +26,7 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
+import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
@@ -46,8 +47,9 @@ public class UDPStream {
     InetAddress IPAddressSet=null;
     UDPins INS=new  UDPins();
     UDPouts OUTS=new UDPouts(); 
-    
+
     private boolean isServer;
+    private boolean isAlive = true;
     
     byte [] lastSent=new byte[1];
     
@@ -116,7 +118,7 @@ public class UDPStream {
 	 */
 	public void start(){
 		//Log.info("Starting the UDP Stream Manager...");
-
+		isAlive = true;
 		INS.start();
 		OUTS.start();
 		
@@ -164,11 +166,13 @@ public class UDPStream {
 			}
 		};
 		public void run(){
-			while(true){
+			while(isAlive){
 				try {Thread.sleep(10);} catch (InterruptedException e) {}
 				receivePacket = new DatagramPacket(receiveData, receiveData.length);
                 try {
-                	while(udpSock==null);
+                	while(udpSock==null && isAlive) {
+                		ThreadUtil.wait(100);
+                	}
 					udpSock.receive(receivePacket);
 					
 					byte [] data = receivePacket.getData();
@@ -232,9 +236,11 @@ public class UDPStream {
 			}
 		};
 		public void run(){
-			while(true){
+			while(isAlive ){
 				ThreadUtil.wait(1);
-				while(udpSock==null);
+				while(udpSock==null && isAlive){
+            		ThreadUtil.wait(100);
+            	}
 				try {				
 					if( outputData.size()>0){
 						synchronized(outputData){
@@ -304,8 +310,7 @@ public class UDPStream {
 	public void disconnect() {
 		if(udpSock != null)
 			 udpSock.close();
-		INS=null;
-		OUTS=null;
+		isAlive = false;
 		udpSock=null;
 	}
 	

@@ -47,15 +47,19 @@ public class BowlerCamDevice extends BowlerAbstractDevice {
 
 	}
 	public BufferedImage getHighSpeedImage(int cam) throws MalformedURLException, IOException {
-		while(urls.size()<=cam){
+		while(urls.size()<=cam && isAvailable()){
 			urls.add(null);
 		}
-		while(images.size() <= cam){
+		while(images.size() <= cam && isAvailable()){
 			images.add(null);
 		}
 		if(urls.get(cam) == null)
 			getImageServerURL(cam);
-		images.set(cam,ImageIO.read(new URL(urls.get(cam))));
+		try {
+			images.set(cam,ImageIO.read(new URL(urls.get(cam))));
+		}catch(Exception ex) {
+			System.err.println("Image capture failed");
+		}
 		return images.get(cam);
 	}
 	
@@ -109,7 +113,7 @@ public class BowlerCamDevice extends BowlerAbstractDevice {
 	}
 	public String getImageServerURL(int chan){
 		BowlerDatagram b=send(new ImageURLCommand(chan));
-		while(urls.size()<=chan){
+		while(urls.size()<=chan && isAvailable()){
 			urls.add(null);
 		}
 		urls.add(chan,b.getData().asString());
@@ -120,7 +124,7 @@ public class BowlerCamDevice extends BowlerAbstractDevice {
 	}
 	public void startHighSpeedAutoCapture(int cam,double scale,int fps) {
 		stopAutoCapture(cam);
-		while((captures.size() <= cam))
+		while((captures.size() <= cam)&& isAvailable())
 			captures.add(null);
 		captures.set(cam,new highSpeedAutoCapture(cam,scale,fps));
 		captures.get(cam).start();
@@ -144,7 +148,7 @@ public class BowlerCamDevice extends BowlerAbstractDevice {
 	public ArrayList<ItemMarker> getBlobs(){
 		mark.clear();
 		send(new BlobCommand());
-		while(gotLastMark == false){
+		while(gotLastMark == false && isAvailable()){
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException e) {
@@ -173,7 +177,7 @@ public class BowlerCamDevice extends BowlerAbstractDevice {
 		public void run() {
 			System.out.println("Starting auto capture on: "+getImageServerURL(cam));
 			long st = System.currentTimeMillis();
-			while(running) {
+			while(running && isAvailable()) {
 				try {
 					BufferedImage im =getHighSpeedImage(cam);
 					if(scale>1.01||scale<.99)
