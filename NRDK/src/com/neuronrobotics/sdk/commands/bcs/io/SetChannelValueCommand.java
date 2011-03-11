@@ -77,6 +77,8 @@ public class SetChannelValueCommand extends BowlerAbstractCommand {
 			getCallingDataStorage().add(value);
 			//Time is in seconds, the converts to Ms then sends as 16 bit value
 			getCallingDataStorage().addAs16((int)(time*1000));
+		}else{
+			getCallingDataStorage().add(value);
 		}
 	}
 	
