@@ -17,6 +17,7 @@ package com.neuronrobotics.sdk.serial;
 import gnu.io.CommPort;
 import gnu.io.CommPortIdentifier;
 import gnu.io.PortInUseException;
+import gnu.io.RXTXCommDriver;
 import gnu.io.SerialPort;
 import gnu.io.UnsupportedCommOperationException;
 
@@ -249,16 +250,19 @@ public class SerialConnection extends BowlerAbstractConnection {
 	/**
      * @return    A HashSet containing the CommPortIdentifier for all serial ports that are not currently being used.
      */
-    @SuppressWarnings("unchecked")
+
 	public static List<String> getAvailableSerialPorts() {
         ArrayList<String> available = new ArrayList<String>();
-        Enumeration<CommPortIdentifier> ports;
+        //Enumeration<CommPortIdentifier> ports;
         try{
-        	ports = CommPortIdentifier.getPortIdentifiers();
+        	//ports = CommPortIdentifier.getPortIdentifiers();
+        	RXTXCommDriver d = new RXTXCommDriver();
+        	available=d.getPortIdentifierList();
         }catch( UnsatisfiedLinkError e){
         	e.printStackTrace();
         	throw new MissingNativeLibraryException(e.getMessage());
         }
+        /*
         while (ports.hasMoreElements()) {
             CommPortIdentifier com = (CommPortIdentifier) ports.nextElement();
             switch (com.getPortType()) {
@@ -274,8 +278,10 @@ public class SerialConnection extends BowlerAbstractConnection {
             	available.add(com.getName());
             }
         }
+        */
         //FIXME THis NEEDS to be here to work on Linux systems
         //NO NOT REMOVE unless the RXTX bug has been fixed to make this un-necessary
+        /*
         if((System.getProperty("os.name").toLowerCase().indexOf("linux")!=-1)){
         	String root="/dev/";
         	File dir = new File(root);
@@ -300,6 +306,7 @@ public class SerialConnection extends BowlerAbstractConnection {
         		
         	}
         }
+        */
                 
         return available;
     }
