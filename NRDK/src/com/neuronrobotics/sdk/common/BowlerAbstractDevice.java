@@ -260,8 +260,13 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	private class HeartBeat extends Thread{
 		public void run(){
 			while (connection.isConnected()){
-				if((System.currentTimeMillis()-lastPacketTime)>heartBeatTime){
-					ping();
+				if((connection.msSinceLastSend())>heartBeatTime){
+					try{
+						if(ping()==null)
+							connection.disconnect();
+					}catch(Exception e){
+						connection.disconnect();
+					}
 				}
 				ThreadUtil.wait(10);
 				if(getInstance() == null){

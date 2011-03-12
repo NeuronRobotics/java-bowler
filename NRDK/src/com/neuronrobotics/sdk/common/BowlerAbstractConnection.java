@@ -232,7 +232,11 @@ public abstract class BowlerAbstractConnection {
 	public int getSleepTime() {
 		return sleepTime;
 	}
-	
+	private long lastWrite = 0;
+	public long msSinceLastSend() {
+		// TODO Auto-generated method stub
+		return System.currentTimeMillis() - lastWrite ;
+	}
 	/**
 	 * Write.
 	 *
@@ -241,6 +245,7 @@ public abstract class BowlerAbstractConnection {
 	 */
 	public void write(byte[] data) throws IOException {
 		waitForConnectioToBeReady();
+		lastWrite = System.currentTimeMillis();
 		try{
 			//Log.info("Writing: "+data.length+" bytes");
 			ByteList outgoing = new ByteList(data);
@@ -558,4 +563,6 @@ public abstract class BowlerAbstractConnection {
 			disconnect();
 		}
 	}
+
+
 }
