@@ -108,7 +108,9 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	 * Disconnect.
 	 */
 	public void disconnect() {
+		Log.info("Disconnecting Bowler Device");
 		if (connection != null) {
+			
 			connection.disconnect();
 		}
 	}

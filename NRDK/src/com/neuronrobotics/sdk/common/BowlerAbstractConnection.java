@@ -178,23 +178,11 @@ public abstract class BowlerAbstractConnection {
 	 * Disconnect and deactive the current connection.
 	 */
 	public void disconnect(){
+		Log.info("Disconnecting Bowler Connection");
 		if(!isConnected()) {
 			return;
 		}
 		setConnected(false);
-		try {
-			getDataIns().close();
-		} catch (Exception e) {
-			Log.error("Unable to close the input stream");
-			return;
-		}
-		try {
-			getDataOuts().close();
-		} catch (Exception e) {
-			Log.error("Unable to close the output stream");
-			return;
-		}
-		stopQueue();
 	}
 
 	/**
@@ -268,6 +256,8 @@ public abstract class BowlerAbstractConnection {
 	 * @param connected the new connected
 	 */
 	public void setConnected(boolean connected) {
+		if(this.connected == connected)
+			return;
 		this.connected = connected;
 		if(this.connected){
 			updater = new Updater();
@@ -276,6 +266,18 @@ public abstract class BowlerAbstractConnection {
 			syncQueue.start();
 			asyncQueue = new QueueManager();
 			asyncQueue.start();
+		}else{
+			try {
+				getDataIns().close();
+			} catch (Exception e) {
+				return;
+			}
+			try {
+				getDataOuts().close();
+			} catch (Exception e) {
+				return;
+			}
+			stopQueue();
 		}
 	}
 	

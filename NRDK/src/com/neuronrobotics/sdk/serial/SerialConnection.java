@@ -221,6 +221,7 @@ public class SerialConnection extends BowlerAbstractConnection {
 	public void disconnect() {
 		try{
 			super.disconnect();
+			Log.info("Disconnecting Serial Connection");
 			// TODO: [DEV-116] This is a hack for 64bit JVMs
 			//if((!SDKInfo.isOS64bit && !SDKInfo.isVM64bit) || SDKInfo.isLinux) {
 				try{
