@@ -17,17 +17,18 @@ public class SimpleConnection {
 		//s=new SerialConnection("COM5");
 		
 		//OSX
-		s=new SerialConnection("/dev/tty.usbmodemfd13411");
+		//s=new SerialConnection("/dev/tty.usbmodemfd13411");
 		
 		//Linux
-		//s=new SerialConnection("/dev/ttyACM0");
+		s=new SerialConnection("/dev/ttyACM0");
 		
 		DyIO dyio = new DyIO(s);
-		//Log.enableDebugPrint(true);
+		Log.enableDebugPrint(true);
 		dyio.connect();
         dyio.ping();
         dyio.disconnect();
 		System.exit(0);
+        //while(true);
 	}
 
 }
