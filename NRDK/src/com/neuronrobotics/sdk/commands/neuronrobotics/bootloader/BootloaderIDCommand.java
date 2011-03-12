@@ -7,16 +7,10 @@ import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.InvalidResponseException;
 
 public class BootloaderIDCommand extends BowlerAbstractCommand {
-	private ByteList data = new ByteList();
 	
 	public  BootloaderIDCommand() {
 		setOpCode("blid");
 		setMethod(BowlerMethod.GET);
-	}
-
-	@Override
-	public byte[] getCallingData() {
-		return data.getBytes();
 	}
 	
 	@Override

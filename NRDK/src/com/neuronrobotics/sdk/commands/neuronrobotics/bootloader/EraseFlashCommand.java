@@ -7,17 +7,12 @@ import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.InvalidResponseException;
 
 public class EraseFlashCommand extends BowlerAbstractCommand {
-	private ByteList data = new ByteList();
+
 	
 	public EraseFlashCommand(int channel) {
 		setOpCode("erfl");
 		setMethod(BowlerMethod.CRITICAL);
-		data.add(channel);
-	}
-
-	@Override
-	public byte[] getCallingData() {
-		return data.getBytes();
+		getCallingDataStorage().add(channel);
 	}
 	
 	@Override

@@ -8,21 +8,14 @@ import com.neuronrobotics.sdk.common.InvalidResponseException;
 
 public class ProgramSectionCommand extends BowlerAbstractCommand {
 	
-	private ByteList data = new ByteList();
-	
-	public ProgramSectionCommand(int channel, int address, ByteList data) {
+	public ProgramSectionCommand(int channel, int address, ByteList byteData) {
 		setOpCode("prog");
 		setMethod(BowlerMethod.CRITICAL);
-		data.add(channel);
-		data.addAs32(address);
-		for (byte b:data){
-			data.add(b);
+		getCallingDataStorage().add(channel);
+		getCallingDataStorage().addAs32(address);
+		for (byte b:byteData){
+			getCallingDataStorage().add(b);
 		}
-	}
-
-	@Override
-	public byte[] getCallingData() {
-		return data.getBytes();
 	}
 	
 	@Override
