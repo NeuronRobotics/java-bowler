@@ -292,37 +292,7 @@ public class SerialConnection extends BowlerAbstractConnection {
             		available.add(com.getName());
             	}
             }
-        }
-        
-        //FIXME THis NEEDS to be here to work on Linux systems
-        //NO NOT REMOVE unless the RXTX bug has been fixed to make this un-necessary
-        /*
-        if((System.getProperty("os.name").toLowerCase().indexOf("linux")!=-1)){
-        	String root="/dev/";
-        	File dir = new File(root);
-        	String[] children = dir.list(); 
-        	if (children != null) { // Either dir does not exist or is not a directory 
-    			for (String filename :children){ // Get filename of file or directory 
-    				if (filename.contains("ttyACM") || filename.contains("rfcomm") || 
-    						//filename.contains("ttyS")|| 
-    						filename.contains("ttyUSB") ){
-    					boolean exists = false;
-    					for(String s: available){
-    						if(s.contains(filename)){
-    							exists = true;
-    						}
-    					}
-    					if(!exists)
-    						available.add(root+filename);
-    					
-    				}
-    				
-    			} 
-        		
-        	}
-        }
-        */
-                
+        }                
         return available;
     }
 
