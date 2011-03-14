@@ -252,18 +252,24 @@ public class SerialConnection extends BowlerAbstractConnection {
      * @return    A HashSet containing the CommPortIdentifier for all serial ports that are not currently being used.
      */
 
+	@SuppressWarnings("unchecked")
 	public static List<String> getAvailableSerialPorts() {
         ArrayList<String> available = new ArrayList<String>();
-        //Enumeration<CommPortIdentifier> ports;
         try{
-        	//ports = CommPortIdentifier.getPortIdentifiers();
         	RXTXCommDriver d = new RXTXCommDriver();
         	available=d.getPortIdentifierList();
         }catch( UnsatisfiedLinkError e){
         	e.printStackTrace();
         	throw new MissingNativeLibraryException(e.getMessage());
         }
-        /*
+        
+        Enumeration<CommPortIdentifier> ports;
+        try{
+        	ports = CommPortIdentifier.getPortIdentifiers();
+        }catch( UnsatisfiedLinkError e){
+        	e.printStackTrace();
+        	throw new MissingNativeLibraryException(e.getMessage());
+        }
         while (ports.hasMoreElements()) {
             CommPortIdentifier com = (CommPortIdentifier) ports.nextElement();
             switch (com.getPortType()) {
@@ -275,11 +281,19 @@ public class SerialConnection extends BowlerAbstractConnection {
             	if(com.getName().matches("^/.+/tty\\.Bluetooth.+$")) {
             		continue;
             	}
-            	
-            	available.add(com.getName());
+            	boolean inList=false;
+            	for(String s:available){
+            		if(com.getName().contains(s)){
+            			inList=true;
+            		}
+            	}
+            	if(!inList){
+            		Log.info("Enumerator found: "+com.getName()+" that list detect did not.");
+            		available.add(com.getName());
+            	}
             }
         }
-        */
+        
         //FIXME THis NEEDS to be here to work on Linux systems
         //NO NOT REMOVE unless the RXTX bug has been fixed to make this un-necessary
         /*
