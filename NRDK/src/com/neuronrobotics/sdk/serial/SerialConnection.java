@@ -248,9 +248,6 @@ public class SerialConnection extends BowlerAbstractConnection {
 		return port;
 	}
 	
-	/**
-     * @return    A HashSet containing the CommPortIdentifier for all serial ports that are not currently being used.
-     */
 
 	@SuppressWarnings("unchecked")
 	public static List<String> getAvailableSerialPorts() {
