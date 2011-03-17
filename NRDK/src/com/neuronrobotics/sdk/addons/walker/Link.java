@@ -14,14 +14,16 @@ public class Link {
 	//Actual servo position
 	private int srvVal=0;
 	//private float time=0;
+	private String type;
 	
-	public Link(ServoChannel srv,int home,int lowerLimit,int upperLimit,double scale,double linkLen){
+	public Link(ServoChannel srv,int home,int lowerLimit,int upperLimit,double scale,double linkLen, String type){
 		this.setLinkLen(linkLen);
 		this.scale=scale;
 		this.upperLimit=upperLimit;
 		this.lowerLimit=lowerLimit;
 		this.home=home;
 		this.srv=srv;
+		this.type = type;
 		//Home();
 	}
 	public void Home(){
@@ -42,6 +44,7 @@ public class Link {
 	public void updateServo(double time) {
 		srv.SetPosition(srvVal, (float) time);
 	}
+	
 	public void incrementAngle(double inc,double time){
 		setAngle(pos+inc,time);
 	}
@@ -85,5 +88,35 @@ public class Link {
 	}
 	public void flush() {
 		srv.flush();	
+	}
+	public void loadHomeValuesFromDyIO() {
+		this.home = srv.getValue();
+		if(home>upperLimit)
+			upperLimit=home+1;
+		if(home<lowerLimit)
+			lowerLimit=home-1;
+	}
+	public void setCurrentAsUpperLimit() {
+		upperLimit = srv.getValue();
+	}
+	public void setCurrentAsLowerLimit() {
+		lowerLimit = srv.getValue();
+	}
+	public void setCurrentAsAngle(double angle) {
+		double current = (double)(srv.getValue()-home);
+		scale = angle/current;
+	}
+	public String getLinkXML() {
+		String s="		<link>\n"+
+"			<ulimit>"+upperLimit+"</ulimit>\n"+
+"			<llimit>"+lowerLimit+"</llimit>\n"+
+"			<home>"+home+"</home>\n"+
+"			<channel>"+srv.getChannel().getNumber()+"</channel>\n"+
+"			<inverse>"+((scale>0)?1:-1)+"</inverse>\n"+
+"			<linkLen>"+linkLen+"</linkLen>\n"+
+"			<scale>"+Math.abs(scale)+"</scale>\n"+
+"			<type>"+type+"</type>\n"+
+"		</link>\n";
+		return s;
 	}
 }

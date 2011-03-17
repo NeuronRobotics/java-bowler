@@ -327,4 +327,20 @@ public class Leg {
 		//System.out.println("Attempting to turn, vector legnth: "+currentVectLen + " angle: "+(theta/M_PI)*180+" new x "+x+" new y "+y  );
 		setCartesian(x, y, current[2], time);
 	}
+	public void loadHomeValuesFromDyIO() {
+		for(Link l: links ) {
+			l.loadHomeValuesFromDyIO();
+		}
+	}
+	public String getLegXML() {
+		String s="	<leg>\n"+
+"		<x>"+xOffset+"</x>\n"+
+"		<y>"+yOffset+"</y>\n"+
+"		<theta>"+thetaOffset+"</theta>\n";
+		for(Link l: links ) {
+			s+=l.getLinkXML();
+		}
+		s+="	</leg>\n";
+		return s;
+	}
 }

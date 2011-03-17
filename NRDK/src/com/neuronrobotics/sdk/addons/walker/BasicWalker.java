@@ -73,10 +73,11 @@ public class BasicWalker {
 			    		inverse=Double.parseDouble(getTagValue("inverse",lElement));
 			    		scale = Double.parseDouble(getTagValue("scale",lElement));
 			    		linkLen = Double.parseDouble(getTagValue("linkLen",lElement));
+			    		String type = getTagValue("type",lElement);
 			    		if(useHardware){
 				    		ServoChannel srv = new ServoChannel(dyio.getChannel(channel));
-				    		Link tmpLink = new Link(srv,home,llimit,ulimit,(scale*inverse),linkLen);
-				    		tmpLeg.addLink(tmpLink,getTagValue("type",lElement));
+				    		Link tmpLink = new Link(srv,home,llimit,ulimit,(scale*inverse),linkLen,type);
+				    		tmpLeg.addLink(tmpLink,type);
 			    		}
 		    		}
 		    	}
@@ -88,6 +89,22 @@ public class BasicWalker {
 		    }
 		}
 		System.out.println("Populated Hexapod.");
+	}
+	
+	public void loadHomeValuesFromDyIO() {
+		for(Leg l:legs) {
+			l.loadHomeValuesFromDyIO();
+		}
+	}
+	public String getXML() {
+		String s="<hexapod>\n";
+		for(Leg l:legs) {
+			s+=l.getLegXML();
+		}
+		s+="\n</hexapod>";
+		return s;
+	}
+	public void initialize() {
 		double time=.5;
 		int leg=0;
 		for (Leg l:legs){
@@ -106,11 +123,8 @@ public class BasicWalker {
 		}
 		updateAllServos((float) .5);
 		try {Thread.sleep(2000);} catch (InterruptedException e) {}
-		for (Leg l:legs){
-			l.save();
-		}
-		
 	}
+	
 	public void Home() {
 		for (Leg l:legs){
 			l.Home();
