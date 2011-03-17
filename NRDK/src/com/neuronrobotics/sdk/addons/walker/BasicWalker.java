@@ -52,6 +52,14 @@ public class BasicWalker {
 		dyio.setCachedMode(true);
 		parse(f);
 	}
+	public BasicWalker(InputStream is,DyIO d){
+		//useHardware = false;
+		if(useHardware){
+			dyio=d;
+		}
+		dyio.setCachedMode(true);
+		parse(is);
+	}
 	
 	private void parse(File f) {
 		InputStream is = null;
@@ -87,7 +95,7 @@ public class BasicWalker {
 		//System.out.println("Parsing File...");
 		NodeList nList = doc.getElementsByTagName("leg");
 		for (int temp = 0; temp < nList.getLength(); temp++) {
-			System.out.println("Leg # "+temp);
+			//System.out.println("Leg # "+temp);
 		    Node nNode = nList.item(temp);
 		    ArrayList<Link> legLinks = new ArrayList<Link>();
 		    if (nNode.getNodeType() == Node.ELEMENT_NODE) {
@@ -99,7 +107,7 @@ public class BasicWalker {
 		    	
 		    	NodeList links = eElement.getElementsByTagName("link");
 		    	for (int i = 0; i < links.getLength(); i++) {
-		    		System.out.println("\tLink # "+i);
+		    		//System.out.println("\tLink # "+i);
 		    		Node lNode = links.item(i);
 		    		if (lNode.getNodeType() == Node.ELEMENT_NODE) {
 			    		Element lElement = (Element) lNode;
@@ -120,7 +128,7 @@ public class BasicWalker {
 		    	}
 		    	addLeg(x,y,theta,legLinks);
 		    }else{
-		    	System.out.println("Not Element Node");
+		    	//System.out.println("Not Element Node");
 		    }
 		}
 		System.out.println("Populated Hexapod.");
@@ -161,7 +169,7 @@ public class BasicWalker {
 			if(hipStart<-90)
 				hipStart+=180;	
 
-			System.out.println("Leg : "+leg+" is set to : "+hipStart);
+			//System.out.println("Leg : "+leg+" is set to : "+hipStart);
 			l.setHip(hipStart, time);
 			l.setKnee(0, time);
 			l.setAnkle(-90, time);
@@ -236,7 +244,7 @@ public class BasicWalker {
 	private static String getTagValue(String sTag, Element eElement){
 	    NodeList nlList= eElement.getElementsByTagName(sTag).item(0).getChildNodes();
 	    Node nValue = (Node) nlList.item(0); 
-	    System.out.println("\t\t"+sTag+" = "+nValue.getNodeValue());
+	    //System.out.println("\t\t"+sTag+" = "+nValue.getNodeValue());
 	    return nValue.getNodeValue();    
 	}
 
