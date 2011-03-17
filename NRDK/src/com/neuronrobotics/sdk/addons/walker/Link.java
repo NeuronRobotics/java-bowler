@@ -22,9 +22,8 @@ public class Link {
 		this.upperLimit=upperLimit;
 		this.lowerLimit=lowerLimit;
 		this.home=home;
-		this.srv=srv;
-		this.type = type;
-		//Home();
+		this.setServoChannel(srv);
+		this.setType(type);
 	}
 	public void Home(){
 		setPosition(this.home,2);
@@ -42,7 +41,7 @@ public class Link {
 		srvVal=val;
 	}
 	public void updateServo(double time) {
-		srv.SetPosition(srvVal, (float) time);
+		getServoChannel().SetPosition(srvVal, (float) time);
 	}
 	
 	public void incrementAngle(double inc,double time){
@@ -62,7 +61,7 @@ public class Link {
 		return linkLen;
 	}
 	public void save() {
-		srv.SavePosition(srvVal);
+		getServoChannel().SavePosition(srvVal);
 	}
 	public double getMax() {
 		// TODO Auto-generated method stub
@@ -87,23 +86,23 @@ public class Link {
 		return false;
 	}
 	public void flush() {
-		srv.flush();	
+		getServoChannel().flush();	
 	}
 	public void loadHomeValuesFromDyIO() {
-		this.home = srv.getValue();
+		this.home = getServoChannel().getValue();
 		if(home>upperLimit)
 			upperLimit=home+1;
 		if(home<lowerLimit)
 			lowerLimit=home-1;
 	}
 	public void setCurrentAsUpperLimit() {
-		upperLimit = srv.getValue();
+		upperLimit = getServoChannel().getValue();
 	}
 	public void setCurrentAsLowerLimit() {
-		lowerLimit = srv.getValue();
+		lowerLimit = getServoChannel().getValue();
 	}
 	public void setCurrentAsAngle(double angle) {
-		double current = (double)(srv.getValue()-home);
+		double current = (double)(getServoChannel().getValue()-home);
 		scale = angle/current;
 	}
 	public String getLinkXML() {
@@ -111,12 +110,24 @@ public class Link {
 "			<ulimit>"+upperLimit+"</ulimit>\n"+
 "			<llimit>"+lowerLimit+"</llimit>\n"+
 "			<home>"+home+"</home>\n"+
-"			<channel>"+srv.getChannel().getNumber()+"</channel>\n"+
+"			<channel>"+getServoChannel().getChannel().getNumber()+"</channel>\n"+
 "			<inverse>"+((scale>0)?1:-1)+"</inverse>\n"+
 "			<linkLen>"+linkLen+"</linkLen>\n"+
 "			<scale>"+Math.abs(scale)+"</scale>\n"+
-"			<type>"+type+"</type>\n"+
+"			<type>"+getType()+"</type>\n"+
 "		</link>\n";
 		return s;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	public String getType() {
+		return type;
+	}
+	public void setServoChannel(ServoChannel srv) {
+		this.srv = srv;
+	}
+	public ServoChannel getServoChannel() {
+		return srv;
 	}
 }

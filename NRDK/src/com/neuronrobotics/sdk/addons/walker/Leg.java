@@ -29,7 +29,8 @@ public class Leg {
 	public Link getAnkleLink() {
 		return links.get(2);
 	}
-	public void addLink(Link l,String type){
+	public void addLink(Link l){
+		String type = l.getType();
 		if(type.equalsIgnoreCase("hip")){
 			links.set(0,l);
 			 gotHip=true;
@@ -45,7 +46,6 @@ public class Leg {
 		else{
 			throw new RuntimeException("Unknown link type"+type);
 		}
-		//System.out.println("Added link of the: "+type);
 	}
 	public boolean legOk(){
 		if((gotHip && gotKnee && gotAnkle))			

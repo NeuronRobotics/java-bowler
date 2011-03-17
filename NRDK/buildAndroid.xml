@@ -65,6 +65,7 @@
       <fileset dir="build">
         <include name="**/*.class"/>
       	<include name="**/*.png"/>
+      	<include name="**/*.xml"/>
         <exclude name="test/*.class"/>
       </fileset>
       <zipgroupfileset dir="lib/android" includes="*.jar" />

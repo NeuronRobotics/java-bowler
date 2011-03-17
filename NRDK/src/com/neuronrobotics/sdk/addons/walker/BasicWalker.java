@@ -1,7 +1,16 @@
 package com.neuronrobotics.sdk.addons.walker;
 
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.Writer;
 import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -25,12 +34,41 @@ public class BasicWalker {
 	private int    llimit,ulimit,home,channel;
 	private DyIO dyio;
 	private boolean useHardware = true;
+	public BasicWalker(DyIO d) {
+		dyio=d;
+		dyio.setCachedMode(true);
+		System.out.println("Loading default configuration");
+		parse(BasicWalkerConfig.getDefaultConfigurationStream());
+	}
+	public void addLeg(double x, double y, double theta,ArrayList<Link> links) {
+		Leg tmpLeg = new Leg(x,y,theta);
+		for(Link l:links) {
+			 tmpLeg.addLink(l);
+		}
+		legs.add(tmpLeg);
+	}
 	public BasicWalker(File f,DyIO d){
 		//useHardware = false;
 		if(useHardware){
 			dyio=d;
 		}
 		dyio.setCachedMode(true);
+		parse(f);
+	}
+	
+	private void parse(File f) {
+		InputStream is = null;
+		try {
+			is= new FileInputStream(f);
+		}
+		catch(IOException e) {
+			System.err.println("Error Writing/Reading Streams.");
+		}
+		if(is!=null)
+			parse(is);
+	}
+	
+	private void parse(InputStream is) {
 		/**
 		 * sample code from
 		 * http://www.mkyong.com/java/how-to-read-xml-file-in-java-dom-parser/
@@ -40,7 +78,7 @@ public class BasicWalker {
 	    Document doc = null;
 	    try {
 			dBuilder = dbFactory.newDocumentBuilder();
-			doc = dBuilder.parse(f);
+			doc = dBuilder.parse(is);
 			doc.getDocumentElement().normalize();
 		} catch (ParserConfigurationException e) {
 			throw new RuntimeException(e);
@@ -53,13 +91,15 @@ public class BasicWalker {
 		NodeList nList = doc.getElementsByTagName("leg");
 		for (int temp = 0; temp < nList.getLength(); temp++) {
 			System.out.println("Leg # "+temp);
-		    Node nNode = nList.item(temp);	    
+		    Node nNode = nList.item(temp);
+		    ArrayList<Link> legLinks = new ArrayList<Link>();
 		    if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 		    	Element eElement = (Element) nNode;
 		    	x = Double.parseDouble(getTagValue("x",eElement));
 		    	y = Double.parseDouble(getTagValue("y",eElement));
 		    	theta = Double.parseDouble(getTagValue("theta",eElement));
-		    	Leg tmpLeg = new Leg(x,y,theta);
+		    	//Leg tmpLeg = new Leg(x,y,theta);
+		    	
 		    	NodeList links = eElement.getElementsByTagName("link");
 		    	for (int i = 0; i < links.getLength(); i++) {
 		    		System.out.println("\tLink # "+i);
@@ -77,13 +117,11 @@ public class BasicWalker {
 			    		if(useHardware){
 				    		ServoChannel srv = new ServoChannel(dyio.getChannel(channel));
 				    		Link tmpLink = new Link(srv,home,llimit,ulimit,(scale*inverse),linkLen,type);
-				    		tmpLeg.addLink(tmpLink,type);
+				    		legLinks.add(tmpLink);
 			    		}
 		    		}
 		    	}
-		    	if(!tmpLeg.legOk())
-		    		throw new RuntimeException("Failed to get all leg elements for leg: "+temp);
-		    	legs.add(tmpLeg);
+		    	addLeg(x,y,theta,legLinks);
 		    }else{
 		    	System.out.println("Not Element Node");
 		    }
@@ -103,6 +141,18 @@ public class BasicWalker {
 		}
 		s+="\n</hexapod>";
 		return s;
+	}
+	public void writeXML(File f) {
+		writeXML(f,getXML());
+	}
+	public void writeXML(File f,String xml) {
+	    try {
+	    	Writer output = new BufferedWriter(new FileWriter(f));
+			output.write(xml);
+		    output.close();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 	public void initialize() {
 		double time=.5;
