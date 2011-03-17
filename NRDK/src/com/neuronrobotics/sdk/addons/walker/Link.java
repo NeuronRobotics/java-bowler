@@ -18,7 +18,7 @@ public class Link {
 	
 	public Link(ServoChannel srv,int home,int lowerLimit,int upperLimit,double scale,double linkLen, String type){
 		this.setLinkLen(linkLen);
-		this.scale=scale;
+		this.setScale(scale);
 		this.upperLimit=upperLimit;
 		this.lowerLimit=lowerLimit;
 		this.home=home;
@@ -49,10 +49,10 @@ public class Link {
 	}
 	public void setAngle(double pos,double time) {
 		this.pos = pos;
-		setPosition(((int) (pos/scale))+home,(float) time);
+		setPosition(((int) (pos/getScale()))+home,(float) time);
 	}
 	public double getAngle() {
-		return ((srvVal-home)*scale);
+		return ((srvVal-home)*getScale());
 	}
 	private void setLinkLen(double linkLen) {
 		this.linkLen = linkLen;
@@ -65,11 +65,11 @@ public class Link {
 	}
 	public double getMax() {
 		// TODO Auto-generated method stub
-		return (upperLimit-home)*scale;
+		return (upperLimit-home)*getScale();
 	}
 	public double getMin() {
 		// TODO Auto-generated method stub
-		return (lowerLimit-home)*scale;
+		return (lowerLimit-home)*getScale();
 	}
 	public boolean isMax() {
 		if(srvVal == upperLimit) {
@@ -103,7 +103,8 @@ public class Link {
 	}
 	public void setCurrentAsAngle(double angle) {
 		double current = (double)(getServoChannel().getValue()-home);
-		scale = angle/current;
+		if(current != 0)
+			setScale(angle/current);
 	}
 	public String getLinkXML() {
 		String s="		<link>\n"+
@@ -111,9 +112,9 @@ public class Link {
 "			<llimit>"+lowerLimit+"</llimit>\n"+
 "			<home>"+home+"</home>\n"+
 "			<channel>"+getServoChannel().getChannel().getNumber()+"</channel>\n"+
-"			<inverse>"+((scale>0)?1:-1)+"</inverse>\n"+
+"			<inverse>"+((getScale()>0)?1:-1)+"</inverse>\n"+
 "			<linkLen>"+linkLen+"</linkLen>\n"+
-"			<scale>"+Math.abs(scale)+"</scale>\n"+
+"			<scale>"+Math.abs(getScale())+"</scale>\n"+
 "			<type>"+getType()+"</type>\n"+
 "		</link>\n";
 		return s;
@@ -129,5 +130,11 @@ public class Link {
 	}
 	public ServoChannel getServoChannel() {
 		return srv;
+	}
+	public void setScale(double scale) {
+		this.scale = scale;
+	}
+	public double getScale() {
+		return scale;
 	}
 }
