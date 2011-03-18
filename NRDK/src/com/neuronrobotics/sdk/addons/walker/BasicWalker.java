@@ -247,5 +247,8 @@ public class BasicWalker {
 	    //System.out.println("\t\t"+sTag+" = "+nValue.getNodeValue());
 	    return nValue.getNodeValue();    
 	}
+	public void disconnect() {
+		dyio.disconnect();
+	}
 
 }
