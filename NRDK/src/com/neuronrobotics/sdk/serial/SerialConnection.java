@@ -18,6 +18,7 @@ import gnu.io.CommPort;
 import gnu.io.CommPortIdentifier;
 import gnu.io.PortInUseException;
 import gnu.io.RXTXCommDriver;
+import gnu.io.RXTXPort;
 import gnu.io.SerialPort;
 import gnu.io.UnsupportedCommOperationException;
 
@@ -57,7 +58,7 @@ public class SerialConnection extends BowlerAbstractConnection {
 	private String port=null;
 	private int baud = 115200;
 	
-	private SerialPort serial;
+	private RXTXPort serial;
 	
 	/**
 	 * Default Constructor.
@@ -155,7 +156,7 @@ public class SerialConnection extends BowlerAbstractConnection {
 		
 		try 
 		{
-			CommPort comm = null;
+			RXTXPort comm = null;
 			CommPortIdentifier ident = null;
 			if(SDKInfo.isLinux){
 				if (port.contains("rfcomm")||port.contains("ttyUSB") ||port.contains("ttyS")|| port.contains("ACM") || port.contains("Neuron_Robotics")||port.contains("NR")||port.contains("FTDI")||port.contains("ftdi")){
@@ -185,12 +186,12 @@ public class SerialConnection extends BowlerAbstractConnection {
 				return false;
 			}
 			
-			if ( !(comm instanceof SerialPort) ) {
+			if ( !(comm instanceof RXTXPort) ) {
 				throw new UnsupportedCommOperationException("Non-serial connections are unsupported.");
 			}
 			
-			serial = (SerialPort) comm;
-			
+			serial = (RXTXPort) comm;
+			serial.enableReceiveTimeout(100);
 			serial.setSerialPortParams(baud, SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE);				
 			setDataIns(new DataInputStream(serial.getInputStream()));
 			setDataOuts(new DataOutputStream(serial.getOutputStream()));
@@ -219,9 +220,10 @@ public class SerialConnection extends BowlerAbstractConnection {
 	 */
 	@Override
 	public void disconnect() {
+		if(isConnected())
+			Log.info("Disconnecting Serial Connection");
 		try{
 			super.disconnect();
-			Log.info("Disconnecting Serial Connection");
 			// TODO: [DEV-116] This is a hack for 64bit JVMs
 			//if((!SDKInfo.isOS64bit && !SDKInfo.isVM64bit) || SDKInfo.isLinux) {
 				try{

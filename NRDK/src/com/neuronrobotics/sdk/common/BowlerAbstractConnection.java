@@ -178,10 +178,10 @@ public abstract class BowlerAbstractConnection {
 	 * Disconnect and deactive the current connection.
 	 */
 	public void disconnect(){
-		Log.info("Disconnecting Bowler Connection");
 		if(!isConnected()) {
 			return;
 		}
+		Log.info("Disconnecting Bowler Connection");
 		setConnected(false);
 	}
 
