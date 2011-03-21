@@ -280,9 +280,11 @@ public class DyIOChannel implements IDyIOChannel {
 		}
 		return modes;
 	}
-	
+	private boolean isStreamChannel(){
+		return ((getMode() == DyIOChannelMode.PPM_IN) ||(getMode() == DyIOChannelMode.USART_RX)||(getMode() == DyIOChannelMode.USART_TX));
+	}
 	public int parseDyIOChannelEvent(DyIOChannelEvent e){
-		if((getMode() == DyIOChannelMode.PPM_IN) ||(getMode() == DyIOChannelMode.USART_RX)||(getMode() == DyIOChannelMode.USART_TX))
+		if(isStreamChannel())
 			return 0;
 		return ByteList.convertToInt(e.getData().getBytes());
 	}
@@ -295,7 +297,8 @@ public class DyIOChannel implements IDyIOChannel {
 	protected void fireChannelEvent(DyIOChannelEvent e) {
 		if(getPreviousValue() == parseDyIOChannelEvent(e) ){
 			Log.debug("Value is the same, ignoring");
-			return;
+			if(!isStreamChannel())
+				return;
 		}
 		setPreviousValue(parseDyIOChannelEvent(e));
 		for(IChannelEventListener l : listeners) {
