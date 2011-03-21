@@ -21,7 +21,9 @@ import com.neuronrobotics.sdk.commands.bcs.io.GetChannelModeCommand;
 import com.neuronrobotics.sdk.commands.bcs.io.SetAllChannelValuesCommand;
 import com.neuronrobotics.sdk.commands.bcs.io.setmode.SetChannelModeCommand;
 import com.neuronrobotics.sdk.commands.bcs.pid.DyPID.ConfigureDynamicPIDCommand;
+import com.neuronrobotics.sdk.commands.bcs.safe.SafeModeCommand;
 import com.neuronrobotics.sdk.commands.neuronrobotics.dyio.InfoCommand;
+import com.neuronrobotics.sdk.commands.neuronrobotics.dyio.InfoFirmwareRevisionCommand;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
 import com.neuronrobotics.sdk.common.BowlerDatagram;
@@ -576,11 +578,28 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 			pid.setConnection(getConnection());
 			pid.setAddress(getAddress());
 			pid.connect();
-			startHeartBeat(2000);
+			startHeartBeat(3000);
 			return true;
 		}
 		return false;
 	}
 
-	
+	@Override
+	public void startHeartBeat(long msHeartBeatTime){
+		super.startHeartBeat(msHeartBeatTime);
+		try{
+			BowlerDatagram b = send(new SafeModeCommand(true, (int) msHeartBeatTime));
+		}catch(Exception e){
+			throw new DyIOFirmwareOutOfDateException(e.getMessage());
+		}
+	}
+	@Override
+	public void stopHeartBeat(){
+		super.stopHeartBeat();
+		try{
+			BowlerDatagram b = send(new SafeModeCommand(false, 0));
+		}catch(Exception e){
+			throw new DyIOFirmwareOutOfDateException(e.getMessage());
+		}
+	}
 }
