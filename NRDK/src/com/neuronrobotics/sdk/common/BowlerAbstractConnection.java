@@ -329,10 +329,8 @@ public abstract class BowlerAbstractConnection {
 	 */
 	protected void fireSyncOnResponse(BowlerDatagram datagram) {
 		if(datagram.isSyncronous()){
-			synchronized(listeners){
-				for(IBowlerDatagramListener l : listeners) {
-					l.onAllResponse(datagram);
-				}
+			for(IBowlerDatagramListener l : listeners) {
+				l.onAllResponse(datagram);
 			}
 		}
 	}

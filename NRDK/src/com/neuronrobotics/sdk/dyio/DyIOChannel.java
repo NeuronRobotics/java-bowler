@@ -46,6 +46,7 @@ public class DyIOChannel implements IDyIOChannel {
 	protected int cachedValue = 0;
 	private boolean cachedMode=false;
 	private DyIOAbstractPeripheral dap=null;
+	private int previousValue = 0;
 	/**
 	 * Construct a channel object.
 	 * @param dyio			The DyIO that the channel belongs on
@@ -280,12 +281,23 @@ public class DyIOChannel implements IDyIOChannel {
 		return modes;
 	}
 	
+	public int parseDyIOChannelEvent(DyIOChannelEvent e){
+		if((getMode() == DyIOChannelMode.PPM_IN) ||(getMode() == DyIOChannelMode.USART_RX)||(getMode() == DyIOChannelMode.USART_TX))
+			return 0;
+		return ByteList.convertToInt(e.getData().getBytes());
+	}
+	
 	/**
 	 * 
 	 * 
 	 * @param e
 	 */
 	protected void fireChannelEvent(DyIOChannelEvent e) {
+		if(getPreviousValue() == parseDyIOChannelEvent(e) ){
+			Log.debug("Value is the same, ignoring");
+			return;
+		}
+		setPreviousValue(parseDyIOChannelEvent(e));
 		for(IChannelEventListener l : listeners) {
 			l.onChannelEvent(e);
 		}
@@ -321,6 +333,7 @@ public class DyIOChannel implements IDyIOChannel {
 	@Override
 	public int getValue() {
 		BowlerDatagram response=null;
+		int val=0;
 		try {
 			response = getDevice().send(new GetValueCommand(number));
 		} catch (InvalidResponseException e) {
@@ -332,7 +345,8 @@ public class DyIOChannel implements IDyIOChannel {
 		case DIGITAL_OUT:
 		case SERVO_OUT: 
 		case PWM_OUT:
-			return ByteList.convertToInt(response.getData().getBytes(1), false);
+			val=ByteList.convertToInt(response.getData().getBytes(1), false);
+			break;
 		case COUNT_IN_INT:
 		case COUNT_IN_DIR:
 		case COUNT_IN_HOME:
@@ -340,12 +354,14 @@ public class DyIOChannel implements IDyIOChannel {
 		case COUNT_OUT_DIR:
 		case COUNT_OUT_HOME:
 			byte [] b=response.getData().getBytes(1);
-			int val = ByteList.convertToInt(b, true);
-			return val;
+			val=  ByteList.convertToInt(b, true);
+			break;
 		default:
 			// fail gracefully
 			return 0;
 		} 
+		setPreviousValue(val);
+		return val;
 	}
 	
 	/* (non-Javadoc)
@@ -449,5 +465,13 @@ public class DyIOChannel implements IDyIOChannel {
 
 	public DyIOAbstractPeripheral getDap() {
 		return dap;
+	}
+
+	public void setPreviousValue(int previousValue) {
+		this.previousValue = previousValue;
+	}
+
+	public int getPreviousValue() {
+		return previousValue;
 	}	
 }
