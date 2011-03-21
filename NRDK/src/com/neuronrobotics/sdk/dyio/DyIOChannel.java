@@ -46,7 +46,7 @@ public class DyIOChannel implements IDyIOChannel {
 	protected int cachedValue = 0;
 	private boolean cachedMode=false;
 	private DyIOAbstractPeripheral dap=null;
-	private int previousValue = 0;
+	private int previousValue = 1;
 	/**
 	 * Construct a channel object.
 	 * @param dyio			The DyIO that the channel belongs on
