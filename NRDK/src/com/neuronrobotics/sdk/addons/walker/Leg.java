@@ -343,4 +343,16 @@ public class Leg {
 		s+="	</leg>\n";
 		return s;
 	}
+	public double getLexXOffset() {
+		// TODO Auto-generated method stub
+		return xOffset;
+	}
+	public double  getLexYOffset() {
+		// TODO Auto-generated method stub
+		return yOffset;
+	}
+	public double  getLexThetaOffset() {
+		// TODO Auto-generated method stub
+		return thetaOffset;
+	}
 }

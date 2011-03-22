@@ -19,26 +19,27 @@ public class Link {
 	public Link(ServoChannel srv,int home,int lowerLimit,int upperLimit,double scale,double linkLen, String type){
 		this.setLinkLen(linkLen);
 		this.setScale(scale);
-		this.upperLimit=upperLimit;
-		this.lowerLimit=lowerLimit;
-		this.home=home;
+		this.setUpperLimit(upperLimit);
+		this.setLowerLimit(lowerLimit);
+		this.setHome(home);
 		this.setServoChannel(srv);
 		this.setType(type);
 	}
 	public void Home(){
-		setPosition(this.home,2);
+		setPosition(this.getHome(),2);
 		updateServo(2);
 	}
 	private void setPosition(int val,float time) {
-		if(val>upperLimit)
-			val=upperLimit;
-		if(val<lowerLimit) {
+		if(val>getUpperLimit())
+			val=getUpperLimit();
+		if(val<getLowerLimit()) {
 			//System.out.println("Attempting to set to value:"+val+" is below limit:"+lowerLimit);
-			val=lowerLimit;
+			val=getLowerLimit();
 		}
 		if(srvVal == val)
 			return;
 		srvVal=val;
+		updateServo(time);
 	}
 	public void updateServo(double time) {
 		getServoChannel().SetPosition(srvVal, (float) time);
@@ -49,10 +50,10 @@ public class Link {
 	}
 	public void setAngle(double pos,double time) {
 		this.pos = pos;
-		setPosition(((int) (pos/getScale()))+home,(float) time);
+		setPosition(((int) (pos/getScale()))+getHome(),(float) time);
 	}
 	public double getAngle() {
-		return ((srvVal-home)*getScale());
+		return ((srvVal-getHome())*getScale());
 	}
 	private void setLinkLen(double linkLen) {
 		this.linkLen = linkLen;
@@ -63,54 +64,56 @@ public class Link {
 	public void save() {
 		getServoChannel().SavePosition(srvVal);
 	}
+	
 	public double getMax() {
 		// TODO Auto-generated method stub
-		return (upperLimit-home)*getScale();
+		return (getUpperLimit()-getHome())*getScale();
 	}
 	public double getMin() {
 		// TODO Auto-generated method stub
-		return (lowerLimit-home)*getScale();
+		return (getLowerLimit()-getHome())*getScale();
 	}
 	public boolean isMax() {
-		if(srvVal == upperLimit) {
-			System.out.println("Servo value is :" +srvVal+" upper limit is"+ upperLimit);
+		if(srvVal == getUpperLimit()) {
+			System.out.println("Servo value is :" +srvVal+" upper limit is"+ getUpperLimit());
 			return true;
 		}
 		return false;
 	}
 	public boolean isMin() {
-		if(srvVal == lowerLimit) {
-			System.out.println("Servo value is :" +srvVal+" lower limit is"+ lowerLimit);
+		if(srvVal == getLowerLimit()) {
+			System.out.println("Servo value is :" +srvVal+" lower limit is"+ getLowerLimit());
 			return true;
 		}
 		return false;
 	}
 	public void flush() {
+		
 		getServoChannel().flush();	
 	}
 	public void loadHomeValuesFromDyIO() {
-		this.home = getServoChannel().getValue();
-		if(home>upperLimit)
-			upperLimit=home+1;
-		if(home<lowerLimit)
-			lowerLimit=home-1;
+		this.setHome(getServoChannel().getValue());
+		if(getHome()>getUpperLimit())
+			setUpperLimit(getHome()+1);
+		if(getHome()<getLowerLimit())
+			setLowerLimit(getHome()-1);
 	}
 	public void setCurrentAsUpperLimit() {
-		upperLimit = getServoChannel().getValue();
+		setUpperLimit(getServoChannel().getValue());
 	}
 	public void setCurrentAsLowerLimit() {
-		lowerLimit = getServoChannel().getValue();
+		setLowerLimit(getServoChannel().getValue());
 	}
 	public void setCurrentAsAngle(double angle) {
-		double current = (double)(getServoChannel().getValue()-home);
+		double current = (double)(getServoChannel().getValue()-getHome());
 		if(current != 0)
 			setScale(angle/current);
 	}
 	public String getLinkXML() {
 		String s="		<link>\n"+
-"			<ulimit>"+upperLimit+"</ulimit>\n"+
-"			<llimit>"+lowerLimit+"</llimit>\n"+
-"			<home>"+home+"</home>\n"+
+"			<ulimit>"+getUpperLimit()+"</ulimit>\n"+
+"			<llimit>"+getLowerLimit()+"</llimit>\n"+
+"			<home>"+getHome()+"</home>\n"+
 "			<channel>"+getServoChannel().getChannel().getNumber()+"</channel>\n"+
 "			<inverse>"+((getScale()>0)?1:-1)+"</inverse>\n"+
 "			<linkLen>"+linkLen+"</linkLen>\n"+
@@ -126,6 +129,8 @@ public class Link {
 		return type;
 	}
 	public void setServoChannel(ServoChannel srv) {
+		//System.out.println("Setting new servo channel: "+srv.getChannel().getNumber());
+		srv.getChannel().setCachedMode(true);
 		this.srv = srv;
 	}
 	public ServoChannel getServoChannel() {
@@ -136,5 +141,27 @@ public class Link {
 	}
 	public double getScale() {
 		return scale;
+	}
+	public void setUpperLimit(int upperLimit) {
+		this.upperLimit = upperLimit;
+	}
+	public int getUpperLimit() {
+		return upperLimit;
+	}
+	public void setLowerLimit(int lowerLimit) {
+		this.lowerLimit = lowerLimit;
+	}
+	public int getLowerLimit() {
+		return lowerLimit;
+	}
+	public void setHome(int home) {
+		this.home = home;
+	}
+	public int getHome() {
+		return home;
+	}
+	public void setServoValue(int val) {
+		setPosition(val,0);
+		srv.flush();
 	}
 }

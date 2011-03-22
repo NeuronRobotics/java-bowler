@@ -10,7 +10,7 @@
 			<channel>9</channel>
 			<inverse>-1</inverse>
 			<linkLen>0.59</linkLen>
-			<scale>0.8256</scale>
+			<scale>0.9090909090909091</scale>
 			<type>hip</type>
 		</link>
 		<link>
@@ -20,7 +20,7 @@
 			<channel>10</channel>
 			<inverse>1</inverse>
 			<linkLen>1.41</linkLen>
-			<scale>0.8256</scale>
+			<scale>0.9090909090909091</scale>
 			<type>knee</type>
 		</link>
 		<link>
@@ -30,7 +30,7 @@
 			<channel>11</channel>
 			<inverse>-1</inverse>
 			<linkLen>1.97</linkLen>
-			<scale>0.8256</scale>
+			<scale>0.9090909090909091</scale>
 			<type>ankle</type>
 		</link>
 	</leg>
@@ -45,7 +45,7 @@
 			<channel>6</channel>
 			<inverse>-1</inverse>
 			<linkLen>0.59</linkLen>
-			<scale>0.8256</scale>
+			<scale>0.9090909090909091</scale>
 			<type>hip</type>
 		</link>
 		<link>
@@ -55,7 +55,7 @@
 			<channel>7</channel>
 			<inverse>-1</inverse>
 			<linkLen>1.41</linkLen>
-			<scale>0.8256</scale>
+			<scale>0.9090909090909091</scale>
 			<type>knee</type>
 		</link>
 		<link>
@@ -65,7 +65,7 @@
 			<channel>8</channel>
 			<inverse>1</inverse>
 			<linkLen>1.97</linkLen>
-			<scale>0.8256</scale>
+			<scale>0.9090909090909091</scale>
 			<type>ankle</type>
 		</link>
 	</leg>
@@ -80,7 +80,7 @@
 			<channel>3</channel>
 			<inverse>-1</inverse>
 			<linkLen>0.59</linkLen>
-			<scale>0.8256</scale>
+			<scale>0.9090909090909091</scale>
 			<type>hip</type>
 		</link>
 		<link>
@@ -90,7 +90,7 @@
 			<channel>4</channel>
 			<inverse>-1</inverse>
 			<linkLen>1.41</linkLen>
-			<scale>0.8256</scale>
+			<scale>0.9090909090909091</scale>
 			<type>knee</type>
 		</link>
 		<link>
@@ -100,7 +100,7 @@
 			<channel>5</channel>
 			<inverse>1</inverse>
 			<linkLen>1.97</linkLen>
-			<scale>0.8256</scale>
+			<scale>0.9090909090909091</scale>
 			<type>ankle</type>
 		</link>
 	</leg>
@@ -115,7 +115,7 @@
 			<channel>20</channel>
 			<inverse>-1</inverse>
 			<linkLen>0.59</linkLen>
-			<scale>0.8256</scale>
+			<scale>0.9090909090909091</scale>
 			<type>hip</type>
 		</link>
 		<link>
@@ -125,7 +125,7 @@
 			<channel>19</channel>
 			<inverse>1</inverse>
 			<linkLen>1.41</linkLen>
-			<scale>0.8256</scale>
+			<scale>0.9090909090909091</scale>
 			<type>knee</type>
 		</link>
 		<link>
@@ -135,7 +135,7 @@
 			<channel>18</channel>
 			<inverse>-1</inverse>
 			<linkLen>1.97</linkLen>
-			<scale>0.8256</scale>
+			<scale>0.9090909090909091</scale>
 			<type>ankle</type>
 		</link>
 	</leg>
@@ -150,7 +150,7 @@
 			<channel>17</channel>
 			<inverse>-1</inverse>
 			<linkLen>0.59</linkLen>
-			<scale>0.8256</scale>
+			<scale>0.9090909090909091</scale>
 			<type>hip</type>
 		</link>
 		<link>
@@ -160,7 +160,7 @@
 			<channel>16</channel>
 			<inverse>1</inverse>
 			<linkLen>1.41</linkLen>
-			<scale>0.8256</scale>
+			<scale>0.9090909090909091</scale>
 			<type>knee</type>
 		</link>
 		<link>
@@ -170,7 +170,7 @@
 			<channel>15</channel>
 			<inverse>-1</inverse>
 			<linkLen>1.97</linkLen>
-			<scale>0.8256</scale>
+			<scale>0.9090909090909091</scale>
 			<type>ankle</type>
 		</link>
 	</leg>
@@ -185,7 +185,7 @@
 			<channel>14</channel>
 			<inverse>-1</inverse>
 			<linkLen>0.59</linkLen>
-			<scale>0.8256</scale>
+			<scale>0.9090909090909091</scale>
 			<type>hip</type>
 		</link>
 		<link>
@@ -195,7 +195,7 @@
 			<channel>13</channel>
 			<inverse>-1</inverse>
 			<linkLen>1.41</linkLen>
-			<scale>0.8256</scale>
+			<scale>0.9090909090909091</scale>
 			<type>knee</type>
 		</link>
 		<link>
@@ -205,8 +205,9 @@
 			<channel>12</channel>
 			<inverse>1</inverse>
 			<linkLen>1.97</linkLen>
-			<scale>0.8256</scale>
+			<scale>0.9090909090909091</scale>
 			<type>ankle</type>
 		</link>
 	</leg>
+
 </hexapod>
