@@ -15,7 +15,7 @@
 		</link>
 		<link>
 			<ulimit>203</ulimit>
-			<llimit>36</llimit>
+			<llimit>56</llimit>
 			<home>132</home>
 			<channel>10</channel>
 			<inverse>1</inverse>
@@ -24,7 +24,7 @@
 			<type>knee</type>
 		</link>
 		<link>
-			<ulimit>203</ulimit>
+			<ulimit>185</ulimit>
 			<llimit>36</llimit>
 			<home>48</home>
 			<channel>11</channel>
@@ -50,7 +50,7 @@
 		</link>
 		<link>
 			<ulimit>203</ulimit>
-			<llimit>36</llimit>
+			<llimit>50</llimit>
 			<home>128</home>
 			<channel>7</channel>
 			<inverse>-1</inverse>
@@ -60,7 +60,7 @@
 		</link>
 		<link>
 			<ulimit>203</ulimit>
-			<llimit>36</llimit>
+			<llimit>53</llimit>
 			<home>192</home>
 			<channel>8</channel>
 			<inverse>1</inverse>
