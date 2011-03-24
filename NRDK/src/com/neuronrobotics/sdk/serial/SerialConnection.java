@@ -193,7 +193,6 @@ public class SerialConnection extends BowlerAbstractConnection {
 				e.printStackTrace();
 				//throw new RuntimeException(e);
 			}
-
 			serial = null;
 			setConnected(false);
 		} catch(UnsatisfiedLinkError e) {
