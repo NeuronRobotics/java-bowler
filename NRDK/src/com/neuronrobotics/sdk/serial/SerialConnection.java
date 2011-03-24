@@ -16,6 +16,7 @@ package com.neuronrobotics.sdk.serial;
 
 import gnu.io.CommPort;
 import gnu.io.CommPortIdentifier;
+import gnu.io.NRSerialPort;
 import gnu.io.PortInUseException;
 import gnu.io.RXTXCommDriver;
 import gnu.io.RXTXPort;
@@ -58,7 +59,7 @@ public class SerialConnection extends BowlerAbstractConnection {
 	private String port=null;
 	private int baud = 115200;
 	
-	private RXTXPort serial;
+	private NRSerialPort serial;
 	
 	/**
 	 * Default Constructor.
@@ -156,52 +157,14 @@ public class SerialConnection extends BowlerAbstractConnection {
 		
 		try 
 		{
-			RXTXPort comm = null;
-			CommPortIdentifier ident = null;
-			if(SDKInfo.isLinux){
-				if (port.contains("rfcomm")||port.contains("ttyUSB") ||port.contains("ttyS")|| port.contains("ACM") || port.contains("Neuron_Robotics")||port.contains("NR")||port.contains("FTDI")||port.contains("ftdi")){
-					System.setProperty("gnu.io.rxtx.SerialPorts", port);
-				}
-			}
-			
-			ident = CommPortIdentifier.getPortIdentifier(port);
-			if(ident.isCurrentlyOwned()) {
-				if(SDKInfo.isUnix){
-					String name = ManagementFactory.getRuntimeMXBean().getName();
-					String owner = ident.getCurrentOwner();
-					System.err.println("Owner :"+owner+" This Process:"+name);
-					if (!owner.contains(name)){
-						throw new PortInUseException();
-					}
-				}else{
-					System.err.println("Not a unix machine");
-					throw new PortInUseException();
-				}
-			}
-
-			try{
-				comm = ident.open(SDKInfo.NAME, 2000);
-			}catch (PortInUseException e) {
-				Log.error("This is a bug, passed the ownership test above: " + e.getMessage());
-				return false;
-			}
-			
-			if ( !(comm instanceof RXTXPort) ) {
-				throw new UnsupportedCommOperationException("Non-serial connections are unsupported.");
-			}
-			
-			serial = (RXTXPort) comm;
-			serial.enableReceiveTimeout(100);
-			serial.setSerialPortParams(baud, SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE);				
+			serial = new NRSerialPort(getPort(), baud);
+			serial.connect();	
 			setDataIns(new DataInputStream(serial.getInputStream()));
 			setDataOuts(new DataOutputStream(serial.getOutputStream()));
 			setConnected(true);
 		}catch(UnsatisfiedLinkError e){
 			throw new MissingNativeLibraryException(e.getMessage());
-        }catch (PortInUseException e) {
-			Log.error("Port is alreay in use by: " + e.getMessage());
-			setConnected(false);
-		}catch (Exception e) {
+        }catch (Exception e) {
 			Log.error("Failed to connect on port: "+port+" exception: ");
 			e.printStackTrace();
 			setConnected(false);
@@ -224,17 +187,13 @@ public class SerialConnection extends BowlerAbstractConnection {
 			Log.info("Disconnecting Serial Connection");
 		try{
 			super.disconnect();
-			// TODO: [DEV-116] This is a hack for 64bit JVMs
-			//if((!SDKInfo.isOS64bit && !SDKInfo.isVM64bit) || SDKInfo.isLinux) {
-				try{
-					serial.close();
-				}catch (NullPointerException n){
-					
-				}catch(Exception e){
-					e.printStackTrace();
-					//throw new RuntimeException(e);
-				}
-			//}
+			try{
+				serial.disconnect();
+			}catch(Exception e){
+				e.printStackTrace();
+				//throw new RuntimeException(e);
+			}
+
 			serial = null;
 			setConnected(false);
 		} catch(UnsatisfiedLinkError e) {
@@ -250,18 +209,8 @@ public class SerialConnection extends BowlerAbstractConnection {
 		return port;
 	}
 	
-
-	@SuppressWarnings("unchecked")
 	public static List<String> getAvailableSerialPorts() {
-        ArrayList<String> available = new ArrayList<String>();
-        try{
-        	RXTXCommDriver d = new RXTXCommDriver();
-        	available=d.getPortIdentifierList();
-        }catch( UnsatisfiedLinkError e){
-        	e.printStackTrace();
-        	throw new MissingNativeLibraryException(e.getMessage());
-        }  
-        return available;
+        return NRSerialPort.getAvailableSerialPorts();
     }
 
 	/* (non-Javadoc)
