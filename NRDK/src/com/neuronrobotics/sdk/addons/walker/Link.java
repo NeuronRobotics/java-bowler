@@ -36,13 +36,13 @@ public class Link {
 			//System.out.println("Attempting to set to value:"+val+" is below limit:"+lowerLimit);
 			val=getLowerLimit();
 		}
-		if(srvVal == val)
+		if(getServoSetPoint() == val)
 			return;
-		srvVal=val;
+		setServoSetPoint(val);
 		updateServo(time);
 	}
 	public void updateServo(double time) {
-		getServoChannel().SetPosition(srvVal, (float) time);
+		getServoChannel().SetPosition(getServoSetPoint(), (float) time);
 	}
 	
 	public void incrementAngle(double inc,double time){
@@ -53,7 +53,7 @@ public class Link {
 		setPosition(((int) (pos/getScale()))+getHome(),(float) time);
 	}
 	public double getAngle() {
-		return ((srvVal-getHome())*getScale());
+		return ((getServoSetPoint()-getHome())*getScale());
 	}
 	private void setLinkLen(double linkLen) {
 		this.linkLen = linkLen;
@@ -62,7 +62,7 @@ public class Link {
 		return linkLen;
 	}
 	public void save() {
-		getServoChannel().SavePosition(srvVal);
+		getServoChannel().SavePosition(getServoSetPoint());
 	}
 	
 	public double getMax() {
@@ -74,15 +74,15 @@ public class Link {
 		return (getLowerLimit()-getHome())*getScale();
 	}
 	public boolean isMax() {
-		if(srvVal == getUpperLimit()) {
-			System.out.println("Servo value is :" +srvVal+" upper limit is"+ getUpperLimit());
+		if(getServoSetPoint() == getUpperLimit()) {
+			System.out.println("Servo value is :" +getServoSetPoint()+" upper limit is"+ getUpperLimit());
 			return true;
 		}
 		return false;
 	}
 	public boolean isMin() {
-		if(srvVal == getLowerLimit()) {
-			System.out.println("Servo value is :" +srvVal+" lower limit is"+ getLowerLimit());
+		if(getServoSetPoint() == getLowerLimit()) {
+			System.out.println("Servo value is :" +getServoSetPoint()+" lower limit is"+ getLowerLimit());
 			return true;
 		}
 		return false;
@@ -163,5 +163,11 @@ public class Link {
 	public void setServoValue(int val) {
 		setPosition(val,0);
 		srv.flush();
+	}
+	public void setServoSetPoint(int srvVal) {
+		this.srvVal = srvVal;
+	}
+	public int getServoSetPoint() {
+		return srvVal;
 	}
 }
