@@ -209,7 +209,11 @@ public class SerialConnection extends BowlerAbstractConnection {
 	}
 	
 	public static List<String> getAvailableSerialPorts() {
-        return NRSerialPort.getAvailableSerialPorts();
+		ArrayList<String> back = new  ArrayList<String>();
+		for(String s:NRSerialPort.getAvailableSerialPorts()){
+			back.add(s);
+		}
+        return back;
     }
 
 	/* (non-Javadoc)
