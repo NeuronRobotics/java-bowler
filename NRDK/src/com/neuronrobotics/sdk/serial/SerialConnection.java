@@ -260,38 +260,7 @@ public class SerialConnection extends BowlerAbstractConnection {
         }catch( UnsatisfiedLinkError e){
         	e.printStackTrace();
         	throw new MissingNativeLibraryException(e.getMessage());
-        }
-        
-        Enumeration<CommPortIdentifier> ports;
-        try{
-        	ports = CommPortIdentifier.getPortIdentifiers();
-        }catch( UnsatisfiedLinkError e){
-        	e.printStackTrace();
-        	throw new MissingNativeLibraryException(e.getMessage());
-        }
-        while (ports.hasMoreElements()) {
-            CommPortIdentifier com = (CommPortIdentifier) ports.nextElement();
-            switch (com.getPortType()) {
-            case CommPortIdentifier.PORT_SERIAL:
-            	if(com.getName().matches("^/.+/cu\\..+$")) {
-            		continue;
-            	}
-            	
-            	if(com.getName().matches("^/.+/tty\\.Bluetooth.+$")) {
-            		continue;
-            	}
-            	boolean inList=false;
-            	for(String s:available){
-            		if(com.getName().contains(s)){
-            			inList=true;
-            		}
-            	}
-            	if(!inList){
-            		Log.info("Enumerator found: "+com.getName()+" that list detect did not.");
-            		available.add(com.getName());
-            	}
-            }
-        }                
+        }  
         return available;
     }
 
