@@ -21,6 +21,7 @@ import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
 import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.Log;
+import com.neuronrobotics.sdk.util.ThreadUtil;
 
 public class BowlerCamDevice extends BowlerAbstractDevice {
 	private ByteList tmp = new ByteList();
@@ -47,22 +48,54 @@ public class BowlerCamDevice extends BowlerAbstractDevice {
 
 	}
 	public BufferedImage getHighSpeedImage(int cam) throws MalformedURLException, IOException {
-		while(urls.size()<=cam && isAvailable()){
+		System.out.println("Getting HighSpeedImage");
+		while(urls.size()<(cam+1) && isAvailable()){
+			Log.info("Adding dummy url: "+urls.size());
 			urls.add(null);
 		}
-		while(images.size() <= cam && isAvailable()){
+		while(images.size() <(cam+1) && isAvailable()){
+			Log.info("Adding dummy image: "+images);
 			images.add(null);
 		}
-		if(urls.get(cam) == null)
-			getImageServerURL(cam);
+		if(urls.get(cam) == null){
+			System.out.println("URL List element is empty: "+urls);
+			urls.set(cam,getImageServerURL(cam));
+		}
 		try {
-			images.set(cam,ImageIO.read(new URL(urls.get(cam))));
+			System.out.println("Reading: "+urls.get(cam) );
+			ImageReader ir = new ImageReader(cam);
+			ir.start();
+			long start = System.currentTimeMillis();
+			while(((System.currentTimeMillis()-start)<200) && ir.isDone()==false){
+				ThreadUtil.wait(5);
+			}
+			if(ir.isDone())
+				System.out.println("Read ok");
+			else
+				Log.error("Image read timed out");
 		}catch(Exception ex) {
-			System.err.println("Image capture failed");
+			//Log.error("Image capture failed");	
 		}
 		return images.get(cam);
 	}
-	
+	private class ImageReader extends Thread{
+		int cam;
+		private boolean done=false;
+		public ImageReader(int cam){
+			this.cam=cam;
+		}
+		public void run(){
+				try {
+					images.set(cam,ImageIO.read(new URL(urls.get(cam))));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				done=(true);
+		}
+		public boolean isDone() {
+			return done;
+		}
+	}
 	@Override
 	public void onAsyncResponse(BowlerDatagram data) {
 		if(data.getRPC().contains("_img")){
@@ -112,11 +145,14 @@ public class BowlerCamDevice extends BowlerAbstractDevice {
 		return send(new ImageCommand(chan, scale))==null;
 	}
 	public String getImageServerURL(int chan){
-		BowlerDatagram b=send(new ImageURLCommand(chan));
-		while(urls.size()<=chan && isAvailable()){
+		//Log.info("Requesting image server URL");
+		while(urls.size() < (chan+1) && isAvailable()){
 			urls.add(null);
 		}
-		urls.add(chan,b.getData().asString());
+		if(urls.get(chan) != null)
+			return urls.get(chan);
+		BowlerDatagram b=send(new ImageURLCommand(chan));
+		urls.set(chan,b.getData().asString());
 		return urls.get(chan);
 	}
 	public BufferedImage getImage(int chan) {
@@ -178,12 +214,17 @@ public class BowlerCamDevice extends BowlerAbstractDevice {
 			System.out.println("Starting auto capture on: "+getImageServerURL(cam));
 			long st = System.currentTimeMillis();
 			while(running && isAvailable()) {
+				System.out.println("Getting image from: "+getImageServerURL(cam));
 				try {
+					System.out.println("Capturing");
 					BufferedImage im =getHighSpeedImage(cam);
 					if(scale>1.01||scale<.99)
 						im = resize(im, scale);
-					if(im!=null)
+					if(im!=null){
+						System.out.println("Fireing");
 						fireIWebcamImageListenerEvent(cam,im);
+					}
+					System.out.println("ok");
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
