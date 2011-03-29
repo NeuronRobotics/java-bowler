@@ -24,6 +24,7 @@ import java.net.UnknownHostException;
 
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.Log;
+import com.neuronrobotics.sdk.util.ThreadUtil;
 
 
 
@@ -32,7 +33,7 @@ import com.neuronrobotics.sdk.common.Log;
  */
 public class BowlerTCPServer extends BowlerAbstractConnection{
 	private int sleepTime = 1000;
-	private int pollTimeoutTime = 5;
+	private int pollTimeoutTime = 20;
 	
 	private ServerSocket tcpSock = null;
 	private Socket connectionSocket=null;
@@ -80,9 +81,11 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 		if(tcpSock != null)
 			tcpSock.close();
 		ServerSocket serverSocket = new ServerSocket(port);
-		while(!serverSocket.isBound());
+		while(!serverSocket.isBound()){
+			ThreadUtil.wait(100);
+		}
 		tcpSock = serverSocket;
-		setConnected(true);
+		connect();
 	}
 	
 	/* (non-Javadoc)
@@ -100,7 +103,7 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 		}
 		tcp = new TCPListener();
 		tcp.start();
-		
+		setConnected(true);
 		return isConnected();	
 	}
 	
@@ -122,11 +125,11 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 	
 	private class TCPListener extends Thread {
 		public void run(){
-			Log.info("Starting the TCP listener...");
+			//Log.info("Starting the TCP listener...");
 			
 			while(isConnected()){
 				try {
-					Log.info("Waiting for next connection...");
+					//Log.info("Waiting for next connection...");
 					connectionSocket = tcpSock.accept();
 					Log.info("\nGot connection..");
 					setDataIns(new DataInputStream(connectionSocket.getInputStream()));
@@ -136,7 +139,7 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 					setConnected(false);
 					throw new RuntimeException(e1);
 				}
-				Log.info("..OK!\n");
+				//Log.info("..OK!\n");
 			}
 		}
 	}

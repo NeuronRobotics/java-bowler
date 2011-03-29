@@ -86,7 +86,7 @@ public class BowlerCamDevice extends BowlerAbstractDevice {
 				try {
 					images.set(cam,ImageIO.read(new URL(urls.get(cam))));
 				} catch (Exception e) {
-					e.printStackTrace();
+					Log.error("Image Read threw an exception: "+e.getMessage());
 				}
 				done=(true);
 		}

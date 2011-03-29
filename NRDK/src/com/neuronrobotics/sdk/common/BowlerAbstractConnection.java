@@ -477,7 +477,9 @@ public abstract class BowlerAbstractConnection {
 		private ByteList buffer = new ByteList();
 		public void run() {
 			//wait for the data stream to stabilize
-			while(getDataIns() == null);
+			while(getDataIns() == null){
+				ThreadUtil.wait(100);
+			}
 			while(isConnected()) {
 				try {
 					if(getDataIns().available()>0){
