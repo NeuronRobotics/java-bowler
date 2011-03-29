@@ -48,7 +48,7 @@ public class BowlerCamDevice extends BowlerAbstractDevice {
 
 	}
 	public BufferedImage getHighSpeedImage(int cam) throws MalformedURLException, IOException {
-		System.out.println("Getting HighSpeedImage");
+		//System.out.println("Getting HighSpeedImage");
 		while(urls.size()<(cam+1) && isAvailable()){
 			Log.info("Adding dummy url: "+urls.size());
 			urls.add(null);
@@ -58,20 +58,18 @@ public class BowlerCamDevice extends BowlerAbstractDevice {
 			images.add(null);
 		}
 		if(urls.get(cam) == null){
-			System.out.println("URL List element is empty: "+urls);
+			//System.out.println("URL List element is empty: "+urls);
 			urls.set(cam,getImageServerURL(cam));
 		}
 		try {
-			System.out.println("Reading: "+urls.get(cam) );
+			//System.out.println("Reading: "+urls.get(cam) );
 			ImageReader ir = new ImageReader(cam);
 			ir.start();
 			long start = System.currentTimeMillis();
 			while(((System.currentTimeMillis()-start)<200) && ir.isDone()==false){
 				ThreadUtil.wait(5);
 			}
-			if(ir.isDone())
-				System.out.println("Read ok");
-			else
+			if(!ir.isDone())
 				Log.error("Image read timed out");
 		}catch(Exception ex) {
 			//Log.error("Image capture failed");	
@@ -109,7 +107,7 @@ public class BowlerCamDevice extends BowlerAbstractDevice {
 				tmp.add(imgData);
 			}
 			if(index == (total)){
-				//System.out.println("Making image");
+				////System.out.println("Making image");
 		        BufferedImage image=null;
 				try {
 					synchronized(tmp) {
@@ -125,7 +123,7 @@ public class BowlerCamDevice extends BowlerAbstractDevice {
 				}
 				images.set(camera, image);
 				fireIWebcamImageListenerEvent(camera,images.get(camera));
-				System.out.println("Image OK");
+				//System.out.println("Image OK");
 			}
 			
 		}
@@ -208,32 +206,32 @@ public class BowlerCamDevice extends BowlerAbstractDevice {
 				return;
 			}
 			mspf = (int)(1000.0/((double)fps));
-			System.out.println("MS/frame: "+mspf);
+			//System.out.println("MS/frame: "+mspf);
 		}
 		public void run() {
-			System.out.println("Starting auto capture on: "+getImageServerURL(cam));
+			//System.out.println("Starting auto capture on: "+getImageServerURL(cam));
 			long st = System.currentTimeMillis();
 			while(running && isAvailable()) {
-				System.out.println("Getting image from: "+getImageServerURL(cam));
+				//System.out.println("Getting image from: "+getImageServerURL(cam));
 				try {
-					System.out.println("Capturing");
+					//System.out.println("Capturing");
 					BufferedImage im =getHighSpeedImage(cam);
 					if(scale>1.01||scale<.99)
 						im = resize(im, scale);
 					if(im!=null){
-						System.out.println("Fireing");
+						//System.out.println("Fireing");
 						fireIWebcamImageListenerEvent(cam,im);
 					}
-					System.out.println("ok");
+					//System.out.println("ok");
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 				if(mspf != 0) {
 					long diff = System.currentTimeMillis() - st;
-					//System.out.print("\nMS diff: "+diff);
+					////System.out.print("\nMS diff: "+diff);
 					if(diff<mspf) {
 						try {
-							//System.out.print(" sleeping: "+(mspf-diff));
+							////System.out.print(" sleeping: "+(mspf-diff));
 							Thread.sleep(mspf-diff);
 						} catch (InterruptedException e) {
 						}
@@ -243,7 +241,7 @@ public class BowlerCamDevice extends BowlerAbstractDevice {
 			}
 		}
 		public void kill() {
-			System.out.println("Killing auto capture on cam: "+cam);
+			//System.out.println("Killing auto capture on cam: "+cam);
 			running = false;
 		}
 	}
