@@ -20,13 +20,15 @@ import java.util.ArrayList;
 import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIOChannel;
+import com.neuronrobotics.sdk.dyio.DyIOChannelEvent;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
+import com.neuronrobotics.sdk.dyio.IChannelEventListener;
 
 
 /**
  * 
  */
-public class CounterOutputChannel extends DyIOAbstractPeripheral {
+public class CounterOutputChannel extends DyIOAbstractPeripheral implements IChannelEventListener{
 	private ArrayList<ICounterOutputListener> listeners = new ArrayList<ICounterOutputListener>();
 	/**
 	 * CounterChannel.
@@ -36,13 +38,19 @@ public class CounterOutputChannel extends DyIOAbstractPeripheral {
 	 */
 	public CounterOutputChannel(DyIOChannel channel) {
 		super(channel,DyIOChannelMode.COUNT_OUT_INT);
-		
+		init(channel,false);
+	}
+	public CounterOutputChannel(DyIOChannel channel,boolean isAsync) {
+		super(channel,DyIOChannelMode.COUNT_OUT_INT);
+		init(channel,isAsync);
+	}
+	private void init(DyIOChannel channel,boolean isAsync){
 		DyIOChannelMode mode = DyIOChannelMode.COUNT_OUT_INT;
-		
-		if(!setMode()) {
+		channel.addChannelEventListener(this);
+		if(!channel.setMode(mode, isAsync)) {
 			throw new DyIOPeripheralException("Could not set channel " + channel + " to " + mode + " mode.");
 		}
-
+		channel.resync(true);
 	}
 	/**
 	 * addCounterOutputListener.
@@ -99,6 +107,17 @@ public class CounterOutputChannel extends DyIOAbstractPeripheral {
 		ByteList b = new ByteList();
 		b.addAs32(value);
 		return setValue(b);
+	}
+	/**
+	 * onChannelEvent Send the counter value to all the listening objects.
+	 * 
+	 * @param e
+	 */
+	@Override
+	public void onChannelEvent(DyIOChannelEvent e) {
+		byte []  b = e.getData().getBytes();
+		int data = ByteList.convertToInt(b,true);
+		fireOnCounterOutput(data);
 	}
 
 }
