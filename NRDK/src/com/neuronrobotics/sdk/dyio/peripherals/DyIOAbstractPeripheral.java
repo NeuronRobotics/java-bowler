@@ -14,9 +14,7 @@
  ******************************************************************************/
 package com.neuronrobotics.sdk.dyio.peripherals;
 
-import com.neuronrobotics.sdk.commands.bcs.io.AsyncMode;
 import com.neuronrobotics.sdk.commands.bcs.io.AsyncThreshholdEdgeType;
-import com.neuronrobotics.sdk.commands.bcs.io.ConfigAsyncCommand;
 import com.neuronrobotics.sdk.commands.bcs.io.SetChannelValueCommand;
 import com.neuronrobotics.sdk.common.ISendable;
 import com.neuronrobotics.sdk.common.InvalidResponseException;
