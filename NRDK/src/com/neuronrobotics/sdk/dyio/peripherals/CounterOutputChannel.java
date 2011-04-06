@@ -15,6 +15,8 @@
 package com.neuronrobotics.sdk.dyio.peripherals;
 
 
+import java.util.ArrayList;
+
 import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIOChannel;
@@ -25,7 +27,7 @@ import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
  * 
  */
 public class CounterOutputChannel extends DyIOAbstractPeripheral {
-	
+	private ArrayList<ICounterOutputListener> listeners = new ArrayList<ICounterOutputListener>();
 	/**
 	 * CounterChannel.
 	 * 
@@ -41,6 +43,51 @@ public class CounterOutputChannel extends DyIOAbstractPeripheral {
 			throw new DyIOPeripheralException("Could not set channel " + channel + " to " + mode + " mode.");
 		}
 
+	}
+	/**
+	 * addCounterOutputListener.
+	 * 
+	 * @param l
+	 *            add this listener to this channels event listeners
+	 */
+	public void addCounterOutputListener(ICounterOutputListener l) {
+		if(listeners.contains(l)) {
+			return;
+		}
+		
+		listeners.add(l);
+	}
+	
+	/**
+	 * removeCounterOutputListener.
+	 * 
+	 * @param l
+	 *            remove this listener to this channels event listeners
+	 */
+	public void removeCounterOutputListener(ICounterOutputListener l) {
+		if(!listeners.contains(l)) {
+			return;
+		}
+		
+		listeners.add(l);
+	}
+	
+	/**
+	 * 
+	 */
+	public void removeAllCounterOutputListeners() {
+		listeners.clear();
+	}
+	
+	/**
+	 * 
+	 * 
+	 * @param value
+	 */
+	protected void fireOnCounterOutput(int value) {
+		for(ICounterOutputListener l : listeners) {
+			l.onCounterValueChange(this, value);
+		}
 	}
 	
 	/* (non-Javadoc)
