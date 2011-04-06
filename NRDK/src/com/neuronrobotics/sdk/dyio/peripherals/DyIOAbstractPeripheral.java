@@ -14,6 +14,9 @@
  ******************************************************************************/
 package com.neuronrobotics.sdk.dyio.peripherals;
 
+import com.neuronrobotics.sdk.commands.bcs.io.AsyncMode;
+import com.neuronrobotics.sdk.commands.bcs.io.AsyncThreshholdEdgeType;
+import com.neuronrobotics.sdk.commands.bcs.io.ConfigAsyncCommand;
 import com.neuronrobotics.sdk.commands.bcs.io.SetChannelValueCommand;
 import com.neuronrobotics.sdk.common.ISendable;
 import com.neuronrobotics.sdk.common.InvalidResponseException;
@@ -166,7 +169,7 @@ public abstract class DyIOAbstractPeripheral implements IDyIOChannel {
 			switch(mode){
 			case SERVO_OUT:
 			case PWM_OUT :
-				getChannel().send(new SetChannelValueCommand(getChannel().getNumber(), pos , getMode(), true));
+				getChannel().send(new SetChannelValueCommand(getChannel().getChannelNumber(), pos , getMode(), true));
 				return true;
 			default:
 				return false;
@@ -176,6 +179,33 @@ public abstract class DyIOAbstractPeripheral implements IDyIOChannel {
 			return false;
 		}
 	}
+	
+	public boolean configAdvancedAsyncNotEqual(){
+		return getChannel().configAdvancedAsyncNotEqual(100);
+	}
+	public boolean configAdvancedAsyncDeadBand(int deadbandSize){
+		return  getChannel().configAdvancedAsyncDeadBand(100,deadbandSize);
+	}
+	public boolean configAdvancedAsyncTreshhold(int threshholdValue, AsyncThreshholdEdgeType edgeType){
+		return  getChannel().configAdvancedAsyncTreshhold(100, threshholdValue, edgeType);
+	}
+	public boolean configAdvancedAsyncAutoSample(){
+		return  getChannel().configAdvancedAsyncAutoSample(100);
+	}
+	
+	public boolean configAdvancedAsyncNotEqual(int msTime){
+		return getChannel().configAdvancedAsyncNotEqual(msTime);
+	}
+	public boolean configAdvancedAsyncDeadBand(int msTime,int deadbandSize){
+		return  getChannel().configAdvancedAsyncDeadBand(msTime,deadbandSize);
+	}
+	public boolean configAdvancedAsyncTreshhold(int msTime,int threshholdValue, AsyncThreshholdEdgeType edgeType){
+		return  getChannel().configAdvancedAsyncTreshhold(msTime, threshholdValue, edgeType);
+	}
+	public boolean configAdvancedAsyncAutoSample(int msTime){
+		return  getChannel().configAdvancedAsyncAutoSample(msTime);
+	}
+	
 
 	public boolean flush() {
 		return getChannel().flush();

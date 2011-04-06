@@ -114,7 +114,7 @@ public class Link {
 "			<ulimit>"+getUpperLimit()+"</ulimit>\n"+
 "			<llimit>"+getLowerLimit()+"</llimit>\n"+
 "			<home>"+getHome()+"</home>\n"+
-"			<channel>"+getServoChannel().getChannel().getNumber()+"</channel>\n"+
+"			<channel>"+getServoChannel().getChannel().getChannelNumber()+"</channel>\n"+
 "			<inverse>"+((getScale()>0)?1:-1)+"</inverse>\n"+
 "			<linkLen>"+linkLen+"</linkLen>\n"+
 "			<scale>"+Math.abs(getScale())+"</scale>\n"+

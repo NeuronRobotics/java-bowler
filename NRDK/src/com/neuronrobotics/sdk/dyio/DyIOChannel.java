@@ -17,6 +17,9 @@ package com.neuronrobotics.sdk.dyio;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import com.neuronrobotics.sdk.commands.bcs.io.AsyncMode;
+import com.neuronrobotics.sdk.commands.bcs.io.AsyncThreshholdEdgeType;
+import com.neuronrobotics.sdk.commands.bcs.io.ConfigAsyncCommand;
 import com.neuronrobotics.sdk.commands.bcs.io.GetChannelModeCommand;
 import com.neuronrobotics.sdk.commands.bcs.io.GetValueCommand;
 import com.neuronrobotics.sdk.commands.bcs.io.SetChannelValueCommand;
@@ -80,7 +83,7 @@ public class DyIOChannel implements IDyIOChannel {
 	 * Get the channel's number.
 	 * @return The Channel on the corresponding DyIO that this pin belongs to.
 	 */
-	public int getNumber() {
+	public int getChannelNumber() {
 		return number;
 	}
 	
@@ -310,7 +313,7 @@ public class DyIOChannel implements IDyIOChannel {
 	 */
 	@Override
 	public String toString() {
-		return String.format("(%02d) - %-20s", getNumber(), getMode());
+		return String.format("(%02d) - %-20s", getChannelNumber(), getMode());
 	}
 	
 	/* (non-Javadoc)
@@ -476,4 +479,34 @@ public class DyIOChannel implements IDyIOChannel {
 	public int getPreviousValue() {
 		return previousValue;
 	}	
+	
+	public boolean configAdvancedAsyncNotEqual(){
+		return configAdvancedAsyncNotEqual(100);
+	}
+	public boolean configAdvancedAsyncDeadBand(int deadbandSize){
+		return  configAdvancedAsyncDeadBand(100,deadbandSize);
+	}
+	public boolean configAdvancedAsyncTreshhold(int threshholdValue, AsyncThreshholdEdgeType edgeType){
+		return  configAdvancedAsyncTreshhold(100, threshholdValue, edgeType);
+	}
+	public boolean configAdvancedAsyncAutoSample(){
+		return  configAdvancedAsyncAutoSample(100);
+	}
+	
+	public boolean configAdvancedAsyncNotEqual(int msTime){
+		isAsync=true;
+		return  getDevice().configAdvancedAsyncNotEqual(getChannelNumber(),msTime);
+	}
+	public boolean configAdvancedAsyncDeadBand(int msTime,int deadbandSize){
+		isAsync=true;
+		return  getDevice().configAdvancedAsyncDeadBand(getChannelNumber(),msTime,deadbandSize);
+	}
+	public boolean configAdvancedAsyncTreshhold(int msTime,int threshholdValue, AsyncThreshholdEdgeType edgeType){
+		isAsync=true;
+		return  getDevice().configAdvancedAsyncTreshhold(getChannelNumber(),msTime, threshholdValue, edgeType);
+	}
+	public boolean configAdvancedAsyncAutoSample(int msTime){
+		isAsync=true;
+		return  getDevice().configAdvancedAsyncAutoSample(getChannelNumber(),msTime);
+	}
 }

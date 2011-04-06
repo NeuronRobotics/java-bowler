@@ -81,7 +81,7 @@ public class ServoChannel extends DyIOAbstractPeripheral {
 	
 	private boolean flush(float time) {
 		try {
-			getChannel().send(new SetChannelValueCommand(getChannel().getNumber(), getChannel().getCachedValue(), time, getMode()));
+			getChannel().send(new SetChannelValueCommand(getChannel().getChannelNumber(), getChannel().getCachedValue(), time, getMode()));
 			cachedTime=0;
 			return true;
 		} catch (InvalidResponseException e) {

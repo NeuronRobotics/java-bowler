@@ -17,6 +17,9 @@ package com.neuronrobotics.sdk.dyio;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import com.neuronrobotics.sdk.commands.bcs.io.AsyncMode;
+import com.neuronrobotics.sdk.commands.bcs.io.AsyncThreshholdEdgeType;
+import com.neuronrobotics.sdk.commands.bcs.io.ConfigAsyncCommand;
 import com.neuronrobotics.sdk.commands.bcs.io.GetChannelModeCommand;
 import com.neuronrobotics.sdk.commands.bcs.io.SetAllChannelValuesCommand;
 import com.neuronrobotics.sdk.commands.bcs.io.setmode.SetChannelModeCommand;
@@ -572,6 +575,24 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 	public void addPIDEventListener(IPIDEventListener l) {
 		pid.addPIDEventListener(l);
 	}
+	
+	/**
+	 * Advanced Async Configuration
+	 */
+	public boolean configAdvancedAsyncNotEqual(int pin,int time){
+		return send(new ConfigAsyncCommand(pin,time,AsyncMode.NOTEQUAL)) == null;
+	}
+	public boolean configAdvancedAsyncDeadBand(int pin,int time,int deadbandSize){
+		return send(new ConfigAsyncCommand(pin,time,deadbandSize)) == null;
+	}
+	public boolean configAdvancedAsyncTreshhold(int pin,int time,int threshholdValue, AsyncThreshholdEdgeType edgeType){
+		return send(new ConfigAsyncCommand(pin,time,threshholdValue,edgeType)) == null;
+	}
+	public boolean configAdvancedAsyncAutoSample(int pin,int time){
+		return send(new ConfigAsyncCommand(pin,time,AsyncMode.AUTOSAMP)) == null;
+	}
+	
+	
 	@Override
 	public boolean connect(){
 		if(super.connect()){
