@@ -190,7 +190,7 @@ public class SerialConnection extends BowlerAbstractConnection {
 			try{
 				serial.disconnect();
 			}catch(Exception e){
-				e.printStackTrace();
+				//e.printStackTrace();
 				//throw new RuntimeException(e);
 			}
 			serial = null;

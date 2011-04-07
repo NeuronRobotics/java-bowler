@@ -59,7 +59,7 @@ public class GetChannelModeCommand extends BowlerAbstractCommand {
 		}
 		
 		if(getOpCode().equals("gchm") && data.getData().size() != 1) {
-			throw new InvalidResponseException("Get Channel Mode did not return with 1 values.");
+			//throw new InvalidResponseException("Get Channel Mode did not return with 1 values.");
 		}
 		
 		return data;
