@@ -58,9 +58,9 @@ public class DyIOChannel implements IDyIOChannel {
 	 * @param isEditable	Lock the channel parameters after creation.
 	 */
 	public DyIOChannel(DyIO dyio, int channel, DyIOChannelMode mode, boolean isEditable) {
+		current = mode;
 		setDevice(dyio);
 		number = channel;
-		current = mode;
 		editable = isEditable;
 	}
 	
@@ -200,6 +200,22 @@ public class DyIOChannel implements IDyIOChannel {
 				return true;
 		}
 		return false;
+	}
+	
+	public boolean hasAsync(){
+		if(getMode(false) == null)
+			return false;
+		switch(getMode(false)){
+		case ANALOG_IN:
+		case COUNT_IN_INT:
+		case COUNT_OUT_INT:
+		case DIGITAL_IN:
+		case PPM_IN:
+		case USART_RX:
+			return true;
+		default:
+			return false;	
+		}
 	}
 	
 	public Collection<DyIOChannelMode> getAvailableModes() {
