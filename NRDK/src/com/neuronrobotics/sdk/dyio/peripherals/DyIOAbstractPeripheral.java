@@ -26,7 +26,7 @@ import com.neuronrobotics.sdk.dyio.IDyIOChannel;
  * 
  */
 public abstract class DyIOAbstractPeripheral implements IDyIOChannel {
-	private IDyIOChannel channel;
+	private DyIOChannel channel;
 	private boolean enabled = false;
 	/**
 	 * DyIOAbstractPeripheral.
@@ -35,7 +35,7 @@ public abstract class DyIOAbstractPeripheral implements IDyIOChannel {
 	 *            The channel object to set up as whatever peripheral is needed
 	 * @throws Exception 
 	 */
-	public DyIOAbstractPeripheral(IDyIOChannel channel, DyIOChannelMode myMode) {
+	public DyIOAbstractPeripheral(DyIOChannel channel, DyIOChannelMode myMode) {
 		this.channel = channel;
 		this.enabled = true;
 		if(channel.getMode() != myMode)

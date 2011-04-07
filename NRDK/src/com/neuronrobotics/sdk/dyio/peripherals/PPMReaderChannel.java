@@ -6,6 +6,7 @@ import com.neuronrobotics.sdk.commands.bcs.io.GetValueCommand;
 import com.neuronrobotics.sdk.commands.bcs.io.SetChannelValueCommand;
 import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.common.ByteList;
+import com.neuronrobotics.sdk.dyio.DyIOChannel;
 import com.neuronrobotics.sdk.dyio.DyIOChannelEvent;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.dyio.IChannelEventListener;
@@ -19,7 +20,7 @@ public class PPMReaderChannel  extends DyIOAbstractPeripheral implements IChanne
 	int [] values=null;
 	public static final int NO_CROSSLINK = 0xff;
 	
-	public PPMReaderChannel(IDyIOChannel channel) {
+	public PPMReaderChannel(DyIOChannel channel) {
 		super(channel,myMode);
 		if(!getChannel().canBeMode(myMode)) {
 			throw new DyIOPeripheralException("Could not ever be " + channel + " to " + myMode +  " mode");
