@@ -135,4 +135,9 @@ public class CounterInputChannel extends DyIOAbstractPeripheral implements IChan
 		b.addAs32(value);
 		return setValue(b);
 	}
+
+	@Override
+	public boolean hasAsync() {
+		return true;
+	}
 }

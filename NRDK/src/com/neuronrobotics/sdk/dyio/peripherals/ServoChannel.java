@@ -97,4 +97,9 @@ public class ServoChannel extends DyIOAbstractPeripheral {
 		
 		return getMode() == DyIOChannelMode.SERVO_OUT;
 	}
+
+	@Override
+	public boolean hasAsync() {
+		return false;
+	}
 }

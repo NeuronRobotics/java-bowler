@@ -119,5 +119,9 @@ public class CounterOutputChannel extends DyIOAbstractPeripheral implements ICha
 		int data = ByteList.convertToInt(b,true);
 		fireOnCounterOutput(data);
 	}
+	@Override
+	public boolean hasAsync() {
+		return true;
+	}
 
 }

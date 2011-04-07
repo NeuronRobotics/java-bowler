@@ -112,4 +112,8 @@ public class PPMReaderChannel  extends DyIOAbstractPeripheral implements IChanne
 			l.onPPMPacket(values);
 		}
 	}
+	@Override
+	public boolean hasAsync() {
+		return true;
+	}
 }

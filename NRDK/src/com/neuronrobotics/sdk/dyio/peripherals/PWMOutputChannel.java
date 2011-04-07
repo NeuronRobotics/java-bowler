@@ -54,4 +54,9 @@ public class PWMOutputChannel extends DyIOAbstractPeripheral {
 		
 		setValue((int)((duty / 100) * 255));
 	}
+
+	@Override
+	public boolean hasAsync() {
+		return false;
+	}
 }

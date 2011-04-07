@@ -55,4 +55,9 @@ public class DigitalOutputChannel extends DyIOAbstractPeripheral {
 	public boolean isHigh() {
 		return getValue() != 0;
 	}
+
+	@Override
+	public boolean hasAsync() {
+		return false;
+	}
 }

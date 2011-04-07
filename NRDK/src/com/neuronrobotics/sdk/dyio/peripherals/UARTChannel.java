@@ -207,6 +207,11 @@ public class UARTChannel implements ISendable {
 		public DyIOOutputStream getOutStream(){
 			return out;
 		}
+		@Override
+		public boolean hasAsync() {
+			// TODO Auto-generated method stub
+			return true;
+		}
 		
 	}
 	
@@ -247,6 +252,12 @@ public class UARTChannel implements ISendable {
 		}
 		public DyIOInputStream getInputStream(){
 			return in;
+		}
+
+		@Override
+		public boolean hasAsync() {
+			// TODO Auto-generated method stub
+			return true;
 		}
 
 	}

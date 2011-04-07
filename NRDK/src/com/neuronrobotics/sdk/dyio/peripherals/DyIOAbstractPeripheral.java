@@ -178,6 +178,9 @@ public abstract class DyIOAbstractPeripheral implements IDyIOChannel {
 		}
 	}
 	
+	abstract public boolean hasAsync();
+	
+	
 	public boolean configAdvancedAsyncNotEqual(){
 		return getChannel().configAdvancedAsyncNotEqual(100);
 	}

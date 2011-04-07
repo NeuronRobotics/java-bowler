@@ -126,4 +126,9 @@ public class DigitalInputChannel extends DyIOAbstractPeripheral implements IChan
 	public void onChannelEvent(DyIOChannelEvent e) {
 		fireValueChanged(e.getData().get(0) != 0);
 	}
+
+	@Override
+	public boolean hasAsync() {
+		return true;
+	}
 }

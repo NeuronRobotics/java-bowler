@@ -54,4 +54,9 @@ public class DCMotorOutputChannel extends DyIOAbstractPeripheral {
 		
 		setValue((int)((velocity / 100) * 128)+128);
 	}
+
+	@Override
+	public boolean hasAsync() {
+		return false;
+	}
 }
