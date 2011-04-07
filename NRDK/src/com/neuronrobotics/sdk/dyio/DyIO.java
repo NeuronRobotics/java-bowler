@@ -579,6 +579,20 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 	/**
 	 * Advanced Async Configuration
 	 */
+	public boolean configAdvancedAsyncNotEqual(int pin){
+		return configAdvancedAsyncNotEqual(pin,100);
+	}
+	public boolean configAdvancedAsyncDeadBand(int pin,int deadbandSize){
+		return  configAdvancedAsyncDeadBand(pin,100,deadbandSize);
+	}
+	public boolean configAdvancedAsyncTreshhold(int pin,int threshholdValue, AsyncThreshholdEdgeType edgeType){
+		return  configAdvancedAsyncTreshhold(pin,100, threshholdValue, edgeType);
+	}
+	public boolean configAdvancedAsyncAutoSample(int pin){
+		return  configAdvancedAsyncAutoSample(pin,100);
+	}
+	
+	
 	public boolean configAdvancedAsyncNotEqual(int pin,int time){
 		return send(new ConfigAsyncCommand(pin,time,AsyncMode.NOTEQUAL)) == null;
 	}
