@@ -109,7 +109,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 	 */
 	public DyIOChannel getChannel(int channel) {
 		validateChannel(channel);
-		return channels.get(channel);
+		return getInternalChannels().get(channel);
 	}
 	
 	/**
@@ -224,7 +224,10 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 	 */
 	public Collection<DyIOChannel> getChannels() {
 		ArrayList<DyIOChannel> c = new ArrayList<DyIOChannel>();
-		c.addAll(channels);
+		for(DyIOChannel chan:getInternalChannels() ) {
+			//System.out.println(this.getClass()+" Adding channel: "+chan.getChannelNumber()+" as mode: "+chan.getMode());
+			c.add(chan);
+		}
 		return c;
 	}
 	
@@ -267,7 +270,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 		try {
 			response = send(new GetChannelModeCommand());
 		} catch (Exception e) {
-			if (channels.size()==0){
+			if (getInternalChannels().size()==0){
 				Log.error("Initilization failed once, retrying");
 				try{
 					response = send(new GetChannelModeCommand());
@@ -285,16 +288,13 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 			setAddress(response.getAddress());
 		}
 		
-		if (channels.size()==0){
-			channels.clear();
-		}
 		if (response.getData().size()<24)
 			throw new DyIOCommunicationException("Not enough channels, not a valid DyIO"+response.toString());
 		for (int i = 0; i < response.getData().size(); i++){
 			DyIOChannelMode cm = DyIOChannelMode.get(response.getData().getByte(i));
 			boolean editable = true;
 			if(cm == null) {
-				cm = DyIOChannelMode.DIGITAL_OUT;
+				cm = DyIOChannelMode.DIGITAL_IN;
 				editable = false;
 				try {
 					send(new SetChannelModeCommand(i, cm));
@@ -303,12 +303,15 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 				}
 			}
 			try{
-				channels.get(i).update(this, i, cm, editable);
+				getInternalChannels().get(i).update(this, i, cm, editable);
+				//System.out.println("Updating channel: "+i);
 			}catch(IndexOutOfBoundsException e){
-				channels.add(new DyIOChannel(this, i, cm, editable));
+				//System.out.println("New channel "+i);
+				getInternalChannels().add(new DyIOChannel(this, i, cm, editable));
 			}
+			getInternalChannels().get(i).fireModeChangeEvent(cm);
 		}
-		if (channels.size()==0)
+		if (getInternalChannels().size()==0)
 			throw new DyIOCommunicationException("DyIO failed to report during initialization");
 		
 		return true;
@@ -376,7 +379,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 	 */
 	protected void validateChannel(int channel) {
 		int syncs=0;
-		while(channels.size() == 0){
+		while(getInternalChannels().size() == 0){
 			Log.error("Valadate will fail, no channels, resyncing");
 			resync();
 			syncs++;
@@ -386,8 +389,8 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 			ThreadUtil.wait(200);
 			
 		}
-		if (channel < 0 || channel > channels.size()) {
-			throw new IndexOutOfBoundsException("DyIO channels must be between 0 and " + channels.size());
+		if (channel < 0 || channel > getInternalChannels().size()) {
+			throw new IndexOutOfBoundsException("DyIO channels must be between 0 and " + getInternalChannels().size());
 		}
 	}
 	
@@ -431,7 +434,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 	
 	public void setCachedMode(boolean mode) {
 		cachedMode=mode;
-		for(DyIOChannel d:channels) {
+		for(DyIOChannel d:getInternalChannels()) {
 			d.setCachedMode(mode);
 			if(mode)
 				try {
@@ -444,9 +447,9 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 	
 	public void flushCache(float time) {
 		//System.out.println("Updating all channels");
-		int [] values = new int[channels.size()];
+		int [] values = new int[getInternalChannels().size()];
 		int i=0;
-		for(DyIOChannel d:channels) {
+		for(DyIOChannel d:getInternalChannels()) {
 			values[i++]=d.getCachedValue();
 			//d.flush();
 		}
@@ -470,12 +473,12 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 		String chFmt = "%02d - %-20s   %02d - %-20s\n";
 		
 		String s = getInfo() + "\n" + getFirmwareRevString()+ " \nMAC: " + getAddress() + "\n";
-		for(int i = 0; i < channels.size()/2; i++) {
+		for(int i = 0; i < getInternalChannels().size()/2; i++) {
 			s += String.format(chFmt, 
-					           channels.size() - 1 - i, 
-					           channels.get(channels.size()-1-i).getMode(), 
+					           getInternalChannels().size() - 1 - i, 
+					           getInternalChannels().get(getInternalChannels().size()-1-i).getMode(), 
 					           i, 
-					           channels.get(i).getMode());
+					           getInternalChannels().get(i).getMode());
 		}
 		
 		return s;
@@ -486,7 +489,12 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 	 */
 	@Override
 	public boolean isAvailable() throws InvalidConnectionException {
-		return resync();
+		try {
+			return resync();
+		}catch (Exception ex) {
+			ex.printStackTrace();
+			return false;
+		}
 	}
 
 	/* (non-Javadoc)
@@ -636,5 +644,13 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 		}catch(Exception e){
 			throw new DyIOFirmwareOutOfDateException(e.getMessage());
 		}
+	}
+
+	public void setInternalChannels(ArrayList<DyIOChannel> channels) {
+		this.channels = channels;
+	}
+
+	public ArrayList<DyIOChannel> getInternalChannels() {
+		return channels;
 	}
 }

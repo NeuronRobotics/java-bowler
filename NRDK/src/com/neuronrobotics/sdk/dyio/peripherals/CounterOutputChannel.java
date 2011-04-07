@@ -123,5 +123,13 @@ public class CounterOutputChannel extends DyIOAbstractPeripheral implements ICha
 	public boolean hasAsync() {
 		return true;
 	}
+	/**
+	 * 
+	 * 
+	 * @param isAsync
+	 */
+	public void setAsync(boolean isAsync) {
+		setMode(DyIOChannelMode.COUNT_OUT_INT, isAsync);
+	}
 
 }

@@ -48,6 +48,7 @@ public interface IDyIOChannel {
 	 * @param mode
 	 * @param async
 	 * @return if the action was successful
+	 * @throws Exception 
 	 */
 	public boolean setMode(DyIOChannelMode mode, boolean async);
 	

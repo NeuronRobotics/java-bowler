@@ -46,6 +46,8 @@ public class DyIOChannel implements IDyIOChannel {
 	private boolean isAsync=false;
 	private ArrayList<IChannelEventListener> listeners = new ArrayList<IChannelEventListener>();
 	
+	private ArrayList< IDyIOChannelModeChangeListener> modeListeners = new ArrayList< IDyIOChannelModeChangeListener>();
+	
 	protected int cachedValue = 0;
 	private boolean cachedMode=false;
 	private DyIOAbstractPeripheral dap=null;
@@ -58,10 +60,7 @@ public class DyIOChannel implements IDyIOChannel {
 	 * @param isEditable	Lock the channel parameters after creation.
 	 */
 	public DyIOChannel(DyIO dyio, int channel, DyIOChannelMode mode, boolean isEditable) {
-		current = mode;
-		setDevice(dyio);
-		number = channel;
-		editable = isEditable;
+		update(dyio, channel, mode,  isEditable);
 	}
 	
 	/**
@@ -75,8 +74,13 @@ public class DyIOChannel implements IDyIOChannel {
 	public void update(DyIO dyio, int channel, DyIOChannelMode mode, boolean isEditable) {
 		setDevice(dyio);
 		number = channel;
-		current = mode;
 		editable = isEditable;
+		fireModeChangeEvent(mode);
+		if(getCurrentMode() == DyIOChannelMode.NO_CHANGE) {
+			System.err.println("Failed to update channel: "+ channel);
+			throw new RuntimeException("Failed to update channel: "+ channel);
+		}
+		setCurrentMode(mode);
 	}
 	
 	/**
@@ -103,6 +107,42 @@ public class DyIOChannel implements IDyIOChannel {
 	public void send(BowlerAbstractCommand command) {
 		getDevice().send(command);
 	}
+	
+	
+	/**
+	 * Clear list of objects that have subscribed to channel updates.
+	 */
+	public void removeAllChannelModeChangeListener() {
+		modeListeners.clear();
+	}
+	
+	/**
+	 * Remove a particular subscription.
+	 * 
+	 * @param l
+	 *            The object that has subscribed to updates
+	 */
+	public void removeChannelModeChangeListener(IDyIOChannelModeChangeListener l) {
+		if(!modeListeners.contains(l)) {
+			return;
+		}
+		
+		modeListeners.remove(l);
+	}
+	
+	/**
+	 * Add an object that wishes to receive channel updates.
+	 * 
+	 * @param l
+	 *            The object that wishes to receive updates.
+	 */
+	public void addChannelModeChangeListener(IDyIOChannelModeChangeListener l) {
+		if(modeListeners.contains(l)) {
+			return;
+		}
+		modeListeners.add(l);
+	}
+	
 	/**
 	 * Clear list of objects that have subscribed to channel updates.
 	 */
@@ -167,6 +207,7 @@ public class DyIOChannel implements IDyIOChannel {
 	
 	private void setDevice(DyIO device) {
 		this.device = device;
+		//resync(false);
 	}
 
 	/**
@@ -188,9 +229,9 @@ public class DyIOChannel implements IDyIOChannel {
 			getDevice().resync();
 			return;
 		}
-		
-		BowlerDatagram bd = getDevice().send(new GetChannelModeCommand(number));
-		current = DyIOChannelMode.get(bd.getData().getByte(0));
+		//BowlerDatagram bd = getDevice().send(new GetChannelModeCommand(number));
+		//System.out.println(bd);
+		//setCurrentMode(DyIOChannelMode.get(bd.getData().getByte(1)));
 	}
 	
 	public boolean canBeMode(DyIOChannelMode m) {
@@ -324,6 +365,20 @@ public class DyIOChannel implements IDyIOChannel {
 		}
 	}
 	
+	/**
+	 * 
+	 * 
+	 * @param e
+	 */
+	protected void fireModeChangeEvent(DyIOChannelMode e) {
+		if(e==getMode()) {
+			Log.info("Mode not changed: "+getChannelNumber()+" mode: "+getMode());
+		}
+		setCurrentMode(e);
+		for(IDyIOChannelModeChangeListener l : modeListeners) {
+			l.onModeChange(e);
+		}
+	}
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
@@ -345,7 +400,7 @@ public class DyIOChannel implements IDyIOChannel {
 	 */
 	@Override
 	public DyIOChannelMode getMode() {		
-		return current;
+		return getCurrentMode();
 	}
 	
 	/* (non-Javadoc)
@@ -360,7 +415,7 @@ public class DyIOChannel implements IDyIOChannel {
 		} catch (InvalidResponseException e) {
 			response = getDevice().send(new GetValueCommand(number));
 		}
-		switch(current) {
+		switch(getCurrentMode()) {
 		case ANALOG_IN:
 		case DIGITAL_IN:
 		case DIGITAL_OUT:
@@ -378,7 +433,7 @@ public class DyIOChannel implements IDyIOChannel {
 			val=  ByteList.convertToInt(b, true);
 			break;
 		default:
-			// fail gracefully
+			System.err.println("Invalid mode for get: "+getCurrentMode());
 			return 0;
 		} 
 		setPreviousValue(val);
@@ -389,15 +444,19 @@ public class DyIOChannel implements IDyIOChannel {
 	 * @see com.neuronrobotics.sdk.dyio.IDyIOChannel#setMode(com.neuronrobotics.sdk.dyio.DyIOChannelMode, boolean)
 	 */
 	@Override
-	public boolean setMode(DyIOChannelMode mode, boolean async) {
-		if (getMode() == mode && (async == isAsync))
+	public synchronized boolean setMode(DyIOChannelMode mode, boolean async) {
+		//resyncIfNotSynced();
+		if (getMode() == mode && (async == isAsync)) {	
+			fireModeChangeEvent(mode);
 			return true;
+		}
 		for(int i = 0; i < MAXATTEMPTS; i++) {
 			try {
 				isAsync = async;
-				current = mode;
+				setCurrentMode(mode);
 				getDevice().send(new SetChannelModeCommand(number, mode, async));
 				getDevice().resync();
+				fireModeChangeEvent(mode);
 				return true;
 			} catch (InvalidResponseException e) {
 				Log.error(e.getMessage());
@@ -410,7 +469,14 @@ public class DyIOChannel implements IDyIOChannel {
 		}
 		return false;
 	}
-	
+	private boolean synced = false;
+	private void resyncIfNotSynced() {
+		if(synced==false) {
+			synced = true;
+			resync(false);
+		}
+	}
+
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.dyio.IDyIOChannel#setValue(int)
 	 */
@@ -437,6 +503,7 @@ public class DyIOChannel implements IDyIOChannel {
 		default:
 			b.add(getCachedValue());
 		}
+		Log.info("Setting channel: "+getChannelNumber()+" to value: "+b);
 		return setValue(b);
 	}
 
@@ -524,5 +591,23 @@ public class DyIOChannel implements IDyIOChannel {
 	public boolean configAdvancedAsyncAutoSample(int msTime){
 		isAsync=true;
 		return  getDevice().configAdvancedAsyncAutoSample(getChannelNumber(),msTime);
+	}
+
+	public void setCurrentMode(DyIOChannelMode mode) {
+		String message = this.getClass()+" Can not set channel: "+getChannelNumber()+" to mode: "+mode;
+		try {
+			if(!canBeMode(mode)) {
+				System.err.println(message);
+				throw new RuntimeException(message);
+			}
+		}catch(RuntimeException ex) {
+			ex.printStackTrace();
+			throw ex;
+		}
+		this.current = mode;
+	}
+
+	public DyIOChannelMode getCurrentMode() {
+		return current;
 	}
 }

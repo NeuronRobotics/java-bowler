@@ -28,21 +28,22 @@ import com.neuronrobotics.sdk.dyio.IDyIOChannel;
 public abstract class DyIOAbstractPeripheral implements IDyIOChannel {
 	private IDyIOChannel channel;
 	private boolean enabled = false;
-	private DyIOChannelMode myMode = null;
 	/**
 	 * DyIOAbstractPeripheral.
 	 * 
 	 * @param channel
 	 *            The channel object to set up as whatever peripheral is needed
+	 * @throws Exception 
 	 */
 	public DyIOAbstractPeripheral(IDyIOChannel channel, DyIOChannelMode myMode) {
 		this.channel = channel;
 		this.enabled = true;
-		this.myMode=myMode;
+		if(channel.getMode() != myMode)
+			channel.setMode(myMode, false);
 	}
 	
 	public  DyIOChannelMode getClassMode() {
-		return myMode;
+		return channel.getMode();
 	}
 	
 	/**
@@ -60,9 +61,9 @@ public abstract class DyIOAbstractPeripheral implements IDyIOChannel {
 	 * @param mode
 	 *            the DyIO mode to set the channel to
 	 * @return if the set worked. Not all channels have all peripherals
-	 * @throws InvalidResponseException
+	 * @throws Exception 
 	 */
-	public boolean setMode()throws InvalidResponseException {
+	public boolean setMode(){
 		return setMode( false);
 	}
 	
@@ -74,9 +75,9 @@ public abstract class DyIOAbstractPeripheral implements IDyIOChannel {
 	 * @param async
 	 *            If the channel should be set into async mode
 	 * @return if the set worked. Not all channels have all peripherals
-	 * @throws InvalidResponseException
+	 * @throws Exception 
 	 */
-	public boolean setMode( boolean async)throws InvalidResponseException {
+	public boolean setMode( boolean async) {
 		return channel.setMode(getClassMode(), async);
 	}
 	
@@ -88,6 +89,7 @@ public abstract class DyIOAbstractPeripheral implements IDyIOChannel {
 	 * @param async
 	 *            If the channel should be set into async mode
 	 * @return if the set worked. Not all channels have all peripherals
+	 * @throws Exception 
 	 * @throws InvalidResponseException
 	 */
 	public boolean setMode(DyIOChannelMode mode, boolean async) {
