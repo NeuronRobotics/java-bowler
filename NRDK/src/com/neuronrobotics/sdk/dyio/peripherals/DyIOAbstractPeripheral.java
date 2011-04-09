@@ -213,4 +213,8 @@ public abstract class DyIOAbstractPeripheral implements IDyIOChannel {
 	public boolean flush() {
 		return getChannel().flush();
 	}
+
+	public void setAsync(boolean b) {
+		channel.setMode(getClassMode(), b);
+	}
 }

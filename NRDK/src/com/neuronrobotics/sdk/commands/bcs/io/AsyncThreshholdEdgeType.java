@@ -13,13 +13,13 @@ public enum AsyncThreshholdEdgeType implements ISendable{
 #define		ASYN_FALLING 	2
 	 */
 	/** The STATUS. */
-	ASYN_BOTH(0x00),
+	BOTH(0x00),
 	
 	/** The GET. */
-	ASYN_RISING(0x01),
+	RISING(0x01),
 	
 	/** The POST. */
-	ASYN_FALLING(0x02);
+	FALLING(0x02);
 
 	/* (non-Javadoc)
 	 * @see java.lang.Enum#toString()

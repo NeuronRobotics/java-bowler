@@ -356,8 +356,8 @@ public class DyIOChannel implements IDyIOChannel {
 	 */
 	protected void fireChannelEvent(DyIOChannelEvent e) {
 		if((getPreviousValue() == parseDyIOChannelEvent(e)) && !isStreamChannel() ){
-			Log.debug("Value is the same, ignoring");
-			return;
+			Log.debug("Value is the same");
+			//return;
 		}
 		setPreviousValue(parseDyIOChannelEvent(e));
 		for(IChannelEventListener l : listeners) {
