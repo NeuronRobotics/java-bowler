@@ -447,7 +447,7 @@ public class DyIOChannel implements IDyIOChannel {
 	public synchronized boolean setMode(DyIOChannelMode mode, boolean async) {
 		//resyncIfNotSynced();
 		if (getMode() == mode && (async == isAsync)) {	
-			fireModeChangeEvent(mode);
+			//fireModeChangeEvent(mode);
 			return true;
 		}
 		for(int i = 0; i < MAXATTEMPTS; i++) {
@@ -456,7 +456,6 @@ public class DyIOChannel implements IDyIOChannel {
 				setCurrentMode(mode);
 				getDevice().send(new SetChannelModeCommand(number, mode, async));
 				getDevice().resync();
-				fireModeChangeEvent(mode);
 				return true;
 			} catch (InvalidResponseException e) {
 				Log.error(e.getMessage());
