@@ -300,11 +300,13 @@ public class DyIOChannel implements IDyIOChannel {
 		case 7:
 			modes.add(DyIOChannelMode.PWM_OUT);
 			modes.add(DyIOChannelMode.DC_MOTOR_VEL);
+			modes.add(DyIOChannelMode.DC_MOTOR_DIR);
 			break;
 		case 8:
 		case 9:
 		case 10:
 		case 11:
+			modes.add(DyIOChannelMode.DC_MOTOR_VEL);
 			modes.add(DyIOChannelMode.DC_MOTOR_DIR);
 		case 12:
 		case 13:
@@ -421,6 +423,8 @@ public class DyIOChannel implements IDyIOChannel {
 		case DIGITAL_OUT:
 		case SERVO_OUT: 
 		case PWM_OUT:
+		case DC_MOTOR_DIR:
+		case DC_MOTOR_VEL:
 			val=ByteList.convertToInt(response.getData().getBytes(1), false);
 			break;
 		case COUNT_IN_INT:
@@ -433,7 +437,7 @@ public class DyIOChannel implements IDyIOChannel {
 			val=  ByteList.convertToInt(b, true);
 			break;
 		default:
-			System.err.println("Invalid mode for get: "+getCurrentMode());
+			Log.error(this.getClass()+"Invalid mode for get: "+getCurrentMode());
 			return 0;
 		} 
 		setPreviousValue(val);
