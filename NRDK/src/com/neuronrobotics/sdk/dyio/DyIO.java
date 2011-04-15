@@ -638,6 +638,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 	}
 	@Override
 	public void stopHeartBeat(){
+		
 		super.stopHeartBeat();
 		try{
 			BowlerDatagram b = send(new SafeModeCommand(false, 0));
