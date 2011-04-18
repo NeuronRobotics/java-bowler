@@ -632,8 +632,11 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 		super.startHeartBeat(msHeartBeatTime);
 		try{
 			BowlerDatagram b = send(new SafeModeCommand(true, (int) msHeartBeatTime));
+			if(b== null)
+				throw new RuntimeException();
 		}catch(Exception e){
 			System.err.println("DyIO is out of date");
+			throw new DyIOFirmwareOutOfDateException("DyIO firmware is out of date");
 		}
 	}
 	@Override
@@ -642,10 +645,11 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 		super.stopHeartBeat();
 		try{
 			BowlerDatagram b = send(new SafeModeCommand(false, 0));
+			if(b== null)
+				throw new RuntimeException();
 		}catch(Exception e){
-			//throw new DyIOFirmwareOutOfDateException(e.getMessage());
 			System.err.println("DyIO is out of date");
-		}
+		}	
 	}
 
 	public void setInternalChannels(ArrayList<DyIOChannel> channels) {
