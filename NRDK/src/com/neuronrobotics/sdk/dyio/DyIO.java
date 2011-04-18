@@ -27,6 +27,7 @@ import com.neuronrobotics.sdk.commands.bcs.pid.DyPID.ConfigureDynamicPIDCommand;
 import com.neuronrobotics.sdk.commands.bcs.safe.SafeModeCommand;
 import com.neuronrobotics.sdk.commands.neuronrobotics.dyio.InfoCommand;
 import com.neuronrobotics.sdk.commands.neuronrobotics.dyio.InfoFirmwareRevisionCommand;
+import com.neuronrobotics.sdk.commands.neuronrobotics.dyio.PowerCommand;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
 import com.neuronrobotics.sdk.common.BowlerDatagram;
@@ -56,6 +57,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 	
 	private DyIOPowerState bankAState;
 	private DyIOPowerState bankBState;
+	private double batteryVoltage = 0;
 	
 	private boolean cachedMode=false;
 	private GenericPIDDevice pid = new GenericPIDDevice();
@@ -263,6 +265,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 					info = response.getData().asString();
 				}
 			}
+			send( new PowerCommand());
 		}catch (Exception e){
 			throw new DyIOCommunicationException("DyIO failed to report during initialization. Could not determine DyIO configuration");
 		}
@@ -506,6 +509,19 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 		for(IDyIOEventListener l : listeners) {
 			l.onDyIOEvent(e);
 		}
+		if(data.getRPC().equals("_pwr")) {
+			System.out.println("Updating Power state");
+			ByteList bl = data.getData();
+			if(bl.size() != 4) {
+				return;
+			}
+			bankAState = DyIOPowerState.valueOf(bl.get(0));
+			bankBState = DyIOPowerState.valueOf(bl.get(1));
+			batteryVoltage = ByteList.convertToInt(bl.getBytes(2, 2),false);
+
+			fireDyIOEvent(new DyIOPowerEvent(bankAState, bankBState));
+			return;
+		}
 		pid.onAllResponse(data);
 	}
 
@@ -527,17 +543,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 			return;
 		}
 		
-		if(data.getRPC().equals("_pwr")) {
-			ByteList bl = data.getData();
-			if(bl.size() != 4) {
-				return;
-			}
-			bankAState = DyIOPowerState.valueOf(bl.get(0));
-			bankBState = DyIOPowerState.valueOf(bl.get(1));
-			
-			fireDyIOEvent(new DyIOPowerEvent(bankAState, bankBState));
-			return;
-		}
+
 		pid.onAsyncResponse(data);
 	}
 

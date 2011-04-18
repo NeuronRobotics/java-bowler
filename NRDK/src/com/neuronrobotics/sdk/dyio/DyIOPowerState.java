@@ -7,9 +7,9 @@ public enum DyIOPowerState {
 	
 	public static DyIOPowerState valueOf(int code) {
 		switch(code) {
-		case 0:
-			return DyIOPowerState.REGULATED;
 		case 1:
+			return DyIOPowerState.REGULATED;
+		case 0:
 			return DyIOPowerState.BATTERY_UNPOWERED;
 		default:
 			return DyIOPowerState.BATTERY_POWERED;

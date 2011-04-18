@@ -11,6 +11,6 @@ public class PowerCommand extends BowlerAbstractCommand {
 	 */
 	public PowerCommand() {
 		setOpCode("_pwr");
-		setMethod(BowlerMethod.POST);
+		setMethod(BowlerMethod.GET);
 	}
 }
