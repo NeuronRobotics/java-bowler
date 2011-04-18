@@ -251,8 +251,6 @@ public class DyIOChannel implements IDyIOChannel {
 		case COUNT_IN_INT:
 		case COUNT_OUT_INT:
 		case DIGITAL_IN:
-		case PPM_IN:
-		case USART_RX:
 			return true;
 		default:
 			return false;	
@@ -606,9 +604,9 @@ public class DyIOChannel implements IDyIOChannel {
 	}
 
 	public void setCurrentMode(DyIOChannelMode mode) {
-		String message = this.getClass()+" Can not set channel: "+getChannelNumber()+" to mode: "+mode;
 		try {
 			if(!canBeMode(mode)) {
+				String message = this.getClass()+" Can not set channel: "+getChannelNumber()+" to mode: "+mode;
 				System.err.println(message);
 				//throw new RuntimeException(message);
 			}
