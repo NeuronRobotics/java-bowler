@@ -265,7 +265,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 					info = response.getData().asString();
 				}
 			}
-			send( new PowerCommand());
+			
 		}catch (Exception e){
 			throw new DyIOCommunicationException("DyIO failed to report during initialization. Could not determine DyIO configuration");
 		}
@@ -370,6 +370,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 	 *            - the event to fire to all listeners
 	 */
 	public void fireDyIOEvent(IDyIOEvent e) {
+		//System.out.println("DyIO Event: "+e);
 		for(IDyIOEventListener l : listeners) {
 			l.onDyIOEvent(e);
 		}
@@ -499,27 +500,23 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 			return false;
 		}
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.common.IBowlerDatagramListener#onAllResponse(com.neuronrobotics.sdk.common.BowlerDatagram)
 	 */
 	@Override
 	public void onAllResponse(BowlerDatagram data) {
-		IDyIOEvent e = new DyIOAsyncEvent(data);
-		for(IDyIOEventListener l : listeners) {
-			l.onDyIOEvent(e);
-		}
 		if(data.getRPC().equals("_pwr")) {
 			System.out.println("Updating Power state");
 			ByteList bl = data.getData();
 			if(bl.size() != 4) {
 				return;
 			}
-			bankAState = DyIOPowerState.valueOf(bl.get(0));
-			bankBState = DyIOPowerState.valueOf(bl.get(1));
-			batteryVoltage = ByteList.convertToInt(bl.getBytes(2, 2),false);
-
-			fireDyIOEvent(new DyIOPowerEvent(bankAState, bankBState));
+			batteryVoltage = ((double)(ByteList.convertToInt(bl.getBytes(2, 2),false)))/1000.0;
+			bankAState = DyIOPowerState.valueOf(bl.get(0),batteryVoltage);
+			bankBState = DyIOPowerState.valueOf(bl.get(1),batteryVoltage);
+			
+			fireDyIOEvent(new DyIOPowerEvent(bankAState, bankBState, batteryVoltage));
 			return;
 		}
 		pid.onAllResponse(data);
@@ -541,6 +538,11 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 			DyIOChannel c = getChannel(b);
 			c.fireChannelEvent(new DyIOChannelEvent(c, bl));
 			return;
+		}else{
+			IDyIOEvent e = new DyIOAsyncEvent(data);
+			for(IDyIOEventListener l : listeners) {
+				l.onDyIOEvent(e);
+			}
 		}
 		
 
@@ -627,6 +629,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 			pid.setConnection(getConnection());
 			pid.setAddress(getAddress());
 			pid.connect();
+			send( new PowerCommand());
 			startHeartBeat(3000);
 			return true;
 		}

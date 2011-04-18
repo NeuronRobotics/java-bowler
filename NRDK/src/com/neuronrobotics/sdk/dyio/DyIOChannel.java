@@ -373,8 +373,17 @@ public class DyIOChannel implements IDyIOChannel {
 	 * @param e
 	 */
 	protected void fireModeChangeEvent(DyIOChannelMode e) {
+		boolean ok = false;
+		for (DyIOChannelMode md :getAvailableModes()){
+			if(md == e)
+				ok=true;
+		}
+		if(! ok){
+			Log.error("Mode is invalid!!!");
+			e = DyIOChannelMode.DIGITAL_IN;
+		}
 		if(e==getMode()) {
-			Log.info("Mode not changed: "+getChannelNumber()+" mode: "+getMode());
+			//Log.info("Mode not changed: "+getChannelNumber()+" mode: "+getMode());
 		}
 		setCurrentMode(e);
 		for(IDyIOChannelModeChangeListener l : modeListeners) {
@@ -450,7 +459,7 @@ public class DyIOChannel implements IDyIOChannel {
 	@Override
 	public synchronized boolean setMode(DyIOChannelMode mode, boolean async) {
 		//resyncIfNotSynced();
-		if (getMode() == mode && (async == isAsync)) {	
+		if ((getMode() == mode && (async == isAsync)) || mode == null) {	
 			//fireModeChangeEvent(mode);
 			return true;
 		}
@@ -601,7 +610,7 @@ public class DyIOChannel implements IDyIOChannel {
 		try {
 			if(!canBeMode(mode)) {
 				System.err.println(message);
-				throw new RuntimeException(message);
+				//throw new RuntimeException(message);
 			}
 		}catch(RuntimeException ex) {
 			ex.printStackTrace();
