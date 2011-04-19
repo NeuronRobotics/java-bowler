@@ -325,13 +325,11 @@ public class DyIOChannel implements IDyIOChannel {
 		case 7:
 			modes.add(DyIOChannelMode.PWM_OUT);
 			modes.add(DyIOChannelMode.DC_MOTOR_VEL);
-			modes.add(DyIOChannelMode.DC_MOTOR_DIR);
 			break;
 		case 8:
 		case 9:
 		case 10:
 		case 11:
-			modes.add(DyIOChannelMode.DC_MOTOR_VEL);
 			modes.add(DyIOChannelMode.DC_MOTOR_DIR);
 			break;
 		}
