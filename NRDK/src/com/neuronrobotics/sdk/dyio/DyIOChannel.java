@@ -229,9 +229,9 @@ public class DyIOChannel implements IDyIOChannel {
 			getDevice().resync();
 			return;
 		}
-		//BowlerDatagram bd = getDevice().send(new GetChannelModeCommand(number));
+		BowlerDatagram bd = getDevice().send(new GetChannelModeCommand(number));
 		//System.out.println(bd);
-		//setCurrentMode(DyIOChannelMode.get(bd.getData().getByte(1)));
+		setCurrentMode(DyIOChannelMode.get(bd.getData().getByte(1)));
 	}
 	
 	public boolean canBeMode(DyIOChannelMode m) {
@@ -271,27 +271,54 @@ public class DyIOChannel implements IDyIOChannel {
 		}
 		
 		
-		
 		switch(number) {
 		case 0:
 			modes.add(DyIOChannelMode.SPI_CLOCK);
-			modes.add(DyIOChannelMode.COUNT_IN_HOME);
-			modes.add(DyIOChannelMode.COUNT_OUT_HOME);
 			break;
 		case 1:
 			modes.add(DyIOChannelMode.SPI_MISO);
-			modes.add(DyIOChannelMode.COUNT_IN_HOME);
-			modes.add(DyIOChannelMode.COUNT_OUT_HOME);
 			break;
 		case 2:
 			modes.add(DyIOChannelMode.SPI_MOSI);
-			modes.add(DyIOChannelMode.COUNT_IN_HOME);
-			modes.add(DyIOChannelMode.COUNT_OUT_HOME);
 			break;
+
+		}
+		switch(number) {
+		case 0:
+		case 1:
+		case 2:
 		case 3:
 			modes.add(DyIOChannelMode.COUNT_IN_HOME);
 			modes.add(DyIOChannelMode.COUNT_OUT_HOME);
 			break;
+		case 16:
+		case 18:
+		case 20:
+		case 22:
+			modes.add(DyIOChannelMode.COUNT_IN_DIR);
+			modes.add(DyIOChannelMode.COUNT_OUT_DIR);
+			break;
+		case 17:
+		case 19:
+		case 21:
+		case 23:
+			modes.add(DyIOChannelMode.COUNT_IN_INT);
+			modes.add(DyIOChannelMode.COUNT_OUT_INT);
+			break;
+		}
+		switch(number) {
+		case 8:
+		case 9:
+		case 10:
+		case 11:
+		case 12:
+		case 13:
+		case 14:
+		case 15:
+			modes.add(DyIOChannelMode.ANALOG_IN);
+			break;
+		}
+		switch(number) {
 		case 4:
 		case 5:
 		case 6:
@@ -306,33 +333,14 @@ public class DyIOChannel implements IDyIOChannel {
 		case 11:
 			modes.add(DyIOChannelMode.DC_MOTOR_VEL);
 			modes.add(DyIOChannelMode.DC_MOTOR_DIR);
-		case 12:
-		case 13:
-		case 14:
-		case 15:
-			modes.add(DyIOChannelMode.ANALOG_IN);
 			break;
+		}
+		switch(number) {
 		case 16:
 			modes.add(DyIOChannelMode.USART_TX);
-			modes.add(DyIOChannelMode.COUNT_IN_DIR);
-			modes.add(DyIOChannelMode.COUNT_OUT_DIR);
 			break;
 		case 17:
 			modes.add(DyIOChannelMode.USART_RX);
-			modes.add(DyIOChannelMode.COUNT_IN_INT);
-			modes.add(DyIOChannelMode.COUNT_OUT_INT);
-			break;
-		case 18:
-		case 20:
-		case 22:
-			modes.add(DyIOChannelMode.COUNT_IN_DIR);
-			modes.add(DyIOChannelMode.COUNT_OUT_DIR);
-			break;
-		case 19:
-		case 21:
-		case 23:
-			modes.add(DyIOChannelMode.COUNT_IN_INT);
-			modes.add(DyIOChannelMode.COUNT_OUT_INT);
 			break;
 		}
 		if(number == 23) {
