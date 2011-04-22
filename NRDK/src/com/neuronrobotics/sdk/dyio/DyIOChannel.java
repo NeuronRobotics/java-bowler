@@ -467,6 +467,7 @@ public class DyIOChannel implements IDyIOChannel {
 			//fireModeChangeEvent(mode);
 			return true;
 		}
+		
 		for(int i = 0; i < MAXATTEMPTS; i++) {
 			try {
 				isAsync = async;
