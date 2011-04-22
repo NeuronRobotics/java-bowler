@@ -54,7 +54,7 @@ public class CounterOutputChannel extends DyIOAbstractPeripheral implements ICha
 	}
 	
 	/**
-	 * Set the servo to a given position.
+	 * Set the Counter to a given position.
 	 * 
 	 * @param pos
 	 * @return if the action was successful
@@ -64,7 +64,7 @@ public class CounterOutputChannel extends DyIOAbstractPeripheral implements ICha
 	}
 	
 	/**
-	 * Steps the servo though a transformation over a given amount of time.
+	 * Steps the Counter though a transformation over a given amount of time.
 	 * 
 	 * @param pos - the end position 
 	 * @param time - the number of seconds for the transition to take place
