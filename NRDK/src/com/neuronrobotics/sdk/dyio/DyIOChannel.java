@@ -516,11 +516,11 @@ public class DyIOChannel implements IDyIOChannel {
 		case COUNT_OUT_DIR:
 		case COUNT_OUT_HOME:
 			b.addAs32(getCachedValue());
-			b.addAs32((int)(cachedTime*1000));
+			b.addAs32((int)(getCachedTime()*1000));
 			break;
 		case SERVO_OUT:
 			b.add(getCachedValue());
-			b.addAs16((int)(cachedTime*1000));
+			b.addAs16((int)(getCachedTime()*1000));
 			break;
 		default:
 			b.add(getCachedValue());
@@ -635,5 +635,9 @@ public class DyIOChannel implements IDyIOChannel {
 
 	public void setCachedTime(float cachedTime) {
 		this.cachedTime = cachedTime;
+	}
+
+	public float getCachedTime() {
+		return cachedTime;
 	}
 }
