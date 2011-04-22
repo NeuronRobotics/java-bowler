@@ -46,6 +46,7 @@ public class SetChannelValueCommand extends BowlerAbstractCommand {
 		case COUNT_OUT_DIR:
 		case COUNT_OUT_HOME:
 			getCallingDataStorage().addAs32(value);
+			getCallingDataStorage().addAs32(0);
 			break;
 		default:
 			getCallingDataStorage().add(value);
@@ -71,13 +72,20 @@ public class SetChannelValueCommand extends BowlerAbstractCommand {
 		setOpCode("schv");
 		
 		getCallingDataStorage().add(channel);
-		
-		if((mode == DyIOChannelMode.SERVO_OUT)){
-			//
+		switch(mode){
+		case COUNT_OUT_INT:
+		case COUNT_OUT_DIR:
+		case COUNT_OUT_HOME:
+			getCallingDataStorage().addAs32(value);
+			//Time is in seconds, the converts to Ms then sends as 16 bit value
+			getCallingDataStorage().addAs32((int)(time*1000));
+			break;
+		case SERVO_OUT:
 			getCallingDataStorage().add(value);
 			//Time is in seconds, the converts to Ms then sends as 16 bit value
 			getCallingDataStorage().addAs16((int)(time*1000));
-		}else{
+			break;
+		default:
 			getCallingDataStorage().add(value);
 		}
 	}
