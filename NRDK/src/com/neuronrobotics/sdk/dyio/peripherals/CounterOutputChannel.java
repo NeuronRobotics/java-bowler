@@ -52,6 +52,37 @@ public class CounterOutputChannel extends DyIOAbstractPeripheral implements ICha
 		}
 		channel.resync(true);
 	}
+	
+	/**
+	 * Set the servo to a given position.
+	 * 
+	 * @param pos
+	 * @return if the action was successful
+	 */
+	public boolean SetPosition(int pos){
+		return SetPosition(pos, 0);
+	}
+	
+	/**
+	 * Steps the servo though a transformation over a given amount of time.
+	 * 
+	 * @param pos - the end position 
+	 * @param time - the number of seconds for the transition to take place
+	 * @return if the action was successful
+	 */
+	public boolean SetPosition(int pos, float time){
+		if(!validate()) {
+			return false;
+		}
+		getChannel().setCachedValue(pos);
+		getChannel().setCachedTime(time);
+		if(getChannel().getCachedMode()) {
+			return true;
+		}
+		return flush();
+	}
+	
+	
 	/**
 	 * addCounterOutputListener.
 	 * 
@@ -130,6 +161,12 @@ public class CounterOutputChannel extends DyIOAbstractPeripheral implements ICha
 	 */
 	public void setAsync(boolean isAsync) {
 		setMode(DyIOChannelMode.COUNT_OUT_INT, isAsync);
+	}
+	private boolean validate() {
+		if(!isEnabled()) {
+			//return false;
+		}
+		return getMode() == DyIOChannelMode.COUNT_OUT_INT;
 	}
 
 }

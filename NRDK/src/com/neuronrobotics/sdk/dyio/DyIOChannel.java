@@ -38,7 +38,7 @@ import com.neuronrobotics.sdk.dyio.peripherals.DyIOAbstractPeripheral;
  */
 public class DyIOChannel implements IDyIOChannel {
 	private int MAXATTEMPTS = 3;
-	
+	private float cachedTime=0;
 	private DyIO device;
 	private int number;
 	private boolean editable;
@@ -516,6 +516,12 @@ public class DyIOChannel implements IDyIOChannel {
 		case COUNT_OUT_DIR:
 		case COUNT_OUT_HOME:
 			b.addAs32(getCachedValue());
+			b.addAs32((int)(cachedTime*1000));
+			break;
+		case SERVO_OUT:
+			b.add(getCachedValue());
+			b.addAs16((int)(cachedTime*1000));
+			break;
 		default:
 			b.add(getCachedValue());
 		}
@@ -625,5 +631,9 @@ public class DyIOChannel implements IDyIOChannel {
 
 	public DyIOChannelMode getCurrentMode() {
 		return current;
+	}
+
+	public void setCachedTime(float cachedTime) {
+		this.cachedTime = cachedTime;
 	}
 }

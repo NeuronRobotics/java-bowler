@@ -13,9 +13,6 @@
  * limitations under the License.
  ******************************************************************************/
 package com.neuronrobotics.sdk.dyio.peripherals;
-
-import com.neuronrobotics.sdk.commands.bcs.io.SetChannelValueCommand;
-import com.neuronrobotics.sdk.common.InvalidResponseException;
 import com.neuronrobotics.sdk.dyio.DyIOChannel;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 
@@ -23,8 +20,6 @@ import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
  * 
  */
 public class ServoChannel extends DyIOAbstractPeripheral {
-	
-	private float cachedTime=0;
 	
 	/**
 	 * 
@@ -46,11 +41,7 @@ public class ServoChannel extends DyIOAbstractPeripheral {
 	 * @return if the action was successful
 	 */
 	public boolean SetPosition(int pos){
-		if(!validate()) {
-			return false;
-		}
-		cachedTime=0;
-		return setValue(pos);
+		return SetPosition(pos, 0);
 	}
 	
 	/**
@@ -64,29 +55,12 @@ public class ServoChannel extends DyIOAbstractPeripheral {
 		if(!validate()) {
 			return false;
 		}
-		//System.out.println("Setting Servo to pos: "+pos);
-		cachedTime=time;
 		getChannel().setCachedValue(pos);
+		getChannel().setCachedTime(time);
 		if(getChannel().getCachedMode()) {
 			return true;
 		}
 		return flush();
-	}
-	
-	@Override
-	public boolean flush() { 
-		//System.out.println("Flushing servo");
-		return flush(cachedTime);
-	}
-	
-	private boolean flush(float time) {
-		try {
-			getChannel().send(new SetChannelValueCommand(getChannel().getChannelNumber(), getChannel().getCachedValue(), time, getMode()));
-			cachedTime=0;
-			return true;
-		} catch (InvalidResponseException e) {
-			return false;
-		}
 	}
 	
 	
@@ -94,7 +68,6 @@ public class ServoChannel extends DyIOAbstractPeripheral {
 		if(!isEnabled()) {
 			//return false;
 		}
-		
 		return getMode() == DyIOChannelMode.SERVO_OUT;
 	}
 
