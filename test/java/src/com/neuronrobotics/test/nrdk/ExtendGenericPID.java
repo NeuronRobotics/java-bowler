@@ -8,36 +8,30 @@ import com.neuronrobotics.sdk.common.BowlerMethod;
 import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.genericdevice.GenericPIDDevice;
-import com.neuronrobotics.sdk.network.BowlerTCPClient;
+import com.neuronrobotics.sdk.ui.ConnectionDialog;
 
 public class ExtendGenericPID {
 	private ExtendGenericPID(){
 		Log.enableDebugPrint(true);
 		ExtendedPID pid = new ExtendedPID();
-		//if (!ConnectionDialog.getBowlerDevice(pid)){
-		//	System.exit(1);
-		//}
+		if (!ConnectionDialog.getBowlerDevice(pid)){
+			System.exit(1);
+		}
 		try {
-			pid.setConnection(new BowlerTCPClient("cortex.wpi.edu", 1965));
-			//pid.setConnection(new BowlerTCPClient("192.168.0.134", 1965));
+			System.out.println("Extended get position: "+pid.getExtendedValue(0));
 			pid.GetAllPIDPosition();
 			pid.GetPIDPosition(2);
 			pid.disconnect();
 			System.out.println("All OK!");
 			System.exit(0);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			pid.disconnect();
 			System.exit(1);
 		}
 	}
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		new ExtendGenericPID();
-	}
+
 	private class ExtendedPID extends GenericPIDDevice{
 		public int getExtendedValue(int group){
 			BowlerDatagram bd = send(new ExtendPIDCommand(group));
@@ -53,5 +47,12 @@ public class ExtendGenericPID {
 			setMethod(BowlerMethod.GET);
 			getCallingDataStorage().add(group);
 		}
+	}
+	
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		new ExtendGenericPID();
 	}
 }
