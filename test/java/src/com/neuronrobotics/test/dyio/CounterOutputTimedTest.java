@@ -17,7 +17,6 @@ public class CounterOutputTimedTest {
 		}
 		//Instantiate a new counter input
 		CounterOutputChannel stepper=new CounterOutputChannel(dyio.getChannel(23));
-		//Loop forever printing out the satate of the button
 		// Move 5 steps
 		stepper.SetPosition(500, 6);
 		ThreadUtil.wait(7000);
