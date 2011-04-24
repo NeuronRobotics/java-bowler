@@ -18,10 +18,9 @@ public class CounterOutputTimedTest {
 		//Instantiate a new counter input
 		CounterOutputChannel stepper=new CounterOutputChannel(dyio.getChannel(23));
 		// Move 5 steps
-		stepper.SetPosition(500, 6);
-		ThreadUtil.wait(7000);
-		stepper.SetPosition(0, 6);
-		ThreadUtil.wait(7000);
+		stepper.SetPosition(10000, 30);
+		ThreadUtil.wait(30000);
+		stepper.SetPosition(0, 0);
         dyio.disconnect();
         System.exit(0);
 	}
