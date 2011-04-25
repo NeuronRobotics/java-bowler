@@ -499,7 +499,9 @@ public class DyIOChannel implements IDyIOChannel {
 	 */
 	@Override
 	public boolean setValue(int value) {
+		Log.debug("Setting channel: "+number+" to value: "+value);
 		setCachedValue(value);
+		setCachedTime(0);
 		if(cachedMode)
 			return true;
 		if(dap!=null)
@@ -508,6 +510,7 @@ public class DyIOChannel implements IDyIOChannel {
 	}
 	
 	public boolean flush() {
+		Log.debug("Flushing channel: "+number);
 		ByteList b = new ByteList();
 		switch(getMode()){
 		case COUNT_IN_INT:
