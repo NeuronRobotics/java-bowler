@@ -56,7 +56,7 @@ public class SerialConnectionPanel extends AbstractConnectionPanel {
 		
 		refresh = new JButton("Refresh");
 		refresh.addActionListener(new ActionListener() {
-			@Override
+			
 			public void actionPerformed(ActionEvent arg0) {
 				refresh();
 			}
@@ -77,7 +77,7 @@ public class SerialConnectionPanel extends AbstractConnectionPanel {
 		refresh();
 	}
 
-	@Override
+	
 	public BowlerAbstractConnection getConnection() {
 		try {
 			int baud = Integer.parseInt(baudrateTxt.getText());
@@ -96,7 +96,7 @@ public class SerialConnectionPanel extends AbstractConnectionPanel {
 		return connection;
 	}
 
-	@Override
+	
 	public void refresh() {		
 		connectionCbo.removeAllItems();
 		String m = "NRSDK not installed properly, native library not found\n\n" +

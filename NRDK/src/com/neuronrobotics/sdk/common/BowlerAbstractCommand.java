@@ -194,7 +194,6 @@ public abstract class BowlerAbstractCommand implements ISendable {
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.common.ISendable#getBytes()
 	 */
-	@Override
 	public byte[] getBytes() {
 		ByteList buffer = new ByteList();
 		buffer.add(opCode.getBytes());

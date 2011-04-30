@@ -96,7 +96,7 @@ public class PPMReaderChannel  extends DyIOAbstractPeripheral implements IChanne
 		if(!listeners.contains(l))
 			listeners.add(l);
 	}
-	@Override
+	
 	public void onChannelEvent(DyIOChannelEvent e) {
 		getValues();
 		if(crossLinks == null){
@@ -113,7 +113,7 @@ public class PPMReaderChannel  extends DyIOAbstractPeripheral implements IChanne
 			l.onPPMPacket(values);
 		}
 	}
-	@Override
+	
 	public boolean hasAsync() {
 		return true;
 	}

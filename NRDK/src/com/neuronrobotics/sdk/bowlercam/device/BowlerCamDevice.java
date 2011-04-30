@@ -42,7 +42,6 @@ public class BowlerCamDevice extends BowlerAbstractDevice {
 			l.onNewImage(camera,im);
 		}
 	}
-	@Override
 	public void onAllResponse(BowlerDatagram data) {
 		// TODO Auto-generated method stub
 
@@ -94,7 +93,6 @@ public class BowlerCamDevice extends BowlerAbstractDevice {
 			return done;
 		}
 	}
-	@Override
 	public void onAsyncResponse(BowlerDatagram data) {
 		if(data.getRPC().contains("_img")){
 			ByteList d = data.getData();

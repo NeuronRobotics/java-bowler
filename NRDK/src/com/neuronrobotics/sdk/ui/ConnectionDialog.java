@@ -47,7 +47,7 @@ public class ConnectionDialog extends JDialog {
 		
 		connectBtn = new JButton("Connect");
 		connectBtn.addActionListener(new ActionListener() {
-			@Override
+			
 			public void actionPerformed(ActionEvent arg0) {
 				try {
 					Log.info("Using connection" + getConnection() + "\n");
@@ -62,7 +62,7 @@ public class ConnectionDialog extends JDialog {
 		
 		cancelBtn = new JButton("Cancel");
 		cancelBtn.addActionListener(new ActionListener() {
-			@Override
+			
 			public void actionPerformed(ActionEvent arg0) {
 				isCancled = true;
 				setVisible(false);
@@ -71,10 +71,10 @@ public class ConnectionDialog extends JDialog {
 		
 		refresh = new JButton("Refresh");
 		refresh.addActionListener(new ActionListener() {
-			@Override
+			
 			public void actionPerformed(ActionEvent arg0) {
 				for(int i = 0; i < connectionPanels.getTabCount(); i++) {
-					((AbstractConnectionPanel) connectionPanels.getTabComponentAt(i)).refresh();
+					((AbstractConnectionPanel) connectionPanels.getComponentAt(i)).refresh();
 				}
 			}
 		});

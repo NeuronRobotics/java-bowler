@@ -31,7 +31,7 @@ public class MockDyIO implements IMockDevice {
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.mock.dyio.IMockDevice#getInputStream()
 	 */
-	@Override
+	
 	public InputStream getInputStream() {
 		return sis;
 	}
@@ -39,7 +39,7 @@ public class MockDyIO implements IMockDevice {
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.mock.dyio.IMockDevice#getOutputStream()
 	 */
-	@Override
+	
 	public OutputStream getOutputStream() {
 		return sos;
 	}
@@ -48,14 +48,14 @@ public class MockDyIO implements IMockDevice {
 		
 		private StringBuilder buffer = new StringBuilder();
 		
-		@Override
+		
 		public int read() throws IOException {
 			return buffer.length();
 		}
 	}
 	
 	private class StringOutputStream extends OutputStream {
-		@Override
+		
 		public void write(int b) throws IOException {
 			Log.info("MC << " + b);
 		}

@@ -70,7 +70,7 @@ public class UDPConnectionPanel extends AbstractConnectionPanel {
 		add(connectionCbo);
 		refresh = new JButton("Refresh");
 		refresh.addActionListener(new ActionListener() {
-			@Override
+			
 			public void actionPerformed(ActionEvent arg0) {
 				refresh();
 			}
@@ -83,7 +83,7 @@ public class UDPConnectionPanel extends AbstractConnectionPanel {
 		//refresh();
 	}
 
-	@Override
+	
 	public BowlerAbstractConnection getConnection() {
 		try {
 			int baud = Integer.parseInt(port.getText());
@@ -104,7 +104,7 @@ public class UDPConnectionPanel extends AbstractConnectionPanel {
 		return null;
 	}
 
-	@Override
+	
 	public void refresh() {
 		connectionCbo.removeAllItems();
 		connectionCbo.addItem("Searching...");
@@ -119,13 +119,13 @@ public class UDPConnectionPanel extends AbstractConnectionPanel {
 		ProcessMonitor pm = new ProcessMonitor(nsp);
 		pm.addProcessMonitorListener(new IProgressMonitorListener() {
 			
-			@Override
+			
 			public void onUpdate(double value) {
 				// TODO Auto-generated method stub
 				
 			}
 			
-			@Override
+			
 			public void onComplete() {
 				connectionCbo.setEnabled(true);
 				port.setEnabled(true);
@@ -162,11 +162,11 @@ public class UDPConnectionPanel extends AbstractConnectionPanel {
 			
 			isRunning = false;
 		}
-		@Override
+		
 		public double getPercentage() {
 			return 0;
 		}
-		@Override
+		
 		public boolean isComplete() {
 			return !isRunning;
 		}

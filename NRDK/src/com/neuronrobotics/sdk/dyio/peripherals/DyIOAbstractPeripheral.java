@@ -103,7 +103,7 @@ public abstract class DyIOAbstractPeripheral implements IDyIOChannel {
 	 * 
 	 * @return returns the channel object
 	 */
-	@Override
+	 
 	public DyIOChannel getChannel() {
 		return channel.getChannel();
 	}
@@ -113,7 +113,7 @@ public abstract class DyIOAbstractPeripheral implements IDyIOChannel {
 	 * 
 	 * @return returns the mode of this channel
 	 */
-	@Override
+	 
 	public DyIOChannelMode getMode() {
 		return channel.getMode();
 	}
@@ -126,7 +126,7 @@ public abstract class DyIOAbstractPeripheral implements IDyIOChannel {
 	 * @return if the set worked
 	 * @throws InvalidResponseException
 	 */
-	@Override
+	 
 	public boolean setValue(int value) throws InvalidResponseException {
 		return channel.setValue(value);
 	}
@@ -139,7 +139,7 @@ public abstract class DyIOAbstractPeripheral implements IDyIOChannel {
 	 * @return if the set worked
 	 * @throws InvalidResponseException
 	 */
-	@Override
+	 
 	public boolean setValue(ISendable value)throws InvalidResponseException {
 		return channel.setValue(value);
 	}
@@ -150,7 +150,7 @@ public abstract class DyIOAbstractPeripheral implements IDyIOChannel {
 	 * @return the value of the channel on the DyIO
 	 * @throws InvalidResponseException
 	 */
-	@Override
+	 
 	public int getValue()throws InvalidResponseException {
 		return channel.getValue();
 	}

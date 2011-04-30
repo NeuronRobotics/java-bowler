@@ -336,7 +336,6 @@ public class Create implements IUARTStreamListener{
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.dyio.IChannelEventListener#onChannelEvent(com.neuronrobotics.sdk.dyio.DyIOChannelEvent)
 	 */
-	@Override
 	public void onChannelEvent(DyIOChannelEvent e) {
 		try {
 			Thread.sleep(100);

@@ -110,7 +110,7 @@ public class CounterInputChannel extends DyIOAbstractPeripheral implements IChan
 	 * 
 	 * @param e
 	 */
-	@Override
+	 
 	public void onChannelEvent(DyIOChannelEvent e) {
 		byte []  b = e.getData().getBytes();
 		int data = ByteList.convertToInt(b,true);
@@ -129,14 +129,14 @@ public class CounterInputChannel extends DyIOAbstractPeripheral implements IChan
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.dyio.peripherals.DyIOAbstractPeripheral#setValue(int)
 	 */
-	@Override
+	 
 	public boolean setValue(int value){
 		ByteList b = new ByteList();
 		b.addAs32(value);
 		return setValue(b);
 	}
 
-	@Override
+	 
 	public boolean hasAsync() {
 		return true;
 	}

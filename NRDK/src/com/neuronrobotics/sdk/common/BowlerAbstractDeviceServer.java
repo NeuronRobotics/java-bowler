@@ -20,7 +20,6 @@ public abstract class BowlerAbstractDeviceServer extends BowlerAbstractDevice {
 		if(!namespaces.contains(nms))
 			namespaces.add(nms);
 	}
-	@Override
 	public void onAllResponse(BowlerDatagram data) {
 		String rpc = data.getRPC();
 		if(rpc.contains("_nms")) {
@@ -55,7 +54,6 @@ public abstract class BowlerAbstractDeviceServer extends BowlerAbstractDevice {
 
 	}
 
-	@Override
 	public void onAsyncResponse(BowlerDatagram data) {
 		// TODO Auto-generated method stub
 

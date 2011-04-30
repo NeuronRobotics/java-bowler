@@ -61,7 +61,7 @@ public class BluetoothConnectionPanel extends AbstractConnectionPanel {
 		
 		search = new JButton("Search for Devices");
 		search.addActionListener(new ActionListener() {
-			@Override
+			
 			public void actionPerformed(ActionEvent arg0) {
 				refresh();
 			}
@@ -81,7 +81,7 @@ public class BluetoothConnectionPanel extends AbstractConnectionPanel {
 		add(message, "spanx, growx");
 	}
 
-	@Override
+	
 	public BluetoothSerialConnection getConnection() {
 		try {
 			String port = connectionCbo.getSelectedItem().toString();
@@ -94,7 +94,7 @@ public class BluetoothConnectionPanel extends AbstractConnectionPanel {
 		return connection;
 	}
 	
-	@Override
+	
 	public void refresh() {
 		Log.info("Searching for devices over bluetooth...");
 		
@@ -112,13 +112,13 @@ public class BluetoothConnectionPanel extends AbstractConnectionPanel {
 		ProcessMonitor pm = new ProcessMonitor(bsp);
 		pm.addProcessMonitorListener(new IProgressMonitorListener() {
 			
-			@Override
+			
 			public void onUpdate(double value) {
 				// TODO Auto-generated method stub
 				
 			}
 			
-			@Override
+			
 			public void onComplete() {
 				progress.setIndeterminate(false);
 				search.setEnabled(true);
@@ -170,12 +170,12 @@ public class BluetoothConnectionPanel extends AbstractConnectionPanel {
 			}
 		}
 		
-		@Override
+		
 		public double getPercentage() {
 			return 0;
 		}
 
-		@Override
+		
 		public boolean isComplete() {
 			return !isRunning;
 		}

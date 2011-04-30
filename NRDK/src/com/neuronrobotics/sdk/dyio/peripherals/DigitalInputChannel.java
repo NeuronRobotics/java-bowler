@@ -122,12 +122,12 @@ public class DigitalInputChannel extends DyIOAbstractPeripheral implements IChan
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.dyio.IChannelEventListener#onChannelEvent(com.neuronrobotics.sdk.dyio.DyIOChannelEvent)
 	 */
-	@Override
+	 
 	public void onChannelEvent(DyIOChannelEvent e) {
 		fireValueChanged(e.getData().get(0) != 0);
 	}
 
-	@Override
+	 
 	public boolean hasAsync() {
 		return true;
 	}

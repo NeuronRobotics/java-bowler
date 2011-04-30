@@ -20,17 +20,17 @@ public class DigitalInput implements IDataType {
 		inverted = isInverted;
 	}
 	
-	@Override
+	
 	public void setValue(ByteList value) {
 		setValue(value.get(0) > 0);
 	}
 
-	@Override
+	
 	public void setCached(boolean isCached) {
 		cached = isCached;
 	}
 
-	@Override
+	
 	public boolean isCached() {
 		return cached;
 	}

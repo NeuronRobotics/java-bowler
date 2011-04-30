@@ -21,18 +21,18 @@ public class GenericDevice extends BowlerAbstractDevice {
 		setConnection(connection);
 	}
 
-	@Override
+	
 	public boolean isAvailable() throws InvalidConnectionException {
 		return getConnection().isConnected();
 	}
 
-	@Override
+	
 	public void onAllResponse(BowlerDatagram data) {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
+	
 	public void onAsyncResponse(BowlerDatagram data) {
 		// TODO Auto-generated method stub
 

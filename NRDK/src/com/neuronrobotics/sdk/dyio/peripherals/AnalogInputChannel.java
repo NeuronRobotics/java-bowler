@@ -144,12 +144,12 @@ public class AnalogInputChannel extends DyIOAbstractPeripheral implements IChann
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.dyio.IChannelEventListener#onChannelEvent(com.neuronrobotics.sdk.dyio.DyIOChannelEvent)
 	 */
-	@Override
+	 
 	public void onChannelEvent(DyIOChannelEvent e) {
 		fireValueChanged(ByteList.convertToInt(e.getData().getBytes()));
 	}
 
-	@Override
+	 
 	public boolean hasAsync() {
 		return true;
 	}

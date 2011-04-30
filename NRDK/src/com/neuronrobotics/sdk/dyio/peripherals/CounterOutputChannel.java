@@ -132,7 +132,7 @@ public class CounterOutputChannel extends DyIOAbstractPeripheral implements ICha
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.dyio.peripherals.DyIOAbstractPeripheral#setValue(int)
 	 */
-	@Override
+	 
 	public boolean setValue(int value){
 		Log.info("Setting counter set point");
 		ByteList b = new ByteList();
@@ -144,13 +144,13 @@ public class CounterOutputChannel extends DyIOAbstractPeripheral implements ICha
 	 * 
 	 * @param e
 	 */
-	@Override
+	 
 	public void onChannelEvent(DyIOChannelEvent e) {
 		byte []  b = e.getData().getBytes();
 		int data = ByteList.convertToInt(b,true);
 		fireOnCounterOutput(data);
 	}
-	@Override
+	 
 	public boolean hasAsync() {
 		return true;
 	}

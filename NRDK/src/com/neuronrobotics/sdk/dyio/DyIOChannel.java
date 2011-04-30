@@ -397,7 +397,7 @@ public class DyIOChannel implements IDyIOChannel {
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	 
 	public String toString() {
 		return String.format("(%02d) - %-20s", getChannelNumber(), getMode());
 	}
@@ -405,7 +405,7 @@ public class DyIOChannel implements IDyIOChannel {
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.dyio.IDyIOChannel#getChannel()
 	 */
-	@Override
+	 
 	public DyIOChannel getChannel() {
 		return this;
 	}
@@ -413,7 +413,7 @@ public class DyIOChannel implements IDyIOChannel {
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.dyio.IDyIOChannel#getMode()
 	 */
-	@Override
+	 
 	public DyIOChannelMode getMode() {		
 		return getCurrentMode();
 	}
@@ -421,7 +421,7 @@ public class DyIOChannel implements IDyIOChannel {
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.dyio.IDyIOChannel#getValue()
 	 */
-	@Override
+	 
 	public int getValue() {
 		BowlerDatagram response=null;
 		int val=0;
@@ -460,7 +460,7 @@ public class DyIOChannel implements IDyIOChannel {
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.dyio.IDyIOChannel#setMode(com.neuronrobotics.sdk.dyio.DyIOChannelMode, boolean)
 	 */
-	@Override
+	 
 	public synchronized boolean setMode(DyIOChannelMode mode, boolean async) {
 		//resyncIfNotSynced();
 		if ((getMode() == mode && (async == isAsync)) || mode == null) {	
@@ -497,7 +497,7 @@ public class DyIOChannel implements IDyIOChannel {
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.dyio.IDyIOChannel#setValue(int)
 	 */
-	@Override
+	 
 	public boolean setValue(int value) {
 		Log.debug("Setting channel: "+number+" to value: "+value);
 		setCachedValue(value);
@@ -536,7 +536,7 @@ public class DyIOChannel implements IDyIOChannel {
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.dyio.IDyIOChannel#setValue(com.neuronrobotics.sdk.common.ISendable)
 	 */
-	@Override
+	 
 	public boolean setValue(ISendable data) {
 		int attempts = MAXATTEMPTS;
 		if(getMode() == DyIOChannelMode.USART_RX ||getMode() == DyIOChannelMode.USART_TX )

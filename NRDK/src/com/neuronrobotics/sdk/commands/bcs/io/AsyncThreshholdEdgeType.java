@@ -80,7 +80,6 @@ public enum AsyncThreshholdEdgeType implements ISendable{
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.common.ISendable#getBytes()
 	 */
-	@Override
 	public byte[] getBytes() {
 		byte [] b = {getValue()};
 		return b;

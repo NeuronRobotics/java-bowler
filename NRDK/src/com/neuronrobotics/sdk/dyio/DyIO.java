@@ -471,7 +471,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	 
 	public String toString() {
 		
 		String chFmt = "%02d - %-20s   %02d - %-20s\n";
@@ -491,7 +491,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.common.BowlerAbstractDevice#isAvailable()
 	 */
-	@Override
+	 
 	public boolean isAvailable() throws InvalidConnectionException {
 		try {
 			return resync();
@@ -504,7 +504,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.common.IBowlerDatagramListener#onAllResponse(com.neuronrobotics.sdk.common.BowlerDatagram)
 	 */
-	@Override
+	 
 	public void onAllResponse(BowlerDatagram data) {
 		if(data.getRPC().equals("_pwr")) {
 			System.out.println("Updating Power state");
@@ -525,7 +525,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.common.IBowlerDatagramListener#onAsyncResponse(com.neuronrobotics.sdk.common.BowlerDatagram)
 	 */
-	@Override
+	 
 	public void onAsyncResponse(BowlerDatagram data) {
 		Log.info("<< Async\n"+data.toString());
 		if(data.getRPC().equals("gchv")) {
@@ -566,7 +566,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 	public boolean ResetPIDChannel(int group) {
 		return pid.ResetPIDChannel(group);
 	}
-	@Override
+	 
 	public boolean ResetPIDChannel(int group, int valueToSetCurrentTo) {
 		return pid.ResetPIDChannel(group, valueToSetCurrentTo);
 	}
@@ -623,7 +623,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 	}
 	
 	
-	@Override
+	 
 	public boolean connect(){
 		if(super.connect()){
 			pid.setConnection(getConnection());
@@ -636,7 +636,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 		return false;
 	}
 
-	@Override
+	 
 	public void startHeartBeat(long msHeartBeatTime){
 		super.startHeartBeat(msHeartBeatTime);
 		try{
@@ -648,7 +648,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 			throw new DyIOFirmwareOutOfDateException("DyIO firmware is out of date");
 		}
 	}
-	@Override
+	 
 	public void stopHeartBeat(){
 		
 		super.stopHeartBeat();

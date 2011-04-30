@@ -27,13 +27,13 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 	public GenericPIDDevice() {
 	}
 
-	@Override
+	
 	public void onAllResponse(BowlerDatagram data) {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
+	
 	public void onAsyncResponse(BowlerDatagram data) {
 		if(data.getRPC().contains("_pid")){
 			firePIDEvent(new PIDEvent(data));
@@ -46,20 +46,20 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 	/**
 	 * PID controller (new as of 0.3.6)
 	 */
-	@Override
+	
 	public boolean SetPIDSetPoint(int group,int setpoint,double seconds){
 		return send(new  ControlPIDCommand((char) group,setpoint, seconds))!=null;
 	}
-	@Override
+	
 	public boolean SetAllPIDSetPoint(int []setpoints,double seconds){
 		return send(new  ControlAllPIDCommand(setpoints, seconds))!=null;
 	}
-	@Override
+	
 	public int GetPIDPosition(int group) {
 		BowlerDatagram b = send(new  ControlPIDCommand((char) group));
 		return ByteList.convertToInt(b.getData().getBytes(1, 4),true);
 	}
-	@Override
+	
 	public int [] GetAllPIDPosition() {
 		BowlerDatagram b = send(new ControlAllPIDCommand());
 		ByteList data = b.getData();
@@ -70,18 +70,18 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 		return back;
 	}
 	
-	@Override
+	
 	public boolean ConfigurePIDController(PIDConfiguration config) {
 		return send(new  ConfigurePIDCommand(config))!=null;
 	}
 
-	@Override
+	
 	public PIDConfiguration getPIDConfiguration(int group) {
 		BowlerDatagram conf = send(new ConfigurePIDCommand( (char) group) );
 		PIDConfiguration back=new PIDConfiguration (conf);
 		return back;
 	}
-	@Override
+	
 	public boolean ResetPIDChannel(int group) {
 		BowlerDatagram rst = send(new  ResetPIDCommand((char) group));
 		if(rst==null)
@@ -91,7 +91,7 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 		return true;
 	}
 
-	@Override
+	
 	public boolean ResetPIDChannel(int group, int valueToSetCurrentTo) {
 		BowlerDatagram rst = send(new  ResetPIDCommand((char) group,valueToSetCurrentTo));
 		if(rst==null)
@@ -103,7 +103,7 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 	
 	
 	private ArrayList<IPIDEventListener> PIDEventListeners = new ArrayList<IPIDEventListener>();
-	@Override
+	
 	public void addPIDEventListener(IPIDEventListener l) {
 		synchronized(PIDEventListeners){
 			if(!PIDEventListeners.contains(l))

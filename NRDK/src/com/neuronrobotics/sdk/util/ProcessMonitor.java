@@ -22,7 +22,7 @@ public class ProcessMonitor implements ActionListener {
 		timer.start();
 	}
 	
-	@Override
+	
 	public void actionPerformed(ActionEvent arg0) {
 		double value = process.getPercentage();
 		boolean isComplete = process.isComplete();

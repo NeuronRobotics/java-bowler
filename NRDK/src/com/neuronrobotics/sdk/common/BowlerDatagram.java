@@ -243,7 +243,6 @@ public class BowlerDatagram implements ISendable {
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.common.ISendable#getBytes()
 	 */
-	@Override
 	public byte[] getBytes() {
 		ByteList bl = new ByteList();
 		bl.add(REVISION);
