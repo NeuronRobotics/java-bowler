@@ -525,7 +525,7 @@ public abstract class BowlerAbstractConnection {
 					//Log.info("Poping latest packet and sending to listeners");
 					// pop is thread safe.
 					synchronized(queueBuffer){
-						send(queueBuffer.remove(0));
+						send(queueBuffer.remove(queueBuffer.size()-1));
 					}
 				}
 			}
