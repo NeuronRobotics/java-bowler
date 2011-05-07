@@ -507,7 +507,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 	 
 	public void onAllResponse(BowlerDatagram data) {
 		if(data.getRPC().equals("_pwr")) {
-			System.out.println("Updating Power state");
+			//System.out.println("Updating Power state");
 			ByteList bl = data.getData();
 			if(bl.size() != 4) {
 				return;
