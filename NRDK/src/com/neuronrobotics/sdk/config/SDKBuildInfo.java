@@ -9,8 +9,15 @@ import java.io.InputStreamReader;
 
 public class SDKBuildInfo {
 	public static String getVersion(){
+		String s=getTag("app.version");
+		if(s==null)
+			s="0.0.0";
+		return s;
+	}
+	
+	private static String getTag(String target){
 		String s="";
-		InputStream is = getDefaultConfigurationStream();
+		InputStream is = getBuildPropertiesStream();
 		BufferedReader br = new BufferedReader(new InputStreamReader(is));
 		String line;
 		try {
@@ -21,14 +28,14 @@ public class SDKBuildInfo {
 		}
 		String [] splitAll = s.split("\n");
 		for(int i=0;i<splitAll.length;i++){
-			if(splitAll[i].contains("app.version")){
+			if(splitAll[i].contains(target)){
 				String [] split = splitAll[i].split("=");
 				return split[1];
 			}
 		}
-		return "0.0.0";
+		return null;
 	}
-	private static InputStream getDefaultConfigurationStream() {
+	private static InputStream getBuildPropertiesStream() {
 		return SDKBuildInfo.class.getResourceAsStream("build.properties");
 	}
 }
