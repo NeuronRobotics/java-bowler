@@ -18,13 +18,14 @@ import com.neuronrobotics.sdk.config.SDKBuildInfo;
 // TODO: Auto-generated Javadoc
 
 /**
- * This class contains information about the SDK.
- *
+ * This class has been replaced by SDKBuildInfo
  * @author rbreznak
  */
+@Deprecated
 public class SDKInfo {
 	
 	/** The Constant NAME. */
+	
 	public static final String NAME = "Neuron Robotics SDK " + SDKBuildInfo.getMajorVersion() + "." + SDKBuildInfo.getMinorVersion() + "(" + SDKBuildInfo.getBuild() + ")";
 	
 	/** The Constant isVM64bit. */
@@ -44,7 +45,5 @@ public class SDKInfo {
 	
 	/** The is unix. */
 	public static boolean isUnix =(isLinux || isMac);
-
-
 	
 }
