@@ -25,7 +25,7 @@ import com.neuronrobotics.sdk.config.SDKBuildInfo;
 public class SDKInfo {
 	
 	/** The Constant NAME. */
-	public static final String NAME = "Neuron Robotics SDK " + getMajorVersion() + "." + getMinorVersion() + "(" + getBuild() + ")";
+	public static final String NAME = "Neuron Robotics SDK " + SDKBuildInfo.getMajorVersion() + "." + SDKBuildInfo.getMinorVersion() + "(" + SDKBuildInfo.getBuild() + ")";
 	
 	/** The Constant isVM64bit. */
 	//public static final boolean isVM64bit = (System.getProperty("sun.arch.data.model").indexOf("64") != -1);
@@ -45,24 +45,6 @@ public class SDKInfo {
 	/** The is unix. */
 	public static boolean isUnix =(isLinux || isMac);
 
-	public static int getMajorVersion() {
-		return getBuildInfo()[0];
-	}
 
-	public static int getMinorVersion() {
-		return getBuildInfo()[1];
-	}
-
-	public static int getBuild() {
-		return getBuildInfo()[2];
-	}
-	private static int[] getBuildInfo(){
-		String s = SDKBuildInfo.getVersion();
-		String [] splits=s.split(".");
-		int [] rev = new int[3];
-		for(int i=0;i<3;i++){
-			rev[i]=new Integer(splits[i]);
-		}
-		return rev;
-	}
+	
 }

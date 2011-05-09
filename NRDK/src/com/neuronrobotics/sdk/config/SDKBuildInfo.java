@@ -14,6 +14,26 @@ public class SDKBuildInfo {
 			s="0.0.0";
 		return s;
 	}
+	public static int getMajorVersion() {
+		return getBuildInfo()[0];
+	}
+
+	public static int getMinorVersion() {
+		return getBuildInfo()[1];
+	}
+
+	public static int getBuild() {
+		return getBuildInfo()[2];
+	}
+	public static int[] getBuildInfo(){
+		String s = getVersion();
+		String [] splits=s.split(".");
+		int [] rev = new int[3];
+		for(int i=0;i<3;i++){
+			rev[i]=new Integer(splits[i]);
+		}
+		return rev;
+	}
 	
 	private static String getTag(String target){
 		String s="";
