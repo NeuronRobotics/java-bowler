@@ -13,6 +13,8 @@
  * limitations under the License.
  ******************************************************************************/
 package com.neuronrobotics.sdk.common;
+
+import com.neuronrobotics.sdk.config.SDKBuildInfo;
 // TODO: Auto-generated Javadoc
 
 /**
@@ -22,17 +24,8 @@ package com.neuronrobotics.sdk.common;
  */
 public class SDKInfo {
 	
-	/** The Constant MAJOR_VERSION. */
-	public static final int MAJOR_VERSION = 3;
-	
-	/** The Constant MINOR_VERSION. */
-	public static final int MINOR_VERSION = 7;
-	
-	/** The Constant BUILD. */
-	public static final String BUILD = "2";
-	
 	/** The Constant NAME. */
-	public static final String NAME = "Neuron Robotics SDK " + MAJOR_VERSION + "." + MINOR_VERSION + "(" + BUILD + ")";
+	public static final String NAME = "Neuron Robotics SDK " + getMajorVersion() + "." + getMinorVersion() + "(" + getBuild() + ")";
 	
 	/** The Constant isVM64bit. */
 	//public static final boolean isVM64bit = (System.getProperty("sun.arch.data.model").indexOf("64") != -1);
@@ -51,4 +44,25 @@ public class SDKInfo {
 	
 	/** The is unix. */
 	public static boolean isUnix =(isLinux || isMac);
+
+	public static int getMajorVersion() {
+		return getBuildInfo()[0];
+	}
+
+	public static int getMinorVersion() {
+		return getBuildInfo()[1];
+	}
+
+	public static int getBuild() {
+		return getBuildInfo()[2];
+	}
+	private static int[] getBuildInfo(){
+		String s = SDKBuildInfo.getVersion();
+		String [] splits=s.split(".");
+		int [] rev = new int[3];
+		for(int i=0;i<3;i++){
+			rev[i]=new Integer(splits[i]);
+		}
+		return rev;
+	}
 }
