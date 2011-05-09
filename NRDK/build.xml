@@ -1,6 +1,6 @@
 <project name="Neuron Robotics SDK" default="deploy" basedir=".">
 
-  <property file="build.properties"/>
+  <property file="src/com/neuronrobotics/sdk/config/build.properties"/>
  
   <property name="app.path"      value="/${app.name}"/>
   <property name="build.home"    value="${basedir}/build"/>
@@ -69,6 +69,7 @@
         <include name="**/*.class"/>
       	<include name="**/*.png"/>
       	<include name="**/*.xml"/>
+      	<include name="**/*.properties"/>
         <exclude name="test/*.class"/>
       </fileset>
       <zipgroupfileset dir="lib" includes="*.jar" />
