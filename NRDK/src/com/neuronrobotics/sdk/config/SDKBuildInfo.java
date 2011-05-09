@@ -9,25 +9,7 @@ import java.io.InputStreamReader;
 
 public class SDKBuildInfo {
 	/** The Constant NAME. */
-	public static final String NAME = "Neuron Robotics SDK " + SDKBuildInfo.getMajorVersion() + "." + SDKBuildInfo.getMinorVersion() + "(" + SDKBuildInfo.getBuild() + ")";
-	
-	/** The Constant isVM64bit. */
-	//public static final boolean isVM64bit = (System.getProperty("sun.arch.data.model").indexOf("64") != -1);
-	
-	/** The Constant isOS64bit. */
-	public static final boolean isOS64bit = (System.getProperty("os.arch").indexOf("x86_64") != -1);
-	
-	/** The Constant isLinux. */
-	public static final boolean isLinux = (System.getProperty("os.name").toLowerCase().indexOf("linux")!=-1);
-	
-	/** The Constant isWindows. */
-	public static final boolean isWindows = (System.getProperty("os.name").toLowerCase().indexOf("win")!=-1);
-	
-	/** The Constant isMac. */
-	public static final boolean isMac = (System.getProperty("os.name").toLowerCase().indexOf("mac")!=-1);
-	
-	/** The is unix. */
-	public static boolean isUnix =(isLinux || isMac);
+	private static final String NAME = "Neuron Robotics SDK " + getProtocolVersion() + "." + getSDKVersion() + "(" + getBuildVersion() + ")";
 	
 	public static String getVersion(){
 		String s=getTag("app.version");
@@ -35,15 +17,15 @@ public class SDKBuildInfo {
 			s="0.0.0";
 		return s;
 	}
-	public static int getMajorVersion() {
+	public static int getProtocolVersion() {
 		return getBuildInfo()[0];
 	}
 
-	public static int getMinorVersion() {
+	public static int getSDKVersion() {
 		return getBuildInfo()[1];
 	}
 
-	public static int getBuild() {
+	public static int getBuildVersion() {
 		return getBuildInfo()[2];
 	}
 	public static int[] getBuildInfo(){
@@ -78,5 +60,23 @@ public class SDKBuildInfo {
 	}
 	private static InputStream getBuildPropertiesStream() {
 		return SDKBuildInfo.class.getResourceAsStream("build.properties");
+	}
+	public static String getSDKVersionString() {
+		return NAME;
+	}
+	public static boolean isOS64bit() {
+		return (System.getProperty("os.arch").indexOf("x86_64") != -1);
+	}
+	public static boolean isLinux() {
+		return (System.getProperty("os.name").toLowerCase().indexOf("linux")!=-1);
+	}
+	public static boolean isWindows() {
+		return (System.getProperty("os.name").toLowerCase().indexOf("win")!=-1);
+	}
+	public static boolean isMac() {
+		return (System.getProperty("os.name").toLowerCase().indexOf("mac")!=-1);
+	}
+	public static boolean isUnix() {
+		return (isLinux() || isMac());
 	}
 }
