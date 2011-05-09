@@ -535,11 +535,11 @@ public abstract class BowlerAbstractConnection {
 					synchronized(queueBuffer){
 						int len = queueBuffer.size();
 						for(int i=0;i<len;i++){
-								try{
-									if(queueBuffer.get(i).isSyncronous()){
-										send(queueBuffer.remove(i));
-									}
-								}catch(Exception e){}
+							try{
+								if(queueBuffer.get(i).isSyncronous()){
+									send(queueBuffer.remove(i));
+								}
+							}catch(Exception e){}
 							
 						}
 						if(!queueBuffer.isEmpty()){
