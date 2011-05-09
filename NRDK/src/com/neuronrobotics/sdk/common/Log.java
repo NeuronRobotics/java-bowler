@@ -20,6 +20,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import com.neuronrobotics.sdk.config.SDKBuildInfo;
 // TODO: Auto-generated Javadoc
 /**
  * This class is the Logging Class for the NRsdk.
@@ -73,7 +75,7 @@ public class Log {
 	 */
 	private Log() {
 		// private for singleton pattern
-		add(SDKInfo.NAME, INFO);
+		add(SDKBuildInfo.getSDKVersionString(), INFO);
 	}
 	/**
 	 * Filter out all messages except for one importance level.

@@ -24,10 +24,6 @@ import com.neuronrobotics.sdk.config.SDKBuildInfo;
 @Deprecated
 public class SDKInfo {
 	
-	/** The Constant NAME. */
-	
-	public static final String NAME = "Neuron Robotics SDK " + SDKBuildInfo.getMajorVersion() + "." + SDKBuildInfo.getMinorVersion() + "(" + SDKBuildInfo.getBuild() + ")";
-	
 	/** The Constant isVM64bit. */
 	//public static final boolean isVM64bit = (System.getProperty("sun.arch.data.model").indexOf("64") != -1);
 	
