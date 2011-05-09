@@ -63,7 +63,7 @@ public abstract class BowlerAbstractConnection {
 	
 	/** The queue. */
 	private QueueManager syncQueue = null;
-	private QueueManager asyncQueue = null;
+	//private QueueManager asyncQueue = null;
 	
 	/** The connected. */
 	private boolean connected = false;
@@ -114,13 +114,13 @@ public abstract class BowlerAbstractConnection {
 		}
 		clearLastSyncronousResponse();
 		long start = System.currentTimeMillis();
-		if((!syncQueue.isEmpty() ||!asyncQueue.isEmpty())){
+		if((!getSyncQueue().isEmpty() ||!getAsyncQueue().isEmpty())){
 			Log.debug("Waiting for byte and packet buffers to clear...");
-			Log.info("Synchronus queue size: " + syncQueue.size());
-			Log.info("Asynchronus queue size: " + asyncQueue.size());
+			Log.info("Synchronus queue size: " + getSyncQueue().size());
+			Log.info("Asynchronus queue size: " + getAsyncQueue().size());
 			//Log.info("Byte Buffer: " + builder.size());
 		}
-		while ((!syncQueue.isEmpty() ||!asyncQueue.isEmpty())) {
+		while ((!getSyncQueue().isEmpty() ||!getAsyncQueue().isEmpty())) {
 			ThreadUtil.wait(1);
 		}
 		long diff = System.currentTimeMillis()-start;
@@ -262,10 +262,8 @@ public abstract class BowlerAbstractConnection {
 		if(this.connected){
 			updater = new Updater();
 			updater.start();
-			syncQueue = new QueueManager();
-			syncQueue.start();
-			asyncQueue = new QueueManager();
-			asyncQueue.start();
+			setSyncQueue(new QueueManager());
+			getSyncQueue().start();
 		}else{
 			try {
 				getDataIns().close();
@@ -315,10 +313,10 @@ public abstract class BowlerAbstractConnection {
 	 */
 	protected void onDataReceived(BowlerDatagram data) {
 		if(data.isSyncronous()) {
-			syncQueue.addDatagram(data);
+			getSyncQueue().addDatagram(data);
 			response = data;
 		}else {
-			asyncQueue.addDatagram(data);
+			getAsyncQueue().addDatagram(data);
 		}
 	}
 	
@@ -390,13 +388,12 @@ public abstract class BowlerAbstractConnection {
 	 * Kills the Queue.
 	 */
 	protected void stopQueue() {
-		if(syncQueue != null) {
-			syncQueue.kill();
-			syncQueue=null;
+		if(getSyncQueue() != null) {
+			getSyncQueue().kill();
+			setSyncQueue(null);
 		}
-		if(asyncQueue != null) {
-			asyncQueue.kill();
-			asyncQueue=null;
+		if(getAsyncQueue() != null) {
+			getAsyncQueue().kill();
 		}
 	}
 	
@@ -472,7 +469,17 @@ public abstract class BowlerAbstractConnection {
 	public int getChunkSize() {
 		return chunkSize;
 	}
-
+	
+	public void setSyncQueue(QueueManager syncQueue) {
+		this.syncQueue = syncQueue;
+	}
+	public QueueManager getAsyncQueue() {
+		return syncQueue;
+	}
+	public QueueManager getSyncQueue() {
+		return syncQueue;
+	}
+	
 	private class Updater extends Thread{
 		private ByteList buffer = new ByteList();
 		public void run() {
@@ -524,8 +531,34 @@ public abstract class BowlerAbstractConnection {
 				while(!queueBuffer.isEmpty()) {
 					//Log.info("Poping latest packet and sending to listeners");
 					// pop is thread safe.
+					
 					synchronized(queueBuffer){
-						send(queueBuffer.remove(queueBuffer.size()-1));
+						int len = queueBuffer.size();
+						for(int i=0;i<len;i++){
+								try{
+									if(queueBuffer.get(i).isSyncronous()){
+										send(queueBuffer.remove(i));
+									}
+								}catch(Exception e){}
+							
+						}
+						if(!queueBuffer.isEmpty()){
+							try{
+								send(queueBuffer.remove(queueBuffer.size()-1));
+							}catch(Exception e){}
+						}
+						int index = 0;
+						int max = 500;
+						while(queueBuffer.size()>max){
+							if(!queueBuffer.get(index).isSyncronous() && queueBuffer.get(index).getMethod() != BowlerMethod.CRITICAL){
+								queueBuffer.remove(index);
+							}else{
+								index++;
+							}
+							if(index >= max){
+								break;
+							}
+						}
 					}
 				}
 			}
