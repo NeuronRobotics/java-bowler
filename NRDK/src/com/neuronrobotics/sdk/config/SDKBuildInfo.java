@@ -13,6 +13,7 @@ public class SDKBuildInfo {
 	
 	public static String getVersion(){
 		String s=getTag("app.version");
+		//System.out.println("Version: "+s);
 		if(s==null)
 			s="0.0.0";
 		return s;
@@ -30,7 +31,8 @@ public class SDKBuildInfo {
 	}
 	public static int[] getBuildInfo(){
 		String s = getVersion();
-		String [] splits=s.split(".");
+		String [] splits=s.split("[.]+");
+		//System.out.println("Split version: "+s+" len: "+splits.length);
 		int [] rev = new int[3];
 		for(int i=0;i<3;i++){
 			rev[i]=new Integer(splits[i]);
@@ -49,14 +51,28 @@ public class SDKBuildInfo {
 			}
 		} catch (IOException e) {
 		}
-		String [] splitAll = s.split("\n");
+		String [] splitAll = s.split("[\n]+");
 		for(int i=0;i<splitAll.length;i++){
 			if(splitAll[i].contains(target)){
-				String [] split = splitAll[i].split("=");
+				String [] split = splitAll[i].split("[=]+");
 				return split[1];
 			}
 		}
 		return null;
+	}
+	public static String getBuildDate(){
+		String s="";
+		InputStream is = SDKBuildInfo.class.getResourceAsStream( "/META-INF/MANIFEST.MF");
+		BufferedReader br = new BufferedReader(new InputStreamReader(is));
+		String line;
+		try {
+			while (null != (line = br.readLine())) {
+			     s+=line+"\n";
+			}
+		} catch (IOException e) {
+		}
+		System.out.println("Manifest:\n"+s);
+		return "";
 	}
 	private static InputStream getBuildPropertiesStream() {
 		return SDKBuildInfo.class.getResourceAsStream("build.properties");

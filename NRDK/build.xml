@@ -18,7 +18,6 @@
   <property name="compile.optimize"    value="true"/>
 	
   <property name="jar.module" value="${app.name}-jar-with-dependencies.jar"/>
-	
   <target name="clean"
    description="Delete old build and dist directories">
     <delete dir="${build.home}"/>
@@ -60,10 +59,13 @@
   <target name="dist"
    description="Create binary distribution">
   	<mkdir dir="${dist.home}/docs/api"/>
-  	
+    <tstamp>
+      <format property="TODAY" pattern="yyyy-MM-dd" />
+    </tstamp>
     <jar jarfile="${dist.home}/${app.name}-${app.version}-jar-with-dependencies.jar">
       <manifest>
         <attribute name="Sealed" value="true"/>
+      	<attribute name="Built-Date" value="${TODAY}"/> 
       </manifest>
       <fileset dir="build">
         <include name="**/*.class"/>
