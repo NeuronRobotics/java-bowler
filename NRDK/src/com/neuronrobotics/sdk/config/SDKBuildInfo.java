@@ -13,7 +13,6 @@ public class SDKBuildInfo {
 	
 	public static String getVersion(){
 		String s=getTag("app.version");
-		//System.out.println("Version: "+s);
 		if(s==null)
 			s="0.0.0";
 		return s;
@@ -32,7 +31,6 @@ public class SDKBuildInfo {
 	public static int[] getBuildInfo(){
 		String s = getVersion();
 		String [] splits=s.split("[.]+");
-		//System.out.println("Split version: "+s+" len: "+splits.length);
 		int [] rev = new int[3];
 		for(int i=0;i<3;i++){
 			rev[i]=new Integer(splits[i]);
