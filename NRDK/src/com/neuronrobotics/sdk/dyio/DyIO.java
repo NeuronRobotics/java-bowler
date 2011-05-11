@@ -248,8 +248,10 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 	 * @return true if the sync was successful
 	 */
 	public boolean resync() {
+		if(getConnection() == null) {
+			return false;
+		}
 		if(!getConnection().isConnected()) {
-			System.err.println("No connection");
 			return false;
 		}
 		Log.info("Re-syncing...");
