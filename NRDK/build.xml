@@ -1,4 +1,4 @@
-<project name="Neuron Robotics SDK" default="deploy" basedir=".">
+<project name="Neuron Robotics SDK" basedir=".">
 
 	
   <property file="src/com/neuronrobotics/sdk/config/build.properties"/>
