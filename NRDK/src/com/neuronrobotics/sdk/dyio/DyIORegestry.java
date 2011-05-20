@@ -1,6 +1,7 @@
 package com.neuronrobotics.sdk.dyio;
 
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
+import com.neuronrobotics.sdk.common.IConnectionEventListener;
 import com.neuronrobotics.sdk.dyio.DyIO;
 
 public class DyIORegestry {
@@ -22,5 +23,11 @@ public class DyIORegestry {
 			dyio = new DyIO();
 		return dyio;
 	}
-
+	public static void addConnectionEventListener(IConnectionEventListener l ) {
+		if(dyio.getConnection() != null) {
+			dyio.getConnection().addConnectionEventListener(l);
+			return;
+		}
+		throw new NullPointerException();
+	}
 }

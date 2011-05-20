@@ -179,12 +179,12 @@ public abstract class BowlerAbstractConnection {
 	 */
 	public void disconnect(){
 		if(!isConnected()) {
-			fireDisconnectEvent();
+
 			return;
 		}
 		Log.info("Disconnecting Bowler Connection");
 		setConnected(false);
-		fireDisconnectEvent();
+
 	}
 
 	/**
@@ -266,6 +266,7 @@ public abstract class BowlerAbstractConnection {
 			updater.start();
 			setSyncQueue(new QueueManager());
 			getSyncQueue().start();
+			fireConnectEvent();
 		}else{
 			try {
 				getDataIns().close();
@@ -278,6 +279,7 @@ public abstract class BowlerAbstractConnection {
 				return;
 			}
 			stopQueue();
+			fireDisconnectEvent();
 		}
 	}
 	
@@ -602,22 +604,26 @@ public abstract class BowlerAbstractConnection {
 			disconnect();
 		}
 	}
-	ArrayList<IDisconnectEventListener> disconnectListeners = new ArrayList<IDisconnectEventListener> ();
+	ArrayList<IConnectionEventListener> disconnectListeners = new ArrayList<IConnectionEventListener> ();
 	
-	public void addDisconnectEventListener(IDisconnectEventListener l ) {
+	public void addConnectionEventListener(IConnectionEventListener l ) {
 		if(!disconnectListeners.contains(l)) {
 			disconnectListeners.add(l);
 		}
 	}
-	public void removeDisconnectEventListener(IDisconnectEventListener l ) {
+	public void removeConnectionEventListener(IConnectionEventListener l ) {
 		if(disconnectListeners.contains(l)) {
 			disconnectListeners.remove(l);
 		}
 	} 
 	private void fireDisconnectEvent() {
-		for(IDisconnectEventListener l:disconnectListeners) {
+		for(IConnectionEventListener l:disconnectListeners) {
 			l.onDisconnect();
 		}
 	}
-
+	private void fireConnectEvent() {
+		for(IConnectionEventListener l:disconnectListeners) {
+			l.onDisconnect();
+		}
+	}
 }

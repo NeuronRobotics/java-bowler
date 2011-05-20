@@ -1,5 +1,6 @@
 package com.neuronrobotics.sdk.common;
 
-public interface IDisconnectEventListener {
+public interface IConnectionEventListener {
 	public void onDisconnect();
+	public void onConnect();
 }
