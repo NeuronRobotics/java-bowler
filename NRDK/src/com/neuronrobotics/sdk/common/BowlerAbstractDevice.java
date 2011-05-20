@@ -93,14 +93,12 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 		if (connection == null) {
 			throw new InvalidConnectionException("Null Connection");
 		}
-		//connection.disconnect();
 		if(!connection.isConnected()) {
 			if(!connection.connect()) {
 				startHeartBeat();
 				return false;
 			}
 		}
-		
 		return this.isAvailable();
 	}
 	
@@ -135,7 +133,6 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 		if(!address.isValid()) {
 			throw new InvalidMACAddressException();
 		}
-		
 		this.address = address;
 	}
 	
@@ -145,6 +142,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	 * @return  the device's address
 	 */
 	public MACAddress getAddress() {
+		System.out.println();
 		return address;
 	}
 	
@@ -187,7 +185,10 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	 */
 	public BowlerDatagram ping() {
 		try {
-			return send(new PingCommand());
+			BowlerDatagram bd = send(new PingCommand());
+			//System.out.println("Ping success " + bd.getAddress());
+			setAddress(bd.getAddress());
+			return bd;
 		} catch (InvalidResponseException e) {
 			Log.error("Invalid response from Ping");
 			return null;

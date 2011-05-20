@@ -289,9 +289,9 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 		}
 		if(response == null)
 			throw new DyIOCommunicationException("DyIO failed to report during initialization. Could not determine DyIO configuration");
-		if(getAddress().equals(new MACAddress(MACAddress.BROADCAST))) {
+		//if(getAddress().equals(new MACAddress(MACAddress.BROADCAST))) {
 			setAddress(response.getAddress());
-		}
+		//}
 		
 		if (response.getData().size()<24)
 			throw new DyIOCommunicationException("Not enough channels, not a valid DyIO"+response.toString());

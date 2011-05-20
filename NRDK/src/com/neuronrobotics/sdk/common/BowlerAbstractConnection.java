@@ -623,7 +623,7 @@ public abstract class BowlerAbstractConnection {
 	}
 	private void fireConnectEvent() {
 		for(IConnectionEventListener l:disconnectListeners) {
-			l.onDisconnect();
+			l.onConnect();
 		}
 	}
 }
