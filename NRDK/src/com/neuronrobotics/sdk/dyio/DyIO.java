@@ -493,14 +493,11 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.common.BowlerAbstractDevice#isAvailable()
 	 */
-	 
 	public boolean isAvailable() throws InvalidConnectionException {
-		try {
-			return resync();
-		}catch (Exception ex) {
-			ex.printStackTrace();
+		if(getConnection() == null)
 			return false;
-		}
+		return getConnection().isConnected();
+	
 	}
 	
 	/* (non-Javadoc)
@@ -633,6 +630,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 			pid.connect();
 			send( new PowerCommand());
 			startHeartBeat(3000);
+			resync();
 			return true;
 		}
 		return false;
