@@ -73,11 +73,25 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	 *
 	 * @param connection the new connection
 	 */
+	private static ArrayList<IConnectionEventListener> disconnectListeners = new ArrayList<IConnectionEventListener> ();
+	
+	public void addConnectionEventListener(IConnectionEventListener l ) {
+		if(!disconnectListeners.contains(l)) {
+			disconnectListeners.add(l);
+		}
+	}
+	public void removeConnectionEventListener(IConnectionEventListener l ) {
+		if(disconnectListeners.contains(l)) {
+			disconnectListeners.remove(l);
+		}
+	}
 	public void setConnection(BowlerAbstractConnection connection) {
 		if(connection == null) {
 			throw new NullPointerException("Can not use a NULL connection.");
 		}
-		
+		for(IConnectionEventListener i:disconnectListeners) {
+			connection.addConnectionEventListener(i);
+		}
 		this.connection = connection;
 		connection.addDatagramListener(this);
 	}

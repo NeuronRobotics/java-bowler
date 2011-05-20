@@ -32,6 +32,7 @@ import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
 import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.common.ByteList;
+import com.neuronrobotics.sdk.common.IConnectionEventListener;
 import com.neuronrobotics.sdk.common.ISendable;
 import com.neuronrobotics.sdk.common.InvalidConnectionException;
 import com.neuronrobotics.sdk.common.InvalidResponseException;
@@ -668,4 +669,5 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 	public ArrayList<DyIOChannel> getInternalChannels() {
 		return channels;
 	}
+	
 }

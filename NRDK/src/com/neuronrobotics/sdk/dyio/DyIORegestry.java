@@ -11,9 +11,7 @@ public class DyIORegestry {
 	private static DyIO dyio = null;
 	private static ArrayList<IConnectionEventListener> disconnectListeners = new ArrayList<IConnectionEventListener> ();
 	public static boolean setConnection(BowlerAbstractConnection c){
-		for(IConnectionEventListener i:disconnectListeners) {
-			c.addConnectionEventListener(i);
-		}
+
 		try{
 			get().disconnect();
 			get().setConnection(c);
@@ -25,27 +23,34 @@ public class DyIORegestry {
 		}
 	}
 	public static DyIO get(){
-		if(dyio == null)
+		if(dyio == null) {
 			dyio = new DyIO();
+			for(IConnectionEventListener i:disconnectListeners) {
+				dyio.addConnectionEventListener(i);
+			}
+		}
 		return dyio;
 	}
-	public static void promptConnection(IConnectionEventListener l) {
+	public static boolean promptConnection() {
 		BowlerAbstractConnection connection = ConnectionDialog.promptConnection();
 		if(connection != null) {
-			addConnectionEventListener(l);
-			setConnection(connection);
+			return setConnection(connection);
 		}
+		return false;
 	}
 	public static void addConnectionEventListener(IConnectionEventListener l ) {
 		if(!disconnectListeners.contains(l)) {
 			disconnectListeners.add(l);
+			dyio.addConnectionEventListener(l);
 		}
 	}
 	public static void removeConnectionEventListener(IConnectionEventListener l ) {
 		if(disconnectListeners.contains(l)) {
 			disconnectListeners.remove(l);
+			dyio.removeConnectionEventListener(l);
 		}
 	}
+	
 	public static void disconnect() {
 		dyio.disconnect();
 		dyio=null;
