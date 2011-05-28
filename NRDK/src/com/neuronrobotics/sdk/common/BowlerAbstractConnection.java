@@ -548,7 +548,7 @@ public abstract class BowlerAbstractConnection {
 						}
 						if(!queueBuffer.isEmpty()){
 							try{
-								send(queueBuffer.remove(queueBuffer.size()-1));
+								send(queueBuffer.remove(queueBuffer.size()-1)	);
 							}catch(Exception e){}
 						}
 						int index = 0;
