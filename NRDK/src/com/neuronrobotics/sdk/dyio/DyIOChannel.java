@@ -507,7 +507,6 @@ public class DyIOChannel implements IDyIOChannel {
 		}
 		if(async != isAsync) {
 			Log.debug(this.getClass()+" Async is the different, was: "+isAsync+" setting to: "+ async);
-			throw new RuntimeException();
 		}
 		for(int i = 0; i < MAXATTEMPTS; i++) {
 			try {
