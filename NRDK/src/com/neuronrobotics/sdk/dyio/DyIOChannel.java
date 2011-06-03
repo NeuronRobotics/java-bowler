@@ -42,8 +42,8 @@ public class DyIOChannel implements IDyIOChannel {
 	private DyIO device;
 	private int number;
 	private boolean editable;
-	private DyIOChannelMode current;
-	private boolean isAsync=false;
+	private DyIOChannelMode current=null;
+	private boolean isAsync=true;
 	private ArrayList<IChannelEventListener> listeners = new ArrayList<IChannelEventListener>();
 	
 	private ArrayList< IDyIOChannelModeChangeListener> modeListeners = new ArrayList< IDyIOChannelModeChangeListener>();
@@ -75,14 +75,38 @@ public class DyIOChannel implements IDyIOChannel {
 		setDevice(dyio);
 		number = channel;
 		editable = isEditable;
+		
+		setMode(mode);
+		
 		fireModeChangeEvent(mode);
 		if(getCurrentMode() == DyIOChannelMode.NO_CHANGE) {
 			System.err.println("Failed to update channel: "+ channel);
 			throw new RuntimeException("Failed to update channel: "+ channel);
 		}
-		setCurrentMode(mode);
 	}
 	
+	private boolean isDefaultAsync(DyIOChannelMode m) {
+		return (!isOutputMode(m) && (m != DyIOChannelMode.ANALOG_IN));
+	}
+	
+	@SuppressWarnings("incomplete-switch")
+	private boolean isOutputMode( DyIOChannelMode m) {
+		switch(m) {
+		case SERVO_OUT:
+		case ANALOG_OUT:
+		case DC_MOTOR_DIR:
+		case DC_MOTOR_VEL:
+		case PWM_OUT:
+		case SPI_CLOCK:
+		case SPI_MISO:
+		case SPI_MOSI:
+		case SPI_SELECT:
+		case USART_TX:
+			return true;
+		}
+		return false;
+	}
+
 	/**
 	 * Get the channel's number.
 	 * @return The Channel on the corresponding DyIO that this pin belongs to.
@@ -186,7 +210,7 @@ public class DyIOChannel implements IDyIOChannel {
 	 * @return True if successful
 	 */
 	public boolean setMode(DyIOChannelMode mode) {
-		return setMode(mode, false);
+		return setMode(mode, isDefaultAsync(mode));
 	}
 	
 	/**
@@ -225,6 +249,7 @@ public class DyIOChannel implements IDyIOChannel {
 	 * @param all - should all channels be refreshed.
 	 */
 	public void resync(boolean all) {
+		
 		if(all) {
 			getDevice().resync();
 			return;
@@ -232,6 +257,7 @@ public class DyIOChannel implements IDyIOChannel {
 		BowlerDatagram bd = getDevice().send(new GetChannelModeCommand(number));
 		//System.out.println(bd);
 		setCurrentMode(DyIOChannelMode.get(bd.getData().getByte(1)));
+		throw new RuntimeException();
 	}
 	
 	public boolean canBeMode(DyIOChannelMode m) {
@@ -244,9 +270,9 @@ public class DyIOChannel implements IDyIOChannel {
 	}
 	
 	public boolean hasAsync(){
-		if(getMode(false) == null)
+		if(getMode() == null)
 			return false;
-		switch(getMode(false)){
+		switch(getMode()){
 		case ANALOG_IN:
 		case COUNT_IN_INT:
 		case COUNT_OUT_INT:
@@ -463,11 +489,26 @@ public class DyIOChannel implements IDyIOChannel {
 	 
 	public synchronized boolean setMode(DyIOChannelMode mode, boolean async) {
 		//resyncIfNotSynced();
-		if ((getMode() == mode && (async == isAsync)) || mode == null) {	
-			//fireModeChangeEvent(mode);
+		if(mode == null) {
 			return true;
 		}
-		
+		if(getMode()  == null) {
+			Log.debug(this.getClass()+" First time setting mode.");
+			setCurrentMode(mode);
+			isAsync = isDefaultAsync(mode);
+			return true;
+		}
+		if ((getMode() == mode && (async == isAsync)) ) {	
+			Log.debug(this.getClass()+" Mode is the same, ignoring...");
+			return true;
+		}
+		if(getMode() != mode) {
+			Log.debug(this.getClass()+" Mode is the different, was: "+getMode()+" setting to: "+ mode);
+		}
+		if(async != isAsync) {
+			Log.debug(this.getClass()+" Async is the different, was: "+isAsync+" setting to: "+ async);
+			throw new RuntimeException();
+		}
 		for(int i = 0; i < MAXATTEMPTS; i++) {
 			try {
 				isAsync = async;

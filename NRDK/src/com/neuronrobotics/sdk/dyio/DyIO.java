@@ -303,6 +303,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 				cm = DyIOChannelMode.DIGITAL_IN;
 				editable = false;
 				try {
+					Log.error("Mode get failed, setting to default");
 					send(new SetChannelModeCommand(i, cm));
 				} catch(Exception e) {
 					throw new DyIOCommunicationException("Setting a pin to Digital In failed");

@@ -64,7 +64,7 @@ public abstract class DyIOAbstractPeripheral implements IDyIOChannel {
 	 * @throws Exception 
 	 */
 	public boolean setMode(){
-		return setMode( false);
+		return channel.setMode(getClassMode());
 	}
 	
 	/**
