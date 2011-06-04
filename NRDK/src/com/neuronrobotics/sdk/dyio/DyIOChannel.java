@@ -510,7 +510,7 @@ public class DyIOChannel implements IDyIOChannel {
 		}
 	
 		if(!canBeMode(mode)){
-			throw new RuntimeException("Channel: "+getChannelNumber()+" can not be mode: "+mode+" in current configuration.");
+			throw new RuntimeException("Channel: "+getChannelNumber()+" can not be mode: "+mode+" in current configuration. Check the power settings and availible modes.");
 		}
 		for(int i = 0; i < MAXATTEMPTS; i++) {
 			try {
