@@ -71,7 +71,7 @@ public class DyIOChannel implements IDyIOChannel {
 	 * @param mode
 	 * @param isEditable
 	 */
-	public void update(DyIO dyio, int channel, DyIOChannelMode mode, boolean isEditable) {
+	public synchronized void update(DyIO dyio, int channel, DyIOChannelMode mode, boolean isEditable) {
 		setDevice(dyio);
 		number = channel;
 		editable = isEditable;
@@ -507,6 +507,10 @@ public class DyIOChannel implements IDyIOChannel {
 		}
 		if(async != isAsync) {
 			Log.debug(this.getClass()+" Async is the different, was: "+isAsync+" setting to: "+ async);
+		}
+	
+		if(!canBeMode(mode)){
+			throw new RuntimeException("Channel: "+getChannelNumber()+" can not be mode: "+mode+" in current configuration.");
 		}
 		for(int i = 0; i < MAXATTEMPTS; i++) {
 			try {
