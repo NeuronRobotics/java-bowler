@@ -167,7 +167,7 @@ public class BlueCoveManager implements DiscoveryListener {
 					e.printStackTrace();
 				}
 			}else {
-				System.out.println("Non matching device: "+s[i]);
+				//System.out.println("Non matching device: "+s[i]);
 			}
 		}
 		return null;

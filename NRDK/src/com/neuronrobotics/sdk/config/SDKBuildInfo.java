@@ -69,7 +69,7 @@ public class SDKBuildInfo {
 			}
 		} catch (IOException e) {
 		}
-		System.out.println("Manifest:\n"+s);
+		//System.out.println("Manifest:\n"+s);
 		return "";
 	}
 	private static InputStream getBuildPropertiesStream() {

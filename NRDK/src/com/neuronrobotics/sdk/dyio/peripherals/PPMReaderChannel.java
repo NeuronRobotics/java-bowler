@@ -44,12 +44,12 @@ public class PPMReaderChannel  extends DyIOAbstractPeripheral implements IChanne
 		if(crossLinks == null){
 			throw new RuntimeException("Must get cross link state before setting a new one");
 		}
-		System.out.print("\nSetting cross link map: [");
+		//System.out.print("\nSetting cross link map: [");
 		for(int i=0;i<crossLinks.length;i++) {
 			crossLinks[i] = links[i];
-			System.out.print(" "+crossLinks[i]);
+			//System.out.print(" "+crossLinks[i]);
 		}
-		System.out.print("]");
+		//System.out.print("]");
 		getChannel().getDevice().send(new SetChannelValueCommand(23,crossLinks,myMode));
 	}
 	
@@ -57,7 +57,7 @@ public class PPMReaderChannel  extends DyIOAbstractPeripheral implements IChanne
 		if(crossLinks == null){
 			updateValues();
 		}
-		System.out.print("\nGetting cross link map: [");
+		//System.out.print("\nGetting cross link map: [");
 		for(int i=0;i<crossLinks.length;i++) {
 			System.out.print(" "+crossLinks[i]);
 		}
@@ -73,7 +73,7 @@ public class PPMReaderChannel  extends DyIOAbstractPeripheral implements IChanne
 	
 	private void updateValues() {
 		BowlerDatagram b=null;
-		System.out.println("Updating value map");
+		//System.out.println("Updating value map");
 		try {
 			b= getChannel().getDevice().send(new GetValueCommand(23));
 		}catch (Exception e) {

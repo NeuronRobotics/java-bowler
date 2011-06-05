@@ -156,7 +156,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	 * @return  the device's address
 	 */
 	public MACAddress getAddress() {
-		System.out.println();
+		//System.out.println();
 		return address;
 	}
 	

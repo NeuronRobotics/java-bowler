@@ -141,7 +141,7 @@ public class UDPConnectionPanel extends AbstractConnectionPanel {
 		private boolean isRunning = false;
 		public void run() {
 			isRunning = true;
-			System.out.println("Searching for UDP devices, please wait...");
+			//System.out.println("Searching for UDP devices, please wait...");
 			int prt;
 			try {
 				prt=new Integer(port.getText());
@@ -151,8 +151,8 @@ public class UDPConnectionPanel extends AbstractConnectionPanel {
 			}
 			clnt=new BowlerUDPClient(prt);
 			ArrayList<InetAddress>  addrs = clnt.getAllAddresses();
-			if (addrs.size()>0)
-				System.out.println("Bowler servers: "+addrs);
+//			if (addrs.size()>0)
+//				System.out.println("Bowler servers: "+addrs);
 			connectionCbo.removeAllItems();
 			for (InetAddress i:addrs) {
 				connectionCbo.addItem(i.getHostAddress());
