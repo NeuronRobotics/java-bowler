@@ -75,9 +75,11 @@ public class DyIOChannel implements IDyIOChannel {
 		setDevice(dyio);
 		number = channel;
 		editable = isEditable;
-		
-		setMode(mode);
-		
+		if(getCurrentMode() == null){
+			setMode(mode);
+		}else{
+			setMode(mode,isAsync);
+		}
 		fireModeChangeEvent(mode);
 		if(getCurrentMode() == DyIOChannelMode.NO_CHANGE) {
 			System.err.println("Failed to update channel: "+ channel);
