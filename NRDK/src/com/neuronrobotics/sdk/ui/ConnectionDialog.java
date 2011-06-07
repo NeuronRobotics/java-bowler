@@ -127,18 +127,8 @@ public class ConnectionDialog extends JDialog {
 	 * @return - Did the user cancel
 	 */
 	public boolean showDialog() {
-		try {
-			laf = UIManager.getLookAndFeel();
-		    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (Exception ex) {
-			
-		} 
 		setLocationRelativeTo(null); 
 	    setVisible(true);
-	    try {
-			UIManager.setLookAndFeel(laf);
-		} catch (UnsupportedLookAndFeelException e) {
-		}
 	    return !isCancled;
 	}
 	

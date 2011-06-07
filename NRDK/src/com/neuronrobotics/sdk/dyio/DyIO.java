@@ -31,6 +31,7 @@ import com.neuronrobotics.sdk.commands.neuronrobotics.dyio.PowerCommand;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
 import com.neuronrobotics.sdk.common.BowlerDatagram;
+import com.neuronrobotics.sdk.common.BowlerRuntimeException;
 import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.IConnectionEventListener;
 import com.neuronrobotics.sdk.common.ISendable;
@@ -38,6 +39,7 @@ import com.neuronrobotics.sdk.common.InvalidConnectionException;
 import com.neuronrobotics.sdk.common.InvalidResponseException;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.MACAddress;
+import com.neuronrobotics.sdk.config.SDKBuildInfo;
 import com.neuronrobotics.sdk.dyio.dypid.DyPIDConfiguration;
 import com.neuronrobotics.sdk.genericdevice.GenericPIDDevice;
 import com.neuronrobotics.sdk.pid.IPIDControl;
@@ -245,9 +247,17 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 	
 	/**
 	 * Sync the state cache with the live device. 
-	 * 
-	 * @return true if the sync was successful
 	 */
+	public void checkFirmwareRev()throws DyIOFirmwareOutOfDateException{
+		int[] sdkRev = SDKBuildInfo.getBuildInfo(); 
+		for(int i=0;i<3;i++){
+			if(firmware[i] != sdkRev[i]){
+				throw new DyIOFirmwareOutOfDateException( 	"\nNRDK version = "+new ByteList(sdkRev)+
+															"\n DyIO version = "+ new ByteList(firmware)+
+															"\nTry updating your firmware using the firmware update instructions from http://neuronrobotics.com/");
+			}
+		}
+	}
 	public boolean resync() {
 		if(getConnection() == null) {
 			return false;
@@ -262,6 +272,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 				
 				firmware = getRevisions().get(0).getBytes();
 			}
+			checkFirmwareRev();
 			if(info.contains("Unknown")){
 				response = send(new InfoCommand());
 				if (response != null) {
@@ -269,8 +280,8 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 				}
 			}
 			
-		}catch (Exception e){
-			throw new DyIOCommunicationException("DyIO failed to report during initialization. Could not determine DyIO configuration");
+		}catch (InvalidResponseException e){
+			checkFirmwareRev();
 		}
 		
 		try {
@@ -289,7 +300,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 				return false;
 		}
 		if(response == null)
-			throw new DyIOCommunicationException("DyIO failed to report during initialization. Could not determine DyIO configuration");
+			checkFirmwareRev();
 		//if(getAddress().equals(new MACAddress(MACAddress.BROADCAST))) {
 			setAddress(response.getAddress());
 		//}
@@ -644,10 +655,10 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 		try{
 			BowlerDatagram b = send(new SafeModeCommand(true, (int) msHeartBeatTime));
 			if(b== null)
-				throw new DyIOFirmwareOutOfDateException("The DyIO firmware is out of date.");
+				checkFirmwareRev();
 		}catch(Exception e){
 			System.err.println("DyIO is out of date");
-			throw new DyIOFirmwareOutOfDateException("DyIO firmware is out of date");
+			checkFirmwareRev();
 		}
 	}
 	 
@@ -657,10 +668,10 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 		try{
 			BowlerDatagram b = send(new SafeModeCommand(false, 0));
 			if(b== null)
-				throw new DyIOFirmwareOutOfDateException("The DyIO firmware is out of date.");
+				checkFirmwareRev();
 		}catch(Exception e){
 			System.err.println("DyIO is out of date");
-			throw new DyIOFirmwareOutOfDateException("The DyIO firmware is out of date.");
+			checkFirmwareRev();
 		}	
 	}
 

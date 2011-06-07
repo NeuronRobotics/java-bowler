@@ -75,6 +75,12 @@ public class ByteList implements ISendable, List<Byte> {
 		add(data);
 	}
 
+	public ByteList(int[] data) {
+		for(int i=0;i<data.length;i++){
+			add(data[i]);
+		}
+	}
+
 	/**
 	 * Adds a single byte to the bytelist and return the status of the additon.
 	 *
