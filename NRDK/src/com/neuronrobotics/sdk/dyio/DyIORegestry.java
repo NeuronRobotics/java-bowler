@@ -11,11 +11,16 @@ public class DyIORegestry {
 	private static DyIO dyio = null;
 	private static ArrayList<IConnectionEventListener> disconnectListeners = new ArrayList<IConnectionEventListener> ();
 	public static boolean setConnection(BowlerAbstractConnection c){
-
 		try{
 			get().disconnect();
 			get().setConnection(c);
 			get().connect();
+			c.addConnectionEventListener(new IConnectionEventListener() {
+				public void onDisconnect() {
+					DyIORegestry.disconnect();
+				}
+				public void onConnect() {}
+			});
 			return get().isAvailable();
 		}catch(Exception ex){
 			ex.printStackTrace();
@@ -52,7 +57,11 @@ public class DyIORegestry {
 	}
 	
 	public static void disconnect() {
-		dyio.disconnect();
+		try {
+			dyio.disconnect();
+		}catch (Exception ex) {
+			
+		}
 		dyio=null;
 	}
 }
