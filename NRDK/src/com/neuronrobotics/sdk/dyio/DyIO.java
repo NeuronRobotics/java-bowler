@@ -168,7 +168,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 	 * @param value
 	 * @return
 	 */
-	public boolean setValue(int channel, ISendable value) {
+	public boolean setValue(int channel, ByteList value) {
 		return getChannel(channel).setValue(value);
 	}
 

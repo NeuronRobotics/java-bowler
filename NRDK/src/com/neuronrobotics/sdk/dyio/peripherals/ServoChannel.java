@@ -13,7 +13,6 @@
  * limitations under the License.
  ******************************************************************************/
 package com.neuronrobotics.sdk.dyio.peripherals;
-import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIOChannel;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 
@@ -42,7 +41,7 @@ public class ServoChannel extends DyIOAbstractPeripheral {
 	 * @return if the action was successful
 	 */
 	public boolean SetPosition(int pos){
-		return SetPosition(pos, 0);
+		return SetPosition(pos, (float) .001);
 	}
 	
 	/**

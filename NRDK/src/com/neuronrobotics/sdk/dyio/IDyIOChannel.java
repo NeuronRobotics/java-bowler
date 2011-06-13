@@ -14,6 +14,7 @@
  ******************************************************************************/
 package com.neuronrobotics.sdk.dyio;
 
+import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.ISendable;
 
 /**
@@ -68,5 +69,5 @@ public interface IDyIOChannel {
 	 * @param value
 	 * @return
 	 */
-	public boolean setValue(ISendable value);
+	public boolean setValue(ByteList value);
 }

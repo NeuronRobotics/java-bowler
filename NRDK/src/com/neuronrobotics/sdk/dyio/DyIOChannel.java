@@ -583,7 +583,7 @@ public class DyIOChannel implements IDyIOChannel {
 	 * @see com.neuronrobotics.sdk.dyio.IDyIOChannel#setValue(com.neuronrobotics.sdk.common.ISendable)
 	 */
 	 
-	public boolean setValue(ISendable data) {
+	public boolean setValue(ByteList data) {
 		int attempts = MAXATTEMPTS;
 		if(getMode() == DyIOChannelMode.USART_RX ||getMode() == DyIOChannelMode.USART_TX )
 			attempts=1;
