@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.IConnectionEventListener;
 import com.neuronrobotics.sdk.dyio.DyIO;
-import com.neuronrobotics.sdk.ui.ConnectionDialog;
+
 
 public class DyIORegestry {
 	private static DyIO dyio = null;
@@ -35,13 +35,7 @@ public class DyIORegestry {
 		}
 		return dyio;
 	}
-	public static boolean promptConnection() {
-		BowlerAbstractConnection connection = ConnectionDialog.promptConnection();
-		if(connection != null) {
-			return setConnection(connection);
-		}
-		return false;
-	}
+
 	public static void addConnectionEventListener(IConnectionEventListener l ) {
 		if(!disconnectListeners.contains(l)) {
 			disconnectListeners.add(l);
