@@ -14,27 +14,15 @@
  ******************************************************************************/
 package com.neuronrobotics.sdk.serial;
 
-import gnu.io.CommPort;
-import gnu.io.CommPortIdentifier;
 import gnu.io.NRSerialPort;
-import gnu.io.PortInUseException;
-import gnu.io.RXTXCommDriver;
-import gnu.io.RXTXPort;
-import gnu.io.SerialPort;
-import gnu.io.UnsupportedCommOperationException;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.File;
-import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.MissingNativeLibraryException;
-import com.neuronrobotics.sdk.common.SDKInfo;
 
 /**
  * SerialConnection manages a connection to a serial port on the host system. This class is responsible for
