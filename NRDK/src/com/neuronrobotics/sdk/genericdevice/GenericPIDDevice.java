@@ -13,12 +13,13 @@ import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.MACAddress;
 import com.neuronrobotics.sdk.pid.IPIDControl;
 import com.neuronrobotics.sdk.pid.IPIDEventListener;
+import com.neuronrobotics.sdk.pid.PIDChannel;
 import com.neuronrobotics.sdk.pid.PIDConfiguration;
 import com.neuronrobotics.sdk.pid.PIDEvent;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 
 public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDControl {
-
+	private ArrayList<PIDChannel> channels = new ArrayList<PIDChannel>();
 	public GenericPIDDevice(BowlerAbstractConnection connection) {
 		setAddress(new MACAddress(MACAddress.BROADCAST));
 		setConnection(connection);
@@ -43,9 +44,6 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 		}
 
 	}
-	/**
-	 * PID controller (new as of 0.3.6)
-	 */
 	
 	public boolean SetPIDSetPoint(int group,int setpoint,double seconds){
 		return send(new  ControlPIDCommand((char) group,setpoint, seconds))!=null;
@@ -66,6 +64,12 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 		int [] back = new int[data.size()/4];
 		for(int i=0;i<back.length;i++) {
 			back[i] = ByteList.convertToInt( data.getBytes(i*4, (i*4)+4),true);
+		}
+		if(back.length != channels.size()){
+			channels =  new ArrayList<PIDChannel>();
+			for(int i=0;i<back.length;i++){
+				channels.add(new PIDChannel(this,i));
+			}
 		}
 		return back;
 	}
