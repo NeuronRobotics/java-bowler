@@ -3,7 +3,7 @@ package com.neuronrobotics.sdk.addons.walker;
 import java.util.ArrayList;
 
 public class Leg {
-	ArrayList<Link> links = new ArrayList<Link>();
+	ArrayList<WalkerServoLink> links = new ArrayList<WalkerServoLink>();
 	private static final double M_PI = Math.PI; 
 	private double xOffset,yOffset,thetaOffset;
 	//private double xLockSetPoint;
@@ -20,16 +20,16 @@ public class Leg {
 		links.add(null);
 		links.add(null);
 	}
-	public Link getHipLink() {
+	public WalkerServoLink getHipLink() {
 		return links.get(0);
 	}
-	public Link getKneeLink() {
+	public WalkerServoLink getKneeLink() {
 		return links.get(1);
 	}
-	public Link getAnkleLink() {
+	public WalkerServoLink getAnkleLink() {
 		return links.get(2);
 	}
-	public void addLink(Link l){
+	public void addLink(WalkerServoLink l){
 		String type = l.getType();
 		if(type.equalsIgnoreCase("hip")){
 			links.set(0,l);
@@ -64,13 +64,13 @@ public class Leg {
 	
 	public void setHip(double inc,double time){
 		
-		getHipLink().setAngle(inc, time);
+		getHipLink().setTargetAngle(inc, time);
 	}
 	public void setKnee(double inc,double time){
-		getKneeLink().setAngle(inc, time);
+		getKneeLink().setTargetAngle(inc, time);
 	}
 	public void setAnkle(double inc,double time){
-		getAnkleLink().setAngle(inc, time);
+		getAnkleLink().setTargetAngle(inc, time);
 	}
 	
 	private double [] calcCartesianLocal(double hip,double knee,double ankle) {
@@ -86,9 +86,9 @@ public class Leg {
 	}
 	
 	private double [] loadCartesianLocal(){
-		double hip = (getHipLink().getAngle());
-		double knee = (getKneeLink().getAngle());
-		double ankle = (getAnkleLink().getAngle());
+		double hip = (getHipLink().getTargetAngle());
+		double knee = (getKneeLink().getTargetAngle());
+		double ankle = (getAnkleLink().getTargetAngle());
 		return calcCartesianLocal(hip,knee,ankle);
 	}
 	private double [] calcCartesian(double [] loc) {
@@ -209,21 +209,21 @@ public class Leg {
 		return degrees*M_PI/180.0;
 	}
 	public void Home() {
-		for(Link l: links ) {
-			l.Home();
+		for(WalkerServoLink l: links ) {
+			l.Home(2);
 		}
 	}
 	public void save() {
-		for(Link l: links ) {
+		for(WalkerServoLink l: links ) {
 			l.save();
 		}
 		
 	}
-	public boolean hitMaxHip() {
-		return getHipLink().isMax();
+	public boolean hitMaxAngleHip() {
+		return getHipLink().isMaxAngle();
 	}
-	public boolean hitMinHip() {
-		return getHipLink().isMin();
+	public boolean hitMinAngleHip() {
+		return getHipLink().isMinAngle();
 	}
 	public void setStartPoint() {
 		double [] start = getCartesian();
@@ -231,11 +231,11 @@ public class Leg {
 		ySetPoint=start[1];
 		zSetPoint=start[2];
 	}
-	public void toMinHip(double time) {
-		stepToHipAngle(getHipLink().getMin()+10, time);
+	public void toMinAngleHip(double time) {
+		stepToHipAngle(getHipLink().getMinAngle()+10, time);
 	}
-	public void toMaxHip(double time) {
-		stepToHipAngle(getHipLink().getMax()-10, time);
+	public void toMaxAngleHip(double time) {
+		stepToHipAngle(getHipLink().getMaxAngle()-10, time);
 	}
 	public void stepToSetpoint(double time) {
 		double [] current = getCartesian();
@@ -251,7 +251,7 @@ public class Leg {
 		time/=20;
 		liftLeg(time);
 		
-		getHipLink().setAngle(hip, time);
+		getHipLink().setTargetAngle(hip, time);
 		double [] adjusted = getCartesian();
 		setCartesian(xSetPoint,adjusted[1], adjusted[2], time);
 		
@@ -261,17 +261,17 @@ public class Leg {
 	private void liftLeg(double time) {
 		double [] current = getCartesian();
 		setCartesian(xSetPoint,current[1], current[2]+.5, time);
-		updateServos(time);
-		flush();
+		updateServos();
+		flush(time);
 		try {Thread.sleep((long) (time*1000));} catch (InterruptedException e) {}
 	}
 	private void putLegDown(double time) {
-		updateServos(time);
-		flush();
+		updateServos();
+		flush(time);
 		try {Thread.sleep((long) (time*1000));} catch (InterruptedException e) {}
 		setZ(zSetPoint, time);
-		updateServos(time);
-		flush();
+		updateServos();
+		flush(time);
 		try {Thread.sleep((long) (time*1000));} catch (InterruptedException e) {}
 	}
 	
@@ -283,32 +283,32 @@ public class Leg {
 			return;
 		}
 		
-		if(getAnkleLink().getAngle()>-50) {
+		if(getAnkleLink().getTargetAngle()>-50) {
 			System.out.println("Ankle over extended");
 			stepToSetpoint(time);
 			return;
 		}
 		
-		if(hitMaxHip()||hitMinHip()) {
+		if(hitMaxAngleHip()||hitMinAngleHip()) {
 			System.out.println("Fixing hip");
-			if(hitMaxHip()) {
-				toMinHip(time);
+			if(hitMaxAngleHip()) {
+				toMinAngleHip(time);
 				return;
-			}if(hitMinHip()) {
-				toMaxHip(time);
+			}if(hitMinAngleHip()) {
+				toMaxAngleHip(time);
 				return;
 			}
 		}
 		
 	}
-	public void updateServos(double time) {
-		for(Link l: links ) {
-			l.updateServo(time);
+	public void updateServos() {
+		for(WalkerServoLink l: links ) {
+			l.cacheTargetValue();
 		}
 	}
-	public void flush() {
-		for(Link l: links ) {
-			l.flush();
+	public void flush(double time) {
+		for(WalkerServoLink l: links ) {
+			l.flush(time);
 		}
 	}
 	public double getThetaOffset() {
@@ -328,7 +328,7 @@ public class Leg {
 		setCartesian(x, y, current[2], time);
 	}
 	public void loadHomeValuesFromDyIO() {
-		for(Link l: links ) {
+		for(WalkerServoLink l: links ) {
 			l.loadHomeValuesFromDyIO();
 		}
 	}
@@ -337,7 +337,7 @@ public class Leg {
 "		<x>"+xOffset+"</x>\n"+
 "		<y>"+yOffset+"</y>\n"+
 "		<theta>"+thetaOffset+"</theta>\n";
-		for(Link l: links ) {
+		for(WalkerServoLink l: links ) {
 			s+=l.getLinkXML();
 		}
 		s+="	</leg>\n";

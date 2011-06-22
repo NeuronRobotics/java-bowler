@@ -37,9 +37,9 @@ public class BasicWalker {
 		System.out.println("Loading default configuration");
 		parse(BasicWalkerConfig.getDefaultConfigurationStream());
 	}
-	public void addLeg(double x, double y, double theta,ArrayList<Link> links) {
+	public void addLeg(double x, double y, double theta,ArrayList<WalkerServoLink> links) {
 		Leg tmpLeg = new Leg(x,y,theta);
-		for(Link l:links) {
+		for(WalkerServoLink l:links) {
 			 tmpLeg.addLink(l);
 		}
 		legs.add(tmpLeg);
@@ -97,7 +97,7 @@ public class BasicWalker {
 		for (int temp = 0; temp < nList.getLength(); temp++) {
 			//System.out.println("Leg # "+temp);
 		    Node nNode = nList.item(temp);
-		    ArrayList<Link> legLinks = new ArrayList<Link>();
+		    ArrayList<WalkerServoLink> legLinks = new ArrayList<WalkerServoLink>();
 		    if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 		    	Element eElement = (Element) nNode;
 		    	x = Double.parseDouble(getTagValue("x",eElement));
@@ -121,7 +121,7 @@ public class BasicWalker {
 			    		String type = getTagValue("type",lElement);
 			    		if(useHardware){
 				    		ServoChannel srv = new ServoChannel(dyio.getChannel(channel));
-				    		Link tmpLink = new Link(srv,home,llimit,ulimit,(scale*inverse),linkLen,type);
+				    		WalkerServoLink tmpLink = new WalkerServoLink(srv,home,llimit,ulimit,(scale*inverse),linkLen,type);
 				    		legLinks.add(tmpLink);
 			    		}
 		    		}
@@ -237,7 +237,7 @@ public class BasicWalker {
 	}
 	public void updateAllServos(double time) {
 		for (Leg l:legs){
-			l.updateServos(time);
+			l.updateServos();
 		}
 		dyio.flushCache((float) time);
 	}
