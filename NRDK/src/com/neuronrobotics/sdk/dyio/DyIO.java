@@ -603,6 +603,10 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 	public void addPIDEventListener(IPIDEventListener l) {
 		pid.addPIDEventListener(l);
 	}
+	@Override
+	public void flushPIDChannels(double time) {
+		pid.flushPIDChannels(time);
+	}
 	
 	/**
 	 * Advanced Async Configuration
@@ -682,5 +686,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 	public ArrayList<DyIOChannel> getInternalChannels() {
 		return channels;
 	}
+
+
 	
 }

@@ -46,10 +46,14 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 	}
 	
 	public boolean SetPIDSetPoint(int group,int setpoint,double seconds){
+		channels.get(group).setCachedTargetValue(setpoint);
 		return send(new  ControlPIDCommand((char) group,setpoint, seconds))!=null;
 	}
 	
 	public boolean SetAllPIDSetPoint(int []setpoints,double seconds){
+		for(int i=0;i<channels.size();i++){
+			channels.get(i).setCachedTargetValue(setpoints[i]);
+		}
 		return send(new  ControlAllPIDCommand(setpoints, seconds))!=null;
 	}
 	
@@ -68,7 +72,9 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 		if(back.length != channels.size()){
 			channels =  new ArrayList<PIDChannel>();
 			for(int i=0;i<back.length;i++){
-				channels.add(new PIDChannel(this,i));
+				PIDChannel c =new PIDChannel(this,i);
+				c.setCachedTargetValue(back[i]);
+				channels.add(c);
 			}
 		}
 		return back;
@@ -129,6 +135,15 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 	public void firePIDResetEvent(int group,int value){
 		for(IPIDEventListener l: PIDEventListeners)
 			l.onPIDReset(group,value);
+	}
+
+	@Override
+	public void flushPIDChannels(double time) {
+		int [] data = new int[channels.size()];
+		for(int i=0;i<channels.size();i++){
+			data[i]=channels.get(i).getCachedTargetValue();
+		}
+		SetAllPIDSetPoint(data, time);
 	}
 	
 

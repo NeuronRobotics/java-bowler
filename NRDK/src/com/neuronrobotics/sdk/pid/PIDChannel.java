@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class PIDChannel {
 	private IPIDControl pid;
 	private int index;
+	private int targetValue;
 	
 	private ArrayList<IPIDEventListener> PIDEventListeners = new ArrayList<IPIDEventListener>();
 	
@@ -12,6 +13,8 @@ public class PIDChannel {
 		setPid(p);
 		index=i;
 	}
+	
+	
 
 	public boolean SetPIDSetPoint(int setpoint,double seconds){
 		return getPid().SetPIDSetPoint(index, setpoint, seconds);
@@ -92,6 +95,18 @@ public class PIDChannel {
 	public void firePIDResetEvent(int group,int value){
 		for(IPIDEventListener l: PIDEventListeners)
 			l.onPIDReset(group,value);
+	}
+
+	public void flush(double time){
+		SetPIDSetPoint(getCachedTargetValue(),time);
+	}
+
+	public void setCachedTargetValue(int targetValue) {
+		this.targetValue = targetValue;
+	}
+	
+	public int getCachedTargetValue() {
+		return targetValue;
 	}
 	
 }

@@ -9,4 +9,5 @@ public interface IPIDControl {
 	public int GetPIDPosition(int group);
 	public int [] GetAllPIDPosition();
 	public void addPIDEventListener(IPIDEventListener l);
+	public void flushPIDChannels(double time);
 }
