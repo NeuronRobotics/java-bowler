@@ -78,6 +78,9 @@ public abstract class AbstractLink {
 		targetAngle = pos;
 		setPosition(toValue(targetAngle),(float) time);
 	}
+	public double getCurrentAngle(){
+		return toAngle(getCurrentPosition());
+	}
 	public double getTargetAngle() {
 		return toAngle(getTargetValue());
 	}
@@ -144,6 +147,18 @@ public abstract class AbstractLink {
 	}
 	public int getHome() {
 		return home;
+	}
+	
+	public void setCurrentAsUpperLimit() {
+		setUpperLimit(getCurrentPosition());
+	}
+	public void setCurrentAsLowerLimit() {
+		setLowerLimit(getCurrentPosition());
+	}
+	public void setCurrentAsAngle(double angle) {
+		double current = (double)(getCurrentPosition()-getHome());
+		if(current != 0)
+			setScale(angle/current);
 	}
 	
 }
