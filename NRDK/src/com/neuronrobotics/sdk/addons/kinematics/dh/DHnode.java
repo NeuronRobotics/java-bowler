@@ -20,6 +20,7 @@ public class DHnode extends AbstractTransform{
 		setR(R);
 		setAlpha(Alpha);
 	}
+	
 	public Matrix getTransform(){
 		double theta = getLink().getCurrentAngle();
 		double sThata = Math.sin(theta);
