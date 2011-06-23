@@ -1,5 +1,7 @@
 package com.neuronrobotics.sdk.addons.kinematics.dh;
 
-public abstract class AbstractTransform {
+import Jama.Matrix;
 
+public abstract class AbstractTransform {
+	public abstract Matrix getTransform();
 }
