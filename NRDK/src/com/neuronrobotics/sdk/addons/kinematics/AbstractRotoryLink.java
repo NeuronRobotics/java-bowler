@@ -13,7 +13,6 @@ public abstract class AbstractRotoryLink extends AbstractLink {
 	public void setTargetAngle(double pos,double time) {
 		setTargetAngle(pos, time);
 	}
-
 	public void setCurrentAsAngle(double angle) {
 		setCurrentEngineeringUnits(angle);
 	}
