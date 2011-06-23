@@ -1,13 +1,13 @@
 package com.neuronrobotics.sdk.addons.kinematics;
 
-public abstract class MockRotoryLink extends AbstractRotoryLink {
+public class MockRotoryLink extends AbstractRotoryLink {
 	int val=0;
 	public MockRotoryLink(int home, int lowerLimit, int upperLimit, double scale) {
 		super(home, lowerLimit, upperLimit, scale);
 		setHome(0);
 		setLowerLimit(-355);
 		setUpperLimit(355);
-		setScale(1.0);
+		setScale(Math.PI/180);
 		setTargetValue(35);
 	}
 
@@ -26,7 +26,7 @@ public abstract class MockRotoryLink extends AbstractRotoryLink {
 	@Override
 	public int getCurrentPosition() {
 		// TODO Auto-generated method stub
-		return (int)Math.toRadians(val);
+		return 35;
 	}
 
 }

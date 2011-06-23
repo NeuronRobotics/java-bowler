@@ -3,11 +3,13 @@ package com.neuronrobotics.sdk.addons.kinematics.dh;
 import Jama.Matrix;
 
 import com.neuronrobotics.sdk.addons.kinematics.AbstractRotoryLink;
+import com.neuronrobotics.sdk.addons.kinematics.ILinkListener;
 
-public class DHnode extends AbstractTransform{
+public class DHnode extends AbstractTransform implements ILinkListener{
 	private AbstractRotoryLink link;
 	private double D, R, Alpha;
 	private double sinA,cosA;
+	double theta;
 	/**
 	 * 
 	 * @param D 	offset along previous z to the common normal
@@ -20,9 +22,7 @@ public class DHnode extends AbstractTransform{
 		setR(R);
 		setAlpha(Alpha);
 	}
-	
-	public Matrix getTransform(){
-		double theta = getLink().getCurrentAngle();
+	private double[][] getMatrixData(){
 		double sThata = Math.sin(theta);
 		double cTheta = Math.cos(theta);
 		double [][] rotTheta ={
@@ -58,15 +58,18 @@ public class DHnode extends AbstractTransform{
 				{1		,1		,1		,1},
 		};
 		
-		for(int i=0;i<4;i++){
-			for(int j=0;i<4;j++){
+		for(int i=0;i<3;i++){
+			for(int j=0;j<3;j++){
 				trans[i][j]*=transD[i][j];
 				trans[i][j]*=rotTheta[i][j];
 				trans[i][j]*=transR[i][j];
 				trans[i][j]*=rotAlpha[i][j];	
 			}
 		}	
-		Matrix Trans = new Matrix(trans);
+		return trans;
+	}
+	public Matrix getTransform(){
+		Matrix Trans = new Matrix(getMatrixData());
 		return Trans;
 	}
 	public void setAlpha(double alpha) {
@@ -90,10 +93,39 @@ public class DHnode extends AbstractTransform{
 		return R;
 	}
 	public void setLink(AbstractRotoryLink link) {
+		link.addLinkListener(this);
 		this.link = link;
+		theta = getLink().getCurrentAngle();
 	}
 	public AbstractRotoryLink getLink() {
 		return link;
+	}
+	public String toString(){
+		String s="D-H node";
+		s+="\n\tD="+D;
+		s+="\n\tAlpha="+Alpha;
+		s+="\n\tR="+R;
+		s+="\n\tTheta="+theta;
+		s+="\n\tMatrix=[\n";
+		double[][] d= getMatrixData();
+		for(int i=0;i<4;i++){
+			
+			for(int j=0;j<4;j++){
+				if(j==0)
+					s+="\t\t[";
+				s+=d[i][j];
+				if(j<3)
+					s+=" , ";
+			}
+			if(i<3)
+				s+=" ], \n";
+		}
+		s+=" ] ]\n";
+		return s;
+	}
+	@Override
+	public void onLinkPositionUpdate(double engineeringUnitsValue) {
+		theta=engineeringUnitsValue;
 	}
 	
 }
