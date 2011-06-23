@@ -53,9 +53,9 @@ public abstract class AbstractLink {
 	 * 
 	 * @param value in un-scaled link units. This method converts to an angle then sends to listeners. 
 	 */
-	public void fireLinkListener(int value){
+	public void fireLinkListener(int linkUnitsValue){
 		for(ILinkListener l:links){
-			l.onLinkPositionUpdate(toEngineeringUnits(value));
+			l.onLinkPositionUpdate(toEngineeringUnits(linkUnitsValue));
 		}
 	}
 	
