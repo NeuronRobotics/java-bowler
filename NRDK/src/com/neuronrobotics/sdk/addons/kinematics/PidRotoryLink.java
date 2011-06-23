@@ -2,9 +2,9 @@ package com.neuronrobotics.sdk.addons.kinematics;
 
 import com.neuronrobotics.sdk.pid.PIDChannel;
 
-public class PidLink extends AbstractLink{
+public class PidRotoryLink extends AbstractRotoryLink{
 	private PIDChannel channel;
-	public PidLink(PIDChannel c,int home, int lowerLimit, int upperLimit, double scale) {
+	public PidRotoryLink(PIDChannel c,int home, int lowerLimit, int upperLimit, double scale) {
 		super(home, lowerLimit, upperLimit, scale);
 		setPIDChannel(c);
 	}

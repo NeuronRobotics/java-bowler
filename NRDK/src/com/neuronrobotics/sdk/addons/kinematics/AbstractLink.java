@@ -9,7 +9,7 @@ public abstract class AbstractLink {
 	private int home;
 	private int targetValue=0;
 	
-	private double targetAngle=0;
+	private double targetEngineeringUnits=0;
 	
 	private ArrayList<ILinkListener> links = new ArrayList<ILinkListener>();
 	
@@ -32,6 +32,13 @@ public abstract class AbstractLink {
  	 */
 	public abstract int getCurrentPosition();
 	
+	protected double toEngineeringUnits(int value){
+		return ((value-getHome())*getScale());
+	}
+	protected int toLinkUnits(double euValue){
+		return ((int) (euValue/getScale()))+getHome();
+	}
+	
 	public void addLinkListener(ILinkListener l){
 		if(links.contains(l))
 			return;
@@ -48,7 +55,7 @@ public abstract class AbstractLink {
 	 */
 	public void fireLinkListener(int value){
 		for(ILinkListener l:links){
-			l.onLinkPositionUpdate(toAngle(value));
+			l.onLinkPositionUpdate(toEngineeringUnits(value));
 		}
 	}
 	
@@ -59,44 +66,43 @@ public abstract class AbstractLink {
 		setHome(home);
 	}
 	
-	private double toAngle(int value){
-		return ((value-getHome())*getScale());
-	}
-	private int toValue(double angle){
-		return ((int) (angle/getScale()))+getHome();
-	}
-	
 	public void Home(double time){
 		setPosition(this.getHome(),(float) time);
 		cacheTargetValue();
 	}
 	
-	public void incrementAngle(double inc,double time){
-		setTargetAngle(targetAngle+inc,time);
+	public void incrementEngineeringUnits(double inc,double time){
+		setTargetEngineeringUnits(targetEngineeringUnits+inc,time);
 	}
-	public void setTargetAngle(double pos,double time) {
-		targetAngle = pos;
-		setPosition(toValue(targetAngle),(float) time);
+	public void setTargetEngineeringUnits(double pos,double time) {
+		targetEngineeringUnits = pos;
+		setPosition(toLinkUnits(targetEngineeringUnits),(float) time);
 	}
-	public double getCurrentAngle(){
-		return toAngle(getCurrentPosition());
+
+	public void setCurrentEngineeringUnits(double angle) {
+		double current = (double)(getCurrentPosition()-getHome());
+		if(current != 0)
+			setScale(angle/current);
 	}
-	public double getTargetAngle() {
-		return toAngle(getTargetValue());
+	public double getCurrentEngineeringUnits(){
+		return toEngineeringUnits(getCurrentPosition());
 	}
-	public double getMaxAngle() {
-		return toAngle(getUpperLimit());
+	public double getTargetEngineeringUnits() {
+		return toEngineeringUnits(getTargetValue());
 	}
-	public double getMinAngle() {
-		return toAngle(getLowerLimit());
+	public double getMaxEngineeringUnits() {
+		return toEngineeringUnits(getUpperLimit());
 	}
-	public boolean isMaxAngle() {
+	public double getMinEngineeringUnits() {
+		return toEngineeringUnits(getLowerLimit());
+	}
+	public boolean isMaxEngineeringUnits() {
 		if(getTargetValue() == getUpperLimit()) {
 			return true;
 		}
 		return false;
 	}
-	public boolean isMinAngle() {
+	public boolean isMinEngineeringUnits() {
 		if(getTargetValue() == getLowerLimit()) {
 			return true;
 		}
@@ -111,11 +117,10 @@ public abstract class AbstractLink {
 		flush(time);
 	}
 	
-	public void setTargetValue(int val) {
+	protected void setTargetValue(int val) {
 		if(val>getUpperLimit())
 			val=getUpperLimit();
 		if(val<getLowerLimit()) {
-			//System.out.println("Attempting to set to value:"+val+" is below limit:"+lowerLimit);
 			val=getLowerLimit();
 		}
 		this.targetValue = val;
@@ -152,13 +157,9 @@ public abstract class AbstractLink {
 	public void setCurrentAsUpperLimit() {
 		setUpperLimit(getCurrentPosition());
 	}
+	
 	public void setCurrentAsLowerLimit() {
 		setLowerLimit(getCurrentPosition());
-	}
-	public void setCurrentAsAngle(double angle) {
-		double current = (double)(getCurrentPosition()-getHome());
-		if(current != 0)
-			setScale(angle/current);
 	}
 	
 }

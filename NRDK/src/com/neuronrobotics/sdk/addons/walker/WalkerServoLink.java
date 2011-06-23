@@ -1,10 +1,10 @@
 package com.neuronrobotics.sdk.addons.walker;
 
 
-import com.neuronrobotics.sdk.addons.kinematics.ServoLink;
+import com.neuronrobotics.sdk.addons.kinematics.ServoRotoryLink;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 
-public class WalkerServoLink extends ServoLink {
+public class WalkerServoLink extends ServoRotoryLink {
 	private double linkLen;
 	private String type;
 	

@@ -2,10 +2,10 @@ package com.neuronrobotics.sdk.addons.kinematics;
 
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 
-public class ServoLink extends AbstractLink{
+public class ServoRotoryLink extends AbstractRotoryLink{
 	private ServoChannel srv;
 	
-	public ServoLink(ServoChannel srv,int home, int lowerLimit, int upperLimit, double scale) {
+	public ServoRotoryLink(ServoChannel srv,int home, int lowerLimit, int upperLimit, double scale) {
 		super(home, lowerLimit, upperLimit, scale);
 		setServoChannel(srv);
 	}
