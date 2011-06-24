@@ -7,11 +7,11 @@ public abstract class AbstractRotoryLink extends AbstractLink {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public void incrementAngle(double inc,double time){
-		incrementEngineeringUnits(inc, time);
+	public void incrementAngle(double inc){
+		incrementEngineeringUnits(inc);
 	}
-	public void setTargetAngle(double pos,double time) {
-		setTargetAngle(pos, time);
+	public void setTargetAngle(double pos) {
+		setTargetEngineeringUnits(pos);
 	}
 	public void setCurrentAsAngle(double angle) {
 		setCurrentEngineeringUnits(angle);

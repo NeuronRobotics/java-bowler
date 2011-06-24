@@ -160,7 +160,6 @@ public class BasicWalker {
 		}
 	}
 	public void initialize() {
-		double time=.5;
 		int leg=0;
 		for (Leg l:legs){
 			double hipStart=0.0-l.getThetaOffset();
@@ -170,9 +169,9 @@ public class BasicWalker {
 				hipStart+=180;	
 
 			//System.out.println("Leg : "+leg+" is set to : "+hipStart);
-			l.setHip(hipStart, time);
-			l.setKnee(0, time);
-			l.setAnkle(-90, time);
+			l.setHip(hipStart);
+			l.setKnee(0);
+			l.setAnkle(-90);
 			l.setStartPoint();
 			leg++;
 		}
@@ -195,7 +194,7 @@ public class BasicWalker {
 	public void turnBody(double degrees,double time) {
 		degrees*=-1;
 		for (Leg l:legs){
-			l.turn(degrees, time);
+			l.turn(degrees);
 		}
 		updateAllServos((float) time);
 		fixAll(time);
@@ -204,7 +203,7 @@ public class BasicWalker {
 	public void incrementAllY(double inc,double time) {
 		inc*=-1;
 		for (Leg l:legs){
-			l.incrementY(inc, time);
+			l.incrementY(inc);
 		}
 		updateAllServos((float) time);
 		fixAll(time);
@@ -212,7 +211,7 @@ public class BasicWalker {
 	public void incrementAllX(double inc,double time) {
 		inc*=-1;
 		for (Leg l:legs){
-			l.incrementX(inc, time);
+			l.incrementX(inc);
 		}
 		updateAllServos((float) time);
 		fixAll(time);
@@ -221,7 +220,7 @@ public class BasicWalker {
 	public void incrementAllZ(double inc,double time) {
 		inc*=-1;
 		for (Leg l:legs){
-			l.incrementZ(inc, time);
+			l.incrementZ(inc);
 		}
 		updateAllServos((float) time);
 		fixAll(time);
@@ -232,8 +231,9 @@ public class BasicWalker {
 	
 	public void fixAll(double time) {
 		for (Leg l:legs){
-			l.fix(time);
+			l.fix();
 		}
+		updateAllServos((float) time);
 	}
 	public void updateAllServos(double time) {
 		for (Leg l:legs){

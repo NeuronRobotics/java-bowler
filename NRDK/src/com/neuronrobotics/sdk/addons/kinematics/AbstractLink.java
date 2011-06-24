@@ -66,17 +66,17 @@ public abstract class AbstractLink {
 		setHome(home);
 	}
 	
-	public void Home(double time){
-		setPosition(this.getHome(),(float) time);
+	public void Home(){
+		setTargetValue(getHome());
 		cacheTargetValue();
 	}
 	
-	public void incrementEngineeringUnits(double inc,double time){
-		setTargetEngineeringUnits(targetEngineeringUnits+inc,time);
+	public void incrementEngineeringUnits(double inc){
+		setTargetEngineeringUnits(targetEngineeringUnits+inc);
 	}
-	public void setTargetEngineeringUnits(double pos,double time) {
+	public void setTargetEngineeringUnits(double pos) {
 		targetEngineeringUnits = pos;
-		setPosition(toLinkUnits(targetEngineeringUnits),(float) time);
+		setPosition(toLinkUnits(targetEngineeringUnits));
 	}
 
 	public void setCurrentEngineeringUnits(double angle) {
@@ -109,12 +109,11 @@ public abstract class AbstractLink {
 		return false;
 	}
 	
-	protected void setPosition(int val,float time) {
+	protected void setPosition(int val) {
 		if(getTargetValue() == val)
 			return;
 		setTargetValue(val);
 		cacheTargetValue();
-		flush(time);
 	}
 	
 	protected void setTargetValue(int val) {

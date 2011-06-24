@@ -6,8 +6,8 @@ public abstract class AbstractPrismaticLink extends AbstractLink {
 		super(home, lowerLimit, upperLimit, scale);
 		// TODO Auto-generated constructor stub
 	}
-	public void incrementDisplacment(double inc,double time){
-		incrementEngineeringUnits(inc, time);
+	public void incrementDisplacment(double inc){
+		incrementEngineeringUnits(inc);
 	}
 	public void setTargetDisplacment(double pos,double time) {
 		setTargetDisplacment(pos, time);

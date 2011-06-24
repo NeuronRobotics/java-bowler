@@ -556,7 +556,9 @@ public class DyIOChannel implements IDyIOChannel {
 	}
 	
 	public boolean flush() {
+		//Log.enableDebugPrint(true);
 		Log.debug("Flushing channel: "+number);
+		
 		ByteList b = new ByteList();
 		switch(getMode()){
 		case COUNT_IN_INT:
@@ -576,7 +578,9 @@ public class DyIOChannel implements IDyIOChannel {
 			b.add(getCachedValue());
 		}
 		Log.info("Setting channel: "+getChannelNumber()+" to value: "+b);
-		return setValue(b);
+		boolean back = setValue(b);
+		//Log.enableDebugPrint(false);
+		return back;
 	}
 
 	/* (non-Javadoc)

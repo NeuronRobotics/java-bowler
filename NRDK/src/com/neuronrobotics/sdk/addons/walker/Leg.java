@@ -52,25 +52,31 @@ public class Leg {
 			loadCartesianLocal();
 		return (gotHip && gotKnee && gotAnkle);
 	}
-	public void incrementHip(double inc,double time){
-		getHipLink().incrementAngle(inc, time);
+	public void incrementHip(double inc){
+		getHipLink().incrementAngle(inc);
+		//getHipLink().flush(time);
 	}
-	public void incrementKnee(double inc,double time){
-		getKneeLink().incrementAngle(inc, time);
+	public void incrementKnee(double inc){
+		getKneeLink().incrementAngle(inc);
+		//getKneeLink().flush(time);
 	}
-	public void incrementAnkle(double inc,double time){
-		getAnkleLink().incrementAngle(inc, time);
+	public void incrementAnkle(double inc){
+		getAnkleLink().incrementAngle(inc);
+		//getAnkleLink().flush(time);
 	}
 	
-	public void setHip(double inc,double time){
+	public void setHip(double inc){
 		
-		getHipLink().setTargetAngle(inc, time);
+		getHipLink().setTargetAngle(inc);
+		//getHipLink().flush(time);
 	}
-	public void setKnee(double inc,double time){
-		getKneeLink().setTargetAngle(inc, time);
+	public void setKnee(double inc){
+		getKneeLink().setTargetAngle(inc);
+		//getKneeLink().flush(time);
 	}
-	public void setAnkle(double inc,double time){
-		getAnkleLink().setTargetAngle(inc, time);
+	public void setAnkle(double inc){
+		getAnkleLink().setTargetAngle(inc);
+		//getAnkleLink().flush(time);
 	}
 	
 	private double [] calcCartesianLocal(double hip,double knee,double ankle) {
@@ -108,50 +114,50 @@ public class Leg {
 	public double [] getCartesianLocal(){
 		return loadCartesianLocal();
 	}
-	public void incrementX(double val, double time){
+	public void incrementX(double val){
 		double [] pos = getCartesian();
 		try {
-			setCartesian(pos[0]+val,pos[1],pos[2],time);
+			setCartesian(pos[0]+val,pos[1],pos[2]);
 		}catch(RuntimeException e) {
-			stepToSetpoint(time);
+			stepToSetpoint();
 		}
-		fix(time);
+		fix();
 	}
-	public void incrementY(double val, double time){
+	public void incrementY(double val){
 		double [] pos = getCartesian();
 		try {
-			setCartesian(pos[0],pos[1]+val,pos[2],time);
+			setCartesian(pos[0],pos[1]+val,pos[2]);
 		}catch(RuntimeException e) {
 			System.err.println("Error in increment y");
-			stepToSetpoint(time);
+			stepToSetpoint();
 		}
 		//fix(time);
 	}
-	public void incrementZ(double val, double time){
+	public void incrementZ(double val){
 		double [] pos = getCartesian();
 		try {
-			setCartesian(pos[0],pos[1],pos[2]+val,time);
+			setCartesian(pos[0],pos[1],pos[2]+val);
 		}catch(RuntimeException e) {
-			stepToSetpoint(time);
+			stepToSetpoint();
 		}
-		fix(time);
+		fix();
 	}
 	
-	public void setZ(double val,double time) {
+	public void setZ(double val) {
 		double [] pos = getCartesian();
-		setCartesian(pos[0],pos[1],val,time);
+		setCartesian(pos[0],pos[1],val);
 	}
 	
-	public void setCartesian(double x,double y,double z,double time){
+	public void setCartesian(double x,double y,double z){
 		x-=xOffset;
 		y-=yOffset;
 		double vect =  sqrt(x*x+y*y);
 		double angle = atan2(y,x)-ToRadians(thetaOffset);
 		x=cos(angle)*vect;
 		y=sin(angle)*vect;
-		setCartesianLocal(x,y,z,time);
+		setCartesianLocal(x,y,z);
 	}
-	public void setCartesianLocal(double xSet,double ySet,double zSet,double time){
+	public void setCartesianLocal(double xSet,double ySet,double zSet){
 		double l1 = getKneeLink().getLinkLen();
 		double l2 = getAnkleLink().getLinkLen();
 		double l3 = getHipLink().getLinkLen();
@@ -182,9 +188,9 @@ public class Leg {
 		double ankle=elbow;
 		
 		double hip = thetaLocal*(180.0/M_PI);
-		setHip(hip, time);
-		setKnee(knee, time);
-		setAnkle(ankle, time);
+		setHip(hip);
+		setKnee(knee);
+		setAnkle(ankle);
 	}
 	
 	/*
@@ -210,7 +216,7 @@ public class Leg {
 	}
 	public void Home() {
 		for(WalkerServoLink l: links ) {
-			l.Home(2);
+			l.Home();
 		}
 	}
 	public void save() {
@@ -231,71 +237,74 @@ public class Leg {
 		ySetPoint=start[1];
 		zSetPoint=start[2];
 	}
-	public void toMinAngleHip(double time) {
-		stepToHipAngle(getHipLink().getMinAngle()+10, time);
+	public void toMinAngleHip() {
+		stepToHipAngle(getHipLink().getMinAngle()+10);
 	}
-	public void toMaxAngleHip(double time) {
-		stepToHipAngle(getHipLink().getMaxAngle()-10, time);
+	public void toMaxAngleHip() {
+		stepToHipAngle(getHipLink().getMaxAngle()-10);
 	}
-	public void stepToSetpoint(double time) {
+	public void stepToSetpoint() {
 		double [] current = getCartesian();
-		time/=10;
-		liftLeg(time);
+
+		liftLeg();
 		
-		setCartesian(xSetPoint,ySetPoint, current[2]+1, time);
+		setCartesian(xSetPoint,ySetPoint, current[2]+1);
 		
-		putLegDown(time);
+		putLegDown();
 	}
 	
-	public void stepToHipAngle(double hip,double time) {
-		time/=20;
-		liftLeg(time);
+	public void stepToHipAngle(double hip) {
+
+		liftLeg();
 		
-		getHipLink().setTargetAngle(hip, time);
+		getHipLink().setTargetAngle(hip);
+
 		double [] adjusted = getCartesian();
-		setCartesian(xSetPoint,adjusted[1], adjusted[2], time);
+		setCartesian(xSetPoint,adjusted[1], adjusted[2]);
 		
-		putLegDown(time);
+		putLegDown();
 	}
 	
-	private void liftLeg(double time) {
+	private void liftLeg() {
+		double time=.05;
 		double [] current = getCartesian();
-		setCartesian(xSetPoint,current[1], current[2]+.5, time);
+		setCartesian(xSetPoint,current[1], current[2]+.5);
 		updateServos();
 		flush(time);
 		try {Thread.sleep((long) (time*1000));} catch (InterruptedException e) {}
 	}
-	private void putLegDown(double time) {
+	private void putLegDown() {
+		double time=.05;
 		updateServos();
 		flush(time);
 		try {Thread.sleep((long) (time*1000));} catch (InterruptedException e) {}
-		setZ(zSetPoint, time);
+		setZ(zSetPoint);
 		updateServos();
 		flush(time);
 		try {Thread.sleep((long) (time*1000));} catch (InterruptedException e) {}
 	}
 	
-	public void fix(double time) {
+	public void fix() {
 		double [] current = getCartesianLocal();
 		if(Math.abs(current[0])<(getHipLink().getLinkLen()*2) ) {
 			System.out.println("Legnth too short");
-			stepToSetpoint(time);
+			stepToSetpoint();
 			return;
 		}
 		
 		if(getAnkleLink().getTargetAngle()>-50) {
 			System.out.println("Ankle over extended");
-			stepToSetpoint(time);
+			stepToSetpoint();
 			return;
 		}
 		
 		if(hitMaxAngleHip()||hitMinAngleHip()) {
 			System.out.println("Fixing hip");
 			if(hitMaxAngleHip()) {
-				toMinAngleHip(time);
+				toMinAngleHip();
 				return;
 			}if(hitMinAngleHip()) {
-				toMaxAngleHip(time);
+				toMaxAngleHip();
 				return;
 			}
 		}
@@ -308,13 +317,17 @@ public class Leg {
 	}
 	public void flush(double time) {
 		for(WalkerServoLink l: links ) {
-			l.flush(time);
+			try {
+				l.flush(time);
+			}catch(Exception e) {
+				//e.printStackTrace();
+			}
 		}
 	}
 	public double getThetaOffset() {
 		return thetaOffset;
 	}
-	public void turn(double degrees, double time) {
+	public void turn(double degrees) {
 		double rad = ToRadians(degrees);
 		double [] current = getCartesian();
 		double theta,currentVectLen,x,y;
@@ -325,7 +338,7 @@ public class Leg {
 		y=currentVectLen*sin(theta);
 		
 		//System.out.println("Attempting to turn, vector legnth: "+currentVectLen + " angle: "+(theta/M_PI)*180+" new x "+x+" new y "+y  );
-		setCartesian(x, y, current[2], time);
+		setCartesian(x, y, current[2]);
 	}
 	public void loadHomeValuesFromDyIO() {
 		for(WalkerServoLink l: links ) {

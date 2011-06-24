@@ -48,6 +48,10 @@ public class WalkerServoLink extends ServoRotoryLink {
 	public String getType() {
 		return type;
 	}
-
+	@Override
+	public void flush(double time) {
+		super.flush(time);
+		throw new RuntimeException("Shouldnt be flushing from here!");
+	}
 
 }

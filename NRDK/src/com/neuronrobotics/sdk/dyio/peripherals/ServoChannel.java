@@ -13,6 +13,7 @@
  * limitations under the License.
  ******************************************************************************/
 package com.neuronrobotics.sdk.dyio.peripherals;
+import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIOChannel;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 
