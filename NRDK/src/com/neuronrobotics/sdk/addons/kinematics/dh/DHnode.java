@@ -58,14 +58,15 @@ public class DHnode extends AbstractTransform implements ILinkListener{
 				{1		,1		,1		,1},
 		};
 		
-		for(int i=0;i<3;i++){
-			for(int j=0;j<3;j++){
-				trans[i][j]*=transD[i][j];
-				trans[i][j]*=rotTheta[i][j];
-				trans[i][j]*=transR[i][j];
-				trans[i][j]*=rotAlpha[i][j];	
-			}
-		}	
+		//Not calculating this right...
+//		for(int i=0;i<3;i++){
+//			for(int j=0;j<3;j++){
+//				trans[i][j]*=transD[i][j];
+//				trans[i][j]*=rotTheta[i][j];
+//				trans[i][j]*=transR[i][j];
+//				trans[i][j]*=rotAlpha[i][j];	
+//			}
+//		}	
 		return trans;
 	}
 	public Matrix getTransform(){
