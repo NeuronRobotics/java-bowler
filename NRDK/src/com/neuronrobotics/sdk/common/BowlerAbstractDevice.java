@@ -221,6 +221,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 		ArrayList<ByteList> list = new ArrayList<ByteList>();
 		try {
 			BowlerDatagram b = send(new InfoFirmwareRevisionCommand());
+			System.out.println("FW info:\n"+b);
 			for(int i=0;i<(b.getData().size()/3);i++){
 				list.add(new ByteList(b.getData().getBytes((i*3),3)));
 			}

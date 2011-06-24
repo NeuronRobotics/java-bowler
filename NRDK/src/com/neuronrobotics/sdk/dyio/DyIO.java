@@ -269,7 +269,6 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 		BowlerDatagram response;
 		try{
 			if (!haveFirmware()){
-				
 				firmware = getRevisions().get(0).getBytes();
 			}
 			checkFirmwareRev();
