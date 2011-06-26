@@ -42,12 +42,12 @@ public class PIDEvent {
 	}
 	@Override 
 	public String toString(){
-		return "PID Event: chan="+channel+", value="+ticks+", time="+timeStamp;
+		return "PID Event: \n\tchan = "+channel+"\n\tvalue = "+ticks+"\n\ttime = "+timeStamp+"\n\tvelocity since last packet= "+velocity;
 	}
 	public void setVelocity(int vel) {
 		this.velocity = vel;
 	}
-	public int getVel() {
+	public int getVelocity() {
 		return velocity;
 	}
 }

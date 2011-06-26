@@ -148,6 +148,7 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 		}
 	}
 	public void firePIDEvent(PIDEvent e){
+		SetCachedPosition(e.getGroup(), e.getValue());
 		synchronized(PIDEventListeners){
 			for(IPIDEventListener l: PIDEventListeners)
 				l.onPIDEvent(e);
