@@ -32,6 +32,7 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 	@Override
 	public boolean connect(){
 		if(super.connect()){
+			GetAllPIDPosition();
 			addPIDEventListener(new IPIDEventListener() {
 				public void onPIDReset(int group, int currentValue) {}
 				public void onPIDLimitEvent(PIDLimitEvent e) {}
