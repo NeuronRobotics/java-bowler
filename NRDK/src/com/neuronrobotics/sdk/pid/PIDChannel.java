@@ -19,7 +19,13 @@ public class PIDChannel {
 	public boolean SetPIDSetPoint(int setpoint,double seconds){
 		return getPid().SetPIDSetPoint(index, setpoint, seconds);
 	}
-	
+	public boolean SetPIDVelicity( int unitsPerSecond, double seconds) {
+		long dist = (long)unitsPerSecond*(long)seconds;
+		if(dist>2147483646 || dist<-2147483646){
+			throw new PIDCommandException("Velocity * Time too large: "+dist);
+		}
+		return SetPIDSetPoint((int) dist, seconds);
+	}
 	public int GetPIDPosition() {
 		return getPid().GetPIDPosition(index);
 	}
