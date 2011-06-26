@@ -21,6 +21,7 @@ import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 
 public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDControl {
 	private ArrayList<PIDChannel> channels = new ArrayList<PIDChannel>();
+	
 	public GenericPIDDevice(BowlerAbstractConnection connection) {
 		setAddress(new MACAddress(MACAddress.BROADCAST));
 		setConnection(connection);
@@ -28,8 +29,20 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 
 	public GenericPIDDevice() {
 	}
-
-	
+	@Override
+	public boolean connect(){
+		if(super.connect()){
+			addPIDEventListener(new IPIDEventListener() {
+				public void onPIDReset(int group, int currentValue) {}
+				public void onPIDLimitEvent(PIDLimitEvent e) {}
+				public void onPIDEvent(PIDEvent e) {
+					channels.get(e.getGroup()).setCurrentCachedPosition(e.getValue());
+				}
+			});
+			return true;
+		}
+		return false;
+	}
 	public void onAllResponse(BowlerDatagram data) {
 		// TODO Auto-generated method stub
 
@@ -61,6 +74,9 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 	public int GetPIDPosition(int group) {
 		BowlerDatagram b = send(new  ControlPIDCommand((char) group));
 		return ByteList.convertToInt(b.getData().getBytes(1, 4),true);
+	}
+	public int GetCachedPosition(int group) {
+		return channels.get(group).getCurrentCachedPosition();
 	}
 	
 	public int [] GetAllPIDPosition() {
@@ -150,7 +166,7 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 	@Override
 	public boolean SetPIDVelicity(int group, int unitsPerSecond, double seconds) {
 		long dist = (long)unitsPerSecond*(long)seconds;
-		long delt = ((long) (GetPIDPosition(group))-dist);
+		long delt = ((long) (GetCachedPosition(group))-dist);
 		if(delt>2147483646 || delt<-2147483646){
 			throw new PIDCommandException("(Current Position) - (Velocity * Time) too large: "+delt);
 		}

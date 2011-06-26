@@ -6,6 +6,7 @@ public class PIDChannel {
 	private IPIDControl pid;
 	private int index;
 	private int targetValue;
+	private int currentCachedPosition;
 	
 	private ArrayList<IPIDEventListener> PIDEventListeners = new ArrayList<IPIDEventListener>();
 	
@@ -109,6 +110,18 @@ public class PIDChannel {
 	
 	public int getCachedTargetValue() {
 		return targetValue;
+	}
+
+
+
+	public void setCurrentCachedPosition(int currentCachedPosition) {
+		this.currentCachedPosition = currentCachedPosition;
+	}
+
+
+
+	public int getCurrentCachedPosition() {
+		return currentCachedPosition;
 	}
 	
 }
