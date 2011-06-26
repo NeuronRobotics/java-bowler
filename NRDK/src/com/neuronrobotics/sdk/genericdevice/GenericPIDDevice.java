@@ -79,6 +79,9 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 	public int GetCachedPosition(int group) {
 		return channels.get(group).getCurrentCachedPosition();
 	}
+	public void SetCachedPosition(int group, int value) {
+		channels.get(group).setCurrentCachedPosition(value);
+	}
 	
 	public int [] GetAllPIDPosition() {
 		BowlerDatagram b = send(new ControlAllPIDCommand());
@@ -151,6 +154,7 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 		}
 	}
 	public void firePIDResetEvent(int group,int value){
+		SetCachedPosition(group, value);
 		for(IPIDEventListener l: PIDEventListeners)
 			l.onPIDReset(group,value);
 	}
@@ -169,7 +173,7 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 		long dist = (long)unitsPerSecond*(long)seconds;
 		long delt = ((long) (GetCachedPosition(group))-dist);
 		if(delt>2147483646 || delt<-2147483646){
-			throw new PIDCommandException("(Current Position) - (Velocity * Time) too large: "+delt);
+			throw new PIDCommandException("(Current Position) - (Velocity * Time) too large: "+delt+"\nTry resetting the encoders");
 		}
 		return SetPIDSetPoint(group, (int) delt, seconds);
 	}
