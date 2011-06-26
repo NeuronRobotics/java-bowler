@@ -14,6 +14,7 @@ import com.neuronrobotics.sdk.common.MACAddress;
 import com.neuronrobotics.sdk.pid.IPIDControl;
 import com.neuronrobotics.sdk.pid.IPIDEventListener;
 import com.neuronrobotics.sdk.pid.PIDChannel;
+import com.neuronrobotics.sdk.pid.PIDCommandException;
 import com.neuronrobotics.sdk.pid.PIDConfiguration;
 import com.neuronrobotics.sdk.pid.PIDEvent;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
@@ -144,6 +145,15 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 			data[i]=channels.get(i).getCachedTargetValue();
 		}
 		SetAllPIDSetPoint(data, time);
+	}
+
+	@Override
+	public boolean SetPIDVelicity(int group, int unitsPerSecond, double seconds) {
+		long dist = (long)unitsPerSecond*(long)seconds;
+		if(dist>2147483646 || dist<-2147483646){
+			throw new PIDCommandException("Velocity * Time too large");
+		}
+		return SetPIDSetPoint(group, (int) dist, seconds);
 	}
 	
 

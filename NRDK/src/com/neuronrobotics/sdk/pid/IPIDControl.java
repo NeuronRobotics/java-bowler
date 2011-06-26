@@ -10,4 +10,5 @@ public interface IPIDControl {
 	public int [] GetAllPIDPosition();
 	public void addPIDEventListener(IPIDEventListener l);
 	public void flushPIDChannels(double time);
+	public boolean SetPIDVelicity(int group,int unitsPerSecond,double seconds);
 }

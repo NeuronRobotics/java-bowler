@@ -686,6 +686,11 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 		return channels;
 	}
 
+	@Override
+	public boolean SetPIDVelicity(int group, int unitsPerSecond, double seconds) {
+		return pid.SetPIDVelicity(group, unitsPerSecond, seconds);
+	}
+
 
 	
 }
