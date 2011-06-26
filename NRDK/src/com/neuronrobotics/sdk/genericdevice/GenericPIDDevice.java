@@ -151,7 +151,7 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 	public boolean SetPIDVelicity(int group, int unitsPerSecond, double seconds) {
 		long dist = (long)unitsPerSecond*(long)seconds;
 		if(dist>2147483646 || dist<-2147483646){
-			throw new PIDCommandException("Velocity * Time too large");
+			throw new PIDCommandException("Velocity * Time too large: "+dist);
 		}
 		return SetPIDSetPoint(group, (int) dist, seconds);
 	}
