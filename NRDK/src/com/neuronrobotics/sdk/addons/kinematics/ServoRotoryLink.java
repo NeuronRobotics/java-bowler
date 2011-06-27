@@ -30,7 +30,7 @@ public class ServoRotoryLink extends AbstractRotoryLink{
 	@Override
 	public void flush(double time) {
 		getServoChannel().SetPosition(getTargetValue(),(float) time);
-		getServoChannel().flush();	
+		getServoChannel().getChannel().getDevice().flushCache((float) time);	
 	}
 	@Override
 	public int getCurrentPosition() {

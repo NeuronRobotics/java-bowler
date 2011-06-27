@@ -6,10 +6,7 @@ public class DeltaRobotKinematics {
 	//Sample code from http://forums.trossenrobotics.com/tutorials/introduction-129/delta-robot-kinematics-3276/
 	 // robot geometry
 	 // (look at pics above for explanation)
-	 private  double e = 115.0;     // end effector
-	 private  double f = 457.3;     // base
-	 private  double re = 232.0;
-	 private  double rf = 112.0;
+	DeltaRobotConfig configuration;
 	 /**
 	  * All units in milimeters
 	  * @param e
@@ -17,11 +14,8 @@ public class DeltaRobotKinematics {
 	  * @param re
 	  * @param rf
 	  */
-	 public DeltaRobotKinematics(double e, double f, double re, double rf){
-		 setE(e);
-		 setF(f);
-		 setRe(re);
-		 setRf(rf);
+	 public DeltaRobotKinematics(DeltaRobotConfig config){
+		 configuration=new DeltaRobotConfig(config);
 	 }
 	 
 	 
@@ -116,35 +110,19 @@ public class DeltaRobotKinematics {
 	     return new DeltaJointAngles(theta1, theta2, theta3);
 	 }
 
-	private void setE(double e) {
-		this.e = e;
-	}
-
 	public double getE() {
-		return e;
-	}
-
-	private void setF(double f) {
-		this.f = f;
+		return configuration.getE();
 	}
 
 	public double getF() {
-		return f;
-	}
-
-	private void setRe(double re) {
-		this.re = re;
+		return configuration.getF();
 	}
 
 	public double getRe() {
-		return re;
-	}
-
-	private void setRf(double rf) {
-		this.rf = rf;
+		return configuration.getRe();
 	}
 
 	public double getRf() {
-		return rf;
+		return configuration.getRf();
 	}
 }
