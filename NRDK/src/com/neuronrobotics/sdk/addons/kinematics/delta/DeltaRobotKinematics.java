@@ -10,7 +10,13 @@ public class DeltaRobotKinematics {
 	 private  double f = 457.3;     // base
 	 private  double re = 232.0;
 	 private  double rf = 112.0;
-	 
+	 /**
+	  * All units in milimeters
+	  * @param e
+	  * @param f
+	  * @param re
+	  * @param rf
+	  */
 	 public DeltaRobotKinematics(double e, double f, double re, double rf){
 		 setE(e);
 		 setF(f);
@@ -36,11 +42,6 @@ public class DeltaRobotKinematics {
 		 double theta2 = input.getTheta2();
 		 double theta3 = input.getTheta3();
 	     double t = (getF()-getE())*tan30/2;
-	     double dtr = pi/(double)180.0;
-	 
-	     theta1 *= dtr;
-	     theta2 *= dtr;
-	     theta3 *= dtr;
 	 
 	     double y1 = -(t + getRf()*Math.cos(theta1));
 	     double z1 = -getRf()*Math.sin(theta1);
@@ -97,7 +98,7 @@ public class DeltaRobotKinematics {
 	    	 throw new RuntimeException("inverse kinematics failed"); // non-existing point
 	     double yj = (y1 - a*b - Math.sqrt(d))/(b*b + 1); // chooMath.sing outer point
 	     double zj = a + b*yj;
-	     theta = 180.0*Math.atan(-zj/(y1 - yj))/pi + ((yj>y1)?180.0:0.0);
+	     theta = Math.atan(-zj/(y1 - yj)) + ((yj>y1)?180.0:0.0);
 	     return theta;
 	 }
 	 

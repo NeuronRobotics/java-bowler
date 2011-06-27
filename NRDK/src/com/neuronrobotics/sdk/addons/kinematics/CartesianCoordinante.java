@@ -2,6 +2,12 @@ package com.neuronrobotics.sdk.addons.kinematics;
 
 public class CartesianCoordinante {
 	private double x,y,z;
+	/**
+	 * all units in millimeters
+	 * @param x
+	 * @param y
+	 * @param z
+	 */
 	public CartesianCoordinante(double x,double y,double z){
 		setX(x);
 		setY(y);

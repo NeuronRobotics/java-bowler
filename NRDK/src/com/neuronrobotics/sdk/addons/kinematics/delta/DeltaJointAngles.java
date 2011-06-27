@@ -2,6 +2,12 @@ package com.neuronrobotics.sdk.addons.kinematics.delta;
 
 public class DeltaJointAngles {
 	private double theta1, theta2,  theta3;
+	/**
+	 * All angles in radians
+	 * @param theta1
+	 * @param theta2
+	 * @param theta3
+	 */
 	public DeltaJointAngles(double theta1, double theta2, double theta3){
 		setTheta1(theta1);
 		setTheta2(theta2);
