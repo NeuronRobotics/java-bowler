@@ -170,7 +170,7 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 	}
 
 	@Override
-	public boolean SetPIDVelicity(int group, int unitsPerSecond, double seconds) {
+	public boolean SetPIDVelicity(int group, int unitsPerSecond, double seconds) throws PIDCommandException {
 		long dist = (long)unitsPerSecond*(long)seconds;
 		long delt = ((long) (GetCachedPosition(group))-dist);
 		if(delt>2147483646 || delt<-2147483646){

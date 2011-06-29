@@ -1,6 +1,6 @@
 package com.neuronrobotics.sdk.pid;
 
-public class PIDCommandException extends RuntimeException {
+public class PIDCommandException extends Exception {
 
 	/**
 	 * 

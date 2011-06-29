@@ -44,6 +44,7 @@ import com.neuronrobotics.sdk.dyio.dypid.DyPIDConfiguration;
 import com.neuronrobotics.sdk.genericdevice.GenericPIDDevice;
 import com.neuronrobotics.sdk.pid.IPIDControl;
 import com.neuronrobotics.sdk.pid.IPIDEventListener;
+import com.neuronrobotics.sdk.pid.PIDCommandException;
 import com.neuronrobotics.sdk.pid.PIDConfiguration;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
@@ -687,7 +688,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 	}
 
 	@Override
-	public boolean SetPIDVelicity(int group, int unitsPerSecond, double seconds) {
+	public boolean SetPIDVelicity(int group, int unitsPerSecond, double seconds) throws PIDCommandException {
 		return pid.SetPIDVelicity(group, unitsPerSecond, seconds);
 	}
 
