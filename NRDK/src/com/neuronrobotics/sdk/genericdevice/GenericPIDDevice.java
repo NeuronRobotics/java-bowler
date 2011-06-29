@@ -45,7 +45,6 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 		return false;
 	}
 	public void onAllResponse(BowlerDatagram data) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -181,8 +180,8 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 
 	@Override
 	public boolean SetPDVelocity(int group, int unitsPerSecond, double seconds)throws PIDCommandException {
-		// TODO Auto-generated method stub
-		return false;
+		//TODO replace with proper implementation
+		return SetPIDInterpolatedVelocity(group, unitsPerSecond, seconds);
 	}
 	
 
