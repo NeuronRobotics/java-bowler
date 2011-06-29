@@ -20,8 +20,11 @@ public class PIDChannel {
 	public boolean SetPIDSetPoint(int setpoint,double seconds){
 		return getPid().SetPIDSetPoint(index, setpoint, seconds);
 	}
-	public boolean SetPIDVelicity( int unitsPerSecond, double seconds) throws PIDCommandException {
-		return getPid().SetPIDVelicity(index, unitsPerSecond, seconds);
+	public boolean SetPIDInterpolatedVelocity( int unitsPerSecond, double seconds) throws PIDCommandException {
+		return getPid().SetPIDInterpolatedVelocity(index, unitsPerSecond, seconds);
+	}
+	public boolean SetPDVelocity( int unitsPerSecond, double seconds) throws PIDCommandException {
+		return getPid().SetPDVelocity(index, unitsPerSecond, seconds);
 	}
 	public int GetPIDPosition() {
 		return getPid().GetPIDPosition(index);

@@ -10,5 +10,6 @@ public interface IPIDControl {
 	public int [] GetAllPIDPosition();
 	public void addPIDEventListener(IPIDEventListener l);
 	public void flushPIDChannels(double time);
-	public boolean SetPIDVelicity(int group,int unitsPerSecond,double seconds) throws PIDCommandException;
+	public boolean SetPIDInterpolatedVelocity(int group,int unitsPerSecond,double seconds) throws PIDCommandException;
+	public boolean SetPDVelocity(int group,int unitsPerSecond,double seconds) throws PIDCommandException;
 }

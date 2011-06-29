@@ -688,8 +688,13 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 	}
 
 	@Override
-	public boolean SetPIDVelicity(int group, int unitsPerSecond, double seconds) throws PIDCommandException {
-		return pid.SetPIDVelicity(group, unitsPerSecond, seconds);
+	public boolean SetPIDInterpolatedVelocity(int group, int unitsPerSecond, double seconds) throws PIDCommandException {
+		return pid.SetPIDInterpolatedVelocity(group, unitsPerSecond, seconds);
+	}
+
+	@Override
+	public boolean SetPDVelocity(int group, int unitsPerSecond, double seconds)throws PIDCommandException {
+		return pid.SetPDVelocity(group, unitsPerSecond, seconds);
 	}
 
 
