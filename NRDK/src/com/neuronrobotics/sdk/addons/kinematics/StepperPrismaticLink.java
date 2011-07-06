@@ -5,6 +5,7 @@ import com.neuronrobotics.sdk.dyio.peripherals.ICounterOutputListener;
 
 public class StepperPrismaticLink extends AbstractPrismaticLink {
 	private CounterOutputChannel channel;
+	
 	public StepperPrismaticLink(CounterOutputChannel chan, int home, int lowerLimit, int upperLimit,double scale) {
 		super(home, lowerLimit, upperLimit, scale);
 		this.setChannel(chan);
