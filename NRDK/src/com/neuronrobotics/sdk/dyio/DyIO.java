@@ -270,6 +270,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 		BowlerDatagram response;
 		try{
 			if (!haveFirmware()){
+				getBatteryVoltage(true);
 				firmware = getRevisions().get(0).getBytes();
 			}
 			checkFirmwareRev();
@@ -516,7 +517,11 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.common.IBowlerDatagramListener#onAllResponse(com.neuronrobotics.sdk.common.BowlerDatagram)
 	 */
-	 
+	public double getBatteryVoltage(boolean refresh){
+		if(refresh)
+			send(new PowerCommand());
+		return batteryVoltage;
+	}
 	public void onAllResponse(BowlerDatagram data) {
 		if(data.getRPC().equals("_pwr")) {
 			//System.out.println("Updating Power state");
