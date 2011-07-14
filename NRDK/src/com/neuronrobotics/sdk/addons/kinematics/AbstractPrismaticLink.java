@@ -9,8 +9,8 @@ public abstract class AbstractPrismaticLink extends AbstractLink {
 	public void incrementDisplacment(double inc){
 		incrementEngineeringUnits(inc);
 	}
-	public void setTargetDisplacment(double pos,double time) {
-		setTargetDisplacment(pos, time);
+	public void setTargetDisplacment(double pos) {
+		setTargetEngineeringUnits(pos);
 	}
 	public void setCurrentAsDisplacment(double Displacment) {
 		setCurrentEngineeringUnits(Displacment);
