@@ -2,6 +2,7 @@ package com.neuronrobotics.sdk.addons.kinematics;
 
 import java.util.ArrayList;
 
+// Kevin Shouldn't the Link's channel be kept in this level of Abstraction? The way I designg AbstractCartesianPositonDevice  Requires this
 public abstract class AbstractLink {
 	private double scale;
 	private int upperLimit;

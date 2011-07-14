@@ -22,7 +22,18 @@ public abstract class AbstractCartesianPositionDevice {
 	 * just a idea I would run by you
 	 * 
 	 * */
+	// links that belong to the AbstractCartesianPositionDevice
+	AbstractLink X = null;
+	AbstractLink Y = null;
+	AbstractLink Z = null;
+
 	
+	public AbstractCartesianPositionDevice(AbstractLink X, AbstractLink Y,AbstractLink Z){
+		this.X=X;
+		this.Y=Y;
+		this.Z=Z;
+		
+	}
 	
 	/**inititalize is used for seting the AbstractCartesianDevice to its default configuration
 	 * */
@@ -73,5 +84,31 @@ public abstract class AbstractCartesianPositionDevice {
 	 * device at any point during the set of commands it may be executing 
 	 * this method allows for calibration post the initialize routine.*/
 	public abstract void ReCalibrateAbstractCartesianDevice();
-	
+
+	// Setters and Getters for Links in Fab3D AbstractCartesianDevice
+	// setter for x link
+	public void setX(AbstractLink X){
+		this.X=X;
+	}
+	// getter for x link
+	public AbstractLink getX(){
+		return X;
+	}
+	// setter for Y link
+	public void setY(AbstractLink Y){
+		this.Y=Y;
+	}
+	// getter for Y link
+	public AbstractLink getY(){
+		return Y;
+	}
+	// setter for Z link
+	public void setZ(AbstractLink Z){
+		this.Z=Z;
+	}
+	// getter for Z link
+	public AbstractLink getZ(){
+		return Z;
+	}
+	// end Setters and Getters
 }
