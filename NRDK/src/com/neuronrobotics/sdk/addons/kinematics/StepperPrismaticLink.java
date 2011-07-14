@@ -45,5 +45,4 @@ public class StepperPrismaticLink extends AbstractPrismaticLink {
 	public CounterOutputChannel getChannel() {
 		return channel;
 	}
-
 }

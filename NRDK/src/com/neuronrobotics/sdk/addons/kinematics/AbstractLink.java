@@ -14,6 +14,13 @@ public abstract class AbstractLink {
 	
 	private ArrayList<ILinkListener> links = new ArrayList<ILinkListener>();
 	
+	public AbstractLink(int home,int lowerLimit,int upperLimit,double scale){
+		setScale(scale);
+		setUpperLimit(upperLimit);
+		setLowerLimit(lowerLimit);
+		setHome(home);
+	}
+	
 	/**
 	 * This method is called in order to take the target value and pass it to the implementation's target value
 	 * This method should not alter the position of the implementations link
@@ -61,12 +68,7 @@ public abstract class AbstractLink {
 		}
 	}
 	
-	public AbstractLink(int home,int lowerLimit,int upperLimit,double scale){
-		setScale(scale);
-		setUpperLimit(upperLimit);
-		setLowerLimit(lowerLimit);
-		setHome(home);
-	}
+	
 	
 	public void Home(){
 		setTargetValue(getHome());
