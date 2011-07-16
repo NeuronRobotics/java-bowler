@@ -16,13 +16,8 @@ import com.neuronrobotics.sdk.serial.SerialConnection;
 
 
 public class ConfigManager {
-	public static BowlerAbstractConnection loadDefaultConnection() {
+	public static BowlerAbstractConnection loadDefaultConnection(String filename) {
 		try {
-			if(System.getProperty("nrdk.config.file") == null) {
-				return null;
-			}
-			
-			String filename=System.getProperty("nrdk.config.file");
 			
 			File file = new File(filename);
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();

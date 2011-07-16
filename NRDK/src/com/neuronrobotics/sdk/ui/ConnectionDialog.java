@@ -210,8 +210,14 @@ public class ConnectionDialog extends JDialog {
 		
 			return cd.isCancled?null:cd.getConnection();
 		}
-		
-		return ConfigManager.loadDefaultConnection();
+		if(System.getProperty("nrdk.config.file") == null) {
+			return null;
+		}
+		return getHeadlessConnection(System.getProperty("nrdk.config.file"));
+	}
+	
+	public static BowlerAbstractConnection getHeadlessConnection(String config){
+		return ConfigManager.loadDefaultConnection(config);
 	}
 	
 	/**
@@ -229,8 +235,10 @@ public class ConnectionDialog extends JDialog {
 		
 			return cd.isCancled?null:cd.getConnection();
 		}
-		
-		return ConfigManager.loadDefaultConnection();
+		if(System.getProperty("nrdk.config.file") == null) {
+			return null;
+		}
+		return getHeadlessConnection(System.getProperty("nrdk.config.file"));
 	}
 	
 	private class Packer extends Thread{
