@@ -220,7 +220,7 @@ public class ConnectionDialog extends JDialog {
 	 * @return the connection if one is selected, null if canceled or no connection is selected.
 	 */
 	public static BowlerAbstractConnection promptConnection(AbstractConnectionPanel panel) {
-		if(!GraphicsEnvironment.isHeadless()) {
+		if(System.getProperty("nrdk.config.file") == null) {
 			ConnectionDialog cd = new ConnectionDialog();
 			if(panel != null) {
 				cd.addConnectionPanel(panel);
