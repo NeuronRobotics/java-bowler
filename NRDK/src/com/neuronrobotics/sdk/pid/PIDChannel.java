@@ -1,0 +1,130 @@
+package com.neuronrobotics.sdk.pid;
+
+import java.util.ArrayList;
+
+public class PIDChannel {
+	private IPIDControl pid;
+	private int index;
+	private int targetValue;
+	private int currentCachedPosition;
+	
+	private ArrayList<IPIDEventListener> PIDEventListeners = new ArrayList<IPIDEventListener>();
+	
+	public PIDChannel(IPIDControl p, int i) {
+		setPid(p);
+		index=i;
+	}
+	
+	
+
+	public boolean SetPIDSetPoint(int setpoint,double seconds){
+		return getPid().SetPIDSetPoint(index, setpoint, seconds);
+	}
+	public boolean SetPIDInterpolatedVelocity( int unitsPerSecond, double seconds) throws PIDCommandException {
+		return getPid().SetPIDInterpolatedVelocity(index, unitsPerSecond, seconds);
+	}
+	public boolean SetPDVelocity( int unitsPerSecond, double seconds) throws PIDCommandException {
+		return getPid().SetPDVelocity(index, unitsPerSecond, seconds);
+	}
+	public int GetPIDPosition() {
+		return getPid().GetPIDPosition(index);
+	}
+	
+	public boolean ConfigurePIDController(PIDConfiguration config) {
+		config.setGroup(index);
+		return getPid().ConfigurePIDController(config);
+	}
+
+	
+	public PIDConfiguration getPIDConfiguration() {
+		return getPid().getPIDConfiguration(index);
+	}
+	
+	public boolean ResetPIDChannel(int group) {
+		return getPid().ResetPIDChannel(index);
+	}
+
+	
+	public boolean ResetPIDChannel(int group, int valueToSetCurrentTo) {
+		return getPid().ResetPIDChannel(index,valueToSetCurrentTo);
+	}
+
+	public void setPid(IPIDControl p) {
+		pid = p;
+		pid.addPIDEventListener(new IPIDEventListener() {
+			@Override
+			public void onPIDReset(int group, int currentValue) {
+				if(group==index){
+					firePIDResetEvent(index, currentValue);
+				}
+			}
+			
+			@Override
+			public void onPIDLimitEvent(PIDLimitEvent e) {
+				if(e.getGroup()==index){
+					firePIDLimitEvent(e);
+				}
+			}
+			
+			@Override
+			public void onPIDEvent(PIDEvent e) {
+				if(e.getGroup()==index){
+					firePIDEvent(e);
+				}
+			}
+		});
+	}
+
+
+	public IPIDControl getPid() {
+		return pid;
+	}
+	
+	public void addPIDEventListener(IPIDEventListener l) {
+		synchronized(PIDEventListeners){
+			if(!PIDEventListeners.contains(l))
+				PIDEventListeners.add(l);
+		}
+	}
+	public void firePIDLimitEvent(PIDLimitEvent e){
+		synchronized(PIDEventListeners){
+			for(IPIDEventListener l: PIDEventListeners)
+				l.onPIDLimitEvent(e);
+		}
+	}
+	public void firePIDEvent(PIDEvent e){
+		synchronized(PIDEventListeners){
+			for(IPIDEventListener l: PIDEventListeners)
+				l.onPIDEvent(e);
+		}
+	}
+	public void firePIDResetEvent(int group,int value){
+		for(IPIDEventListener l: PIDEventListeners)
+			l.onPIDReset(group,value);
+	}
+
+	public void flush(double time){
+		SetPIDSetPoint(getCachedTargetValue(),time);
+	}
+
+	public void setCachedTargetValue(int targetValue) {
+		this.targetValue = targetValue;
+	}
+	
+	public int getCachedTargetValue() {
+		return targetValue;
+	}
+
+
+
+	public void setCurrentCachedPosition(int currentCachedPosition) {
+		this.currentCachedPosition = currentCachedPosition;
+	}
+
+
+
+	public int getCurrentCachedPosition() {
+		return currentCachedPosition;
+	}
+	
+}
