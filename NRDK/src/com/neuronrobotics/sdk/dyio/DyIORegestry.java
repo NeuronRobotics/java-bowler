@@ -39,19 +39,19 @@ public class DyIORegestry {
 	public static void addConnectionEventListener(IConnectionEventListener l ) {
 		if(!disconnectListeners.contains(l)) {
 			disconnectListeners.add(l);
-			dyio.addConnectionEventListener(l);
+			get().addConnectionEventListener(l);
 		}
 	}
 	public static void removeConnectionEventListener(IConnectionEventListener l ) {
 		if(disconnectListeners.contains(l)) {
 			disconnectListeners.remove(l);
-			dyio.removeConnectionEventListener(l);
+			get().removeConnectionEventListener(l);
 		}
 	}
 	
 	public static void disconnect() {
 		try {
-			dyio.disconnect();
+			get().disconnect();
 		}catch (Exception ex) {
 			
 		}
