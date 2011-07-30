@@ -116,4 +116,7 @@ public class MACAddress implements ISendable {
 	public byte[] getBytes() {
 		return address;
 	}
+	public void increment() {
+
+	}
 }
