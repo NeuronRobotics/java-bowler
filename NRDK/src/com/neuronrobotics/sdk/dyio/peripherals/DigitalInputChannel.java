@@ -38,8 +38,7 @@ public class DigitalInputChannel extends DyIOAbstractPeripheral implements IChan
 	 */
 	public DigitalInputChannel(DyIOChannel channel, boolean async){
 		super(channel,DyIOChannelMode.DIGITAL_IN);
-		channel.addChannelEventListener(this);
-		 
+		channel.addChannelEventListener(this); 
 		if(!setMode( async)) {
 			throw new DyIOPeripheralException("Could not set channel " + getChannel() + " to " + DyIOChannelMode.DIGITAL_IN + " mode.");
 		}	

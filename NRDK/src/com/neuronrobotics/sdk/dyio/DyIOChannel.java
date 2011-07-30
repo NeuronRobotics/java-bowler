@@ -500,16 +500,12 @@ public class DyIOChannel implements IDyIOChannel {
 			isAsync = isDefaultAsync(mode);
 			return true;
 		}
-		if ((getMode() == mode && (async == isAsync)) ) {	
-			Log.debug(this.getClass()+" Mode is the same, ignoring...");
+		if ((getMode() == mode) && (async == isAsync)) {
+			Log.debug(this.getClass()+"Channel: "+getChannelNumber()+" Mode and Async is the same, ignoring...");
 			return true;
 		}
-		if(getMode() != mode) {
-			Log.debug(this.getClass()+" Mode is the different, was: "+getMode()+" setting to: "+ mode);
-		}
-		if(async != isAsync) {
-			Log.debug(this.getClass()+" Async is the different, was: "+isAsync+" setting to: "+ async);
-		}
+
+
 	
 		if(!canBeMode(mode)){
 			throw new RuntimeException("\nChannel: "+getChannelNumber()+" can not be mode '"+mode+"' in current configuration. \nCheck the power switch settings and availible modes.");
