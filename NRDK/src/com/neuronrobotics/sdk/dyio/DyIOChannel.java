@@ -52,6 +52,7 @@ public class DyIOChannel implements IDyIOChannel {
 	private boolean cachedMode=false;
 	private DyIOAbstractPeripheral dap=null;
 	private int previousValue = 1;
+	private boolean haveSetMode = false;
 	/**
 	 * Construct a channel object.
 	 * @param dyio			The DyIO that the channel belongs on
@@ -88,7 +89,7 @@ public class DyIOChannel implements IDyIOChannel {
 	}
 	
 	private boolean isDefaultAsync(DyIOChannelMode m) {
-		return (!isOutputMode(m) && (m != DyIOChannelMode.ANALOG_IN));
+		return false;
 	}
 	
 	@SuppressWarnings("incomplete-switch")
@@ -500,13 +501,11 @@ public class DyIOChannel implements IDyIOChannel {
 			isAsync = isDefaultAsync(mode);
 			return true;
 		}
-		if ((getMode() == mode) && (async == isAsync)) {
+		if ((getMode() == mode) && (async == isAsync) && haveSetMode) {
 			Log.debug(this.getClass()+"Channel: "+getChannelNumber()+" Mode and Async is the same, ignoring...");
 			return true;
 		}
-
-
-	
+		
 		if(!canBeMode(mode)){
 			throw new RuntimeException("\nChannel: "+getChannelNumber()+" can not be mode '"+mode+"' in current configuration. \nCheck the power switch settings and availible modes.");
 		}
@@ -515,6 +514,7 @@ public class DyIOChannel implements IDyIOChannel {
 				isAsync = async;
 				setCurrentMode(mode);
 				getDevice().send(new SetChannelModeCommand(number, mode, async));
+				haveSetMode=true;
 				getDevice().resync();
 				return true;
 			} catch (InvalidResponseException e) {
