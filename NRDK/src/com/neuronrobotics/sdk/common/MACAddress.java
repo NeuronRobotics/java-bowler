@@ -75,16 +75,17 @@ public class MACAddress implements ISendable {
 	 * @return true, if successful
 	 */
 	public boolean equals(Object o) {
-		if(!(o instanceof MACAddress)) { return false; }
-		
-		MACAddress addr = (MACAddress) o;
-		
+		if(!(o instanceof MACAddress)) { throw new RuntimeException("Object being compared is not of type MACAddress"); }
+
+		return equals((MACAddress) o);
+	}
+	
+	public boolean equals(MACAddress addr){
 		for(int i=0; i<6; i++) {
 			if(addr.address[i] != address[i]) {
 				return false;
 			}
 		}
-		
 		return true;
 	}
 	
@@ -93,11 +94,15 @@ public class MACAddress implements ISendable {
 	 */
 	public String toString() {
 		String rtn = "";
-		for(byte x : address){
-			rtn += String.format("%02x:", x);
+		for(int i=0;i< address.length;i++){
+			rtn += getHexByteString(i)+":";
 		}
 		rtn = rtn.substring(0, rtn.length()-1);
 		return rtn.toUpperCase();
+	}
+	
+	public String getHexByteString(int index){
+		return String.format("%02x", address[index]);
 	}
 	
 	/**
