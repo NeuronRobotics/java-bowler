@@ -116,7 +116,24 @@ public class MACAddress implements ISendable {
 	public byte[] getBytes() {
 		return address;
 	}
-	public void increment() {
-
+	
+	public void increment(){
+		if(address[5]<255) {
+			address[5]++;
+			return;
+		}else {
+			if(address[4]<255) {
+				address[5]=0;
+				address[4]++;
+			}else {
+				if(address[3]<255) {
+					address[5]=0;
+					address[4]=0;
+					address[3]++;
+				}else {
+					throw new RuntimeException("MAC Address can not be incremented!");
+				}
+			}
+		}
 	}
 }
