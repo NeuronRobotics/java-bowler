@@ -246,16 +246,24 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 		getChannel(channel).resync(false);
 	}
 	
+	private static boolean checkFirmware=true;
+	public static void disableFWCheck() {
+		checkFirmware=false;
+	}
+	
 	/**
 	 * Sync the state cache with the live device. 
 	 */
 	public void checkFirmwareRev()throws DyIOFirmwareOutOfDateException{
-		int[] sdkRev = SDKBuildInfo.getBuildInfo(); 
-		for(int i=0;i<3;i++){
-			if(firmware[i] < sdkRev[i]){
-				throw new DyIOFirmwareOutOfDateException( 	"\nNRDK version = "+new ByteList(sdkRev)+
-															"\n DyIO version = "+ new ByteList(firmware)+
-															"\nTry updating your firmware using the firmware update instructions from http://neuronrobotics.com/");
+		if(checkFirmware) {
+			int[] sdkRev = SDKBuildInfo.getBuildInfo(); 
+			
+			for(int i=0;i<3;i++){
+				if(firmware[i] < sdkRev[i]){
+					throw new DyIOFirmwareOutOfDateException( 	"\nNRDK version = "+new ByteList(sdkRev)+
+																"\n DyIO version = "+ new ByteList(firmware)+
+																"\nTry updating your firmware using the firmware update instructions from http://neuronrobotics.com/");
+				}
 			}
 		}
 	}
@@ -701,6 +709,8 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 	public boolean SetPDVelocity(int group, int unitsPerSecond, double seconds)throws PIDCommandException {
 		return pid.SetPDVelocity(group, unitsPerSecond, seconds);
 	}
+
+	
 
 
 	
