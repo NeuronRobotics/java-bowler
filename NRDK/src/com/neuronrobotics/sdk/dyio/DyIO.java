@@ -526,25 +526,29 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 	 * @see com.neuronrobotics.sdk.common.IBowlerDatagramListener#onAllResponse(com.neuronrobotics.sdk.common.BowlerDatagram)
 	 */
 	public double getBatteryVoltage(boolean refresh){
-		if(refresh)
-			send(new PowerCommand());
+		if(refresh) {
+			BowlerDatagram data = send(new PowerCommand());
+			powerEvent(data);
+		}
 		return batteryVoltage;
 	}
 	public void onAllResponse(BowlerDatagram data) {
-		if(data.getRPC().equals("_pwr")) {
-			//System.out.println("Updating Power state");
-			ByteList bl = data.getData();
-			if(bl.size() != 4) {
-				return;
-			}
-			batteryVoltage = ((double)(ByteList.convertToInt(bl.getBytes(2, 2),false)))/1000.0;
-			bankAState = DyIOPowerState.valueOf(bl.get(0),batteryVoltage);
-			bankBState = DyIOPowerState.valueOf(bl.get(1),batteryVoltage);
-			
-			fireDyIOEvent(new DyIOPowerEvent(bankAState, bankBState, batteryVoltage));
+
+		pid.onAllResponse(data);
+	}
+	
+	private void powerEvent(BowlerDatagram data) {
+		//System.out.println("Updating Power state");
+		ByteList bl = data.getData();
+		if(bl.size() != 4) {
 			return;
 		}
-		pid.onAllResponse(data);
+		batteryVoltage = ((double)(ByteList.convertToInt(bl.getBytes(2, 2),false)))/1000.0;
+		bankAState = DyIOPowerState.valueOf(bl.get(0),batteryVoltage);
+		bankBState = DyIOPowerState.valueOf(bl.get(1),batteryVoltage);
+		
+		fireDyIOEvent(new DyIOPowerEvent(bankAState, bankBState, batteryVoltage));
+		return;
 	}
 
 	/* (non-Javadoc)
@@ -553,6 +557,9 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 	 
 	public void onAsyncResponse(BowlerDatagram data) {
 		Log.info("<< Async\n"+data.toString());
+		if(data.getRPC().equals("_pwr")) {
+			powerEvent(data);
+		}
 		if(data.getRPC().equals("gchv")) {
 			ByteList bl = data.getData();
 			
