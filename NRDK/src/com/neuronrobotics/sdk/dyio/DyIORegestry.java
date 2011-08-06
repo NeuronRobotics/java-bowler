@@ -11,15 +11,20 @@ public class DyIORegestry {
 	private static DyIO dyio = null;
 	private static ArrayList<IConnectionEventListener> disconnectListeners = new ArrayList<IConnectionEventListener> ();
 	public static boolean setConnection(BowlerAbstractConnection c){
-		get().setConnection(c);
-		get().connect();
-		c.addConnectionEventListener(new IConnectionEventListener() {
-			public void onDisconnect() {
-				DyIORegestry.disconnect();
-			}
-			public void onConnect() {}
-		});
-		return get().isAvailable();
+		try{
+			get().setConnection(c);
+			get().connect();
+			c.addConnectionEventListener(new IConnectionEventListener() {
+				public void onDisconnect() {
+					DyIORegestry.disconnect();
+				}
+				public void onConnect() {}
+			});
+			return get().isAvailable();
+		}catch(RuntimeException ex){
+			dyio=null;
+			throw ex;
+		}
 	}
 	public static DyIO get(){
 		if(dyio == null) {
