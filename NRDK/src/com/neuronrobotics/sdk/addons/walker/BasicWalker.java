@@ -233,11 +233,11 @@ public class BasicWalker {
 		for (Leg l:legs){
 			l.fix();
 		}
-		updateAllServos((float) time);
+		//updateAllServos((float) time);
 	}
 	public void updateAllServos(double time) {
 		for (Leg l:legs){
-			l.updateServos();
+			l.cacheLinkPositions();
 		}
 		dyio.flushCache((float) time);
 	}

@@ -253,6 +253,9 @@ public class Leg {
 		putLegDown();
 	}
 	
+	
+	private double resetTime = 0;
+	
 	public void stepToHipAngle(double hip) {
 
 		liftLeg();
@@ -266,40 +269,43 @@ public class Leg {
 	}
 	
 	private void liftLeg() {
-		double time=.05;
+		//System.out.println("Lifting leg ");
 		double [] current = getCartesian();
 		setCartesian(xSetPoint,current[1], current[2]+.5);
-		updateServos();
-		flush(time);
-		try {Thread.sleep((long) (time*1000));} catch (InterruptedException e) {}
+		cacheLinkPositions();
+		flush(resetTime);
+		//try {Thread.sleep((long) (resetTime*1000));} catch (InterruptedException e) {}
+		//System.out.println("Lifting leg done");
 	}
+	
 	private void putLegDown() {
-		double time=.05;
-		updateServos();
-		flush(time);
-		try {Thread.sleep((long) (time*1000));} catch (InterruptedException e) {}
+		//System.out.println("Putting leg down");
+		cacheLinkPositions();
+		flush(resetTime);
+		try {Thread.sleep((long) (resetTime*1000));} catch (InterruptedException e) {}
 		setZ(zSetPoint);
-		updateServos();
-		flush(time);
-		try {Thread.sleep((long) (time*1000));} catch (InterruptedException e) {}
+		cacheLinkPositions();
+		flush(resetTime);
+		//try {Thread.sleep((long) (resetTime*1000));} catch (InterruptedException e) {}
+		//System.out.println("Putting leg down done");
 	}
 	
 	public void fix() {
 		double [] current = getCartesianLocal();
 		if(Math.abs(current[0])<(getHipLink().getLinkLen()*2) ) {
-			System.out.println("Legnth too short");
+			//System.out.println("Legnth too short");
 			stepToSetpoint();
 			return;
 		}
 		
 		if(getAnkleLink().getTargetAngle()>-50) {
-			System.out.println("Ankle over extended");
+			//System.out.println("Ankle over extended");
 			stepToSetpoint();
 			return;
 		}
 		
 		if(hitMaxAngleHip()||hitMinAngleHip()) {
-			System.out.println("Fixing hip");
+			//System.out.println("Fixing hip");
 			if(hitMaxAngleHip()) {
 				toMinAngleHip();
 				return;
@@ -310,7 +316,7 @@ public class Leg {
 		}
 		
 	}
-	public void updateServos() {
+	public void cacheLinkPositions() {
 		for(WalkerServoLink l: links ) {
 			l.cacheTargetValue();
 		}
