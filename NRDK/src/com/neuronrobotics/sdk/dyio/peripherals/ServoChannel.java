@@ -28,7 +28,7 @@ public class ServoChannel extends DyIOAbstractPeripheral {
 	 * @param channel
 	 */
 	public ServoChannel(DyIOChannel channel){
-		super(channel,DyIOChannelMode.SERVO_OUT);
+		super(channel,DyIOChannelMode.SERVO_OUT,false);
 		if(!setMode()) {
 			throw new DyIOPeripheralException("Could not set channel " + channel + " to " + DyIOChannelMode.SERVO_OUT +  " mode");
 		}

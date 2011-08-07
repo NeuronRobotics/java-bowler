@@ -64,6 +64,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 	private double batteryVoltage = 0;
 	
 	private boolean cachedMode=false;
+	private boolean muteResyncOnModeChange=false;
 	private GenericPIDDevice pid = new GenericPIDDevice();
 	/**
 	 * Default Constructor.
@@ -715,6 +716,17 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 	@Override
 	public boolean SetPDVelocity(int group, int unitsPerSecond, double seconds)throws PIDCommandException {
 		return pid.SetPDVelocity(group, unitsPerSecond, seconds);
+	}
+
+	public void setMuteResyncOnModeChange(boolean muteResyncOnModeChange) {
+		if(this.muteResyncOnModeChange && !muteResyncOnModeChange){
+			resync();
+		}
+		this.muteResyncOnModeChange = muteResyncOnModeChange;
+	}
+
+	public boolean isMuteResyncOnModeChange() {
+		return muteResyncOnModeChange;
 	}
 
 	

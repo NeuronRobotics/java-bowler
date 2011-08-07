@@ -194,7 +194,7 @@ public class UARTChannel implements ISendable {
 	private class UARTTxChannel extends DyIOAbstractPeripheral {
 		DyIOOutputStream out;
 		public UARTTxChannel(DyIOChannel channel) {
-			super(channel,DyIOChannelMode.USART_TX);
+			super(channel,DyIOChannelMode.USART_TX,true);
 			if(!setMode()) {
 				throw new DyIOPeripheralException("Could not set channel " + channel + " to " + DyIOChannelMode.USART_TX +  " mode");
 			}
@@ -218,7 +218,7 @@ public class UARTChannel implements ISendable {
 	private class UARTRxChannel extends DyIOAbstractPeripheral implements IChannelEventListener {
 		DyIOInputStream in;
 		public UARTRxChannel(DyIOChannel channel) {
-			super(channel,DyIOChannelMode.USART_RX);
+			super(channel,DyIOChannelMode.USART_RX,true);
 			channel.addChannelEventListener(this);
 			if(!setMode()) {
 				throw new DyIOPeripheralException("Could not set channel " + channel + " to " + DyIOChannelMode.USART_RX +  " mode");

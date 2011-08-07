@@ -515,7 +515,11 @@ public class DyIOChannel implements IDyIOChannel {
 				setCurrentMode(mode);
 				getDevice().send(new SetChannelModeCommand(number, mode, async));
 				haveSetMode=true;
-				getDevice().resync();
+				if(!getDevice().isMuteResyncOnModeChange()){
+					getDevice().resync();
+				}else{
+					Log.debug("Not resyncing from channel: "+getChannelNumber());
+				}
 				return true;
 			} catch (InvalidResponseException e) {
 				Log.error(e.getMessage());

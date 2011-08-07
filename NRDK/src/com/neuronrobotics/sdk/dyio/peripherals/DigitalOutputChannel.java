@@ -29,7 +29,7 @@ public class DigitalOutputChannel extends DyIOAbstractPeripheral {
 	 *            The channel object to set up as a digital output
 	 */
 	public DigitalOutputChannel(DyIOChannel channel) {
-		super(channel,DyIOChannelMode.DIGITAL_OUT);
+		super(channel,DyIOChannelMode.DIGITAL_OUT,false);
 	
 		if(!setMode()) {
 			throw new DyIOPeripheralException("Could not set channel " + channel + " to digital out mode");

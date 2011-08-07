@@ -34,13 +34,14 @@ public abstract class DyIOAbstractPeripheral implements IDyIOChannel {
 	 * 
 	 * @param channel
 	 *            The channel object to set up as whatever peripheral is needed
+	 * @param async 
 	 * @throws Exception 
 	 */
-	public DyIOAbstractPeripheral(DyIOChannel channel, DyIOChannelMode myMode) {
+	public DyIOAbstractPeripheral(DyIOChannel channel, DyIOChannelMode myMode, boolean async) {
 		this.channel = channel;
 		this.enabled = true;
 		if(channel.getMode() != myMode)
-			channel.setMode(myMode, false);
+			channel.setMode(myMode, async);
 	}
 	
 	public  DyIOChannelMode getClassMode() {

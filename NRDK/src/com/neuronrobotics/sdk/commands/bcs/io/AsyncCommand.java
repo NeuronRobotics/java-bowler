@@ -15,6 +15,7 @@ public class AsyncCommand extends BowlerAbstractCommand {
 		setMethod(BowlerMethod.POST);
 		getCallingDataStorage().add(channel);
 		getCallingDataStorage().add((isAsync?1:0));
+		
 	}
 	
 }

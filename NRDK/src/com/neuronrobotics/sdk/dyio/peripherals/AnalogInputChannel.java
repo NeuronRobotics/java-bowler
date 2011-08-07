@@ -41,7 +41,7 @@ public class AnalogInputChannel extends DyIOAbstractPeripheral implements IChann
 	 * @param async - boolean to determine if this is an async analog channel
 	 */
 	public AnalogInputChannel(DyIOChannel channel, boolean async){
-		super(channel,DyIOChannelMode.ANALOG_IN);
+		super(channel,DyIOChannelMode.ANALOG_IN,async);
 		channel.addChannelEventListener(this);
 		
 		if(!setMode(async)) {
@@ -56,7 +56,7 @@ public class AnalogInputChannel extends DyIOAbstractPeripheral implements IChann
 	 * @param channel - the channel object requested from the DyIO
 	 */
 	public AnalogInputChannel(DyIOChannel channel){
-		super(channel,DyIOChannelMode.ANALOG_IN);
+		super(channel,DyIOChannelMode.ANALOG_IN,false);
 		channel.addChannelEventListener(this);
 		
 		if(!setMode( false)) {

@@ -35,7 +35,7 @@ public class CounterInputChannel extends DyIOAbstractPeripheral implements IChan
 	 *            The channel object to set up as counter
 	 */
 	public CounterInputChannel(DyIOChannel channel) {
-		super(channel,DyIOChannelMode.COUNT_IN_INT);
+		super(channel,DyIOChannelMode.COUNT_IN_INT,true);
 		init(channel,false);
 	}
 	
@@ -46,7 +46,7 @@ public class CounterInputChannel extends DyIOAbstractPeripheral implements IChan
 	 * @param isAsync
 	 */
 	public CounterInputChannel(DyIOChannel channel,boolean isAsync) {
-		super(channel,DyIOChannelMode.COUNT_IN_INT);
+		super(channel,DyIOChannelMode.COUNT_IN_INT,isAsync);
 		init(channel,isAsync);
 	}
 	

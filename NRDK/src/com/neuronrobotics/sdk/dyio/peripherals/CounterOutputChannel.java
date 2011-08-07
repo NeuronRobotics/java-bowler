@@ -37,11 +37,11 @@ public class CounterOutputChannel extends DyIOAbstractPeripheral implements ICha
 	 *            The channel object to set up as counter
 	 */
 	public CounterOutputChannel(DyIOChannel channel) {
-		super(channel,DyIOChannelMode.COUNT_OUT_INT);
+		super(channel,DyIOChannelMode.COUNT_OUT_INT,true);
 		init(channel,false);
 	}
 	public CounterOutputChannel(DyIOChannel channel,boolean isAsync) {
-		super(channel,DyIOChannelMode.COUNT_OUT_INT);
+		super(channel,DyIOChannelMode.COUNT_OUT_INT,isAsync);
 		init(channel,isAsync);
 	}
 	private void init(DyIOChannel channel,boolean isAsync){
