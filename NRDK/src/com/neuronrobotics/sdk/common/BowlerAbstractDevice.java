@@ -167,15 +167,15 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	 * @return the syncronous response
 	 */
 	public BowlerDatagram send(ISendable sendable) {
-		if((new BowlerDatagram(new ByteList(sendable.getBytes())).getRPC().toLowerCase().contains("_png")))
-			Log.debug("sending ping");
-		else
+		if((new BowlerDatagram(new ByteList(sendable.getBytes())).getRPC().toLowerCase().contains("_png"))){
+			//Log.debug("sending ping");
+		}else
 			Log.debug("TX>>\n"+sendable.toString());
 		BowlerDatagram b =connection.send(sendable);
 		if(b != null) {
-			if(b.getRPC().toLowerCase().contains("_png"))
-				Log.debug("ping ok!");
-			else
+			if(b.getRPC().toLowerCase().contains("_png")){
+				//Log.debug("ping ok!");
+			}else
 				Log.debug("RX<<\n"+b);
 		}else {
 			Log.debug("RX<<: No response");
