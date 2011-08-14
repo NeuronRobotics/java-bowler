@@ -21,6 +21,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.neuronrobotics.sdk.dyio.DyIO;
+import com.neuronrobotics.sdk.dyio.DyIOPowerState;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 
 
@@ -32,8 +33,8 @@ public class BasicWalker {
 	private DyIO dyio;
 	private boolean useHardware = true;
 	public BasicWalker(DyIO d) {
-		dyio=d;
-		dyio.setCachedMode(true);
+		setDyio(d);
+		getDyio().setCachedMode(true);
 		System.out.println("Loading default configuration");
 		parse(BasicWalkerConfig.getDefaultConfigurationStream());
 	}
@@ -47,17 +48,17 @@ public class BasicWalker {
 	public BasicWalker(File f,DyIO d){
 		//useHardware = false;
 		if(useHardware){
-			dyio=d;
+			setDyio(d);
 		}
-		dyio.setCachedMode(true);
+		getDyio().setCachedMode(true);
 		parse(f);
 	}
 	public BasicWalker(InputStream is,DyIO d){
 		//useHardware = false;
 		if(useHardware){
-			dyio=d;
+			setDyio(d);
 		}
-		dyio.setCachedMode(true);
+		getDyio().setCachedMode(true);
 		parse(is);
 	}
 	
@@ -120,7 +121,7 @@ public class BasicWalker {
 			    		linkLen = Double.parseDouble(getTagValue("linkLen",lElement));
 			    		String type = getTagValue("type",lElement);
 			    		if(useHardware){
-				    		ServoChannel srv = new ServoChannel(dyio.getChannel(channel));
+				    		ServoChannel srv = new ServoChannel(getDyio().getChannel(channel));
 				    		WalkerServoLink tmpLink = new WalkerServoLink(srv,home,llimit,ulimit,(scale*inverse),linkLen,type);
 				    		legLinks.add(tmpLink);
 			    		}
@@ -183,7 +184,7 @@ public class BasicWalker {
 		for (Leg l:legs){
 			l.Home();
 		}
-		dyio.flushCache(2);
+		getDyio().flushCache(2);
 	}
 	public void save() {
 		for (Leg l:legs){
@@ -239,7 +240,7 @@ public class BasicWalker {
 		for (Leg l:legs){
 			l.cacheLinkPositions();
 		}
-		dyio.flushCache((float) time);
+		getDyio().flushCache((float) time);
 	}
 	private static String getTagValue(String sTag, Element eElement){
 	    NodeList nlList= eElement.getElementsByTagName(sTag).item(0).getChildNodes();
@@ -248,7 +249,17 @@ public class BasicWalker {
 	    return nValue.getNodeValue();    
 	}
 	public void disconnect() {
-		dyio.disconnect();
+		getDyio().disconnect();
+	}
+	private void setDyio(DyIO dyio) {
+		if(((dyio.getBankAState()==DyIOPowerState.REGULATED) || (dyio.getBankBState()==DyIOPowerState.REGULATED))){
+			System.err.println("Invalid switch configuration!");
+			throw new RuntimeException("Invalid switch configuration for hexapod!");
+		}
+		this.dyio = dyio;
+	}
+	private DyIO getDyio() {
+		return dyio;
 	}
 
 }
