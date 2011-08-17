@@ -254,7 +254,7 @@ public class Leg {
 	}
 	
 	
-	private double resetTime = 0;
+	private double resetTime = .1;
 	
 	public void stepToHipAngle(double hip) {
 

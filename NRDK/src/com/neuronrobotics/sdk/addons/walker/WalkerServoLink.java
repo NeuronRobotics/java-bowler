@@ -51,7 +51,6 @@ public class WalkerServoLink extends ServoRotoryLink {
 	@Override
 	public void flush(double time) {
 		super.flush(time);
-		throw new RuntimeException("Shouldnt be flushing from here!");
 	}
 
 }
