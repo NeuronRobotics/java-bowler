@@ -29,4 +29,11 @@ public class MockRotoryLink extends AbstractRotoryLink {
 		return 35;
 	}
 
+	@Override
+	public void flushAll(double time) {
+		// TODO Auto-generated method stub
+		val=getTargetValue();
+		System.out.println("Flushing all Values");
+	}
+
 }

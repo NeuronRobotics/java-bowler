@@ -19,8 +19,13 @@ public class PidPrismaticLink extends AbstractPrismaticLink{
 
 	@Override
 	public void flush(double time) {
+		channel.flush(time);
+	}
+	@Override
+	public void flushAll(double time) {
 		channel.getPid().flushPIDChannels(time);
 	}
+
 
 	@Override
 	public int getCurrentPosition() {
@@ -48,5 +53,6 @@ public class PidPrismaticLink extends AbstractPrismaticLink{
 	public PIDChannel getPIDChannel() {
 		return channel;
 	}
+
 
 }

@@ -19,6 +19,10 @@ public class PidRotoryLink extends AbstractRotoryLink{
 
 	@Override
 	public void flush(double time) {
+		channel.flush(time);
+	}
+	@Override
+	public void flushAll(double time) {
 		channel.getPid().flushPIDChannels(time);
 	}
 

@@ -18,6 +18,12 @@ public class StepperPrismaticLink extends AbstractPrismaticLink {
 
 	@Override
 	public void flush(double time) {
+		channel.getChannel().setCachedTime((float)time);
+		channel.getChannel().flush();
+		
+	}
+	@Override
+	public void flushAll(double time) {
 		channel.getChannel().getDevice().flushCache((float) time);
 	}
 

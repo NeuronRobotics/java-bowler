@@ -29,10 +29,15 @@ public abstract class AbstractLink {
 	public abstract void cacheTargetValue();
 	/**
 	 * This method will force one link to update its position in the given time (seconds)
-	 * This may also update all other links on a controller. 
 	 * @param time (seconds) for the position update to take
 	 */
 	public abstract void flush(double time);
+	/**
+	 * This method will force one link to update its position in the given time (seconds)
+	 * This will also flush the host controller
+	 * @param time (seconds) for the position update to take
+	 */
+	public abstract void flushAll(double time);
 	
 	/**
 	 * This method should return the current position of the link

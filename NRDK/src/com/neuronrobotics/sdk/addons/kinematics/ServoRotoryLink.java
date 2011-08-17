@@ -38,5 +38,12 @@ public class ServoRotoryLink extends AbstractRotoryLink{
 		fireLinkListener(val);
 		return val;
 	}
+
+	@Override
+	public void flushAll(double time) {
+		// TODO Auto-generated method stub
+		getServoChannel().SetPosition(getTargetValue(),(float) time);
+		getServoChannel().getChannel().getDevice().flushCache((float)time);
+	}
 	
 }
