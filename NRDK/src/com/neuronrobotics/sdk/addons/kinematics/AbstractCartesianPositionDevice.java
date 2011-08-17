@@ -11,6 +11,12 @@ public abstract class AbstractCartesianPositionDevice {
 	 * @param time the feedrate for the printer task*/
 	public abstract void flush(double time);
 	
+	/** flushall is for executing the DyIO's flush command 
+	 * across all channels configured for use
+	 * @param time the feedrate for the printer task
+	 * */
+	public abstract void flushall(double time);
+	
 	/** SetXAxisPosition takes the location that the X axis will move to,
 	 *  typically the steps that the motor must move the use of this
 	 * function requires a DyIO flush to be called.
