@@ -17,6 +17,9 @@ package com.neuronrobotics.sdk.dyio;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.sql.ConnectionEvent;
+import javax.sql.ConnectionEventListener;
+
 import com.neuronrobotics.sdk.commands.bcs.io.AsyncMode;
 import com.neuronrobotics.sdk.commands.bcs.io.AsyncThreshholdEdgeType;
 import com.neuronrobotics.sdk.commands.bcs.io.ConfigAsyncCommand;
@@ -51,7 +54,7 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
 /**
  * 
  */
-public class DyIO extends BowlerAbstractDevice implements IPIDControl {
+public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectionEventListener {
 
 	private ArrayList<IDyIOEventListener> listeners = new ArrayList<IDyIOEventListener>();
 	private ArrayList<DyIOChannel> channels = new ArrayList<DyIOChannel>();
@@ -662,10 +665,10 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 	
 	 
 	public boolean connect(){
-		if(super.connect()){
-			pid.setConnection(getConnection());
-			pid.setAddress(getAddress());
-			pid.connect();
+		if(getConnection()!=null) {
+			getConnection().addConnectionEventListener(this);
+		}
+		if(super.connect()) {
 			send( new PowerCommand());
 			startHeartBeat(3000);
 			resync();
@@ -727,6 +730,20 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl {
 
 	public boolean isMuteResyncOnModeChange() {
 		return muteResyncOnModeChange;
+	}
+
+	@Override
+	public void onDisconnect() {
+		firmware[0]=0;
+		firmware[1]=0;
+		firmware[2]=0;
+	}
+
+	@Override
+	public void onConnect() {
+		pid.setConnection(getConnection());
+		pid.setAddress(getAddress());
+		pid.connect();
 	}
 
 	
