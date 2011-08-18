@@ -669,6 +669,9 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 			getConnection().addConnectionEventListener(this);
 		}
 		if(super.connect()) {
+			pid.setConnection(getConnection());
+			pid.setAddress(getAddress());
+			pid.connect();
 			send( new PowerCommand());
 			startHeartBeat(3000);
 			resync();
@@ -741,9 +744,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 
 	@Override
 	public void onConnect() {
-		pid.setConnection(getConnection());
-		pid.setAddress(getAddress());
-		pid.connect();
+
 	}
 
 	
