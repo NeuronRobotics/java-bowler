@@ -65,10 +65,22 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 	}
 	
 	public boolean SetAllPIDSetPoint(int []setpoints,double seconds){
-		for(int i=0;i<channels.size();i++){
-			channels.get(i).setCachedTargetValue(setpoints[i]);
+		int[] sp;
+		if(setpoints.length<channels.size()) {
+			sp = new int[channels.size()];
+			for(int i=0;i<sp.length;i++) {
+				sp[i]=channels.get(i).getCachedTargetValue();
+			}
+			for(int i=0;i<setpoints.length;i++) {
+				sp[i]=setpoints[i];
+			}
+		}else {
+			sp=setpoints;
 		}
-		return send(new  ControlAllPIDCommand(setpoints, seconds))!=null;
+		for(int i=0;i<channels.size();i++){
+			channels.get(i).setCachedTargetValue(sp[i]);
+		}
+		return send(new  ControlAllPIDCommand(sp, seconds))!=null;
 	}
 	
 	public int GetPIDPosition(int group) {
