@@ -91,6 +91,11 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 		return channels.get(group).getCurrentCachedPosition();
 	}
 	public void SetCachedPosition(int group, int value) {
+		if(channels.size()<=group) {
+			PIDChannel c =new PIDChannel(this,group);
+			c.setCachedTargetValue(value);
+			channels.add(c);
+		}
 		channels.get(group).setCurrentCachedPosition(value);
 	}
 	
