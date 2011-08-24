@@ -15,16 +15,20 @@ public class DigitalInputTestAsync implements IDigitalInputListener{
 		if (!ConnectionDialog.getBowlerDevice(dyio)){
 			System.exit(1);
 		}
+		dyio.enableDebug();
 		//Instantiate a new digital channel
 		//The second parameter tells the digital channel that is it an asynchronous channel
-		dip = new DigitalInputChannel(dyio.getChannel(0),true);	
-		//Add this instance of the Tester class to the digital channel 
-		dip.addDigitalInputListener(this);
-		//Run forever printing out digital events
+		for(int i=0;i<24;i++) {
+			new DigitalInputChannel(dyio.getChannel(i),false);
+		}
+//		dip = new DigitalInputChannel(dyio.getChannel(0),true);	
+//		//Add this instance of the Tester class to the digital channel 
+//		dip.addDigitalInputListener(this);
+//		//Run forever printing out digital events
 		while (true){
 			Thread.sleep(100);
 		}
-
+		//dyio.disconnect();
 	}
 	/**
 	 * @param args
