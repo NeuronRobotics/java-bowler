@@ -254,7 +254,7 @@ public class Leg {
 	}
 	
 	
-	private double resetTime = .1;
+	private double resetTime = 0;
 	
 	public void stepToHipAngle(double hip) {
 
@@ -282,7 +282,7 @@ public class Leg {
 		//System.out.println("Putting leg down");
 		cacheLinkPositions();
 		flush(resetTime);
-		try {Thread.sleep((long) (resetTime*1000));} catch (InterruptedException e) {}
+		//try {Thread.sleep((long) (resetTime*1000));} catch (InterruptedException e) {}
 		setZ(zSetPoint);
 		cacheLinkPositions();
 		flush(resetTime);
