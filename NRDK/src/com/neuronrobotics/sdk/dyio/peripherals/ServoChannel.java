@@ -53,7 +53,8 @@ public class ServoChannel extends DyIOAbstractPeripheral {
 	 * @return if the action was successful
 	 */
 	public boolean SetPosition(int pos, float time){
-		
+		if(time == 0)
+			time = (float) .01;
 		if(!validate()) {
 			return false;
 		}
