@@ -44,6 +44,9 @@ public class ServoChannel extends DyIOAbstractPeripheral {
 	public boolean SetPosition(int pos){
 		return SetPosition(pos, 0);
 	}
+	public boolean SetPosition(int pos, double time){
+		return SetPosition( pos, (float) time);
+	}
 	
 	/**
 	 * Steps the servo though a transformation over a given amount of time.
@@ -54,7 +57,7 @@ public class ServoChannel extends DyIOAbstractPeripheral {
 	 */
 	public boolean SetPosition(int pos, float time){
 		if(time == 0)
-			time = (float) .01;
+			time = (float) .001;
 		if(!validate()) {
 			return false;
 		}
