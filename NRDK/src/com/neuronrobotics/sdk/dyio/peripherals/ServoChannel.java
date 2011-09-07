@@ -44,6 +44,13 @@ public class ServoChannel extends DyIOAbstractPeripheral {
 	public boolean SetPosition(int pos){
 		return SetPosition(pos, 0);
 	}
+	/**
+	 * Steps the servo though a transformation over a given amount of time.
+	 * 
+	 * @param pos - the end position 
+	 * @param time - the number of seconds for the transition to take place
+	 * @return if the action was successful
+	 */
 	public boolean SetPosition(int pos, double time){
 		return SetPosition( pos, (float) time);
 	}
