@@ -6,8 +6,10 @@ import com.neuronrobotics.sdk.ui.ConnectionDialog;
 
 public class ConnectionDialogTest {
 	public static void main(String[] args) {
+		System.out.println("Starting");
 		DyIO dyio=new DyIO();
 		if (!ConnectionDialog.getBowlerDevice(dyio)){
+			System.err.println("Dialog failed");
 			System.exit(1);
 		}
 		Log.enableDebugPrint(true);
