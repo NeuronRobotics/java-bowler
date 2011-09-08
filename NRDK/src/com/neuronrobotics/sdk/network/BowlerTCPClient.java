@@ -36,7 +36,7 @@ import com.neuronrobotics.sdk.common.Log;
  * 
  */
 public class BowlerTCPClient extends BowlerAbstractConnection{
-	private int sleepTime = 5000;
+	private int sleepTime = 10000;
 	private int pollTimeoutTime = 5;
 	
 	private Socket tcpSock = null;
