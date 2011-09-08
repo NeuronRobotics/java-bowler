@@ -1,5 +1,5 @@
 package com.neuronrobotics.addons.driving;
 
-public class PuckBot {
+public class PuckBot extends AbstractDrivingRobot{
 
 }

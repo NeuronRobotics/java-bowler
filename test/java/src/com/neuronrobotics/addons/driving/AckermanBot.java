@@ -1,5 +1,5 @@
 package com.neuronrobotics.addons.driving;
 
-public class AckermanBot {
+public class AckermanBot extends AbstractDrivingRobot {
 
 }
