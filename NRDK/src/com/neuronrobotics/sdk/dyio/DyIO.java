@@ -47,6 +47,7 @@ import com.neuronrobotics.sdk.dyio.dypid.DyPIDConfiguration;
 import com.neuronrobotics.sdk.genericdevice.GenericPIDDevice;
 import com.neuronrobotics.sdk.pid.IPIDControl;
 import com.neuronrobotics.sdk.pid.IPIDEventListener;
+import com.neuronrobotics.sdk.pid.PIDChannel;
 import com.neuronrobotics.sdk.pid.PIDCommandException;
 import com.neuronrobotics.sdk.pid.PIDConfiguration;
 import com.neuronrobotics.sdk.util.ThreadUtil;
@@ -631,6 +632,10 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 	public void flushPIDChannels(double time) {
 		pid.flushPIDChannels(time);
 	}
+	@Override
+	public PIDChannel getPIDChannel(int group) {
+		return pid.getPIDChannel(group);
+	}
 	
 	/**
 	 * Advanced Async Configuration
@@ -746,6 +751,8 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 	public void onConnect() {
 
 	}
+
+	
 
 	
 

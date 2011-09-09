@@ -14,8 +14,6 @@ public class PIDChannel {
 		setPid(p);
 		index=i;
 	}
-	
-	
 
 	public boolean SetPIDSetPoint(int setpoint,double seconds){
 		return getPid().SetPIDSetPoint(index, setpoint, seconds);

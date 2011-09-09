@@ -209,6 +209,14 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 		//TODO replace with proper implementation
 		return SetPIDInterpolatedVelocity(group, unitsPerSecond, seconds);
 	}
+
+	@Override
+	public PIDChannel getPIDChannel(int group) {
+		if(channels.size()==0) {
+			GetAllPIDPosition();
+		}
+		return channels.get(group);
+	}
 	
 
 }
