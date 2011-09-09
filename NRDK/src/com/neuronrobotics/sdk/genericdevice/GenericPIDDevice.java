@@ -21,7 +21,7 @@ import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 
 public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDControl {
 	private ArrayList<PIDChannel> channels = new ArrayList<PIDChannel>();
-	
+	private int [] lastPacketTime = null;
 	public GenericPIDDevice(BowlerAbstractConnection connection) {
 		setAddress(new MACAddress(MACAddress.BROADCAST));
 		setConnection(connection);
@@ -51,7 +51,12 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 	
 	public void onAsyncResponse(BowlerDatagram data) {
 		if(data.getRPC().contains("_pid")){
-			firePIDEvent(new PIDEvent(data));
+			PIDEvent e =new PIDEvent(data);
+			if(lastPacketTime != null){
+				if(lastPacketTime[e.getGroup()]<e.getTimeStamp())
+					return;
+			}
+			firePIDEvent(e);
 		}
 		if(data.getRPC().contains("pidl")){
 			firePIDLimitEvent(new PIDLimitEvent(data));
@@ -108,6 +113,7 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 		}
 		if(back.length != channels.size()){
 			channels =  new ArrayList<PIDChannel>();
+			lastPacketTime =  new int[back.length];
 			for(int i=0;i<back.length;i++){
 				PIDChannel c =new PIDChannel(this,i);
 				c.setCachedTargetValue(back[i]);
