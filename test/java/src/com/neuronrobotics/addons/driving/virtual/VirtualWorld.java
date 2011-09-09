@@ -96,7 +96,9 @@ public class VirtualWorld extends JPanel implements MouseListener,MouseMotionLis
 		
 		return display;
 	}
-	
+	public ObsticleType getObsticle(int x,int y) {
+		return ObsticleType.get(new Color(getMap().getRGB(x, y)));
+	}
 	private void updateMap() {
 		BufferedImage display = getMap();
 		
