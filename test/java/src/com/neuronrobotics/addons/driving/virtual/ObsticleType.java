@@ -10,7 +10,9 @@ public enum ObsticleType {
 	LINE(Color.black),
 
 	WALL(Color.blue),
-
+	
+	GOAL(Color.orange),
+	
 	NONE(Color.white);
 	
 	/** The Constant lookup. */
@@ -64,6 +66,8 @@ public enum ObsticleType {
 			return "On The Line";
 		case WALL:
 			return "In The Wall";
+		case GOAL:
+			return "In The goal";
 		case NONE:
 			return "No Obsticle";
 		}

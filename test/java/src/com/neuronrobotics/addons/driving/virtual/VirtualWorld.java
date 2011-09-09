@@ -28,7 +28,7 @@ public class VirtualWorld extends JPanel implements MouseListener,MouseMotionLis
 	private static final double hight = 480;
 	
 	private static final double botStartX = width /2;
-	private static final double botStartY = hight /2;
+	private static final double botStartY = (int)( hight/2+60 );
 	
 	public VirtualWorld() {
 		System.out.println("Starting new Virtual World");
@@ -43,7 +43,7 @@ public class VirtualWorld extends JPanel implements MouseListener,MouseMotionLis
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBackground(Color.black);
         frame.add(this);
-        frame.setSize((int)width,(int)hight);
+        frame.setSize((int)width+200,(int)hight+200);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
         frame.addMouseListener(this);
@@ -63,7 +63,13 @@ public class VirtualWorld extends JPanel implements MouseListener,MouseMotionLis
 		
 		//White Oval tack
 		g.setColor(Color.white);
-		g.fillOval(30,10, (int)(width-50 ),(int)( hight-80 ));
+		int rad =20;
+		g.fillRoundRect(30,50, 720,300, rad ,rad );
+		g.fillRoundRect(450,50,150,500, rad ,rad );
+		g.fillRoundRect(450,450,300,120, rad ,rad );
+		g.setColor(Color.orange);
+		g.fillOval(720, 460, 20, 20);
+		//g.fillOval(30,10, (int)(width-50 ),(int)( hight-80 ));
 		
 		//Draw Line Follow Track
 		g.setColor(Color.black);
@@ -102,7 +108,10 @@ public class VirtualWorld extends JPanel implements MouseListener,MouseMotionLis
 	private void updateMap() {
 		BufferedImage display = getMap();
 		
-		
+		Graphics2D g =  display.createGraphics();
+		for(DrivingRobotUI b:bots) {
+			b.drawRobot(g);
+		}
 		
 		lab.setIcon(new ImageIcon(display ) );
 	}
@@ -110,6 +119,7 @@ public class VirtualWorld extends JPanel implements MouseListener,MouseMotionLis
 	public void addRobot(AbstractDrivingRobot robot) {
 		if(!bots.contains(robot))
 			bots.add(new DrivingRobotUI(robot,botStartX ,botStartY));
+		updateMap();
 	}
 
 	@Override

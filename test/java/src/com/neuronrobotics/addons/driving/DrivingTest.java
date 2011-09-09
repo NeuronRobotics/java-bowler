@@ -59,7 +59,7 @@ public class DrivingTest {
 		double driveTime=40;
 		ackerman.DriveStraight(10, driveTime);
 		ThreadUtil.wait((int) (driveTime*1000));
-		System.exit(0);
+		//System.exit(0);
 	}
 
 }
