@@ -1,9 +1,11 @@
 package com.neuronrobotics.addons.driving.virtual;
 
 import com.neuronrobotics.addons.driving.AbstractDrivingRobot;
+import com.neuronrobotics.addons.driving.AckermanConfiguration;
 
 public class VirtualAckermanBot extends AbstractDrivingRobot {
 	private VirtualWorld world;
+	private final AckermanConfiguration config = new AckermanConfiguration();
 	public VirtualAckermanBot(VirtualWorld w){
 		world=w;
 	}

@@ -4,7 +4,7 @@ import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 import com.neuronrobotics.sdk.pid.PIDChannel;
 
 public class AckermanBot extends AbstractDrivingRobot {
-	
+	private final AckermanConfiguration config = new AckermanConfiguration();
 	public AckermanBot(ServoChannel steering,PIDChannel drive) {
 		
 	}

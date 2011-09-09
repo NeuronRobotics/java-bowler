@@ -3,7 +3,7 @@ package com.neuronrobotics.addons.driving;
 import com.neuronrobotics.sdk.pid.PIDChannel;
 
 public class PuckBot extends AbstractDrivingRobot{
-	
+	private final PuckBotConfiguration config = new PuckBotConfiguration();
 	public PuckBot(PIDChannel driveRight,PIDChannel driveLeft) {
 		
 	}
