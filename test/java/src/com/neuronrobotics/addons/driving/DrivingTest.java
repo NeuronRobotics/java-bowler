@@ -56,10 +56,10 @@ public class DrivingTest {
 			ackerman = a;
 		}
 		
-		double driveTime=7;
+		double driveTime=40;
 		ackerman.DriveStraight(10, driveTime);
 		ThreadUtil.wait((int) (driveTime*1000));
-		
+		System.exit(0);
 	}
 
 }
