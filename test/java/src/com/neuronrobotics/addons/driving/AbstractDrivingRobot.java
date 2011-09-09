@@ -11,6 +11,8 @@ public abstract class AbstractDrivingRobot {
 		this.line=line;
 	}
 	
+	
+	
 	/**
 	 * Driving kinematics should be implemented in here
 	 * Before driving, a reset for each drive wheel should be called

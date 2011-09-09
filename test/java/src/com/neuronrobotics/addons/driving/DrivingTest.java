@@ -10,6 +10,7 @@ import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 import com.neuronrobotics.sdk.pid.PIDChannel;
 import com.neuronrobotics.sdk.pid.PIDConfiguration;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
+import com.neuronrobotics.sdk.util.ThreadUtil;
 
 public class DrivingTest {
 
@@ -38,7 +39,7 @@ public class DrivingTest {
 																DyIOChannelMode.SERVO_OUT);//Output mode
 			PIDConfiguration pid =new PIDConfiguration (	0,//PID group
 															true,//enabled
-															true,//inverted
+															false,//inverted
 															true,//Async
 															1,// Kp
 															0,// Ki
@@ -48,8 +49,16 @@ public class DrivingTest {
 			
 			PIDChannel drive = dyio.getPIDChannel(0);
 			AckermanBot a = new AckermanBot(new ServoChannel(dyio.getChannel(10)), drive );
+			
+			a.setLineSensor(null);
+			a.setRangeSensor(null);
+			
 			ackerman = a;
 		}
+		
+		double driveTime=7;
+		ackerman.DriveStraight(10, driveTime);
+		ThreadUtil.wait((int) (driveTime*1000));
 		
 	}
 
