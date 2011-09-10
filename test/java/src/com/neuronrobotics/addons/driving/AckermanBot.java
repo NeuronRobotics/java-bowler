@@ -30,17 +30,20 @@ public class AckermanBot extends AbstractDrivingRobot {
 	public double getSteeringAngle() {
 		return steeringAngle;
 	}
-
+	protected void SetDriveDistance(double cm, double seconds){
+		drive.SetPIDSetPoint((int)(cm*config.getCmtoTicks()), seconds);
+	}
+	
 	@Override
 	public void DriveStraight(double cm, double seconds) {
 		setSteeringAngle(0);
-		drive.SetPIDSetPoint((int)(cm*config.getCmtoTicks()), seconds);
+		SetDriveDistance(cm,seconds);
 	}
 	@Override
 	public void DriveArc(double cmRadius, double degrees, double seconds) {
 		double archlen = cmRadius*((2*Math.PI*degrees)/(360));
 		setSteeringAngle(degrees);
-		drive.SetPIDSetPoint((int)(archlen*config.getCmtoTicks()), seconds);
+		SetDriveDistance(archlen,seconds);
 	}
 
 	public double getMaxTicksPreSecond() {
@@ -50,9 +53,9 @@ public class AckermanBot extends AbstractDrivingRobot {
 	@Override
 	public void onPIDEvent(PIDEvent e) {
 		System.out.println("Ackerman drive event: "+e);
-		int differenceTicks = e.getValue()-currentDriveTicks;
-		
-		
+		double differenceTicks = (e.getValue()-currentDriveTicks);
+		double halfBase=config.getWheelbase()/2;
+		//double archlen = cmRadius*(getCurrentTheta());
 		
 		currentDriveTicks=e.getValue();
 	}

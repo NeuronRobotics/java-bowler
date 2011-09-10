@@ -58,7 +58,7 @@ public class DrivingTest {
 			
 			ackerman = a;
 		}
-		System.out.println(ObsticleType.get(Color.gray));;
+		
 		double driveTime=5;
 		ackerman.DriveStraight(10, driveTime);
 		ThreadUtil.wait((int) (driveTime*1000));

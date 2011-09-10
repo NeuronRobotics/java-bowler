@@ -16,16 +16,10 @@ public class VirtualAckermanBot extends AckermanBot {
 		drive.start();
 	}
 	@Override
-	public void DriveStraight(double cm, double seconds) {
-		setSteeringAngle(0);
+	protected void SetDriveDistance(double cm, double seconds){
 		drive.SetPIDSetPoint((int)(cm*config.getCmtoTicks()), seconds);
 	}
-	@Override
-	public void DriveArc(double cmRadius, double degrees, double seconds) {
-		double archlen = cmRadius*((2*Math.PI*degrees)/(360));
-		setSteeringAngle(degrees);
-		drive.SetPIDSetPoint((int)(archlen*config.getCmtoTicks()), seconds);
-	}
+
 	@Override
 	public void onPIDEvent(PIDEvent e)  {
 		super.onPIDEvent(e);
