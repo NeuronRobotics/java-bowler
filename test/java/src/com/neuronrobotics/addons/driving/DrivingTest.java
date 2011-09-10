@@ -1,5 +1,8 @@
 package com.neuronrobotics.addons.driving;
 
+import java.awt.Color;
+
+import com.neuronrobotics.addons.driving.virtual.ObsticleType;
 import com.neuronrobotics.addons.driving.virtual.VirtualAckermanBot;
 import com.neuronrobotics.addons.driving.virtual.VirtualPuckBot;
 import com.neuronrobotics.addons.driving.virtual.VirtualWorld;
@@ -55,8 +58,8 @@ public class DrivingTest {
 			
 			ackerman = a;
 		}
-		
-		double driveTime=40;
+		System.out.println(ObsticleType.get(Color.gray));;
+		double driveTime=5;
 		ackerman.DriveStraight(10, driveTime);
 		ThreadUtil.wait((int) (driveTime*1000));
 		//System.exit(0);

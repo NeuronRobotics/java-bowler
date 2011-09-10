@@ -1,8 +1,10 @@
 package com.neuronrobotics.addons.driving.virtual;
 
 import com.neuronrobotics.addons.driving.AbstractDrivingRobot;
+import com.neuronrobotics.addons.driving.PuckBot;
+import com.neuronrobotics.sdk.pid.PIDEvent;
 
-public class VirtualPuckBot extends AbstractDrivingRobot{
+public class VirtualPuckBot extends PuckBot{
 	private VirtualWorld world;
 	public VirtualPuckBot(VirtualWorld w){
 		world=w;
@@ -18,4 +20,5 @@ public class VirtualPuckBot extends AbstractDrivingRobot{
 		// TODO Auto-generated method stub
 		
 	}
+
 }

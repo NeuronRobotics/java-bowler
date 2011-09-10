@@ -52,7 +52,10 @@ public enum ObsticleType {
      * @return the bowler method
      */
     public static ObsticleType get(Color c) { 
-    	return lookup.get(c); 
+    	ObsticleType ot = lookup.get(c);
+    	if(ot==null)
+    		ot=ObsticleType.NONE;
+    	return ot; 
     }
 
 	
