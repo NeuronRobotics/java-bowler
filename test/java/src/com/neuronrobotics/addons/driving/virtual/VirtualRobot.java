@@ -2,6 +2,7 @@ package com.neuronrobotics.addons.driving.virtual;
 
 import com.neuronrobotics.addons.driving.AbstractDrivingRobot;
 import com.neuronrobotics.sdk.pid.PIDEvent;
+import com.neuronrobotics.sdk.util.ThreadUtil;
 
 public class VirtualRobot extends Thread{
 	
@@ -17,21 +18,28 @@ public class VirtualRobot extends Thread{
 	private long startTime;
 	private long startPoint;
 	private double maxTicksPerSecond;
+	boolean pause = false;
 	public  VirtualRobot(int channel,AbstractDrivingRobot r, double d) {
 		robot=r;
 		this.maxTicksPerSecond=d;
 		setChan(channel);	
 	}
 	public synchronized  void ZeroEncoder() {
+		pause=true;
+		ThreadUtil.wait((int)(threadTime*2));
 		ticks=0;
 		lastTick=0;
 		setPoint=0;
 		duration=0;
 		startTime=0;
 		startPoint=0;
+		pause=false;
 	}
 	public void run() {
 		while(true) {
+			while(pause){
+				ThreadUtil.wait(10);
+			}
 			try {Thread.sleep(threadTime);} catch (InterruptedException e) {}
 			interpolate();
 			if(ticks!=lastTick) {
@@ -70,7 +78,8 @@ public class VirtualRobot extends Thread{
 	}
 
 	public synchronized  void SetPIDSetPoint(int setpoint,double seconds){
-		
+		pause=true;
+		ThreadUtil.wait((int)(threadTime*2));
 		double TPS = (double)setpoint/seconds;
 		//Models motor saturation
 		if(TPS >  maxTicksPerSecond){
@@ -79,8 +88,10 @@ public class VirtualRobot extends Thread{
 		}
 		duration = (long) (seconds*1000);
 		startTime=System.currentTimeMillis();
-		startPoint = ticks;
 		setPoint=setpoint;
+		startPoint = ticks;
+		
+		pause=false;
 		System.out.println("Setting Setpoint Ticks to: "+setPoint);
 	}
 	

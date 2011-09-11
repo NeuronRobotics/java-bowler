@@ -62,7 +62,7 @@ public class AckermanBot extends AbstractDrivingRobot {
 
 	@Override
 	public void onPIDEvent(PIDEvent e) {
-		System.out.println("\n\n");
+		System.out.println("\n\nCurrent Ticks="+currentDriveTicks+e);
 		double differenceTicks = (e.getValue()-currentDriveTicks);
 		double archLen = differenceTicks/config.getCmtoTicks();
 		

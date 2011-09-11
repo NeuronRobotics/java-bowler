@@ -22,7 +22,7 @@ public class VirtualAckermanBot extends AckermanBot {
 	}
 	@Override
 	protected void ResetDrivePosition(){
-		drive.ZeroEncoder();
+		onPIDReset(0, 0);
 		ThreadUtil.wait(200);
 	}
 
@@ -33,6 +33,7 @@ public class VirtualAckermanBot extends AckermanBot {
 	}
 	@Override
 	public void onPIDReset(int group, int currentValue){
+		System.out.println("##Virtual Robot Reset called");
 		if(group==0){
 			drive.ZeroEncoder();
 			super.onPIDReset(group, currentValue);
