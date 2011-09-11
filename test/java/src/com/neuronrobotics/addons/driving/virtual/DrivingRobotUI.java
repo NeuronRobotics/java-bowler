@@ -3,6 +3,7 @@ package com.neuronrobotics.addons.driving.virtual;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
 
 import com.neuronrobotics.addons.driving.AbstractRobot;
 
@@ -15,7 +16,7 @@ public class DrivingRobotUI {
 	
 	private int robotDiameter = 60;
 	private double pixelToCm=5;
-	
+	private ArrayList<SensorDot> dots= new ArrayList<SensorDot> ();
 	public DrivingRobotUI(AbstractRobot robot, double botstartx, double botstarty) {
 		setRobot(robot);
 		startx=botstartx;
@@ -48,7 +49,7 @@ public class DrivingRobotUI {
 		
 		int x1 = (int) centerx;
 		int y1 = (int) centery;
-		int orVe = robotDiameter/2+5;
+		int orVe = robotDiameter/2;
 		
 		//System.out.println("Robot center coordinante x="+x1+" y="+y1);
 		
@@ -56,6 +57,13 @@ public class DrivingRobotUI {
 		int y2 = (int) (centery-Math.sin(getRobot().getCurrentOrentation()-(Math.PI/2))*orVe);
 		g.setColor(Color.magenta);
 		g.drawLine(x1, y1, x2, y2);
+		
+		for(SensorDot s:dots){
+			int [] loc = getSensorPixelLocation(s.deltLateral, s.deltForward);
+			int d=3;
+			g.setColor(s.color);
+			g.fillOval(loc[0]-d,loc[1]-d,d*2, d*2);
+		}
 		
 	}
 
@@ -68,36 +76,30 @@ public class DrivingRobotUI {
 		return robot;
 	}
 
-
-	public int getXpix(double deltLateral,double deltForward) {
+	public int[] getSensorPixelLocation(double deltLateral, double deltForward) {
+		int [] back = new int[2];
 		
-		double x = getRobot().getCurrentX();
-		double y = getRobot().getCurrentY();
-		double o = getRobot().getCurrentOrentation();
+		double [] loc = getRobot().getPositionOffset(deltLateral, deltForward);
 		
-		x+=deltForward*Math.cos(o);
-		y+=deltForward*Math.sin(o);
+		back[0]=(int)(getCmToPixel(loc[1])+startx);
+		back[1]=(int)(getCmToPixel(loc[0])+starty);
 		
-		x+=deltLateral*Math.sin(o);
-		y+=deltLateral*Math.cos(o);
-		
-		return (int)(getCmToPixel(y)+startx);
+		return back;
 	}
 
-
-	public int getYpix(double deltLateral, double deltForward)  {
-		double x = getRobot().getCurrentX();
-		double y = getRobot().getCurrentY();
-		double o = getRobot().getCurrentOrentation();
-		
-		x+=deltForward*Math.cos(o);
-		y+=deltForward*Math.sin(o);
-		
-		x+=deltLateral*Math.sin(o);
-		y+=deltLateral*Math.cos(o);
-		
-		
-		return (int)(getCmToPixel(x)+starty);
+	public void addSensorDisplayDot(double deltLateral, double deltForward, Color c) {
+		dots.add(new SensorDot(deltLateral, deltForward, c));
+	}
+	
+	private class SensorDot{
+		public double deltLateral; 
+		public double deltForward; 
+		public Color color;
+		public SensorDot(double l, double f, Color c){
+			deltForward=f;
+			deltLateral=l;
+			color=c;
+		}
 	}
 
 }

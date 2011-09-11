@@ -130,4 +130,20 @@ public abstract class AbstractRobot implements IPIDEventListener{
 		}
 	}
 	
+	public double [] getPositionOffset(double deltLateral, double deltForward) {
+		double [] back ={0,0};
+		
+		back[0] = getCurrentX();
+		back[1] = getCurrentY();
+		double o = getCurrentOrentation();
+		
+		back[0]+=deltForward*Math.cos(o);
+		back[1]+=deltForward*Math.sin(o);
+		
+		back[0]-=deltLateral*Math.sin(o);
+		back[1]+=deltLateral*Math.cos(o);
+		
+		return back;
+	}
+	
 }

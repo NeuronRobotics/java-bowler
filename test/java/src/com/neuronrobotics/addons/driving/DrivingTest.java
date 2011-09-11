@@ -61,13 +61,13 @@ public class DrivingTest {
 		}
 		
 		double driveTime=5;
-//		ackerman.addIRobotDriveEventListener(new IRobotDriveEventListener() {
-//			
-//			@Override
-//			public void onDriveEvent(double x, double y, double orentation) {
-//				System.out.println("Drive Event x="+x+" y="+y+" orentation="+Math.toDegrees(orentation));
-//			}
-//		});
+		ackerman.addIRobotDriveEventListener(new IRobotDriveEventListener() {
+			
+			@Override
+			public void onDriveEvent(double x, double y, double orentation) {
+				System.out.println("Drive Event x="+x+" y="+y+" orentation="+Math.toDegrees(orentation));
+			}
+		});
 		ackerman.addSensorListener(new ISensorListener() {
 			
 			@Override

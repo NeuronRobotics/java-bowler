@@ -85,20 +85,11 @@ public class AckermanBot extends AbstractRobot {
 		}
 		
 		//System.out.println("Relative motion delta Ticks="+differenceTicks+", forward="+deltForward+", lateral="+deltLateral);
+		double [] loc = getPositionOffset(deltLateral, deltForward);
 		
-		double x = getCurrentX();
-		double y = getCurrentY();
-		double o = getCurrentOrentation();
-		
-		x+=deltForward*Math.cos(o);
-		y+=deltForward*Math.sin(o);
-		
-		x+=deltLateral*Math.sin(o);
-		y+=deltLateral*Math.cos(o);
-		
-		setCurrentX(x);
-		setCurrentY(y);
-		setCurrentTheta(o+centralAngleRadians);
+		setCurrentX(loc[0]);
+		setCurrentY(loc[1]);
+		setCurrentTheta( getCurrentOrentation()+centralAngleRadians);
 		
 		currentDriveTicks=e.getValue();
 		fireDriveEvent();

@@ -126,13 +126,20 @@ public class VirtualWorld extends JPanel{
 			bots.add(new DrivingRobotUI(robot,botStartX ,botStartY));
 		updateMap();
 	}
+	
+	public void addSensorDisplayDot(AbstractRobot platform, double deltLateral, double deltForward, Color c){
+		for( DrivingRobotUI b:bots){
+			if(b.getRobot()==platform){
+				b.addSensorDisplayDot(deltLateral,deltForward,c );
+			}
+		}
+	}
 
 	public ObsticleType getObsticle(AbstractRobot platform, double deltLateral, double deltForward) {
 		for( DrivingRobotUI b:bots){
 			if(b.getRobot()==platform){
-				int pixX = b.getXpix(deltLateral,deltForward);
-				int pixY = b.getYpix(deltLateral,deltForward);
-				return getObsticle(pixX,pixY);
+				int [] loc = b.getSensorPixelLocation(deltLateral, deltForward);
+				return getObsticle(loc[0],loc[1]);
 			}
 		}
 		return null;

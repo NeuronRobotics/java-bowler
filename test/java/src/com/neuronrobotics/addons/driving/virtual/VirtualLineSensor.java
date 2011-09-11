@@ -1,5 +1,7 @@
 package com.neuronrobotics.addons.driving.virtual;
 
+import java.awt.Color;
+
 import com.neuronrobotics.addons.driving.AbstractRobot;
 import com.neuronrobotics.addons.driving.AbstractLineSensor;
 import com.neuronrobotics.sdk.util.ThreadUtil;
@@ -10,6 +12,8 @@ public class VirtualLineSensor extends AbstractLineSensor {
 	ObsticleType left= ObsticleType.NONE;
 	ObsticleType middle= ObsticleType.NONE;
 	ObsticleType right= ObsticleType.NONE;
+	double fOffset = 6;
+	double lOffset = 2;
 	public VirtualLineSensor(AbstractRobot r,VirtualWorld w) {
 		super(r);
 		setWorld(w);
@@ -26,11 +30,14 @@ public class VirtualLineSensor extends AbstractLineSensor {
 
 	private class SensorPoll extends Thread{
 		public void run(){
+			getWorld().addSensorDisplayDot(getrobot(), 	 -lOffset, fOffset, Color.red);
+			getWorld().addSensorDisplayDot(getrobot(),  		0, fOffset, Color.white);
+			getWorld().addSensorDisplayDot(getrobot(),    lOffset, fOffset, Color.black);
 			while(true){
 				ThreadUtil.wait(1);
-				ObsticleType tmpL = getWorld().getObsticle(getrobot(),-2,8);
-				ObsticleType tmpC = getWorld().getObsticle(getrobot(),0,8);
-				ObsticleType tmpR = getWorld().getObsticle(getrobot(),2,8);
+				ObsticleType tmpL = getWorld().getObsticle(getrobot(),	 -lOffset,fOffset);
+				ObsticleType tmpC = getWorld().getObsticle(getrobot(),			0,fOffset);
+				ObsticleType tmpR = getWorld().getObsticle(getrobot(),	  lOffset,fOffset);
 				
 				if((tmpL != left) ||(tmpC!=middle) ||(tmpR!=right)){
 					left=tmpL;
