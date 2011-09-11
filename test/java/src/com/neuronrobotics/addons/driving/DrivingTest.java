@@ -24,7 +24,7 @@ public class DrivingTest {
 	public static void main(String[] args) {
 		boolean virtual = true;
 		//virtual = false;
-		AbstractDrivingRobot ackerman;
+		AbstractRobot ackerman;
 		if(virtual) {
 			
 			VirtualWorld w = new VirtualWorld();

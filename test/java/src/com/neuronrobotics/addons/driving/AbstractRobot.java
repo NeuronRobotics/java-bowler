@@ -3,7 +3,7 @@ package com.neuronrobotics.addons.driving;
 import java.util.ArrayList;
 import com.neuronrobotics.sdk.pid.IPIDEventListener;
 
-public abstract class AbstractDrivingRobot implements IPIDEventListener{
+public abstract class AbstractRobot implements IPIDEventListener{
 	private ArrayList<IRobotDriveEventListener> dl = new  ArrayList<IRobotDriveEventListener> ();
 	
 	private ArrayList<ISensorListener> sensorListeners = new ArrayList<ISensorListener>();

@@ -4,19 +4,19 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import com.neuronrobotics.addons.driving.AbstractDrivingRobot;
+import com.neuronrobotics.addons.driving.AbstractRobot;
 
 public class DrivingRobotUI {
 	//These represent where the robots base frame is in pixel-space. This is passed in at instantiation.
 	private double startx;
 	private double starty;
 
-	private AbstractDrivingRobot robot;
+	private AbstractRobot robot;
 	
 	private int robotDiameter = 60;
 	private double pixelToCm=5;
 	
-	public DrivingRobotUI(AbstractDrivingRobot robot, double botstartx, double botstarty) {
+	public DrivingRobotUI(AbstractRobot robot, double botstartx, double botstarty) {
 		setRobot(robot);
 		startx=botstartx;
 		starty=botstarty;
@@ -60,16 +60,16 @@ public class DrivingRobotUI {
 	}
 
 
-	public void setRobot(AbstractDrivingRobot robot) {
+	public void setRobot(AbstractRobot robot) {
 		this.robot = robot;
 	}
 
-	public AbstractDrivingRobot getRobot() {
+	public AbstractRobot getRobot() {
 		return robot;
 	}
 
 
-	public int getXpix(int deltLateral, int deltForward) {
+	public int getXpix(double deltLateral,double deltForward) {
 		
 		double x = getRobot().getCurrentX();
 		double y = getRobot().getCurrentY();
@@ -85,7 +85,7 @@ public class DrivingRobotUI {
 	}
 
 
-	public int getYpix(int deltLateral, int deltForward)  {
+	public int getYpix(double deltLateral, double deltForward)  {
 		double x = getRobot().getCurrentX();
 		double y = getRobot().getCurrentY();
 		double o = getRobot().getCurrentOrentation();

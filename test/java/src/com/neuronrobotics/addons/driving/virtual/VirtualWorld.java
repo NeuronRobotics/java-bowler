@@ -14,7 +14,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import com.neuronrobotics.addons.driving.AbstractDrivingRobot;
+import com.neuronrobotics.addons.driving.AbstractRobot;
 
 public class VirtualWorld extends JPanel{
 	/**
@@ -121,17 +121,17 @@ public class VirtualWorld extends JPanel{
 		frame.repaint();
 	}
 	
-	public void addRobot(AbstractDrivingRobot robot) {
+	public void addRobot(AbstractRobot robot) {
 		if(!bots.contains(robot))
 			bots.add(new DrivingRobotUI(robot,botStartX ,botStartY));
 		updateMap();
 	}
 
-	public ObsticleType getObsticle(AbstractDrivingRobot platform, int xOffset, int yOffset) {
+	public ObsticleType getObsticle(AbstractRobot platform, double deltLateral, double deltForward) {
 		for( DrivingRobotUI b:bots){
 			if(b.getRobot()==platform){
-				int pixX = b.getXpix(xOffset,yOffset);
-				int pixY = b.getYpix(xOffset,yOffset);
+				int pixX = b.getXpix(deltLateral,deltForward);
+				int pixY = b.getYpix(deltLateral,deltForward);
 				return getObsticle(pixX,pixY);
 			}
 		}

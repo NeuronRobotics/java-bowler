@@ -1,13 +1,13 @@
 package com.neuronrobotics.addons.driving.virtual;
 
-import com.neuronrobotics.addons.driving.AbstractDrivingRobot;
+import com.neuronrobotics.addons.driving.AbstractRobot;
 import com.neuronrobotics.sdk.pid.PIDEvent;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 public class VirtualRobot extends Thread{
 	
 
-	private AbstractDrivingRobot robot;
+	private AbstractRobot robot;
 
 	private static final long threadTime=200;
 	private int chan;
@@ -19,7 +19,7 @@ public class VirtualRobot extends Thread{
 	private long startPoint;
 	private double maxTicksPerSecond;
 	boolean pause = false;
-	public  VirtualRobot(int channel,AbstractDrivingRobot r, double d) {
+	public  VirtualRobot(int channel,AbstractRobot r, double d) {
 		robot=r;
 		this.maxTicksPerSecond=d;
 		setChan(channel);	

@@ -1,6 +1,6 @@
 package com.neuronrobotics.addons.driving.virtual;
 
-import com.neuronrobotics.addons.driving.AbstractDrivingRobot;
+import com.neuronrobotics.addons.driving.AbstractRobot;
 import com.neuronrobotics.addons.driving.PuckBot;
 import com.neuronrobotics.sdk.pid.PIDEvent;
 

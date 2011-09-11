@@ -1,19 +1,19 @@
 package com.neuronrobotics.addons.driving;
 
 public abstract class AbstractRangeSensor {
-	private AbstractDrivingRobot platform = null;
+	private AbstractRobot platform = null;
 	
-	public AbstractRangeSensor(AbstractDrivingRobot r){
+	public AbstractRangeSensor(AbstractRobot r){
 		setPlatform(r);
 	}
 	
 	public abstract boolean StartSweep(float startDeg,float endDeg,int degPerStep);
 
-	public void setPlatform(AbstractDrivingRobot platform) {
+	public void setPlatform(AbstractRobot platform) {
 		this.platform = platform;
 	}
 
-	public AbstractDrivingRobot getPlatform() {
+	public AbstractRobot getPlatform() {
 		return platform;
 	}
 }

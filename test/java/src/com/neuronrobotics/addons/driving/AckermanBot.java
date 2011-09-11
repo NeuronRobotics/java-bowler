@@ -6,7 +6,7 @@ import com.neuronrobotics.sdk.pid.PIDChannel;
 import com.neuronrobotics.sdk.pid.PIDEvent;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 
-public class AckermanBot extends AbstractDrivingRobot {
+public class AckermanBot extends AbstractRobot {
 	private final AckermanConfiguration config = new AckermanConfiguration();
 	private int currentDriveTicks=0;
 	/**

@@ -1,11 +1,11 @@
 package com.neuronrobotics.addons.driving.virtual;
 
-import com.neuronrobotics.addons.driving.AbstractDrivingRobot;
+import com.neuronrobotics.addons.driving.AbstractRobot;
 import com.neuronrobotics.addons.driving.AbstractRangeSensor;
 
 public class VirtualRangeSensor extends AbstractRangeSensor {
 
-	public VirtualRangeSensor(AbstractDrivingRobot r,VirtualWorld w) {
+	public VirtualRangeSensor(AbstractRobot r,VirtualWorld w) {
 		super(r);
 		// TODO Auto-generated constructor stub
 	}
