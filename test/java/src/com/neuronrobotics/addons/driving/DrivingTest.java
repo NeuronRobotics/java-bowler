@@ -61,13 +61,13 @@ public class DrivingTest {
 		}
 		
 		double driveTime=5;
-		ackerman.addIRobotDriveEventListener(new IRobotDriveEventListener() {
-			
-			@Override
-			public void onDriveEvent(double x, double y, double orentation) {
-				System.out.println("Drive Event x="+x+" y="+y+" orentation="+Math.toDegrees(orentation));
-			}
-		});
+//		ackerman.addIRobotDriveEventListener(new IRobotDriveEventListener() {
+//			
+//			@Override
+//			public void onDriveEvent(double x, double y, double orentation) {
+//				System.out.println("Drive Event x="+x+" y="+y+" orentation="+Math.toDegrees(orentation));
+//			}
+//		});
 		ackerman.addSensorListener(new ISensorListener() {
 			
 			@Override
@@ -83,8 +83,8 @@ public class DrivingTest {
 		ackerman.DriveArc(20, 90, driveTime);
 		ThreadUtil.wait((int) (driveTime*1000));
 		ackerman.StartSweep(-90, 90, 1);
-		//ackerman.DriveArc(-50, -45, driveTime);
-		//ThreadUtil.wait((int) (driveTime*1000));
+		ackerman.DriveStraight(30, driveTime);
+		ThreadUtil.wait((int) (driveTime*1000));
 		//System.exit(0);
 	}
 
