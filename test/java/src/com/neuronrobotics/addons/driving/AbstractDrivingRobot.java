@@ -1,13 +1,15 @@
 package com.neuronrobotics.addons.driving;
 
 import java.util.ArrayList;
-
 import com.neuronrobotics.sdk.pid.IPIDEventListener;
 
 public abstract class AbstractDrivingRobot implements IPIDEventListener{
 	private ArrayList<IRobotDriveEventListener> dl = new  ArrayList<IRobotDriveEventListener> ();
-	protected IRangeSensor range=null;
-	protected ILineSensor line=null;
+	
+	private ArrayList<ISensorListener> sensorListeners = new ArrayList<ISensorListener>();
+	
+	protected AbstractRangeSensor range=null;
+	protected AbstractLineSensor line=null;
 	
 	private double currentX=0;
 	private double currentY=0;
@@ -31,10 +33,24 @@ public abstract class AbstractDrivingRobot implements IPIDEventListener{
 	public abstract void DriveArc(double cmRadius,double degrees,double seconds);
 	
 	
-	public void setRangeSensor(IRangeSensor range) {
+	
+	/**
+	 * 
+	 * @param startDeg
+	 * @param endDeg
+	 * @param degPerStep
+	 * @return if the command succeed
+	 */
+	public boolean StartSweep(float startDeg,float endDeg,int degPerStep){
+		if(range==null)
+			return false;
+		return range.StartSweep(startDeg,endDeg, degPerStep);
+	}
+	
+	public void setRangeSensor(AbstractRangeSensor range) {
 		this.range=range;
 	}
-	public void setLineSensor(ILineSensor line) {
+	public void setLineSensor(AbstractLineSensor line) {
 		this.line=line;
 	}
 	
@@ -79,5 +95,39 @@ public abstract class AbstractDrivingRobot implements IPIDEventListener{
 		if(!dl.contains(l))
 			dl.add(l);
 	}
+	
+	/**
+	 * Add an IDriveListener that will be contacted with an   on
+	 * each incoming data event.
+	 * 
+	 * @param l
+	 */
+	public void addSensorListener(ISensorListener l) {
+		if(sensorListeners.contains(l)) {
+			return;
+		}
+		sensorListeners.add(l);
+	}
+	/**
+	 * Contact all of the sensorListeners with the given event.
+	 * 
+	 * 
+	 */
+	public void fireRangeSensorEvent(ArrayList<DataPoint> data,long timeStamp) {
+		for(ISensorListener l : sensorListeners) {
+			l.onRangeSensorEvent(data,timeStamp);
+		}
+	}
 
+	/**
+	 * Contact all of the sensorListeners with the given event.
+	 * 
+	 * 
+	 */
+	public void fireLineSensorEvent(DataPoint left,DataPoint middle,DataPoint right,long timeStamp) {
+		for(ISensorListener l : sensorListeners) {
+			l.onLineSensorEvent(left,middle,right,timeStamp);
+		}
+	}
+	
 }

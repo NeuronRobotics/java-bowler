@@ -15,6 +15,8 @@ public class VirtualAckermanBot extends AckermanBot {
 		world.addRobot(this);
 		drive = new VirtualRobot(0,this,config.getMaxTicksPerSeconds());
 		drive.start();
+		setLineSensor(new VirtualLineSensor(this));
+		setRangeSensor(new VirtualRangeSensor(this));
 	}
 	@Override
 	protected void SetDriveDistance(int ticks, double seconds){
@@ -44,4 +46,5 @@ public class VirtualAckermanBot extends AckermanBot {
 		System.out.println("Setting steering angle to: " + Math.toDegrees(steeringAngle));
 		this.steeringAngle = steeringAngle;
 	}
+	
 }

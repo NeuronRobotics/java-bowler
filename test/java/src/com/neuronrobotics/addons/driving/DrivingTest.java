@@ -69,6 +69,7 @@ public class DrivingTest {
 		});
 		ackerman.DriveArc(20, 90, driveTime);
 		ThreadUtil.wait((int) (driveTime*1000));
+		ackerman.StartSweep(-90, 90, 1);
 		//ackerman.DriveArc(-50, -45, driveTime);
 		//ThreadUtil.wait((int) (driveTime*1000));
 		//System.exit(0);
