@@ -15,8 +15,8 @@ public class VirtualAckermanBot extends AckermanBot {
 		world.addRobot(this);
 		drive = new VirtualRobot(0,this,config.getMaxTicksPerSeconds());
 		drive.start();
-		setLineSensor(new VirtualLineSensor(this));
-		setRangeSensor(new VirtualRangeSensor(this));
+		setLineSensor(new VirtualLineSensor(this,w));
+		setRangeSensor(new VirtualRangeSensor(this,w));
 	}
 	@Override
 	protected void SetDriveDistance(int ticks, double seconds){

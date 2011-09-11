@@ -52,6 +52,7 @@ public class VirtualWorld extends JPanel{
         removeAll();
         updateMap();
         add(lab);
+        
 	}
 	
 	BufferedImage getMap() {
@@ -115,13 +116,26 @@ public class VirtualWorld extends JPanel{
 		}
 		
 		lab.setIcon(new ImageIcon(display ) );
-		frame.invalidate();
+		lab.invalidate();
+		lab.setVisible(true);
+		frame.repaint();
 	}
 	
 	public void addRobot(AbstractDrivingRobot robot) {
 		if(!bots.contains(robot))
 			bots.add(new DrivingRobotUI(robot,botStartX ,botStartY));
 		updateMap();
+	}
+
+	public ObsticleType getObsticle(AbstractDrivingRobot platform, int xOffset, int yOffset) {
+		for( DrivingRobotUI b:bots){
+			if(b.getRobot()==platform){
+				int pixX = b.getXpix(xOffset,yOffset);
+				int pixY = b.getYpix(xOffset,yOffset);
+				return getObsticle(pixX,pixY);
+			}
+		}
+		return null;
 	}
 
 }

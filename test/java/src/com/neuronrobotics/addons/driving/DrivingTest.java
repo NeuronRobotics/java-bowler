@@ -1,6 +1,7 @@
 package com.neuronrobotics.addons.driving;
 
 import java.awt.Color;
+import java.util.ArrayList;
 
 import com.neuronrobotics.addons.driving.virtual.ObsticleType;
 import com.neuronrobotics.addons.driving.virtual.VirtualAckermanBot;
@@ -60,11 +61,23 @@ public class DrivingTest {
 		}
 		
 		double driveTime=5;
-		ackerman.addIRobotDriveEventListener(new IRobotDriveEventListener() {
+//		ackerman.addIRobotDriveEventListener(new IRobotDriveEventListener() {
+//			
+//			@Override
+//			public void onDriveEvent(double x, double y, double orentation) {
+//				System.out.println("Drive Event x="+x+" y="+y+" orentation="+Math.toDegrees(orentation));
+//			}
+//		});
+		ackerman.addSensorListener(new ISensorListener() {
 			
 			@Override
-			public void onDriveEvent(double x, double y, double orentation) {
-				System.out.println("Drive Event x="+x+" y="+y+" orentation="+Math.toDegrees(orentation));
+			public void onRangeSensorEvent(ArrayList<DataPoint> data, long timeStamp) {
+				System.out.println("Range Sensor Event "+data);
+			}
+
+			@Override
+			public void onLineSensorEvent(Integer left, Integer middle,Integer right, long timeStamp) {
+				System.out.println("Line Sensor Event left="+left+" middle="+middle+" right="+right);
 			}
 		});
 		ackerman.DriveArc(20, 90, driveTime);

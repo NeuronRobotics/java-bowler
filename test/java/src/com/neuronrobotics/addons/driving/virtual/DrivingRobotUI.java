@@ -10,14 +10,14 @@ public class DrivingRobotUI {
 	//These represent where the robots base frame is in pixel-space. This is passed in at instantiation.
 	private double startx;
 	private double starty;
-	private double orentation = 0;
+
 	private AbstractDrivingRobot robot;
 	
 	private int robotDiameter = 60;
 	private double pixelToCm=5;
 	
 	public DrivingRobotUI(AbstractDrivingRobot robot, double botstartx, double botstarty) {
-		this.robot=robot;
+		setRobot(robot);
 		startx=botstartx;
 		starty=botstarty;
 	}
@@ -29,11 +29,11 @@ public class DrivingRobotUI {
 	
 	private int getRobotXToPixel(){
 		//This converts from robot coordinantes to pixel space, note that X and Y seem swapped, this is correct
-		return (int)(getCmToPixel(robot.getCurrentY())+startx);
+		return (int)(getCmToPixel(getRobot().getCurrentY())+startx);
 	}
 	private int getRobotYToPixel(){
 		//This converts from robot coordinantes to pixel space, note that X and Y seem swapped, this is correct
-		return (int)(getCmToPixel(robot.getCurrentX())+starty);
+		return (int)(getCmToPixel(getRobot().getCurrentX())+starty);
 	}
 	
 	public void drawRobot(Graphics2D g) {
@@ -52,10 +52,52 @@ public class DrivingRobotUI {
 		
 		//System.out.println("Robot center coordinante x="+x1+" y="+y1);
 		
-		int x2 = (int) (centerx+Math.cos(robot.getCurrentTheta()-(Math.PI/2))*orVe);
-		int y2 = (int) (centery-Math.sin(robot.getCurrentTheta()-(Math.PI/2))*orVe);
+		int x2 = (int) (centerx+Math.cos(getRobot().getCurrentOrentation()-(Math.PI/2))*orVe);
+		int y2 = (int) (centery-Math.sin(getRobot().getCurrentOrentation()-(Math.PI/2))*orVe);
 		g.setColor(Color.magenta);
 		g.drawLine(x1, y1, x2, y2);
 		
 	}
+
+
+	public void setRobot(AbstractDrivingRobot robot) {
+		this.robot = robot;
+	}
+
+	public AbstractDrivingRobot getRobot() {
+		return robot;
+	}
+
+
+	public int getXpix(int deltLateral, int deltForward) {
+		
+		double x = getRobot().getCurrentX();
+		double y = getRobot().getCurrentY();
+		double o = getRobot().getCurrentOrentation();
+		
+		x+=deltForward*Math.cos(o);
+		y+=deltForward*Math.sin(o);
+		
+		x+=deltLateral*Math.sin(o);
+		y+=deltLateral*Math.cos(o);
+		
+		return (int)(getCmToPixel(y)+startx);
+	}
+
+
+	public int getYpix(int deltLateral, int deltForward)  {
+		double x = getRobot().getCurrentX();
+		double y = getRobot().getCurrentY();
+		double o = getRobot().getCurrentOrentation();
+		
+		x+=deltForward*Math.cos(o);
+		y+=deltForward*Math.sin(o);
+		
+		x+=deltLateral*Math.sin(o);
+		y+=deltLateral*Math.cos(o);
+		
+		
+		return (int)(getCmToPixel(x)+starty);
+	}
+
 }

@@ -88,7 +88,7 @@ public class AckermanBot extends AbstractDrivingRobot {
 		
 		double x = getCurrentX();
 		double y = getCurrentY();
-		double o = getCurrentTheta();
+		double o = getCurrentOrentation();
 		
 		x+=deltForward*Math.cos(o);
 		y+=deltForward*Math.sin(o);

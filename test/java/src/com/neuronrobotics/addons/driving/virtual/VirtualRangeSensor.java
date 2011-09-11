@@ -5,7 +5,7 @@ import com.neuronrobotics.addons.driving.AbstractRangeSensor;
 
 public class VirtualRangeSensor extends AbstractRangeSensor {
 
-	public VirtualRangeSensor(AbstractDrivingRobot r) {
+	public VirtualRangeSensor(AbstractDrivingRobot r,VirtualWorld w) {
 		super(r);
 		// TODO Auto-generated constructor stub
 	}

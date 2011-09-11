@@ -81,7 +81,7 @@ public abstract class AbstractDrivingRobot implements IPIDEventListener{
 	 * 
 	 * @return current orentation in radians
 	 */
-	public double getCurrentTheta() {
+	public double getCurrentOrentation() {
 		return currentTheta;
 	}
 	
@@ -124,7 +124,7 @@ public abstract class AbstractDrivingRobot implements IPIDEventListener{
 	 * 
 	 * 
 	 */
-	public void fireLineSensorEvent(DataPoint left,DataPoint middle,DataPoint right,long timeStamp) {
+	public void fireLineSensorEvent(Integer left,Integer middle,Integer right,long timeStamp) {
 		for(ISensorListener l : sensorListeners) {
 			l.onLineSensorEvent(left,middle,right,timeStamp);
 		}

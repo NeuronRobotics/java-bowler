@@ -4,5 +4,5 @@ import java.util.ArrayList;
 
 public interface ISensorListener {
 	public void onRangeSensorEvent(ArrayList<DataPoint> data,long timeStamp);
-	public void onLineSensorEvent(DataPoint left,DataPoint middle,DataPoint right,long timeStamp);
+	public void onLineSensorEvent(Integer left,Integer  middle,Integer  right,long timeStamp);
 }
