@@ -74,8 +74,10 @@ public class AckermanBot extends AbstractDrivingRobot {
 			radiusOfCurve = config.getWheelbase()/getSteeringAngle();
 			centralAngleRadians = archLen/radiusOfCurve;
 			System.out.println("Central angle of motion was: "+Math.toDegrees(centralAngleRadians) + " Radius of curve = "+radiusOfCurve);
-			deltLateral = -1*(radiusOfCurve*Math.sin(centralAngleRadians));
-			deltForward = radiusOfCurve-(radiusOfCurve*Math.cos(centralAngleRadians));
+			double y = radiusOfCurve*Math.sin(centralAngleRadians);
+			double x = radiusOfCurve*Math.cos(centralAngleRadians);
+			deltLateral =  -1*(radiusOfCurve-x);
+			deltForward =  y;
 		}else{
 			System.out.println("Steering angle of 0, moving forward");
 			deltLateral =  0;
@@ -109,8 +111,6 @@ public class AckermanBot extends AbstractDrivingRobot {
 
 	@Override
 	public void onPIDReset(int group, int currentValue) {
-		if(group==0){
-			currentDriveTicks=0;
-		}
+		currentDriveTicks=0;
 	}
 }

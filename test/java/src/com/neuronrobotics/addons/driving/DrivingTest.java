@@ -61,10 +61,10 @@ public class DrivingTest {
 		
 		double driveTime=5;
 		
-		ackerman.DriveArc(30, 45, driveTime);
+		ackerman.DriveArc(50, 45, driveTime);
 		ThreadUtil.wait((int) (driveTime*1000));
-		ackerman.DriveStraight(10, driveTime);
-		ThreadUtil.wait((int) (driveTime*1000));
+		//ackerman.DriveStraight(10, driveTime);
+		//ThreadUtil.wait((int) (driveTime*1000));
 		//System.exit(0);
 	}
 

@@ -75,7 +75,7 @@ public class VirtualRobot extends Thread{
 		//Models motor saturation
 		if(TPS >  maxTicksPerSecond){
 			//seconds = (double)setpoint/maxTicksPerSeconds;
-			throw new RuntimeException("Saturated PID on channel: "+chan+" Attempted Ticks Per Second: "+TPS+" set: "+setpoint+" sec: "+seconds);
+			throw new RuntimeException("Saturated PID on channel: "+chan+" Attempted Ticks Per Second: "+TPS+", when max is"+maxTicksPerSecond+" set: "+setpoint+" sec: "+seconds);
 		}
 		duration = (long) (seconds*1000);
 		startTime=System.currentTimeMillis();
