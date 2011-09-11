@@ -3,6 +3,7 @@ package com.neuronrobotics.addons.driving.virtual;
 import com.neuronrobotics.addons.driving.AckermanBot;
 import com.neuronrobotics.addons.driving.AckermanConfiguration;
 import com.neuronrobotics.sdk.pid.PIDEvent;
+import com.neuronrobotics.sdk.util.ThreadUtil;
 
 public class VirtualAckermanBot extends AckermanBot {
 	private VirtualWorld world;
@@ -16,14 +17,19 @@ public class VirtualAckermanBot extends AckermanBot {
 		drive.start();
 	}
 	@Override
-	protected void SetDriveDistance(double cm, double seconds){
-		drive.SetPIDSetPoint((int)(cm*config.getCmtoTicks()), seconds);
+	protected void SetDriveDistance(int ticks, double seconds){
+		drive.SetPIDSetPoint(ticks, seconds);
+	}
+	@Override
+	protected void ResetDrivePosition(){
+		drive.ZeroEncoder();
+		ThreadUtil.wait(200);
 	}
 
 	@Override
 	public void onPIDEvent(PIDEvent e)  {
 		super.onPIDEvent(e);
-		world.updateUI();
+		world.updateMap();
 	}
 	@Override
 	public void onPIDReset(int group, int currentValue){
@@ -34,6 +40,7 @@ public class VirtualAckermanBot extends AckermanBot {
 	}
 
 	public void setSteeringAngle(double steeringAngle) {
+		System.out.println("Setting steering angle to: " + Math.toDegrees(steeringAngle));
 		this.steeringAngle = steeringAngle;
 	}
 }

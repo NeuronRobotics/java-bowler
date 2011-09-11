@@ -24,7 +24,7 @@ public class DrivingRobotUI {
 	
 	
 	private int getCmToPixel(double cm){
-		return (int)(cm*(1/pixelToCm));
+		return (int)(cm*(pixelToCm));
 	}
 	
 	private int getRobotXToPixel(){
@@ -37,6 +37,7 @@ public class DrivingRobotUI {
 	}
 	
 	public void drawRobot(Graphics2D g) {
+		//System.out.println("Drawing robot on map");
 		g.setColor(Color.CYAN);
 		g.setStroke(new BasicStroke(3));
 		
@@ -49,7 +50,7 @@ public class DrivingRobotUI {
 		int y1 = (int) centery;
 		int orVe = robotDiameter/2+5;
 		
-		
+		//System.out.println("Robot center coordinante x="+x1+" y="+y1);
 		
 		int x2 = (int) (centerx+Math.cos(robot.getCurrentTheta()-(Math.PI/2))*orVe);
 		int y2 = (int) (centery-Math.sin(robot.getCurrentTheta()-(Math.PI/2))*orVe);

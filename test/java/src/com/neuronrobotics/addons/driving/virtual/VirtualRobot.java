@@ -81,6 +81,7 @@ public class VirtualRobot extends Thread{
 		startTime=System.currentTimeMillis();
 		startPoint = ticks;
 		setPoint=setpoint;
+		System.out.println("Setting Setpoint Ticks to: "+setPoint);
 	}
 	
 	private void setChan(int chan) {

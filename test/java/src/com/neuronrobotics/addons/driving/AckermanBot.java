@@ -9,6 +9,9 @@ import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 public class AckermanBot extends AbstractDrivingRobot {
 	private final AckermanConfiguration config = new AckermanConfiguration();
 	private int currentDriveTicks=0;
+	/**
+	 * steeringAngle in radians
+	 */
 	protected double steeringAngle=0;
 	ServoChannel steering;
 	PIDChannel drive;
@@ -30,20 +33,27 @@ public class AckermanBot extends AbstractDrivingRobot {
 	public double getSteeringAngle() {
 		return steeringAngle;
 	}
-	protected void SetDriveDistance(double cm, double seconds){
-		drive.SetPIDSetPoint((int)(cm*config.getCmtoTicks()), seconds);
+	protected void SetDriveDistance(int ticks, double seconds){
+		drive.SetPIDSetPoint(ticks, seconds);
+	}
+	protected void ResetDrivePosition(){
+		drive.ResetPIDChannel(0);
 	}
 	
 	@Override
 	public void DriveStraight(double cm, double seconds) {
+		ResetDrivePosition();
 		setSteeringAngle(0);
-		SetDriveDistance(cm,seconds);
+		SetDriveDistance((int) (cm*config.getCmtoTicks()),seconds);
 	}
 	@Override
 	public void DriveArc(double cmRadius, double degrees, double seconds) {
+		ResetDrivePosition();
 		double archlen = cmRadius*((2*Math.PI*degrees)/(360));
-		setSteeringAngle(degrees);
-		SetDriveDistance(archlen,seconds);
+		System.out.println("Running archLen="+archlen);
+		double steerAngle =((config.getWheelbase()/cmRadius));
+		setSteeringAngle(steerAngle);
+		SetDriveDistance((int) (archlen*config.getCmtoTicks()),seconds);
 	}
 
 	public double getMaxTicksPreSecond() {
@@ -52,10 +62,41 @@ public class AckermanBot extends AbstractDrivingRobot {
 
 	@Override
 	public void onPIDEvent(PIDEvent e) {
-		System.out.println("Ackerman drive event: "+e);
+		System.out.println("\n\n");
 		double differenceTicks = (e.getValue()-currentDriveTicks);
-		double halfBase=config.getWheelbase()/2;
-		//double archlen = cmRadius*(getCurrentTheta());
+		double archLen = differenceTicks/config.getCmtoTicks();
+		
+		double radiusOfCurve=0;
+		double centralAngleRadians=0;
+		double deltLateral=0;
+		double deltForward=0;
+		if(getSteeringAngle() !=0){
+			radiusOfCurve = config.getWheelbase()/getSteeringAngle();
+			centralAngleRadians = archLen/radiusOfCurve;
+			System.out.println("Central angle of motion was: "+Math.toDegrees(centralAngleRadians) + " Radius of curve = "+radiusOfCurve);
+			deltLateral = -1*(radiusOfCurve*Math.sin(centralAngleRadians));
+			deltForward = radiusOfCurve-(radiusOfCurve*Math.cos(centralAngleRadians));
+		}else{
+			System.out.println("Steering angle of 0, moving forward");
+			deltLateral =  0;
+			deltForward =  archLen;
+		}
+		
+		System.out.println("Relative motion delta Ticks="+differenceTicks+", forward="+deltForward+", lateral="+deltLateral);
+		
+		double x = getCurrentX();
+		double y = getCurrentY();
+		double o = getCurrentTheta();
+		
+		x+=deltForward*Math.cos(o);
+		y+=deltForward*Math.sin(o);
+		
+		x+=deltLateral*Math.sin(o);
+		y+=deltLateral*Math.cos(o);
+		
+		setCurrentX(x);
+		setCurrentY(y);
+		setCurrentTheta(o+centralAngleRadians);
 		
 		currentDriveTicks=e.getValue();
 	}

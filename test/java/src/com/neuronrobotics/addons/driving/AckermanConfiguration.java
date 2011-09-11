@@ -19,11 +19,6 @@ public class AckermanConfiguration {
 		// TODO Auto-generated method stub
 		return ticksToCm;
 	}
-	
-	public double getTickstoCm() {
-		// TODO Auto-generated method stub
-		return 1/ticksToCm;
-	}
 
 	public double getWheelbase() {
 		return wheelbase;
