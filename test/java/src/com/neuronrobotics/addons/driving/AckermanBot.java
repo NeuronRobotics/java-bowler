@@ -89,7 +89,7 @@ public class AckermanBot extends AbstractRobot {
 		
 		setCurrentX(loc[0]);
 		setCurrentY(loc[1]);
-		setCurrentTheta( getCurrentOrentation()+centralAngleRadians);
+		setCurrentOrentation( getCurrentOrentation()+centralAngleRadians);
 		
 		currentDriveTicks=e.getValue();
 		fireDriveEvent();

@@ -13,7 +13,7 @@ public abstract class AbstractRobot implements IPIDEventListener{
 	
 	private double currentX=0;
 	private double currentY=0;
-	private double currentTheta=Math.PI/2;
+	private double currentOrentation=Math.PI/2;
 	
 	/**
 	 * Driving kinematics should be implemented in here
@@ -73,21 +73,21 @@ public abstract class AbstractRobot implements IPIDEventListener{
 	 * 
 	 * @param currentTheta in radians
 	 */
-	public void setCurrentTheta(double currentTheta) {
+	public void setCurrentOrentation(double o) {
 		//System.out.println("Current orentation is: "+Math.toDegrees(currentTheta));
-		this.currentTheta = currentTheta;
+		this.currentOrentation = o;
 	}
 	/**
 	 * 
 	 * @return current orentation in radians
 	 */
 	public double getCurrentOrentation() {
-		return currentTheta;
+		return currentOrentation;
 	}
 	
 	public void fireDriveEvent(){
 		for(IRobotDriveEventListener l:dl){
-			l.onDriveEvent(currentX, currentY, currentTheta);
+			l.onDriveEvent(currentX, currentY, currentOrentation);
 		}
 	}
 	
