@@ -35,7 +35,7 @@ public class VirtualAckermanBot extends AckermanBot {
 	}
 	@Override
 	public void onPIDReset(int group, int currentValue){
-		System.out.println("##Virtual Robot Reset called");
+		//System.out.println("##Virtual Robot Reset called");
 		if(group==0){
 			drive.ZeroEncoder();
 			super.onPIDReset(group, currentValue);
@@ -43,7 +43,7 @@ public class VirtualAckermanBot extends AckermanBot {
 	}
 
 	public void setSteeringAngle(double steeringAngle) {
-		System.out.println("Setting steering angle to: " + Math.toDegrees(steeringAngle));
+		//System.out.println("Setting steering angle to: " + Math.toDegrees(steeringAngle));
 		this.steeringAngle = steeringAngle;
 	}
 	

@@ -92,7 +92,7 @@ public class VirtualRobot extends Thread{
 		startPoint = ticks;
 		
 		pause=false;
-		System.out.println("Setting Setpoint Ticks to: "+setPoint);
+		//System.out.println("Setting Setpoint Ticks to: "+setPoint);
 	}
 	
 	private void setChan(int chan) {

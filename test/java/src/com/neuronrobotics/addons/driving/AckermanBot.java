@@ -50,7 +50,7 @@ public class AckermanBot extends AbstractRobot {
 	public void DriveArc(double cmRadius, double degrees, double seconds) {
 		ResetDrivePosition();
 		double archlen = cmRadius*((2*Math.PI*degrees)/(360));
-		System.out.println("Running archLen="+archlen);
+		//System.out.println("Running archLen="+archlen);
 		double steerAngle =((config.getWheelbase()/cmRadius));
 		setSteeringAngle(steerAngle);
 		SetDriveDistance((int) (archlen*config.getCmtoTicks()),seconds);
