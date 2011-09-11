@@ -39,7 +39,7 @@ public class PIDChannel {
 	}
 	
 	public boolean ResetPIDChannel(int group) {
-		return getPid().ResetPIDChannel(index);
+		return getPid().ResetPIDChannel(index,0);
 	}
 
 	

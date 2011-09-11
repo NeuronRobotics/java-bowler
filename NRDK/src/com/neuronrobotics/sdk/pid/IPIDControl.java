@@ -1,6 +1,5 @@
 package com.neuronrobotics.sdk.pid;
 public interface IPIDControl {
-	public boolean ResetPIDChannel(int group);
 	public boolean ResetPIDChannel(int group,int valueToSetCurrentTo);
 	public boolean ConfigurePIDController(PIDConfiguration config);
 	public PIDConfiguration getPIDConfiguration(int group);
