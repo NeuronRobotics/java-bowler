@@ -62,7 +62,7 @@ public class AckermanBot extends AbstractDrivingRobot {
 
 	@Override
 	public void onPIDEvent(PIDEvent e) {
-		System.out.println("\n\nCurrent Ticks="+currentDriveTicks+e);
+		//System.out.println("\n\nCurrent Ticks="+currentDriveTicks+e);
 		double differenceTicks = (e.getValue()-currentDriveTicks);
 		double archLen = differenceTicks/config.getCmtoTicks();
 		
@@ -73,18 +73,18 @@ public class AckermanBot extends AbstractDrivingRobot {
 		if(getSteeringAngle() !=0){
 			radiusOfCurve = config.getWheelbase()/getSteeringAngle();
 			centralAngleRadians = archLen/radiusOfCurve;
-			System.out.println("Central angle of motion was: "+Math.toDegrees(centralAngleRadians) + " Radius of curve = "+radiusOfCurve);
+			//System.out.println("Central angle of motion was: "+Math.toDegrees(centralAngleRadians) + " Radius of curve = "+radiusOfCurve);
 			double y = radiusOfCurve*Math.sin(centralAngleRadians);
 			double x = radiusOfCurve*Math.cos(centralAngleRadians);
 			deltLateral =  -1*(radiusOfCurve-x);
 			deltForward =  y;
 		}else{
-			System.out.println("Steering angle of 0, moving forward");
+			//System.out.println("Steering angle of 0, moving forward");
 			deltLateral =  0;
 			deltForward =  archLen;
 		}
 		
-		System.out.println("Relative motion delta Ticks="+differenceTicks+", forward="+deltForward+", lateral="+deltLateral);
+		//System.out.println("Relative motion delta Ticks="+differenceTicks+", forward="+deltForward+", lateral="+deltLateral);
 		
 		double x = getCurrentX();
 		double y = getCurrentY();
@@ -101,6 +101,7 @@ public class AckermanBot extends AbstractDrivingRobot {
 		setCurrentTheta(o+centralAngleRadians);
 		
 		currentDriveTicks=e.getValue();
+		fireDriveEvent();
 	}
 
 	@Override

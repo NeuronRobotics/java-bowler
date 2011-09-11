@@ -16,7 +16,7 @@ import javax.swing.JPanel;
 
 import com.neuronrobotics.addons.driving.AbstractDrivingRobot;
 
-public class VirtualWorld extends JPanel implements MouseListener,MouseMotionListener{
+public class VirtualWorld extends JPanel{
 	/**
 	 * long 
 	 */
@@ -46,8 +46,8 @@ public class VirtualWorld extends JPanel implements MouseListener,MouseMotionLis
         frame.setSize((int)width+200,(int)hight+200);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-        frame.addMouseListener(this);
-        frame.addMouseMotionListener(this);
+        //frame.addMouseListener(this);
+        //frame.addMouseMotionListener(this);
         
         removeAll();
         updateMap();
@@ -115,54 +115,13 @@ public class VirtualWorld extends JPanel implements MouseListener,MouseMotionLis
 		}
 		
 		lab.setIcon(new ImageIcon(display ) );
+		frame.invalidate();
 	}
 	
 	public void addRobot(AbstractDrivingRobot robot) {
 		if(!bots.contains(robot))
 			bots.add(new DrivingRobotUI(robot,botStartX ,botStartY));
 		updateMap();
-	}
-
-	@Override
-	public void mouseDragged(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseMoved(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseClicked(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseExited(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

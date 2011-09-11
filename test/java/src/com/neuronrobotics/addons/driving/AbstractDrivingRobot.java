@@ -1,8 +1,11 @@
 package com.neuronrobotics.addons.driving;
 
+import java.util.ArrayList;
+
 import com.neuronrobotics.sdk.pid.IPIDEventListener;
 
 public abstract class AbstractDrivingRobot implements IPIDEventListener{
+	private ArrayList<IRobotDriveEventListener> dl = new  ArrayList<IRobotDriveEventListener> ();
 	protected IRangeSensor range=null;
 	protected ILineSensor line=null;
 	
@@ -37,14 +40,14 @@ public abstract class AbstractDrivingRobot implements IPIDEventListener{
 	
 	
 	public void setCurrentX(double currentX) {
-		System.out.println("Current X is: "+currentX);
+		//System.out.println("Current X is: "+currentX);
 		this.currentX = currentX;
 	}
 	public double getCurrentX() {
 		return currentX;
 	}
 	public void setCurrentY(double currentY) {
-		System.out.println("Current Y is: "+currentY);
+		//System.out.println("Current Y is: "+currentY);
 		this.currentY = currentY;
 	}
 	public double getCurrentY() {
@@ -55,7 +58,7 @@ public abstract class AbstractDrivingRobot implements IPIDEventListener{
 	 * @param currentTheta in radians
 	 */
 	public void setCurrentTheta(double currentTheta) {
-		System.out.println("Current orentation is: "+Math.toDegrees(currentTheta));
+		//System.out.println("Current orentation is: "+Math.toDegrees(currentTheta));
 		this.currentTheta = currentTheta;
 	}
 	/**
@@ -64,6 +67,17 @@ public abstract class AbstractDrivingRobot implements IPIDEventListener{
 	 */
 	public double getCurrentTheta() {
 		return currentTheta;
+	}
+	
+	public void fireDriveEvent(){
+		for(IRobotDriveEventListener l:dl){
+			l.onDriveEvent(currentX, currentY, currentTheta);
+		}
+	}
+	
+	public void addIRobotDriveEventListener(IRobotDriveEventListener l){
+		if(!dl.contains(l))
+			dl.add(l);
 	}
 
 }
