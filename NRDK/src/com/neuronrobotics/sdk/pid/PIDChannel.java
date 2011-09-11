@@ -38,12 +38,12 @@ public class PIDChannel {
 		return getPid().getPIDConfiguration(index);
 	}
 	
-	public boolean ResetPIDChannel(int group) {
+	public boolean ResetPIDChannel() {
 		return getPid().ResetPIDChannel(index,0);
 	}
 
 	
-	public boolean ResetPIDChannel(int group, int valueToSetCurrentTo) {
+	public boolean ResetPIDChannel( int valueToSetCurrentTo) {
 		return getPid().ResetPIDChannel(index,valueToSetCurrentTo);
 	}
 
