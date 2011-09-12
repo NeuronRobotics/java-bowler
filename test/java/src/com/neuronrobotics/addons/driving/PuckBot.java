@@ -4,7 +4,7 @@ import com.neuronrobotics.sdk.pid.PIDChannel;
 import com.neuronrobotics.sdk.pid.PIDEvent;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 
-public class PuckBot extends AbstractRobot{
+public class PuckBot extends AbstractRobotDrive{
 	protected final PuckBotConfiguration config = new PuckBotConfiguration();
 	protected PIDChannel left, right;
 	public PuckBot(){

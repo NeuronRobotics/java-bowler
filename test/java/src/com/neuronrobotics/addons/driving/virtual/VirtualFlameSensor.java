@@ -1,10 +1,10 @@
 package com.neuronrobotics.addons.driving.virtual;
 
-import com.neuronrobotics.addons.driving.AbstractRobot;
+import com.neuronrobotics.addons.driving.AbstractRobotDrive;
 
 public class VirtualFlameSensor extends VirtualRangeSensor {
 
-	public VirtualFlameSensor(AbstractRobot r, VirtualWorld w) {
+	public VirtualFlameSensor(AbstractRobotDrive r, VirtualWorld w) {
 		super(r, w);
 		// TODO Auto-generated constructor stub
 	}

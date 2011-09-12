@@ -14,7 +14,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import com.neuronrobotics.addons.driving.AbstractRobot;
+import com.neuronrobotics.addons.driving.AbstractRobotDrive;
 
 public class VirtualWorld extends JPanel{
 	/**
@@ -137,13 +137,13 @@ public class VirtualWorld extends JPanel{
 		frame.repaint();
 	}
 	
-	public void addRobot(AbstractRobot robot,int botStartX ,int botStartY) {
+	public void addRobot(AbstractRobotDrive robot,int botStartX ,int botStartY) {
 		if(!bots.contains(robot))
 			bots.add(new DrivingRobotUI(this,robot,botStartX ,botStartY));
 		updateMap();
 	}
 	
-	public synchronized void addSensorDisplayDot(AbstractRobot platform, double deltLateral, double deltForward, Color c){
+	public synchronized void addSensorDisplayDot(AbstractRobotDrive platform, double deltLateral, double deltForward, Color c){
 		for( int i=0;i<bots.size();i++){
 			DrivingRobotUI b = bots.get(i);
 			if(b.getRobot()==platform){
@@ -152,7 +152,7 @@ public class VirtualWorld extends JPanel{
 		}
 	}
 
-	public ObsticleType getObsticle(AbstractRobot platform, double deltLateral, double deltForward) {
+	public ObsticleType getObsticle(AbstractRobotDrive platform, double deltLateral, double deltForward) {
 		for( int i=0;i<bots.size();i++){
 			DrivingRobotUI b = bots.get(i);
 			if(b.getRobot()==platform){
@@ -169,7 +169,7 @@ public class VirtualWorld extends JPanel{
 	 * @param pixelMaxRange in pixels
 	 * @return distance in mm
 	 */
-	public double getRangeData(AbstractRobot robot, double direction,int pixelMaxRange, ObsticleType type) {
+	public double getRangeData(AbstractRobotDrive robot, double direction,int pixelMaxRange, ObsticleType type) {
 		for( int j=0;j<bots.size();j++){
 			DrivingRobotUI b = bots.get(j);
 			if(b.getRobot()==robot){

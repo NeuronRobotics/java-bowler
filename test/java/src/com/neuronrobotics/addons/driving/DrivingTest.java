@@ -27,7 +27,7 @@ public class DrivingTest {
 	public static void main(String[] args) {
 		boolean virtual = true;
 		//virtual = false;
-		AbstractRobot mainRobot;
+		AbstractRobotDrive mainRobot;
 		AbstractSensor line=null;
 		AbstractSensor range=null;
 		AbstractSensor flame=null;

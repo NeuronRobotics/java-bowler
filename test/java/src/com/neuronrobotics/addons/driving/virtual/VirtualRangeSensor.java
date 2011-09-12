@@ -2,14 +2,14 @@ package com.neuronrobotics.addons.driving.virtual;
 
 import java.util.ArrayList;
 
-import com.neuronrobotics.addons.driving.AbstractRobot;
+import com.neuronrobotics.addons.driving.AbstractRobotDrive;
 import com.neuronrobotics.addons.driving.AbstractRangeSensor;
 import com.neuronrobotics.addons.driving.DataPoint;
 
 public class VirtualRangeSensor extends AbstractRangeSensor {
 	
 	private VirtualWorld world;
-	public VirtualRangeSensor(AbstractRobot r,VirtualWorld w) {
+	public VirtualRangeSensor(AbstractRobotDrive r,VirtualWorld w) {
 		super(r);
 		world=w;
 	}

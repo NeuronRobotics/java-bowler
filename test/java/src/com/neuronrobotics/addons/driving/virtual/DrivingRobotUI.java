@@ -5,21 +5,21 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
-import com.neuronrobotics.addons.driving.AbstractRobot;
+import com.neuronrobotics.addons.driving.AbstractRobotDrive;
 
 public class DrivingRobotUI {
 	//These represent where the robots base frame is in pixel-space. This is passed in at instantiation.
 	private double startx;
 	private double starty;
 
-	private AbstractRobot robot;
+	private AbstractRobotDrive robot;
 	
 	private int robotDiameter = 60;
 
 	private VirtualWorld world;
 	private ArrayList<SensorDot> dots= new ArrayList<SensorDot> ();
 	int [] range = null;
-	public DrivingRobotUI(VirtualWorld w ,AbstractRobot robot, double botstartx, double botstarty) {
+	public DrivingRobotUI(VirtualWorld w ,AbstractRobotDrive robot, double botstartx, double botstarty) {
 		setRobot(robot);
 		startx=botstartx;
 		starty=botstarty;
@@ -73,11 +73,11 @@ public class DrivingRobotUI {
 	}
 
 
-	public void setRobot(AbstractRobot robot) {
+	public void setRobot(AbstractRobotDrive robot) {
 		this.robot = robot;
 	}
 
-	public AbstractRobot getRobot() {
+	public AbstractRobotDrive getRobot() {
 		return robot;
 	}
 

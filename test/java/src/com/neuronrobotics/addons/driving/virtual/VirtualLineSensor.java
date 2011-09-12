@@ -2,7 +2,7 @@ package com.neuronrobotics.addons.driving.virtual;
 
 import java.awt.Color;
 
-import com.neuronrobotics.addons.driving.AbstractRobot;
+import com.neuronrobotics.addons.driving.AbstractRobotDrive;
 import com.neuronrobotics.addons.driving.AbstractLineSensor;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
@@ -14,7 +14,7 @@ public class VirtualLineSensor extends AbstractLineSensor {
 	ObsticleType right= ObsticleType.NONE;
 	double fOffset = 6;
 	double lOffset = 3;
-	public VirtualLineSensor(AbstractRobot r,VirtualWorld w) {
+	public VirtualLineSensor(AbstractRobotDrive r,VirtualWorld w) {
 		super(r);
 		setWorld(w);
 		poller.start();
