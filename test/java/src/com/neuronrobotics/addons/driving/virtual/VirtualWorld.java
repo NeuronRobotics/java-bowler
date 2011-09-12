@@ -167,7 +167,7 @@ public class VirtualWorld extends JPanel{
 	 * @param robot 
 	 * @param direction in radians
 	 * @param pixelMaxRange in pixels
-	 * @return
+	 * @return distance in cm
 	 */
 	public double getRangeData(AbstractRobot robot, double direction,int pixelMaxRange) {
 		for( int j=0;j<bots.size();j++){
@@ -175,29 +175,17 @@ public class VirtualWorld extends JPanel{
 			if(b.getRobot()==robot){
 				int x = b.getRobotXToPixel();
 				int y = b.getRobotYToPixel();
-				int i=15;
+				int i=0;
 				double o =robot.getCurrentOrentation()+direction;
-				System.out.println("Getting range at angle: "+Math.toDegrees(o));
+				//System.out.println("Getting range at angle: "+Math.toDegrees(o));
 				while(x>0&&x<frame.getWidth()&&y>0&&y<frame.getHeight() && i<pixelMaxRange){
 					i+=1;
 					x += (i*Math.sin(o));
 					y += (i*Math.cos(o));
 					if(getObsticle(x,y)==ObsticleType.WALL){
 						b.setRangeVector(x,y);
-						return i;
+						return getPixelToCm(i);
 					}
-					
-					
-//					//6 pixel vector steps
-//					x+=6*Math.cos(o);
-//					y+=6*Math.sin(o);
-//					if(getObsticle(x,y)==ObsticleType.WALL){
-//						double deltX = b.getRobotXToPixel()-x;
-//						double deltY = b.getRobotYToPixel()-y;
-//						r=getPixelToCm( (int) Math.sqrt(Math.pow(deltX, 2)+Math.pow(deltY, 2)));
-//						b.setRangeVector(x,y);
-//						return r;
-//					}
 				}
 				
 			}
