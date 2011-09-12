@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import com.neuronrobotics.addons.driving.virtual.ObsticleType;
 import com.neuronrobotics.addons.driving.virtual.VirtualAckermanBot;
+import com.neuronrobotics.addons.driving.virtual.VirtualFlameSensor;
 import com.neuronrobotics.addons.driving.virtual.VirtualLineSensor;
 import com.neuronrobotics.addons.driving.virtual.VirtualPuckBot;
 import com.neuronrobotics.addons.driving.virtual.VirtualRangeSensor;
@@ -29,6 +30,7 @@ public class DrivingTest {
 		AbstractRobot mainRobot;
 		AbstractSensor line=null;
 		AbstractSensor range=null;
+		AbstractSensor flame=null;
 		if(virtual) {
 			
 			VirtualWorld w = new VirtualWorld();
@@ -36,6 +38,7 @@ public class DrivingTest {
 			VirtualAckermanBot a = new VirtualAckermanBot(w); 
 			line = new VirtualLineSensor(a,w);
 			range = new VirtualRangeSensor(a,w);
+			flame = new VirtualFlameSensor(a, w);
 			
 			VirtualAckermanBot b = new VirtualAckermanBot(w,200 ,300);
 			mainRobot = a;
@@ -74,6 +77,8 @@ public class DrivingTest {
 				System.out.println("Drive Event x="+x+" y="+y+" orentation="+Math.toDegrees(orentation));
 			}
 		});
+		
+		
 		line.addSensorListener(new ISensorListener() {
 			public void onRangeSensorEvent(ArrayList<DataPoint> data, long timeStamp) {}
 			@Override
@@ -81,7 +86,6 @@ public class DrivingTest {
 				System.out.println("Line Sensor Event left="+left+" middle="+middle+" right="+right);
 			}
 		});
-		
 		range.addSensorListener(new ISensorListener() {
 			@Override
 			public void onRangeSensorEvent(ArrayList<DataPoint> data, long timeStamp) {
@@ -89,6 +93,14 @@ public class DrivingTest {
 			}
 			public void onLineSensorEvent(Integer left, Integer middle, Integer right,long timeStamp) {}
 		});
+		flame.addSensorListener(new ISensorListener() {
+			@Override
+			public void onRangeSensorEvent(ArrayList<DataPoint> data, long timeStamp) {
+				System.out.println("Flame sensor "+data);
+			}
+			public void onLineSensorEvent(Integer left, Integer middle, Integer right,long timeStamp) {}
+		});
+		
 		
 		mainRobot.DriveArc(20, 90, driveTime);
 		ThreadUtil.wait((int) (driveTime*1000));
