@@ -13,11 +13,11 @@ public class LineSensor extends AbstractSensor implements IAnalogInputListener {
 		this.left=left;
 		this.right=right;
 		this.middle=middle;
-		if(left != null){
+		if (left != null){
 			left.configAdvancedAsyncNotEqual(10);
 			left.addAnalogInputListener(this);
 		}
-		if(middle != null){
+		if (middle != null){
 			middle.configAdvancedAsyncNotEqual(10);
 			middle.addAnalogInputListener(this);
 		}
