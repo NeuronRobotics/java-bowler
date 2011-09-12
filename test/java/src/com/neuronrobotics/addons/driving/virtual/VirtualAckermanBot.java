@@ -8,12 +8,12 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
 public class VirtualAckermanBot extends AckermanBot {
 	private VirtualWorld world;
 	private final AckermanConfiguration config = new AckermanConfiguration();
-	VirtualRobot drive;
+	VirtualPIDChannel drive;
 
 	public VirtualAckermanBot(VirtualWorld w){
 		world=w;
 		world.addRobot(this);
-		drive = new VirtualRobot(0,this,config.getMaxTicksPerSeconds());
+		drive = new VirtualPIDChannel(0,this,config.getMaxTicksPerSeconds());
 		drive.start();
 		setLineSensor(new VirtualLineSensor(this,w));
 		setRangeSensor(new VirtualRangeSensor(this,w));
