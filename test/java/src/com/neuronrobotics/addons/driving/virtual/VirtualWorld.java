@@ -42,8 +42,8 @@ public class VirtualWorld extends JPanel{
 	public double getPixelToCm(int pix){
 		return ((double)pix)/(pixelToCm);
 	}
-	public int getCmToPixel(double cm){
-		return (int)(cm*(pixelToCm));
+	public double getCmToPixel(double cm){
+		return (cm*(pixelToCm));
 	}
 	private void initGui(){
 		frame = new JFrame("Virtual World");
@@ -167,7 +167,7 @@ public class VirtualWorld extends JPanel{
 	 * @param robot 
 	 * @param direction in radians
 	 * @param pixelMaxRange in pixels
-	 * @return distance in cm
+	 * @return distance in mm
 	 */
 	public double getRangeData(AbstractRobot robot, double direction,int pixelMaxRange) {
 		for( int j=0;j<bots.size();j++){
@@ -175,22 +175,24 @@ public class VirtualWorld extends JPanel{
 			if(b.getRobot()==robot){
 				int x = b.getRobotXToPixel();
 				int y = b.getRobotYToPixel();
-				int i=0;
+				double i=15;
 				double o =robot.getCurrentOrentation()+direction;
 				//System.out.println("Getting range at angle: "+Math.toDegrees(o));
 				while(x>0&&x<frame.getWidth()&&y>0&&y<frame.getHeight() && i<pixelMaxRange){
-					i+=1;
-					x += (i*Math.sin(o));
-					y += (i*Math.cos(o));
+					i+=10;
+					x += (10*Math.sin(o));
+					y += (10*Math.cos(o));
+					//System.out.println("Getting value at x="+x+" y="+y+ " orentation="+Math.toDegrees(o));
 					if(getObsticle(x,y)==ObsticleType.WALL){
 						b.setRangeVector(x,y);
-						return getPixelToCm(i);
+						//System.out.println("Range value="+i);
+						return getPixelToCm((int) (i));
 					}
 				}
 				
 			}
 		}
-		return cmMaxRange;
+		return pixelMaxRange;
 	}
 
 }

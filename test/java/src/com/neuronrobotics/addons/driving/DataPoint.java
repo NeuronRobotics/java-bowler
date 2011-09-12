@@ -3,16 +3,16 @@ package com.neuronrobotics.addons.driving;
 import java.text.DecimalFormat;
 
 public class DataPoint {
-	private int range;
+	private double range;
 	private double angle;
-	public DataPoint(int range, double angle) {
+	public DataPoint(double range, double angle) {
 		this.setRange(range);
 		this.setAngle(angle);
 	}
-	private void setRange(int range) {
+	private void setRange(double range) {
 		this.range = range;
 	}
-	public int getRange() {
+	public double getRange() {
 		return range;
 	}
 	private void setAngle(double angle) {

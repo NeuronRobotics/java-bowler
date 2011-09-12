@@ -36,7 +36,7 @@ public class VirtualRangeSensor extends AbstractRangeSensor {
 			double distance = world.getRangeData(getRobot(),Math.toRadians(current), 5000000);
 			DataPoint p = new DataPoint((int) (distance), current);
 			data.add(p);
-			//System.out.println("Distance "+p);
+			System.out.println("Distance "+p);
 			current+=increment;
 			world.updateMap();
 		}
