@@ -31,9 +31,6 @@ public class VirtualAckermanBot extends AckermanBot {
 		});
 		
 		setPIDChanel(controller.getPIDChannel(0));
-		
-		setLineSensor(new VirtualLineSensor(this,w));
-		setRangeSensor(new VirtualRangeSensor(this,w));
 	}
 	
 	@Override

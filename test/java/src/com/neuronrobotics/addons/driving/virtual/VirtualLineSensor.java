@@ -43,9 +43,14 @@ public class VirtualLineSensor extends AbstractLineSensor {
 					left=tmpL;
 					middle=tmpC;
 					right=tmpR;
-					getrobot().fireLineSensorEvent(left==ObsticleType.NONE?0:1024, middle==ObsticleType.NONE?0:1024, right==ObsticleType.NONE?0:1024, System.currentTimeMillis());
+					fireLineSensorEvent(left==ObsticleType.NONE?0:1024, middle==ObsticleType.NONE?0:1024, right==ObsticleType.NONE?0:1024, System.currentTimeMillis());
 				}
 			}
 		}
+	}
+
+	@Override
+	public void StartSweep(double start, double stop, int increment) {
+		// do nothing
 	}
 }

@@ -5,7 +5,9 @@ import java.util.ArrayList;
 
 import com.neuronrobotics.addons.driving.virtual.ObsticleType;
 import com.neuronrobotics.addons.driving.virtual.VirtualAckermanBot;
+import com.neuronrobotics.addons.driving.virtual.VirtualLineSensor;
 import com.neuronrobotics.addons.driving.virtual.VirtualPuckBot;
+import com.neuronrobotics.addons.driving.virtual.VirtualRangeSensor;
 import com.neuronrobotics.addons.driving.virtual.VirtualWorld;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
@@ -25,10 +27,16 @@ public class DrivingTest {
 		boolean virtual = true;
 		//virtual = false;
 		AbstractRobot mainRobot;
+		AbstractSensor line=null;
+		AbstractSensor range=null;
 		if(virtual) {
 			
 			VirtualWorld w = new VirtualWorld();
-			VirtualAckermanBot a = new VirtualAckermanBot(w);
+			
+			VirtualAckermanBot a = new VirtualAckermanBot(w); 
+			line = new VirtualLineSensor(a,w);
+			range = new VirtualRangeSensor(a,w);
+			
 			VirtualAckermanBot b = new VirtualAckermanBot(w,200 ,300);
 			mainRobot = a;
 		}else {
@@ -53,9 +61,7 @@ public class DrivingTest {
 			
 			PIDChannel drive = dyio.getPIDChannel(0);
 			AckermanBot a = new AckermanBot(new ServoChannel(dyio.getChannel(10)), drive );
-			
-			a.setLineSensor(null);
-			a.setRangeSensor(null);
+
 			
 			mainRobot = a;
 		}
@@ -68,24 +74,28 @@ public class DrivingTest {
 				System.out.println("Drive Event x="+x+" y="+y+" orentation="+Math.toDegrees(orentation));
 			}
 		});
-		mainRobot.addSensorListener(new ISensorListener() {
-			
-			@Override
-			public void onRangeSensorEvent(ArrayList<DataPoint> data, long timeStamp) {
-				System.out.println("Range Sensor Event "+data);
-			}
-
+		line.addSensorListener(new ISensorListener() {
+			public void onRangeSensorEvent(ArrayList<DataPoint> data, long timeStamp) {}
 			@Override
 			public void onLineSensorEvent(Integer left, Integer middle,Integer right, long timeStamp) {
 				System.out.println("Line Sensor Event left="+left+" middle="+middle+" right="+right);
 			}
 		});
+		
+		range.addSensorListener(new ISensorListener() {
+			@Override
+			public void onRangeSensorEvent(ArrayList<DataPoint> data, long timeStamp) {
+				System.out.println("Range Sensor Event "+data);
+			}
+			public void onLineSensorEvent(Integer left, Integer middle, Integer right,long timeStamp) {}
+		});
+		
 		mainRobot.DriveArc(20, 90, driveTime);
 		ThreadUtil.wait((int) (driveTime*1000));
 
 		mainRobot.DriveStraight(10, driveTime);
 		ThreadUtil.wait((int) (driveTime*1000));
-		mainRobot.StartSweep(-90, 90, 10);
+		range.StartSweep(-90, 90, 10);
 		//System.exit(0);
 	}
 

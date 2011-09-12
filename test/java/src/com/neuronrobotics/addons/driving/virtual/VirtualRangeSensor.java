@@ -15,9 +15,8 @@ public class VirtualRangeSensor extends AbstractRangeSensor {
 	}
 
 	@Override
-	public boolean StartSweep(float startDeg, float endDeg, int degPerStep) {
+	public void StartSweep(double startDeg, double endDeg, int degPerStep) {
 		new sweepThread(startDeg,endDeg,degPerStep).start();
-		return true;
 	}
 	protected ObsticleType getObsticleType(){
 		return ObsticleType.WALL;
@@ -52,10 +51,12 @@ public class VirtualRangeSensor extends AbstractRangeSensor {
 			}
 			current=stop;
 			update();
-			getRobot().fireRangeSensorEvent( data,  System.currentTimeMillis());
+			fireRangeSensorEvent( data,  System.currentTimeMillis());
 			//update GUI
 			//gui.getRangeData(current);
 		}
 
 	}
+
+
 }

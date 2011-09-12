@@ -32,8 +32,6 @@ public class VirtualPuckBot extends PuckBot{
 		
 		setPIDChanels(controller.getPIDChannel(0),controller.getPIDChannel(1));
 		
-		setLineSensor(new VirtualLineSensor(this,w));
-		setRangeSensor(new VirtualRangeSensor(this,w));
 	}
 
 

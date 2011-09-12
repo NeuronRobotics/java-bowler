@@ -1,6 +1,6 @@
 package com.neuronrobotics.addons.driving;
 
-public abstract class  AbstractLineSensor {
+public abstract class  AbstractLineSensor extends AbstractSensor{
 	private AbstractRobot platform = null;	
 	public AbstractLineSensor(AbstractRobot r){
 		setPlatform(r);
