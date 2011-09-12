@@ -20,15 +20,22 @@ public class AckermanBot extends AbstractRobot {
 	}
 	
 	public AckermanBot(ServoChannel s,PIDChannel d) {
-		drive=d;
+		setPIRChanel(d);
 		steering=s;
+	}
+	
+	protected void setPIRChanel(PIDChannel d){
+		drive=d;
 		drive.addPIDEventListener(this);
-		
+	}
+	
+	public void setSteeringHardwareAngle(double s) {
+		steering.SetPosition((int) (steeringAngle*config.getSteerAngleToServo()));
 	}
 	
 	public void setSteeringAngle(double s) {
 		steeringAngle = s;
-		steering.SetPosition((int) (steeringAngle*config.getSteerAngleToServo()));
+		setSteeringHardwareAngle(s);
 	}
 	public double getSteeringAngle() {
 		return steeringAngle;
