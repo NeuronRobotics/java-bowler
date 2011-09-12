@@ -20,26 +20,26 @@ import com.neuronrobotics.sdk.pid.PIDEvent;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 
 public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDControl {
-	private ArrayList<PIDChannel> channels = new ArrayList<PIDChannel>();
-	private long [] lastPacketTime = null;
+	protected ArrayList<PIDChannel> channels = new ArrayList<PIDChannel>();
+	protected long [] lastPacketTime = null;
 	public GenericPIDDevice(BowlerAbstractConnection connection) {
 		setAddress(new MACAddress(MACAddress.BROADCAST));
 		setConnection(connection);
 	}
 
 	public GenericPIDDevice() {
+		addPIDEventListener(new IPIDEventListener() {
+			public void onPIDReset(int group, int currentValue) {}
+			public void onPIDLimitEvent(PIDLimitEvent e) {}
+			public void onPIDEvent(PIDEvent e) {
+				channels.get(e.getGroup()).setCurrentCachedPosition(e.getValue());
+			}
+		});
 	}
 	@Override
 	public boolean connect(){
 		if(super.connect()){
 			GetAllPIDPosition();
-			addPIDEventListener(new IPIDEventListener() {
-				public void onPIDReset(int group, int currentValue) {}
-				public void onPIDLimitEvent(PIDLimitEvent e) {}
-				public void onPIDEvent(PIDEvent e) {
-					channels.get(e.getGroup()).setCurrentCachedPosition(e.getValue());
-				}
-			});
 			return true;
 		}
 		return false;
@@ -48,17 +48,10 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 
 	}
 
-	
 	public void onAsyncResponse(BowlerDatagram data) {
 		if(data.getRPC().contains("_pid")){
 			PIDEvent e =new PIDEvent(data);
-			if(lastPacketTime != null){
-				if(lastPacketTime[e.getGroup()]>e.getTimeStamp()){
-					return;
-				}else{
-					lastPacketTime[e.getGroup()]=e.getTimeStamp();
-				}
-			}
+	
 			firePIDEvent(e);
 		}
 		if(data.getRPC().contains("pidl")){
@@ -173,6 +166,13 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 		}
 	}
 	public void firePIDEvent(PIDEvent e){
+		if(lastPacketTime != null){
+			if(lastPacketTime[e.getGroup()]>e.getTimeStamp()){
+				return;
+			}else{
+				lastPacketTime[e.getGroup()]=e.getTimeStamp();
+			}
+		}
 		SetCachedPosition(e.getGroup(), e.getValue());
 		synchronized(PIDEventListeners){
 			for(IPIDEventListener l: PIDEventListeners)
