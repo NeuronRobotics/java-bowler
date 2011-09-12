@@ -11,8 +11,10 @@ import com.neuronrobotics.addons.driving.virtual.VirtualPuckBot;
 import com.neuronrobotics.addons.driving.virtual.VirtualRangeSensor;
 import com.neuronrobotics.addons.driving.virtual.VirtualWorld;
 import com.neuronrobotics.sdk.dyio.DyIO;
+import com.neuronrobotics.sdk.dyio.DyIOChannel;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.dyio.dypid.DyPIDConfiguration;
+import com.neuronrobotics.sdk.dyio.peripherals.AnalogInputChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 import com.neuronrobotics.sdk.pid.PIDChannel;
 import com.neuronrobotics.sdk.pid.PIDConfiguration;
@@ -64,7 +66,16 @@ public class DrivingTest {
 			
 			PIDChannel drive = dyio.getPIDChannel(0);
 			AckermanBot a = new AckermanBot(new ServoChannel(dyio.getChannel(10)), drive );
-
+			
+			line = new LineSensor(new AnalogInputChannel(dyio.getChannel(12)),
+																		 null,
+								  new AnalogInputChannel(dyio.getChannel(13)));
+			ServoChannel sweeper = new ServoChannel(dyio.getChannel(9));
+			range = new LinearRangeSensor(	sweeper,
+											new AnalogInputChannel(dyio.getChannel(14)));
+			//This flame sensor uses the same servo as the rangefinder
+			flame = new LinearRangeSensor(	sweeper,
+											new AnalogInputChannel(dyio.getChannel(15)));
 			
 			mainRobot = a;
 		}
