@@ -169,7 +169,7 @@ public class VirtualWorld extends JPanel{
 	 * @param pixelMaxRange in pixels
 	 * @return distance in mm
 	 */
-	public double getRangeData(AbstractRobot robot, double direction,int pixelMaxRange) {
+	public double getRangeData(AbstractRobot robot, double direction,int pixelMaxRange, ObsticleType type) {
 		for( int j=0;j<bots.size();j++){
 			DrivingRobotUI b = bots.get(j);
 			if(b.getRobot()==robot){
@@ -183,10 +183,10 @@ public class VirtualWorld extends JPanel{
 					x += (10*Math.sin(o));
 					y += (10*Math.cos(o));
 					//System.out.println("Getting value at x="+x+" y="+y+ " orentation="+Math.toDegrees(o));
-					if(getObsticle(x,y)==ObsticleType.WALL){
+					if(getObsticle(x,y)==type){
 						b.setRangeVector(x,y);
-						//System.out.println("Range value="+i);
-						return getPixelToCm((int) (i));
+
+						return getPixelToCm((int) (i))*100;
 					}
 				}
 				

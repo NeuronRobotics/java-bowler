@@ -24,13 +24,13 @@ public class DrivingTest {
 	public static void main(String[] args) {
 		boolean virtual = true;
 		//virtual = false;
-		AbstractRobot ackerman;
+		AbstractRobot mainRobot;
 		if(virtual) {
 			
 			VirtualWorld w = new VirtualWorld();
 			VirtualAckermanBot a = new VirtualAckermanBot(w);
 			VirtualAckermanBot b = new VirtualAckermanBot(w,200 ,300);
-			ackerman = a;
+			mainRobot = a;
 		}else {
 			DyIO dyio=new DyIO();
 			if (!ConnectionDialog.getBowlerDevice(dyio)){
@@ -57,18 +57,18 @@ public class DrivingTest {
 			a.setLineSensor(null);
 			a.setRangeSensor(null);
 			
-			ackerman = a;
+			mainRobot = a;
 		}
 		
 		double driveTime=5;
-//		ackerman.addIRobotDriveEventListener(new IRobotDriveEventListener() {
-//			
-//			@Override
-//			public void onDriveEvent(double x, double y, double orentation) {
-//				System.out.println("Drive Event x="+x+" y="+y+" orentation="+Math.toDegrees(orentation));
-//			}
-//		});
-		ackerman.addSensorListener(new ISensorListener() {
+		mainRobot.addIRobotDriveEventListener(new IRobotDriveEventListener() {
+			
+			@Override
+			public void onDriveEvent(double x, double y, double orentation) {
+				System.out.println("Drive Event x="+x+" y="+y+" orentation="+Math.toDegrees(orentation));
+			}
+		});
+		mainRobot.addSensorListener(new ISensorListener() {
 			
 			@Override
 			public void onRangeSensorEvent(ArrayList<DataPoint> data, long timeStamp) {
@@ -80,12 +80,12 @@ public class DrivingTest {
 				System.out.println("Line Sensor Event left="+left+" middle="+middle+" right="+right);
 			}
 		});
-//		ackerman.DriveArc(20, 90, driveTime);
-//		ThreadUtil.wait((int) (driveTime*1000));
-//
-//		ackerman.DriveStraight(10, driveTime);
-//		ThreadUtil.wait((int) (driveTime*1000));
-		ackerman.StartSweep(-90, 90, 10);
+		mainRobot.DriveArc(20, 90, driveTime);
+		ThreadUtil.wait((int) (driveTime*1000));
+
+		mainRobot.DriveStraight(10, driveTime);
+		ThreadUtil.wait((int) (driveTime*1000));
+		mainRobot.StartSweep(-90, 90, 10);
 		//System.exit(0);
 	}
 

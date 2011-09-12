@@ -19,10 +19,14 @@ public class VirtualRangeSensor extends AbstractRangeSensor {
 		new sweepThread(startDeg,endDeg,degPerStep).start();
 		return true;
 	}
+	protected ObsticleType getObsticleType(){
+		return ObsticleType.WALL;
+	}
 	private class sweepThread extends Thread{
 		double stop,current,startangle;
 		int increment;
 		ArrayList<DataPoint> data;
+		
 		public sweepThread(double start,double stop,int increment) {
 			if(start>=stop)
 				throw new RuntimeException("Start must be less then stop angle in sweep: start = "+start+" stop = "+stop);
@@ -33,10 +37,10 @@ public class VirtualRangeSensor extends AbstractRangeSensor {
 		}
 		private void update(){
 			//try {Thread.sleep(5);} catch (InterruptedException e) {}
-			double distance = world.getRangeData(getRobot(),Math.toRadians(current), 5000000);
+			double distance = world.getRangeData(getRobot(),Math.toRadians(current), 5000000,getObsticleType());
 			DataPoint p = new DataPoint((int) (distance), current);
 			data.add(p);
-			System.out.println("Distance "+p);
+			//System.out.println("Distance "+p);
 			current+=increment;
 			world.updateMap();
 		}
