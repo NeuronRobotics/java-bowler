@@ -15,26 +15,25 @@ public class DrivingRobotUI {
 	private AbstractRobot robot;
 	
 	private int robotDiameter = 60;
-	private double pixelToCm=5;
+
+	private VirtualWorld world;
 	private ArrayList<SensorDot> dots= new ArrayList<SensorDot> ();
-	public DrivingRobotUI(AbstractRobot robot, double botstartx, double botstarty) {
+	int [] range = null;
+	public DrivingRobotUI(VirtualWorld w ,AbstractRobot robot, double botstartx, double botstarty) {
 		setRobot(robot);
 		startx=botstartx;
 		starty=botstarty;
+		world=w;
 	}
 	
-	
-	private int getCmToPixel(double cm){
-		return (int)(cm*(pixelToCm));
-	}
-	
-	private int getRobotXToPixel(){
+
+	public int getRobotXToPixel(){
 		//This converts from robot coordinantes to pixel space, note that X and Y seem swapped, this is correct
-		return (int)(getCmToPixel(getRobot().getCurrentY())+startx);
+		return (int)(world.getCmToPixel(getRobot().getCurrentY())+startx);
 	}
-	private int getRobotYToPixel(){
+	public int getRobotYToPixel(){
 		//This converts from robot coordinantes to pixel space, note that X and Y seem swapped, this is correct
-		return (int)(getCmToPixel(getRobot().getCurrentX())+starty);
+		return (int)(world.getCmToPixel(getRobot().getCurrentX())+starty);
 	}
 	
 	public void drawRobot(Graphics2D g) {
@@ -65,6 +64,12 @@ public class DrivingRobotUI {
 			g.fillOval(loc[0]-d,loc[1]-d,d*2, d*2);
 		}
 		
+		if(range!=null){
+			g.setColor(Color.green);
+			g.setStroke(new BasicStroke(1));
+			g.drawLine(x1, y1, range[0], range[1]);
+		}
+		
 	}
 
 
@@ -81,8 +86,8 @@ public class DrivingRobotUI {
 		
 		double [] loc = getRobot().getPositionOffset(deltLateral, deltForward);
 		
-		back[0]=(int)(getCmToPixel(loc[1])+startx);
-		back[1]=(int)(getCmToPixel(loc[0])+starty);
+		back[0]=(int)(world.getCmToPixel(loc[1])+startx);
+		back[1]=(int)(world.getCmToPixel(loc[0])+starty);
 		
 		return back;
 	}
@@ -100,6 +105,14 @@ public class DrivingRobotUI {
 			deltLateral=l;
 			color=c;
 		}
+	}
+	public void clearRangeVector() {
+		range=null;
+	}
+	public void setRangeVector(int x, int y) {
+		range = new int[2];
+		range[0]=x;
+		range[1]=y;
 	}
 
 }

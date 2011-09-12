@@ -80,11 +80,12 @@ public class DrivingTest {
 				System.out.println("Line Sensor Event left="+left+" middle="+middle+" right="+right);
 			}
 		});
-		ackerman.DriveArc(20, 90, driveTime);
-		ThreadUtil.wait((int) (driveTime*1000));
-		ackerman.StartSweep(-90, 90, 1);
-		ackerman.DriveStraight(30, driveTime);
-		ThreadUtil.wait((int) (driveTime*1000));
+//		ackerman.DriveArc(20, 90, driveTime);
+//		ThreadUtil.wait((int) (driveTime*1000));
+//
+//		ackerman.DriveStraight(10, driveTime);
+//		ThreadUtil.wait((int) (driveTime*1000));
+		ackerman.StartSweep(-45, 0, 1);
 		//System.exit(0);
 	}
 

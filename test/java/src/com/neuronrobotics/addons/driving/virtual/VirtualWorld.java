@@ -26,10 +26,11 @@ public class VirtualWorld extends JPanel{
 	private JFrame frame;
 	private static final double width = 600;
 	private static final double hight = 480;
-	
+	private double pixelToCm=5;
 	private static final double botStartX = width /2;
 	private static final double botStartY = (int)( hight/2+60 );
 	private BufferedImage display;
+	private static final int cmMaxRange=50000;
 	public VirtualWorld() {
 		System.out.println("Starting new Virtual World");
 		initGui();
@@ -38,7 +39,12 @@ public class VirtualWorld extends JPanel{
 		setDisplay(b);
 		initGui();
 	}
-	
+	public double getPixelToCm(int pix){
+		return ((double)pix)/(pixelToCm);
+	}
+	public int getCmToPixel(double cm){
+		return (int)(cm*(pixelToCm));
+	}
 	private void initGui(){
 		frame = new JFrame("Virtual World");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -125,20 +131,21 @@ public class VirtualWorld extends JPanel{
 		}
 		
 		lab.setIcon(new ImageIcon(display ) );
-		lab.invalidate();
+
 		lab.setVisible(true);
-		
+
 		frame.repaint();
 	}
 	
 	public void addRobot(AbstractRobot robot,int botStartX ,int botStartY) {
 		if(!bots.contains(robot))
-			bots.add(new DrivingRobotUI(robot,botStartX ,botStartY));
+			bots.add(new DrivingRobotUI(this,robot,botStartX ,botStartY));
 		updateMap();
 	}
 	
 	public synchronized void addSensorDisplayDot(AbstractRobot platform, double deltLateral, double deltForward, Color c){
-		for( DrivingRobotUI b:bots){
+		for( int i=0;i<bots.size();i++){
+			DrivingRobotUI b = bots.get(i);
 			if(b.getRobot()==platform){
 				b.addSensorDisplayDot(deltLateral,deltForward,c );
 			}
@@ -146,13 +153,56 @@ public class VirtualWorld extends JPanel{
 	}
 
 	public ObsticleType getObsticle(AbstractRobot platform, double deltLateral, double deltForward) {
-		for( DrivingRobotUI b:bots){
+		for( int i=0;i<bots.size();i++){
+			DrivingRobotUI b = bots.get(i);
 			if(b.getRobot()==platform){
 				int [] loc = b.getSensorPixelLocation(deltLateral, deltForward);
 				return getObsticle(loc[0],loc[1]);
 			}
 		}
 		return null;
+	}
+	/**
+	 * 
+	 * @param robot 
+	 * @param direction in radians
+	 * @param pixelMaxRange in pixels
+	 * @return
+	 */
+	public double getRangeData(AbstractRobot robot, double direction,int pixelMaxRange) {
+		for( int j=0;j<bots.size();j++){
+			DrivingRobotUI b = bots.get(j);
+			if(b.getRobot()==robot){
+				int x = b.getRobotXToPixel();
+				int y = b.getRobotYToPixel();
+				int i=15;
+				double o =robot.getCurrentOrentation()+direction;
+				System.out.println("Getting range at angle: "+Math.toDegrees(o));
+				while(x>0&&x<frame.getWidth()&&y>0&&y<frame.getHeight() && i<pixelMaxRange){
+					i+=1;
+					x += (i*Math.sin(o));
+					y += (i*Math.cos(o));
+					if(getObsticle(x,y)==ObsticleType.WALL){
+						b.setRangeVector(x,y);
+						return i;
+					}
+					
+					
+//					//6 pixel vector steps
+//					x+=6*Math.cos(o);
+//					y+=6*Math.sin(o);
+//					if(getObsticle(x,y)==ObsticleType.WALL){
+//						double deltX = b.getRobotXToPixel()-x;
+//						double deltY = b.getRobotYToPixel()-y;
+//						r=getPixelToCm( (int) Math.sqrt(Math.pow(deltX, 2)+Math.pow(deltY, 2)));
+//						b.setRangeVector(x,y);
+//						return r;
+//					}
+				}
+				
+			}
+		}
+		return cmMaxRange;
 	}
 
 }
