@@ -15,20 +15,23 @@ public class VirtualLineSensor extends AbstractSensor {
 	ObsticleType right= ObsticleType.NONE;
 	double fOffset = 6;
 	double lOffset = 3;
+	private AbstractRobotDrive platform = null;
 	public VirtualLineSensor(AbstractRobotDrive r,VirtualWorld w) {
-		super(r);
+		this.platform = r;
 		setWorld(w);
 		poller.start();
 	}
 	
 	public VirtualLineSensor(AbstractRobotDrive r,VirtualWorld w, double forwardOffset, double lateralOffset) {
-		super(r);
+		this.platform = r;
 		fOffset=forwardOffset;
 		lOffset=lateralOffset;
 		setWorld(w);
 		poller.start();
 	}
-
+	public AbstractRobotDrive getRobot() {
+		return platform;
+	}
 	private void setWorld(VirtualWorld world) {
 		this.world = world;
 	}
@@ -43,7 +46,7 @@ public class VirtualLineSensor extends AbstractSensor {
 			getWorld().addSensorDisplayDot(getRobot(),  		0, fOffset, Color.white);
 			getWorld().addSensorDisplayDot(getRobot(),    -lOffset, fOffset, Color.black);
 			while(true){
-				ThreadUtil.wait(1);
+				ThreadUtil.wait(10);
 				ObsticleType tmpL = getWorld().getObsticle(getRobot(),	 lOffset,fOffset);
 				ObsticleType tmpC = getWorld().getObsticle(getRobot(),			0,fOffset);
 				ObsticleType tmpR = getWorld().getObsticle(getRobot(),	  -lOffset,fOffset);

@@ -5,17 +5,7 @@ import java.util.ArrayList;
 public abstract class AbstractSensor {
 	
 	private ArrayList<ISensorListener> sensorListeners = new ArrayList<ISensorListener>();
-	private AbstractRobotDrive platform = null;	
-	
-	public AbstractSensor(AbstractRobotDrive r){
-		setPlatform(r);
-	}
-	private void setPlatform(AbstractRobotDrive platform) {
-		this.platform = platform;
-	}
-	public AbstractRobotDrive getRobot() {
-		return platform;
-	}
+
 	
 	/**
 	 * Add an IDriveListener that will be contacted with an   on

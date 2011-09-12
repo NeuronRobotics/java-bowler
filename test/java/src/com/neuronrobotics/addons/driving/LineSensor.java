@@ -8,8 +8,8 @@ public class LineSensor extends AbstractSensor implements IAnalogInputListener {
 	private AnalogInputChannel middle;
 	private AnalogInputChannel right;
 	private double mVal=0,rVal=0,lVal=0;
-	public LineSensor(AbstractRobotDrive r,AnalogInputChannel left, AnalogInputChannel middle, AnalogInputChannel right) {
-		super(r);
+	
+	public LineSensor(AnalogInputChannel left, AnalogInputChannel middle, AnalogInputChannel right) {
 		this.left=left;
 		this.right=right;
 		this.middle=middle;

@@ -10,11 +10,14 @@ import com.neuronrobotics.addons.driving.DataPoint;
 public class VirtualRangeSensor extends AbstractSensor {
 	
 	private VirtualWorld world;
+	private AbstractRobotDrive platform = null;
 	public VirtualRangeSensor(AbstractRobotDrive r,VirtualWorld w) {
-		super(r);
+		this.platform = r;
 		world=w;
 	}
-
+	public AbstractRobotDrive getRobot() {
+		return platform;
+	}
 	@Override
 	public void StartSweep(double startDeg, double endDeg, int degPerStep) {
 		new sweepThread(startDeg,endDeg,degPerStep).start();
