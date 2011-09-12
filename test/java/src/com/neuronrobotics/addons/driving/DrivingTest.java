@@ -29,7 +29,7 @@ public class DrivingTest {
 			
 			VirtualWorld w = new VirtualWorld();
 			VirtualAckermanBot a = new VirtualAckermanBot(w);
-			
+			VirtualAckermanBot b = new VirtualAckermanBot(w,200 ,300);
 			ackerman = a;
 		}else {
 			DyIO dyio=new DyIO();

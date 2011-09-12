@@ -11,7 +11,7 @@ import com.neuronrobotics.sdk.pid.PIDChannel;
 import com.neuronrobotics.sdk.pid.PIDEvent;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
-public class VirtualPIDChannel extends GenericPIDDevice{
+public class VirtualGenericPIDDevice extends GenericPIDDevice{
 	private ArrayList<DriveThread>  driveThreads = new  ArrayList<DriveThread>();
 
 	private double maxTicksPerSecond;
@@ -19,7 +19,7 @@ public class VirtualPIDChannel extends GenericPIDDevice{
 	private int numChannels = 10;
 	
 	
-	public  VirtualPIDChannel( double maxTicksPerSecond) {
+	public  VirtualGenericPIDDevice( double maxTicksPerSecond) {
 		this.maxTicksPerSecond=maxTicksPerSecond;
 		
 	}

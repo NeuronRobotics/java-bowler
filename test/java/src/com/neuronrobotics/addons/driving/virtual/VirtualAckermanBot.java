@@ -9,14 +9,19 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
 
 public class VirtualAckermanBot extends AckermanBot {
 	private VirtualWorld world;
-	private final AckermanConfiguration config = new AckermanConfiguration();
-	VirtualPIDChannel controller;
+	VirtualGenericPIDDevice controller;
 
+	public VirtualAckermanBot(VirtualWorld w,int botStartX ,int botStartY){
+		init(w,botStartX,botStartY);
+	}
 	public VirtualAckermanBot(VirtualWorld w){
-		
+		init(w,300,300);
+	}
+	
+	private void init(VirtualWorld w ,int botStartX ,int botStartY){
 		world=w;
-		world.addRobot(this);
-		controller = new VirtualPIDChannel(config.getMaxTicksPerSeconds());
+		world.addRobot(this,botStartX , botStartY);
+		controller = new VirtualGenericPIDDevice(config.getMaxTicksPerSeconds());
 		controller.addPIDEventListener(new IPIDEventListener() {
 			public void onPIDReset(int group, int currentValue) {}
 			public void onPIDLimitEvent(PIDLimitEvent e) {}
@@ -25,11 +30,12 @@ public class VirtualAckermanBot extends AckermanBot {
 			}
 		});
 		
-		setPIRChanel(controller.getPIDChannel(0));
+		setPIDChanel(controller.getPIDChannel(0));
 		
 		setLineSensor(new VirtualLineSensor(this,w));
 		setRangeSensor(new VirtualRangeSensor(this,w));
 	}
+	
 	@Override
 	public void setSteeringHardwareAngle(double s) {
 		//do nothing

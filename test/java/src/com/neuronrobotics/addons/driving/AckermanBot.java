@@ -7,7 +7,7 @@ import com.neuronrobotics.sdk.pid.PIDEvent;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 
 public class AckermanBot extends AbstractRobot {
-	private final AckermanConfiguration config = new AckermanConfiguration();
+	protected final AckermanConfiguration config = new AckermanConfiguration();
 	private int currentDriveTicks=0;
 	/**
 	 * steeringAngle in radians
@@ -20,11 +20,11 @@ public class AckermanBot extends AbstractRobot {
 	}
 	
 	public AckermanBot(ServoChannel s,PIDChannel d) {
-		setPIRChanel(d);
+		setPIDChanel(d);
 		steering=s;
 	}
 	
-	protected void setPIRChanel(PIDChannel d){
+	protected void setPIDChanel(PIDChannel d){
 		drive=d;
 		drive.addPIDEventListener(this);
 	}
@@ -110,7 +110,7 @@ public class AckermanBot extends AbstractRobot {
 
 	@Override
 	public void onPIDReset(int group, int currentValue) {
-		currentDriveTicks=0;
+		currentDriveTicks=currentValue;
 	}
 
 }
