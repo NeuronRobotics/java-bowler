@@ -3,10 +3,11 @@ package com.neuronrobotics.addons.driving.virtual;
 import java.awt.Color;
 
 import com.neuronrobotics.addons.driving.AbstractRobotDrive;
-import com.neuronrobotics.addons.driving.AbstractLineSensor;
+import com.neuronrobotics.addons.driving.AbstractSensor;
+
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
-public class VirtualLineSensor extends AbstractLineSensor {
+public class VirtualLineSensor extends AbstractSensor {
 	SensorPoll poller=new SensorPoll();
 	private VirtualWorld world;
 	ObsticleType left= ObsticleType.NONE;
@@ -16,6 +17,14 @@ public class VirtualLineSensor extends AbstractLineSensor {
 	double lOffset = 3;
 	public VirtualLineSensor(AbstractRobotDrive r,VirtualWorld w) {
 		super(r);
+		setWorld(w);
+		poller.start();
+	}
+	
+	public VirtualLineSensor(AbstractRobotDrive r,VirtualWorld w, double forwardOffset, double lateralOffset) {
+		super(r);
+		fOffset=forwardOffset;
+		lOffset=lateralOffset;
 		setWorld(w);
 		poller.start();
 	}
@@ -30,14 +39,14 @@ public class VirtualLineSensor extends AbstractLineSensor {
 
 	private class SensorPoll extends Thread{
 		public void run(){
-			getWorld().addSensorDisplayDot(getrobot(), 	 lOffset, fOffset, Color.red);
-			getWorld().addSensorDisplayDot(getrobot(),  		0, fOffset, Color.white);
-			getWorld().addSensorDisplayDot(getrobot(),    -lOffset, fOffset, Color.black);
+			getWorld().addSensorDisplayDot(getRobot(), 	 lOffset, fOffset, Color.red);
+			getWorld().addSensorDisplayDot(getRobot(),  		0, fOffset, Color.white);
+			getWorld().addSensorDisplayDot(getRobot(),    -lOffset, fOffset, Color.black);
 			while(true){
 				ThreadUtil.wait(1);
-				ObsticleType tmpL = getWorld().getObsticle(getrobot(),	 lOffset,fOffset);
-				ObsticleType tmpC = getWorld().getObsticle(getrobot(),			0,fOffset);
-				ObsticleType tmpR = getWorld().getObsticle(getrobot(),	  -lOffset,fOffset);
+				ObsticleType tmpL = getWorld().getObsticle(getRobot(),	 lOffset,fOffset);
+				ObsticleType tmpC = getWorld().getObsticle(getRobot(),			0,fOffset);
+				ObsticleType tmpR = getWorld().getObsticle(getRobot(),	  -lOffset,fOffset);
 				
 				if((tmpL != left) ||(tmpC!=middle) ||(tmpR!=right)){
 					left=tmpL;

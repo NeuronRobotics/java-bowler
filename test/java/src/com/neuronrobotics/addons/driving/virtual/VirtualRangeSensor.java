@@ -3,10 +3,11 @@ package com.neuronrobotics.addons.driving.virtual;
 import java.util.ArrayList;
 
 import com.neuronrobotics.addons.driving.AbstractRobotDrive;
-import com.neuronrobotics.addons.driving.AbstractRangeSensor;
+import com.neuronrobotics.addons.driving.AbstractSensor;
+
 import com.neuronrobotics.addons.driving.DataPoint;
 
-public class VirtualRangeSensor extends AbstractRangeSensor {
+public class VirtualRangeSensor extends AbstractSensor {
 	
 	private VirtualWorld world;
 	public VirtualRangeSensor(AbstractRobotDrive r,VirtualWorld w) {

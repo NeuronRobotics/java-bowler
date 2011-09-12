@@ -40,7 +40,7 @@ public class DrivingTest {
 			range = new VirtualRangeSensor(a,w);
 			flame = new VirtualFlameSensor(a, w);
 			
-			VirtualAckermanBot b = new VirtualAckermanBot(w,200 ,300);
+			//VirtualAckermanBot b = new VirtualAckermanBot(w,200 ,300);
 			mainRobot = a;
 		}else {
 			DyIO dyio=new DyIO();
@@ -79,27 +79,33 @@ public class DrivingTest {
 		});
 		
 		
-		line.addSensorListener(new ISensorListener() {
-			public void onRangeSensorEvent(ArrayList<DataPoint> data, long timeStamp) {}
-			@Override
-			public void onLineSensorEvent(Integer left, Integer middle,Integer right, long timeStamp) {
-				System.out.println("Line Sensor Event left="+left+" middle="+middle+" right="+right);
-			}
-		});
-		range.addSensorListener(new ISensorListener() {
-			@Override
-			public void onRangeSensorEvent(ArrayList<DataPoint> data, long timeStamp) {
-				System.out.println("Range Sensor Event "+data);
-			}
-			public void onLineSensorEvent(Integer left, Integer middle, Integer right,long timeStamp) {}
-		});
-		flame.addSensorListener(new ISensorListener() {
-			@Override
-			public void onRangeSensorEvent(ArrayList<DataPoint> data, long timeStamp) {
-				System.out.println("Flame sensor "+data);
-			}
-			public void onLineSensorEvent(Integer left, Integer middle, Integer right,long timeStamp) {}
-		});
+		if(line != null){
+			line.addSensorListener(new ISensorListener() {
+				public void onRangeSensorEvent(ArrayList<DataPoint> data, long timeStamp) {}
+				@Override
+				public void onLineSensorEvent(Integer left, Integer middle,Integer right, long timeStamp) {
+					System.out.println("Line Sensor Event left="+left+" middle="+middle+" right="+right);
+				}
+			});
+		}
+		if(range !=null){
+			range.addSensorListener(new ISensorListener() {
+				@Override
+				public void onRangeSensorEvent(ArrayList<DataPoint> data, long timeStamp) {
+					System.out.println("Range Sensor Event "+data);
+				}
+				public void onLineSensorEvent(Integer left, Integer middle, Integer right,long timeStamp) {}
+			});
+		}
+		if(flame != null){
+			flame.addSensorListener(new ISensorListener() {
+				@Override
+				public void onRangeSensorEvent(ArrayList<DataPoint> data, long timeStamp) {
+					System.out.println("Flame sensor "+data);
+				}
+				public void onLineSensorEvent(Integer left, Integer middle, Integer right,long timeStamp) {}
+			});
+		}
 		
 		
 		mainRobot.DriveArc(20, 90, driveTime);
@@ -107,7 +113,8 @@ public class DrivingTest {
 
 		mainRobot.DriveStraight(10, driveTime);
 		ThreadUtil.wait((int) (driveTime*1000));
-		range.StartSweep(-90, 90, 10);
+		if (range != null)
+			range.StartSweep(-90, 90, 10);
 		//System.exit(0);
 	}
 
