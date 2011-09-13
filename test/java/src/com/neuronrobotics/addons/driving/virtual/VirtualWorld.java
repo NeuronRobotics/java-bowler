@@ -133,8 +133,9 @@ public class VirtualWorld extends JPanel{
 		lab.setIcon(new ImageIcon(display ) );
 
 		lab.setVisible(true);
-
+		frame.setVisible(true);
 		frame.repaint();
+		
 	}
 	
 	public void addRobot(AbstractRobotDrive robot,int botStartX ,int botStartY) {
