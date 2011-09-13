@@ -6,7 +6,9 @@ public abstract class AbstractSensor {
 	
 	private ArrayList<ISensorListener> sensorListeners = new ArrayList<ISensorListener>();
 
-	
+	protected AbstractSensor() {
+		
+	}
 	/**
 	 * Add an IDriveListener that will be contacted with an   on
 	 * each incoming data event.

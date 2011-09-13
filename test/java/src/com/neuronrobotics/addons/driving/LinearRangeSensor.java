@@ -11,7 +11,7 @@ public class LinearRangeSensor extends AbstractSensor {
 	private AnalogInputChannel sensor;
 	private final double servoToDegrees=1;
 	
-	public LinearRangeSensor(){
+	protected LinearRangeSensor(){
 		
 	}
 	
