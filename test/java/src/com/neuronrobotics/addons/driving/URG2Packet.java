@@ -41,8 +41,11 @@ public class URG2Packet {
 					angleTicks+=stepsPerDataPoint;
 				}
 			}else {
-				throw new RuntimeException("Unknown packet: "+line);
+				throw new RuntimeException("Unknown packet: "+line+" Command="+cmd);
 			}
+			
+		}else if(cmd.contains("QT")) {
+			//do nothing
 		}else{
 			throw new RuntimeException("Unknown packet: "+line);
 		}
@@ -92,9 +95,7 @@ public class URG2Packet {
 		}
 		return tmp;
 	}
-	private void setData(ArrayList<DataPoint> data) {
-		this.data = data;
-	}
+
 	public ArrayList<DataPoint> getData() {
 		return data;
 	}

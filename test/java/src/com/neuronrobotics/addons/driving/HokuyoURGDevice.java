@@ -34,7 +34,7 @@ public class HokuyoURGDevice {
 		receive = new Thread(){
 			public void run(){
 				ByteList bl = new ByteList();
-				System.out.print("Starting listener");
+				//System.out.println("Starting listener");
 				while(true){
 					try {
 						if(ins.available()>0){
@@ -44,12 +44,15 @@ public class HokuyoURGDevice {
 									if(bl.size()>0){
 										try{
 											URG2Packet p =new URG2Packet(new String(bl.getBytes()));
-											System.out.println("New Packet: \n"+p);
+											//System.out.println("New Packet: \n"+p);
 											packet=p;
+											bl = new ByteList();
 										}catch(Exception ex){
-											ex.printStackTrace();
+											packet=null;
+											//System.out.println("Unknown packet");
+											//ex.printStackTrace();
 										}
-										bl = new ByteList();
+										
 									}
 								}else{
 									bl.add(b);
@@ -83,7 +86,12 @@ public class HokuyoURGDevice {
 		return packet;
 	}
 	private int degreeToTicks(double degrees) {
-		return (int)(degrees/degreesPerAngleUnit);
+		int tick =(int)(degrees/degreesPerAngleUnit)+center;
+		if(tick<0)
+			tick=0;
+		if(tick > (center*2))
+			tick=center*2;
+		return tick;
 	}
 	/**
 	 * 

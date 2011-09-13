@@ -1,11 +1,9 @@
 package com.neuronrobotics.addons.driving.virtual;
 
 import com.neuronrobotics.addons.driving.AckermanBot;
-import com.neuronrobotics.addons.driving.AckermanConfiguration;
 import com.neuronrobotics.sdk.pid.IPIDEventListener;
 import com.neuronrobotics.sdk.pid.PIDEvent;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
-import com.neuronrobotics.sdk.util.ThreadUtil;
 
 public class VirtualAckermanBot extends AckermanBot {
 	private VirtualWorld world;

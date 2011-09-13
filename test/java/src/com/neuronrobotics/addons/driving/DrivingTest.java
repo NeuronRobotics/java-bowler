@@ -1,5 +1,7 @@
 package com.neuronrobotics.addons.driving;
 
+import gnu.io.NRSerialPort;
+
 import java.util.ArrayList;
 
 import com.neuronrobotics.addons.driving.virtual.VirtualAckermanBot;
@@ -17,6 +19,7 @@ import com.neuronrobotics.sdk.pid.PIDConfiguration;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
+@SuppressWarnings("unused")
 public class DrivingTest {
 	AbstractRobotDrive mainRobot;
 	AbstractSensor line=null;
@@ -69,11 +72,11 @@ public class DrivingTest {
 		}
 		
 		
-		mainRobot.DriveArc(20, 90, driveTime);
-		ThreadUtil.wait((int) (driveTime*1000));
-
-		mainRobot.DriveStraight(10, driveTime);
-		ThreadUtil.wait((int) (driveTime*1000));
+//		mainRobot.DriveArc(20, 90, driveTime);
+//		ThreadUtil.wait((int) (driveTime*1000));
+//
+//		mainRobot.DriveStraight(10, driveTime);
+//		ThreadUtil.wait((int) (driveTime*1000));
 		if (range != null)
 			range.StartSweep(-90, 90, 10);
 	}
@@ -125,7 +128,8 @@ public class DrivingTest {
 		VirtualWorld w = new VirtualWorld();
 		VirtualAckermanBot a = new VirtualAckermanBot(w); 
 		line = new VirtualLineSensor(a,w);
-		range = new VirtualRangeSensor(a,w);
+		//range = new VirtualRangeSensor(a,w);
+		range = new LaserRangeSensor(new NRSerialPort("/dev/ttyACM0", 115200));
 		flame = new VirtualFlameSensor(a, w);
 		mainRobot = a;
 	}

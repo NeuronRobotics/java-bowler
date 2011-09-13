@@ -1,7 +1,6 @@
 package com.neuronrobotics.addons.driving;
 
 import com.neuronrobotics.sdk.pid.PIDChannel;
-import com.neuronrobotics.sdk.pid.PIDEvent;
 
 public abstract class AbstractPuckBot extends AbstractRobotDrive {
 	protected final PuckBotConfiguration config = new PuckBotConfiguration();

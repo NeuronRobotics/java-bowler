@@ -3,9 +3,6 @@ package com.neuronrobotics.addons.driving.virtual;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -27,10 +24,8 @@ public class VirtualWorld extends JPanel{
 	private static final double width = 600;
 	private static final double hight = 480;
 	private double pixelToCm=5;
-	private static final double botStartX = width /2;
-	private static final double botStartY = (int)( hight/2+60 );
+
 	private BufferedImage display;
-	private static final int cmMaxRange=50000;
 	public VirtualWorld() {
 		System.out.println("Starting new Virtual World");
 		initGui();
