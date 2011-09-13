@@ -72,11 +72,11 @@ public class DrivingTest {
 		}
 		
 		
-//		mainRobot.DriveArc(20, 90, driveTime);
-//		ThreadUtil.wait((int) (driveTime*1000));
-//
-//		mainRobot.DriveStraight(10, driveTime);
-//		ThreadUtil.wait((int) (driveTime*1000));
+		mainRobot.DriveArc(20, 90, driveTime);
+		ThreadUtil.wait((int) (driveTime*1000));
+
+		mainRobot.DriveStraight(10, driveTime);
+		ThreadUtil.wait((int) (driveTime*1000));
 		if (range != null)
 			range.StartSweep(-90, 90, 10);
 	}
@@ -123,13 +123,15 @@ public class DrivingTest {
 										new AnalogInputChannel(dyio.getChannel(15)));
 		
 		mainRobot = a;
+		VirtualWorld w = new VirtualWorld();
 	}
 	private void setupVirtualRobot() {
 		VirtualWorld w = new VirtualWorld();
 		VirtualAckermanBot a = new VirtualAckermanBot(w); 
+		VirtualAckermanBot b = new VirtualAckermanBot(w,300,200); 
 		line = new VirtualLineSensor(a,w);
-		//range = new VirtualRangeSensor(a,w);
-		range = new LaserRangeSensor(new NRSerialPort("/dev/ttyACM0", 115200));
+		range = new VirtualRangeSensor(a,w);
+		//range = new LaserRangeSensor(new NRSerialPort("/dev/ttyACM0", 115200));
 		flame = new VirtualFlameSensor(a, w);
 		mainRobot = a;
 	}
