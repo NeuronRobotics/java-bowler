@@ -2,6 +2,7 @@ package com.neuronrobotics.addons.driving;
 
 import java.util.ArrayList;
 import com.neuronrobotics.sdk.pid.IPIDEventListener;
+import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 
 public abstract class AbstractRobotDrive implements IPIDEventListener{
 	private ArrayList<IRobotDriveEventListener> dl = new  ArrayList<IRobotDriveEventListener> ();
@@ -9,7 +10,9 @@ public abstract class AbstractRobotDrive implements IPIDEventListener{
 	private double currentX=0;
 	private double currentY=0;
 	private double currentOrentation=Math.PI/2;
-	
+	protected AbstractRobotDrive(){
+		
+	}
 	/**
 	 * Driving kinematics should be implemented in here
 	 * Before driving, a reset for each drive wheel should be called
@@ -84,6 +87,11 @@ public abstract class AbstractRobotDrive implements IPIDEventListener{
 		back[1]+=deltLateral*Math.cos(o);
 		
 		return back;
+	}
+	
+	@Override
+	public void onPIDLimitEvent(PIDLimitEvent e) {
+		// do nothing, drive motors have no limits
 	}
 	
 }

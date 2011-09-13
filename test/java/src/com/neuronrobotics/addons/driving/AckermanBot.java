@@ -15,7 +15,7 @@ public class AckermanBot extends AbstractRobotDrive {
 	protected double steeringAngle=0;
 	ServoChannel steering;
 	PIDChannel drive;
-	public AckermanBot(){
+	protected AckermanBot(){
 		
 	}
 	
@@ -100,12 +100,6 @@ public class AckermanBot extends AbstractRobotDrive {
 		
 		currentDriveTicks=e.getValue();
 		fireDriveEvent();
-	}
-
-	@Override
-	public void onPIDLimitEvent(PIDLimitEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
