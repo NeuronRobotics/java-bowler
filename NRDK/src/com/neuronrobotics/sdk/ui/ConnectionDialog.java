@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -16,7 +17,6 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import net.miginfocom.swing.MigLayout;
-
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
 import com.neuronrobotics.sdk.common.ConfigManager;
@@ -38,6 +38,8 @@ public class ConnectionDialog extends JDialog {
 	private static Packer fudge;
 	private  LookAndFeel laf;
 	public ConnectionDialog() {
+		setIconImage( ConnectionImageIconFactory.getIcon("images/hat.png").getImage());
+	       
 		
 		setModal(true);	
 		

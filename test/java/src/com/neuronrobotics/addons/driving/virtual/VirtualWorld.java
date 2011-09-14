@@ -12,6 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.neuronrobotics.addons.driving.AbstractRobotDrive;
+import com.neuronrobotics.sdk.ui.ConnectionImageIconFactory;
 
 public class VirtualWorld extends JPanel{
 	/**
@@ -48,7 +49,7 @@ public class VirtualWorld extends JPanel{
         frame.setSize((int)width+200,(int)hight+200);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-        frame.setIconImage( new ImageIcon(VirtualWorld.class.getResource("image/logo.png")).getImage());
+        frame.setIconImage( ConnectionImageIconFactory.getIcon("images/hat.png").getImage());
         //frame.addMouseListener(this);
         //frame.addMouseMotionListener(this);
         
