@@ -12,6 +12,7 @@ public class SpeedTest {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		DyIO.disableFWCheck();
 		DyIO dyio = new DyIO();
 		if (!ConnectionDialog.getBowlerDevice(dyio)){
 			System.exit(0);
@@ -23,12 +24,15 @@ public class SpeedTest {
 		DigitalOutputChannel dop = new DigitalOutputChannel(dyio.getChannel(1));
 		
 		double avg=0;
-		long start = System.currentTimeMillis();
+		
 		int i;
 		boolean high = false;
-		for(i=0;i<5000;i++) {
+		//dyio.setCachedMode(true);
+		long start = System.currentTimeMillis();
+		for(i=0;i<100;i++) {
+			//dyio.flushCache(0);
 			high = !high;
-			//high = dip.getValue();
+			high = dip.getValue()==1;
 			dop.setHigh(high);
 			double ms=System.currentTimeMillis()-start;
 			avg +=ms;
@@ -36,6 +40,18 @@ public class SpeedTest {
 			//System.out.println("Average cycle time: "+(int)(avg/i)+"ms\t\t\t this loop was: "+ms);
 		}
 		System.out.println("Average cycle time for IO get/set: "+(avg/i)+" ms");
+		
+		avg=0;
+		dyio.setCachedMode(true);
+		start = System.currentTimeMillis();
+		for(i=0;i<100;i++) {
+			dyio.flushCache(0);
+			double ms=System.currentTimeMillis()-start;
+			avg +=ms;
+			start = System.currentTimeMillis();
+			//System.out.println("Average cycle time: "+(int)(avg/i)+"ms\t\t\t this loop was: "+ms);
+		}
+		System.out.println("Average cycle time for cache flush: "+(avg/i)+" ms");
 		
 		avg=0;
 		start = System.currentTimeMillis();
