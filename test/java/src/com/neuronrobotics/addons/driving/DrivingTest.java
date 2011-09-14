@@ -20,7 +20,7 @@ import com.neuronrobotics.sdk.ui.ConnectionDialog;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 @SuppressWarnings("unused")
-public class DrivingTest {
+public class DrivingTest implements IRobotDriveEventListener,ISensorListener{
 	AbstractRobotDrive mainRobot;
 	AbstractSensor line=null;
 	AbstractSensor range=null;
@@ -34,41 +34,16 @@ public class DrivingTest {
 	
 	private void runDriveSample() {
 		double driveTime=5;
-		mainRobot.addIRobotDriveEventListener(new IRobotDriveEventListener() {
-			public void onDriveEvent(AbstractRobotDrive source,double x, double y, double orentation) {
-				System.out.println("Drive Event x="+x+" y="+y+" orentation="+Math.toDegrees(orentation));
-			}
-		});
-		
-		
+		mainRobot.addIRobotDriveEventListener(this);
 		if(line != null){
-			line.addSensorListener(new ISensorListener() {
-				public void onRangeSensorEvent(AbstractSensor source,ArrayList<DataPoint> data, long timeStamp) {}
-				@Override
-				public void onLineSensorEvent(AbstractSensor source,Integer left, Integer middle,Integer right, long timeStamp) {
-					System.out.println("Line Sensor Event left="+left+" middle="+middle+" right="+right);
-				}
-			});
+			line.addSensorListener(this);
 		}
 		if(range !=null){
-			range.addSensorListener(new ISensorListener() {
-				@Override
-				public void onRangeSensorEvent(AbstractSensor source,ArrayList<DataPoint> data, long timeStamp) {
-					System.out.println("Range Sensor Event "+data);
-				}
-				public void onLineSensorEvent(AbstractSensor source,Integer left, Integer middle, Integer right,long timeStamp) {}
-			});
+			range.addSensorListener(this);
 		}
 		if(flame != null){
-			flame.addSensorListener(new ISensorListener() {
-				@Override
-				public void onRangeSensorEvent(AbstractSensor source,ArrayList<DataPoint> data, long timeStamp) {
-					System.out.println("Flame sensor "+data);
-				}
-				public void onLineSensorEvent(AbstractSensor source,Integer left, Integer middle, Integer right,long timeStamp) {}
-			});
+			flame.addSensorListener(this);
 		}
-		
 		
 		mainRobot.DriveArc(20, 90, driveTime);
 		ThreadUtil.wait((int) (driveTime*1000));
@@ -78,7 +53,29 @@ public class DrivingTest {
 		if (range != null)
 			range.StartSweep(-90, 90, 10);
 	}
+	@Override
+	public void onRangeSensorEvent(AbstractSensor source,ArrayList<DataPoint> data, long timeStamp) {
+		if(source == range){
+			System.out.println("Range Sensor Event "+data);
+		}
+		if(source == flame){
+			System.out.println("Flame sensor "+data);
+		}
+	}
 
+	@Override
+	public void onLineSensorEvent(AbstractSensor source, Integer left,Integer middle, Integer right, long timeStamp) {
+		if(source==line){
+			System.out.println("Line Sensor Event left="+left+" middle="+middle+" right="+right);
+		}
+	}
+
+	@Override
+	public void onDriveEvent(AbstractRobotDrive source, double x, double y,double orentation) {
+		if(source==mainRobot){
+			System.out.println("Drive Event x="+x+" y="+y+" orentation="+Math.toDegrees(orentation));
+		}
+	}
 	/**
 	 * @param args
 	 */
@@ -134,6 +131,8 @@ public class DrivingTest {
 		flame = new VirtualFlameSensor(a, w);
 		mainRobot = a;
 	}
+
+
 
 
 }
