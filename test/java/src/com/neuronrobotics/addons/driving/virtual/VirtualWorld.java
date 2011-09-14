@@ -48,6 +48,7 @@ public class VirtualWorld extends JPanel{
         frame.setSize((int)width+200,(int)hight+200);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+        frame.setIconImage( new ImageIcon(VirtualWorld.class.getResource("image/logo.png")).getImage());
         //frame.addMouseListener(this);
         //frame.addMouseMotionListener(this);
         

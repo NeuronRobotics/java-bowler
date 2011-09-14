@@ -16,6 +16,8 @@ public class CounterInputTest {
 		}
 		//Instantiate a new counter input
 		CounterInputChannel enc=new CounterInputChannel(dyio.getChannel(23));
+		//To reset the value of the encoder, simply set the channel value
+		enc.setValue(0);
 		while(true){
 			System.out.println(enc.getValue());
 		}
