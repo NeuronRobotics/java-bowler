@@ -35,9 +35,7 @@ public class DrivingTest {
 	private void runDriveSample() {
 		double driveTime=5;
 		mainRobot.addIRobotDriveEventListener(new IRobotDriveEventListener() {
-			
-			@Override
-			public void onDriveEvent(double x, double y, double orentation) {
+			public void onDriveEvent(AbstractRobotDrive source,double x, double y, double orentation) {
 				System.out.println("Drive Event x="+x+" y="+y+" orentation="+Math.toDegrees(orentation));
 			}
 		});
@@ -45,9 +43,9 @@ public class DrivingTest {
 		
 		if(line != null){
 			line.addSensorListener(new ISensorListener() {
-				public void onRangeSensorEvent(ArrayList<DataPoint> data, long timeStamp) {}
+				public void onRangeSensorEvent(AbstractSensor source,ArrayList<DataPoint> data, long timeStamp) {}
 				@Override
-				public void onLineSensorEvent(Integer left, Integer middle,Integer right, long timeStamp) {
+				public void onLineSensorEvent(AbstractSensor source,Integer left, Integer middle,Integer right, long timeStamp) {
 					System.out.println("Line Sensor Event left="+left+" middle="+middle+" right="+right);
 				}
 			});
@@ -55,19 +53,19 @@ public class DrivingTest {
 		if(range !=null){
 			range.addSensorListener(new ISensorListener() {
 				@Override
-				public void onRangeSensorEvent(ArrayList<DataPoint> data, long timeStamp) {
+				public void onRangeSensorEvent(AbstractSensor source,ArrayList<DataPoint> data, long timeStamp) {
 					System.out.println("Range Sensor Event "+data);
 				}
-				public void onLineSensorEvent(Integer left, Integer middle, Integer right,long timeStamp) {}
+				public void onLineSensorEvent(AbstractSensor source,Integer left, Integer middle, Integer right,long timeStamp) {}
 			});
 		}
 		if(flame != null){
 			flame.addSensorListener(new ISensorListener() {
 				@Override
-				public void onRangeSensorEvent(ArrayList<DataPoint> data, long timeStamp) {
+				public void onRangeSensorEvent(AbstractSensor source,ArrayList<DataPoint> data, long timeStamp) {
 					System.out.println("Flame sensor "+data);
 				}
-				public void onLineSensorEvent(Integer left, Integer middle, Integer right,long timeStamp) {}
+				public void onLineSensorEvent(AbstractSensor source,Integer left, Integer middle, Integer right,long timeStamp) {}
 			});
 		}
 		
@@ -116,6 +114,7 @@ public class DrivingTest {
 																	 null,
 							  new AnalogInputChannel(dyio.getChannel(13)));
 		ServoChannel sweeper = new ServoChannel(dyio.getChannel(9));
+		//range = new LaserRangeSensor(new NRSerialPort("/dev/ttyACM0", 115200));
 		range = new LinearRangeSensor(	sweeper,
 										new AnalogInputChannel(dyio.getChannel(14)));
 		//This flame sensor uses the same servo as the rangefinder

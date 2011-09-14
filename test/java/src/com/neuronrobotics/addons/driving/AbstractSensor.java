@@ -28,7 +28,7 @@ public abstract class AbstractSensor {
 	 */
 	public void fireRangeSensorEvent(ArrayList<DataPoint> data,long timeStamp) {
 		for(ISensorListener l : sensorListeners) {
-			l.onRangeSensorEvent(data,timeStamp);
+			l.onRangeSensorEvent(this,data,timeStamp);
 		}
 	}
 
@@ -39,7 +39,7 @@ public abstract class AbstractSensor {
 	 */
 	public void fireLineSensorEvent(Integer left,Integer middle,Integer right,long timeStamp) {
 		for(ISensorListener l : sensorListeners) {
-			l.onLineSensorEvent(left,middle,right,timeStamp);
+			l.onLineSensorEvent(this,left,middle,right,timeStamp);
 		}
 	}
 	public abstract void StartSweep(double start, double stop, int increment);

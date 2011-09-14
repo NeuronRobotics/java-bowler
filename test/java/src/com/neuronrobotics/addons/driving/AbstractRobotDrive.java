@@ -63,7 +63,7 @@ public abstract class AbstractRobotDrive implements IPIDEventListener{
 	
 	public void fireDriveEvent(){
 		for(IRobotDriveEventListener l:dl){
-			l.onDriveEvent(currentX, currentY, currentOrentation);
+			l.onDriveEvent(this,currentX, currentY, currentOrentation);
 		}
 	}
 	
