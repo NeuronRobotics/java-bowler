@@ -25,8 +25,11 @@ public class SpeedTest {
 		double avg=0;
 		long start = System.currentTimeMillis();
 		int i;
-		for(i=0;i<100;i++) {
-			dop.setValue(dip.getValue());
+		boolean high = false;
+		for(i=0;i<5000;i++) {
+			high = !high;
+			//dop.setValue(dip.getValue());
+			dop.setHigh(high);
 			double ms=System.currentTimeMillis()-start;
 			avg +=ms;
 			start = System.currentTimeMillis();
