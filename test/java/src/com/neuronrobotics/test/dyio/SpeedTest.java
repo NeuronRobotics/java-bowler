@@ -28,7 +28,7 @@ public class SpeedTest {
 		boolean high = false;
 		for(i=0;i<5000;i++) {
 			high = !high;
-			//dop.setValue(dip.getValue());
+			//high = dip.getValue();
 			dop.setHigh(high);
 			double ms=System.currentTimeMillis()-start;
 			avg +=ms;
