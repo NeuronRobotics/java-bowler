@@ -11,7 +11,7 @@ public enum ObsticleType {
 
 	WALL(Color.blue),
 	
-	GOAL(Color.orange),
+	FIRE(Color.orange),
 	
 	NONE(Color.white);
 	
@@ -69,8 +69,8 @@ public enum ObsticleType {
 			return "On The Line";
 		case WALL:
 			return "In The Wall";
-		case GOAL:
-			return "In The goal";
+		case FIRE:
+			return "In The Fire";
 		case NONE:
 			return "No Obsticle";
 		}

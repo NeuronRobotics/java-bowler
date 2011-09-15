@@ -10,6 +10,6 @@ public class VirtualFlameSensor extends VirtualRangeSensor {
 	}
 	@Override
 	protected ObsticleType getObsticleType(){
-		return ObsticleType.GOAL;
+		return ObsticleType.FIRE;
 	}
 }
