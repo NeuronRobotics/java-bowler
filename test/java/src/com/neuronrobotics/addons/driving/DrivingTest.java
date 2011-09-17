@@ -119,7 +119,6 @@ public class DrivingTest implements IRobotDriveEventListener,ISensorListener{
 										new AnalogInputChannel(dyio.getChannel(15)));
 		
 		mainRobot = a;
-		VirtualWorld w = new VirtualWorld();
 	}
 	private void setupVirtualRobot() {
 		VirtualWorld w = new VirtualWorld();
