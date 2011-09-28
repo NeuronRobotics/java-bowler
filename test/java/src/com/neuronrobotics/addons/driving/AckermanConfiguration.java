@@ -6,6 +6,7 @@ public class AckermanConfiguration {
 	private double ticksToCm = 128;
 	private double wheelbase = 15;
 	private double servoToSteerAngle=1;
+	private int servoCenterPos = 98;
 
 	public void setMaxTicksPerSeconds(double maxTicksPerSeconds) {
 		this.maxTicksPerSeconds = maxTicksPerSeconds;
@@ -30,5 +31,9 @@ public class AckermanConfiguration {
 
 	public double getServoToSteerAngle() {
 		return servoToSteerAngle;
+	}
+
+	public int getServoCenterPos() {
+		return servoCenterPos;
 	}
 }

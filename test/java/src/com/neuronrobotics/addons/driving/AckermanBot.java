@@ -1,5 +1,6 @@
 package com.neuronrobotics.addons.driving;
 
+import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 import com.neuronrobotics.sdk.pid.PIDChannel;
 import com.neuronrobotics.sdk.pid.PIDEvent;
@@ -28,7 +29,7 @@ public class AckermanBot extends AbstractRobotDrive {
 	}
 	
 	public void setSteeringHardwareAngle(double s) {
-		steering.SetPosition((int) (steeringAngle*config.getSteerAngleToServo()));
+		steering.SetPosition((int) (steeringAngle*config.getSteerAngleToServo())+config.getServoCenterPos());
 	}
 	
 	public void setSteeringAngle(double s) {
@@ -39,10 +40,14 @@ public class AckermanBot extends AbstractRobotDrive {
 		return steeringAngle;
 	}
 	protected void SetDriveDistance(int ticks, double seconds){
+		System.out.println("Seting PID set point of="+ticks);
 		drive.SetPIDSetPoint(ticks, seconds);
 	}
 	protected void ResetDrivePosition(){
+		//Log.enableDebugPrint(true);
+		
 		drive.ResetPIDChannel(0);
+		//Log.enableDebugPrint(false);
 	}
 	
 	@Override
@@ -102,6 +107,7 @@ public class AckermanBot extends AbstractRobotDrive {
 
 	@Override
 	public void onPIDReset(int group, int currentValue) {
+		System.out.println("Resetting PID");
 		currentDriveTicks=currentValue;
 	}
 

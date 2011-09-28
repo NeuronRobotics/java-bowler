@@ -84,11 +84,7 @@ public class DrivingTest implements IRobotDriveEventListener,ISensorListener{
 	}
 	
 	
-	private void setupRealRobot() {
-		DyIO dyio=new DyIO();
-		if (!ConnectionDialog.getBowlerDevice(dyio)){
-			System.exit(1);
-		}
+	private void setupRealRobot(DyIO dyio) {
 		DyPIDConfiguration dypid = new DyPIDConfiguration(	0,//PID group 0
 															23,//Input channel number
 															DyIOChannelMode.COUNT_IN_INT,//Input mode
@@ -99,21 +95,22 @@ public class DrivingTest implements IRobotDriveEventListener,ISensorListener{
 														false,//inverted
 														true,//Async
 														1,// Kp
-														0,// Ki
-														0);//Kd
+														1,// Ki
+														.5);//Kd
 		dyio.ConfigureDynamicPIDChannels(dypid);
 		dyio.ConfigurePIDController(pid);
 		
 		PIDChannel drive = dyio.getPIDChannel(0);
 		AckermanBot a = new AckermanBot(new ServoChannel(dyio.getChannel(10)), drive );
 		
-		line = new LineSensor(new AnalogInputChannel(dyio.getChannel(12)),
-																	 null,
-							  new AnalogInputChannel(dyio.getChannel(13)));
+
 		ServoChannel sweeper = new ServoChannel(dyio.getChannel(9));
 		//range = new LaserRangeSensor(new NRSerialPort("/dev/ttyACM0", 115200));
 		range = new LinearRangeSensor(	sweeper,
-										new AnalogInputChannel(dyio.getChannel(14)));
+										new AnalogInputChannel(dyio.getChannel(12)));
+		line = new LineSensor(	new AnalogInputChannel(dyio.getChannel(13)),
+				 				null,
+				 				new AnalogInputChannel(dyio.getChannel(14)));
 		//This flame sensor uses the same servo as the rangefinder
 		flame = new LinearRangeSensor(	sweeper,
 										new AnalogInputChannel(dyio.getChannel(15)));
