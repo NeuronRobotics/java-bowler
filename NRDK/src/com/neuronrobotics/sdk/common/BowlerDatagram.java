@@ -281,7 +281,7 @@ public class BowlerDatagram implements ISendable {
 		str += "\n\tRPC: \t\t";
 		str += getRPC();// This extracts the opcode as ascii
 		str += "\n\tData: \t\t";
-		for (byte x : data.getBytes()){
+		for (byte x : getData().getBytes()){
 			// This writes out the hex values of all the data Bytes
 			str += String.format("%02x ", x);
 		}
