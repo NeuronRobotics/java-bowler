@@ -234,7 +234,6 @@ public class DyIOChannel implements IDyIOChannel {
 	
 	private void setDevice(DyIO device) {
 		this.device = device;
-		//resync(false);
 	}
 
 	/**
