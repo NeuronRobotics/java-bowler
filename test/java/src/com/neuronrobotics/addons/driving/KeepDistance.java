@@ -26,8 +26,8 @@ public class KeepDistance implements IRobotDriveEventListener,IAnalogInputListen
 					false,//inverted
 					true,//Async
 					1,// Kp
-					1,// Ki
-					.5);//Kd
+					0,// Ki
+					0);//Kd
 		dyio.ConfigureDynamicPIDChannels(dypid);
 		dyio.ConfigurePIDController(pid);
 		
@@ -42,19 +42,19 @@ public class KeepDistance implements IRobotDriveEventListener,IAnalogInputListen
 		new Thread() {
 			public void run() {
 				System.out.println("Starting distance thread");
-				double distance = 1;
+				double distance = .2;
 				while(dyio.isAvailable()) {
-					ThreadUtil.wait(1000);
+					ThreadUtil.wait(500);
 					if(anaVal>200) {
 						ack.DriveStraight(-1*distance, 1);
-						System.out.println("Move back="+anaVal);
+						//System.out.println("Move back="+anaVal);
 					}
 					else if(anaVal<150) {
 						ack.DriveStraight(distance, 1);
-						System.out.println("Move forward="+anaVal);
+						//System.out.println("Move forward="+anaVal);
 					}
 					else {
-						System.out.println("Move nowhere="+anaVal);
+						//System.out.println("Move nowhere="+anaVal);
 					}
 					
 				}

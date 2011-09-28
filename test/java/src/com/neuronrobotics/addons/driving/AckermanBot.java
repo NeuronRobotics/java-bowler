@@ -29,7 +29,12 @@ public class AckermanBot extends AbstractRobotDrive {
 	}
 	
 	public void setSteeringHardwareAngle(double s) {
-		steering.SetPosition((int) (steeringAngle*config.getSteerAngleToServo())+config.getServoCenterPos());
+		int srvVal = (int) (steeringAngle*config.getSteerAngleToServo())+config.getServoCenterPos();
+		if(srvVal> config.getSteeringServoMaxVal())
+			srvVal= config.getSteeringServoMaxVal();
+		if(srvVal<config.getSteeringServoMinVal())
+			srvVal= config.getSteeringServoMinVal();
+		steering.SetPosition(srvVal);
 	}
 	
 	public void setSteeringAngle(double s) {
@@ -40,7 +45,7 @@ public class AckermanBot extends AbstractRobotDrive {
 		return steeringAngle;
 	}
 	protected void SetDriveDistance(int ticks, double seconds){
-		System.out.println("Seting PID set point of="+ticks);
+		//System.out.println("Seting PID set point of="+ticks);
 		drive.SetPIDSetPoint(ticks, seconds);
 	}
 	protected void ResetDrivePosition(){
@@ -107,7 +112,7 @@ public class AckermanBot extends AbstractRobotDrive {
 
 	@Override
 	public void onPIDReset(int group, int currentValue) {
-		System.out.println("Resetting PID");
+		//System.out.println("Resetting PID");
 		currentDriveTicks=currentValue;
 	}
 
