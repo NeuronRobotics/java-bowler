@@ -11,6 +11,7 @@ import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
 import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.common.ByteList;
+import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.MACAddress;
 import com.neuronrobotics.sdk.pid.IPIDControl;
 import com.neuronrobotics.sdk.pid.IPIDEventListener;
@@ -208,6 +209,7 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 	@Override
 	public boolean SetPDVelocity(int group, int unitsPerSecond, double seconds)throws PIDCommandException {
 		try{
+			Log.debug("Setting hardware velocity control");
 			return send(new PDVelocityCommand(group, unitsPerSecond, seconds))!=null;
 		}catch (Exception ex){
 			return SetPIDInterpolatedVelocity( group, unitsPerSecond,  seconds);

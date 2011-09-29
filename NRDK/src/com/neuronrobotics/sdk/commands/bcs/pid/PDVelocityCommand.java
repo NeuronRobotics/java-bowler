@@ -5,7 +5,7 @@ import com.neuronrobotics.sdk.common.BowlerMethod;
 
 public class PDVelocityCommand extends BowlerAbstractCommand {
 	public PDVelocityCommand(int group, int ticksPerSecond, double seconds) {
-		setOpCode("vpid");
+		setOpCode("_vpd");
 		setMethod(BowlerMethod.POST);
 		getCallingDataStorage().add(group);
 		getCallingDataStorage().addAs32(ticksPerSecond);
