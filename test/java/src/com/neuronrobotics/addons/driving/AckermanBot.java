@@ -3,6 +3,7 @@ package com.neuronrobotics.addons.driving;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 import com.neuronrobotics.sdk.pid.PIDChannel;
+import com.neuronrobotics.sdk.pid.PIDCommandException;
 import com.neuronrobotics.sdk.pid.PIDEvent;
 
 public class AckermanBot extends AbstractRobotDrive {
@@ -48,6 +49,15 @@ public class AckermanBot extends AbstractRobotDrive {
 		//System.out.println("Seting PID set point of="+ticks);
 		drive.SetPIDSetPoint(ticks, seconds);
 	}
+	protected void SetDriveVelocity(int ticksPerSecond){
+		//System.out.println("Seting PID set point of="+ticks);
+		try {
+			drive.SetPDVelocity(ticksPerSecond, 0);
+		} catch (PIDCommandException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	protected void ResetDrivePosition(){
 		//Log.enableDebugPrint(true);
 		
@@ -65,12 +75,25 @@ public class AckermanBot extends AbstractRobotDrive {
 	public void DriveArc(double cmRadius, double degrees, double seconds) {
 		ResetDrivePosition();
 		double archlen = cmRadius*((2*Math.PI*degrees)/(360));
-		//System.out.println("Running archLen="+archlen);
 		double steerAngle =((config.getWheelbase()/cmRadius));
 		setSteeringAngle(steerAngle);
 		SetDriveDistance((int) (archlen*config.getCmtoTicks()),seconds);
 	}
+	@Override
+	public void DriveVelocityStraight(double cmPerSecond) {
+		setSteeringAngle(0);
+		SetDriveVelocity((int)(cmPerSecond/config.getCmtoTicks()));
+	}
+	@Override
+	public void DriveVelocityArc(double degreesPerSecond, double cmRadius) {
+		// TODO Auto-generated method stub
+		double steerAngle =((config.getWheelbase()/cmRadius));
+		setSteeringAngle(steerAngle);
+		double archlen = cmRadius*((2*Math.PI*degreesPerSecond)/(360));
+		SetDriveVelocity((int) (archlen*config.getCmtoTicks()));
+	}
 
+	
 	public double getMaxTicksPreSecond() {
 		return config.getMaxTicksPerSeconds();
 	}
@@ -115,5 +138,7 @@ public class AckermanBot extends AbstractRobotDrive {
 		//System.out.println("Resetting PID");
 		currentDriveTicks=currentValue;
 	}
+
+
 
 }

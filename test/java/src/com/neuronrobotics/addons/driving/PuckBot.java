@@ -16,7 +16,17 @@ public class PuckBot extends AbstractPuckBot{
 		// TODO Auto-generated method stub
 		
 	}
+	@Override
+	public void DriveVelocityArc(double degreesPerSecond, double cmRadius) {
+		// TODO Auto-generated method stub
+		
+	}
 
+	@Override
+	public void DriveVelocityStraight(double cmPerSecond) {
+		// TODO Auto-generated method stub
+		
+	}
 
 	@Override
 	public void onPIDEvent(PIDEvent e) {

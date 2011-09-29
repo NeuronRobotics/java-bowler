@@ -30,6 +30,20 @@ public abstract class AbstractRobotDrive implements IPIDEventListener{
 	 */
 	public abstract void DriveArc(double cmRadius,double degrees,double seconds);
 	
+	/**
+	 * Tells the robot to start driving at a speed without any endpoint. 
+	 * The encoding will track the progress.
+	 * @param cmPerSecond
+	 */
+	public abstract void DriveVelocityStraight(double cmPerSecond);
+	/**
+	 * Tells the robot to start driving at a speed without any endpoint. 
+	 * The encoding will track the progress.
+	 * The radius is how much turn arch is needed
+	 * @param degreesPerSecond is now much orientation will change over time
+	 * @param cmRadius is the radius of the turn. 0 is turn on center, infinity is driving straight
+	 */
+	public abstract void DriveVelocityArc(double degreesPerSecond, double cmRadius);
 	
 	public void setCurrentX(double currentX) {
 		//System.out.println("Current X is: "+currentX);
