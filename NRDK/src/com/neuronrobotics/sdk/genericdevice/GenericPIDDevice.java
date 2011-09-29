@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.neuronrobotics.sdk.commands.bcs.pid.ConfigurePIDCommand;
 import com.neuronrobotics.sdk.commands.bcs.pid.ControlAllPIDCommand;
 import com.neuronrobotics.sdk.commands.bcs.pid.ControlPIDCommand;
+import com.neuronrobotics.sdk.commands.bcs.pid.PDVelocityCommand;
 import com.neuronrobotics.sdk.commands.bcs.pid.ResetPIDCommand;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
@@ -206,8 +207,11 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 
 	@Override
 	public boolean SetPDVelocity(int group, int unitsPerSecond, double seconds)throws PIDCommandException {
-		//TODO replace with proper implementation
-		return SetPIDInterpolatedVelocity(group, unitsPerSecond, seconds);
+		try{
+			return send(new PDVelocityCommand(group, unitsPerSecond, seconds))!=null;
+		}catch (Exception ex){
+			return SetPIDInterpolatedVelocity( group, unitsPerSecond,  seconds);
+		}
 	}
 
 	@Override
