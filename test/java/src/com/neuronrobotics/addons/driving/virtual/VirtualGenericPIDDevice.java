@@ -2,12 +2,15 @@ package com.neuronrobotics.addons.driving.virtual;
 
 import java.util.ArrayList;
 
+import com.neuronrobotics.sdk.commands.bcs.pid.PDVelocityCommand;
 import com.neuronrobotics.sdk.common.BowlerAbstractCommand;
 import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.common.InvalidResponseException;
+import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.NoConnectionAvailableException;
 import com.neuronrobotics.sdk.genericdevice.GenericPIDDevice;
 import com.neuronrobotics.sdk.pid.PIDChannel;
+import com.neuronrobotics.sdk.pid.PIDCommandException;
 import com.neuronrobotics.sdk.pid.PIDEvent;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
@@ -43,6 +46,14 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 	@Override
 	public boolean SetPIDSetPoint(int group, int setpoint, double seconds) {
 		driveThreads.get(group).SetPIDSetPoint(setpoint, seconds);
+		return true;
+	}
+	@Override
+	public boolean SetPDVelocity(int group, int unitsPerSecond, double seconds)throws PIDCommandException {
+		if(seconds==0)
+			driveThreads.get(group).SetVelocity(unitsPerSecond);
+		else
+			SetPIDInterpolatedVelocity(group, unitsPerSecond, seconds);
 		return true;
 	}
 	@Override
@@ -92,19 +103,28 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 		
 		private long ticks=0;
 		private long lastTick=ticks;
+		private long lastInterpolationTime=0;
 		private long setPoint;
 		private long duration;
 		private long startTime;
 		private long startPoint;
 		boolean pause = false;
+		private boolean velocityRun=false;
+		private int unitsPerMs;
 		private int chan;
 		public DriveThread(int index){
 			setChan(index);
+		}
+		public void SetVelocity(int unitsPerSecond) {
+			this.unitsPerMs=unitsPerSecond/1000;
+			velocityRun=true;
+			duration =0;
 		}
 		public int getPosition() {
 			return (int) ticks;
 		}
 		public synchronized  void SetPIDSetPoint(int setpoint,double seconds){
+			velocityRun=false;
 			pause=true;
 			ThreadUtil.wait((int)(threadTime*2));
 			double TPS = (double)setpoint/seconds;
@@ -136,6 +156,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 		}
 		public synchronized  void ResetEncoder(int value) {
 			System.out.println("Resetting channel "+getChan());
+			velocityRun=false;
 			pause=true;
 			ThreadUtil.wait((int)(threadTime*2));
 			ticks=value;
@@ -144,7 +165,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 			duration=0;
 			startTime=System.currentTimeMillis();
 			startPoint=value;
-			pause=false;
+			pause=false;	
 		}
 		private void setChan(int chan) {
 			this.chan = chan;
@@ -155,9 +176,9 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 		private void interpolate() {
 			float back;
 			float diffTime;
-			if(duration > 0){
+			if(duration > 0 ){
 				diffTime = System.currentTimeMillis()-startTime;
-				if((diffTime < duration) && (diffTime>0)){
+				if((diffTime < duration) && (diffTime>0) ){
 					float elapsed = 1-((duration-diffTime)/duration);
 					float tmp=((float)startPoint+(float)(setPoint-startPoint)*elapsed);
 					if(setPoint>startPoint){
@@ -177,7 +198,12 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 				back=setPoint;
 				duration = 0;
 			}
+			if(velocityRun){
+				long ms = System.currentTimeMillis()-lastInterpolationTime;
+				back=ticks+unitsPerMs*ms;
+			}
 			ticks = (long) back;
+			lastInterpolationTime=System.currentTimeMillis();
 		}
 	}
 	
