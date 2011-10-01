@@ -2,14 +2,6 @@ package com.neuronrobotics.addons.driving;
 
 import java.util.ArrayList;
 
-import com.neuronrobotics.sdk.dyio.DyIO;
-import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
-import com.neuronrobotics.sdk.dyio.dypid.DyPIDConfiguration;
-import com.neuronrobotics.sdk.dyio.peripherals.AnalogInputChannel;
-import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
-import com.neuronrobotics.sdk.pid.PIDChannel;
-import com.neuronrobotics.sdk.pid.PIDConfiguration;
-import com.neuronrobotics.sdk.ui.ConnectionDialog;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 public class LineTrack implements IRobotDriveEventListener,ISensorListener{
@@ -22,10 +14,12 @@ public class LineTrack implements IRobotDriveEventListener,ISensorListener{
 		while(mainRobot.isAvailable()) {
 			ThreadUtil.wait(50);
 			double diff = (double)(l-r);
-			System.out.println("Steer value ="+diff);
+			///System.out.println("Steer value ="+diff);
 			if(diff<100 && diff>-100) {
-				mainRobot.DriveStraight(20, .1);
+				//System.out.println("Drive straight");
+				mainRobot.DriveVelocityStraight(5);
 			}else {
+				//System.out.println("turn");
 				mainRobot.DriveArc(1/(diff/100), 20, .1);
 			}
 		}

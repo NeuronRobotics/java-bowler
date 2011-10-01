@@ -11,21 +11,15 @@ public class VirtualLineTrack {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		final DyIO d = new DyIO();
-		ConnectionDialog.getBowlerDevice(d);
-		if(d.isAvailable()) {
-			new Thread() {
-				public void run() {
-					VirtualWorld w = new VirtualWorld();
-					AbstractRobotDrive a = new VirtualAckermanBot(w); 
-					AbstractSensor line = new VirtualLineSensor(a,w);
-					new LineTrack().runTrack(a,line);
-				}
-			}.start();
-		}else{
-			System.out.println("Failed");
-			d.disconnect();
-		}
+		new Thread() {
+			public void run() {
+				VirtualWorld w = new VirtualWorld();
+				AbstractRobotDrive a = new VirtualAckermanBot(w); 
+				AbstractSensor line = new VirtualLineSensor(a,w);
+				new LineTrack().runTrack(a,line);
+			}
+		}.start();
+
 	}
 
 }

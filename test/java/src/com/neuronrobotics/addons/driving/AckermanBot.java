@@ -81,7 +81,7 @@ public class AckermanBot extends AbstractRobotDrive {
 	@Override
 	public void DriveVelocityStraight(double cmPerSecond) {
 		setSteeringAngle(0);
-		SetDriveVelocity((int)(cmPerSecond/config.getCmtoTicks()));
+		SetDriveVelocity((int)(cmPerSecond*config.getCmtoTicks()));
 	}
 	@Override
 	public void DriveVelocityArc(double degreesPerSecond, double cmRadius) {

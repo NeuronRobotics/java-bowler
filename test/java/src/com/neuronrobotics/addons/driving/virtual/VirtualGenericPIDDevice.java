@@ -50,10 +50,17 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 	}
 	@Override
 	public boolean SetPDVelocity(int group, int unitsPerSecond, double seconds)throws PIDCommandException {
-		if(seconds==0)
+		if(unitsPerSecond>maxTicksPerSecond)
+			unitsPerSecond=(int) maxTicksPerSecond;
+		if(unitsPerSecond<-maxTicksPerSecond)
+			unitsPerSecond=(int) -maxTicksPerSecond;
+		if(seconds<0.1 && seconds>-0.1){
+			//System.out.println("Setting virtual velocity="+unitsPerSecond);
 			driveThreads.get(group).SetVelocity(unitsPerSecond);
-		else
+		}
+		else{
 			SetPIDInterpolatedVelocity(group, unitsPerSecond, seconds);
+		}
 		return true;
 	}
 	@Override
@@ -114,12 +121,12 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 		private long startPoint;
 		boolean pause = false;
 		private boolean velocityRun=false;
-		private int unitsPerMs;
+		private double unitsPerMs;
 		private int chan;
 		public DriveThread(int index){
 			setChan(index);
 		}
-		public void SetVelocity(int unitsPerSecond) {
+		public void SetVelocity(double unitsPerSecond) {
 			this.unitsPerMs=unitsPerSecond/1000;
 			velocityRun=true;
 			duration =0;
@@ -178,13 +185,13 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 			return chan;
 		}
 		private void interpolate() {
-			float back;
-			float diffTime;
+			double back;
+			double diffTime;
 			if(duration > 0 ){
 				diffTime = System.currentTimeMillis()-startTime;
 				if((diffTime < duration) && (diffTime>0) ){
-					float elapsed = 1-((duration-diffTime)/duration);
-					float tmp=((float)startPoint+(float)(setPoint-startPoint)*elapsed);
+					double elapsed = 1-((duration-diffTime)/duration);
+					double tmp=((float)startPoint+(float)(setPoint-startPoint)*elapsed);
 					if(setPoint>startPoint){
 						if((tmp>setPoint)||(tmp<startPoint))
 							tmp=setPoint;
@@ -204,7 +211,8 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 			}
 			if(velocityRun){
 				long ms = System.currentTimeMillis()-lastInterpolationTime;
-				back=ticks+unitsPerMs*ms;
+				//System.out.println("Time Diff="+ms+" tick difference="+unitsPerMs*ms);
+				back=(ticks+unitsPerMs*ms);
 			}
 			ticks = (long) back;
 			lastInterpolationTime=System.currentTimeMillis();
