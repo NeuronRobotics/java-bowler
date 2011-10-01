@@ -49,7 +49,7 @@ public abstract class AbstractRobotDrive implements IPIDEventListener{
 	 * Is the robot still availible
 	 * @return true if the robot is availible
 	 */
-	public abstract boolean isAvailible();
+	public abstract boolean isAvailable();
 	
 	public void setCurrentX(double currentX) {
 		//System.out.println("Current X is: "+currentX);

@@ -139,7 +139,7 @@ public class AckermanBot extends AbstractRobotDrive {
 	}
 
 	@Override
-	public boolean isAvailible() {
+	public boolean isAvailable() {
 		// TODO Auto-generated method stub
 		return drive.isAvailable();
 	}

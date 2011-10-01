@@ -40,4 +40,10 @@ public class PuckBot extends AbstractPuckBot{
 		
 	}
 
+	@Override
+	public boolean isAvailable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }
