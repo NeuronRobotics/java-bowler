@@ -124,5 +124,10 @@ public class PIDChannel {
 	public int getCurrentCachedPosition() {
 		return currentCachedPosition;
 	}
+
+	public boolean isAvailable() {
+		// TODO Auto-generated method stub
+		return pid.isAvailable();
+	}
 	
 }

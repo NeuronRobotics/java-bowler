@@ -223,6 +223,5 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 		}
 		return channels.get(group);
 	}
-	
 
 }
