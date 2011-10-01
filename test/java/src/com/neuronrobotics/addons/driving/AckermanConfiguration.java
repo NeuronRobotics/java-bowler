@@ -1,10 +1,14 @@
 package com.neuronrobotics.addons.driving;
 
 public class AckermanConfiguration {
-
+	
+	private double ticksPerRevolution = 128;//ticks
+	private double wheelDiameter = 2.54;//cm
+	private double cmPerRevolution = 2*Math.PI*wheelDiameter;
+	private double ticksToCm = ticksPerRevolution/cmPerRevolution;
+	
 	private double maxTicksPerSeconds = 200;
-	private double ticksToCm = 128;
-	private double wheelbase = 15;
+	private double wheelbase = 14.2;//cm
 	private double servoToSteerAngle=1;
 	private int servoCenterPos = 98;
 	private int steeringServoMinVal = 51;
@@ -18,11 +22,18 @@ public class AckermanConfiguration {
 		return maxTicksPerSeconds;
 	}
 
-	public double getCmtoTicks() {
-		// TODO Auto-generated method stub
-		return ticksToCm;
+	public double convetrtToCm(int ticks){
+		double back =ticks/ticksToCm;
+		//System.out.println(ticks+"ticks = "+back+"cm");
+		return back;
 	}
-
+	
+	public int convertToTicks(double cm){
+		int back = (int)(cm*ticksToCm);
+		//System.out.println(cm+"cm = "+back+"ticks");
+		return back;
+	}
+	
 	public double getWheelbase() {
 		return wheelbase;
 	}

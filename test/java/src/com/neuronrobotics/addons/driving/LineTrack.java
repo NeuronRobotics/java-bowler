@@ -2,27 +2,15 @@ package com.neuronrobotics.addons.driving;
 
 import java.util.ArrayList;
 
-import com.neuronrobotics.sdk.util.ThreadUtil;
-
 public class LineTrack implements IRobotDriveEventListener,ISensorListener{
-
-	int l=0,r=0;
-
-	public void runTrack(AbstractRobotDrive mainRobot,AbstractSensor line) {
+	AbstractRobotDrive mainRobot;
+	AbstractSensor line;
+	public void runTrack(AbstractRobotDrive m,AbstractSensor l) {
+		mainRobot=m;
+		line=l;
 		mainRobot.addIRobotDriveEventListener(this);
 		line.addSensorListener(this);
-		while(mainRobot.isAvailable()) {
-			ThreadUtil.wait(50);
-			double diff = (double)(l-r);
-			///System.out.println("Steer value ="+diff);
-			if(diff<100 && diff>-100) {
-				//System.out.println("Drive straight");
-				mainRobot.DriveVelocityStraight(5);
-			}else {
-				//System.out.println("turn");
-				mainRobot.DriveArc(1/(diff/100), 20, .1);
-			}
-		}
+		mainRobot.DriveVelocityStraight(100);
 	}
 	@Override
 	public void onRangeSensorEvent(AbstractSensor source,ArrayList<DataPoint> data, long timeStamp) {
@@ -31,8 +19,15 @@ public class LineTrack implements IRobotDriveEventListener,ISensorListener{
 	@Override
 	public void onLineSensorEvent(AbstractSensor source, Integer left,Integer middle, Integer right, long timeStamp) {
 		//System.out.println("Sensor Event left="+left+" middle="+middle+" right="+right);
-		l=left;
-		r=right;
+		double diff = (double)(left-right);
+		///System.out.println("Steer value ="+diff);
+		if(diff<100 && diff>-100) {
+			//System.out.println("Drive straight");
+			mainRobot.DriveVelocityStraight(100);
+		}else {
+			//System.out.println("turn");
+			mainRobot.DriveVelocityArc(1/(diff/100), 20);
+		}
 	}
 	@Override
 	public void onDriveEvent(AbstractRobotDrive source, double x, double y,double orentation) {

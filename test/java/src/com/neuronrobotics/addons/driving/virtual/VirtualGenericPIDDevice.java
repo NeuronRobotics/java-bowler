@@ -114,7 +114,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 		
 		private long ticks=0;
 		private long lastTick=ticks;
-		private long lastInterpolationTime=0;
+		private long lastInterpolationTime;
 		private long setPoint;
 		private long duration;
 		private long startTime;
@@ -127,9 +127,10 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 			setChan(index);
 		}
 		public void SetVelocity(double unitsPerSecond) {
+			//System.out.println("Setting velocity to "+unitsPerSecond+"ticks/second");
 			this.unitsPerMs=unitsPerSecond/1000;
+			lastInterpolationTime=System.currentTimeMillis();
 			velocityRun=true;
-			duration =0;
 		}
 		public int getPosition() {
 			return (int) ticks;
@@ -211,7 +212,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 			}
 			if(velocityRun){
 				long ms = System.currentTimeMillis()-lastInterpolationTime;
-				//System.out.println("Time Diff="+ms+" tick difference="+unitsPerMs*ms);
+				//System.out.println("Time Diff="+ms+" tick difference="+unitsPerMs*ms+" ticksPerMs="+unitsPerMs);
 				back=(ticks+unitsPerMs*ms);
 			}
 			ticks = (long) back;
