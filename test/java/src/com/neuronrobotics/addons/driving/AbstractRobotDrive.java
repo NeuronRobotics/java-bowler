@@ -45,6 +45,12 @@ public abstract class AbstractRobotDrive implements IPIDEventListener{
 	 */
 	public abstract void DriveVelocityArc(double degreesPerSecond, double cmRadius);
 	
+	/**
+	 * Is the robot still availible
+	 * @return true if the robot is availible
+	 */
+	public abstract boolean isAvailible();
+	
 	public void setCurrentX(double currentX) {
 		//System.out.println("Current X is: "+currentX);
 		this.currentX = currentX;

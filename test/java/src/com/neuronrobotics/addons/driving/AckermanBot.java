@@ -1,6 +1,5 @@
 package com.neuronrobotics.addons.driving;
 
-import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 import com.neuronrobotics.sdk.pid.PIDChannel;
 import com.neuronrobotics.sdk.pid.PIDCommandException;
@@ -137,6 +136,12 @@ public class AckermanBot extends AbstractRobotDrive {
 	public void onPIDReset(int group, int currentValue) {
 		//System.out.println("Resetting PID");
 		currentDriveTicks=currentValue;
+	}
+
+	@Override
+	public boolean isAvailible() {
+		// TODO Auto-generated method stub
+		return drive.isAvailable();
 	}
 
 

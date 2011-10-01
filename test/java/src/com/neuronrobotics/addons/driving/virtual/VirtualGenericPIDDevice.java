@@ -69,6 +69,10 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 		return driveThreads.get(group).getPosition();
 	}
 	@Override
+	public boolean isAvailable(){
+		return true;
+	}
+	@Override
 	public int[] GetAllPIDPosition() {
 		//This is the trigger to populate the number of PID channels
 		int [] back = new int[numChannels];

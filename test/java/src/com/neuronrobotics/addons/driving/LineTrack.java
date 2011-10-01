@@ -13,8 +13,6 @@ import com.neuronrobotics.sdk.ui.ConnectionDialog;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 public class LineTrack implements IRobotDriveEventListener,ISensorListener{
-	AckermanBot mainRobot;
-	AbstractSensor line=null;
 	DyIO dyio;
 	int l=0,r=0;
 	public LineTrack(DyIO d) {
@@ -37,9 +35,9 @@ public class LineTrack implements IRobotDriveEventListener,ISensorListener{
 				dyio.ConfigurePIDController(pid);
 				
 				PIDChannel drive = dyio.getPIDChannel(0);
-				mainRobot  = new AckermanBot(new ServoChannel(dyio.getChannel(10)), drive );
+				AbstractRobotDrive mainRobot  = new AckermanBot(new ServoChannel(dyio.getChannel(10)), drive );
 
-				line = new LineSensor(	new AnalogInputChannel(dyio.getChannel(14),true),
+				AbstractSensor line = new LineSensor(	new AnalogInputChannel(dyio.getChannel(14),true),
 										null,
 										new AnalogInputChannel(dyio.getChannel(13),true));
 				
@@ -48,7 +46,7 @@ public class LineTrack implements IRobotDriveEventListener,ISensorListener{
 		}.start();
 
 	}
-	private void runTrack() {
+	private void runTrack(AbstractRobotDrive mainRobot,AbstractSensor line) {
 		mainRobot.addIRobotDriveEventListener(this);
 		line.addSensorListener(this);
 		while(dyio.isAvailable()) {
