@@ -45,15 +45,16 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 
 	@Override
 	public boolean SetPIDSetPoint(int group, int setpoint, double seconds) {
+		
 		driveThreads.get(group).SetPIDSetPoint(setpoint, seconds);
 		return true;
 	}
 	@Override
 	public boolean SetPDVelocity(int group, int unitsPerSecond, double seconds)throws PIDCommandException {
 		if(unitsPerSecond>maxTicksPerSecond)
-			unitsPerSecond=(int) maxTicksPerSecond;
+			throw new RuntimeException("Saturated PID on channel: "+group+" Attempted Ticks Per Second: "+unitsPerSecond+", when max is"+maxTicksPerSecond+" set: "+maxTicksPerSecond+" sec: "+seconds);
 		if(unitsPerSecond<-maxTicksPerSecond)
-			unitsPerSecond=(int) -maxTicksPerSecond;
+			throw new RuntimeException("Saturated PID on channel: "+group+" Attempted Ticks Per Second: "+unitsPerSecond+", when max is"+maxTicksPerSecond+" set: "+maxTicksPerSecond+" sec: "+seconds);
 		if(seconds<0.1 && seconds>-0.1){
 			//System.out.println("Setting virtual velocity="+unitsPerSecond);
 			driveThreads.get(group).SetVelocity(unitsPerSecond);
@@ -160,7 +161,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 				}
 				try {Thread.sleep(threadTime);} catch (InterruptedException e) {}
 				interpolate();
-				if(ticks!=lastTick) {
+				if((ticks!=lastTick) && !pause) {
 					lastTick=ticks;
 					firePIDEvent(new PIDEvent(getChan(), (int)ticks, System.currentTimeMillis(),0));
 				}

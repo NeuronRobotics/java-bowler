@@ -4,6 +4,7 @@ import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 import com.neuronrobotics.sdk.pid.PIDChannel;
 import com.neuronrobotics.sdk.pid.PIDCommandException;
 import com.neuronrobotics.sdk.pid.PIDEvent;
+import com.neuronrobotics.sdk.util.ThreadUtil;
 
 public class AckermanBot extends AbstractRobotDrive {
 	protected final AckermanConfiguration config = new AckermanConfiguration();
@@ -61,6 +62,7 @@ public class AckermanBot extends AbstractRobotDrive {
 		//Log.enableDebugPrint(true);
 		
 		drive.ResetPIDChannel(0);
+		ThreadUtil.wait((200));
 		//Log.enableDebugPrint(false);
 	}
 	
@@ -102,7 +104,7 @@ public class AckermanBot extends AbstractRobotDrive {
 
 	@Override
 	public void onPIDEvent(PIDEvent e) {
-		//System.out.println("\n\nCurrent Ticks="+currentDriveTicks+e);
+		System.out.println("\n\nCurrent Ticks="+currentDriveTicks+" Event="+e);
 		int differenceTicks = (e.getValue()-currentDriveTicks);
 		double archLen = config.convetrtToCm(differenceTicks);
 		
@@ -137,7 +139,7 @@ public class AckermanBot extends AbstractRobotDrive {
 
 	@Override
 	public void onPIDReset(int group, int currentValue) {
-		//System.out.println("Resetting PID");
+		System.out.println("Resetting PID");
 		currentDriveTicks=currentValue;
 	}
 

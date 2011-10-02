@@ -51,6 +51,10 @@ public abstract class AbstractRobotDrive implements IPIDEventListener{
 	 */
 	public abstract boolean isAvailable();
 	
+	public void stopRobot(){
+		DriveStraight(0,0);
+	}
+	
 	public void setCurrentX(double currentX) {
 		//System.out.println("Current X is: "+currentX);
 		this.currentX = currentX;
