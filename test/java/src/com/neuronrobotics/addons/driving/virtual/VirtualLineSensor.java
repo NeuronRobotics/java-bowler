@@ -14,7 +14,7 @@ public class VirtualLineSensor extends AbstractSensor {
 	ObsticleType middle= ObsticleType.NONE;
 	ObsticleType right= ObsticleType.NONE;
 	double fOffset = 6;
-	double lOffset = 3;
+	double lOffset = 2;
 	private AbstractRobotDrive platform = null;
 	public VirtualLineSensor(AbstractRobotDrive r,VirtualWorld w) {
 		this.platform = r;

@@ -90,7 +90,9 @@ public class AckermanBot extends AbstractRobotDrive {
 		double steerAngle =((config.getWheelbase()/cmRadius));
 		setSteeringAngle(steerAngle);
 		double archlen = cmRadius*((2*Math.PI*degreesPerSecond)/(360));
-		SetDriveVelocity(config.convertToTicks(archlen));
+		int ticks = config.convertToTicks(archlen);
+		System.out.println("Seting PID set point of="+ticks);
+		SetDriveVelocity(ticks);
 	}
 
 	

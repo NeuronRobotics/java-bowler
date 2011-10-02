@@ -23,10 +23,10 @@ public class LineTrack implements IRobotDriveEventListener,ISensorListener{
 		///System.out.println("Steer value ="+diff);
 		if(diff<100 && diff>-100) {
 			//System.out.println("Drive straight");
-			mainRobot.DriveVelocityStraight(100);
+			mainRobot.DriveVelocityStraight(20);
 		}else {
 			//System.out.println("turn");
-			mainRobot.DriveVelocityArc(1/(diff/100), 20);
+			mainRobot.DriveVelocityArc((diff)/30, 10*((diff>0)?1:-1));
 		}
 	}
 	@Override
