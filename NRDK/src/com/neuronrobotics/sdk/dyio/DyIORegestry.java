@@ -14,8 +14,9 @@ public class DyIORegestry {
 		try{
 			if(get().getConnection()!=c)
 				get().setConnection(c);
-			if(!get().isAvailable())
+			if(get().getConnection().isConnected() == false){
 				get().connect();
+			}
 			c.addConnectionEventListener(new IConnectionEventListener() {
 				public void onDisconnect() {
 					DyIORegestry.disconnect();
