@@ -12,8 +12,10 @@ public class DyIORegestry {
 	private static ArrayList<IConnectionEventListener> disconnectListeners = new ArrayList<IConnectionEventListener> ();
 	public static boolean setConnection(BowlerAbstractConnection c){
 		try{
-			get().setConnection(c);
-			get().connect();
+			if(get().getConnection()!=c)
+				get().setConnection(c);
+			if(!get().isAvailable())
+				get().connect();
 			c.addConnectionEventListener(new IConnectionEventListener() {
 				public void onDisconnect() {
 					DyIORegestry.disconnect();
