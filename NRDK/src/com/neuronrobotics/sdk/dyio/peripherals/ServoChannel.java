@@ -13,6 +13,8 @@
  * limitations under the License.
  ******************************************************************************/
 package com.neuronrobotics.sdk.dyio.peripherals;
+import java.util.ArrayList;
+
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIOChannel;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
@@ -21,7 +23,7 @@ import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
  * 
  */
 public class ServoChannel extends DyIOAbstractPeripheral {
-	
+	private ArrayList<IServoPositionUpdateListener >listeners = new ArrayList<IServoPositionUpdateListener >();
 	/**
 	 * 
 	 * 
@@ -68,6 +70,7 @@ public class ServoChannel extends DyIOAbstractPeripheral {
 		if(!validate()) {
 			return false;
 		}
+		firePositionUpdate(pos,time);
 		getChannel().setCachedValue(pos);
 		getChannel().setCachedTime(time);
 		if(getChannel().getCachedMode()) {
@@ -89,5 +92,21 @@ public class ServoChannel extends DyIOAbstractPeripheral {
 	@Override
 	public boolean hasAsync() {
 		return false;
+	}
+	
+	private void firePositionUpdate(int pos,double time){
+		for(IServoPositionUpdateListener s:listeners){
+			s.onServoPositionUpdate(this, pos,time);
+		}
+	}
+	
+	public void addIServoPositionUpdateListener(IServoPositionUpdateListener l) {
+		if(listeners.contains(l))
+			return;
+		listeners.add(l);
+	}
+	public void removeIServoPositionUpdateListener(IServoPositionUpdateListener l) {
+		if(listeners.contains(l))
+			listeners.add(l);
 	}
 }

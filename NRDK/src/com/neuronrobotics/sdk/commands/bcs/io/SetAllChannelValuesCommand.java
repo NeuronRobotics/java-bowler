@@ -6,8 +6,12 @@ import com.neuronrobotics.sdk.common.BowlerMethod;
 
 public class SetAllChannelValuesCommand extends BowlerAbstractCommand {
 
-
-	public SetAllChannelValuesCommand(float time, int [] values){
+/**
+ * 
+ * @param time in seconds
+ * @param values
+ */
+	public SetAllChannelValuesCommand(double time, int [] values){
 		setMethod(BowlerMethod.POST);
 		setOpCode("sacv");
 		getCallingDataStorage().addAs32((int)(time*1000));

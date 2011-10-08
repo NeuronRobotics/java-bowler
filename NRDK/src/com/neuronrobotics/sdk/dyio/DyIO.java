@@ -477,8 +477,11 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 				}
 		}
 	}
-	
-	public void flushCache(float time) {
+	/**
+	 * 
+	 * @param time in seconds
+	 */
+	public void flushCache(double seconds) {
 		//System.out.println("Updating all channels");
 		int [] values = new int[getInternalChannels().size()];
 		int i=0;
@@ -488,7 +491,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 		}
 		for(int i1=0;i1<5;i1++) {
 			try {
-				send(new SetAllChannelValuesCommand(time,values));
+				send(new SetAllChannelValuesCommand(seconds,values));
 				return;
 			}catch (InvalidResponseException e1) {
 				//System.err.println("Failed to update all, retrying");
