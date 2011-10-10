@@ -178,11 +178,11 @@ public class ConnectionDialog extends JDialog {
 				Log.info("Connected");
 			} catch(DyIOCommunicationException e1) {
 				String m = "The DyIO has not reported back to the library. \nCheck your connection and ensure you are attempting to talk to a DyIO, not another Bowler Device\nThis program will now exit.";
-				JOptionPane.showMessageDialog(null, m, "DyIO Not Responding", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, m, "DyIO Not Responding"+e1.getMessage(), JOptionPane.ERROR_MESSAGE);
 				continue;
 			} catch(Exception e) {
 				String m = "The connection is not valid.";
-				JOptionPane.showMessageDialog(null, m, "DyIO Not Responding", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, m, "DyIO Not Responding"+e.getMessage(), JOptionPane.ERROR_MESSAGE);
 				fudge=null;
 				return false;
 			}
