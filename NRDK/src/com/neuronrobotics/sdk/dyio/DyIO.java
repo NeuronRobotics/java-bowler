@@ -423,7 +423,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 			
 		}
 		if (channel < 0 || channel > getInternalChannels().size()) {
-			throw new IndexOutOfBoundsException("DyIO channels must be between 0 and " + getInternalChannels().size());
+			throw new IndexOutOfBoundsException("DyIO channels must be between 0 and " + getInternalChannels().size()+" requested:"+channel);
 		}
 	}
 	
