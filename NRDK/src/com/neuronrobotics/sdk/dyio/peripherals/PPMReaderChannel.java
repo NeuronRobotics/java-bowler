@@ -9,6 +9,7 @@ import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.dyio.DyIOChannel;
 import com.neuronrobotics.sdk.dyio.DyIOChannelEvent;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
+import com.neuronrobotics.sdk.dyio.DyIORegestry;
 import com.neuronrobotics.sdk.dyio.IChannelEventListener;
 import com.neuronrobotics.sdk.dyio.IDyIOChannel;
 
@@ -20,6 +21,9 @@ public class PPMReaderChannel  extends DyIOAbstractPeripheral implements IChanne
 	int [] values=null;
 	public static final int NO_CROSSLINK = 0xff;
 	
+	public PPMReaderChannel() {
+		this(DyIORegestry.get().getChannel(23));
+	}
 	public PPMReaderChannel(DyIOChannel channel) {
 		super(channel,myMode,true);
 		if(!getChannel().canBeMode(myMode)) {

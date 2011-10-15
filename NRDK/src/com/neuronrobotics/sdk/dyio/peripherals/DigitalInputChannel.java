@@ -16,9 +16,11 @@ package com.neuronrobotics.sdk.dyio.peripherals;
 
 import java.util.ArrayList;
 
+import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIOChannelEvent;
 import com.neuronrobotics.sdk.dyio.DyIOChannel;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
+import com.neuronrobotics.sdk.dyio.DyIORegestry;
 import com.neuronrobotics.sdk.dyio.IChannelEventListener;
 
 /**
@@ -45,18 +47,33 @@ public class DigitalInputChannel extends DyIOAbstractPeripheral implements IChan
 	}
 	
 	/**
-	 * DigitalInputChannel.
+	 * Constructor.
+	 * Creates an counter input input channel that is syncronous only by default.
 	 * 
-	 * @param channel
-	 *            The channel object to set up as a Digital Input
+	 * @param channel - the channel object requested from the DyIO
 	 */
-	public DigitalInputChannel(DyIOChannel channel){
-		super(channel,DyIOChannelMode.DIGITAL_IN,true);
-		channel.addChannelEventListener(this);
-		
-		if(!setMode()) {
-			throw new DyIOPeripheralException("Could not set channel " + getChannel() + " to " + DyIOChannelMode.DIGITAL_IN + " mode.");
-		}	
+	public  DigitalInputChannel(int channel){
+		this(DyIORegestry.get().getChannel(channel));	
+	}
+	
+	/**
+	 * Constructor.
+	 * Creates an counter input input channel that is syncronous only by default.
+	 * 
+	 * @param channel - the channel object requested from the DyIO
+	 */
+	public  DigitalInputChannel(DyIO dyio,int channel){
+		this(dyio.getChannel(channel));	
+	}
+	
+	/**
+	 * Constructor.
+	 * Creates an counter input input channel that is syncronous only by default.
+	 * 
+	 * @param channel - the channel object requested from the DyIO
+	 */
+	public  DigitalInputChannel(DyIOChannel channel){
+		this(channel,true);	
 	}
 	
 	/**

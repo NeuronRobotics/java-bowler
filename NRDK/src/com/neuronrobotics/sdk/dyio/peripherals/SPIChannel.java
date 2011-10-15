@@ -5,9 +5,13 @@ import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
+import com.neuronrobotics.sdk.dyio.DyIORegestry;
 
 public class SPIChannel {
 	DyIO dyio;
+	public SPIChannel () {
+		this(DyIORegestry.get());
+	}
 	public SPIChannel (DyIO d) {
 		d.setMode(0, DyIOChannelMode.SPI_CLOCK);
 		dyio = d;

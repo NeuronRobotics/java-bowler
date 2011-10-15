@@ -14,14 +14,36 @@
  ******************************************************************************/
 package com.neuronrobotics.sdk.dyio.peripherals;
 
+import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIOChannel;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
+import com.neuronrobotics.sdk.dyio.DyIORegestry;
 
 /**
  * 
  */
 public class DigitalOutputChannel extends DyIOAbstractPeripheral {
+	/**
+	 * Constructor.
+	 * Creates an counter input input channel that is syncronous only by default.
+	 * 
+	 * @param channel - the channel object requested from the DyIO
+	 */
+	public DigitalOutputChannel(int channel){
+		this(DyIORegestry.get().getChannel(channel));	
+	}
 	
+	/**
+	 * Constructor.
+	 * Creates an counter input input channel that is syncronous only by default.
+	 * 
+	 * @param channel - the channel object requested from the DyIO
+	 */
+	public DigitalOutputChannel(DyIO dyio,int channel){
+		this(dyio.getChannel(channel));	
+	}
+	
+
 	/**
 	 * DigitalOutChannel.
 	 * 

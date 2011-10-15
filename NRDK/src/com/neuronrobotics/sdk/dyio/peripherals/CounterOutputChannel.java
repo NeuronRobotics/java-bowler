@@ -19,9 +19,11 @@ import java.util.ArrayList;
 
 import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.Log;
+import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIOChannel;
 import com.neuronrobotics.sdk.dyio.DyIOChannelEvent;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
+import com.neuronrobotics.sdk.dyio.DyIORegestry;
 import com.neuronrobotics.sdk.dyio.IChannelEventListener;
 
 
@@ -30,16 +32,37 @@ import com.neuronrobotics.sdk.dyio.IChannelEventListener;
  */
 public class CounterOutputChannel extends DyIOAbstractPeripheral implements IChannelEventListener{
 	private ArrayList<ICounterOutputListener> listeners = new ArrayList<ICounterOutputListener>();
+	
 	/**
-	 * CounterChannel.
+	 * Constructor.
+	 * Creates an counter input input channel that is syncronous only by default.
 	 * 
-	 * @param channel
-	 *            The channel object to set up as counter
+	 * @param channel - the channel object requested from the DyIO
 	 */
-	public CounterOutputChannel(DyIOChannel channel) {
-		super(channel,DyIOChannelMode.COUNT_OUT_INT,true);
-		init(channel,false);
+	public CounterOutputChannel(int channel){
+		this(DyIORegestry.get().getChannel(channel));	
 	}
+	
+	/**
+	 * Constructor.
+	 * Creates an counter input input channel that is syncronous only by default.
+	 * 
+	 * @param channel - the channel object requested from the DyIO
+	 */
+	public CounterOutputChannel(DyIO dyio,int channel){
+		this(dyio.getChannel(channel));	
+	}
+	
+	/**
+	 * Constructor.
+	 * Creates an counter input input channel that is syncronous only by default.
+	 * 
+	 * @param channel - the channel object requested from the DyIO
+	 */
+	public CounterOutputChannel(DyIOChannel channel){
+		this(channel,true);	
+	}
+
 	public CounterOutputChannel(DyIOChannel channel,boolean isAsync) {
 		super(channel,DyIOChannelMode.COUNT_OUT_INT,isAsync);
 		init(channel,isAsync);

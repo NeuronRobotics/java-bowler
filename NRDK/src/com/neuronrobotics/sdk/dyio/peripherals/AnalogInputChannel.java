@@ -18,9 +18,11 @@ import java.util.ArrayList;
 
 import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.Log;
+import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIOChannel;
 import com.neuronrobotics.sdk.dyio.DyIOChannelEvent;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
+import com.neuronrobotics.sdk.dyio.DyIORegestry;
 import com.neuronrobotics.sdk.dyio.IChannelEventListener;
 
 /**
@@ -32,6 +34,36 @@ public class AnalogInputChannel extends DyIOAbstractPeripheral implements IChann
 	public static final int ADCVOLTAGE = 5;
 	
 	private ArrayList<IAnalogInputListener> listeners = new ArrayList<IAnalogInputListener>();
+	
+	/**
+	 * Constructor.
+	 * Creates an analog input channel that is syncronous only by default.
+	 * 
+	 * @param channel - the channel object requested from the DyIO
+	 */
+	public AnalogInputChannel(int channel){
+		this(DyIORegestry.get().getChannel(channel));	
+	}
+	
+	/**
+	 * Constructor.
+	 * Creates an analog input channel that is syncronous only by default.
+	 * 
+	 * @param channel - the channel object requested from the DyIO
+	 */
+	public AnalogInputChannel(DyIO dyio,int channel){
+		this(dyio.getChannel(channel));	
+	}
+	
+	/**
+	 * Constructor.
+	 * Creates an analog input channel that is syncronous only by default.
+	 * 
+	 * @param channel - the channel object requested from the DyIO
+	 */
+	public AnalogInputChannel(DyIOChannel channel){
+		this(channel,true);	
+	}
 	
 	/**
 	 * Constructor.
@@ -49,20 +81,7 @@ public class AnalogInputChannel extends DyIOAbstractPeripheral implements IChann
 		}	
 	}
 	
-	/**
-	 * Constructor.
-	 * Creates an analog input channel that is syncronous only by default.
-	 * 
-	 * @param channel - the channel object requested from the DyIO
-	 */
-	public AnalogInputChannel(DyIOChannel channel){
-		super(channel,DyIOChannelMode.ANALOG_IN,false);
-		channel.addChannelEventListener(this);
-		
-		if(!setMode( false)) {
-			throw new DyIOPeripheralException("Could not set channel " + getChannel() + " to " + DyIOChannelMode.ANALOG_IN +  " mode.");
-		}	
-	}
+
 	
 	/**
 	 * Gets the value of the channel as a percentage.

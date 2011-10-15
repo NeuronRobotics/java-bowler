@@ -26,6 +26,7 @@ import com.neuronrobotics.sdk.dyio.DyIOChannelEvent;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.dyio.DyIOInputStream;
 import com.neuronrobotics.sdk.dyio.DyIOOutputStream;
+import com.neuronrobotics.sdk.dyio.DyIORegestry;
 import com.neuronrobotics.sdk.dyio.IChannelEventListener;
 import com.neuronrobotics.sdk.dyio.InvalidChannelOperationException;
 
@@ -40,6 +41,10 @@ public class UARTChannel implements ISendable {
 	DyIO device;
 	UARTTxChannel tx;
 	UARTRxChannel rx;
+	
+	public UARTChannel() {
+		this(DyIORegestry.get());
+	}
 	
 	/**
 	 * 
