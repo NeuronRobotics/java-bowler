@@ -265,11 +265,15 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 			
 			for(int i=0;i<3;i++){
 				if(firmware[i] < sdkRev[i]){
-					throw new DyIOFirmwareOutOfDateException( 	"\nNRDK version = "+new ByteList(sdkRev)+
-																"\n DyIO version = "+ new ByteList(firmware)+
+					DyIOFirmwareOutOfDateException e = new DyIOFirmwareOutOfDateException( 	"\nNRDK version = "+new ByteList(sdkRev)+
+																"\nDyIO version = "+ new ByteList(firmware)+
 																"\nTry updating your firmware using the firmware update instructions from http://neuronrobotics.com/");
+					//e.printStackTrace();
+					throw e;
 				}
 			}
+		}else{
+			Log.debug("Not checking firmware version for DyIO");
 		}
 	}
 	public boolean resync() {
