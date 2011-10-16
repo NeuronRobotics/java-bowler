@@ -253,8 +253,8 @@ public class BasicWalker {
 	}
 	private void setDyio(DyIO dyio) {
 		if(((dyio.getBankAState()==DyIOPowerState.REGULATED) || (dyio.getBankBState()==DyIOPowerState.REGULATED))){
-			System.err.println("Invalid switch configuration!");
-			throw new RuntimeException("Invalid switch configuration for hexapod!");
+			System.err.println("Invalid Power Switch configuration!");
+			throw new RuntimeException("Invalid Power Switch configuration for hexapod!");
 		}
 		this.dyio = dyio;
 	}
