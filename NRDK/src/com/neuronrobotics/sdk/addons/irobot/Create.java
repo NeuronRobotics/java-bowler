@@ -22,7 +22,6 @@ import com.neuronrobotics.sdk.dyio.DyIOChannelEvent;
 import com.neuronrobotics.sdk.dyio.peripherals.DyIOPeripheralException;
 import com.neuronrobotics.sdk.dyio.peripherals.IUARTStreamListener;
 import com.neuronrobotics.sdk.dyio.peripherals.UARTChannel;
-
 /**
  * 
  */
