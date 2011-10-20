@@ -3,8 +3,6 @@ package com.neuronrobotics.addons.driving;
 import com.neuronrobotics.sdk.pid.PIDEvent;
 
 public class PuckBot extends AbstractPuckBot{
-
-
 	@Override
 	public void DriveStraight(double cm, double seconds) {
 		// TODO Auto-generated method stub
