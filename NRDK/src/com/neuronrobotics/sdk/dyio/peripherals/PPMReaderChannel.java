@@ -83,11 +83,11 @@ public class PPMReaderChannel  extends DyIOAbstractPeripheral implements IChanne
 		if(crossLinks == null){
 			updateValues();
 		}
-		//System.out.print("\nGetting cross link map: [");
-		for(int i=0;i<crossLinks.length;i++) {
-			System.out.print(" "+crossLinks[i]);
-		}
-		System.out.print("]");
+//		System.out.print("\nGetting cross link map: [");
+//		for(int i=0;i<crossLinks.length;i++) {
+//			System.out.print(" "+crossLinks[i]);
+//		}
+//		System.out.print("]");
 		return crossLinks;
 	}
 	/**
@@ -143,8 +143,10 @@ public class PPMReaderChannel  extends DyIOAbstractPeripheral implements IChanne
 		for(int i=0;i<values.length;i++) {
 			values[i] = e.getData().getUnsigned(i);
 		}
-		for (IPPMReaderListener l:listeners) {
-			l.onPPMPacket(values);
+		if(values != null) {
+			for (IPPMReaderListener l:listeners) {
+				l.onPPMPacket(values);
+			}
 		}
 	}
 	
