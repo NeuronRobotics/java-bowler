@@ -124,7 +124,7 @@ public abstract class BowlerAbstractCommand implements ISendable {
 		if( data.getRPC().equals("_err")) {
 			Integer zone=Integer.valueOf(data.getData().getByte(0));
 			Integer section=Integer.valueOf(data.getData().getByte(1));
-			System.err.println("Failed!!\n"+data);
+			//System.err.println("Failed!!\n"+data);
 			switch(zone) {
 			default:
 				throw new InvalidResponseException("Unknown error. (" + zone + " " + section + ")");
