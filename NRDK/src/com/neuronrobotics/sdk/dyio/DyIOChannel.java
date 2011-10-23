@@ -519,7 +519,7 @@ public class DyIOChannel implements IDyIOChannel {
 					try {
 						getDevice().resync();
 					}catch(RuntimeException e) {
-						e.printStackTrace();
+						//e.printStackTrace();
 						getDevice().setMuteResyncOnModeChange(true);
 					}
 				}else{
