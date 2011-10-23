@@ -31,7 +31,7 @@ public class SpeedTest {
 		//dyio.setCachedMode(true);
 		long start = System.currentTimeMillis();
 		System.out.println("Starting test");
-		for(i=0;i<10000;i++) {
+		for(i=0;i<1000;i++) {
 			//dyio.flushCache(0);
 			try {
 				high = !high;
@@ -43,9 +43,9 @@ public class SpeedTest {
 			double ms=System.currentTimeMillis()-start;
 			avg +=ms;
 			start = System.currentTimeMillis();
-			System.out.println("Average cycle time: "+(int)(avg/i)+"ms\t\t\t this loop was: "+ms);
+			//System.out.println("Average cycle time: "+(int)(avg/i)+"ms\t\t\t this loop was: "+ms);
 		}
-		//System.out.println("Average cycle time for IO get/set: "+(avg/i)+" ms");
+		System.out.println("Average cycle time for IO get/set: "+(avg/i)+" ms");
 		
 		avg=0;
 		dyio.setCachedMode(true);
