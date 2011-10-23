@@ -17,9 +17,10 @@ public class SpeedTest {
 		if (!ConnectionDialog.getBowlerDevice(dyio)){
 			System.exit(0);
 		}
-		for (int i=0;i<24;i++){
-			dyio.setMode(i, DyIOChannelMode.DIGITAL_IN,false);
-		}
+		dyio.enableDebug();
+//		for (int i=0;i<24;i++){
+//			dyio.getChannel(i).set
+//		}
 		DigitalInputChannel dip = new DigitalInputChannel(dyio.getChannel(0));
 		DigitalOutputChannel dop = new DigitalOutputChannel(dyio.getChannel(1));
 		
@@ -29,10 +30,15 @@ public class SpeedTest {
 		boolean high = false;
 		//dyio.setCachedMode(true);
 		long start = System.currentTimeMillis();
-		for(i=0;i<100;i++) {
+		System.out.println("Starting test");
+		for(i=0;i<10000;i++) {
 			//dyio.flushCache(0);
-			high = !high;
-			high = dip.getValue()==1;
+			try {
+				high = !high;
+				high = dip.getValue()==1;
+			}catch(Exception ex) {
+				ex.printStackTrace();
+			}
 			dop.setHigh(high);
 			double ms=System.currentTimeMillis()-start;
 			avg +=ms;
