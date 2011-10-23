@@ -506,6 +506,7 @@ public class DyIOChannel implements IDyIOChannel {
 		}
 		
 		if(!canBeMode(mode)){
+			
 			throw new RuntimeException("\nChannel: "+getChannelNumber()+" can not be mode '"+mode+"' in current configuration. \nCheck the power switch settings and availible modes.");
 		}
 		for(int i = 0; i < MAXATTEMPTS; i++) {
@@ -515,7 +516,12 @@ public class DyIOChannel implements IDyIOChannel {
 				getDevice().send(new SetChannelModeCommand(number, mode, async));
 				haveSetMode=true;
 				if(!getDevice().isMuteResyncOnModeChange()){
-					getDevice().resync();
+					try {
+						getDevice().resync();
+					}catch(RuntimeException e) {
+						e.printStackTrace();
+						getDevice().setMuteResyncOnModeChange(true);
+					}
 				}else{
 					Log.debug("Not resyncing from channel: "+getChannelNumber());
 				}
