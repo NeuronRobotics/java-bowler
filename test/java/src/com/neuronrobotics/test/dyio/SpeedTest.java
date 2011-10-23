@@ -17,7 +17,7 @@ public class SpeedTest {
 		if (!ConnectionDialog.getBowlerDevice(dyio)){
 			System.exit(0);
 		}
-		dyio.enableDebug();
+		//dyio.enableDebug();
 //		for (int i=0;i<24;i++){
 //			dyio.getChannel(i).set
 //		}
@@ -43,9 +43,9 @@ public class SpeedTest {
 			double ms=System.currentTimeMillis()-start;
 			avg +=ms;
 			start = System.currentTimeMillis();
-			//System.out.println("Average cycle time: "+(int)(avg/i)+"ms\t\t\t this loop was: "+ms);
+			System.out.println("Average cycle time: "+(int)(avg/i)+"ms\t\t\t this loop was: "+ms);
 		}
-		System.out.println("Average cycle time for IO get/set: "+(avg/i)+" ms");
+		//System.out.println("Average cycle time for IO get/set: "+(avg/i)+" ms");
 		
 		avg=0;
 		dyio.setCachedMode(true);
