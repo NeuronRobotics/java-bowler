@@ -3,6 +3,11 @@ package com.neuronrobotics.addons.driving;
 import com.neuronrobotics.sdk.pid.PIDEvent;
 
 public class PuckBotKinematics {
+	
+	/**
+	 * THis is a full implementation of the PuckBot
+	 */
+	
 	PuckBot robot;
 	PuckBotConfiguration config = new PuckBotConfiguration();
 	
