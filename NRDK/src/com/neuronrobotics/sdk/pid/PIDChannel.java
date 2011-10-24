@@ -129,5 +129,10 @@ public class PIDChannel {
 		// TODO Auto-generated method stub
 		return pid.isAvailable();
 	}
+
+	public int getGroup() {
+		// TODO Auto-generated method stub
+		return index;
+	}
 	
 }

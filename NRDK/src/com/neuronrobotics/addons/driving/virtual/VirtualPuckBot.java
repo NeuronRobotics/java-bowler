@@ -1,6 +1,7 @@
 package com.neuronrobotics.addons.driving.virtual;
 
 import com.neuronrobotics.addons.driving.PuckBot;
+import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.pid.IPIDEventListener;
 import com.neuronrobotics.sdk.pid.PIDEvent;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
@@ -18,7 +19,7 @@ public class VirtualPuckBot extends PuckBot{
 	private void init(VirtualWorld w ,int botStartX ,int botStartY){
 		world=w;
 		world.addRobot(this,botStartX , botStartY);
-		controller = new VirtualGenericPIDDevice(config.getMaxTicksPerSeconds());
+		controller = new VirtualGenericPIDDevice(getMaxTicksPerSeconds());
 		controller.addPIDEventListener(new IPIDEventListener() {
 			public void onPIDReset(int group, int currentValue) {}
 			public void onPIDLimitEvent(PIDLimitEvent e) {}
@@ -30,6 +31,7 @@ public class VirtualPuckBot extends PuckBot{
 		setPIDChanels(controller.getPIDChannel(0),controller.getPIDChannel(1));
 		
 	}
+
 
 
 }
