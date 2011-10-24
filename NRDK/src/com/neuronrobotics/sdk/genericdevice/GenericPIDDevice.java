@@ -212,6 +212,7 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 			Log.debug("Setting hardware velocity control");
 			return send(new PDVelocityCommand(group, unitsPerSecond, seconds))!=null;
 		}catch (Exception ex){
+			Log.error("Failed! Setting interpolated velocity control..");
 			return SetPIDInterpolatedVelocity( group, unitsPerSecond,  seconds);
 		}
 	}
