@@ -19,7 +19,7 @@ public class VirtualAckermanBot extends AckermanBot {
 	private void init(VirtualWorld w ,int botStartX ,int botStartY){
 		world=w;
 		world.addRobot(this,botStartX , botStartY);
-		controller = new VirtualGenericPIDDevice(config.getMaxTicksPerSeconds());
+		controller = new VirtualGenericPIDDevice(getMaxTicksPerSecond());
 		controller.addPIDEventListener(new IPIDEventListener() {
 			public void onPIDReset(int group, int currentValue) {}
 			public void onPIDLimitEvent(PIDLimitEvent e) {}
