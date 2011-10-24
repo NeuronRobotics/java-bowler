@@ -13,6 +13,8 @@ public enum ObsticleType {
 	
 	FIRE(Color.orange),
 	
+	USERDEFINED(Color.pink),
+	
 	NONE(Color.white);
 	
 	/** The Constant lookup. */
@@ -71,6 +73,8 @@ public enum ObsticleType {
 			return "In The Wall";
 		case FIRE:
 			return "In The Fire";
+		case USERDEFINED:
+			return "User Defined Obsticle";
 		case NONE:
 			return "No Obsticle";
 		}
