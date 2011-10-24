@@ -1,5 +1,6 @@
 package com.neuronrobotics.addons.driving;
 
+import com.neuronrobotics.sdk.addons.kinematics.ServoRotoryLink;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.dyio.dypid.DyPIDConfiguration;
@@ -36,7 +37,9 @@ public class RealLineTrack {
 					d.ConfigurePIDController(pid);
 					
 					PIDChannel drive = d.getPIDChannel(0);
-					AbstractRobotDrive mainRobot  = new AckermanBot(new ServoChannel(d.getChannel(10)), drive );
+					ServoChannel srv = new ServoChannel(d.getChannel(10));
+					AbstractRobotDrive mainRobot  =  new AckermanBot(	new ServoRotoryLink(srv, 98, 51, 143, 1), 
+							drive );
 
 					AbstractSensor line = new LineSensor(	new AnalogInputChannel(d.getChannel(14),true),
 											null,

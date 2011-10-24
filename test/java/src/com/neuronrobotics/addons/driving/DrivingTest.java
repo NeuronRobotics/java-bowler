@@ -9,6 +9,7 @@ import com.neuronrobotics.addons.driving.virtual.VirtualFlameSensor;
 import com.neuronrobotics.addons.driving.virtual.VirtualLineSensor;
 import com.neuronrobotics.addons.driving.virtual.VirtualRangeSensor;
 import com.neuronrobotics.addons.driving.virtual.VirtualWorld;
+import com.neuronrobotics.sdk.addons.kinematics.ServoRotoryLink;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.dyio.dypid.DyPIDConfiguration;
@@ -101,7 +102,9 @@ public class DrivingTest implements IRobotDriveEventListener,ISensorListener{
 		dyio.ConfigurePIDController(pid);
 		
 		PIDChannel drive = dyio.getPIDChannel(0);
-		AckermanBot a = new AckermanBot(new ServoChannel(dyio.getChannel(10)), drive );
+		ServoChannel srv = new ServoChannel(dyio.getChannel(10));
+		AckermanBot a =  new AckermanBot(	new ServoRotoryLink(srv, 98, 51, 143, 1), 
+				drive );
 		
 
 		ServoChannel sweeper = new ServoChannel(dyio.getChannel(9));
