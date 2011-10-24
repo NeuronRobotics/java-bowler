@@ -9,7 +9,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import com.neuronrobotics.addons.driving.virtual.DrivingRobotUI;
 import com.neuronrobotics.addons.driving.virtual.ObsticleType;
 
 public class NrMap extends JPanel{
@@ -28,9 +27,16 @@ public class NrMap extends JPanel{
 	protected static final double width = 600;
 	protected static final double hight = 480;
 	
+	/**
+	 * Instantiate a robot map using a default blank map. 
+	 */
 	public NrMap(){
 		initGui();
 	}
+	/**
+	 * Instantiate a robot map using a provided map
+	 * @param b the image of the desired map
+	 */
 	public NrMap(BufferedImage b){
 		setDisplay(b);
 		initGui();
@@ -42,13 +48,13 @@ public class NrMap extends JPanel{
         add(lab); 
 	}
 	
-	public void updateMap() {
+	protected void updateMap() {
 		//System.out.println("Updating Map");
 		BufferedImage display = getMap();
 		setFinalDisplayImage(display);
 	}
 	
-	public void setFinalDisplayImage(BufferedImage d){
+	protected void setFinalDisplayImage(BufferedImage d){
 		lab.setIcon(new ImageIcon(d ) );
 		lab.setVisible(true);
 	}
@@ -56,6 +62,7 @@ public class NrMap extends JPanel{
 	protected void setDisplay(BufferedImage d){
 		display=d;
 	}
+	
 	public BufferedImage getMap() {
 		if(display==null){
 			return new BufferedImage(600, 480,BufferedImage.TYPE_INT_RGB);
@@ -70,7 +77,7 @@ public class NrMap extends JPanel{
 		return d;
 	}
 	
-	public void addObsticle(int x, int y, int size){
+	public void addUserDefinedObsticle(int x, int y, int size){
 		if(display==null){
 			display =  new BufferedImage(600, 480,BufferedImage.TYPE_INT_RGB);
 		}

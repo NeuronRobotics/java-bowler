@@ -24,9 +24,6 @@ public class VirtualWorld extends NrMap{
 	private ArrayList<DrivingRobotUI> bots = new ArrayList<DrivingRobotUI>();
 	private JFrame frame;
 
-	
-
-	
 	public VirtualWorld() {
 		System.out.println("Starting new Virtual World");
 		BufferedImage d = new BufferedImage(getWidth(), getHeight(),BufferedImage.TYPE_INT_RGB);
@@ -83,32 +80,33 @@ public class VirtualWorld extends NrMap{
 	}
 
 	public void initGui(){
-		frame = new JFrame("Virtual World");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		super.initGui();
+		
+		
+        getFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBackground(Color.black);
-        frame.add(this);
-        frame.setSize((int)width+200,(int)hight+200);
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-        frame.setIconImage( ConnectionImageIconFactory.getIcon("images/hat.png").getImage());
+        getFrame().add(this);
+        getFrame().setSize((int)width+200,(int)hight+200);
+        getFrame().setLocationRelativeTo(null);
+        getFrame().setVisible(true);
+        getFrame().setIconImage( ConnectionImageIconFactory.getIcon("images/hat.png").getImage());
         //frame.addMouseListener(this);
         //frame.addMouseMotionListener(this);
-        
-        super.initGui();
-        
 	}
 	
-	public void updateMap() {
+	protected void updateMap() {
 		//System.out.println("Updating Map");
 		BufferedImage display = getMap();
 		
 		Graphics2D g =  display.createGraphics();
-		for(DrivingRobotUI b:bots) {
-			b.drawRobot(g);
+		if(bots != null){
+			for(DrivingRobotUI b:bots) {
+				b.drawRobot(g);
+			}
 		}
 		setFinalDisplayImage(display);
-		frame.setVisible(true);
-		frame.repaint();
+		getFrame().setVisible(true);
+		getFrame().repaint();
 	}
 	
 	public void addRobot(AbstractRobotDrive robot,int botStartX ,int botStartY) {
@@ -152,7 +150,7 @@ public class VirtualWorld extends NrMap{
 				double i=15;
 				double o =robot.getCurrentOrentation()+direction;
 				//System.out.println("Getting range at angle: "+Math.toDegrees(o));
-				while(x>0&&x<frame.getWidth()&&y>0&&y<frame.getHeight() && i<pixelMaxRange){
+				while(x>0&&x<getFrame().getWidth()&&y>0&&y<getFrame().getHeight() && i<pixelMaxRange){
 					i+=10;
 					x += (10*Math.sin(o));
 					y += (10*Math.cos(o));
@@ -167,6 +165,12 @@ public class VirtualWorld extends NrMap{
 			}
 		}
 		return pixelMaxRange;
+	}
+
+	public JFrame getFrame() {
+		if(frame == null)
+			frame = new JFrame("Virtual World");
+		return frame;
 	}
 
 
