@@ -4,6 +4,8 @@ import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.dyio.peripherals.DigitalInputChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.DigitalOutputChannel;
+import com.neuronrobotics.sdk.dyio.peripherals.PPMReaderChannel;
+import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 
 public class SpeedTest {
@@ -23,6 +25,8 @@ public class SpeedTest {
 //		}
 		DigitalInputChannel dip = new DigitalInputChannel(dyio.getChannel(0));
 		DigitalOutputChannel dop = new DigitalOutputChannel(dyio.getChannel(1));
+		new PPMReaderChannel(dyio.getChannel(23));
+		new ServoChannel(dyio.getChannel(11));
 		
 		double avg=0;
 		
@@ -32,7 +36,6 @@ public class SpeedTest {
 		long start = System.currentTimeMillis();
 		System.out.println("Starting test");
 		for(i=0;i<1000;i++) {
-			//dyio.flushCache(0);
 			try {
 				high = !high;
 				high = dip.getValue()==1;
@@ -43,9 +46,9 @@ public class SpeedTest {
 			double ms=System.currentTimeMillis()-start;
 			avg +=ms;
 			start = System.currentTimeMillis();
-			//System.out.println("Average cycle time: "+(int)(avg/i)+"ms\t\t\t this loop was: "+ms);
+			System.out.println("Average cycle time: "+(int)(avg/i)+"ms\t\t\t this loop was: "+ms+"\t\tindex="+i);
 		}
-		System.out.println("Average cycle time for IO get/set: "+(avg/i)+" ms");
+		System.out.println("Average cycle time for IO : "+(avg/i)/2+" ms");
 		
 		avg=0;
 		dyio.setCachedMode(true);
