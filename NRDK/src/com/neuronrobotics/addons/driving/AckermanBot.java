@@ -1,7 +1,6 @@
 package com.neuronrobotics.addons.driving;
 
 import com.neuronrobotics.sdk.addons.kinematics.ServoRotoryLink;
-import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 import com.neuronrobotics.sdk.pid.PIDChannel;
 import com.neuronrobotics.sdk.pid.PIDCommandException;
 import com.neuronrobotics.sdk.pid.PIDEvent;
