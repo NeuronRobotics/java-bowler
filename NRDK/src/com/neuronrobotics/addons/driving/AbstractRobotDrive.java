@@ -116,13 +116,13 @@ public abstract class AbstractRobotDrive implements IPIDEventListener{
 	protected void setRobotLocationUpdate(RobotLocationData d) {
 //		if(d==null)
 //			return;
-		System.out.println("Robot pos update "+d);
-		System.out.println("Before "+this);
+		//System.out.println("Robot pos update "+d);
+		//System.out.println("Before "+this);
 		double [] loc = getPositionOffset(d.getDeltaX(), d.getDeltaY());
 		setCurrentX(loc[0]);
 		setCurrentY(loc[1]);
 		setCurrentOrentation( getCurrentOrentation()+d.getDeltaOrentation());
-		System.out.println("After "+this);
+		//System.out.println("After "+this);
 		fireDriveEvent();
 	}
 	public String toString() {
