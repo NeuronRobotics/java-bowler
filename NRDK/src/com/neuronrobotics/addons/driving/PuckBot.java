@@ -1,17 +1,20 @@
 package com.neuronrobotics.addons.driving;
 
 import com.neuronrobotics.sdk.pid.PIDChannel;
+import com.neuronrobotics.sdk.pid.PIDCommandException;
 import com.neuronrobotics.sdk.pid.PIDEvent;
 
 public class PuckBot extends AbstractRobotDrive{
-	private PuckBotKinematics pk = new PuckBotKinematics(this);
+	private IPuckBotKinematics pk = new PuckBotKinematics();
 	protected PIDChannel left, right;
+	int[] flushData = null;
 	protected PuckBot(){
 		
 	}
 	
 	public PuckBot(PIDChannel left,PIDChannel right) {
 		setPIDChanels(left, right);
+		flushData=left.getPid().GetAllPIDPosition();
 	}
 	
 	protected void setPIDChanels(PIDChannel pidChannelLeft, PIDChannel pidChannelRight) {
@@ -21,28 +24,52 @@ public class PuckBot extends AbstractRobotDrive{
 		right.addPIDEventListener(this);
 	}
 	
+	public void SetEncoderPositions(PuckBotDriveData d){
+		left.setCachedTargetValue(d.getLeftEncoderData());
+		right.setCachedTargetValue(d.getRightEncoderData());
+		left.getPid().flushPIDChannels(d.getDriveTimeInSeconds());
+	}
+	public void SetEncoderVelocity(PuckBotVelocityData d) throws PIDCommandException{
+		left.SetPDVelocity((int) d.getLeftTicksPerSecond(), 0);
+		right.SetPDVelocity((int) d.getRightTicksPerSecond(), 0);
+	}
+	
 	@Override
 	public void DriveStraight(double cm, double seconds) {
-		getPuckBotKinematics().DriveStraight(cm, seconds);
+		SetEncoderPositions(getPuckBotKinematics().DriveStraight(cm, seconds));
 	}
 
 	@Override
 	public void DriveArc(double cmRadius, double degrees, double seconds) {
-		getPuckBotKinematics().DriveArc(cmRadius, degrees, seconds);
+		SetEncoderPositions(getPuckBotKinematics().DriveArc(cmRadius, degrees, seconds));
 	}
 	@Override
 	public void DriveVelocityArc(double degreesPerSecond, double cmRadius) {
-		getPuckBotKinematics().DriveVelocityArc(degreesPerSecond, cmRadius);
+		try {
+			SetEncoderVelocity(getPuckBotKinematics().DriveVelocityArc(degreesPerSecond, cmRadius));
+		} catch (PIDCommandException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void DriveVelocityStraight(double cmPerSecond) {
-		getPuckBotKinematics().DriveVelocityStraight(cmPerSecond);
+		try {
+			SetEncoderVelocity(getPuckBotKinematics().DriveVelocityStraight(cmPerSecond));
+		} catch (PIDCommandException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void onPIDEvent(PIDEvent e) {
-		getPuckBotKinematics().onPIDEvent(e);	
+		RobotLocationData d= getPuckBotKinematics().onPIDEvent(e,left.getGroup(),right.getGroup());	
+		double [] loc = getPositionOffset(d.getDeltaX(), d.getDeltaX());
+		setCurrentX(loc[0]);
+		setCurrentY(loc[1]);
+		setCurrentOrentation( getCurrentOrentation()+d.getDeltaOrentation());
 	}
 
 	@Override
@@ -62,11 +89,11 @@ public class PuckBot extends AbstractRobotDrive{
 		return left.isAvailable() && right.isAvailable();
 	}
 
-	public void setPuckBotKinematics(PuckBotKinematics pk) {
+	public void setPuckBotKinematics(IPuckBotKinematics pk) {
 		this.pk = pk;
 	}
 
-	public PuckBotKinematics getPuckBotKinematics() {
+	public IPuckBotKinematics getPuckBotKinematics() {
 		return pk;
 	}
 
