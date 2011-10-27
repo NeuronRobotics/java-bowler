@@ -2,13 +2,13 @@ package com.neuronrobotics.addons.driving;
 
 import com.neuronrobotics.sdk.pid.PIDEvent;
 
-public class AckermanKinematics {
+public class AckermanDefaultKinematics {
 	AckermanBot robot;
 	private int currentDriveTicks=0;
 	
 	protected final AckermanConfiguration config = new AckermanConfiguration();
 	
-	public AckermanKinematics(AckermanBot bot){
+	public AckermanDefaultKinematics(AckermanBot bot){
 		robot=bot;
 	}
 	
