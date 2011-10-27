@@ -15,7 +15,7 @@ public class AckermanBot extends AbstractRobotDrive {
 	protected double steeringAngle=0;
 	ServoRotoryLink steering;
 	PIDChannel drive;
-	private AckermanDefaultKinematics ak = new AckermanDefaultKinematics();
+	private IAckermanBotKinematics ak = new AckermanDefaultKinematics();
 	
 	protected AckermanBot(){
 		
@@ -116,11 +116,11 @@ public class AckermanBot extends AbstractRobotDrive {
 		return drive.isAvailable();
 	}
 
-	public void setAckermanKinematics(AckermanDefaultKinematics ak) {
+	public void setAckermanKinematics(IAckermanBotKinematics ak) {
 		this.ak = ak;
 	}
 
-	public AckermanDefaultKinematics getAckermanKinematics() {
+	public IAckermanBotKinematics getAckermanKinematics() {
 		return ak;
 	}
 
