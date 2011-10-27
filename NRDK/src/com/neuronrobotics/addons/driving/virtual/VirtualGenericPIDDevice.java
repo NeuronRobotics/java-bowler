@@ -32,8 +32,9 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 	 */
 	@Override
 	public BowlerDatagram send(BowlerAbstractCommand command) throws NoConnectionAvailableException, InvalidResponseException {	
-		//do nothing
-		return null;
+		RuntimeException r = new RuntimeException("This method is never supposed to be called in the virtual PID");
+		r.printStackTrace();
+		throw r;
 	}
 	@Override
 	public boolean ResetPIDChannel(int group, int valueToSetCurrentTo) {
