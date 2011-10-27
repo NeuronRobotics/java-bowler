@@ -102,12 +102,7 @@ public class AckermanBot extends AbstractRobotDrive {
 
 	@Override
 	public void onPIDEvent(PIDEvent e) {
-		RobotLocationData d = ak.onPIDEvent(e,getSteeringAngle());
-		double [] loc = getPositionOffset(d.getDeltaX(), d.getDeltaY());
-		setCurrentX(loc[0]);
-		setCurrentY(loc[1]);
-		setCurrentOrentation( getCurrentOrentation()+d.getDeltaOrentation());
-		fireDriveEvent();
+		setRobotLocationUpdate(ak.onPIDEvent(e,getSteeringAngle()));
 	}
 
 	@Override

@@ -69,13 +69,10 @@ public class PuckBot extends AbstractRobotDrive{
 
 	@Override
 	public void onPIDEvent(PIDEvent e) {
-		RobotLocationData d= getPuckBotKinematics().onPIDEvent(e,left.getGroup(),right.getGroup());	
-		double [] loc = getPositionOffset(d.getDeltaX(), d.getDeltaX());
-		setCurrentX(loc[0]);
-		setCurrentY(loc[1]);
-		setCurrentOrentation( getCurrentOrentation()+d.getDeltaOrentation());
-		fireDriveEvent();
+		setRobotLocationUpdate(getPuckBotKinematics().onPIDEvent(e,left.getGroup(),right.getGroup()));
 	}
+
+
 
 	@Override
 	public void onPIDReset(int group, int currentValue) {

@@ -113,6 +113,16 @@ public abstract class AbstractRobotDrive implements IPIDEventListener{
 		return back;
 	}
 	
+	protected void setRobotLocationUpdate(RobotLocationData d) {
+		if(d==null)
+			return;
+		double [] loc = getPositionOffset(d.getDeltaX(), d.getDeltaX());
+		setCurrentX(loc[0]);
+		setCurrentY(loc[1]);
+		setCurrentOrentation( getCurrentOrentation()+d.getDeltaOrentation());
+		fireDriveEvent();
+	}
+	
 	@Override
 	public void onPIDLimitEvent(PIDLimitEvent e) {
 		// do nothing, drive motors have no limits
