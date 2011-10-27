@@ -116,7 +116,7 @@ public class AckermanBot extends AbstractRobotDrive {
 		return drive.isAvailable();
 	}
 
-	public void setAckermanKinematics(IAckermanBotKinematics ak) {
+	public void setIAckermanKinematics(IAckermanBotKinematics ak) {
 		this.ak = ak;
 	}
 
