@@ -55,14 +55,14 @@ public abstract class AbstractRobotDrive implements IPIDEventListener{
 		DriveStraight(0,0);
 	}
 	
-	public void setCurrentX(double currentX) {
+	private void setCurrentX(double currentX) {
 		//System.out.println("Current X is: "+currentX);
 		this.currentX = currentX;
 	}
 	public double getCurrentX() {
 		return currentX;
 	}
-	public void setCurrentY(double currentY) {
+	private void setCurrentY(double currentY) {
 		//System.out.println("Current Y is: "+currentY);
 		this.currentY = currentY;
 	}
@@ -73,7 +73,7 @@ public abstract class AbstractRobotDrive implements IPIDEventListener{
 	 * 
 	 * @param currentTheta in radians
 	 */
-	public void setCurrentOrentation(double o) {
+	private void setCurrentOrentation(double o) {
 		//System.out.println("Current orentation is: "+Math.toDegrees(currentTheta));
 		this.currentOrentation = o;
 	}
@@ -114,15 +114,24 @@ public abstract class AbstractRobotDrive implements IPIDEventListener{
 	}
 	
 	protected void setRobotLocationUpdate(RobotLocationData d) {
-		if(d==null)
-			return;
-		double [] loc = getPositionOffset(d.getDeltaX(), d.getDeltaX());
+//		if(d==null)
+//			return;
+		System.out.println("Robot pos update "+d);
+		System.out.println("Before "+this);
+		double [] loc = getPositionOffset(d.getDeltaX(), d.getDeltaY());
 		setCurrentX(loc[0]);
 		setCurrentY(loc[1]);
 		setCurrentOrentation( getCurrentOrentation()+d.getDeltaOrentation());
+		System.out.println("After "+this);
 		fireDriveEvent();
 	}
-	
+	public String toString() {
+		String s=getClass().toString()+
+		" Current location: \n\tx="+getCurrentX()+
+		" cm \n\ty="+getCurrentY()+
+		" cm \n\torentation="+Math.toDegrees(getCurrentOrentation())+" degrees";
+		return s;
+	}
 	@Override
 	public void onPIDLimitEvent(PIDLimitEvent e) {
 		// do nothing, drive motors have no limits

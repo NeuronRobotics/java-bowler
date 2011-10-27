@@ -21,13 +21,13 @@ public class AckermanConfiguration {
 
 	public double convetrtToCm(int ticks){
 		double back =ticks/ticksToCm;
-		System.out.println(ticks+"ticks = "+back+"cm");
+		//System.out.println(ticks+" ticks = "+back+" cm");
 		return back;
 	}
 	
 	public int convertToTicks(double cm){
 		int back = (int)(cm*ticksToCm);
-		System.out.println(cm+"cm = "+back+"ticks");
+		//System.out.println(cm+"cm = "+back+"ticks");
 		return back;
 	}
 	

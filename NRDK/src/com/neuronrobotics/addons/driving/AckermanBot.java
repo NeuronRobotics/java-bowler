@@ -43,6 +43,7 @@ public class AckermanBot extends AbstractRobotDrive {
 	
 	public void setDriveData(AckermanBotDriveData d) {
 		ResetDrivePosition();
+		
 		setSteeringAngle(d.getSteerAngle());
 		SetDriveDistance(d.getTicksToTravil(), d.getSecondsToTravil());
 	}
@@ -57,11 +58,11 @@ public class AckermanBot extends AbstractRobotDrive {
 		return steeringAngle;
 	}
 	protected void SetDriveDistance(int ticks, double seconds){
-		//System.out.println("Seting PID set point of="+ticks);
+		System.out.println("Seting PID set point of="+ticks);
 		drive.SetPIDSetPoint(ticks, seconds);
 	}
 	protected void SetDriveVelocity(int ticksPerSecond){
-		//System.out.println("Seting PID set point of="+ticks);
+		System.out.println("Seting PID Velocity set point of="+ticksPerSecond);
 		try {
 			drive.SetPDVelocity(ticksPerSecond, 0);
 		} catch (PIDCommandException e) {

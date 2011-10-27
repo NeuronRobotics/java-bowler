@@ -47,15 +47,19 @@ public class VirtualLineSensor extends AbstractSensor {
 			getWorld().addSensorDisplayDot(getRobot(),    -lOffset, fOffset, Color.black);
 			while(true){
 				ThreadUtil.wait(10);
-				ObsticleType tmpL = getWorld().getObsticle(getRobot(),	 lOffset,fOffset);
-				ObsticleType tmpC = getWorld().getObsticle(getRobot(),			0,fOffset);
-				ObsticleType tmpR = getWorld().getObsticle(getRobot(),	  -lOffset,fOffset);
-				
-				if((tmpL != left) ||(tmpC!=middle) ||(tmpR!=right)){
-					left=tmpL;
-					middle=tmpC;
-					right=tmpR;
-					fireLineSensorEvent(left==ObsticleType.NONE?0:1024, middle==ObsticleType.NONE?0:1024, right==ObsticleType.NONE?0:1024, System.currentTimeMillis());
+				try {
+					ObsticleType tmpL = getWorld().getObsticle(getRobot(),	 lOffset,fOffset);
+					ObsticleType tmpC = getWorld().getObsticle(getRobot(),			0,fOffset);
+					ObsticleType tmpR = getWorld().getObsticle(getRobot(),	  -lOffset,fOffset);
+					
+					if((tmpL != left) ||(tmpC!=middle) ||(tmpR!=right)){
+						left=tmpL;
+						middle=tmpC;
+						right=tmpR;
+						fireLineSensorEvent(left==ObsticleType.NONE?0:1024, middle==ObsticleType.NONE?0:1024, right==ObsticleType.NONE?0:1024, System.currentTimeMillis());
+					}
+				}catch(Exception ex) {
+					
 				}
 			}
 		}

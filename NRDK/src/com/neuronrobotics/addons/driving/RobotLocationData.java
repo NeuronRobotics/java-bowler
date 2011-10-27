@@ -7,6 +7,10 @@ public class RobotLocationData {
 		 setY(deltaY);
 		 setO(deltaOrentation);
 	}
+	public String toString() {
+		String s="delta: x="+x+" y="+y+" orentation="+o; 
+		return s;
+	}
 	private void setX(double x) {
 		this.x = x;
 	}

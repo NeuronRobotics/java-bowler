@@ -36,9 +36,9 @@ public class AckermanDefaultKinematics implements IAckermanBotKinematics{
 	}
 	
 	public RobotLocationData onPIDEvent(PIDEvent e, double steerAngle) {
-		System.out.println("\n\nCurrent Ticks="+currentDriveTicks+" Event="+e);
+		//System.out.println("\n\nCurrent Ticks="+currentDriveTicks+" Event="+e);
 		int differenceTicks = (e.getValue()-currentDriveTicks);
-		currentDriveTicks=e.getValue();
+		
 		double archLen = config.convetrtToCm(differenceTicks);
 		
 		double radiusOfCurve=0;
@@ -58,8 +58,9 @@ public class AckermanDefaultKinematics implements IAckermanBotKinematics{
 			deltLateral =  0;
 			deltForward =  archLen;
 		}
-		
-		return new RobotLocationData(deltLateral,deltForward,centralAngleRadians);
+		RobotLocationData rl = new RobotLocationData(deltLateral,deltForward,centralAngleRadians);
+		currentDriveTicks=e.getValue();
+		return rl;
 	}
 	
 	public void onPIDReset( int currentValue){
