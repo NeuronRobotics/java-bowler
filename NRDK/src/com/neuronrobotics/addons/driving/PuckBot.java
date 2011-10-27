@@ -5,7 +5,7 @@ import com.neuronrobotics.sdk.pid.PIDCommandException;
 import com.neuronrobotics.sdk.pid.PIDEvent;
 
 public class PuckBot extends AbstractRobotDrive{
-	private IPuckBotKinematics pk = new PuckBotKinematics();
+	private IPuckBotKinematics pk = new PuckBotDefaultKinematics();
 	protected PIDChannel left, right;
 	int[] flushData = null;
 	protected PuckBot(){
