@@ -16,7 +16,7 @@ public class AckermanBot extends AbstractRobotDrive {
 	protected double steeringAngle=0;
 	ServoRotoryLink steering;
 	PIDChannel drive;
-	private AckermanDefaultKinematics ak = new AckermanDefaultKinematics(this);
+	private AckermanDefaultKinematics ak = new AckermanDefaultKinematics();
 	
 	protected AckermanBot(){
 		
@@ -41,6 +41,19 @@ public class AckermanBot extends AbstractRobotDrive {
 		steeringAngle = s;
 		setSteeringHardwareAngle(s);
 	}
+	
+	public void setDriveData(AckermanBotDriveData d) {
+		ResetDrivePosition();
+		setSteeringAngle(d.getSteerAngle());
+		SetDriveDistance(d.getTicksToTravil(), d.getSecondsToTravil());
+	}
+	public void setVelocityData(AckermanBotVelocityData d) {
+		ResetDrivePosition();
+		setSteeringAngle(d.getSteerAngle());
+		SetDriveVelocity((int) d.getTicksPerSecond());
+	}
+	
+	
 	public double getSteeringAngle() {
 		return steeringAngle;
 	}
@@ -67,19 +80,19 @@ public class AckermanBot extends AbstractRobotDrive {
 	
 	@Override
 	public void DriveStraight(double cm, double seconds) {
-		ak.DriveStraight(cm, seconds);
+		setDriveData(ak.DriveStraight(cm, seconds));
 	}
 	@Override
 	public void DriveArc(double cmRadius, double degrees, double seconds) {
-		ak.DriveArc(cmRadius, degrees, seconds);
+		setDriveData(ak.DriveArc(cmRadius, degrees, seconds));
 	}
 	@Override
 	public void DriveVelocityStraight(double cmPerSecond) {
-		ak.DriveVelocityStraight(cmPerSecond);
+		setVelocityData(ak.DriveVelocityStraight(cmPerSecond));
 	}
 	@Override
 	public void DriveVelocityArc(double degreesPerSecond, double cmRadius) {
-		ak.DriveVelocityArc(degreesPerSecond, cmRadius);
+		setVelocityData(ak.DriveVelocityArc(degreesPerSecond, cmRadius));
 	}
 
 	
