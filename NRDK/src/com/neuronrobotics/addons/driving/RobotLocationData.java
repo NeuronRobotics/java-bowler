@@ -4,7 +4,6 @@ public class RobotLocationData {
 	private double x,y,o;
 	RobotLocationData(double deltaX, double deltaY, double deltaOrentation){
 		 setX(deltaX);
-		 
 		 setY(deltaY);
 		 setO(deltaOrentation);
 	}

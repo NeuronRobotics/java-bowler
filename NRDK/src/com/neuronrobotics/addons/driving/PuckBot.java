@@ -25,11 +25,15 @@ public class PuckBot extends AbstractRobotDrive{
 	}
 	
 	public void SetEncoderPositions(PuckBotDriveData d){
+		left.ResetPIDChannel(0);
+		right.ResetPIDChannel(0);
 		left.setCachedTargetValue(d.getLeftEncoderData());
 		right.setCachedTargetValue(d.getRightEncoderData());
 		left.getPid().flushPIDChannels(d.getDriveTimeInSeconds());
 	}
 	public void SetEncoderVelocity(PuckBotVelocityData d) throws PIDCommandException{
+		left.ResetPIDChannel(0);
+		right.ResetPIDChannel(0);
 		left.SetPDVelocity((int) d.getLeftTicksPerSecond(), 0);
 		right.SetPDVelocity((int) d.getRightTicksPerSecond(), 0);
 	}
@@ -70,6 +74,7 @@ public class PuckBot extends AbstractRobotDrive{
 		setCurrentX(loc[0]);
 		setCurrentY(loc[1]);
 		setCurrentOrentation( getCurrentOrentation()+d.getDeltaOrentation());
+		fireDriveEvent();
 	}
 
 	@Override

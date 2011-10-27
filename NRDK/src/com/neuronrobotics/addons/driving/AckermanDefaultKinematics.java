@@ -42,7 +42,7 @@ public class AckermanDefaultKinematics {
 		robot.SetDriveVelocity(ticks);
 	}
 	
-	public void onPIDEvent(PIDEvent e) {
+	public RobotLocationData onPIDEvent(PIDEvent e, double steerAngle) {
 		System.out.println("\n\nCurrent Ticks="+currentDriveTicks+" Event="+e);
 		int differenceTicks = (e.getValue()-currentDriveTicks);
 		double archLen = config.convetrtToCm(differenceTicks);
@@ -51,8 +51,8 @@ public class AckermanDefaultKinematics {
 		double centralAngleRadians=0;
 		double deltLateral=0;
 		double deltForward=0;
-		if(robot.getSteeringAngle() !=0){
-			radiusOfCurve = config.getWheelbase()/robot.getSteeringAngle();
+		if(steerAngle !=0){
+			radiusOfCurve = config.getWheelbase()/steerAngle;
 			centralAngleRadians = archLen/radiusOfCurve;
 			//System.out.println("Central angle of motion was: "+Math.toDegrees(centralAngleRadians) + " Radius of curve = "+radiusOfCurve);
 			double y = radiusOfCurve*Math.sin(centralAngleRadians);
@@ -64,20 +64,13 @@ public class AckermanDefaultKinematics {
 			deltLateral =  0;
 			deltForward =  archLen;
 		}
-		
-		//System.out.println("Relative motion delta Ticks="+differenceTicks+", forward="+deltForward+", lateral="+deltLateral);
-		double [] loc = robot.getPositionOffset(deltLateral, deltForward);
-		
-		robot.setCurrentX(loc[0]);
-		robot.setCurrentY(loc[1]);
-		robot.setCurrentOrentation( robot.getCurrentOrentation()+centralAngleRadians);
-		
+
 		currentDriveTicks=e.getValue();
-		robot.fireDriveEvent();
+		return new RobotLocationData(deltLateral,deltForward,centralAngleRadians);
 	}
 	
 	public void onPIDReset( int currentValue){
-		
+		currentDriveTicks=currentValue;
 	}
 
 	public double getMaxTicksPerSeconds() {
