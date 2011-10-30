@@ -251,23 +251,31 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	 */
 	public ArrayList<String>  getNamespaces(){
 		ArrayList<String> list = new ArrayList<String>();
-		try {
-			BowlerDatagram b = send(new NamespaceCommand());
-			int num = b.getData().getByte(0);
-			Log.debug("There are "+num+" namespaces on this device");
-			for (int i=0;i<num;i++){
-				b = send(new NamespaceCommand(i));
-				String space = b.getData().asString();
-				Log.debug(space);
-				list.add(space);
+		while(true){
+			try {
+				BowlerDatagram b = send(new NamespaceCommand());
+				
+				int num = b.getData().getByte(0);
+				if(num<1){
+					Log.error("Namespace request failed:\n"+b);
+				}else{
+					Log.info("Number of Namespaces="+num);
+				}
+				Log.debug("There are "+num+" namespaces on this device");
+				for (int i=0;i<num;i++){
+					b = send(new NamespaceCommand(i));
+					String space = b.getData().asString();
+					Log.debug(space);
+					list.add(space);
+				}
+				return list;
+			} catch (InvalidResponseException e) {
+				Log.error("Invalid response from Namespace");
+				
+			} catch (NoConnectionAvailableException e) {
+				Log.error("No connection is available.");
 			}
-		} catch (InvalidResponseException e) {
-			Log.error("Invalid response from Namespace");
-			
-		} catch (NoConnectionAvailableException e) {
-			Log.error("No connection is available.");
 		}
-		return list;
 	}
 	
 	public void startHeartBeat(){
