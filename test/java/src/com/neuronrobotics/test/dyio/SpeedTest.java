@@ -6,6 +6,7 @@ import com.neuronrobotics.sdk.dyio.peripherals.DigitalInputChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.DigitalOutputChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.PPMReaderChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
+import com.neuronrobotics.sdk.serial.SerialConnection;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 
 public class SpeedTest {
@@ -15,10 +16,12 @@ public class SpeedTest {
 	 */
 	public static void main(String[] args) {
 		DyIO.disableFWCheck();
-		DyIO dyio = new DyIO();
-		if (!ConnectionDialog.getBowlerDevice(dyio)){
-			System.exit(0);
-		}
+		DyIO dyio = new DyIO(new SerialConnection("/dev/DyIO0"));
+		dyio.connect();
+//		DyIO dyio = new DyIO();
+//		if (!ConnectionDialog.getBowlerDevice(dyio)){
+//			System.exit(0);
+//		}
 		//dyio.enableDebug();
 //		for (int i=0;i<24;i++){
 //			dyio.getChannel(i).set
