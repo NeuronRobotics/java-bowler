@@ -5,7 +5,7 @@ public class PuckBotVelocityData {
 	private final double leftTicksPerSecond;
 	private final double rightTicksPerSecond;
 
-	PuckBotVelocityData(double leftTicksPerSecond, double rightTicksPerSecond){
+	public PuckBotVelocityData(double leftTicksPerSecond, double rightTicksPerSecond){
 		this.leftTicksPerSecond = leftTicksPerSecond;
 		this.rightTicksPerSecond = rightTicksPerSecond;
 		

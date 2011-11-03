@@ -4,7 +4,7 @@ public class PuckBotDriveData {
 	private int l;
 	private int r;
 	private final double seconds;
-	PuckBotDriveData(int leftEncoder, int rightEncoder, double seconds){
+	public PuckBotDriveData(int leftEncoder, int rightEncoder, double seconds){
 		this.seconds = seconds;
 		setL(leftEncoder);
 		setR(rightEncoder);
