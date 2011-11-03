@@ -23,7 +23,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 	
 	
 	public  VirtualGenericPIDDevice( double maxTicksPerSecond) {
-		this.maxTicksPerSecond=maxTicksPerSecond;
+		this.setMaxTicksPerSecond(maxTicksPerSecond);
 		
 	}
 	/**
@@ -52,10 +52,10 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 	}
 	@Override
 	public boolean SetPDVelocity(int group, int unitsPerSecond, double seconds)throws PIDCommandException {
-		if(unitsPerSecond>maxTicksPerSecond)
-			throw new RuntimeException("Saturated PID on channel: "+group+" Attempted Ticks Per Second: "+unitsPerSecond+", when max is"+maxTicksPerSecond+" set: "+maxTicksPerSecond+" sec: "+seconds);
-		if(unitsPerSecond<-maxTicksPerSecond)
-			throw new RuntimeException("Saturated PID on channel: "+group+" Attempted Ticks Per Second: "+unitsPerSecond+", when max is"+maxTicksPerSecond+" set: "+maxTicksPerSecond+" sec: "+seconds);
+		if(unitsPerSecond>getMaxTicksPerSecond())
+			throw new RuntimeException("Saturated PID on channel: "+group+" Attempted Ticks Per Second: "+unitsPerSecond+", when max is"+getMaxTicksPerSecond()+" set: "+getMaxTicksPerSecond()+" sec: "+seconds);
+		if(unitsPerSecond<-getMaxTicksPerSecond())
+			throw new RuntimeException("Saturated PID on channel: "+group+" Attempted Ticks Per Second: "+unitsPerSecond+", when max is"+getMaxTicksPerSecond()+" set: "+getMaxTicksPerSecond()+" sec: "+seconds);
 		if(seconds<0.1 && seconds>-0.1){
 			//System.out.println("Setting virtual velocity="+unitsPerSecond);
 			driveThreads.get(group).SetVelocity(unitsPerSecond);
@@ -103,6 +103,15 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 
 	
 	
+	public void setMaxTicksPerSecond(double maxTicksPerSecond) {
+		this.maxTicksPerSecond = maxTicksPerSecond;
+	}
+	public double getMaxTicksPerSecond() {
+		return maxTicksPerSecond;
+	}
+
+
+
 	/**
 	 * This class is designed to simulate a wheel driveing with a perfect controller
 	 * @author hephaestus
@@ -143,9 +152,9 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 			ThreadUtil.wait((int)(threadTime*2));
 			double TPS = (double)setpoint/seconds;
 			//Models motor saturation
-			if(TPS >  maxTicksPerSecond){
+			if(TPS >  getMaxTicksPerSecond()){
 				//seconds = (double)setpoint/maxTicksPerSeconds;
-				throw new RuntimeException("Saturated PID on channel: "+chan+" Attempted Ticks Per Second: "+TPS+", when max is"+maxTicksPerSecond+" set: "+setpoint+" sec: "+seconds);
+				throw new RuntimeException("Saturated PID on channel: "+chan+" Attempted Ticks Per Second: "+TPS+", when max is"+getMaxTicksPerSecond()+" set: "+setpoint+" sec: "+seconds);
 			}
 			duration = (long) (seconds*1000);
 			startTime=System.currentTimeMillis();

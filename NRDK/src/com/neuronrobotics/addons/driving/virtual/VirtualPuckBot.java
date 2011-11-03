@@ -1,5 +1,6 @@
 package com.neuronrobotics.addons.driving.virtual;
 
+import com.neuronrobotics.addons.driving.IPuckBotKinematics;
 import com.neuronrobotics.addons.driving.PuckBot;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.pid.IPIDEventListener;
@@ -31,7 +32,11 @@ public class VirtualPuckBot extends PuckBot{
 		setPIDChanels(controller.getPIDChannel(0),controller.getPIDChannel(1));
 		
 	}
-
-
+	@Override
+	public void setPuckBotKinematics(IPuckBotKinematics pk) {
+		super.setPuckBotKinematics(pk);
+		controller.setMaxTicksPerSecond(pk.getMaxTicksPerSeconds());
+	}
+	
 
 }
