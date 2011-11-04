@@ -12,5 +12,6 @@ public interface IPIDControl {
 	public boolean SetPIDInterpolatedVelocity(int group,int unitsPerSecond,double seconds) throws PIDCommandException;
 	public boolean SetPDVelocity(int group,int unitsPerSecond,double seconds) throws PIDCommandException;
 	public PIDChannel getPIDChannel(int group);
+	public boolean killAllPidGroups();
 	public boolean isAvailable();
 }

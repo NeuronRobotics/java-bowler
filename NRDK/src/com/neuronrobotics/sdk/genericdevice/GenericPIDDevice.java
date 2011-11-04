@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.neuronrobotics.sdk.commands.bcs.pid.ConfigurePIDCommand;
 import com.neuronrobotics.sdk.commands.bcs.pid.ControlAllPIDCommand;
 import com.neuronrobotics.sdk.commands.bcs.pid.ControlPIDCommand;
+import com.neuronrobotics.sdk.commands.bcs.pid.KillAllPIDCommand;
 import com.neuronrobotics.sdk.commands.bcs.pid.PDVelocityCommand;
 import com.neuronrobotics.sdk.commands.bcs.pid.ResetPIDCommand;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
@@ -223,6 +224,12 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 			GetAllPIDPosition();
 		}
 		return channels.get(group);
+	}
+
+	@Override
+	public boolean killAllPidGroups() {
+		// TODO Auto-generated method stub
+		return send(new KillAllPIDCommand())==null;
 	}
 
 }

@@ -759,5 +759,10 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 
 	}
 
+	@Override
+	public boolean killAllPidGroups() {
+		return pid.killAllPidGroups();
+	}
+
 
 }
