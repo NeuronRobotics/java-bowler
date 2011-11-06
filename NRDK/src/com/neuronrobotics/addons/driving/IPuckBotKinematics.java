@@ -34,11 +34,13 @@ public interface IPuckBotKinematics {
 	 */
 	public PuckBotVelocityData DriveVelocityArc(double degreesPerSecond, double cmRadius) ;
 	/**
-	 * The robots current location in cartesian space
+	 * The delta of robots current location in cartesian space
 	 * @param e the most recent encoder packet 
 	 * @param leftChannelNumber the number of the left channel, used for packet event handeling
 	 * @param rightChannelNumber the number of the right channel, used for packet event handeling
-	 * @return
+	 * @return 	the Deta of the cartesian position. This is the offset that resulted from the encoder event. 
+	 * 			If the robot did not move based on this encoder packet, the position of 0,0,0 should be 
+	 * 			returned.
 	 */
 	public RobotLocationData onPIDEvent(PIDEvent e, int leftChannelNumber, int rightChannelNumber) ;
 	/**

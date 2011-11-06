@@ -34,10 +34,12 @@ public interface IAckermanBotKinematics {
 	 */
 	public AckermanBotVelocityData DriveVelocityArc(double degreesPerSecond, double cmRadius) ;
 	/**
-	 * The robots current location in cartesian space
+	 * The delta robots current location in cartesian space
 	 * @param e the most recent encoder packet 
 	 * @param steerAngle the current angle of the steering wheel
-	 * @return
+	 * @return 	the Deta of the cartesian position. This is the offset that resulted from the encoder event. 
+	 * 			If the robot did not move based on this encoder packet, the position of 0,0,0 should be 
+	 * 			returned.
 	 */
 	public RobotLocationData onPIDEvent(PIDEvent e, double steerAngle) ;
 	/**
