@@ -1,4 +1,11 @@
 package com.neuronrobotics.addons.driving;
+/**
+ * This class represents the Delta position of the robot in the robots co-ordinate system. 
+ * Only the delta y, delta x and delta orentation relative to the robots current position
+ * should be recorded here. 
+ * @author Kevin Harrington
+ *
+ */
 
 public class RobotLocationData {
 	private double x,y,o;
