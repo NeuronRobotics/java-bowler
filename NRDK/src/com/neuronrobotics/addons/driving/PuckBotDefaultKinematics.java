@@ -3,7 +3,9 @@ package com.neuronrobotics.addons.driving;
 import com.neuronrobotics.sdk.pid.PIDEvent;
 
 public class PuckBotDefaultKinematics implements IPuckBotKinematics{
-
+	/**
+	 * This ia a full implementation of the PuckBot kinematics
+	 */
 	@Override
 	public PuckBotDriveData DriveStraight(double cm, double seconds) {
 		// TODO Auto-generated method stub
