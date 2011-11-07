@@ -9,6 +9,7 @@ import com.neuronrobotics.sdk.pid.PIDChannel;
 import com.neuronrobotics.sdk.pid.PIDConfiguration;
 import com.neuronrobotics.sdk.serial.SerialConnection;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
+import com.neuronrobotics.sdk.util.ThreadUtil;
 
 @SuppressWarnings("unused")
 public class PuckBotDriveTest implements IRobotDriveEventListener {
@@ -60,9 +61,11 @@ public class PuckBotDriveTest implements IRobotDriveEventListener {
 		bot.addIRobotDriveEventListener(this);
 		
 
-		bot.DriveStraight(20, 1);
+		bot.DriveStraight(5, 1);
 		
+		ThreadUtil.wait(2000);
 		
+		//bot.DriveStraight(-5, 1);
 		
 	}
 	
