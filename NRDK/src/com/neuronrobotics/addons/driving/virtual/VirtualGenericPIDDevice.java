@@ -15,8 +15,11 @@ import com.neuronrobotics.sdk.pid.PIDEvent;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 public class VirtualGenericPIDDevice extends GenericPIDDevice{
+	
+	private static final long threadTime=100;
+	
 	private ArrayList<DriveThread>  driveThreads = new  ArrayList<DriveThread>();
-
+	SyncThread sync = new SyncThread ();
 	private double maxTicksPerSecond;
 	
 	private int numChannels = 10;
@@ -67,9 +70,11 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 	}
 	@Override
 	public boolean SetAllPIDSetPoint(int[] setpoints, double seconds) {
+		sync.setPause(true);
 		for(int i=0;i<setpoints.length;i++){
-			 SetPIDSetPoint(i,  setpoints[i], seconds);
+			SetPIDSetPoint(i,  setpoints[i], seconds);
 		}
+		sync.setPause(false);
 		return true;
 	}
 	@Override
@@ -94,9 +99,9 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 				c.setCachedTargetValue(back[i]);
 				channels.add(c);
 				DriveThread d = new DriveThread(i);
-				d.start();
 				driveThreads.add(d);
 			}
+			sync.start();
 		}
 		return back;
 	}
@@ -117,11 +122,34 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 	 * @author hephaestus
 	 *
 	 */
+	private class SyncThread extends Thread{
+		
+		private boolean pause =false;
+		public void run() {
+			while(true) {
+				try {Thread.sleep(threadTime);} catch (InterruptedException e) {}
+				while(isPause()){
+					ThreadUtil.wait(10);
+				}
+				long time = System.currentTimeMillis();
+				for(DriveThread dr : driveThreads){
+					if(dr.update()){
+						firePIDEvent(new PIDEvent(dr.getChan(), (int)dr.ticks, time,0));
+					}
+				}
+			}
+		}
+		public boolean isPause() {
+			return pause;
+		}
+		public void setPause(boolean pause) {
+			if(pause)
+				try {Thread.sleep(threadTime*2);} catch (InterruptedException e) {}
+			this.pause = pause;
+		}
+	}
 	
-	
-	private class DriveThread extends Thread{
-
-		private static final long threadTime=200;
+	private class DriveThread {
 		
 		private long ticks=0;
 		private long lastTick=ticks;
@@ -130,7 +158,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 		private long duration;
 		private long startTime;
 		private long startPoint;
-		boolean pause = false;
+		private boolean pause = false;
 		private boolean velocityRun=false;
 		private double unitsPerMs;
 		private int chan;
@@ -146,10 +174,13 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 		public int getPosition() {
 			return (int) ticks;
 		}
+		
+		
+		
 		public synchronized  void SetPIDSetPoint(int setpoint,double seconds){
 			velocityRun=false;
-			pause=true;
-			ThreadUtil.wait((int)(threadTime*2));
+			setPause(true);
+			//ThreadUtil.wait((int)(threadTime*2));
 			double TPS = (double)setpoint/seconds;
 			//Models motor saturation
 			if(TPS >  getMaxTicksPerSecond()){
@@ -161,34 +192,42 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 			setPoint=setpoint;
 			startPoint = ticks;
 			
-			pause=false;
+			setPause(false);
 			//System.out.println("Setting Setpoint Ticks to: "+setPoint);
 		}
-		public void run() {
-			while(true) {
-				while(pause){
-					ThreadUtil.wait(10);
-				}
-				try {Thread.sleep(threadTime);} catch (InterruptedException e) {}
-				interpolate();
-				if((ticks!=lastTick) && !pause) {
-					lastTick=ticks;
-					firePIDEvent(new PIDEvent(getChan(), (int)ticks, System.currentTimeMillis(),0));
-				}
-			}
+		private boolean update(){
+			interpolate();
+			if((ticks!=lastTick) && !isPause()) {
+				lastTick=ticks;
+				return true;
+			}	
+			return false;
 		}
+//		public void run() {
+//			while(true) {
+//				while(isPause()){
+//					ThreadUtil.wait(10);
+//				}
+//				try {Thread.sleep(threadTime);} catch (InterruptedException e) {}
+//				interpolate();
+//				if((ticks!=lastTick) && !isPause()) {
+//					lastTick=ticks;
+//					firePIDEvent(new PIDEvent(getChan(), (int)ticks, System.currentTimeMillis(),0));
+//				}
+//			}
+//		}
 		public synchronized  void ResetEncoder(int value) {
 			System.out.println("Resetting channel "+getChan());
 			velocityRun=false;
-			pause=true;
-			ThreadUtil.wait((int)(threadTime*2));
+			setPause(true);
+			//ThreadUtil.wait((int)(threadTime*2));
 			ticks=value;
 			lastTick=value;
 			setPoint=value;
 			duration=0;
 			startTime=System.currentTimeMillis();
 			startPoint=value;
-			pause=false;	
+			setPause(false);	
 		}
 		private void setChan(int chan) {
 			this.chan = chan;
@@ -228,6 +267,12 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 			}
 			ticks = (long) back;
 			lastInterpolationTime=System.currentTimeMillis();
+		}
+		public boolean isPause() {
+			return pause;
+		}
+		private void setPause(boolean pause) {
+			this.pause = pause;
 		}
 	}
 	

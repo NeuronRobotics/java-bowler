@@ -26,15 +26,13 @@ public class PuckBotDefaultKinematics implements IPuckBotKinematics{
 	}
 
 	@Override
-	public PuckBotVelocityData DriveVelocityArc(double degreesPerSecond,
-			double cmRadius) {
+	public PuckBotVelocityData DriveVelocityArc(double degreesPerSecond,double cmRadius) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public RobotLocationData onPIDEvent(PIDEvent e, int leftChannelNumber,
-			int rightChannelNumber) {
+	public RobotLocationData onPIDEvent(PIDEvent e, int leftChannelNumber,int rightChannelNumber) {
 		// TODO Auto-generated method stub
 		return null;
 	}
