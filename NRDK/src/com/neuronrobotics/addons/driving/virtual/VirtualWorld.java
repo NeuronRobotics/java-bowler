@@ -94,7 +94,7 @@ public class VirtualWorld extends NrMap{
         //frame.addMouseMotionListener(this);
 	}
 	
-	protected void updateMap() {
+	public void updateMap() {
 		//System.out.println("Updating Map");
 		BufferedImage display = getMap();
 		
