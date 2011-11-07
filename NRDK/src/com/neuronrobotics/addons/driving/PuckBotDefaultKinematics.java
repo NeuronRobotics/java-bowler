@@ -3,20 +3,41 @@ package com.neuronrobotics.addons.driving;
 import com.neuronrobotics.sdk.pid.PIDEvent;
 
 public class PuckBotDefaultKinematics implements IPuckBotKinematics{
+	
+	private static final double wheelBase = 22.86; //cm
+	private static final double wheelDiameter = 7;//cm
+	private static final double ticksPerRevolution = 360;// t/r 
+	
+	private static final double cmToTickScale = ticksPerRevolution*(-1/(Math.PI*wheelDiameter));
+	
+	public static double ticksToCm(int ticks) {
+		return ((double)ticks)/ cmToTickScale;
+	}
+	public static int cmToTicks(double cm) {
+		return (int) (cm*cmToTickScale);
+	}
+	
 	/**
 	 * This is a full implementation of the PuckBot kinematics
 	 */
 	@Override
 	public PuckBotDriveData DriveStraight(double cm, double seconds) {
-		// TODO Auto-generated method stub
-		return null;
+		int dist = cmToTicks(cm);
+		return new PuckBotDriveData(-1*dist, dist, seconds);
 	}
 
 	@Override
-	public PuckBotDriveData DriveArc(double cmRadius, double degrees,
-			double seconds) {
-		// TODO Auto-generated method stub
-		return null;
+	public PuckBotDriveData DriveArc(double cmRadius, double degrees,double seconds) {
+		
+		double ldist = 0;
+		double rdist = 0;
+		
+		double rRadius = cmRadius + (wheelBase/2);
+		double lRadius = cmRadius - (wheelBase/2);
+		ldist = lRadius*(Math.PI*degrees)/180;
+		rdist = rRadius*(Math.PI*degrees)/180;
+		
+		return new PuckBotDriveData(cmToTicks(-1*ldist), cmToTicks(rdist), seconds);
 	}
 
 	@Override
@@ -34,7 +55,7 @@ public class PuckBotDefaultKinematics implements IPuckBotKinematics{
 	@Override
 	public RobotLocationData onPIDEvent(PIDEvent e, int leftChannelNumber,int rightChannelNumber) {
 		// TODO Auto-generated method stub
-		return null;
+		return new RobotLocationData(0, 0, 0);
 	}
 
 	@Override
