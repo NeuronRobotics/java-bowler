@@ -9,6 +9,7 @@ import com.neuronrobotics.sdk.pid.PIDChannel;
 import com.neuronrobotics.sdk.pid.PIDConfiguration;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 
+@SuppressWarnings("unused")
 public class PuckBotDriveTest implements IRobotDriveEventListener {
 	public PuckBotDriveTest(){
 		
