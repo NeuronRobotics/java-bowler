@@ -7,16 +7,18 @@ import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.dyio.dypid.DyPIDConfiguration;
 import com.neuronrobotics.sdk.pid.PIDChannel;
 import com.neuronrobotics.sdk.pid.PIDConfiguration;
+import com.neuronrobotics.sdk.serial.SerialConnection;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 
 @SuppressWarnings("unused")
 public class PuckBotDriveTest implements IRobotDriveEventListener {
 	public PuckBotDriveTest(){
 		
-		DyIO dyio = new DyIO();
-		if(!ConnectionDialog.getBowlerDevice(dyio)){
-			System.exit(0);
-		}
+		DyIO dyio = new DyIO(new SerialConnection("COM75"));
+		dyio.connect();
+//		if(!ConnectionDialog.getBowlerDevice(dyio)){
+//			System.exit(0);
+//		}
 		
 		DyPIDConfiguration ldypid = new DyPIDConfiguration(	1,//PID group 1
 															21,//Input channel number
@@ -58,7 +60,7 @@ public class PuckBotDriveTest implements IRobotDriveEventListener {
 		bot.addIRobotDriveEventListener(this);
 		
 
-		bot.DriveStraight(100, 3);
+		bot.DriveStraight(20, 1);
 		
 		
 		
