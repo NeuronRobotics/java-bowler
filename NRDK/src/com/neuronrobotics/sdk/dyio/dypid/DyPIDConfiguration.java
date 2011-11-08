@@ -17,10 +17,10 @@ public class DyPIDConfiguration {
 		setOutputMode(outputMode);
 	}
 	public DyPIDConfiguration(BowlerDatagram conf) {
-		setGroup(conf.getData().get(0));
-		setInputChannel(conf.getData().get(1));
+		setGroup(conf.getData().getUnsigned(0));
+		setInputChannel(conf.getData().getUnsigned(1));
 		setInputMode(DyIOChannelMode.get(conf.getData().get(2)));
-		setOutputChannel(conf.getData().get(3));
+		setOutputChannel(conf.getData().getUnsigned(3));
 		setOutputMode(DyIOChannelMode.get(conf.getData().get(4)));
 	}
 	public void setGroup(int group) {
