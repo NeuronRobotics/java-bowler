@@ -114,12 +114,52 @@ public class PuckBotDefaultKinematics implements IPuckBotKinematics{
 		if(currentRight==null || currentLeft==null) {
 			currentLocation=null;
 		}else {
-			double x=0,y=0,o=0;
-			//kinematics
-			
-			currentLocation = new RobotLocationData(x, y, o);
+			double left = ticksToCm(currentLeft.getValue() - leftEncoder);
+			double right= ticksToCm(currentRight.getValue() - rightEncoder); 
+			leftEncoder = currentLeft.getValue();
+			rightEncoder = currentRight.getValue();
 			currentRight=null;
 			currentLeft=null;
+			
+			double x=0,y=0,o=0;
+			
+			//kinematics
+			double distDiff = right-left;
+			double arcDiff = (distDiff/(wheelBase/2));
+			//double startOrent = getOrentation();
+			o=(arcDiff/2);
+//			setOrentation(getOrentation() + (arcDiff/2));
+//			double trX;
+//			double trY;
+			//double leftRad,rightRad;
+			if(distDiff == 0){
+				//The robot moved exactly straight forward
+				x = 0;
+				y = right;//right and left the same
+			}else{
+				
+				//Arc Length Calculation
+				/*
+				//TODO this is broken somehow...
+				double arc = Math.abs(arcDiff);
+				leftRad = left/arc;
+				rightRad = right/arc;
+				radius = (leftRad+rightRad)/2;
+				double c = Math.sqrt((2*(radius)*(radius)*(1-Math.cos(arc))));
+				if(radius<0)
+					arc*=1;
+				trX=Math.cos(arc)*c;
+				trY=Math.sin(arc)*c;
+				*/
+				//END Arc Length Calculation
+				
+				//Straight line aproximation
+				y=(right+left)/2;
+				x=0;
+				//END Straight line aproximation
+			}
+			currentLocation = new RobotLocationData(x, y, o);
+
 		}
 		
 		if(currentLocation==null)
