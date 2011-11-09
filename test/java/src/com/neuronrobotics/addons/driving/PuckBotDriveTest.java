@@ -53,9 +53,9 @@ public class PuckBotDriveTest implements IRobotDriveEventListener {
 		PIDChannel left = dyio.getPIDChannel(1);
 		PIDChannel right = dyio.getPIDChannel(2);
 		
-		PuckBot bot = new PuckBot(left, right);
-//		VirtualWorld w = new VirtualWorld();
-//		PuckBot bot = new VirtualPuckBot(w);
+//		PuckBot bot = new PuckBot(left, right);
+		VirtualWorld w = new VirtualWorld();
+		PuckBot bot = new VirtualPuckBot(w);
 		
 		bot.setPuckBotKinematics(new PuckBotDefaultKinematics());
 		bot.addIRobotDriveEventListener(this);
