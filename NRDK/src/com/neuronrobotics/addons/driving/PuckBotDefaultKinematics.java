@@ -6,7 +6,7 @@ public class PuckBotDefaultKinematics implements IPuckBotKinematics{
 	
 	private static final double wheelBase = 22.86; //cm
 	private static final double wheelDiameter = 7;//cm
-	private static final double ticksPerRevolution = 360;// t/r 
+	private static final double ticksPerRevolution = 180;// t/r 
 	
 	private static final double cmToTickScale = ticksPerRevolution*(-1/(Math.PI*wheelDiameter));
 	
