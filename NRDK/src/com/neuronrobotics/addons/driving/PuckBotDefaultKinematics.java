@@ -23,7 +23,7 @@ public class PuckBotDefaultKinematics implements IPuckBotKinematics{
 	@Override
 	public PuckBotDriveData DriveStraight(double cm, double seconds) {
 		int dist = cmToTicks(cm);
-		return new PuckBotDriveData(-1*dist, dist, seconds);
+		return new PuckBotDriveData(dist, dist, seconds);
 	}
 
 	@Override
@@ -37,19 +37,22 @@ public class PuckBotDefaultKinematics implements IPuckBotKinematics{
 		ldist = lRadius*(Math.PI*degrees)/180;
 		rdist = rRadius*(Math.PI*degrees)/180;
 		
-		return new PuckBotDriveData(cmToTicks(-1*ldist), cmToTicks(rdist), seconds);
+		return new PuckBotDriveData(cmToTicks(ldist), cmToTicks(rdist), seconds);
 	}
 
 	@Override
 	public PuckBotVelocityData DriveVelocityStraight(double cmPerSecond) {
-		// TODO Auto-generated method stub
-		return null;
+		int tps = cmToTicks(cmPerSecond);
+		return new PuckBotVelocityData(tps, tps);
 	}
 
 	@Override
-	public PuckBotVelocityData DriveVelocityArc(double degreesPerSecond,double cmRadius) {
-		// TODO Auto-generated method stub
-		return null;
+	public PuckBotVelocityData DriveVelocityArc(double degreesPerSecond,double cmRadius) {	
+		double rRadius = cmRadius + (wheelBase/2);
+		double lRadius = cmRadius - (wheelBase/2);
+		double ldist = lRadius*(Math.PI*degreesPerSecond)/180;
+		double rdist = rRadius*(Math.PI*degreesPerSecond)/180;
+		return new PuckBotVelocityData(cmToTicks(ldist), cmToTicks(rdist));
 	}
 
 	@Override
@@ -60,20 +63,17 @@ public class PuckBotDefaultKinematics implements IPuckBotKinematics{
 
 	@Override
 	public double getMaxTicksPerSeconds() {
-		// TODO Auto-generated method stub
-		return 0;
+		return 200;
 	}
 
 	@Override
 	public void onPIDResetLeft(int currentValue) {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void onPIDResetRight(int currentValue) {
-		// TODO Auto-generated method stub
-		
+
 	}
 	
 	
