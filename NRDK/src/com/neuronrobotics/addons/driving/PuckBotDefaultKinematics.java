@@ -10,6 +10,12 @@ public class PuckBotDefaultKinematics implements IPuckBotKinematics{
 	
 	private static final double cmToTickScale = ticksPerRevolution*(-1/(Math.PI*wheelDiameter));
 	
+	private int leftIndex,rightIndex;
+	
+	private RobotLocationData currentLocation=null;
+	
+	private PIDEvent currentLeft=null,currentRight=null;
+	
 	public static double ticksToCm(int ticks) {
 		return ((double)ticks)/ cmToTickScale;
 	}
@@ -58,8 +64,25 @@ public class PuckBotDefaultKinematics implements IPuckBotKinematics{
 	@Override
 	public RobotLocationData onPIDEvent(PIDEvent e, int leftChannelNumber,int rightChannelNumber) {
 		System.out.println("Got: "+e);
-		// TODO Auto-generated method stub
-		return new RobotLocationData(0, 0, 0);
+		leftIndex=leftChannelNumber;
+		rightIndex=rightChannelNumber;
+		
+		//pairing
+		
+		if(currentRight==null || currentLeft==null) {
+			currentLocation=null;
+		}else {
+			
+			//kinematics
+			
+			double x=0,y=0,o=0;
+			currentLocation = new RobotLocationData(x, y, o);
+		}
+		
+		if(currentLocation==null)
+			return new RobotLocationData(0, 0, 0);
+		else
+			return currentLocation;
 	}
 
 	@Override
