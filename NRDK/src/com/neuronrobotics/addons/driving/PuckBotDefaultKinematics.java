@@ -57,6 +57,7 @@ public class PuckBotDefaultKinematics implements IPuckBotKinematics{
 
 	@Override
 	public RobotLocationData onPIDEvent(PIDEvent e, int leftChannelNumber,int rightChannelNumber) {
+		System.out.println("Got: "+e);
 		// TODO Auto-generated method stub
 		return new RobotLocationData(0, 0, 0);
 	}
