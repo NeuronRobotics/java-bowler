@@ -15,6 +15,8 @@ public class PuckBotDefaultKinematics implements IPuckBotKinematics{
 	private RobotLocationData currentLocation=null;
 	
 	private PIDEvent currentLeft=null,currentRight=null;
+	private int leftEncoder=0,rightEncoder=0;
+	
 	
 	public static double ticksToCm(int ticks) {
 		return ((double)ticks)/ cmToTickScale;
@@ -60,6 +62,45 @@ public class PuckBotDefaultKinematics implements IPuckBotKinematics{
 		double rdist = rRadius*(Math.PI*degreesPerSecond)/180;
 		return new PuckBotVelocityData(cmToTicks(ldist), cmToTicks(rdist));
 	}
+	
+	private void pair(PIDEvent e) {
+		if(currentRight==null && currentLeft==null) {
+			if(e.getGroup() == leftIndex) {
+				currentLeft=e;
+			}
+			if(e.getGroup() == rightIndex) {
+				currentRight=e;
+			}
+		}
+		if(currentRight!=null && currentLeft==null) {
+			if(e.getGroup() == rightIndex) {
+				currentRight = e;
+				currentLeft = new PIDEvent(leftIndex, leftEncoder, e.getTimeStamp(), 0);
+			}
+			if(e.getGroup() == leftIndex) {
+				if(e.getTimeStamp() == currentRight.getTimeStamp()) {
+					currentLeft = e;
+				}else {
+					currentLeft = e;
+					currentRight = null;
+				}
+			}
+		}
+		if(currentRight==null && currentLeft!=null) {
+			if(e.getGroup() == leftIndex) {
+				currentRight = new PIDEvent(rightIndex, rightEncoder, e.getTimeStamp(), 0);
+				currentLeft = e;
+			}
+			if(e.getGroup() == rightIndex) {
+				if(e.getTimeStamp() == currentLeft.getTimeStamp()) {
+					currentRight = e;
+				}else {
+					currentRight = e;
+					currentLeft = null;
+				}
+			}
+		}
+	}
 
 	@Override
 	public RobotLocationData onPIDEvent(PIDEvent e, int leftChannelNumber,int rightChannelNumber) {
@@ -68,15 +109,17 @@ public class PuckBotDefaultKinematics implements IPuckBotKinematics{
 		rightIndex=rightChannelNumber;
 		
 		//pairing
+		pair(e);
 		
 		if(currentRight==null || currentLeft==null) {
 			currentLocation=null;
 		}else {
-			
+			double x=0,y=0,o=0;
 			//kinematics
 			
-			double x=0,y=0,o=0;
 			currentLocation = new RobotLocationData(x, y, o);
+			currentRight=null;
+			currentLeft=null;
 		}
 		
 		if(currentLocation==null)
@@ -92,12 +135,14 @@ public class PuckBotDefaultKinematics implements IPuckBotKinematics{
 
 	@Override
 	public void onPIDResetLeft(int currentValue) {
-
+		leftEncoder=currentValue;
+		currentLeft=null;
 	}
 
 	@Override
 	public void onPIDResetRight(int currentValue) {
-
+		rightEncoder=currentValue;
+		currentRight=null;
 	}
 	
 	
