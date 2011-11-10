@@ -14,8 +14,8 @@ public class PuckBotDefaultKinematics implements IPuckBotKinematics{
 	
 	private RobotLocationData currentLocation=null;
 	
-	private PIDEvent currentLeft=null,currentRight=null;
-	private int leftEncoder=0,rightEncoder=0;
+	private PIDEvent leftPidEvent=null,rightPidEvent=null;
+	private int leftEncoderValue=0,rightEncoderValue=0;
 	
 	
 	public static double ticksToCm(int ticks) {
@@ -64,39 +64,39 @@ public class PuckBotDefaultKinematics implements IPuckBotKinematics{
 	}
 	
 	private void pair(PIDEvent e) {
-		if(currentRight==null && currentLeft==null) {
+		if(rightPidEvent==null && leftPidEvent==null) {
 			if(e.getGroup() == leftIndex) {
-				currentLeft=e;
+				leftPidEvent=e;
 			}
 			if(e.getGroup() == rightIndex) {
-				currentRight=e;
+				rightPidEvent=e;
 			}
 		}
-		if(currentRight!=null && currentLeft==null) {
+		if(rightPidEvent!=null && leftPidEvent==null) {
 			if(e.getGroup() == rightIndex) {
-				currentRight = e;
-				currentLeft = new PIDEvent(leftIndex, leftEncoder, e.getTimeStamp(), 0);
+				rightPidEvent = e;
+				leftPidEvent = new PIDEvent(leftIndex, leftEncoderValue, e.getTimeStamp(), 0);
 			}
 			if(e.getGroup() == leftIndex) {
-				if(e.getTimeStamp() == currentRight.getTimeStamp()) {
-					currentLeft = e;
+				if(e.getTimeStamp() == rightPidEvent.getTimeStamp()) {
+					leftPidEvent = e;
 				}else {
-					currentLeft = e;
-					currentRight = null;
+					leftPidEvent = e;
+					rightPidEvent = null;
 				}
 			}
 		}
-		if(currentRight==null && currentLeft!=null) {
+		if(rightPidEvent==null && leftPidEvent!=null) {
 			if(e.getGroup() == leftIndex) {
-				currentRight = new PIDEvent(rightIndex, rightEncoder, e.getTimeStamp(), 0);
-				currentLeft = e;
+				rightPidEvent = new PIDEvent(rightIndex, rightEncoderValue, e.getTimeStamp(), 0);
+				leftPidEvent = e;
 			}
 			if(e.getGroup() == rightIndex) {
-				if(e.getTimeStamp() == currentLeft.getTimeStamp()) {
-					currentRight = e;
+				if(e.getTimeStamp() == leftPidEvent.getTimeStamp()) {
+					rightPidEvent = e;
 				}else {
-					currentRight = e;
-					currentLeft = null;
+					rightPidEvent = e;
+					leftPidEvent = null;
 				}
 			}
 		}
@@ -111,15 +111,15 @@ public class PuckBotDefaultKinematics implements IPuckBotKinematics{
 		//pairing
 		pair(e);
 		
-		if(currentRight==null || currentLeft==null) {
+		if(rightPidEvent==null || leftPidEvent==null) {
 			currentLocation=null;
 		}else {
-			double left = ticksToCm(currentLeft.getValue() - leftEncoder);
-			double right= ticksToCm(currentRight.getValue() - rightEncoder); 
-			leftEncoder = currentLeft.getValue();
-			rightEncoder = currentRight.getValue();
-			currentRight=null;
-			currentLeft=null;
+			double left = ticksToCm(leftPidEvent.getValue() - leftEncoderValue);
+			double right= ticksToCm(rightPidEvent.getValue() - rightEncoderValue); 
+			leftEncoderValue = leftPidEvent.getValue();
+			rightEncoderValue = rightPidEvent.getValue();
+			rightPidEvent=null;
+			leftPidEvent=null;
 			
 			double x=0,y=0,o=0;
 			
@@ -155,14 +155,14 @@ public class PuckBotDefaultKinematics implements IPuckBotKinematics{
 
 	@Override
 	public void onPIDResetLeft(int currentValue) {
-		leftEncoder=currentValue;
-		currentLeft=null;
+		leftEncoderValue=currentValue;
+		leftPidEvent=null;
 	}
 
 	@Override
 	public void onPIDResetRight(int currentValue) {
-		rightEncoder=currentValue;
-		currentRight=null;
+		rightEncoderValue=currentValue;
+		rightPidEvent=null;
 	}
 	
 	
