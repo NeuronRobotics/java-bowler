@@ -115,10 +115,13 @@ public class PuckBotDefaultKinematics implements IPuckBotKinematics{
 		if(rightPidEvent==null || leftPidEvent==null) {
 			currentLocation=null;
 		}else {
+			//Extract Encoder data
 			double left = ticksToCm(leftPidEvent.getValue() - leftEncoderValue);
 			double right= ticksToCm(rightPidEvent.getValue() - rightEncoderValue); 
+			//Reset current values
 			leftEncoderValue = leftPidEvent.getValue();
 			rightEncoderValue = rightPidEvent.getValue();
+			//clear event storage
 			rightPidEvent=null;
 			leftPidEvent=null;
 			
@@ -134,10 +137,10 @@ public class PuckBotDefaultKinematics implements IPuckBotKinematics{
 				x = 0;
 				y = right;//right and left the same
 			}else{
-				//Straight line aproximation
+				//Straight line approximation
 				y=(right+left)/2;
 				x=0;
-				//END Straight line aproximation
+				//END Straight line approximation
 			}
 			currentLocation = new RobotLocationData(x, y, o);
 
