@@ -64,6 +64,11 @@ public class PuckBotDefaultKinematics implements IPuckBotKinematics{
 	}
 	
 	private void pair(PIDEvent e) {
+		if(e.getGroup() == leftIndex)
+			leftEncoderValue = e.getValue();
+		if(e.getGroup() == rightIndex)
+			rightEncoderValue = e.getValue();
+		
 		if(rightPidEvent==null && leftPidEvent==null) {
 			if(e.getGroup() == leftIndex) {
 				leftPidEvent=e;
