@@ -9,6 +9,10 @@ import com.neuronrobotics.sdk.ui.ConnectionDialog;
 
 public class Rbe3002Robot extends PuckBot {
 	
+	private final double KP = 1;
+	private final double KI = 0;
+	private final double KD = 0;
+	
 	public Rbe3002Robot() {
 		DyIO dyio = new DyIO();
 		if(!ConnectionDialog.getBowlerDevice(dyio)){
@@ -24,9 +28,9 @@ public class Rbe3002Robot extends PuckBot {
 														true,//enabled
 														false,//inverted
 														true,//Async
-														1,// Kp
-														0,// Ki
-														0);//Kd
+														KP,// Kp
+														KI,// Ki
+														KD);//Kd
 		
 		
 		DyPIDConfiguration rdypid = new DyPIDConfiguration(	2,//PID group 2
@@ -38,9 +42,9 @@ public class Rbe3002Robot extends PuckBot {
 														true,//enabled
 														true,//inverted
 														true,//Async
-														1,// Kp
-														0,// Ki
-														0);//Kd
+														KP,// Kp
+														KI,// Ki
+														KD);//Kd
 		dyio.ConfigureDynamicPIDChannels(ldypid);
 		dyio.ConfigurePIDController(lpid);
 		dyio.ConfigureDynamicPIDChannels(rdypid);
