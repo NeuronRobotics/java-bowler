@@ -24,15 +24,15 @@ public class PuckBotDriveTest implements IRobotDriveEventListener {
 		bot.addIRobotDriveEventListener(this);
 		
 
-		bot.DriveStraight(50, 1);
+		bot.DriveStraight(50, 6);
 		
-		ThreadUtil.wait(2000);
+		ThreadUtil.wait(6000);
 		
 		bot.DriveArc(20, 90, 5);
 		
 		ThreadUtil.wait(6000);
 		
-		bot.DriveStraight(-50, 1);
+		bot.DriveStraight(-50, 6);
 		
 		//bot.DriveStraight(-5, 1);
 		
