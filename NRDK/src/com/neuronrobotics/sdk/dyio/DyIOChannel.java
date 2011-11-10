@@ -481,6 +481,7 @@ public class DyIOChannel implements IDyIOChannel {
 			Log.error(this.getClass()+"Invalid mode for get: "+getCurrentMode());
 			return 0;
 		} 
+		setCachedValue(val);
 		setPreviousValue(val);
 		return val;
 	}

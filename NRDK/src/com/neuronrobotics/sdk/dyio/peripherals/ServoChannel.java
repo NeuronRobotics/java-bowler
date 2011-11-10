@@ -130,6 +130,6 @@ public class ServoChannel extends DyIOAbstractPeripheral {
 	}
 	public void removeIServoPositionUpdateListener(IServoPositionUpdateListener l) {
 		if(listeners.contains(l))
-			listeners.add(l);
+			listeners.remove(l);
 	}
 }
