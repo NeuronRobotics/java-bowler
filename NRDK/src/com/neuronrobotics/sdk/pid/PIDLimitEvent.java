@@ -44,7 +44,7 @@ public class PIDLimitEvent {
 	}
 	@Override 
 	public String toString(){
-		return "PID Limit Event: chan="+channel+", value="+ticks+", time="+timeStamp;
+		return "chan="+channel+", Type="+limitType+", value="+ticks+", time="+timeStamp;
 	}
 	public void setLimitType(PIDLimitEventType limitIndex) {
 		this.limitType = limitIndex;
