@@ -11,10 +11,14 @@ public class PIDConfiguration {
 	private double KP=1;
 	private double KI=0;
 	private double KD=0;
+	private double latch=0;
 	public PIDConfiguration(){
 		
 	}
 	public PIDConfiguration(int group,boolean enabled,boolean inverted,boolean async,double KP,double KI,double KD){
+		this( group, enabled, inverted,async, KP, KI, KD,0);
+	}
+	public PIDConfiguration(int group,boolean enabled,boolean inverted,boolean async,double KP,double KI,double KD, double latch){
 		setGroup(group);
 		setEnabled(enabled);
 		setInverted(inverted);
@@ -22,7 +26,9 @@ public class PIDConfiguration {
 		setKP(KP);
 		setKI(KI);
 		setKD(KD);
+		setIndexLatch(latch);
 	}
+
 	public PIDConfiguration(BowlerDatagram conf) {
 		setGroup(   conf.getData().get(0));
 		setEnabled( conf.getData().get(1)>0);
@@ -31,6 +37,11 @@ public class PIDConfiguration {
 		setKP(((double)ByteList.convertToInt(conf.getData().getBytes(4, 4),false))/100);
 		setKI(((double)ByteList.convertToInt(conf.getData().getBytes(8, 4),false))/100);
 		setKD(((double)ByteList.convertToInt(conf.getData().getBytes(12, 4),false))/100);
+		try{
+			setIndexLatch(((double)ByteList.convertToInt(conf.getData().getBytes(16, 4),true)));
+		}catch(Exception e){
+			System.err.println("No latch value sent");
+		}
 	}
 	@Override
 	public String toString(){
@@ -82,5 +93,11 @@ public class PIDConfiguration {
 	}
 	public double getKD() {
 		return KD;
+	}
+	public double getIndexLatch() {
+		return latch;
+	}
+	public void setIndexLatch(double latch) {
+		this.latch=latch;
 	}
 }

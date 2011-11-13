@@ -14,7 +14,7 @@ public class ConfigurePIDCommand extends BowlerAbstractCommand {
 		getCallingDataStorage().add(group);
 	}
 	
-	public ConfigurePIDCommand(char group,boolean enabled,boolean inverted,boolean async,double KP,double KI,double KD) {
+	public ConfigurePIDCommand(char group,boolean enabled,boolean inverted,boolean async,double KP,double KI,double KD, double latchValue) {
 		setOpCode("cpid");
 		setMethod(BowlerMethod.CRITICAL);
 		getCallingDataStorage().add(group);
@@ -24,6 +24,7 @@ public class ConfigurePIDCommand extends BowlerAbstractCommand {
 		getCallingDataStorage().addAs32((int) (KP*100));
 		getCallingDataStorage().addAs32((int) (KI*100));
 		getCallingDataStorage().addAs32((int) (KD*100));
+		getCallingDataStorage().addAs32((int) (latchValue));
 	}
 	
 	public ConfigurePIDCommand(PIDConfiguration config) {
@@ -36,6 +37,7 @@ public class ConfigurePIDCommand extends BowlerAbstractCommand {
 		getCallingDataStorage().addAs32((int) (config.getKP()*100));
 		getCallingDataStorage().addAs32((int) (config.getKI()*100));
 		getCallingDataStorage().addAs32((int) (config.getKD()*100));
+		getCallingDataStorage().addAs32((int) (config.getIndexLatch()));
 	}
 
 
