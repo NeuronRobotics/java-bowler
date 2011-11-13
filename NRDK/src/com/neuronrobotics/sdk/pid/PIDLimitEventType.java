@@ -19,9 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 // TODO: Auto-generated Javadoc
-/**
- * The Enum BowlerMethod.
- */
+
 public enum PIDLimitEventType {
 	
 
@@ -81,21 +79,4 @@ public enum PIDLimitEventType {
 		return b;
 	}
 	
-	/* (non-Javadoc)
-	 * @see java.lang.Enum#toString()
-	 */
-	public String toString(){
-		String s="NOT VALID";
-//		switch (value){
-//		case 0x00:
-//			return "STATUS";
-//		case 0x10:
-//			return "GET";
-//		case 0x20:
-//			return "POST";
-//		case 0x30:
-//			return "CRITICAL";
-//		}
-		return s;
-	}
 }
