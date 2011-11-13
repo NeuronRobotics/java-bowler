@@ -7,10 +7,10 @@ public class PIDLimitEvent {
 	private int channel;
 	private int ticks; 
 	private long timeStamp;
-	private int limitIndex;
-	public PIDLimitEvent(int chan,int tick,int index,long time){
+	private PIDLimitEventType limitType;
+	public PIDLimitEvent(int chan,int tick,PIDLimitEventType type,long time){
 		setGroup(chan);
-		setLimitIndex(index);
+		setLimitType(type);
 		setValue(tick);
 		setTimeStamp(time);
 		
@@ -19,7 +19,7 @@ public class PIDLimitEvent {
 		if(!data.getRPC().contains("pidl"))
 			throw new RuntimeException("Datagram is not a PID event");
 		setGroup(data.getData().getByte(0));
-		setLimitIndex(ByteList.convertToInt(data.getData().getBytes(1, 1),true));
+		setLimitType(PIDLimitEventType.get(data.getData().getBytes(1, 1)[0]));
 		setValue(ByteList.convertToInt(data.getData().getBytes(2, 4),true));
 		setTimeStamp(ByteList.convertToInt(data.getData().getBytes(6, 4),false));
 		
@@ -46,10 +46,10 @@ public class PIDLimitEvent {
 	public String toString(){
 		return "PID Limit Event: chan="+channel+", value="+ticks+", time="+timeStamp;
 	}
-	public void setLimitIndex(int limitIndex) {
-		this.limitIndex = limitIndex;
+	public void setLimitType(PIDLimitEventType limitIndex) {
+		this.limitType = limitIndex;
 	}
-	public int getLimitIndex() {
-		return limitIndex;
+	public PIDLimitEventType getLimitType() {
+		return limitType;
 	}
 }
