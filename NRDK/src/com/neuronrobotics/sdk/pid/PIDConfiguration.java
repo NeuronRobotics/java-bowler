@@ -17,6 +17,7 @@ public class PIDConfiguration {
 	public PIDConfiguration(){
 		
 	}
+	@Deprecated
 	public PIDConfiguration(int group,boolean enabled,boolean inverted,boolean async,double KP,double KI,double KD){
 		this( group, enabled, inverted,async, KP, KI, KD,0, true, true);
 	}
