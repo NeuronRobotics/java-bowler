@@ -12,13 +12,15 @@ public class PIDConfiguration {
 	private double KI=0;
 	private double KD=0;
 	private double latch=0;
+	private boolean useLatch=false;
+	private boolean stopOnIndex=false;
 	public PIDConfiguration(){
 		
 	}
 	public PIDConfiguration(int group,boolean enabled,boolean inverted,boolean async,double KP,double KI,double KD){
-		this( group, enabled, inverted,async, KP, KI, KD,0);
+		this( group, enabled, inverted,async, KP, KI, KD,0, true, true);
 	}
-	public PIDConfiguration(int group,boolean enabled,boolean inverted,boolean async,double KP,double KI,double KD, double latch){
+	public PIDConfiguration(int group,boolean enabled,boolean inverted,boolean async,double KP,double KI,double KD, double latch, boolean useLatch, boolean stopOnLatch){
 		setGroup(group);
 		setEnabled(enabled);
 		setInverted(inverted);
@@ -27,6 +29,8 @@ public class PIDConfiguration {
 		setKI(KI);
 		setKD(KD);
 		setIndexLatch(latch);
+		setUseLatch(useLatch);
+		setStopOnIndex(stopOnLatch);
 	}
 
 	public PIDConfiguration(BowlerDatagram conf) {
@@ -39,6 +43,8 @@ public class PIDConfiguration {
 		setKD(((double)ByteList.convertToInt(conf.getData().getBytes(12, 4),false))/100);
 		try{
 			setIndexLatch(((double)ByteList.convertToInt(conf.getData().getBytes(16, 4),true)));
+			setUseLatch(conf.getData().getBytes(20, 1)[0]>0);
+			setStopOnIndex(conf.getData().getBytes(21, 1)[0]>0);
 		}catch(Exception e){
 			System.err.println("No latch value sent");
 		}
@@ -99,5 +105,17 @@ public class PIDConfiguration {
 	}
 	public void setIndexLatch(double latch) {
 		this.latch=latch;
+	}
+	public void setUseLatch(boolean useLatch) {
+		this.useLatch = useLatch;
+	}
+	public boolean isUseLatch() {
+		return useLatch;
+	}
+	public void setStopOnIndex(boolean stopOnIndex) {
+		this.stopOnIndex = stopOnIndex;
+	}
+	public boolean isStopOnIndex() {
+		return stopOnIndex;
 	}
 }
