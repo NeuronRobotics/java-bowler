@@ -14,17 +14,8 @@ public class ConfigurePIDCommand extends BowlerAbstractCommand {
 		getCallingDataStorage().add(group);
 	}
 	
-	public ConfigurePIDCommand(char group,boolean enabled,boolean inverted,boolean async,double KP,double KI,double KD, double latchValue) {
-		setOpCode("cpid");
-		setMethod(BowlerMethod.CRITICAL);
-		getCallingDataStorage().add(group);
-		getCallingDataStorage().add(((enabled)?1:0));
-		getCallingDataStorage().add(((inverted)?1:0));
-		getCallingDataStorage().add(((async)?1:0));
-		getCallingDataStorage().addAs32((int) (KP*100));
-		getCallingDataStorage().addAs32((int) (KI*100));
-		getCallingDataStorage().addAs32((int) (KD*100));
-		getCallingDataStorage().addAs32((int) (latchValue));
+	public ConfigurePIDCommand(char group,boolean enabled,boolean inverted,boolean async,double KP,double KI,double KD, double latchValue, boolean use, boolean stop) {
+		this(new PIDConfiguration(group, enabled,inverted,async,KP,KI,KD, latchValue,use, stop));
 	}
 	
 	public ConfigurePIDCommand(PIDConfiguration config) {
@@ -38,6 +29,8 @@ public class ConfigurePIDCommand extends BowlerAbstractCommand {
 		getCallingDataStorage().addAs32((int) (config.getKI()*100));
 		getCallingDataStorage().addAs32((int) (config.getKD()*100));
 		getCallingDataStorage().addAs32((int) (config.getIndexLatch()));
+		getCallingDataStorage().add(((config.isUseLatch())?1:0));
+		getCallingDataStorage().add(((config.isStopOnIndex())?1:0));
 	}
 
 
