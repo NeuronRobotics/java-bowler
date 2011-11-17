@@ -29,17 +29,33 @@ public class SpeedTest {
 //		}
 		DigitalInputChannel dip = new DigitalInputChannel(dyio.getChannel(0));
 		DigitalOutputChannel dop = new DigitalOutputChannel(dyio.getChannel(1));
-		new PPMReaderChannel(dyio.getChannel(23));
-		new ServoChannel(dyio.getChannel(11));
+//		new PPMReaderChannel(dyio.getChannel(23));
+//		new ServoChannel(dyio.getChannel(11));
 		
+		System.out.println("Starting test");
 		double avg=0;
-		
+		long start = System.currentTimeMillis();
 		int i;
+		
+		
+		avg=0;
+		start = System.currentTimeMillis();
+		for(i=0;i<500;i++) {
+			dyio.ping();
+			double ms=System.currentTimeMillis()-start;
+			avg +=ms;
+			start = System.currentTimeMillis();
+			//System.out.println("Average cycle time: "+(int)(avg/i)+"ms\t\t\t this loop was: "+ms);
+		}
+		System.out.println("Average cycle time for ping: "+(avg/i)+" ms");
+		
+
 		boolean high = false;
 		//dyio.setCachedMode(true);
-		long start = System.currentTimeMillis();
-		System.out.println("Starting test");
-		for(i=0;i<3000;i++) {
+		start = System.currentTimeMillis();
+		avg=0;
+		
+		for(i=0;i<100;i++) {
 			try {
 				high = !high;
 				high = dip.getValue()==1;
@@ -50,7 +66,7 @@ public class SpeedTest {
 			double ms=System.currentTimeMillis()-start;
 			avg +=ms;
 			start = System.currentTimeMillis();
-			System.out.println("Average cycle time: "+(int)(avg/i)/2+"ms\t\t\t this loop was: "+ms/2+"\t\tindex="+i);
+			//System.out.println("Average cycle time: "+(int)(avg/i)/2+"ms\t\t\t this loop was: "+ms/2+"\t\tindex="+i);
 		}
 		System.out.println("Average cycle time for IO : "+(avg/i)/2+" ms");
 		
@@ -66,16 +82,7 @@ public class SpeedTest {
 		}
 		System.out.println("Average cycle time for cache flush: "+(avg/i)+" ms");
 		
-		avg=0;
-		start = System.currentTimeMillis();
-		for(i=0;i<100;i++) {
-			dyio.ping();
-			double ms=System.currentTimeMillis()-start;
-			avg +=ms;
-			start = System.currentTimeMillis();
-			//System.out.println("Average cycle time: "+(int)(avg/i)+"ms\t\t\t this loop was: "+ms);
-		}
-		System.out.println("Average cycle time for ping: "+(avg/i)+" ms");
+
 		
 		System.exit(0);
 	}
