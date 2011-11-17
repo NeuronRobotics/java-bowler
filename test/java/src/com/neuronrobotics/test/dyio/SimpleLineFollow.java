@@ -78,6 +78,8 @@ public class SimpleLineFollow implements IAnalogInputListener {
 
 	@Override
 	public void onAnalogValueChange(AnalogInputChannel chan, double value) {
+		if (value>1024)
+			return;
 		if(chan==leftSensor)
 			leftValue=value;
 		if(chan==rightSensor)
