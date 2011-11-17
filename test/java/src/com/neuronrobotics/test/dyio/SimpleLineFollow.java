@@ -16,6 +16,14 @@ public class SimpleLineFollow implements IAnalogInputListener {
 	double leftValue = 0;
 	double rightValue = 0;
 	
+	int lastrMValue =127;
+	int lastlMValue =127;
+	int rMValue =127;
+	int lMValue =127;
+	
+	/**
+	 * 
+	 */
 	public SimpleLineFollow(){
 		dyio = new DyIO();
 		if (!ConnectionDialog.getBowlerDevice(dyio)){
@@ -37,13 +45,22 @@ public class SimpleLineFollow implements IAnalogInputListener {
 		System.out.println("Begining line follow..");
 		setVelocity(1, 1);
 		
-		while(!(leftValue>100 && rightValue>100)){
+		while(true){
+			if(leftValue>500 && rightValue>500)
+				break;
+			if(lastlMValue != lMValue ||lastrMValue != rMValue ){
+				leftServo.SetPosition(lMValue);
+				lastlMValue = lMValue;
+				rightServo.SetPosition(rMValue);
+				lastrMValue = rMValue;
+				dyio.flushCache(0);
+			}
 			ThreadUtil.wait(10);
 		}
-		leftSensor.removeAllAnalogInputListeners();
-		rightSensor.removeAllAnalogInputListeners();
 		System.out.println("Stop Condition!");
-		setVelocity(0, 0);
+		rightServo.SetPosition(127);
+		leftServo.SetPosition(127);
+		dyio.flushCache(0);
 	}
 
 	/**
@@ -65,10 +82,11 @@ public class SimpleLineFollow implements IAnalogInputListener {
 			leftValue=value;
 		if(chan==rightSensor)
 			rightValue=value;
-		setVelocity(1-(leftValue/1024), 1-(rightValue/1024));		
+		setVelocity(1-(leftValue/1024), 1-(rightValue/1024));
+		System.out.println( "Setting velocity left="+leftValue+" right="+rightValue);
 	}
 	
-	double scale=20;
+	double scale=22;
 	private void setVelocity(double l, double r){
 		r*=-1;
 		
@@ -83,10 +101,10 @@ public class SimpleLineFollow implements IAnalogInputListener {
 			r=220;
 		if(r<50)
 			r=50;
-		rightServo.SetPosition((int) r);
-		leftServo.SetPosition((int) l);
-		dyio.flushCache(0);
-		System.out.println( "Setting velocity left="+l+" right="+r);
+		rMValue=(int) r;
+		lMValue=(int) l;
+		//dyio.flushCache(0);
+		//System.out.println( "Setting velocity left="+l+" right="+r);
 	}
 
 }
