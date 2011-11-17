@@ -55,7 +55,7 @@ public class SpeedTest {
 		start = System.currentTimeMillis();
 		avg=0;
 		
-		for(i=0;i<100;i++) {
+		for(i=0;i<500;i++) {
 			try {
 				high = !high;
 				high = dip.getValue()==1;
@@ -73,7 +73,7 @@ public class SpeedTest {
 		avg=0;
 		dyio.setCachedMode(true);
 		start = System.currentTimeMillis();
-		for(i=0;i<100;i++) {
+		for(i=0;i<500;i++) {
 			dyio.flushCache(0);
 			double ms=System.currentTimeMillis()-start;
 			avg +=ms;
