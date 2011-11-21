@@ -8,9 +8,13 @@ public class LaserRangeSensor extends AbstractSensor {
 		dev=new HokuyoURGDevice(port);
 	}
 	@Override
-	public void StartSweep(double start, double stop, int increment) {
-		URG2Packet p =dev.startSweep(start, stop, increment);
-		fireRangeSensorEvent(p.getData(), System.currentTimeMillis());
+	public void StartSweep(final double start, final double stop, final int increment) {
+		new Thread(){
+			public void run(){
+				URG2Packet p =dev.startSweep(start, stop, increment);
+				fireRangeSensorEvent(p.getData(), System.currentTimeMillis());
+			}
+		}.start();
 	}
 
 }
