@@ -85,10 +85,10 @@ public class SimpleLineFollow implements IAnalogInputListener {
 		if(chan==rightSensor)
 			rightValue=value;
 		setVelocity(1-(leftValue/1024), 1-(rightValue/1024));
-		System.out.println( "Setting velocity left="+leftValue+" right="+rightValue);
+		//System.out.println( "Setting velocity left="+leftValue+" right="+rightValue);
 	}
 	
-	double scale=22;
+	double scale=20;
 	private void setVelocity(double l, double r){
 		r*=-1;
 		

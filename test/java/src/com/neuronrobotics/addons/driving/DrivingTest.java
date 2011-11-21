@@ -108,9 +108,9 @@ public class DrivingTest implements IRobotDriveEventListener,ISensorListener{
 		
 
 		ServoChannel sweeper = new ServoChannel(dyio.getChannel(9));
-		//range = new LaserRangeSensor(new NRSerialPort("/dev/ttyACM0", 115200));
-		range = new LinearRangeSensor(	sweeper,
-										new AnalogInputChannel(dyio.getChannel(12)));
+		range = new LaserRangeSensor(new NRSerialPort("/dev/ttyACM0", 115200));
+//		range = new LinearRangeSensor(	sweeper,
+//										new AnalogInputChannel(dyio.getChannel(12)));
 		line = new LineSensor(	new AnalogInputChannel(dyio.getChannel(13)),
 				 				null,
 				 				new AnalogInputChannel(dyio.getChannel(14)));
