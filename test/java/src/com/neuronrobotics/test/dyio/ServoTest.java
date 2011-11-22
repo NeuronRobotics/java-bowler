@@ -15,16 +15,17 @@ public class ServoTest {
 		if (!ConnectionDialog.getBowlerDevice(dyio)){
 			System.exit(1);
 		}
-		ServoChannel srv = new ServoChannel (dyio.getChannel(12));
+		ServoChannel srv = new ServoChannel (dyio.getChannel(11));
+		srv.enablePowerOverride();
                 //Loop 10 times setting the position of the servo 
                 //the time the loop waits will be the time it takes for the servo to arrive
 		srv.SetPosition(0);
 		float time = 5;
 		
 		System.out.println("Moving with time");
-		for(int i = 0; i < 3; i++) {
+		for(int i = 0; i < 30; i++) {
 			// Set the value high every other time, exit if unsuccessful
-			int pos = ((i%2==0)?254:1);
+			int pos = ((i%2==0)?204:50);
                         //This will move the servo from the position it is currentlly in
 			srv.SetPosition(pos, time);
 			
