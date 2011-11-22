@@ -489,8 +489,11 @@ public class DyIOChannel implements IDyIOChannel {
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.dyio.IDyIOChannel#setMode(com.neuronrobotics.sdk.dyio.DyIOChannelMode, boolean)
 	 */
-	 
+	private boolean settingMode=false;
 	public synchronized boolean setMode(DyIOChannelMode mode, boolean async) {
+		if(settingMode)
+			return true;
+		
 		//resyncIfNotSynced();
 		if(mode == null) {
 			return true;
@@ -502,14 +505,14 @@ public class DyIOChannel implements IDyIOChannel {
 			return true;
 		}
 		if ((getMode() == mode) && (async == isAsync) && haveSetMode) {
-			Log.debug(this.getClass()+"Channel: "+getChannelNumber()+" Mode and Async is the same, ignoring...");
+			//Log.debug(this.getClass()+"Channel: "+getChannelNumber()+" Mode and Async is the same, ignoring...");
 			return true;
 		}
 		
 		if(!canBeMode(mode)){
-			
-			throw new RuntimeException("\nChannel: "+getChannelNumber()+" can not be mode '"+mode+"' in current configuration. \nCheck the power switch settings and availible modes.");
+			 new RuntimeException("\nChannel: "+getChannelNumber()+" can not be mode '"+mode+"' in current configuration. \nCheck the power switch settings and availible modes.").printStackTrace();
 		}
+		settingMode=true;
 		for(int i = 0; i < MAXATTEMPTS; i++) {
 			try {
 				isAsync = async;
@@ -526,16 +529,19 @@ public class DyIOChannel implements IDyIOChannel {
 				}else{
 					Log.debug("Not resyncing from channel: "+getChannelNumber());
 				}
+				settingMode=false;
 				return true;
 			} catch (InvalidResponseException e) {
 				Log.error(e.getMessage());
 				try {
 					Thread.sleep(100);
 				} catch (InterruptedException e1) {
+					settingMode=false;
 					return false;
 				}
 			}
 		}
+		settingMode=false;
 		return false;
 	}
 	private boolean synced = false;

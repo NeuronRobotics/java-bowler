@@ -283,6 +283,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 		if(!getConnection().isConnected()) {
 			return false;
 		}
+		setMuteResyncOnModeChange(true);
 		Log.info("Re-syncing...");
 		BowlerDatagram response;
 		try{
@@ -349,7 +350,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 		}
 		if (getInternalChannels().size()==0)
 			throw new DyIOCommunicationException("DyIO failed to report during initialization");
-		
+		setMuteResyncOnModeChange(false);
 		return true;
 	}
 	
@@ -737,9 +738,6 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 	}
 
 	public void setMuteResyncOnModeChange(boolean muteResyncOnModeChange) {
-		if(this.muteResyncOnModeChange && !muteResyncOnModeChange){
-			resync();
-		}
 		this.muteResyncOnModeChange = muteResyncOnModeChange;
 	}
 

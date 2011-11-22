@@ -15,6 +15,8 @@
 package com.neuronrobotics.sdk.dyio.peripherals;
 import java.util.ArrayList;
 
+import com.neuronrobotics.sdk.common.BowlerAbstractCommand;
+import com.neuronrobotics.sdk.common.BowlerMethod;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIOChannel;
@@ -132,4 +134,20 @@ public class ServoChannel extends DyIOAbstractPeripheral {
 		if(listeners.contains(l))
 			listeners.remove(l);
 	}
+	
+	public void enablePowerOverride(){
+		getChannel().getDevice().send(new powerOverridePacket(true) );
+	}
+	public void disablePowerOverride(){
+		getChannel().getDevice().send(new powerOverridePacket(false) );
+	}
+	
+	private class powerOverridePacket extends BowlerAbstractCommand{
+		public powerOverridePacket(boolean ovr){
+			setMethod(BowlerMethod.CRITICAL);
+			setOpCode("povr");
+			getCallingDataStorage().add(ovr?1:0);
+		}
+	}
+	
 }
