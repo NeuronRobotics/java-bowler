@@ -1,5 +1,6 @@
 package com.neuronrobotics.test.dyio;
 
+import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.dyio.peripherals.DigitalInputChannel;
@@ -16,13 +17,17 @@ public class SpeedTest {
 	 */
 	public static void main(String[] args) {
 		DyIO.disableFWCheck();
-		//DyIO dyio = new DyIO(new SerialConnection("/dev/DyIO0"));
-//		DyIO dyio = new DyIO(new SerialConnection("COM65"));
-//		dyio.connect();
-		DyIO dyio = new DyIO();
-		if (!ConnectionDialog.getBowlerDevice(dyio)){
-			System.exit(0);
-		}
+//		BowlerAbstractConnection c =  new SerialConnection("/dev/DyIO0")
+//		BowlerAbstractConnection c =  new SerialConnection("COM65")
+		BowlerAbstractConnection c = ConnectionDialog.promptConnection();
+		if(c==null)
+			System.exit(1);
+		System.out.println("Starting test");
+		DyIO dyio = new DyIO(c);
+		
+		long start = System.currentTimeMillis();
+		dyio.connect();
+		System.out.println("Startup time: "+(System.currentTimeMillis()-start)+" ms");
 		//dyio.enableDebug();
 //		for (int i=0;i<24;i++){
 //			dyio.getChannel(i).set
@@ -32,9 +37,9 @@ public class SpeedTest {
 //		new PPMReaderChannel(dyio.getChannel(23));
 //		new ServoChannel(dyio.getChannel(11));
 		
-		System.out.println("Starting test");
+		
 		double avg=0;
-		long start = System.currentTimeMillis();
+		
 		int i;
 		
 		
