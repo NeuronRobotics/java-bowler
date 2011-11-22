@@ -2,6 +2,7 @@ package com.neuronrobotics.sdk.genericdevice;
 
 import java.util.ArrayList;
 
+import com.neuronrobotics.sdk.commands.bcs.io.GetChannelModeCommand;
 import com.neuronrobotics.sdk.commands.bcs.pid.ConfigurePIDCommand;
 import com.neuronrobotics.sdk.commands.bcs.pid.ControlAllPIDCommand;
 import com.neuronrobotics.sdk.commands.bcs.pid.ControlPIDCommand;
@@ -12,6 +13,7 @@ import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
 import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.common.ByteList;
+import com.neuronrobotics.sdk.common.IConnectionEventListener;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.MACAddress;
 import com.neuronrobotics.sdk.pid.IPIDControl;
@@ -35,10 +37,17 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 			public void onPIDReset(int group, int currentValue) {}
 			public void onPIDLimitEvent(PIDLimitEvent e) {}
 			public void onPIDEvent(PIDEvent e) {
-				channels.get(e.getGroup()).setCurrentCachedPosition(e.getValue());
+				getPIDChannel(e.getGroup()).setCurrentCachedPosition(e.getValue());
 			}
 		});
 	}
+	@Override
+	public void setConnection(BowlerAbstractConnection connection) {
+		super.setConnection(connection);
+		if(connection.isConnected())
+			GetAllPIDPosition();
+	}
+	
 	@Override
 	public boolean connect(){
 		if(super.connect()){
@@ -64,16 +73,16 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 	}
 	
 	public boolean SetPIDSetPoint(int group,int setpoint,double seconds){
-		channels.get(group).setCachedTargetValue(setpoint);
+		getPIDChannel(group).setCachedTargetValue(setpoint);
 		return send(new  ControlPIDCommand((char) group,setpoint, seconds))!=null;
 	}
 	
 	public boolean SetAllPIDSetPoint(int []setpoints,double seconds){
 		int[] sp;
-		if(setpoints.length<channels.size()) {
-			sp = new int[channels.size()];
+		if(setpoints.length<getNumberOfChannels()) {
+			sp = new int[getNumberOfChannels()];
 			for(int i=0;i<sp.length;i++) {
-				sp[i]=channels.get(i).getCachedTargetValue();
+				sp[i]=getPIDChannel(i).getCachedTargetValue();
 			}
 			for(int i=0;i<setpoints.length;i++) {
 				sp[i]=setpoints[i];
@@ -81,8 +90,8 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 		}else {
 			sp=setpoints;
 		}
-		for(int i=0;i<channels.size();i++){
-			channels.get(i).setCachedTargetValue(sp[i]);
+		for(int i=0;i<getNumberOfChannels();i++){
+			getPIDChannel(i).setCachedTargetValue(sp[i]);
 		}
 		return send(new  ControlAllPIDCommand(sp, seconds))!=null;
 	}
@@ -92,15 +101,11 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 		return ByteList.convertToInt(b.getData().getBytes(1, 4),true);
 	}
 	public int GetCachedPosition(int group) {
-		return channels.get(group).getCurrentCachedPosition();
+		return getPIDChannel(group).getCurrentCachedPosition();
 	}
 	public void SetCachedPosition(int group, int value) {
-		if(channels.size()<=group) {
-			PIDChannel c =new PIDChannel(this,group);
-			c.setCachedTargetValue(value);
-			channels.add(c);
-		}
-		channels.get(group).setCurrentCachedPosition(value);
+
+		getPIDChannel(group).setCurrentCachedPosition(value);
 	}
 	
 	public int [] GetAllPIDPosition() {
@@ -110,7 +115,7 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 		for(int i=0;i<back.length;i++) {
 			back[i] = ByteList.convertToInt( data.getBytes(i*4, (i*4)+4),true);
 		}
-		if(back.length != channels.size()){
+		if(back.length != getNumberOfChannels()){
 			channels =  new ArrayList<PIDChannel>();
 			lastPacketTime =  new long[back.length];
 			for(int i=0;i<back.length;i++){
@@ -190,9 +195,9 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 
 	@Override
 	public void flushPIDChannels(double time) {
-		int [] data = new int[channels.size()];
-		for(int i=0;i<channels.size();i++){
-			data[i]=channels.get(i).getCachedTargetValue();
+		int [] data = new int[getNumberOfChannels()];
+		for(int i=0;i<getNumberOfChannels();i++){
+			data[i]=getPIDChannel(i).getCachedTargetValue();
 		}
 		SetAllPIDSetPoint(data, time);
 	}
@@ -217,11 +222,19 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 			return SetPIDInterpolatedVelocity( group, unitsPerSecond,  seconds);
 		}
 	}
+	
+	public int getNumberOfChannels(){
+		return channels.size();
+	}
 
 	@Override
 	public PIDChannel getPIDChannel(int group) {
-		if(channels.size()==0) {
+		if(getNumberOfChannels()==0) {
 			GetAllPIDPosition();
+		}
+		while(!(group < getNumberOfChannels() )){
+			PIDChannel c =new PIDChannel(this,group);
+			channels.add(c);
 		}
 		return channels.get(group);
 	}
