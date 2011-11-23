@@ -16,8 +16,8 @@ public class HokuyoURGDevice {
 	private DataOutputStream outs;
 	private Thread receive;
 	
-	private final int center = 384;
-	private final double degreesPerAngleUnit = 0.352422908;
+	private final int center = 384;//from datasheet
+	private final double degreesPerAngleUnit = 0.352422908;//from datasheet
 	
 	
 	private URG2Packet packet=null;
