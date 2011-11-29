@@ -147,11 +147,11 @@ public class VirtualWorld extends NrMap{
 			if(b.getRobot()==robot){
 				int x = b.getRobotXToPixel();
 				int y = b.getRobotYToPixel();
-				double i=15;
+				double i=10;
 				double o =robot.getCurrentOrentation()+direction;
 				//System.out.println("Getting range at angle: "+Math.toDegrees(o));
 				while(x>0&&x<getFrame().getWidth()&&y>0&&y<getFrame().getHeight() && i<pixelMaxRange){
-					i+=10;
+					i+=1;
 					x += (10*Math.sin(o));
 					y += (10*Math.cos(o));
 					//System.out.println("Getting value at x="+x+" y="+y+ " orentation="+Math.toDegrees(o));
