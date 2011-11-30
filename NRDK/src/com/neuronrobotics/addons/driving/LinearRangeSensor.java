@@ -57,6 +57,7 @@ public class LinearRangeSensor extends AbstractSensor {
 		public void run() {
 			data = new ArrayList<DataPoint>();
 			while(getCurrentAngle()<stop) {
+
 				update();
 			}
 			setCurrentAngle(stop);

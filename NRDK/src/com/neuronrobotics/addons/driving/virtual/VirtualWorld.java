@@ -145,20 +145,25 @@ public class VirtualWorld extends NrMap{
 		for( int j=0;j<bots.size();j++){
 			DrivingRobotUI b = bots.get(j);
 			if(b.getRobot()==robot){
-				int x = b.getRobotXToPixel();
-				int y = b.getRobotYToPixel();
+				double x = b.getRobotXToPixel();
+				double y = b.getRobotYToPixel();
 				double i=10;
 				double increment = 2;
 				double o =robot.getCurrentOrentation()+direction;
-				//System.out.println("Getting range at angle: "+Math.toDegrees(o));
+				
+				//System.out.println("getting range at sensor angle="+Math.toDegrees(direction)+" absolute="+Math.toDegrees(o));
 				while(x>0&&x<getFrame().getWidth()&&y>0&&y<getFrame().getHeight() && i<pixelMaxRange){
 					i+=increment;
 					x += (increment*Math.sin(o));
 					y += (increment*Math.cos(o));
-					//System.out.println("Getting value at x="+x+" y="+y+ " orentation="+Math.toDegrees(o));
-					if(getObsticle(x,y)==type){
-						b.setRangeVector(x,y);
-
+//					System.out.println("Getting value at x="+x+" y="+y);
+//					if(i%10==0){
+//						b.setRangeVector((int)x,(int)y);
+//						updateMap();
+//					}
+					if(getObsticle((int)x,(int)y)==type){
+						b.setRangeVector((int)x,(int)y);
+						updateMap();
 						return getPixelToCm((int) (i))*100;
 					}
 				}
