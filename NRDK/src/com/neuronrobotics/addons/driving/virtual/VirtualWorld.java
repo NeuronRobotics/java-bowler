@@ -150,7 +150,7 @@ public class VirtualWorld extends NrMap{
 				double i=10;
 				double increment = 2;
 				double o =robot.getCurrentOrentation()+direction;
-				
+				//System.out.println("Getting range with resolution of "+getPixelToCm((int) (increment))*100+" mm");
 				//System.out.println("getting range at sensor angle="+Math.toDegrees(direction)+" absolute="+Math.toDegrees(o));
 				while(x>0&&x<getFrame().getWidth()&&y>0&&y<getFrame().getHeight() && i<pixelMaxRange){
 					i+=increment;
@@ -164,6 +164,7 @@ public class VirtualWorld extends NrMap{
 					if(getObsticle((int)x,(int)y)==type){
 						b.setRangeVector((int)x,(int)y);
 						updateMap();
+						
 						return getPixelToCm((int) (i))*100;
 					}
 				}
