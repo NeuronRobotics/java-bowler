@@ -17,10 +17,33 @@ public class PIDConfiguration {
 	public PIDConfiguration(){
 		
 	}
+	/**
+	 * 
+	 * @param group This is the PID group this configuration object represents
+	 * @param enabled True if the controller is running, false otherwise
+	 * @param inverted This inverts the output value. Set true if the controller diverges
+	 * @param async sets the flag to send this channels async values upstream
+	 * @param KP Proportional constant
+	 * @param KI Integral constant
+	 * @param KD Derivative constant
+	 */
 	@Deprecated
 	public PIDConfiguration(int group,boolean enabled,boolean inverted,boolean async,double KP,double KI,double KD){
 		this( group, enabled, inverted,async, KP, KI, KD,0, true, true);
 	}
+	/**
+	 * 
+	 * @param group This is the PID group this configuration object represents
+	 * @param enabled True if the controller is running, false otherwise
+	 * @param inverted This inverts the output value. Set true if the controller diverges
+	 * @param async sets the flag to send this channels async values upstream
+	 * @param KP Proportional constant
+	 * @param KI Integral constant
+	 * @param KD Derivative constant
+	 * @param latch The value to latch into the PID controller if the home switch is hit (encoder only, not used in analog PID)
+	 * @param useLatch Use the value to latch into the PID controller if the home switch is hit (encoder only, not used in analog PID)
+	 * @param stopOnLatch Set the setpoint of the controller to current if home switch is hit (encoder only, not used in analog PID)
+	 */
 	public PIDConfiguration(int group,boolean enabled,boolean inverted,boolean async,double KP,double KI,double KD, double latch, boolean useLatch, boolean stopOnLatch){
 		setGroup(group);
 		setEnabled(enabled);
@@ -33,6 +56,11 @@ public class PIDConfiguration {
 		setUseLatch(useLatch);
 		setStopOnIndex(stopOnLatch);
 	}
+	
+	/**
+	 * Used to parse a PID configuration out of a PID packet
+	 * @param conf
+	 */
 
 	public PIDConfiguration(BowlerDatagram conf) {
 		setGroup(   conf.getData().get(0));
