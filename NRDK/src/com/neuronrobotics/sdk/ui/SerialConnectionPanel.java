@@ -16,6 +16,7 @@ package com.neuronrobotics.sdk.ui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -106,9 +107,16 @@ public class SerialConnectionPanel extends AbstractConnectionPanel {
 		"This must be in your JVM or system library path. See:\n"+
 		"http://neuronrobotics.com/wiki/Installing_The_Native_Serial_Library";
 		try {
-			for(String s: SerialConnection.getAvailableSerialPorts()) {
-				connectionCbo.addItem(s);
+			List<String> prts= SerialConnection.getAvailableSerialPorts();
+ 			for(int i=0;i<prts.size();i++) {
+ 				String s = prts.get(i);
+ 				if(s.contains("DyIO")||s.contains("Bootloader"))
+ 					connectionCbo.addItem(prts.remove(i));
 			}
+ 			for(String s:prts){
+ 				if(!(s.contains("ttyS") || s.contains("COM1") || s.contains("COM2") || s.contains("ttyACM")))
+ 					connectionCbo.addItem(s);
+ 			}
 		} catch(MissingNativeLibraryException e) {
 			JOptionPane.showMessageDialog(this, m,"NRSDK not installed properly", JOptionPane.ERROR_MESSAGE);
 			throw new MissingNativeLibraryException(m);
