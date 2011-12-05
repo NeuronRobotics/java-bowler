@@ -24,7 +24,7 @@ public class SpeedTest {
 			System.exit(1);
 		System.out.println("Starting test");
 		DyIO dyio = new DyIO(c);
-		
+		dyio.setThreadedUpstreamPackets(false);
 		long start = System.currentTimeMillis();
 		dyio.connect();
 		System.out.println("Startup time: "+(System.currentTimeMillis()-start)+" ms");
