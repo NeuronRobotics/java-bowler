@@ -86,6 +86,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 		}
 	}
 	public void setConnection(BowlerAbstractConnection connection) {
+		setThreadedUpstreamPackets(true);
 		if(connection == null) {
 			throw new NullPointerException("Can not use a NULL connection.");
 		}
@@ -313,4 +314,14 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 			}
 		}
 	}
+	/**
+	 * Tells the connection to use asynchronous packets as threads or not. 
+	 * @param up
+	 */
+	public void setThreadedUpstreamPackets(boolean up){
+		if(connection != null){
+			connection.setThreadedUpstreamPackets(up);
+		}
+	}
+	
 }

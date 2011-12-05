@@ -47,6 +47,8 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
  */
 public abstract class BowlerAbstractConnection {
 	
+	private boolean threadedUpstreamPackets=false;
+	
 	/** The sleep time. */
 	private int sleepTime = 10;
 	
@@ -98,6 +100,14 @@ public abstract class BowlerAbstractConnection {
 	 * @return true, if successful
 	 */
 	abstract public boolean waitingForConnection();
+	
+	/**
+	 * Tells the connection to use asynchronous packets as threads or not. 
+	 * @param up
+	 */
+	public void setThreadedUpstreamPackets(boolean up){
+		threadedUpstreamPackets=up;
+	}
 	
 	/**
 	 * Sends any "universal" data to the connection and returns either the syncronous response or null in the
@@ -339,12 +349,20 @@ public abstract class BowlerAbstractConnection {
 	
 	protected void fireAsyncOnResponse(BowlerDatagram datagram) {
 		if(!datagram.isSyncronous()){
-			synchronized(listeners){
+			if(threadedUpstreamPackets){
+				synchronized(listeners){
+					for(IBowlerDatagramListener l : listeners) {
+						l.onAllResponse(datagram);
+						AsyncSender a = new AsyncSender(l,datagram);
+						a.start();
+					}
+				}
+			}else{
 				for(IBowlerDatagramListener l : listeners) {
 					l.onAllResponse(datagram);
-					AsyncSender a = new AsyncSender(l,datagram);
-					a.start();
+					l.onAsyncResponse(datagram);
 				}
+			
 			}
 		}
 		
