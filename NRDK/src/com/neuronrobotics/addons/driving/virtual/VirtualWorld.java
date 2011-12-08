@@ -49,11 +49,11 @@ public class VirtualWorld extends NrMap{
 		
 		//Straight Sections
 		int lSx = (int)(width/2-120 );
-		int ly=(int)( hight/2+60 );
+		int ly=(int)( height/2+60 );
 		int lEx=(int)(width/2+120 );
 		
 		int sSx=(int)(width/2-50 );
-		int sy=(int)( hight/2-60 );
+		int sy=(int)( height/2-60 );
 		int sEx= (int)(width/2+50 );
 		
 		g.drawLine(lSx, ly, lEx, ly);
@@ -86,7 +86,7 @@ public class VirtualWorld extends NrMap{
         getFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBackground(Color.black);
         getFrame().add(this);
-        getFrame().setSize((int)width+200,(int)hight+200);
+        getFrame().setSize((int)width+200,(int)height+200);
         getFrame().setLocationRelativeTo(null);
         getFrame().setVisible(true);
         getFrame().setIconImage( ConnectionImageIconFactory.getIcon("images/hat.png").getImage());

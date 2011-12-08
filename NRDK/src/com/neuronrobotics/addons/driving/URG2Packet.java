@@ -37,7 +37,7 @@ public class URG2Packet {
 				while(dataLines.size()>0){
 					int range = decodeURG(dataLines.popList(3));
 					double angle = ((double)(angleTicks-center))*degreesPerAngleUnit;
-					getData().add(new DataPoint(range, angle));
+					getData().add(new DataPoint(range, -1*angle));
 					angleTicks+=stepsPerDataPoint;
 				}
 			}else {

@@ -45,10 +45,10 @@ public class HokuyoURGDevice {
 										try{
 											URG2Packet p =new URG2Packet(new String(bl.getBytes()));
 											//System.out.println("New Packet: \n"+p);
-											packet=p;
+											setPacket(p);
 											bl = new ByteList();
 										}catch(Exception ex){
-											packet=null;
+											setPacket(null);
 											//System.out.println("Unknown packet");
 											//ex.printStackTrace();
 										}
@@ -78,12 +78,12 @@ public class HokuyoURGDevice {
 		send("QT\n");
 	}
 	public URG2Packet startSweep(double startDeg, double endDeg, int degPerStep) {
-		packet = null;
+		setPacket(null);
 		scan(degreeToTicks(startDeg),degreeToTicks(endDeg),1,1,1);
-		while(packet == null) {
+		while(getPacket() == null) {
 			ThreadUtil.wait(10);
 		}
-		return packet;
+		return getPacket();
 	}
 	private int degreeToTicks(double degrees) {
 		int tick =(int)(degrees/degreesPerAngleUnit)+center;
@@ -121,5 +121,13 @@ public class HokuyoURGDevice {
 			e.printStackTrace();
 		} 
 		 
+	}
+
+	public URG2Packet getPacket() {
+		return packet;
+	}
+
+	public void setPacket(URG2Packet packet) {
+		this.packet = packet;
 	}
 }

@@ -25,7 +25,7 @@ public class NrMap extends JPanel{
 	private ArrayList<userDefinedObsticles> obs = new ArrayList<userDefinedObsticles>();
 	
 	protected static final double width = 600;
-	protected static final double hight = 480;
+	protected static final double height = 480;
 	
 	/**
 	 * Instantiate a robot map using a default blank map. 
@@ -76,12 +76,15 @@ public class NrMap extends JPanel{
 		}
 		return d;
 	}
-	
+	public void removeAllUserDefinedObsticles(){
+		obs.clear();
+	}
 	public void addUserDefinedObsticle(int x, int y, int size){
 		if(display==null){
 			display =  new BufferedImage(600, 480,BufferedImage.TYPE_INT_RGB);
 		}
 		obs.add(new userDefinedObsticles(x,y,size));
+		
 	}
 	
 	public ObsticleType getObsticle(int x,int y) {
