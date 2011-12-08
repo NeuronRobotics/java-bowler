@@ -79,7 +79,12 @@ public class HokuyoURGDevice {
 	}
 	public URG2Packet startSweep(double startDeg, double endDeg, double degPerStep) {
 		setPacket(null);
-		scan(degreeToTicks(startDeg),degreeToTicks(endDeg),(int)(degPerStep/degreesPerAngleUnit),1,1);
+		int tick =(int)(degPerStep/degreesPerAngleUnit);
+		if (tick>99)
+			tick=99;
+		if(tick<1)
+			tick=1;
+		scan(degreeToTicks(startDeg),degreeToTicks(endDeg),tick,1,1);
 		while(getPacket() == null) {
 			ThreadUtil.wait(10);
 		}
