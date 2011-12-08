@@ -79,7 +79,7 @@ public class HokuyoURGDevice {
 	}
 	public URG2Packet startSweep(double startDeg, double endDeg, double degPerStep) {
 		setPacket(null);
-		scan(degreeToTicks(startDeg),degreeToTicks(endDeg),1,1,1);
+		scan(degreeToTicks(startDeg),degreeToTicks(endDeg),degreeToTicks(degPerStep),1,1);
 		while(getPacket() == null) {
 			ThreadUtil.wait(10);
 		}
@@ -95,11 +95,19 @@ public class HokuyoURGDevice {
 	}
 	/**
 	 * 
-	 * @param startStep
-	 * @param endStep
-	 * @param clusterCount
-	 * @param scanInterval
-	 * @param numberOfScans
+	 * @param startStep 	tick to start at
+	 * @param endStep 		tick to end at
+	 * 						Starting step and End Step can be any points between 0 and maximum step (see section 4). End Step
+							should be always greater than Starting step.
+	 * @param clusterCount 	Cluster Count is the number of adjacent steps that can be merged into single data and has a range 0 to
+							99. When cluster count is more than 1, step having minimum measurement value (excluding error) in the
+							cluster will be the output data. 
+	 * @param scanInterval 	Scan Interval and
+							Skipping the number of scans when obtaining multiple scan data can be set in Scan Interval. The value
+							should be in decimal.
+	 * @param numberOfScans User can request number of scan data by supplying the count in Number of Scan. If Number of Scan is
+							set to 00 the data is supplied indefinitely unless canceled using [QT-Command] or [RS-Command].
+							The value should be in decimal.
 	 */
 	public void scan(int startStep,int endStep,int clusterCount,int scanInterval,int numberOfScans){
 		clear();
