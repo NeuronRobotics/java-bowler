@@ -32,7 +32,7 @@ public class SimpleDisplay extends NrMap {
 		this.frame = frame;
 	}
 	public void setData(ArrayList<DataPoint> data) {
-		 //removeAllUserDefinedObsticles();
+		 removeAllUserDefinedObsticles();
 		 for(DataPoint d:data){
 			 double pix =  getCmToPixel(d.getRange()/100);
 			 double centerX=(width/2);
