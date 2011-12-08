@@ -66,7 +66,7 @@ public class VirtualLineSensor extends AbstractSensor {
 	}
 
 	@Override
-	public void StartSweep(double start, double stop, int increment) {
+	public void StartSweep(double start, double stop, double increment) {
 		// do nothing
 	}
 }

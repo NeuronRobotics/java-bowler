@@ -42,6 +42,6 @@ public abstract class AbstractSensor {
 			l.onLineSensorEvent(this,left,middle,right,timeStamp);
 		}
 	}
-	public abstract void StartSweep(double start, double stop, int increment);
+	public abstract void StartSweep(double start, double stop, double increment);
 
 }

@@ -77,7 +77,7 @@ public class HokuyoURGDevice {
 	public void clear() {
 		send("QT\n");
 	}
-	public URG2Packet startSweep(double startDeg, double endDeg, int degPerStep) {
+	public URG2Packet startSweep(double startDeg, double endDeg, double degPerStep) {
 		setPacket(null);
 		scan(degreeToTicks(startDeg),degreeToTicks(endDeg),1,1,1);
 		while(getPacket() == null) {

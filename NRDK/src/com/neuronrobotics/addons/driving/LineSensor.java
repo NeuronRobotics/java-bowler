@@ -28,7 +28,7 @@ public class LineSensor extends AbstractSensor implements IAnalogInputListener {
 	}
 
 	@Override
-	public void StartSweep(double start, double stop, int increment) {
+	public void StartSweep(double start, double stop, double increment) {
 		// do nothing
 	}
 

@@ -37,14 +37,14 @@ public class LinearRangeSensor extends AbstractSensor {
 
 	protected class sweepThread extends Thread{
 		double stop;
-		int increment;
+		double increment;
 		ArrayList<DataPoint> data;
 		
-		public sweepThread(double start,double stop,int increment) {
+		public sweepThread(double start,double stop,double degPerStep) {
 			if(start>=stop)
 				throw new RuntimeException("Start must be less then stop angle in sweep: start = "+start+" stop = "+stop);
 			this.stop=stop;
-			this.increment=increment;
+			this.increment=degPerStep;
 			setCurrentAngle(start);
 		}
 		private void update(){
@@ -68,7 +68,7 @@ public class LinearRangeSensor extends AbstractSensor {
 	}
 	
 	@Override
-	public void StartSweep(double startDeg, double endDeg, int degPerStep) {
+	public void StartSweep(double startDeg, double endDeg, double degPerStep) {
 		new sweepThread(startDeg,endDeg,degPerStep).start();
 	}
 
