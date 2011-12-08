@@ -11,7 +11,7 @@ public class HokuyoTest implements ISensorListener {
 	private HokuyoTest(){
 		LaserRangeSensor range = new LaserRangeSensor(new NRSerialPort("COM86", 115200));
 		range.addSensorListener(this);
-		range.StartSweep(-90, 90, 10);
+		range.StartSweep(-90, 90, .5);
 //		try {
 //			Thread.sleep(10000);
 //		} catch (InterruptedException e) {
@@ -28,7 +28,7 @@ public class HokuyoTest implements ISensorListener {
 	public void onRangeSensorEvent(AbstractSensor source,ArrayList<DataPoint> data, long timeStamp) {
 		//System.out.println("Range Sensor Event "+data);
 		display.setData(data);
-		source.StartSweep(-90, 90, 10);
+		source.StartSweep(-90, 90, .5);
 	}
 
 	@Override
