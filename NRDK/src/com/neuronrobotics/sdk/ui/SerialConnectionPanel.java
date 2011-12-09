@@ -114,7 +114,7 @@ public class SerialConnectionPanel extends AbstractConnectionPanel {
  					connectionCbo.addItem(prts.remove(i));
 			}
  			for(String s:prts){
- 				if(!(s.contains("ttyS") || s.equals("COM3") || s.equals("COM1") || s.equals("COM2") || s.contains("ttyACM")))
+ 				if(!(s.contains("ttyS")  || s.equals("COM1") || s.equals("COM2") || s.contains("ttyACM")))
  					connectionCbo.addItem(s);
  			}
 		} catch(MissingNativeLibraryException e) {
