@@ -85,8 +85,16 @@ public class HokuyoURGDevice {
 		if(tick<1)
 			tick=1;
 		scan(degreeToTicks(startDeg),degreeToTicks(endDeg),tick,1,1);
+		long start = System.currentTimeMillis();
 		while(getPacket() == null) {
+			if(System.currentTimeMillis()-start>2000)
+				break;
 			ThreadUtil.wait(10);
+		}
+		if(getPacket()==null){
+			System.err.println("Sweep failed, resetting and trying again");
+			clear();
+			startSweep(startDeg, endDeg, degPerStep);
 		}
 		return getPacket();
 	}
