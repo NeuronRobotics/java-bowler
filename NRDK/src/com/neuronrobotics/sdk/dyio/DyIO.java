@@ -346,7 +346,10 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 				//System.out.println("New channel "+i);
 				getInternalChannels().add(new DyIOChannel(this, i, cm, editable));
 			}
-			getInternalChannels().get(i).fireModeChangeEvent(cm);
+		}
+		for (int i = 0; i < response.getData().size(); i++){
+			DyIOChannel dc =getInternalChannels().get(i);
+			dc.fireModeChangeEvent(dc.getCurrentMode());
 		}
 		if (getInternalChannels().size()==0)
 			throw new DyIOCommunicationException("DyIO failed to report during initialization");
