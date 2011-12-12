@@ -33,7 +33,7 @@ public class URG2Packet {
 				for(int i=3;i<sections.length;i++){
 					byte [] sec = sections[i].getBytes();
 					ByteList bl = new ByteList(sec);
-					int len =  sections[i].length();
+					int len =  sections[i].length()-1;//Remove the \r
 					dataLines.add(bl.getBytes(0, len));
 				}
 				int angleTicks = start;
