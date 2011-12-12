@@ -18,7 +18,7 @@ public class NrMap extends JPanel{
 	 */
 	private static final long serialVersionUID = -1487461776000494761L;
 	
-	private double pixelToCm=5;
+	private double pixelToCm=10;
 	JLabel lab=new JLabel();
 	private BufferedImage display;
 	

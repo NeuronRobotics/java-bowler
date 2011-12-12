@@ -84,7 +84,8 @@ public class HokuyoURGDevice {
 			tick=99;
 		if(tick<1)
 			tick=1;
-		scan(degreeToTicks(startDeg),degreeToTicks(endDeg),tick,1,1);
+		tick=1;//HACK
+		scan(degreeToTicks(startDeg),degreeToTicks(endDeg),tick,0,1);
 		long start = System.currentTimeMillis();
 		while(getPacket() == null) {
 			if(System.currentTimeMillis()-start>2000)

@@ -29,12 +29,17 @@ public class URG2Packet {
 			stepsPerDataPoint = Integer.parseInt(cmd.substring(10, 12));
 			if(sections.length>2){
 				String ts = new String(new ByteList(sections[2].getBytes()).getBytes(0,4));
-				timestamp = decodeURG(ts);
+				//timestamp = decodeURG(ts);
 				for(int i=3;i<sections.length;i++){
-					dataLines.add(new ByteList(sections[i].getBytes()).getBytes(0, sections[i].length()-2));
+					byte [] sec = sections[i].getBytes();
+					ByteList bl = new ByteList(sec);
+					int len =  sections[i].length();
+					dataLines.add(bl.getBytes(0, len));
 				}
 				int angleTicks = start;
-				while(dataLines.size()>0){
+				//System.out.println("Packet = "+line);
+				//System.out.println("Data = "+dataLines.toString());
+				while(dataLines.size()>2){
 					int range = decodeURG(dataLines.popList(3));
 					double angle = ((double)(angleTicks-center))*degreesPerAngleUnit;
 					getData().add(new DataPoint(range, -1*angle));
@@ -51,6 +56,10 @@ public class URG2Packet {
 		}
 	}
 	public static int decodeURG(byte[] bs){
+		if(bs.length!=3){
+			System.err.println("URG fail: "+bs.length);
+			throw new IndexOutOfBoundsException("URG decode expected 3 bytes, got: "+bs.length );
+		}
 		int back =0;
 		byte [] d = bs;
 		for(int i=0;i<d.length;i++){
@@ -63,6 +72,7 @@ public class URG2Packet {
 		return back;
 	}
 	public static int decodeURG(String data){
+		System.out.println("Decoding string="+data);
 		return decodeURG(data.getBytes());
 	}
 	@Override
