@@ -276,6 +276,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 			Log.debug("Not checking firmware version for DyIO");
 		}
 	}
+	private boolean resyncing = false;
 	public boolean resync() {
 		if(getConnection() == null) {
 			return false;
@@ -283,6 +284,9 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 		if(!getConnection().isConnected()) {
 			return false;
 		}
+		if(resyncing)
+			return true;
+		resyncing = true;
 		setMuteResyncOnModeChange(true);
 		Log.info("Re-syncing...");
 		BowlerDatagram response;
@@ -345,15 +349,18 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 			}catch(IndexOutOfBoundsException e){
 				//System.out.println("New channel "+i);
 				getInternalChannels().add(new DyIOChannel(this, i, cm, editable));
+				DyIOChannel dc =getInternalChannels().get(i);
+				dc.fireModeChangeEvent(dc.getCurrentMode());
 			}
 		}
-		for (int i = 0; i < response.getData().size(); i++){
-			DyIOChannel dc =getInternalChannels().get(i);
-			dc.fireModeChangeEvent(dc.getCurrentMode());
-		}
+//		for (int i = 0; i < response.getData().size(); i++){
+//			DyIOChannel dc =getInternalChannels().get(i);
+//			dc.fireModeChangeEvent(dc.getCurrentMode());
+//		}
 		if (getInternalChannels().size()==0)
 			throw new DyIOCommunicationException("DyIO failed to report during initialization");
 		setMuteResyncOnModeChange(false);
+		resyncing = false;
 		return true;
 	}
 	
