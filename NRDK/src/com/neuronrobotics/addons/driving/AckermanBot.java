@@ -66,7 +66,6 @@ public class AckermanBot extends AbstractRobotDrive {
 		try {
 			drive.SetPDVelocity(ticksPerSecond, 0);
 		} catch (PIDCommandException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
