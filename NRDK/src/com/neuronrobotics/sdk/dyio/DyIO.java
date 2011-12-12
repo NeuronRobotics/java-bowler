@@ -277,6 +277,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 		}
 	}
 	private boolean resyncing = false;
+	private boolean haveBeenSynced =false;
 	public boolean resync() {
 		if(getConnection() == null) {
 			return false;
@@ -286,6 +287,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 		}
 		if(resyncing)
 			return true;
+		
 		resyncing = true;
 		setMuteResyncOnModeChange(true);
 		Log.info("Re-syncing...");
@@ -360,6 +362,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 		if (getInternalChannels().size()==0)
 			throw new DyIOCommunicationException("DyIO failed to report during initialization");
 		setMuteResyncOnModeChange(false);
+		haveBeenSynced =true;
 		resyncing = false;
 		return true;
 	}
@@ -427,6 +430,11 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 	 */
 	protected void validateChannel(int channel) {
 		int syncs=0;
+		while(resyncing){
+			ThreadUtil.wait(10);
+		}
+		if(!haveBeenSynced)
+			resync();
 		while(getInternalChannels().size() == 0){
 			Log.error("Valadate will fail, no channels, resyncing");
 			resync();
@@ -579,6 +587,9 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 	 */
 	 
 	public void onAsyncResponse(BowlerDatagram data) {
+		if(!haveBeenSynced){
+			return;
+		}
 		Log.info("<< Async\n"+data.toString());
 		if(data.getRPC().equals("_pwr")) {
 			powerEvent(data);
