@@ -9,7 +9,7 @@ public class HokuyoTest implements ISensorListener {
 	private SimpleDisplay display = new SimpleDisplay();
 	
 	private HokuyoTest(){
-		LaserRangeSensor range = new LaserRangeSensor(new NRSerialPort("COM86", 115200));
+		LaserRangeSensor range = new LaserRangeSensor(new NRSerialPort("/dev/ttyACM0", 115200));
 		range.addSensorListener(this);
 		range.StartSweep(-90, 90, .5);
 //		try {

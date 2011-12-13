@@ -19,7 +19,7 @@ public class URG2Packet {
 	
 	
 	public URG2Packet(String line){
-		String [] sections = line.split("\\n");
+		String [] sections = line.split("\\n");//This removes the \n from the data
 		cmd = sections[0];
 		if(cmd.contains("MD")||cmd.contains("MS")){
 			//junk = sections[1];
@@ -33,7 +33,7 @@ public class URG2Packet {
 				for(int i=3;i<sections.length;i++){
 					byte [] sec = sections[i].getBytes();
 					ByteList bl = new ByteList(sec);
-					int len =  sections[i].length()-1;//Remove the '\r'
+					int len =  sections[i].length()-1;//Remove the '\r' from the data
 					dataLines.add(bl.getBytes(0, len));
 				}
 				int angleTicks = start;
