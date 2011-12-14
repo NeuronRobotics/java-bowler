@@ -55,14 +55,14 @@ public abstract class AbstractRobotDrive implements IPIDEventListener{
 		DriveStraight(0,0);
 	}
 	
-	private void setCurrentX(double currentX) {
+	public void setCurrentX(double currentX) {
 		//System.out.println("Current X is: "+currentX);
 		this.currentX = currentX;
 	}
 	public double getCurrentX() {
 		return currentX;
 	}
-	private void setCurrentY(double currentY) {
+	public void setCurrentY(double currentY) {
 		//System.out.println("Current Y is: "+currentY);
 		this.currentY = currentY;
 	}
@@ -73,7 +73,7 @@ public abstract class AbstractRobotDrive implements IPIDEventListener{
 	 * 
 	 * @param currentTheta in radians
 	 */
-	private void setCurrentOrentation(double o) {
+	public void setCurrentOrentation(double o) {
 		//System.out.println("Current orentation is: "+Math.toDegrees(currentTheta));
 		this.currentOrentation = o;
 	}
@@ -113,7 +113,7 @@ public abstract class AbstractRobotDrive implements IPIDEventListener{
 		return back;
 	}
 	
-	protected void setRobotLocationUpdate(RobotLocationData d) {
+	public void setRobotLocationUpdate(RobotLocationData d) {
 //		if(d==null)
 //			return;
 		//System.out.println("Robot pos update "+d);
