@@ -78,6 +78,13 @@ public class PIDChannel {
 		return pid;
 	}
 	
+	public void removePIDEventListener(IPIDEventListener l) {
+		synchronized(PIDEventListeners){
+			if(PIDEventListeners.contains(l))
+				PIDEventListeners.remove(l);
+		}
+	}
+	
 	public void addPIDEventListener(IPIDEventListener l) {
 		synchronized(PIDEventListeners){
 			if(!PIDEventListeners.contains(l))

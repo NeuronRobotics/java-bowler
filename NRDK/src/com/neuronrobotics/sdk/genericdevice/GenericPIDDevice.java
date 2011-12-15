@@ -159,39 +159,7 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 	}
 	
 	
-	private ArrayList<IPIDEventListener> PIDEventListeners = new ArrayList<IPIDEventListener>();
-	
-	public void addPIDEventListener(IPIDEventListener l) {
-		synchronized(PIDEventListeners){
-			if(!PIDEventListeners.contains(l))
-				PIDEventListeners.add(l);
-		}
-	}
-	public void firePIDLimitEvent(PIDLimitEvent e){
-		synchronized(PIDEventListeners){
-			for(IPIDEventListener l: PIDEventListeners)
-				l.onPIDLimitEvent(e);
-		}
-	}
-	public void firePIDEvent(PIDEvent e){
-		if(lastPacketTime != null){
-			if(lastPacketTime[e.getGroup()]>e.getTimeStamp()){
-				return;
-			}else{
-				lastPacketTime[e.getGroup()]=e.getTimeStamp();
-			}
-		}
-		SetCachedPosition(e.getGroup(), e.getValue());
-		synchronized(PIDEventListeners){
-			for(IPIDEventListener l: PIDEventListeners)
-				l.onPIDEvent(e);
-		}
-	}
-	public void firePIDResetEvent(int group,int value){
-		SetCachedPosition(group, value);
-		for(IPIDEventListener l: PIDEventListeners)
-			l.onPIDReset(group,value);
-	}
+
 
 	@Override
 	public void flushPIDChannels(double time) {
@@ -243,6 +211,40 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 	public boolean killAllPidGroups() {
 		// TODO Auto-generated method stub
 		return send(new KillAllPIDCommand())==null;
+	}
+	
+	private ArrayList<IPIDEventListener> PIDEventListeners = new ArrayList<IPIDEventListener>();
+	
+	public void addPIDEventListener(IPIDEventListener l) {
+		synchronized(PIDEventListeners){
+			if(!PIDEventListeners.contains(l))
+				PIDEventListeners.add(l);
+		}
+	}
+	public void firePIDLimitEvent(PIDLimitEvent e){
+		synchronized(PIDEventListeners){
+			for(IPIDEventListener l: PIDEventListeners)
+				l.onPIDLimitEvent(e);
+		}
+	}
+	public void firePIDEvent(PIDEvent e){
+		if(lastPacketTime != null){
+			if(lastPacketTime[e.getGroup()]>e.getTimeStamp()){
+				return;
+			}else{
+				lastPacketTime[e.getGroup()]=e.getTimeStamp();
+			}
+		}
+		SetCachedPosition(e.getGroup(), e.getValue());
+		synchronized(PIDEventListeners){
+			for(IPIDEventListener l: PIDEventListeners)
+				l.onPIDEvent(e);
+		}
+	}
+	public void firePIDResetEvent(int group,int value){
+		SetCachedPosition(group, value);
+		for(IPIDEventListener l: PIDEventListeners)
+			l.onPIDReset(group,value);
 	}
 
 }
