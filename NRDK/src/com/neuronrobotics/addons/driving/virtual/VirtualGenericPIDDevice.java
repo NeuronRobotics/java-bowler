@@ -30,7 +30,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 	
 	public  VirtualGenericPIDDevice( double maxTicksPerSecond) {
 		this.setMaxTicksPerSecond(maxTicksPerSecond);
-		
+		GetAllPIDPosition();
 	}
 	public boolean ConfigurePIDController(PIDConfiguration config) { 
 		configs.set(config.getGroup(), config);
