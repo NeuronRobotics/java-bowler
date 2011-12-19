@@ -2,6 +2,7 @@ package com.neuronrobotics.addons.driving.virtual;
 
 import java.util.ArrayList;
 
+import com.neuronrobotics.sdk.commands.bcs.pid.ConfigurePIDCommand;
 import com.neuronrobotics.sdk.commands.bcs.pid.PDVelocityCommand;
 import com.neuronrobotics.sdk.common.BowlerAbstractCommand;
 import com.neuronrobotics.sdk.common.BowlerDatagram;
@@ -11,6 +12,7 @@ import com.neuronrobotics.sdk.common.NoConnectionAvailableException;
 import com.neuronrobotics.sdk.genericdevice.GenericPIDDevice;
 import com.neuronrobotics.sdk.pid.PIDChannel;
 import com.neuronrobotics.sdk.pid.PIDCommandException;
+import com.neuronrobotics.sdk.pid.PIDConfiguration;
 import com.neuronrobotics.sdk.pid.PIDEvent;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
@@ -19,6 +21,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 	private static final long threadTime=100;
 	
 	private ArrayList<DriveThread>  driveThreads = new  ArrayList<DriveThread>();
+	private ArrayList<PIDConfiguration>  configs = new  ArrayList<PIDConfiguration>();
 	SyncThread sync = new SyncThread ();
 	private double maxTicksPerSecond;
 	
@@ -28,6 +31,15 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 	public  VirtualGenericPIDDevice( double maxTicksPerSecond) {
 		this.setMaxTicksPerSecond(maxTicksPerSecond);
 		
+	}
+	public boolean ConfigurePIDController(PIDConfiguration config) { 
+		configs.set(config.getGroup(), config);
+		return true;
+	}
+
+	
+	public PIDConfiguration getPIDConfiguration(int group) {
+		return configs.get(group);
 	}
 	/**
 	 * since there is no connection, this is an easy to nip off com functionality
@@ -100,6 +112,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 				channels.add(c);
 				DriveThread d = new DriveThread(i);
 				driveThreads.add(d);
+				configs.add(new PIDConfiguration());
 			}
 			sync.start();
 		}
