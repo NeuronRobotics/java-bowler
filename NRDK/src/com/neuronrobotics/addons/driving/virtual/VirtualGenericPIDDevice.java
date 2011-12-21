@@ -3,6 +3,7 @@ package com.neuronrobotics.addons.driving.virtual;
 import java.util.ArrayList;
 
 import com.neuronrobotics.sdk.commands.bcs.pid.ConfigurePIDCommand;
+import com.neuronrobotics.sdk.commands.bcs.pid.KillAllPIDCommand;
 import com.neuronrobotics.sdk.commands.bcs.pid.PDVelocityCommand;
 import com.neuronrobotics.sdk.common.BowlerAbstractCommand;
 import com.neuronrobotics.sdk.common.BowlerDatagram;
@@ -37,6 +38,12 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 		return true;
 	}
 
+	@Override
+	public boolean killAllPidGroups() {
+		for(PIDConfiguration c:configs)
+			c.setEnabled(false);
+		return true;
+	}
 	
 	public PIDConfiguration getPIDConfiguration(int group) {
 		return configs.get(group);
@@ -191,14 +198,15 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 		
 		
 		public synchronized  void SetPIDSetPoint(int setpoint,double seconds){
+			configs.get(getChan()).setEnabled(true);
 			velocityRun=false;
 			setPause(true);
 			//ThreadUtil.wait((int)(threadTime*2));
 			double TPS = (double)setpoint/seconds;
 			//Models motor saturation
 			if(TPS >  getMaxTicksPerSecond()){
-				//seconds = (double)setpoint/maxTicksPerSeconds;
-				throw new RuntimeException("Saturated PID on channel: "+chan+" Attempted Ticks Per Second: "+TPS+", when max is"+getMaxTicksPerSecond()+" set: "+setpoint+" sec: "+seconds);
+				seconds = (double)setpoint/ getMaxTicksPerSecond();
+				//throw new RuntimeException("Saturated PID on channel: "+chan+" Attempted Ticks Per Second: "+TPS+", when max is"+getMaxTicksPerSecond()+" set: "+setpoint+" sec: "+seconds);
 			}
 			duration = (long) (seconds*1000);
 			startTime=System.currentTimeMillis();
@@ -209,7 +217,8 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 			//System.out.println("Setting Setpoint Ticks to: "+setPoint);
 		}
 		private boolean update(){
-			interpolate();
+			if(configs.get(getChan()).isEnabled())
+				interpolate();
 			if((ticks!=lastTick) && !isPause()) {
 				lastTick=ticks;
 				return true;
