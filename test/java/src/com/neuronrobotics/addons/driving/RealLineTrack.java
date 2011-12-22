@@ -32,7 +32,7 @@ public class RealLineTrack {
 								true,//Async
 								1,// Kp
 								1,// Ki
-								.5);//Kd
+								.5,0,false,false);//Kd
 					d.ConfigureDynamicPIDChannels(dypid);
 					d.ConfigurePIDController(pid);
 					
