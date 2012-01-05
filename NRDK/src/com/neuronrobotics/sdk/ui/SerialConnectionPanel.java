@@ -120,13 +120,12 @@ public class SerialConnectionPanel extends AbstractConnectionPanel {
  					// TODO maybe add the others if you can change the color?
  				}
  			}
- 			if(connectionCbo.getItemCount()==0){
- 				connectionCbo.addItem(null);
- 				for(String s:prts){
- 	 				if((s.contains("ttyS")  || s.equals("COM1") || s.equals("COM2") || s.contains("ttyACM")))
- 	 					connectionCbo.addItem(s);
- 	 			}
+			connectionCbo.addItem(null);
+			for(String s:prts){
+ 				if((s.contains("ttyS")  || s.equals("COM1") || s.equals("COM2") || s.contains("ttyACM")))
+ 					connectionCbo.addItem(s);
  			}
+ 			
 		} catch(MissingNativeLibraryException e) {
 			JOptionPane.showMessageDialog(this, m,"NRSDK not installed properly", JOptionPane.ERROR_MESSAGE);
 			throw new MissingNativeLibraryException(m);
