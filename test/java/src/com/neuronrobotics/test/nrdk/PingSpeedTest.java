@@ -33,6 +33,8 @@ public class PingSpeedTest {
 			//System.out.println("Average cycle time: "+(int)(avg/i)+"ms\t\t\t this loop was: "+ms);
 		}
 		System.out.println("Average cycle time for ping: "+(avg/i)+" ms");	
+		dev.disconnect();
+		System.exit(0);
 	}
 
 }
