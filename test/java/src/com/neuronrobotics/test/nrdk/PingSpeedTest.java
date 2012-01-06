@@ -12,9 +12,9 @@ public class PingSpeedTest {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-//		BowlerAbstractConnection c =  new SerialConnection("/dev/ttyACM0");
+		BowlerAbstractConnection c =  new SerialConnection("/dev/ttyACM0");
 //		BowlerAbstractConnection c =  new SerialConnection("COM65");
-		BowlerAbstractConnection c = ConnectionDialog.promptConnection();
+//		BowlerAbstractConnection c = ConnectionDialog.promptConnection();
 		if(c==null)
 			System.exit(1);
 		System.out.println("Starting test");
@@ -30,7 +30,7 @@ public class PingSpeedTest {
 			double ms=System.currentTimeMillis()-start;
 			avg +=ms;
 			start = System.currentTimeMillis();
-			//System.out.println("Average cycle time: "+(int)(avg/i)+"ms\t\t\t this loop was: "+ms);
+			System.out.println("Average cycle time: "+(int)(avg/i)+"ms\t\t\t this loop was: "+ms);
 		}
 		System.out.println("Average cycle time for ping: "+(avg/i)+" ms");	
 		dev.disconnect();
