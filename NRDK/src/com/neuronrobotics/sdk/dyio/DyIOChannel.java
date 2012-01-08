@@ -708,4 +708,8 @@ public class DyIOChannel implements IDyIOChannel {
 	public float getCachedTime() {
 		return cachedTime;
 	}
+
+	public void setAsync(boolean b) {
+		setMode(getMode(), b);
+	}
 }
