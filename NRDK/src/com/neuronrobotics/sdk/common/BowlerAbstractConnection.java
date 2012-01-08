@@ -47,7 +47,7 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
  */
 public abstract class BowlerAbstractConnection {
 	
-	private boolean threadedUpstreamPackets=false;
+	private boolean threadedUpstreamPackets=true;
 	
 	/** The sleep time. */
 	private int sleepTime = 10;
@@ -325,11 +325,20 @@ public abstract class BowlerAbstractConnection {
 	 * @param data the data
 	 */
 	protected void onDataReceived(BowlerDatagram data) {
-		if(data.isSyncronous()) {
-			getSyncQueue().addDatagram(data);
-			response = data;
-		}else {
-			getAsyncQueue().addDatagram(data);
+		if(threadedUpstreamPackets){
+			if(data.isSyncronous()) {
+				getSyncQueue().addDatagram(data);
+				response = data;
+			}else {
+				getAsyncQueue().addDatagram(data);
+			}
+		}else{
+			if(data.isSyncronous()) {
+				response = data;
+				fireSyncOnResponse(data) ;
+			}else{
+				fireAsyncOnResponse(data);
+			}
 		}
 	}
 	
@@ -522,7 +531,7 @@ public abstract class BowlerAbstractConnection {
 						//Log.info("buffer: "+buffer);
 					}else{
 						// prevents the thread from locking
-						ThreadUtil.wait(0,1);
+						ThreadUtil.wait(1);
 					}
 				} catch (Exception e) {
 					//e.printStackTrace();
@@ -553,7 +562,7 @@ public abstract class BowlerAbstractConnection {
 					//Log.info("Poping latest packet and sending to listeners");
 					// pop is thread safe.
 					
-					//synchronized(queueBuffer){
+					synchronized(queueBuffer){
 						int len = queueBuffer.size();
 						for(int i=0;i<len;i++){
 							try{
@@ -567,6 +576,8 @@ public abstract class BowlerAbstractConnection {
 							try{
 								send(queueBuffer.remove(queueBuffer.size()-1)	);
 							}catch(Exception e){}
+						}else{
+							ThreadUtil.wait(1);
 						}
 						int index = 0;
 						int max = 500;
@@ -581,7 +592,7 @@ public abstract class BowlerAbstractConnection {
 								break;
 							}
 						}
-					//}
+					}
 				}
 			}
 		}
@@ -610,9 +621,9 @@ public abstract class BowlerAbstractConnection {
 		 * @param dg the dg
 		 */
 		private void addDatagram(BowlerDatagram dg) {
-			//synchronized(queueBuffer){
+			synchronized(queueBuffer){
 				queueBuffer.add(dg);
-			//}
+			}
 		}
 		
 		/**
