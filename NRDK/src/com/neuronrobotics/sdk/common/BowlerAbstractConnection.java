@@ -39,7 +39,7 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
 
 
 
-// TODO: Auto-generated Javadoc
+
 /**
  * Connections create a bridge between a device and the SDK. Each connection is encapsulated to allow maximum
  * reuse and system changes without the need to restart / reconfigure.
@@ -234,7 +234,6 @@ public abstract class BowlerAbstractConnection {
 	}
 	private long lastWrite = 0;
 	public long msSinceLastSend() {
-		// TODO Auto-generated method stub
 		return System.currentTimeMillis() - lastWrite ;
 	}
 	/**
@@ -350,13 +349,13 @@ public abstract class BowlerAbstractConnection {
 	protected void fireAsyncOnResponse(BowlerDatagram datagram) {
 		if(!datagram.isSyncronous()){
 			if(threadedUpstreamPackets){
-				synchronized(listeners){
+				//synchronized(listeners){
 					for(IBowlerDatagramListener l : listeners) {
 						l.onAllResponse(datagram);
 						AsyncSender a = new AsyncSender(l,datagram);
 						a.start();
 					}
-				}
+				//}
 			}else{
 				for(IBowlerDatagramListener l : listeners) {
 					l.onAllResponse(datagram);
@@ -388,9 +387,9 @@ public abstract class BowlerAbstractConnection {
 		if(listeners.contains(listener)) {
 			return;
 		}
-		synchronized(listeners){
+		//synchronized(listeners){
 			listeners.add(listener);
-		}
+		//}
 	}
 	
 	/**
@@ -554,7 +553,7 @@ public abstract class BowlerAbstractConnection {
 					//Log.info("Poping latest packet and sending to listeners");
 					// pop is thread safe.
 					
-					synchronized(queueBuffer){
+					//synchronized(queueBuffer){
 						int len = queueBuffer.size();
 						for(int i=0;i<len;i++){
 							try{
@@ -573,7 +572,8 @@ public abstract class BowlerAbstractConnection {
 						int max = 500;
 						while(queueBuffer.size()>max){
 							if(!queueBuffer.get(index).isSyncronous() && queueBuffer.get(index).getMethod() != BowlerMethod.CRITICAL){
-								queueBuffer.remove(index);
+								Log.enableDebugPrint(true);
+								Log.debug("Removing packet from overflow: "+queueBuffer.remove(index));
 							}else{
 								index++;
 							}
@@ -581,7 +581,7 @@ public abstract class BowlerAbstractConnection {
 								break;
 							}
 						}
-					}
+					//}
 				}
 			}
 		}
@@ -609,10 +609,10 @@ public abstract class BowlerAbstractConnection {
 		 *
 		 * @param dg the dg
 		 */
-		public void addDatagram(BowlerDatagram dg) {
-			synchronized(queueBuffer){
+		private void addDatagram(BowlerDatagram dg) {
+			//synchronized(queueBuffer){
 				queueBuffer.add(dg);
-			}
+			//}
 		}
 		
 		/**
