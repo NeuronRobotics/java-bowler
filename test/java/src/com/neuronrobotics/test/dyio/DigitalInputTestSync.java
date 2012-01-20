@@ -1,5 +1,6 @@
 package com.neuronrobotics.test.dyio;
 
+import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.peripherals.DigitalInputChannel;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
@@ -15,6 +16,8 @@ public class DigitalInputTestSync {
 		if (!ConnectionDialog.getBowlerDevice(dyio)){
 			System.exit(1);
 		}
+		Log.enableDebugPrint(true);
+		Log.enableSystemPrint(true);
 		DigitalInputChannel dig = new DigitalInputChannel(dyio.getChannel(0));
 		//Loop forever printing out the state of the button
 		while(true){
