@@ -300,6 +300,8 @@ public class Log {
 		
 		/** The datetime. */
 		private Date datetime;
+		
+		private String callingClass;
 
 		/**
 		 * Instantiates a new message.
@@ -311,13 +313,21 @@ public class Log {
 			this.message = message;
 			this.importance = importance;
 			datetime = new Date();
+		      try
+		      {
+		         throw new Exception("Who called me?");
+		      }
+		      catch( Exception e )
+		      {
+		    	 callingClass= e.getStackTrace()[3].getClassName()+":"+e.getStackTrace()[3].getMethodName();
+		      }
 		}
 		
 		/* (non-Javadoc)
 		 * @see java.lang.Object#toString()
 		 */
 		public String toString() {
-			return "[" + dateFormat.format(datetime) + "] " + " " + getImportance(importance) + " : "+ message;
+			return "[" + dateFormat.format(datetime) + "] " + " " + getImportance(importance) +" "+callingClass+ " : "+ message;
 		}
 	}
 	
