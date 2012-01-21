@@ -35,6 +35,8 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import com.neuronrobotics.sdk.config.SDKBuildInfo;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 
@@ -107,6 +109,11 @@ public abstract class BowlerAbstractConnection {
 	 */
 	public void setThreadedUpstreamPackets(boolean up){
 		threadedUpstreamPackets=up;
+	}
+	public boolean isThreadedUpstreamPackets() {
+		if (SDKBuildInfo.isLinux() && SDKBuildInfo.isARM())
+			return false;
+		return threadedUpstreamPackets;
 	}
 	
 	/**
@@ -276,6 +283,8 @@ public abstract class BowlerAbstractConnection {
 			setSyncQueue(new QueueManager());
 			getSyncQueue().start();
 			fireConnectEvent();
+			if (SDKBuildInfo.isLinux() && SDKBuildInfo.isARM())
+				System.out.println("Is arm, no packet threads");
 		}else{
 			try {
 				getDataIns().close();
@@ -325,7 +334,7 @@ public abstract class BowlerAbstractConnection {
 	 * @param data the data
 	 */
 	protected void onDataReceived(BowlerDatagram data) {
-		if(threadedUpstreamPackets){
+		if(isThreadedUpstreamPackets()){
 			if(data.isSyncronous()) {
 				getSyncQueue().addDatagram(data);
 				response = data;
@@ -357,12 +366,11 @@ public abstract class BowlerAbstractConnection {
 	
 	protected void fireAsyncOnResponse(BowlerDatagram datagram) {
 		if(!datagram.isSyncronous()){
-			if(threadedUpstreamPackets){
+			if(isThreadedUpstreamPackets()){
 				//synchronized(listeners){
 					for(IBowlerDatagramListener l : listeners) {
-						l.onAllResponse(datagram);
-						AsyncSender a = new AsyncSender(l,datagram);
-						a.start();
+						new SyncSender(l,datagram).start();
+						new AsyncSender(l,datagram).start();
 					}
 				//}
 			}else{
@@ -374,6 +382,17 @@ public abstract class BowlerAbstractConnection {
 			}
 		}
 		
+	}
+	private class SyncSender extends Thread{
+		IBowlerDatagramListener l;
+		BowlerDatagram datagram;
+		public SyncSender(IBowlerDatagramListener l,BowlerDatagram datagram){
+			 this.l=l;
+			 this.datagram=datagram;
+		}
+		public void run(){
+			l.onAllResponse(datagram);
+		}
 	}
 	private class AsyncSender extends Thread{
 		IBowlerDatagramListener l;
@@ -655,4 +674,6 @@ public abstract class BowlerAbstractConnection {
 			l.onConnect();
 		}
 	}
+
+
 }

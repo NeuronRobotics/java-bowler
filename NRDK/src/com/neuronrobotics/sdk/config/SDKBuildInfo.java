@@ -81,6 +81,9 @@ public class SDKBuildInfo {
 	public static boolean isOS64bit() {
 		return (System.getProperty("os.arch").indexOf("x86_64") != -1);
 	}
+	public static boolean isARM() {
+		return (System.getProperty("os.arch").toLowerCase().indexOf("arm") != -1);
+	}
 	public static boolean isLinux() {
 		return (System.getProperty("os.name").toLowerCase().indexOf("linux")!=-1);
 	}
