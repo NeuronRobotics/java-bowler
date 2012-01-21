@@ -15,9 +15,9 @@ public class SchedulerTest {
 	public static void main(String[] args) {
 		DyIO dyio = new DyIO(ConnectionDialog.promptConnection());
 		dyio.connect();
-		 CoreScheduler cs = new CoreScheduler(dyio, new File("Test.xml"));
-		 cs.play();
-		 while(cs.isPlaying()){
+		CoreScheduler cs = new CoreScheduler(dyio, new File("Test.xml"));
+		cs.play();
+		while(cs.isPlaying()){
 			 try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
