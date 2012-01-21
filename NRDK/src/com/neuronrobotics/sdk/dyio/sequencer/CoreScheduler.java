@@ -44,9 +44,11 @@ public class CoreScheduler {
 		setDyIO(d);
 		this.setLoopTime(loopTime);
 		msDuration=duration;
-		//dyio.enableDebug();
-		flusher = new DyIOFlusher();
-		flusher.start();
+	}
+	
+	public CoreScheduler(DyIO d, File f){
+		setDyIO(d);
+		loadFromFile(f);
 	}
 	
 	/**
@@ -162,6 +164,8 @@ public class CoreScheduler {
 	public ServoOutputScheduleChannel addServoChannel(int dyIOChannel){
 		System.out.println("Adding DyIO channel: "+dyIOChannel);
 		ServoChannel srv = new ServoChannel(getDyIO().getChannel(dyIOChannel));
+		srv.SetPosition(srv.getValue());
+		srv.flush();
 		srv.getChannel().setCachedMode(true);
 		ServoOutputScheduleChannel soc = new ServoOutputScheduleChannel(srv);
 		soc.setIntervalTime(getLoopTime(), getTrackLength());
@@ -396,6 +400,8 @@ public class CoreScheduler {
 
 	public void setDyIO(DyIO dyio) {
 		this.dyio = dyio;
+		flusher = new DyIOFlusher();
+		flusher.start();
 	}
 
 	public DyIO getDyIO() {

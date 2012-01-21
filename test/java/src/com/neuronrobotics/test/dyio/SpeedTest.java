@@ -29,9 +29,9 @@ public class SpeedTest {
 		dyio.connect();
 		System.out.println("Startup time: "+(System.currentTimeMillis()-start)+" ms");
 		//dyio.enableDebug();
-//		for (int i=0;i<24;i++){
-//			dyio.getChannel(i).set
-//		}
+		for (int i=0;i<24;i++){
+			dyio.getChannel(i).setAsync(false);
+		}
 		DigitalInputChannel dip = new DigitalInputChannel(dyio.getChannel(0));
 		DigitalOutputChannel dop = new DigitalOutputChannel(dyio.getChannel(1));
 //		new PPMReaderChannel(dyio.getChannel(23));

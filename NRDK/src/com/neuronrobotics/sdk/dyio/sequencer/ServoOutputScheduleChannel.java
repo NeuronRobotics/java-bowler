@@ -81,7 +81,7 @@ public class ServoOutputScheduleChannel implements ISchedulerListener, IAnalogIn
 		if(isRecording())
 			data.get(index).input=getCurrentTargetValue();
 		currentValue = data.get(index).input;
-		//System.out.println("Setting servo value="+data.get(index).input);
+		System.out.println("Setting servo value="+data.get(index).input);
 	
 		output.SetPosition(data.get(index).input);
 	}
