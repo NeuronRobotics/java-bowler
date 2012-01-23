@@ -85,9 +85,9 @@ public class PIDConfiguration {
 		s+="\n\tEnabled = "+isEnabled();
 		s+="\n\tAsync = "+isAsync();
 		s+="\n\tInverted = "+isInverted();
-		s+="\nUse Latch  "+ isUseLatch();
-		s+="\nStop on Index  "+ isStopOnIndex();
-		s+="\nLatch value "+getIndexLatch();
+		s+="\n\tUse Latch  "+ isUseLatch();
+		s+="\n\tStop on Index  "+ isStopOnIndex();
+		s+="\n\tLatch value "+getIndexLatch();
 		return s;
 	}
 	public void setGroup(int group) {
