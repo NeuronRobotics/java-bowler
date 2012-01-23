@@ -37,7 +37,8 @@ import com.neuronrobotics.sdk.network.BowlerTCPClient;
 public class TCPConnectionPanel extends AbstractConnectionPanel {
 
 	private static final long serialVersionUID = 1L;
-	private static final int defaultPortNum = 1965;
+	private static int defaultPortNum = 1965;
+	private static String defaultServer = "localhost";
 	private JComboBox connectionCbo = null;
 	private JTextField port = new JTextField(8);
 	BowlerTCPClient clnt=null;
@@ -60,11 +61,15 @@ public class TCPConnectionPanel extends AbstractConnectionPanel {
 		add(new JLabel("Server:"), "cell 0 0");
 		connectionCbo = new JComboBox();
 		connectionCbo.setEditable(true);
-		connectionCbo.addItem("localhost");
+		connectionCbo.addItem(defaultServer);
 		add(connectionCbo, "cell 1 0");
 		
 		add(new JLabel("Port:"), "cell 0 1");
 		add(port, "cell 1 1");
+	}
+	
+	public static void setDefaultServer(String server){
+		defaultServer = server;
 	}
 
 	@Override

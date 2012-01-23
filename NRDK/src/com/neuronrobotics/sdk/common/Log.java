@@ -178,10 +178,14 @@ public class Log {
 		
 		if(systemprint && importance >= minprintlevel) {
 			errStream.println(m);
+			if(errStream != System.err)
+				 System.err.println(m);
 		}
 		
 		if(debugprint && importance == DEBUG) {
 			outStream.println("# " + message);
+			if(outStream != System.out)
+				 System.out.println(m);
 		}
 		
 		
