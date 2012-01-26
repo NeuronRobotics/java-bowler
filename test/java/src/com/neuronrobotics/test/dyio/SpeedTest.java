@@ -59,7 +59,8 @@ public class SpeedTest {
 		//dyio.setCachedMode(true);
 		start = System.currentTimeMillis();
 		avg=0;
-		
+		double best=1000;
+		double worst=0;
 		for(i=0;i<500;i++) {
 			try {
 				high = !high;
@@ -69,23 +70,33 @@ public class SpeedTest {
 			}
 			dop.setHigh(high);
 			double ms=System.currentTimeMillis()-start;
+			if (ms<best)
+				best=ms;
+			if(ms>worst)
+				worst=ms;
 			avg +=ms;
 			start = System.currentTimeMillis();
 			//System.out.println("Average cycle time: "+(int)(avg/i)/2+"ms\t\t\t this loop was: "+ms/2+"\t\tindex="+i);
 		}
-		System.out.println("Average cycle time for IO : "+(avg/i)/2+" ms");
+		System.out.println("Average cycle time for IO : "+(avg/i)/2+" ms best="+ best/2+"ms worst="+worst/2);
 		
 		avg=0;
+		best=1000;
+		worst=0;
 		dyio.setCachedMode(true);
 		start = System.currentTimeMillis();
 		for(i=0;i<500;i++) {
 			dyio.flushCache(0);
 			double ms=System.currentTimeMillis()-start;
+			if (ms<best)
+				best=ms;
+			if(ms>worst)
+				worst=ms;
 			avg +=ms;
 			start = System.currentTimeMillis();
 			//System.out.println("Average cycle time: "+(int)(avg/i)+"ms\t\t\t this loop was: "+ms);
 		}
-		System.out.println("Average cycle time for cache flush: "+(avg/i)+" ms");
+		System.out.println("Average cycle time for cache flush: "+(avg/i)+" ms best="+ best/2+"ms worst="+worst/2);
 		
 
 		
