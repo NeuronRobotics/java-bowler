@@ -48,12 +48,32 @@ public class LinkFactory {
 		links.add(tmp);
 		return tmp;
 	}
+	
+	public void addLinkListener(ILinkListener l){
+		for(AbstractLink lin:links){
+			lin.addLinkListener(l);
+		}
+	}
 	public void flush(double seconds){
 		if(hasPid){
 			pid.flushPIDChannels(seconds);
 		}
 		if(hasServo){
 			dyio.flushCache(seconds);
+		}
+	}
+	public IPIDControl getPid() {
+		return pid;
+	}
+	public DyIO getDyio(){
+		return dyio;
+	}
+	public void setCachedTargets(double[] jointSpaceVect) {
+		if(jointSpaceVect.length!=links.size())
+			throw new IndexOutOfBoundsException();
+		int i=0;
+		for(AbstractLink lin:links){
+			lin.setTargetEngineeringUnits(jointSpaceVect[i++]);
 		}
 	}
 }

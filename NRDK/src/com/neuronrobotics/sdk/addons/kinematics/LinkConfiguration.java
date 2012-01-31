@@ -29,7 +29,11 @@ public class LinkConfiguration {
     	setScale(Double.parseDouble(XmlFactory.getTagValue("scale",eElement)));
     	setUpperLimit(Double.parseDouble(XmlFactory.getTagValue("upperLimit",eElement)));
     	setLowerLimit(Double.parseDouble(XmlFactory.getTagValue("lowerLimit",eElement)));
-    	setType(XmlFactory.getTagValue("type",eElement));
+    	try{
+    		setType(XmlFactory.getTagValue("type",eElement));
+    	}catch (NullPointerException e){
+    		setType("pid");
+    	}
     	if(getType().contains("pid")){
 	    	k[0]=Double.parseDouble(XmlFactory.getTagValue("pGain",eElement));
 	    	k[1]=Double.parseDouble(XmlFactory.getTagValue("iGain",eElement));

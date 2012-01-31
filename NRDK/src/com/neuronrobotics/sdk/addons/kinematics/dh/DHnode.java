@@ -2,6 +2,7 @@ package com.neuronrobotics.sdk.addons.kinematics.dh;
 
 import Jama.Matrix;
 
+import com.neuronrobotics.sdk.addons.kinematics.AbstractLink;
 import com.neuronrobotics.sdk.addons.kinematics.AbstractRotoryLink;
 import com.neuronrobotics.sdk.addons.kinematics.ILinkListener;
 
@@ -125,7 +126,7 @@ public class DHnode extends AbstractTransform implements ILinkListener{
 		return s;
 	}
 	@Override
-	public void onLinkPositionUpdate(double engineeringUnitsValue) {
+	public void onLinkPositionUpdate(AbstractLink source,double engineeringUnitsValue) {
 		theta=engineeringUnitsValue;
 	}
 	

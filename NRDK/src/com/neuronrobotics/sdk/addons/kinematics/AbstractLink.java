@@ -70,7 +70,7 @@ public abstract class AbstractLink {
 	 */
 	public void fireLinkListener(int linkUnitsValue){
 		for(ILinkListener l:links){
-			l.onLinkPositionUpdate(toEngineeringUnits(linkUnitsValue));
+			l.onLinkPositionUpdate(this,toEngineeringUnits(linkUnitsValue));
 		}
 	}
 	

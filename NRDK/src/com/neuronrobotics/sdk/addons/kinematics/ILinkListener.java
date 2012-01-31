@@ -1,5 +1,5 @@
 package com.neuronrobotics.sdk.addons.kinematics;
 
 public interface ILinkListener {
-	public void onLinkPositionUpdate(double engineeringUnitsValue);
+	public void onLinkPositionUpdate(AbstractLink source,double engineeringUnitsValue);
 }
