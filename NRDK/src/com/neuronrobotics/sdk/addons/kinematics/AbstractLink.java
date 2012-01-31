@@ -13,6 +13,7 @@ public abstract class AbstractLink {
 	private double targetEngineeringUnits=0;
 	
 	private ArrayList<ILinkListener> links = new ArrayList<ILinkListener>();
+	private LinkConfiguration conf =null;
 	
 	public AbstractLink(int home,int lowerLimit,int upperLimit,double scale){
 		setScale(scale);
@@ -124,12 +125,14 @@ public abstract class AbstractLink {
 		setTargetValue(val);
 		cacheTargetValue();
 	}
-	
+	private boolean useLimits=true;
 	protected void setTargetValue(int val) {
-		if(val>getUpperLimit())
-			val=getUpperLimit();
-		if(val<getLowerLimit()) {
-			val=getLowerLimit();
+		if(isUseLimits()){
+			if(val>getUpperLimit())
+				val=getUpperLimit();
+			if(val<getLowerLimit()) {
+				val=getLowerLimit();
+			}
 		}
 		this.targetValue = val;
 	}
@@ -168,6 +171,22 @@ public abstract class AbstractLink {
 	
 	public void setCurrentAsLowerLimit() {
 		setLowerLimit(getCurrentPosition());
+	}
+
+	public void setUseLimits(boolean useLimits) {
+		this.useLimits = useLimits;
+	}
+
+	public boolean isUseLimits() {
+		return useLimits;
+	}
+
+	public void setLinkConfiguration(LinkConfiguration conf) {
+		this.conf = conf;
+	}
+
+	public LinkConfiguration getLinkConfiguration() {
+		return conf;
 	}
 	
 }
