@@ -4,7 +4,7 @@
 		<name>basePan</name>
 		<type>servo-rotory</type>
 		<index>11</index>
-		<scale>-.756</scale>
+		<scale>.756</scale>
 		<upperLimit>196</upperLimit>
 		<lowerLimit>77</lowerLimit>
 		<isLatch>true</isLatch>
@@ -76,7 +76,7 @@
 		<homingTPS>500</homingTPS>			
 	</link>
 	
-	<baseToTip>
+	<baseToZframe>
 		<x>0</x>
 		<y>0</y>
 		<z>0</z>
@@ -84,5 +84,5 @@
 		<rotx>0</rotx>
 		<roty>0</roty>
 		<rotz>0</rotz>
-	</baseToTip>
+	</baseToZframe>
 </root>
