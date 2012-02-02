@@ -69,6 +69,7 @@ public class LinkFactory {
 		if(hasServo){
 			dyio.flushCache(seconds);
 		}
+		virtual.flushPIDChannels(seconds);
 	}
 	public IPIDControl getPid() {
 		return pid;
