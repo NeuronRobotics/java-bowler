@@ -1,6 +1,7 @@
 package com.neuronrobotics.sdk.addons.kinematics;
 import java.util.ArrayList;
 
+import com.neuronrobotics.addons.driving.virtual.VirtualGenericPIDDevice;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 import com.neuronrobotics.sdk.genericdevice.GenericPIDDevice;
@@ -9,6 +10,7 @@ import com.neuronrobotics.sdk.pid.IPIDControl;
 public class LinkFactory {
 	private IPIDControl pid=null;
 	private DyIO dyio=null;
+	private VirtualGenericPIDDevice virtual = new VirtualGenericPIDDevice(1000000);
 	private boolean hasPid=false;
 	private boolean hasServo=false;
 	private boolean hasStepper=false;
@@ -36,6 +38,12 @@ public class LinkFactory {
 										(int)c.getLowerLimit(),
 										(int)c.getUpperLimit(),
 										c.getScale());
+		}else if (c.getType().equals("dummy")){
+			tmp=new PidRotoryLink(	virtual.getPIDChannel(c.getHardwareIndex()),
+					(int)c.getIndexLatch(),
+					(int)c.getLowerLimit(),
+					(int)c.getUpperLimit(),
+					c.getScale());
 		}else{
 			tmp=new PidRotoryLink(	pid.getPIDChannel(c.getHardwareIndex()),
 									(int)c.getIndexLatch(),
