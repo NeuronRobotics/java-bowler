@@ -42,7 +42,7 @@
 		<name>wrist1</name>
 		<type>servo-rotory</type>
 		<index>8</index>
-		<scale>-.776</scale>
+		<scale>.776</scale>
 		<upperLimit>197</upperLimit>
 		<lowerLimit>0</lowerLimit>
 		<isLatch>true</isLatch>
@@ -55,7 +55,7 @@
 		<name>wrist2</name>
 		<type>servo-rotory</type>
 		<index>7</index>
-		<scale>-.776</scale>
+		<scale>.776</scale>
 		<upperLimit>240</upperLimit>
 		<lowerLimit>0</lowerLimit>
 		<isLatch>true</isLatch>
@@ -67,7 +67,7 @@
 		<name>wrist3</name>
 		<type>servo-rotory</type>
 		<index>6</index>
-		<scale>-.776</scale>
+		<scale>.776</scale>
 		<upperLimit>255</upperLimit>
 		<lowerLimit>0</lowerLimit>
 		<isLatch>true</isLatch>
