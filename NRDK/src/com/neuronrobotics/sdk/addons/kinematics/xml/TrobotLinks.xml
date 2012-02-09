@@ -4,9 +4,9 @@
 		<name>basePan</name>
 		<type>servo-rotory</type>
 		<index>11</index>
-		<scale>.756</scale>
+		<scale>.796</scale>
 		<upperLimit>196</upperLimit>
-		<lowerLimit>77</lowerLimit>
+		<lowerLimit>67</lowerLimit>
 		<isLatch>true</isLatch>
 		<indexLatch>189</indexLatch>
 		<isStopOnLatch>false</isStopOnLatch>	
@@ -16,7 +16,7 @@
 		<name>baseTilt</name>
 		<type>servo-rotory</type>
 		<index>10</index>
-		<scale>.756</scale>
+		<scale>.796</scale>
 		<upperLimit>218</upperLimit>
 		<lowerLimit>50</lowerLimit>
 		<isLatch>true</isLatch>
@@ -29,11 +29,11 @@
 		<name>elbow</name>
 		<type>servo-rotory</type>
 		<index>9</index>
-		<scale>.756</scale>
+		<scale>.796</scale>
 		<upperLimit>218</upperLimit>
 		<lowerLimit>40</lowerLimit>
 		<isLatch>true</isLatch>
-		<indexLatch>188</indexLatch>
+		<indexLatch>191</indexLatch>
 		<isStopOnLatch>false</isStopOnLatch>
 		<homingTPS>500</homingTPS>				
 	</link>
@@ -42,7 +42,7 @@
 		<name>wrist1</name>
 		<type>servo-rotory</type>
 		<index>8</index>
-		<scale>.776</scale>
+		<scale>.756</scale>
 		<upperLimit>197</upperLimit>
 		<lowerLimit>0</lowerLimit>
 		<isLatch>true</isLatch>
@@ -55,7 +55,7 @@
 		<name>wrist2</name>
 		<type>servo-rotory</type>
 		<index>7</index>
-		<scale>.776</scale>
+		<scale>.756</scale>
 		<upperLimit>240</upperLimit>
 		<lowerLimit>0</lowerLimit>
 		<isLatch>true</isLatch>
@@ -67,7 +67,7 @@
 		<name>wrist3</name>
 		<type>servo-rotory</type>
 		<index>6</index>
-		<scale>.776</scale>
+		<scale>.756</scale>
 		<upperLimit>255</upperLimit>
 		<lowerLimit>0</lowerLimit>
 		<isLatch>true</isLatch>
