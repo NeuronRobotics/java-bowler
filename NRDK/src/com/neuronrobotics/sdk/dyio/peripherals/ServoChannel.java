@@ -99,7 +99,7 @@ public class ServoChannel extends DyIOAbstractPeripheral {
 		getChannel().setCachedValue(pos);
 		getChannel().setCachedTime(time);
 		if(getChannel().getCachedMode()) {
-			Log.debug(getClass()+" In cached mode, NOT flushing");
+			Log.debug(getClass()+" In cached mode, NOT flushing on Set");
 			return true;
 		}
 		

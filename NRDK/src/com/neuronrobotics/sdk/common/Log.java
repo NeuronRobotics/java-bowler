@@ -331,7 +331,7 @@ public class Log {
 		 * @see java.lang.Object#toString()
 		 */
 		public String toString() {
-			return "[" + dateFormat.format(datetime) + "] " + " " + getImportance(importance) +" "+callingClass+ " : "+ message;
+			return "[" + dateFormat.format(datetime) + "] " + " " + getImportance(importance) +" "+callingClass+ " :\n\t"+ message;
 		}
 	}
 	
