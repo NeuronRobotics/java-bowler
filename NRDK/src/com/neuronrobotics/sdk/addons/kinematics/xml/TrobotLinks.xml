@@ -8,7 +8,7 @@
 		<upperLimit>196</upperLimit>
 		<lowerLimit>77</lowerLimit>
 		<isLatch>true</isLatch>
-		<indexLatch>196</indexLatch>
+		<indexLatch>189</indexLatch>
 		<isStopOnLatch>false</isStopOnLatch>	
 		<homingTPS>500</homingTPS>		
 	</link>
@@ -20,7 +20,7 @@
 		<upperLimit>218</upperLimit>
 		<lowerLimit>50</lowerLimit>
 		<isLatch>true</isLatch>
-		<indexLatch>94</indexLatch>
+		<indexLatch>90</indexLatch>
 		<isStopOnLatch>false</isStopOnLatch>
 		<homingTPS>500</homingTPS>		
 	</link>
@@ -33,7 +33,7 @@
 		<upperLimit>218</upperLimit>
 		<lowerLimit>40</lowerLimit>
 		<isLatch>true</isLatch>
-		<indexLatch>196</indexLatch>
+		<indexLatch>188</indexLatch>
 		<isStopOnLatch>false</isStopOnLatch>
 		<homingTPS>500</homingTPS>				
 	</link>
@@ -46,7 +46,7 @@
 		<upperLimit>197</upperLimit>
 		<lowerLimit>0</lowerLimit>
 		<isLatch>true</isLatch>
-		<indexLatch>116</indexLatch>
+		<indexLatch>111</indexLatch>
 		<isStopOnLatch>false</isStopOnLatch>	
 		<homingTPS>500</homingTPS>			
 	</link>
@@ -71,7 +71,7 @@
 		<upperLimit>255</upperLimit>
 		<lowerLimit>0</lowerLimit>
 		<isLatch>true</isLatch>
-		<indexLatch>128</indexLatch>
+		<indexLatch>130</indexLatch>
 		<isStopOnLatch>false</isStopOnLatch>	
 		<homingTPS>500</homingTPS>			
 	</link>
