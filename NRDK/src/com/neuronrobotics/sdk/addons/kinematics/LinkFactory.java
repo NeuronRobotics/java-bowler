@@ -14,7 +14,16 @@ public class LinkFactory {
 	private boolean hasPid=false;
 	private boolean hasServo=false;
 	private boolean hasStepper=false;
+	private boolean forceVirtual = false;
 	private ArrayList<AbstractLink> links = new ArrayList<AbstractLink>();
+	
+	public LinkFactory (){
+		hasPid=false;
+		hasServo=false;
+		hasStepper=false;
+		forceVirtual=true;
+	}
+	
 	public LinkFactory (DyIO d){
 		dyio=d;
 		pid=d;
@@ -32,25 +41,33 @@ public class LinkFactory {
 				return l;
 		}
 		AbstractLink tmp=null;
-		if(c.getType().equals("servo-rotory")){
-			tmp = new ServoRotoryLink(	new ServoChannel(dyio.getChannel(c.getHardwareIndex())), 
-										(int)c.getIndexLatch(),
+		if(!forceVirtual){
+			if(c.getType().equals("servo-rotory")){
+				tmp = new ServoRotoryLink(	new ServoChannel(dyio.getChannel(c.getHardwareIndex())), 
+											(int)c.getIndexLatch(),
+											(int)c.getLowerLimit(),
+											(int)c.getUpperLimit(),
+											c.getScale());
+			}else if (c.getType().equals("dummy")){
+				tmp=new PidRotoryLink(	virtual.getPIDChannel(c.getHardwareIndex()),
+						(int)0,
+						(int)c.getLowerLimit(),
+						(int)c.getUpperLimit(),
+						c.getScale());
+			}else{
+				tmp=new PidRotoryLink(	pid.getPIDChannel(c.getHardwareIndex()),
+										(int)0,
 										(int)c.getLowerLimit(),
 										(int)c.getUpperLimit(),
 										c.getScale());
-		}else if (c.getType().equals("dummy")){
+				
+			}
+		}else{
 			tmp=new PidRotoryLink(	virtual.getPIDChannel(c.getHardwareIndex()),
 					(int)0,
 					(int)c.getLowerLimit(),
 					(int)c.getUpperLimit(),
 					c.getScale());
-		}else{
-			tmp=new PidRotoryLink(	pid.getPIDChannel(c.getHardwareIndex()),
-									(int)0,
-									(int)c.getLowerLimit(),
-									(int)c.getUpperLimit(),
-									c.getScale());
-			
 		}
 		tmp.setLinkConfiguration(c);
 		links.add(tmp);
