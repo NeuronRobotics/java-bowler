@@ -58,7 +58,7 @@ public class BowlerDatagramFactory {
 			return null;
 		}
 		while(fb!=BowlerDatagram.REVISION) {
-			buffer.pop();
+			Log.error("Junk byte: "+buffer.pop());
 			try{
 				if(buffer.size()==0)
 					return null;
@@ -77,7 +77,7 @@ public class BowlerDatagramFactory {
 			try{
 				if( (buffer.get(0) != BowlerDatagram.REVISION)
 						|| (!BowlerDatagram.CheckCRC(buffer))){
-					buffer.pop();
+					Log.error("Junk byte: "+buffer.pop());
 				}else{
 					check=true;
 				}

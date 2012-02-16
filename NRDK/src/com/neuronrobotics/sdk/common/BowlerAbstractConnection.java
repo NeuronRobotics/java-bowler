@@ -145,15 +145,19 @@ public abstract class BowlerAbstractConnection {
 			Log.debug("Buffers cleared in : "+diff+"ms");
 		}
 		try {
+			long send = System.currentTimeMillis();
 			write(sendable.getBytes());
+			Log.info("Transmit took: "+(System.currentTimeMillis()-send)+" ms");
 		} catch (IOException e1) {
 			throw new RuntimeException(e1);
 		}
+		long rcv = System.currentTimeMillis();
 		ThreadedTimeout timeout = new ThreadedTimeout(getSleepTime());
 		timeout.start();
 		while ((!timeout.isTimedOut())  && (getLastSyncronousResponse() == null)){
 			ThreadUtil.wait(getPollTimeoutTime());
 		}
+		Log.info("Receive took: "+(System.currentTimeMillis()-rcv)+" ms");
 		BowlerDatagram b =getLastSyncronousResponse();
 		if (b== null){
 			try {
