@@ -26,7 +26,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 	SyncThread sync = new SyncThread ();
 	private double maxTicksPerSecond;
 	
-	private int numChannels = 10;
+	private int numChannels = 100;
 	
 	
 	public  VirtualGenericPIDDevice( double maxTicksPerSecond) {
