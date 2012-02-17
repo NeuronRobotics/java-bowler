@@ -12,9 +12,9 @@ public class PingSpeedTest {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		BowlerAbstractConnection c =  new SerialConnection("/dev/ttyACM0");
+//		BowlerAbstractConnection c =  new SerialConnection("/dev/ttyACM0");
 //		BowlerAbstractConnection c =  new SerialConnection("COM65");
-//		BowlerAbstractConnection c = ConnectionDialog.promptConnection();
+		BowlerAbstractConnection c = ConnectionDialog.promptConnection();
 		if(c==null)
 			System.exit(1);
 		System.out.println("Starting test");
