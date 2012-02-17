@@ -2,6 +2,8 @@ package com.neuronrobotics.sdk.addons.walker;
 
 import java.util.ArrayList;
 
+import com.neuronrobotics.sdk.common.Log;
+
 public class Leg {
 	ArrayList<WalkerServoLink> links = new ArrayList<WalkerServoLink>();
 	private static final double M_PI = Math.PI; 
@@ -66,16 +68,28 @@ public class Leg {
 	}
 	
 	public void setHip(double inc){
-		
-		getHipLink().setTargetAngle(inc);
+		try{
+			getHipLink().setTargetAngle(inc);
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
 		//getHipLink().flush(time);
 	}
 	public void setKnee(double inc){
-		getKneeLink().setTargetAngle(inc);
+		try{
+			getKneeLink().setTargetAngle(inc);
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
 		//getKneeLink().flush(time);
 	}
 	public void setAnkle(double inc){
-		getAnkleLink().setTargetAngle(inc);
+		try{
+	
+			getAnkleLink().setTargetAngle(inc);
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
 		//getAnkleLink().flush(time);
 	}
 	
@@ -128,7 +142,9 @@ public class Leg {
 		try {
 			setCartesian(pos[0],pos[1]+val,pos[2]);
 		}catch(RuntimeException e) {
-			System.err.println("Error in increment y");
+			Log.enableDebugPrint(true);
+			Log.error("Error in increment y");
+			e.printStackTrace();
 			stepToSetpoint();
 		}
 		//fix(time);
@@ -259,8 +275,11 @@ public class Leg {
 	public void stepToHipAngle(double hip) {
 
 		liftLeg();
-		
-		getHipLink().setTargetAngle(hip);
+		try{
+			getHipLink().setTargetAngle(hip);
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
 
 		double [] adjusted = getCartesian();
 		setCartesian(xSetPoint,adjusted[1], adjusted[2]);

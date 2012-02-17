@@ -133,9 +133,14 @@ public abstract class AbstractLink {
 	private boolean useLimits=true;
 	protected void setTargetValue(int val) {
 		if(isUseLimits()){
-			if(val>getUpperLimit())
+			if(val>getUpperLimit()){
+				this.targetValue = getUpperLimit();
+				cacheTargetValue();
 				throw new RuntimeException("Value upper limit bounded");
+			}
 			if(val<getLowerLimit()) {
+				this.targetValue =getLowerLimit();
+				cacheTargetValue();
 				throw new RuntimeException("Value lower limit bounded");
 			}
 		}
