@@ -25,6 +25,10 @@ public class LinkFactory {
 	}
 	
 	public LinkFactory (DyIO d){
+		if(d==null){
+			forceVirtual=true;
+			return;
+		}
 		dyio=d;
 		pid=d;
 		hasPid=true;
@@ -32,6 +36,10 @@ public class LinkFactory {
 		hasStepper=true;
 	}
 	public LinkFactory (GenericPIDDevice d){
+		if(d==null){
+			forceVirtual=true;
+			return;
+		}
 		pid=d;
 		hasPid=true;
 	}
@@ -63,8 +71,12 @@ public class LinkFactory {
 				
 			}
 		}else{
+			
+			int home=0;
+			if(c.getType().equals("servo-rotory"))
+				home = c.getIndexLatch();
 			tmp=new PidRotoryLink(	virtual.getPIDChannel(c.getHardwareIndex()),
-					(int)0,
+					(int)home,
 					(int)c.getLowerLimit(),
 					(int)c.getUpperLimit(),
 					c.getScale());
@@ -72,6 +84,22 @@ public class LinkFactory {
 		tmp.setLinkConfiguration(c);
 		links.add(tmp);
 		return tmp;
+	}
+	
+	public double [] getLowerLimits(){
+		double [] up = new double [links.size()];
+		for(int i=0;i< up.length;i++){
+			up[i] = links.get(i).getMinEngineeringUnits();
+		}
+		return up;
+	}
+	
+	public double [] getUpperLimits(){
+		double [] up = new double [links.size()];
+		for(int i=0;i< up.length;i++){
+			up[i] = links.get(i).getMaxEngineeringUnits();
+		}
+		return up;
 	}
 	
 	public void addLinkListener(ILinkListener l){
