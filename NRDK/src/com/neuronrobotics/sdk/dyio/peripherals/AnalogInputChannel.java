@@ -167,8 +167,8 @@ public class AnalogInputChannel extends DyIOAbstractPeripheral implements IChann
 	public void onChannelEvent(DyIOChannelEvent e) {
 		fireValueChanged(ByteList.convertToInt(e.getData().getBytes()));
 	}
-
-	 
+	
+	
 	public boolean hasAsync() {
 		return true;
 	}

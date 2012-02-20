@@ -15,6 +15,7 @@
 package com.neuronrobotics.sdk.dyio;
 
 import com.neuronrobotics.sdk.common.ByteList;
+import com.neuronrobotics.sdk.common.Log;
 
 /**
  * a DyIO Channel Event.
@@ -52,5 +53,12 @@ public class DyIOChannelEvent {
 	 */
 	public ByteList getData() {
 		return data;
+	}
+
+	public int getValue() {
+		Log.warning("This is junk data, should be parsed");
+		//DyIOChannelMode mode = getChannel().getCurrentMode();
+		int value =ByteList.convertToInt(getData().getBytes());
+		return value;
 	}
 }
