@@ -531,13 +531,13 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 		
 		String chFmt = "%02d - %-20s   %02d - %-20s\n";
 		
-		String s = getInfo() + "\n" + getFirmwareRevString()+ " \nMAC: " + getAddress() + "\n";
+		String s = getFirmwareRevString()+ " \nMAC: " + getAddress() + "\n";
 		for(int i = 0; i < getInternalChannels().size()/2; i++) {
 			s += String.format(chFmt, 
 					           getInternalChannels().size() - 1 - i, 
-					           getInternalChannels().get(getInternalChannels().size()-1-i).getMode(), 
+					           getInternalChannels().get(getInternalChannels().size()-1-i).getMode().toSlug(), 
 					           i, 
-					           getInternalChannels().get(i).getMode());
+					           getInternalChannels().get(i).getMode().toSlug());
 		}
 		
 		return s;
