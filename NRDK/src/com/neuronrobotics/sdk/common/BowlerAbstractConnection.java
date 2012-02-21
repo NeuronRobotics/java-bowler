@@ -147,7 +147,7 @@ public abstract class BowlerAbstractConnection {
 		try {
 			long send = System.currentTimeMillis();
 			write(sendable.getBytes());
-			Log.info("Transmit took: "+(System.currentTimeMillis()-send)+" ms");
+			//Log.info("Transmit took: "+(System.currentTimeMillis()-send)+" ms");
 		} catch (IOException e1) {
 			throw new RuntimeException(e1);
 		}
@@ -157,7 +157,7 @@ public abstract class BowlerAbstractConnection {
 		while ((!timeout.isTimedOut())  && (getLastSyncronousResponse() == null)){
 			ThreadUtil.wait(getPollTimeoutTime());
 		}
-		Log.info("Receive took: "+(System.currentTimeMillis()-rcv)+" ms");
+		//Log.info("Receive took: "+(System.currentTimeMillis()-rcv)+" ms");
 		BowlerDatagram b =getLastSyncronousResponse();
 		if (b== null){
 			try {

@@ -2,6 +2,8 @@ package com.neuronrobotics.sdk.pid;
 
 import java.util.ArrayList;
 
+import com.neuronrobotics.sdk.common.Log;
+
 public class PIDChannel {
 	private IPIDControl pid;
 	private int index;
@@ -16,6 +18,7 @@ public class PIDChannel {
 	}
 
 	public boolean SetPIDSetPoint(int setpoint,double seconds){
+		
 		return getPid().SetPIDSetPoint(index, setpoint, seconds);
 	}
 	public boolean SetPIDInterpolatedVelocity( int unitsPerSecond, double seconds) throws PIDCommandException {
@@ -113,6 +116,7 @@ public class PIDChannel {
 	}
 
 	public void setCachedTargetValue(int targetValue) {
+		Log.info("Cacheing PID position group="+getGroup()+", setpoint="+targetValue+" ticks");
 		this.targetValue = targetValue;
 	}
 	

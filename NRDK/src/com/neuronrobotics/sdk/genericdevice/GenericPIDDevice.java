@@ -74,6 +74,7 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 	
 	public boolean SetPIDSetPoint(int group,int setpoint,double seconds){
 		getPIDChannel(group).setCachedTargetValue(setpoint);
+		Log.info("Setting PID position group="+group+", setpoint="+setpoint+" ticks, time="+seconds+" sec.");
 		return send(new  ControlPIDCommand((char) group,setpoint, seconds))!=null;
 	}
 	
