@@ -125,9 +125,9 @@ public abstract class AbstractLink {
 	}
 	
 	protected void setPosition(int val) {
-		if(getTargetValue() == val)
-			return;
-		setTargetValue(val);
+		if(getTargetValue() != val){
+			setTargetValue(val);
+		}
 		cacheTargetValue();
 	}
 	private boolean useLimits=true;
@@ -144,6 +144,7 @@ public abstract class AbstractLink {
 				throw new RuntimeException("Value lower limit bounded");
 			}
 		}
+		Log.info("Setting cached value :"+val);
 		this.targetValue = val;
 	}
 	public int getTargetValue() {
