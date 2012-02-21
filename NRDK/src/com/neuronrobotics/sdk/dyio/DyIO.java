@@ -657,6 +657,9 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 	public void addPIDEventListener(IPIDEventListener l) {
 		pid.addPIDEventListener(l);
 	}
+	public void removePIDEventListener(IPIDEventListener l) {
+		pid.removePIDEventListener(l);
+	}
 	@Override
 	public void flushPIDChannels(double time) {
 		pid.flushPIDChannels(time);

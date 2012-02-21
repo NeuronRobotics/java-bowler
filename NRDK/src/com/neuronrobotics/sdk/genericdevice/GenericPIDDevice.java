@@ -221,6 +221,12 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 				PIDEventListeners.add(l);
 		}
 	}
+	public void removePIDEventListener(IPIDEventListener l) {
+		synchronized(PIDEventListeners){
+			if(PIDEventListeners.contains(l))
+				PIDEventListeners.remove(l);
+		}
+	}
 	public void firePIDLimitEvent(PIDLimitEvent e){
 		synchronized(PIDEventListeners){
 			for(IPIDEventListener l: PIDEventListeners)

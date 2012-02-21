@@ -8,10 +8,12 @@ public interface IPIDControl {
 	public int GetPIDPosition(int group);
 	public int [] GetAllPIDPosition();
 	public void addPIDEventListener(IPIDEventListener l);
+	public void removePIDEventListener(IPIDEventListener l);
 	public void flushPIDChannels(double time);
 	public boolean SetPIDInterpolatedVelocity(int group,int unitsPerSecond,double seconds) throws PIDCommandException;
 	public boolean SetPDVelocity(int group,int unitsPerSecond,double seconds) throws PIDCommandException;
 	public PIDChannel getPIDChannel(int group);
 	public boolean killAllPidGroups();
 	public boolean isAvailable();
+	
 }
