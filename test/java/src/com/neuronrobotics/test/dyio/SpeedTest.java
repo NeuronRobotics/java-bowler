@@ -1,6 +1,7 @@
 package com.neuronrobotics.test.dyio;
 
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
+import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.dyio.peripherals.DigitalInputChannel;
@@ -57,18 +58,19 @@ public class SpeedTest {
 
 		boolean high = false;
 		//dyio.setCachedMode(true);
-		start = System.currentTimeMillis();
+		
 		avg=0;
 		double best=1000;
 		double worst=0;
 		for(i=0;i<500;i++) {
+			start = System.currentTimeMillis();
 			try {
 				high = !high;
 				high = dip.getValue()==1;
+				dop.setHigh(high);
 			}catch(Exception ex) {
 				ex.printStackTrace();
 			}
-			dop.setHigh(high);
 			double ms=System.currentTimeMillis()-start;
 			if (ms<best)
 				best=ms;
@@ -78,14 +80,15 @@ public class SpeedTest {
 			start = System.currentTimeMillis();
 			//System.out.println("Average cycle time: "+(int)(avg/i)/2+"ms\t\t\t this loop was: "+ms/2+"\t\tindex="+i);
 		}
-		System.out.println("Average cycle time for IO : "+(avg/i)/2+" ms best="+ best/2+"ms worst="+worst/2);
+		System.out.println("Average cycle time for IO : "+(avg/(i+1))/2+" ms best="+ best/2+"ms worst="+worst/2);
 		
 		avg=0;
 		best=1000;
 		worst=0;
 		dyio.setCachedMode(true);
-		start = System.currentTimeMillis();
+		//Log.enableDebugPrint(true);
 		for(i=0;i<500;i++) {
+			start = System.currentTimeMillis();
 			dyio.flushCache(0);
 			double ms=System.currentTimeMillis()-start;
 			if (ms<best)
@@ -96,7 +99,7 @@ public class SpeedTest {
 			start = System.currentTimeMillis();
 			//System.out.println("Average cycle time: "+(int)(avg/i)+"ms\t\t\t this loop was: "+ms);
 		}
-		System.out.println("Average cycle time for cache flush: "+(avg/i)+" ms best="+ best/2+"ms worst="+worst/2);
+		System.out.println("Average cycle time for cache flush: "+(avg/(i+1))+" ms best="+ best+"ms worst="+worst);
 		
 
 		
