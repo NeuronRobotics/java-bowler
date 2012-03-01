@@ -23,29 +23,40 @@ public class RealTimeLineTrackWithPID implements IPIDEventListener {
 		}
 		
 		dyio.addPIDEventListener(this);
+		/**
+		 * This configuration uses 2 line sensors and 2 continuous turn servos in the standard "Puck Bot" configuration
+		 * 
+		 * The purpose of this demonstration is to show how to use the PID controller for more then just motor control.
+		 * Since it is a generic controller it can link any input to any output, so in this example i took the input 
+		 * from the line sensor and attached it to the output of the drive motor. The PID keeps the robot on the line.
+		 * I also added a listener to the system that can be used to detect a "Double Black" condition, which is used for 
+		 * stopping. This could be encapsulated as a set of behaviors that can be called up as needed at runtime, and
+		 * the closed-loop control stays on the DyIO, while the High level command and decisions take place in Java. 
+		 */
 		DyPIDConfiguration dypidR = new DyPIDConfiguration(	1,//PID group 0
+													
 															12,//Input channel number
 															DyIOChannelMode.ANALOG_IN,//Input mode
 															11,//Output Channel
 															DyIOChannelMode.SERVO_OUT);//Output mode
-		PIDConfiguration pidR =new PIDConfiguration (	1,//PID group
-														true,//enabled
-														false,//inverted
-														true,//Async
-														.1,// Kp
-														0,// Ki
-														0,//Kd
-														//Latch values are only used with the Counter since analog is absolute and can not change its value
-														0,//Value to load to the controller if the index pin is used. This value can be anything
-														false,//Use the auto-load of a latched in value when using the index pin
-														false);//Set the setpoint to the current location when index it reached
+		PIDConfiguration pidR =new PIDConfiguration (		1,//PID group
+															true,//enabled
+															false,//inverted
+															true,//Async
+															.1,// Kp
+															0,// Ki
+															0,//Kd
+															//Latch values are only used with the Counter since analog is absolute and can not change its value
+															0,//Value to load to the controller if the index pin is used. This value can be anything
+															false,//Use the auto-load of a latched in value when using the index pin
+															false);//Set the setpoint to the current location when index it reached
 
 		DyPIDConfiguration dypidL = new DyPIDConfiguration(	0,//PID group 0
 															13,//Input channel number
 															DyIOChannelMode.ANALOG_IN,//Input mode
 															10,//Output Channel
 															DyIOChannelMode.SERVO_OUT);//Output mode
-		PIDConfiguration pidL =new PIDConfiguration (	0,//PID group
+		PIDConfiguration pidL =new PIDConfiguration (		0,//PID group
 															true,//enabled
 															true,//inverted
 															true,//Async
