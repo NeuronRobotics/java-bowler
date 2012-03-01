@@ -181,8 +181,8 @@ public class ConnectionDialog extends JDialog {
 				JOptionPane.showMessageDialog(null, m, "DyIO Not Responding"+e1.getMessage(), JOptionPane.ERROR_MESSAGE);
 				continue;
 			} catch(Exception e) {
-				String m = "The connection is not valid.";
-				JOptionPane.showMessageDialog(null, m, "DyIO Not Responding"+e.getMessage(), JOptionPane.ERROR_MESSAGE);
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, e.getMessage(), "DyIO Connection problem ", JOptionPane.ERROR_MESSAGE);
 				fudge=null;
 				return false;
 			}
