@@ -43,7 +43,7 @@ public class RealTimeLineTrackWithPID implements IPIDEventListener {
 															true,//enabled
 															false,//inverted
 															true,//Async
-															.1,// Kp
+															.15,// Kp
 															0,// Ki
 															0,//Kd
 															//Latch values are only used with the Counter since analog is absolute and can not change its value
@@ -60,7 +60,7 @@ public class RealTimeLineTrackWithPID implements IPIDEventListener {
 															true,//enabled
 															true,//inverted
 															true,//Async
-															.1,// Kp
+															.15,// Kp
 															0,// Ki
 															0,//Kd
 															//Latch values are only used with the Counter since analog is absolute and can not change its value
@@ -76,14 +76,14 @@ public class RealTimeLineTrackWithPID implements IPIDEventListener {
 		
 		//Set a single setpoint to the controler
 		dyio.SetPIDSetPoint(	0,//Group 0
-								100,//Tell the controller to go to position 500
+								512,//Tell the controller to go to position 500
 								0);//Take 0 secoinds to get there
 		dyio.SetPIDSetPoint(	1,//Group 1
-								300,//Tell the controller to go to position 500
+								512,//Tell the controller to go to position 500
 								0);//Take 0 secoinds to get there
 		
 		while(true){
-			ThreadUtil.wait(10);
+			ThreadUtil.wait(100);
 			if(lVal >500 && rVal>500){
 				System.out.println("Stop Condition!");
 			}
