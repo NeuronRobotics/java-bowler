@@ -33,7 +33,7 @@ public class RealTimeLineTrackWithPID implements IPIDEventListener {
 		 * stopping. This could be encapsulated as a set of behaviors that can be called up as needed at runtime, and
 		 * the closed-loop control stays on the DyIO, while the High level command and decisions take place in Java. 
 		 */
-		DyPIDConfiguration dypidR = new DyPIDConfiguration(	1,//PID group 0
+		DyPIDConfiguration dypidR = new DyPIDConfiguration(	1,//PID group 1
 													
 															12,//Input channel number
 															DyIOChannelMode.ANALOG_IN,//Input mode
