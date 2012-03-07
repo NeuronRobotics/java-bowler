@@ -14,13 +14,8 @@ public class RealTimeLineTrackWithPID implements IPIDEventListener {
 	
 	int lVal=0;
 	int rVal=0;
-	private RealTimeLineTrackWithPID(){
-		DyIO.disableFWCheck();
-		DyIO dyio=new DyIO();
-		//dyio.SetPrintModes(true, true);
-		if (!ConnectionDialog.getBowlerDevice(dyio)){
-			System.exit(0);
-		}
+	public RealTimeLineTrackWithPID(DyIO dyio){
+
 		
 		dyio.addPIDEventListener(this);
 		/**
@@ -95,7 +90,13 @@ public class RealTimeLineTrackWithPID implements IPIDEventListener {
 	 */
 	public static void main(String[] args) {
 		try{
-			new RealTimeLineTrackWithPID();
+			DyIO.disableFWCheck();
+			DyIO dyio=new DyIO();
+			//dyio.SetPrintModes(true, true);
+			if (!ConnectionDialog.getBowlerDevice(dyio)){
+				System.exit(0);
+			}
+			new RealTimeLineTrackWithPID(dyio);
 		}catch (Exception ex){
 			ex.printStackTrace();
 			System.exit(0);
