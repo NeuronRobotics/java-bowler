@@ -557,7 +557,7 @@ public abstract class BowlerAbstractConnection {
 						ThreadUtil.wait(1);
 					}
 				} catch (Exception e) {
-					//e.printStackTrace();
+					e.printStackTrace();
 					disconnect();
 				}
 			}

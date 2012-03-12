@@ -110,8 +110,9 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 		}
 		if(!connection.isConnected()) {
 			if(!connection.connect()) {
-				startHeartBeat();
 				return false;
+			}else {
+				startHeartBeat();
 			}
 		}
 		return this.isAvailable();
