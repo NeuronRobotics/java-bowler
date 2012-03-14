@@ -86,9 +86,9 @@ public class DigitalInputChannel extends DyIOAbstractPeripheral implements IChan
 	}
 	
 	/**
-	 * Set the channel to be asyncronous or syncronous.
+	 * Set the channel to be asynchronous or synchronous.
 	 * 
-	 * @param isAsync - true if the channel should be set to asyncronous and syncronous, false if syncronous only
+	 * @param isAsync - true if the channel should be set to asynchronous and synchronous, false if synchronous only
 	 */
 	public void setAsync(boolean isAsync) {
 		setMode(DyIOChannelMode.DIGITAL_IN, isAsync);

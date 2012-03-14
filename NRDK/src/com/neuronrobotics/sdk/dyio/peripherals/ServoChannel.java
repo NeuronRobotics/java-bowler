@@ -124,20 +124,33 @@ public class ServoChannel extends DyIOAbstractPeripheral {
 			s.onServoPositionUpdate(this, pos,time);
 		}
 	}
-	
+	/**
+	 * THis method allows you to listen to servo setpoint changes. 
+	 * @param l
+	 */
 	public void addIServoPositionUpdateListener(IServoPositionUpdateListener l) {
 		if(listeners.contains(l))
 			return;
 		listeners.add(l);
 	}
+	/**
+	 * removes a specified listener
+	 * @param l
+	 */
 	public void removeIServoPositionUpdateListener(IServoPositionUpdateListener l) {
 		if(listeners.contains(l))
 			listeners.remove(l);
 	}
-	
+	/**
+	 * This method allows you to override the servo voltage lock-out
+	 * it is enabled by default
+	 */
 	public void enablePowerOverride(){
 		getChannel().getDevice().send(new powerOverridePacket(true) );
 	}
+	/**
+	 * This method allows you to re enable the lock-out
+	 */
 	public void disablePowerOverride(){
 		getChannel().getDevice().send(new powerOverridePacket(false) );
 	}
