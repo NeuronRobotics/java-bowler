@@ -116,15 +116,11 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 		BowlerDatagram b = send(new  ControlPIDCommand((char) group));
 		return ByteList.convertToInt(b.getData().getBytes(1, 4),true);
 	}
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.pid.IPIDControl#GetCachedPosition
-	 */
+
 	public int GetCachedPosition(int group) {
 		return getPIDChannel(group).getCurrentCachedPosition();
 	}
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.pid.IPIDControl#SetCachedPosition
-	 */
+
 	public void SetCachedPosition(int group, int value) {
 
 		getPIDChannel(group).setCurrentCachedPosition(value);
@@ -166,9 +162,7 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 		PIDConfiguration back=new PIDConfiguration (conf);
 		return back;
 	}
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.pid.IPIDControl#ResetPIDChannel
-	 */
+
 	public boolean ResetPIDChannel(int group) {
 		BowlerDatagram rst = send(new  ResetPIDCommand((char) group));
 		if(rst==null)

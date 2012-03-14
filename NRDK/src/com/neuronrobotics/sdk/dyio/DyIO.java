@@ -764,30 +764,88 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 		return pid.killAllPidGroups();
 	}
 	
+	/*
+	 * Advanced Async Configuration. THese methods configure what value changes trigger an asynchronous event as well as 
+	 * how often those event states are checked
+	 */
 	/**
-	 * Advanced Async Configuration
+	 * This method configures the advanced async mode for a given DyIO channel to trigger on any event where the values are not equal.
+	 * This sets the sample time to 100 ms
+	 * @param pin the DyIO channel to configure
+	 * @return true is success
 	 */
 	public boolean configAdvancedAsyncNotEqual(int pin){
 		return configAdvancedAsyncNotEqual(pin,100);
 	}
+	/**
+	 * This method configures the advanced async mode for a given DyIO channel to trigger on any event where the values are outside a deadband
+	 * This sets the sample time to 100 ms
+	 * @param pin the DyIO channel to configure
+	 * @param deadbandSize the size in sensor units of the deadband
+	 * @return true if success
+	 */
 	public boolean configAdvancedAsyncDeadBand(int pin,int deadbandSize){
 		return  configAdvancedAsyncDeadBand(pin,100,deadbandSize);
 	}
+	/**
+	 * This method configures the advanced async mode for a given DyIO channel to trigger on any event where the value crosses a threshhold
+	 * This sets the sample time to 100 ms
+	 * @param pin the DyIO channel to configure
+	 * @param threshholdValue a value setpoint that triggers an even when it is crossed
+	 * @param edgeType Rising, Falling, or both
+	 * @return true if success
+	 */
 	public boolean configAdvancedAsyncTreshhold(int pin,int threshholdValue, AsyncThreshholdEdgeType edgeType){
 		return  configAdvancedAsyncTreshhold(pin,100, threshholdValue, edgeType);
 	}
+	/**
+	 * This method configures the advanced async mode for a given DyIO channel to trigger on any event where the value is sampled on a real-time 
+	 * This sets the sample time to 100 ms
+	 * clock and sent as async regardless of value change
+	 * @param pin  the DyIO channel to configure
+	 * @return true if success
+	 */
 	public boolean configAdvancedAsyncAutoSample(int pin){
 		return  configAdvancedAsyncAutoSample(pin,100);
 	}
+	
+	/**
+	 * This method configures the advanced async mode for a given DyIO channel to trigger on any event where the values are not equal.
+	 * @param pin the DyIO channel to configure
+	 * @param time the sample time in MiliSeconds
+	 * @return true if success
+	 */
 	public boolean configAdvancedAsyncNotEqual(int pin,int time){
 		return send(new ConfigAsyncCommand(pin,time,AsyncMode.NOTEQUAL)) == null;
 	}
+	/**
+	 * This method configures the advanced async mode for a given DyIO channel to trigger on any event where the values are outside a deadband
+	 * @param pin the DyIO channel to configure
+	 * @param time the sample time in MiliSeconds
+	 * @param deadbandSize the size in sensor units of the deadband
+	 * @return true if success
+	 */
 	public boolean configAdvancedAsyncDeadBand(int pin,int time,int deadbandSize){
 		return send(new ConfigAsyncCommand(pin,time,deadbandSize)) == null;
 	}
+	/**
+	 * This method configures the advanced async mode for a given DyIO channel to trigger on any event where the value crosses a threshhold
+	 * @param pin the DyIO channel to configure
+	 * @param time the sample time in MiliSeconds
+	 * @param threshholdValue a value setpoint that triggers an even when it is crossed
+	 * @param edgeType Rising, Falling, or both
+	 * @return true if success
+	 */
 	public boolean configAdvancedAsyncTreshhold(int pin,int time,int threshholdValue, AsyncThreshholdEdgeType edgeType){
 		return send(new ConfigAsyncCommand(pin,time,threshholdValue,edgeType)) == null;
 	}
+	/**
+	 * This method configures the advanced async mode for a given DyIO channel to trigger on any event where the value is sampled on a real-time 
+	 * clock and sent as async regardless of value change
+	 * @param pin  the DyIO channel to configure
+	 * @param time the sample time in MiliSeconds
+	 * @return true if success
+	 */
 	public boolean configAdvancedAsyncAutoSample(int pin,int time){
 		return send(new ConfigAsyncCommand(pin,time,AsyncMode.AUTOSAMP)) == null;
 	}
@@ -810,7 +868,12 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 		return false;
 	}
 
-	 
+	/**
+	 * This method enables the heart beat. It tells the device how often to expect synchronous packet, and if 
+	 * communication fails to send in the given time, then the device should go into its "safe state". 
+	 * This will also set up a thread to ping the device periodically if it has been too long since the last 
+	 * user generated synchronous packet.
+	 */
 	public void startHeartBeat(long msHeartBeatTime){
 		super.startHeartBeat(msHeartBeatTime);
 		try{
@@ -822,7 +885,9 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 			checkFirmwareRev();
 		}
 	}
-	 
+	/**
+	 * This method stops the heart beat and tells the device to stop expecting a heart beat. This will DISABLE the safe mode detect.
+	 */
 	public void stopHeartBeat(){
 		
 		super.stopHeartBeat();
@@ -835,21 +900,26 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 			checkFirmwareRev();
 		}	
 	}
-
-	private void setInternalChannels(ArrayList<DyIOChannel> channels) {
-		this.channels = channels;
-	}
-
+	
+	/**
+	 * Getter for channels
+	 * @return
+	 */
 	private ArrayList<DyIOChannel> getInternalChannels() {
 		return channels;
 	}
 
-
-
+	/**
+	 * This will enable a state where the DyIO will surpress DyIO mode update events. 
+	 * @param muteResyncOnModeChange true to enable the muted mode
+	 */
 	public void setMuteResyncOnModeChange(boolean muteResyncOnModeChange) {
 		this.muteResyncOnModeChange = muteResyncOnModeChange;
 	}
-
+	/**
+	 * This will check if the device is in the muted mode change mode
+	 * @return true if in muted mode
+	 */
 	public boolean isMuteResyncOnModeChange() {
 		return muteResyncOnModeChange;
 	}
@@ -865,16 +935,21 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 	public void onConnect() {
 
 	}
-
+	/**
+	 * Sets the flag to represent if the DyIO is currently re-suncing itself with the device
+	 * @param resyncing
+	 */
 	public void setResyncing(boolean resyncing) {
 		this.resyncing = resyncing;
 	}
-
+	/**
+	 * Checks to see if the DyIO is currently re-syncing its internal staate. 
+	 * @param resyncing
+	 */
 	public boolean isResyncing() {
 		return resyncing;
 	}
-	
-	
+
 	
 	/**
 	 * This method enables the DyIO log printing. 

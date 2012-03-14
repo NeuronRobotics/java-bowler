@@ -98,7 +98,8 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	}
 	
 	/**
-	 * Connect.
+	 * This method tells the connection object to start and connects the up and down streams pipes. 
+	 * Once this method is called and returns without exception, the device is ready to communicate with
 	 *
 	 * @return true, if successful
 	 * @throws InvalidConnectionException the invalid connection exception
@@ -119,7 +120,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	}
 	
 	/**
-	 * Disconnect.
+	 * This method tells the connection object to disconnect its pipes and close out the connection. Once this is called, it is safe to remove your device.
 	 */
 	public void disconnect() {
 		
