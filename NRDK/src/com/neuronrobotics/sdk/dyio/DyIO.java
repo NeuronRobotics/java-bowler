@@ -673,40 +673,95 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 	public boolean ResetPIDChannel(int group, int valueToSetCurrentTo) {
 		return pid.ResetPIDChannel(group, valueToSetCurrentTo);
 	}
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.pid.IPIDControl#ResetPIDChannel
+	 */
 	public boolean ResetPIDChannel(int group) {
 		return pid.ResetPIDChannel(group);
 	}
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.pid.IPIDControl#SetPIDSetPoint
+	 */
 	public boolean SetPIDSetPoint(int group,int setpoint, double seconds){
 		return pid.SetPIDSetPoint(group, setpoint,seconds);
 	}
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.pid.IPIDControl#SetAllPIDSetPoint
+	 */
 	public boolean SetAllPIDSetPoint(int []setpoints, double seconds){
 		return pid.SetAllPIDSetPoint(setpoints,seconds);
 	}
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.pid.IPIDControl#GetPIDPosition
+	 */
 	public int GetPIDPosition(int group) {
 		return pid.GetPIDPosition(group);
 	}
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.pid.IPIDControl#GetAllPIDPosition
+	 */
 	public int [] GetAllPIDPosition() {
 		return pid.GetAllPIDPosition();
 	}
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.pid.IPIDControl#ConfigurePIDController
+	 */
 	public boolean ConfigurePIDController(PIDConfiguration config) {
 		return pid.ConfigurePIDController(config);
 	}
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.pid.IPIDControl#getPIDConfiguration
+	 */
 	public PIDConfiguration getPIDConfiguration(int group) {
 		return pid.getPIDConfiguration(group);
 	}
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.pid.IPIDControl#addPIDEventListener
+	 */
 	public void addPIDEventListener(IPIDEventListener l) {
 		pid.addPIDEventListener(l);
 	}
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.pid.IPIDControl#removePIDEventListener
+	 */
 	public void removePIDEventListener(IPIDEventListener l) {
 		pid.removePIDEventListener(l);
 	}
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.pid.IPIDControl#flushPIDChannels
+	 */
 	@Override
 	public void flushPIDChannels(double time) {
 		pid.flushPIDChannels(time);
 	}
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.pid.IPIDControl#getPIDChannel
+	 */
 	@Override
 	public PIDChannel getPIDChannel(int group) {
 		return pid.getPIDChannel(group);
+		
+	}
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.pid.IPIDControl#SetPIDInterpolatedVelocity
+	 */
+	@Override
+	public boolean SetPIDInterpolatedVelocity(int group, int unitsPerSecond, double seconds) throws PIDCommandException {
+		return pid.SetPIDInterpolatedVelocity(group, unitsPerSecond, seconds);
+	}
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.pid.IPIDControl#SetPDVelocity
+	 */
+	@Override
+	public boolean SetPDVelocity(int group, int unitsPerSecond, double seconds)throws PIDCommandException {
+		return pid.SetPDVelocity(group, unitsPerSecond, seconds);
+	}
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.pid.IPIDControl#killAllPidGroups
+	 */
+	@Override
+	public boolean killAllPidGroups() {
+		return pid.killAllPidGroups();
 	}
 	
 	/**
@@ -724,8 +779,6 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 	public boolean configAdvancedAsyncAutoSample(int pin){
 		return  configAdvancedAsyncAutoSample(pin,100);
 	}
-	
-	
 	public boolean configAdvancedAsyncNotEqual(int pin,int time){
 		return send(new ConfigAsyncCommand(pin,time,AsyncMode.NOTEQUAL)) == null;
 	}
@@ -783,23 +836,15 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 		}	
 	}
 
-	public void setInternalChannels(ArrayList<DyIOChannel> channels) {
+	private void setInternalChannels(ArrayList<DyIOChannel> channels) {
 		this.channels = channels;
 	}
 
-	public ArrayList<DyIOChannel> getInternalChannels() {
+	private ArrayList<DyIOChannel> getInternalChannels() {
 		return channels;
 	}
 
-	@Override
-	public boolean SetPIDInterpolatedVelocity(int group, int unitsPerSecond, double seconds) throws PIDCommandException {
-		return pid.SetPIDInterpolatedVelocity(group, unitsPerSecond, seconds);
-	}
 
-	@Override
-	public boolean SetPDVelocity(int group, int unitsPerSecond, double seconds)throws PIDCommandException {
-		return pid.SetPDVelocity(group, unitsPerSecond, seconds);
-	}
 
 	public void setMuteResyncOnModeChange(boolean muteResyncOnModeChange) {
 		this.muteResyncOnModeChange = muteResyncOnModeChange;
@@ -819,11 +864,6 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 	@Override
 	public void onConnect() {
 
-	}
-
-	@Override
-	public boolean killAllPidGroups() {
-		return pid.killAllPidGroups();
 	}
 
 	public void setResyncing(boolean resyncing) {
