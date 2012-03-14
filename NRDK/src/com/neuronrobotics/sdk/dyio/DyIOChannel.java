@@ -17,9 +17,7 @@ package com.neuronrobotics.sdk.dyio;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.neuronrobotics.sdk.commands.bcs.io.AsyncMode;
 import com.neuronrobotics.sdk.commands.bcs.io.AsyncThreshholdEdgeType;
-import com.neuronrobotics.sdk.commands.bcs.io.ConfigAsyncCommand;
 import com.neuronrobotics.sdk.commands.bcs.io.GetChannelModeCommand;
 import com.neuronrobotics.sdk.commands.bcs.io.GetValueCommand;
 import com.neuronrobotics.sdk.commands.bcs.io.SetChannelValueCommand;
@@ -27,13 +25,12 @@ import com.neuronrobotics.sdk.commands.bcs.io.setmode.SetChannelModeCommand;
 import com.neuronrobotics.sdk.common.BowlerAbstractCommand;
 import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.common.ByteList;
-import com.neuronrobotics.sdk.common.ISendable;
 import com.neuronrobotics.sdk.common.InvalidResponseException;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.peripherals.DyIOAbstractPeripheral;
 /**
- * A DyIO channel. This represents a single DyIO pin.
- * @author rbreznak
+ * A DyIO channel. This represents a single DyIO pchannel.
+ * @author Kevin Harrington, Robert Breznak
  *
  */
 public class DyIOChannel implements IDyIOChannel {
@@ -53,6 +50,7 @@ public class DyIOChannel implements IDyIOChannel {
 	private DyIOAbstractPeripheral dap=null;
 	private int previousValue = 1;
 	private boolean haveSetMode = false;
+	private boolean settingMode=false;
 	/**
 	 * Construct a channel object.
 	 * @param dyio			The DyIO that the channel belongs on
@@ -65,7 +63,7 @@ public class DyIOChannel implements IDyIOChannel {
 	}
 	
 	/**
-	 * 
+	 * This method allows the user to update all of the content information of this instance of the object.
 	 * 
 	 * @param dyio
 	 * @param channel
@@ -87,28 +85,7 @@ public class DyIOChannel implements IDyIOChannel {
 			throw new RuntimeException("Failed to update channel: "+ channel);
 		}
 	}
-	
-	private boolean isDefaultAsync(DyIOChannelMode m) {
-		return false;
-	}
-	
-	@SuppressWarnings("incomplete-switch")
-	private boolean isOutputMode( DyIOChannelMode m) {
-		switch(m) {
-		case SERVO_OUT:
-		case ANALOG_OUT:
-		case DC_MOTOR_DIR:
-		case DC_MOTOR_VEL:
-		case PWM_OUT:
-		case SPI_CLOCK:
-		case SPI_MISO:
-		case SPI_MOSI:
-		case SPI_SELECT:
-		case USART_TX:
-			return true;
-		}
-		return false;
-	}
+
 
 	/**
 	 * Get the channel's number.
@@ -232,12 +209,9 @@ public class DyIOChannel implements IDyIOChannel {
 		return getMode();
 	}
 	
-	private void setDevice(DyIO device) {
-		this.device = device;
-	}
 
 	/**
-	 * 
+	 * Returns the parent device that is providing the channels.
 	 * 
 	 * @return
 	 */
@@ -262,6 +236,11 @@ public class DyIOChannel implements IDyIOChannel {
 		throw new RuntimeException();
 	}
 	
+	/**
+	 * This method verifies that this channel can be set to the mode given. 
+	 * @param m the mode that is desired
+	 * @return if this channel has the capacity to become this mode
+	 */
 	public boolean canBeMode(DyIOChannelMode m) {
 		Collection<DyIOChannelMode> modes = getAvailableModes();
 		for(DyIOChannelMode mo:modes) {
@@ -270,7 +249,10 @@ public class DyIOChannel implements IDyIOChannel {
 		}
 		return false;
 	}
-	
+	/**
+	 * Checks the current mode of this channel and checks if it is possible for it to have async. 
+	 * @return thru if it is possible to be async
+	 */
 	public boolean hasAsync(){
 		if(getMode() == null)
 			return false;
@@ -284,7 +266,10 @@ public class DyIOChannel implements IDyIOChannel {
 			return false;	
 		}
 	}
-	
+	/**
+	 * This method gets a collection of all of the possible channel modes for this channel.
+	 * @return all of the possible modes
+	 */
 	public Collection<DyIOChannelMode> getAvailableModes() {
 		Collection<DyIOChannelMode> modes = new ArrayList<DyIOChannelMode>();
 		modes.add(DyIOChannelMode.DIGITAL_IN);
@@ -374,9 +359,11 @@ public class DyIOChannel implements IDyIOChannel {
 		}
 		return modes;
 	}
-	private boolean isStreamChannel(){
-		return ((getMode() == DyIOChannelMode.PPM_IN) ||(getMode() == DyIOChannelMode.USART_RX)||(getMode() == DyIOChannelMode.USART_TX));
-	}
+	/**
+	 * THis method gets the value represented by the date portion of a DyIOChannelEvent
+	 * @param e the event to parse
+	 * @return the value represented by the data section
+	 */
 	public int parseDyIOChannelEvent(DyIOChannelEvent e){
 		if(isStreamChannel())
 			return 0;
@@ -384,9 +371,9 @@ public class DyIOChannel implements IDyIOChannel {
 	}
 	
 	/**
+	 * Kicks off an event listener transaction for channel events. 
 	 * 
-	 * 
-	 * @param e
+	 * @param e the event to pass to all listeners
 	 */
 	protected void fireChannelEvent(DyIOChannelEvent e) {
 		if((getPreviousValue() == parseDyIOChannelEvent(e)) && !isStreamChannel() ){
@@ -400,9 +387,9 @@ public class DyIOChannel implements IDyIOChannel {
 	}
 	
 	/**
+	 * Kicks off an event listener transaction for channel mode change events. 
 	 * 
-	 * 
-	 * @param e
+	 * @param e the event to pass to all listeners
 	 */
 	protected void fireModeChangeEvent(DyIOChannelMode e) {
 		boolean ok = false;
@@ -489,7 +476,7 @@ public class DyIOChannel implements IDyIOChannel {
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.dyio.IDyIOChannel#setMode(com.neuronrobotics.sdk.dyio.DyIOChannelMode, boolean)
 	 */
-	private boolean settingMode=false;
+	
 	public synchronized boolean setMode(DyIOChannelMode mode, boolean async) {
 		if(settingMode)
 			return true;
@@ -544,13 +531,7 @@ public class DyIOChannel implements IDyIOChannel {
 		settingMode=false;
 		return false;
 	}
-	private boolean synced = false;
-	private void resyncIfNotSynced() {
-		if(synced==false) {
-			synced = true;
-			resync(false);
-		}
-	}
+
 
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.dyio.IDyIOChannel#setValue(int)
@@ -566,7 +547,11 @@ public class DyIOChannel implements IDyIOChannel {
 			return dap.flush();
 		return flush();
 	}
-	
+	/**
+	 * This method performs a single channel flush. This method will take the cached value, or the current value if none were cached, and 
+	 * send it to the device. 
+	 * @return true if success
+	 */
 	public boolean flush() {
 //		if(getCachedMode())
 //			throw new RuntimeException("In chached mode and flushing from channel");
@@ -620,69 +605,135 @@ public class DyIOChannel implements IDyIOChannel {
 		
 		return false;
 	}
-
+	
+	
+	/**
+	 * THis method allows the user to set a chached value to be sent to the device when a flush is called later on. 
+	 * THis method will not send this value to the device, a flush must be called later to send it.
+	 * @param cachedValue the value to store as the cached value
+	 */
 	public void setCachedValue(int cachedValue) {
 		this.cachedValue = cachedValue;
 	}
-
+	/**
+	 * Provides access to the current cache value. 
+	 * @return
+	 */
 	public int getCachedValue() {
 		return cachedValue;
 	}
-	
+	/**
+	 * This method checks if this channel is in cache/flush mode. 
+	 * @return true if in cache/flush mode
+	 */
 	public boolean getCachedMode() {
 		return cachedMode;
 	}
-
+	/**
+	 * This method enables/disables cache/flush mode for this channel. 
+	 * @param mode
+	 */
 	public void setCachedMode(boolean mode) {
 		cachedMode=mode;
 	}
-
+	/**
+	 * THis sets up the abstract peripheral object that is using this channel object
+	 * @param dap
+	 */
 	public void setDap(DyIOAbstractPeripheral dap) {
 		this.dap = dap;
 	}
-
+	/**
+	 * This method provides access to the abstract perpheral that will be using this channel object
+	 * @return
+	 */
 	public DyIOAbstractPeripheral getDap() {
 		return dap;
 	}
 
-	public void setPreviousValue(int previousValue) {
-		this.previousValue = previousValue;
-	}
-
-	public int getPreviousValue() {
-		return previousValue;
-	}	
 	
+	/**
+	 * This method configures the advanced async mode for a given DyIO channel to trigger on any event where the values are not equal.
+	 * This sets the sample time to 100 ms
+	 * @return true is success
+	 */
 	public boolean configAdvancedAsyncNotEqual(){
 		return configAdvancedAsyncNotEqual(100);
 	}
+	/**
+	 * This method configures the advanced async mode for a given DyIO channel to trigger on any event where the values are outside a deadband
+	 * This sets the sample time to 100 ms
+	 * @param deadbandSize the size in sensor units of the deadband
+	 * @return true if success
+	 */
 	public boolean configAdvancedAsyncDeadBand(int deadbandSize){
 		return  configAdvancedAsyncDeadBand(100,deadbandSize);
 	}
+	/**
+	 * This method configures the advanced async mode for a given DyIO channel to trigger on any event where the value crosses a threshhold
+	 * This sets the sample time to 100 ms
+	 * @param threshholdValue a value setpoint that triggers an even when it is crossed
+	 * @param edgeType Rising, Falling, or both
+	 * @return true if success
+	 */
 	public boolean configAdvancedAsyncTreshhold(int threshholdValue, AsyncThreshholdEdgeType edgeType){
 		return  configAdvancedAsyncTreshhold(100, threshholdValue, edgeType);
 	}
+	/**
+	 * This method configures the advanced async mode for a given DyIO channel to trigger on any event where the value is sampled on a real-time 
+	 * This sets the sample time to 100 ms
+	 * clock and sent as async regardless of value change
+	 * @return true if success
+	 */
 	public boolean configAdvancedAsyncAutoSample(){
 		return  configAdvancedAsyncAutoSample(100);
 	}
 	
+	/**
+	 * This method configures the advanced async mode for a given DyIO channel to trigger on any event where the values are not equal.
+	 * @param msTime the sample time in MiliSeconds
+	 * @return true if success
+	 */
 	public boolean configAdvancedAsyncNotEqual(int msTime){
 		isAsync=true;
 		return  getDevice().configAdvancedAsyncNotEqual(getChannelNumber(),msTime);
 	}
+	/**
+	 * This method configures the advanced async mode for a given DyIO channel to trigger on any event where the values are outside a deadband
+	 * @param msTime the sample time in MiliSeconds
+	 * @param deadbandSize the size in sensor units of the deadband
+	 * @return true if success
+	 */
 	public boolean configAdvancedAsyncDeadBand(int msTime,int deadbandSize){
 		isAsync=true;
 		return  getDevice().configAdvancedAsyncDeadBand(getChannelNumber(),msTime,deadbandSize);
 	}
+	/**
+	 * This method configures the advanced async mode for a given DyIO channel to trigger on any event where the value crosses a threshhold
+	 * @param msTime the sample time in MiliSeconds
+	 * @param threshholdValue a value setpoint that triggers an even when it is crossed
+	 * @param edgeType Rising, Falling, or both
+	 * @return true if success
+	 */
 	public boolean configAdvancedAsyncTreshhold(int msTime,int threshholdValue, AsyncThreshholdEdgeType edgeType){
 		isAsync=true;
 		return  getDevice().configAdvancedAsyncTreshhold(getChannelNumber(),msTime, threshholdValue, edgeType);
 	}
+	/**
+	 * This method configures the advanced async mode for a given DyIO channel to trigger on any event where the value is sampled on a real-time 
+	 * clock and sent as async regardless of value change
+	 * @param msTime the sample time in MiliSeconds
+	 * @return true if success
+	 */
 	public boolean configAdvancedAsyncAutoSample(int msTime){
 		isAsync=true;
 		return  getDevice().configAdvancedAsyncAutoSample(getChannelNumber(),msTime);
 	}
-
+	
+	/**
+	 * Sets the current internal mode variable. 
+	 * @param mode the mode to set to.
+	 */
 	public void setCurrentMode(DyIOChannelMode mode) {
 		try {
 			if(!canBeMode(mode)) {
@@ -696,20 +747,80 @@ public class DyIOChannel implements IDyIOChannel {
 		}
 		this.current = mode;
 	}
-
+	/**
+	 * Gets the current mode.
+	 * @return the current staate of the mode storage variable
+	 */
 	public DyIOChannelMode getCurrentMode() {
 		return current;
 	}
-
+	/**
+	 * Sets the time to store for use by the flush. THis will only be used when flush is called from the channel
+	 * If flush is called from the DyIO, time stored here will be ignored
+	 * @param cachedTime
+	 */
 	public void setCachedTime(float cachedTime) {
 		this.cachedTime = cachedTime;
 	}
-
+	/**
+	 * Gets the current cached time
+	 * @return
+	 */
 	public float getCachedTime() {
 		return cachedTime;
 	}
-
+	/**
+	 * Sets the asynchronus mode for this channel. 
+	 * @param b
+	 */
 	public void setAsync(boolean b) {
 		setMode(getMode(), b);
+	}
+	
+	
+
+	
+	/*
+	 * Helpers
+	 */
+	private void setPreviousValue(int previousValue) {
+		this.previousValue = previousValue;
+	}
+
+	private int getPreviousValue() {
+		return previousValue;
+	}
+	private boolean isStreamChannel(){
+		return ((getMode() == DyIOChannelMode.PPM_IN) ||(getMode() == DyIOChannelMode.USART_RX)||(getMode() == DyIOChannelMode.USART_TX));
+	}
+	private void setDevice(DyIO device) {
+		this.device = device;
+	}
+
+	private boolean isDefaultAsync(DyIOChannelMode m) {
+		return false;
+	}
+	private boolean synced = false;
+	private void resyncIfNotSynced() {
+		if(synced==false) {
+			synced = true;
+			resync(false);
+		}
+	}
+	private boolean isOutputMode( DyIOChannelMode m) {
+		switch(m) {
+		case SERVO_OUT:
+		case ANALOG_OUT:
+		case DC_MOTOR_DIR:
+		case DC_MOTOR_VEL:
+		case PWM_OUT:
+		case SPI_CLOCK:
+		case SPI_MISO:
+		case SPI_MOSI:
+		case SPI_SELECT:
+		case USART_TX:
+			return true;
+		}
+		return false;
 	}
 }

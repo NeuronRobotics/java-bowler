@@ -23,33 +23,33 @@ import com.neuronrobotics.sdk.common.ISendable;
 public interface IDyIOChannel {
 	
 	/**
+	 * This method returns the channel object when requested. 
 	 * 
-	 * 
-	 * @return
+	 * @return the DyIOChannel object
 	 */
 	public DyIOChannel getChannel();
 	
 	/**
 	 * Gets the channel's current mode.
 	 * 
-	 * @return
+	 * @return the mode
 	 */
 	public DyIOChannelMode getMode();
 	
 	/**
 	 * Get the current value of a channel.
 	 * 
-	 * @return
+	 * @return the current value
 	 */
 	public int getValue();
 	
 	/**
 	 * Set the mode of a channel.
 	 * 
-	 * @param mode
-	 * @param async
+	 * @param mode the mode to set the channel to 
+	 * @param async if it should be async or not
 	 * @return if the action was successful
-	 * @throws Exception 
+	 * @throws Exception if there is a communication error
 	 */
 	public boolean setMode(DyIOChannelMode mode, boolean async);
 	
@@ -57,7 +57,7 @@ public interface IDyIOChannel {
 	 * Set the value of a channel. Channels may not be able to be set to certain
 	 * or potentially any values depending on the mode that a channel is in.
 	 * 
-	 * @param value
+	 * @param value the value to set
 	 * @return if the action was successful
 	 */
 	public boolean setValue(int value);
@@ -67,7 +67,7 @@ public interface IDyIOChannel {
 	 * depending on the mode that a channel is in. 
 	 * 
 	 * @param value
-	 * @return
+	 * @return true if successful
 	 */
 	public boolean setValue(ByteList value);
 }

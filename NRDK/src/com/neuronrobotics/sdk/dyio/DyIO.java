@@ -55,6 +55,7 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
 /**
  * The DyIO class is an encapsulation of all of the functionality of the DyIO into one object. This 
  * object has one connection to one DyIO module and wraps all of the commands in an accessible API. 
+ * @author Kevin Harrington, Robert Breznak
  */
 public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectionEventListener {
 
