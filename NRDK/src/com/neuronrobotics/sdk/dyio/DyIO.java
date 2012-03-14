@@ -70,6 +70,10 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 	
 	private boolean cachedMode=false;
 	private boolean muteResyncOnModeChange=false;
+	private static boolean checkFirmware=true;
+	private boolean resyncing = false;
+	private boolean haveBeenSynced =false;
+	
 	private GenericPIDDevice pid = new GenericPIDDevice();
 	/**
 	 * Default Constructor.
@@ -115,7 +119,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 	/**
 	 * Returns the DyIO channel associated with a channel number.
 	 * 
-	 * @param channel
+	 * @param channel  integer representing the index of the channel
 	 *            - a channel number
 	 * @return
 	 */
@@ -261,28 +265,35 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 	}
 	
 	/**
+	 * This method synchronizes the DyIO channel mode from the DyIO module with this DyIO channel object
+	 * This will actively query the DyIO for this information
 	 * 
-	 * 
-	 * @param channel
+	 * @param channel  integer representing the index of the channel
 	 */
 	public void resync(int channel) {
 		getChannel(channel).resync(false);
 	}
 	
-	private static boolean checkFirmware=true;
+	/**
+	 * This static method can be called before connection a DyIO object to disable the firmware verification step
+	 * This can be used to allow older versions of the DyIO firmware to be used with newer NRDK versions. 
+	 */
 	public static void disableFWCheck() {
 		checkFirmware=false;
 	}
 	
 	/**
 	 * Sync the state cache with the live device. 
+	 * This method will query the device for its firmware revision and its info string. 
+	 * The default opperation will be to throw a DyIOFirmwareOutOfDateException is the firmware version does not match
+	 * the NRDK build version. This can be overridden if DyIO.disableFWCheck() is called BEFORE connection.
 	 */
 	public void checkFirmwareRev()throws DyIOFirmwareOutOfDateException{
 		if(checkFirmware) {
 			int[] sdkRev = SDKBuildInfo.getBuildInfo(); 
 			
 			for(int i=0;i<3;i++){
-				if(firmware[i] < sdkRev[i]){
+				if(firmware[i] != sdkRev[i]){
 					DyIOFirmwareOutOfDateException e = new DyIOFirmwareOutOfDateException( 	"\nNRDK version = "+new ByteList(sdkRev)+
 																"\nDyIO version = "+ new ByteList(firmware)+
 																"\nTry updating your firmware using the firmware update instructions from http://neuronrobotics.com/");
@@ -294,8 +305,16 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 			Log.debug("Not checking firmware version for DyIO");
 		}
 	}
-	private boolean resyncing = false;
-	private boolean haveBeenSynced =false;
+
+	
+	/**
+	 * This method re-synchronizes the entire state of the DyIO object with the DyIO module. 
+	 * The Firmware version is checked
+	 * The info string is checked
+	 * All channel modes are updated
+	 * 
+	 * @return true if success
+	 */
 	public boolean resync() {
 		if(getConnection() == null) {
 			return false;
@@ -385,7 +404,10 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 		return true;
 	}
 	
-	
+	/**
+	 * Check to see if the firmware has been checked yet
+	 * @return true if already checked
+	 */
 	private boolean haveFirmware() {
 		if (firmware[0]==0 && firmware[1]==0 && firmware[2]==0)
 			return false;
@@ -396,6 +418,12 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 	/**
 	 * Add an IDyIOEventListener that will be contacted with an IDyIOEvent on
 	 * each incoming data event.
+	 * 
+	 * DyIO event listeners are used to get information from all DyIO events. 
+	 * This is how to access the Power events:
+	 * DyIO power switch change events
+	 * DyIO external power voltage change events
+	 * 
 	 * 
 	 * @param l
 	 */
@@ -444,7 +472,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 	/**
 	 * Validates a that a given channel is in the proper range.
 	 * 
-	 * @param channel
+	 * @param channel  integer representing the index of the channel
 	 */
 	protected void validateChannel(int channel) {
 		int syncs=0;
@@ -468,44 +496,22 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 		}
 	}
 	
-	/**
-	 * 
-	 * 
-	 * @param printing
-	 * @param debug
-	 */
-	public void SetPrintModes(boolean printing,boolean debug){
-		//BOB, do not remove, i need this in here. 
-		Log.enableSystemPrint(printing);
-		Log.enableDebugPrint(debug);
-	}
-	
-	/**
-	 * 
-	 */
-	public void enableDebug() {
-		SetPrintModes(true,true);
-	}
-	
-	/**
-	 * 
-	 */
-	public void disableDebug() {
-		SetPrintModes(false,false);
-	}
-	
-	public DyIOPowerState getBankAState() {
-		return bankAState;
-	}
 
-	public DyIOPowerState getBankBState() {
-		return bankBState;
-	}
 	
+	/**
+	 * This method returns the current state of the DyIO objects cache/flush system for the DyIO channel values.
+	 * @return true if cache/flush mode is enabled
+	 */
 	public boolean getCachedMode() {
 		return cachedMode;
 	}
-	
+	/**
+	 * This method enables the DyIO cache/flush system. When enabled, the system will interrupt all set value method calls and prevent them 
+	 * from sending packets to the DyIO. The channels will then need to either be flushed individually, or as a group. When the entire group 
+	 * is flushed, all channel values are set with a single packet allowing for co-ordinated motion. 
+	 * All channels will read the current state and set it as the cache value on the event of enabling the cache/flush mode
+	 * @param mode true to enable cache/flush mode, false to disable.
+	 */
 	public void setCachedMode(boolean mode) {
 		cachedMode=mode;
 		for(DyIOChannel d:getInternalChannels()) {
@@ -519,7 +525,9 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 		}
 	}
 	/**
-	 * 
+	 * This method will flush the DyIO cache for all channels. All channel values as stored by setting the value from code, or the value 
+	 * stored at the time that the cache/flush mode was enabled. THis method will flush all 24 channel values in one packet allowing for 
+	 * co-ordinated motion.
 	 * @param time in seconds
 	 */
 	public void flushCache(double seconds) {
@@ -541,25 +549,6 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 		
 	}
 	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	 
-	public String toString() {
-		
-		String chFmt = "%02d - %-20s   %02d - %-20s\n";
-		
-		String s = getFirmwareRevString()+ " \nMAC: " + getAddress() + "\n";
-		for(int i = 0; i < getInternalChannels().size()/2; i++) {
-			s += String.format(chFmt, 
-					           getInternalChannels().size() - 1 - i, 
-					           getInternalChannels().get(getInternalChannels().size()-1-i).getMode().toSlug(), 
-					           i, 
-					           getInternalChannels().get(i).getMode().toSlug());
-		}
-		
-		return s;
-	}
 	
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.common.BowlerAbstractDevice#isAvailable()
@@ -570,9 +559,35 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 		return getConnection().isConnected();
 	
 	}
-	
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.common.IBowlerDatagramListener#onAllResponse(com.neuronrobotics.sdk.common.BowlerDatagram)
+	 */
+	public void onAllResponse(BowlerDatagram data) {
+
+		pid.onAllResponse(data);
+	}
+	
+	/**
+	 * This method returns the bank switch state of bank A (0-11)
+	 * This state is updated asynchronously by the DyIOEventListener
+	 * @return the current state
+	 */
+	public DyIOPowerState getBankAState() {
+		return bankAState;
+	}
+	/**
+	 * This method returns the bank switch state of bank B (12-23)
+	 * This state is updated asynchronously by the DyIOEventListener
+	 * @return the current state
+	 */
+	public DyIOPowerState getBankBState() {
+		return bankBState;
+	}
+	
+	/**
+	 * THis method will return the current voltage on the battery connected to the DyIO external power connector. 
+	 * @param refresh true if you want to query the device, false to just get the cached value from the last async. 
+	 * @return the voltage of the battery in Volts
 	 */
 	public double getBatteryVoltage(boolean refresh){
 		if(refresh) {
@@ -581,11 +596,10 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 		}
 		return batteryVoltage;
 	}
-	public void onAllResponse(BowlerDatagram data) {
-
-		pid.onAllResponse(data);
-	}
-	
+	/**
+	 * Parses a datagram into the power event data
+	 * @param data
+	 */
 	private void powerEvent(BowlerDatagram data) {
 		//System.out.println("Updating Power state");
 		ByteList bl = data.getData();
@@ -601,9 +615,8 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 	}
 
 	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.common.IBowlerDatagramListener#onAsyncResponse(com.neuronrobotics.sdk.common.BowlerDatagram)
+	 * @see com.neuronrobotics.sdk.common.IBowlerDatagramListener#onAsyncResponse
 	 */
-	 
 	public void onAsyncResponse(BowlerDatagram data) {
 		if(!haveBeenSynced){
 			return;
@@ -624,35 +637,44 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 			return;
 		}else{
 			IDyIOEvent e = new DyIOAsyncEvent(data);
-			for(IDyIOEventListener l : listeners) {
-				l.onDyIOEvent(e);
-			}
+			fireDyIOEvent(e);
 		}
 		
 
 		pid.onAsyncResponse(data);
 	}
 
+	
 	/**
-	 * PID controller (new as of 0.3.6)
+	 * This method sends a packet to the DyIO module to set up the linking between a DyIO input channel and a DyIO output channel to a PID controller
+	 * Inputs are read as the input to the PID calculation
+	 * Outputs are set as a result of the PID calculation
+	 * @param config the configuration data object
+	 * @return true if success
 	 */
-	
-	
 	public boolean ConfigureDynamicPIDChannels(DyPIDConfiguration config){
 		return send(new ConfigureDynamicPIDCommand(config))!=null;
 	}
+	/**
+	 * This method gets the current state of the DyIO channel configuration of a given PID group
+	 * @param group the index of the PID group to get information about
+	 * @return
+	 */
 	public DyPIDConfiguration getDyPIDConfiguration(int group){
 		BowlerDatagram conf = send(new ConfigureDynamicPIDCommand( group) );
 		DyPIDConfiguration back=new DyPIDConfiguration(conf);
 		return back;
 	}
 	
-	public boolean ResetPIDChannel(int group) {
-		return pid.ResetPIDChannel(group);
-	}
-	 
+
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.pid.IPIDControl#ResetPIDChannel
+	 */
 	public boolean ResetPIDChannel(int group, int valueToSetCurrentTo) {
 		return pid.ResetPIDChannel(group, valueToSetCurrentTo);
+	}
+	public boolean ResetPIDChannel(int group) {
+		return pid.ResetPIDChannel(group);
 	}
 	public boolean SetPIDSetPoint(int group,int setpoint, double seconds){
 		return pid.SetPIDSetPoint(group, setpoint,seconds);
@@ -810,6 +832,53 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 
 	public boolean isResyncing() {
 		return resyncing;
+	}
+	
+	
+	
+	/**
+	 * This method enables the DyIO log printing. 
+	 * 
+	 * @param printing enable the system printing
+	 * @param debug    enable the debug log level
+	 */
+	public void SetPrintModes(boolean printing,boolean debug){
+		Log.enableSystemPrint(printing);
+		Log.enableDebugPrint(debug);
+	}
+	
+	/**
+	 * This method enables the DyIO log printing. 
+	 */
+	public void enableDebug() {
+		SetPrintModes(true,true);
+	}
+	
+	/**
+	 * This method disables the DyIO log printing. 
+	 */
+	public void disableDebug() {
+		SetPrintModes(false,false);
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	 
+	public String toString() {
+		
+		String chFmt = "%02d - %-20s   %02d - %-20s\n";
+		
+		String s = getFirmwareRevString()+ " \nMAC: " + getAddress() + "\n";
+		for(int i = 0; i < getInternalChannels().size()/2; i++) {
+			s += String.format(chFmt, 
+					           getInternalChannels().size() - 1 - i, 
+					           getInternalChannels().get(getInternalChannels().size()-1-i).getMode().toSlug(), 
+					           i, 
+					           getInternalChannels().get(i).getMode().toSlug());
+		}
+		
+		return s;
 	}
 
 

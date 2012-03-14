@@ -1,5 +1,12 @@
 package com.neuronrobotics.sdk.pid;
 public interface IPIDControl {
+	/**
+	 * This method calls a reset of the PID group. This will set the current value of the controllers input to the given value (if possible)
+	 * and will set the setpoint of the PID group to the current value (stopping the output)
+	 * @param group the index of the PID group 
+	 * @param valueToSetCurrentTo the target value that the controller should be set to. 
+	 * @return true if success
+	 */
 	public boolean ResetPIDChannel(int group,int valueToSetCurrentTo);
 	public boolean ConfigurePIDController(PIDConfiguration config);
 	public PIDConfiguration getPIDConfiguration(int group);
