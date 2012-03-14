@@ -53,7 +53,8 @@ import com.neuronrobotics.sdk.pid.PIDConfiguration;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 /**
- * 
+ * The DyIO class is an encapsulation of all of the functionality of the DyIO into one object. This 
+ * object has one connection to one DyIO module and wraps all of the commands in an accessible API. 
  */
 public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectionEventListener {
 
@@ -124,11 +125,14 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 	}
 	
 	/**
+	 * This method sets the I/O mode of a specific channel. the DyIO will be sent a packet to update its mode in firmware
+	 * If the mode is the same as the current mode, nothing happens
+	 * If the mode is different from the previous mode, a mode change listeners will be fired
+	 * Asynchronus state will be unaffected
 	 * 
-	 * 
-	 * @param channel
-	 * @param mode
-	 * @return
+	 * @param channel integer representing the index of the channel
+	 * @param mode    the DyIOChannelMode that this channel should be set to
+	 * @return true for success
 	 */
 	public boolean setMode(int channel, DyIOChannelMode mode) {
 		return getChannel(channel).setMode(mode);
@@ -136,71 +140,84 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 
 	/**
 	 * 
+	 * This method sets the I/O mode of a specific channel. the DyIO will be sent a packet to update its mode in firmware
+	 * If the mode is the same as the current mode, nothing happens
+	 * If the mode is different from the previous mode, a mode change listeners will be fired
 	 * 
-	 * @param channel
-	 * @param mode
-	 * @param async
-	 * @return
+	 * @param channel integer representing the index of the channel
+	 * @param mode    the DyIOChannelMode that this channel should be set to
+	 * @param async	  Forces the mode into or out of async mode
+	 * @return true for success
 	 */
 	public boolean setMode(int channel, DyIOChannelMode mode, boolean async) {
 		return getChannel(channel).setMode(mode, async);
 	}
 	
 	/**
+	 * THis method returns the state of the given channels I/O mode
 	 * 
-	 * 
-	 * @param channel
-	 * @return
+	 * @param channel integer representing the index of the channel
+	 * @return the current mode
 	 */
 	public DyIOChannelMode getMode(int channel) {
 		return getChannel(channel).getMode();
 	}
 	
 	/**
+	 * This method is a simple value set for a DyIO channel. This method is unit-less and will clip data to fit the 
+	 * channel modes requirements. 
 	 * 
-	 * 
-	 * @param channel
-	 * @param value
-	 * @return
+	 * @param channel integer representing the index of the channel
+	 * @param value   Unit-less value to set to the DyIO's channel
+	 * @return  true for success
 	 */
 	public boolean setValue(int channel, int value) {
 		return getChannel(channel).setValue(value);
 	}
 	
 	/**
+	 * This method sets the value of a channel with a pre-packaged ByteList of the data to send. 
+	 * Since the bytelist is pre-packaged, the data will be sent to the DyIO as it is packet into 
+	 * the ByteList with NO VERIFICATION.
 	 * 
-	 * 
-	 * @param channel
-	 * @param value
-	 * @return
+	 * @param channel integer representing the index of the channel
+	 * @param value	  ByteList of the data to send to the DyIO
+	 * @return  true for success
 	 */
 	public boolean setValue(int channel, ByteList value) {
 		return getChannel(channel).setValue(value);
 	}
 
 	/**
+	 * This method is used to get the value of a given channel. The data units will be determined by 
+	 * DyIO channel mode, and so should be treated by this method as unit-less.
 	 * 
-	 * 
-	 * @param channel
-	 * @return
+	 * @param channel integer representing the index of the channel
+	 * @return		  The DyIO channels current value
 	 */
 	public int getValue(int channel) {
 		return getChannel(channel).getValue();
 	}
 	
 	/**
+	 * Gets the DyIO's internally stored info string. This is a 16 byte string that can be stored on 
+	 * the DYIO and used as a human-readable, user setable, identifier.
 	 * 
-	 * 
-	 * @return
+	 * @return The current string
 	 */
 	public String getInfo(){
+		BowlerDatagram response = send(new InfoCommand());
+		if (response != null) {
+			info = response.getData().asString();
+		}
 		return info;
 	}
 	
 	/**
+	 * Sets the DyIO's internally stored info string. This is a 16 byte string that can be stored on 
+	 * the DYIO and used as a human-readable, user setable, identifier.
 	 * 
-	 * 
-	 * @param info
+	 * @param info The String identifier to be stored by the DyIO.
 	 */
 	public void setInfo(String info){
 		if(send(new InfoCommand(info)) == null) {
@@ -210,18 +227,19 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 	}
 	
 	/**
+	 * This method gets the 3 byte firmware revision code. THis code is used to determine compatibility between 
+	 * the version of firmware on the DyIO and the version of the NRDK being used to communicate with it.
 	 * 
-	 * 
-	 * @return
+	 * @return The firmware version data
 	 */
 	public byte [] getFirmwareRev(){
 		return firmware;
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @return
+	 * This method turns the firmware version number into a formatted string for clear display
+	 *  
+	 * @return Firmware version string. 
 	 */
 	public String getFirmwareRevString(){
 		String revFmt = "%02d.%02d.%03d";
@@ -229,9 +247,9 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 	}
 
 	/**
+	 * This method creates a new collection and populates it with the DyIO channel objects. 
 	 * 
-	 * 
-	 * @return
+	 * @return a collection of DyIOChannel objects
 	 */
 	public Collection<DyIOChannel> getChannels() {
 		ArrayList<DyIOChannel> c = new ArrayList<DyIOChannel>();
