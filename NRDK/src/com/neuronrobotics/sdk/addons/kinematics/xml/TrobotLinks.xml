@@ -6,7 +6,7 @@
 		<index>11</index>
 		<scale>.796</scale>
 		<upperLimit>196</upperLimit>
-		<lowerLimit>67</lowerLimit>
+		<lowerLimit>41</lowerLimit>
 		<isLatch>true</isLatch>
 		<indexLatch>189</indexLatch>
 		<isStopOnLatch>false</isStopOnLatch>	
@@ -17,8 +17,8 @@
 		<type>servo-rotory</type>
 		<index>10</index>
 		<scale>.796</scale>
-		<upperLimit>218</upperLimit>
-		<lowerLimit>50</lowerLimit>
+		<upperLimit>205</upperLimit>
+		<lowerLimit>41</lowerLimit>
 		<isLatch>true</isLatch>
 		<indexLatch>90</indexLatch>
 		<isStopOnLatch>false</isStopOnLatch>
@@ -30,10 +30,10 @@
 		<type>servo-rotory</type>
 		<index>9</index>
 		<scale>.796</scale>
-		<upperLimit>218</upperLimit>
-		<lowerLimit>40</lowerLimit>
+		<upperLimit>205</upperLimit>
+		<lowerLimit>41</lowerLimit>
 		<isLatch>true</isLatch>
-		<indexLatch>191</indexLatch>
+		<indexLatch>189</indexLatch>
 		<isStopOnLatch>false</isStopOnLatch>
 		<homingTPS>500</homingTPS>				
 	</link>
@@ -59,7 +59,7 @@
 		<upperLimit>240</upperLimit>
 		<lowerLimit>0</lowerLimit>
 		<isLatch>true</isLatch>
-		<indexLatch>128</indexLatch>
+		<indexLatch>121</indexLatch>
 		<isStopOnLatch>false</isStopOnLatch>	
 		<homingTPS>500</homingTPS>			
 	</link>
@@ -71,7 +71,7 @@
 		<upperLimit>255</upperLimit>
 		<lowerLimit>0</lowerLimit>
 		<isLatch>true</isLatch>
-		<indexLatch>130</indexLatch>
+		<indexLatch>171</indexLatch>
 		<isStopOnLatch>false</isStopOnLatch>	
 		<homingTPS>500</homingTPS>			
 	</link>
