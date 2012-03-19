@@ -3,21 +3,20 @@ package com.neuronrobotics.sdk.addons.kinematics.delta;
 import java.io.InputStream;
 
 import com.neuronrobotics.sdk.addons.kinematics.AbstractKinematics;
-import com.neuronrobotics.sdk.addons.kinematics.AbstractRotoryLink;
 import com.neuronrobotics.sdk.addons.kinematics.LinkFactory;
 import com.neuronrobotics.sdk.addons.kinematics.math.Transform;
+import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
+import com.neuronrobotics.sdk.dyio.DyIO;
 
 public class DeltaRobot extends AbstractKinematics{
 
-	public DeltaRobot(InputStream configFile, LinkFactory f) {
-		super(configFile, f);
-		// TODO Auto-generated constructor stub
+	public DeltaRobot(DyIO dyio) {
+		super(XmlFactory.getDefaultConfigurationStream("DeltaPrototype.xml"),new LinkFactory( dyio));
 	}
 	DeltaRobotKinematics kinematics;
 
 	@Override
-	public double[] inverseKinematics(Transform taskSpaceTransform)
-			throws Exception {
+	public double[] inverseKinematics(Transform taskSpaceTransform)throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
