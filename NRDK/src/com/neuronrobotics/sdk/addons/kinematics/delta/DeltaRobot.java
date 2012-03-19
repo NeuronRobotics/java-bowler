@@ -1,20 +1,29 @@
 package com.neuronrobotics.sdk.addons.kinematics.delta;
 
-import com.neuronrobotics.sdk.addons.kinematics.AbstractRotoryLink;
+import java.io.InputStream;
 
-public class DeltaRobot {
-	AbstractRotoryLink t1;
-	AbstractRotoryLink t2;
-	AbstractRotoryLink t3;
+import com.neuronrobotics.sdk.addons.kinematics.AbstractKinematics;
+import com.neuronrobotics.sdk.addons.kinematics.AbstractRotoryLink;
+import com.neuronrobotics.sdk.addons.kinematics.LinkFactory;
+import com.neuronrobotics.sdk.addons.kinematics.math.Transform;
+
+public class DeltaRobot extends AbstractKinematics{
+
+	public DeltaRobot(InputStream configFile, LinkFactory f) {
+		super(configFile, f);
+		// TODO Auto-generated constructor stub
+	}
 	DeltaRobotKinematics kinematics;
-	public DeltaRobot(AbstractRotoryLink theta1,AbstractRotoryLink theta2,AbstractRotoryLink theta3, DeltaRobotKinematics kin){
-		t1=theta1;
-		t2=theta2;
-		t3=theta3;
-		kinematics=kin;
-		t1.Home();
-		t2.Home();
-		t3.Home();
-		t1.flush(2);
+
+	@Override
+	public double[] inverseKinematics(Transform taskSpaceTransform)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Transform forwardKinematics(double[] jointSpaceVector) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
