@@ -22,6 +22,8 @@ public class LinkConfiguration {
 	private int indexLatch=0;
 	private boolean isStopOnLatch;
 	private int homingTicksPerSecond;
+	private double upperVelocity = 100000000;
+	private double lowerVelocity = -100000000;
 	
 	public LinkConfiguration(Element eElement){
     	setName(XmlFactory.getTagValue("name",eElement));
@@ -41,6 +43,14 @@ public class LinkConfiguration {
 	    	inverted=XmlFactory.getTagValue("isInverted",eElement).contains("true");
 	    	setHomingTicksPerSecond(Integer.parseInt(XmlFactory.getTagValue("homingTPS",eElement)));
     	}
+    	
+    	try{
+    		setUpperVelocity(Double.parseDouble(XmlFactory.getTagValue("upperVelocity",eElement)));
+    		setLowerVelocity(Double.parseDouble(XmlFactory.getTagValue("lowerVelocity",eElement)));
+    	}catch (Exception e){
+    		
+    	}
+    	
     	isLatch=XmlFactory.getTagValue("isLatch",eElement).contains("true");
     	indexLatch=Integer.parseInt(XmlFactory.getTagValue("indexLatch",eElement));
     	isStopOnLatch=XmlFactory.getTagValue("isStopOnLatch",eElement).contains("true");
@@ -138,6 +148,18 @@ public class LinkConfiguration {
 	}
 	public String getType() {
 		return type.toLowerCase();
+	}
+	public void setUpperVelocity(double upperVelocity) {
+		this.upperVelocity = upperVelocity;
+	}
+	public double getUpperVelocity() {
+		return upperVelocity;
+	}
+	public void setLowerVelocity(double lowerVelocity) {
+		this.lowerVelocity = lowerVelocity;
+	}
+	public double getLowerVelocity() {
+		return lowerVelocity;
 	}
 	
 }
