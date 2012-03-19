@@ -249,7 +249,7 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 	 */
 	@Override
 	public boolean killAllPidGroups() {
-		// TODO Auto-generated method stub
+		getConnection().setSleepTime(10000);
 		return send(new KillAllPIDCommand())==null;
 	}
 	
