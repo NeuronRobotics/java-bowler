@@ -1,6 +1,7 @@
 package com.neuronrobotics.sdk.addons.kinematics.delta;
 
-import com.neuronrobotics.sdk.addons.kinematics.CartesianCoordinante;
+import com.neuronrobotics.sdk.addons.kinematics.math.Rotation;
+import com.neuronrobotics.sdk.addons.kinematics.math.Transform;
 
 public class DeltaRobotKinematics {
 	//Sample code from http://forums.trossenrobotics.com/tutorials/introduction-129/delta-robot-kinematics-3276/
@@ -30,11 +31,11 @@ public class DeltaRobotKinematics {
 	 
 	 // forward kinematics: (theta1, theta2, theta3) -> (x0, y0, z0)
 	 // returned status:  CartesianCoordinante=OK, null=non-existing position
-	 public CartesianCoordinante delta_calcForward(DeltaJointAngles input) {
+	 public Transform delta_calcForward(double [] input) {
 		 double x0, y0, z0;
-		 double theta1 = input.getTheta1();
-		 double theta2 = input.getTheta2();
-		 double theta3 = input.getTheta3();
+		 double theta1 = input[0];
+		 double theta2 = input[1];
+		 double theta3 = input[2];
 	     double t = (getF()-getE())*tan30/2;
 	 
 	     double y1 = -(t + getRf()*Math.cos(theta1));
@@ -74,7 +75,7 @@ public class DeltaRobotKinematics {
 	     z0 = -(double)0.5*(b+Math.sqrt(d))/a;
 	     x0 = (a1*z0 + b1)/dnm;
 	     y0 = (a2*z0 + b2)/dnm;
-	     return new CartesianCoordinante(x0, y0, z0);
+	     return new Transform(x0, y0, z0, new Rotation());
 	 }
 	 
 	 // inverse kinematics
@@ -98,7 +99,7 @@ public class DeltaRobotKinematics {
 	 
 	 // inverse kinematics: (x0, y0, z0) -> (theta1, theta2, theta3)
 	 // returned status: 0=OK, -1=non-existing position
-	 public DeltaJointAngles delta_calcInverse(CartesianCoordinante input ) {
+	 public double [] delta_calcInverse(Transform input ) {
 		 double theta1, theta2,  theta3;
 		 double x0 = input.getX();
 		 double y0 = input.getY();
@@ -107,7 +108,7 @@ public class DeltaRobotKinematics {
 	     theta1= delta_calcAngleYZ(x0, y0, z0);
 	     theta2 = delta_calcAngleYZ(x0*cos120 + y0*sin120, y0*cos120-x0*sin120, z0);  // rotate coords to +120 deg
 	     theta3 = delta_calcAngleYZ(x0*cos120 - y0*sin120, y0*cos120+x0*sin120, z0);  // rotate coords to -120 deg
-	     return new DeltaJointAngles(theta1, theta2, theta3);
+	     return new double[] {theta1,theta2,theta3};
 	 }
 
 	public double getE() {
