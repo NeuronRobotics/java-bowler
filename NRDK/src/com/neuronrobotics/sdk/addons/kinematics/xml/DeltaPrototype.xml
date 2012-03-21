@@ -1,5 +1,10 @@
 <root>
-	
+	<deltaRobot>
+		<e>115</e>
+		<f>457.3</f>
+		<re>232.0</re>
+		<rf>112.0</rf>
+	</deltaRobot>
 	<link>
 		<dypid>
 			<inputChan>0</inputChan>

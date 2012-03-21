@@ -8,7 +8,7 @@ import com.neuronrobotics.sdk.addons.kinematics.math.Transform;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
 import com.neuronrobotics.sdk.dyio.DyIO;
 
-public class DeltaRobotPrototype extends AbstractKinematics{
+public class DeltaRobotPrinterPrototype extends AbstractKinematics{
 	DeltaRobotKinematics kinematics;
 	
 	//Configuration hard coded
@@ -16,11 +16,13 @@ public class DeltaRobotPrototype extends AbstractKinematics{
 	private  double f = 457.3;     // base
 	private  double re = 232.0;
 	private  double rf = 112.0;
+	
 	static InputStream s = XmlFactory.getDefaultConfigurationStream("DeltaPrototype.xml");
 	
-	public DeltaRobotPrototype(DyIO dyio) {
+	public DeltaRobotPrinterPrototype(DyIO dyio) {
 		super(s,new LinkFactory( dyio));
 		//parse out the extruder configs
+		//parse delta robot configs
 		
 		kinematics = new DeltaRobotKinematics(new DeltaRobotConfig(e, f, re, rf));
 		setNoFlush(true);
