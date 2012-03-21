@@ -56,6 +56,8 @@ public abstract class AbstractKinematics implements IPIDEventListener, ILinkList
 	private Transform currentPoseTarget=new Transform();
 	private Transform base2Fiducial=new Transform();
 	private Transform fiducial2RAS=new Transform();
+	
+	private boolean noFlush = false;
 	/* The device */
 	//private IPIDControl device =null;
 	private LinkFactory factory=null;
@@ -330,12 +332,13 @@ public abstract class AbstractKinematics implements IPIDEventListener, ILinkList
 //		}
 		
 		//TODO HACK, fix in the ethernet firmware
-//		factory.setCachedTargets(jointSpaceVect);
-//		factory.flush(seconds);
+		factory.setCachedTargets(jointSpaceVect);
+		if(!isNoFlush())
+			factory.flush(seconds);
 		
-		for(int i=0;i<getNumberOfLinks();i++){
-			setDesiredJointAxisValue(i, jointSpaceVect[i],  seconds);
-		}
+//		for(int i=0;i<getNumberOfLinks();i++){
+//			setDesiredJointAxisValue(i, jointSpaceVect[i],  seconds);
+//		}
 		
 		
 		currentJointSpaceTarget = jointSpaceVect;
@@ -361,7 +364,8 @@ public abstract class AbstractKinematics implements IPIDEventListener, ILinkList
 		}catch (Exception ex){
 			throw new Exception("Joint hit software bound, index "+axis+" attempted: "+value+" boundes: U="+c.getUpperLimit()+ ", L="+c.getLowerLimit());
 		}
-		getFactory().getLink(c).flush(seconds);
+		if(!isNoFlush())
+			getFactory().getLink(c).flush(seconds);
 		fireTargetJointsUpdate();
 		return;
 	}
@@ -645,6 +649,12 @@ public abstract class AbstractKinematics implements IPIDEventListener, ILinkList
 	}
 	public LinkFactory getFactory() {
 		return factory;
+	}
+	public void setNoFlush(boolean noFlush) {
+		this.noFlush = noFlush;
+	}
+	public boolean isNoFlush() {
+		return noFlush;
 	}
 
 }
