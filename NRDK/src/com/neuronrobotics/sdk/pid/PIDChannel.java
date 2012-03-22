@@ -82,29 +82,29 @@ public class PIDChannel {
 	}
 	
 	public void removePIDEventListener(IPIDEventListener l) {
-		synchronized(PIDEventListeners){
+
 			if(PIDEventListeners.contains(l))
 				PIDEventListeners.remove(l);
-		}
+		
 	}
 	
 	public void addPIDEventListener(IPIDEventListener l) {
-		synchronized(PIDEventListeners){
+
 			if(!PIDEventListeners.contains(l))
 				PIDEventListeners.add(l);
-		}
+		
 	}
 	public void firePIDLimitEvent(PIDLimitEvent e){
-		synchronized(PIDEventListeners){
+
 			for(IPIDEventListener l: PIDEventListeners)
 				l.onPIDLimitEvent(e);
-		}
+		
 	}
 	public void firePIDEvent(PIDEvent e){
-		synchronized(PIDEventListeners){
+
 			for(IPIDEventListener l: PIDEventListeners)
 				l.onPIDEvent(e);
-		}
+		
 	}
 	public void firePIDResetEvent(int group,int value){
 		for(IPIDEventListener l: PIDEventListeners)
