@@ -82,23 +82,19 @@ public class PIDChannel {
 	}
 	
 	public void removePIDEventListener(IPIDEventListener l) {
-
 			if(PIDEventListeners.contains(l))
 				PIDEventListeners.remove(l);
 		
 	}
 	
 	public void addPIDEventListener(IPIDEventListener l) {
-
 			if(!PIDEventListeners.contains(l))
 				PIDEventListeners.add(l);
 		
 	}
 	public void firePIDLimitEvent(PIDLimitEvent e){
-
 			for(IPIDEventListener l: PIDEventListeners)
 				l.onPIDLimitEvent(e);
-		
 	}
 	public void firePIDEvent(PIDEvent e){
 
