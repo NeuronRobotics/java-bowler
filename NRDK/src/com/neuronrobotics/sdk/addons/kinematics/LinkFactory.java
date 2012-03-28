@@ -135,4 +135,14 @@ public class LinkFactory {
 			i++;
 		}
 	}
+
+	public boolean isConnected() {
+		if(hasPid){
+			return pid.isAvailable();
+		}
+		if(hasServo){
+			return dyio.isAvailable();
+		}
+		return true;
+	}
 }
