@@ -72,7 +72,7 @@ public abstract class AbstractLink {
 	 */
 	public void fireLinkListener(int linkUnitsValue){
 		for(ILinkListener l:links){
-			Log.info("Link Event, RAW="+linkUnitsValue);
+			//Log.info("Link Event, RAW="+linkUnitsValue);
 			l.onLinkPositionUpdate(this,toEngineeringUnits(linkUnitsValue));
 		}
 	}
@@ -100,7 +100,7 @@ public abstract class AbstractLink {
 	public double getCurrentEngineeringUnits(){
 		int link = getCurrentPosition();
 		double back = toEngineeringUnits(link);
-		Log.info("Link space: "+link+" Joint space: "+back);
+		//Log.info("Link space: "+link+" Joint space: "+back);
 		return back;
 	}
 	public double getTargetEngineeringUnits() {
