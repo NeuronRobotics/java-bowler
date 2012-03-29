@@ -126,9 +126,9 @@ public abstract class AbstractLink {
 	}
 	
 	protected void setPosition(int val) {
-		if(getTargetValue() != val){
+		//if(getTargetValue() != val){
 			setTargetValue(val);
-		}
+		//}
 		cacheTargetValue();
 	}
 	private boolean useLimits=true;
