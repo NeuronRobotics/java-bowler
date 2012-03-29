@@ -49,10 +49,10 @@ public abstract class AbstractLink {
  	 */
 	public abstract int getCurrentPosition();
 	
-	protected double toEngineeringUnits(int value){
+	public double toEngineeringUnits(int value){
 		return ((value-getHome())*getScale());
 	}
-	protected int toLinkUnits(double euValue){
+	public int toLinkUnits(double euValue){
 		return ((int) (euValue/getScale()))+getHome();
 	}
 	
