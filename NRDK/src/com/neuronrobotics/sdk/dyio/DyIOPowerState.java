@@ -10,7 +10,7 @@ public enum DyIOPowerState {
 		case 1:
 			return DyIOPowerState.REGULATED;
 		case 0:
-			if(batteryVoltage<6.5)
+			if(batteryVoltage<5.0)
 				return DyIOPowerState.BATTERY_UNPOWERED;
 		default:
 			return DyIOPowerState.BATTERY_POWERED;
