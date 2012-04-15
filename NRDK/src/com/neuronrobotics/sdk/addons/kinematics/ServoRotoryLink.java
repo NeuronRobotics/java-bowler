@@ -1,5 +1,6 @@
 package com.neuronrobotics.sdk.addons.kinematics;
 
+import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 
 public class ServoRotoryLink extends AbstractRotoryLink{
@@ -25,6 +26,7 @@ public class ServoRotoryLink extends AbstractRotoryLink{
 
 	@Override
 	public void cacheTargetValue() {
+		Log.debug("Caching servo value="+getTargetValue());
 		getServoChannel().SetPosition(getTargetValue());
 	}
 	@Override

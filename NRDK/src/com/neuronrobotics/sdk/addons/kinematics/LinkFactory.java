@@ -51,6 +51,7 @@ public class LinkFactory {
 		AbstractLink tmp=null;
 		if(!forceVirtual){
 			if(c.getType().equals("servo-rotory")){
+				
 				tmp = new ServoRotoryLink(	new ServoChannel(dyio.getChannel(c.getHardwareIndex())), 
 											(int)c.getIndexLatch(),
 											(int)c.getLowerLimit(),
