@@ -301,7 +301,7 @@ public abstract class AbstractKinematics implements IPIDEventListener, ILinkList
 	 */
 	public double[] setDesiredJointSpaceVector(double[] jointSpaceVect, double seconds) throws Exception{
 		if(jointSpaceVect.length != getNumberOfLinks()){
-			throw new IndexOutOfBoundsException("Vector must be "+getNumberOfLinks()+" mm,radians "); 
+			throw new IndexOutOfBoundsException("Vector must be "+getNumberOfLinks()+" links, actual number of links = "+jointSpaceVect.length); 
 		}
 		String joints = "[";
 		for(int i=0;i<jointSpaceVect.length;i++){
