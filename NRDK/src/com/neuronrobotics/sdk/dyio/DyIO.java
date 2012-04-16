@@ -903,6 +903,15 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 	}
 	
 	/**
+	 * This method allows you to disable the brown out detect for the servo subsystem. If true is passed 
+	 * @param enable true to enable the borwnout, false to disable
+	 * @return True is success
+	 */
+	public boolean enableBrownOutDetect(boolean enable) {
+		return send(new PowerCommand(!enable))!=null;
+	}
+	
+	/**
 	 * Getter for channels
 	 * @return
 	 */

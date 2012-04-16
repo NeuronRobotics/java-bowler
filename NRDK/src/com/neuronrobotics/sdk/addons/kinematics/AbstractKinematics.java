@@ -225,9 +225,9 @@ public abstract class AbstractKinematics implements IPIDEventListener, ILinkList
 	 */
 	public Transform getCurrentTaskSpaceTransform() {
 		Transform fwd  = forwardKinematics(getCurrentJointSpaceVector());
-		Log.info("Getting robot task space "+fwd);
+		//Log.info("Getting robot task space "+fwd);
 		Transform taskSpaceTransform=forwardOffset(fwd);
-		Log.info("Getting global task space "+taskSpaceTransform);
+		//Log.info("Getting global task space "+taskSpaceTransform);
 		return taskSpaceTransform;
 	}
 	
@@ -264,7 +264,7 @@ public abstract class AbstractKinematics implements IPIDEventListener, ILinkList
 			jointString+=jointSpaceVect[i]+" ";
 		}
 		jointString+="]";
-		Log.info("Getting pos joint space in mm/deg: "+jointString);
+		//Log.info("Getting pos joint space in mm/deg: "+jointString);
 		
 //		jointString = "[";
 //		for(int i=0;i<currentLinkSpacePositions.length;i++){
