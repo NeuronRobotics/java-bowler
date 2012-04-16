@@ -3,8 +3,8 @@
 	<link>
 		<name>basePan</name>
 		<type>analog-rotory</type>
-		<index>12</index>
-		<scale>0.2200489</scale>
+		<index>14</index>
+		<scale>-0.2200489</scale>
 		<upperLimit>1024</upperLimit>
 		<lowerLimit>0</lowerLimit>
 		<isLatch>true</isLatch>
@@ -15,7 +15,7 @@
 	<link>
 		<name>baseTilt</name>
 		<type>analog-rotory</type>
-		<index>13</index>
+		<index>15</index>
 		<scale>0.2200489</scale>
 		<upperLimit>1024</upperLimit>
 		<lowerLimit>0</lowerLimit>
@@ -42,7 +42,7 @@
 		<name>wrist1</name>
 		<type>analog-rotory</type>
 		<index>9</index>
-		<scale>0.2200489</scale>
+		<scale>-0.2200489</scale>
 		<upperLimit>1024</upperLimit>
 		<lowerLimit>0</lowerLimit>
 		<isLatch>true</isLatch>
