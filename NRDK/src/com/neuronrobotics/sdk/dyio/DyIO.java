@@ -544,7 +544,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 				send(new SetAllChannelValuesCommand(seconds,values));
 				return;
 			}catch (InvalidResponseException e1) {
-				//System.err.println("Failed to update all, retrying");
+				System.err.println("Failed to update all, retrying");
 			}
 		}
 		

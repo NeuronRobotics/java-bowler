@@ -117,11 +117,11 @@ public class LinkFactory {
 		}
 	}
 	public void flush(double seconds){
-		if(hasPid){
-			pid.flushPIDChannels(seconds);
-		}
+		
 		if(hasServo){
 			dyio.flushCache(seconds);
+		}else if(hasPid){
+			pid.flushPIDChannels(seconds);
 		}
 		virtual.flushPIDChannels(seconds);
 	}

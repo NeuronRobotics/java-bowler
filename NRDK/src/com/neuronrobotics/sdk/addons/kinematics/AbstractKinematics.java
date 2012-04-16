@@ -330,11 +330,13 @@ public abstract class AbstractKinematics implements IPIDEventListener, ILinkList
 //			}
 //			targets[c.getHardwareIndex()]=scaled;
 //		}
-		
-		//TODO HACK, fix in the ethernet firmware
+
 		factory.setCachedTargets(jointSpaceVect);
-		if(!isNoFlush())
+		if(!isNoFlush()){
+			//long time = System.currentTimeMillis();
 			factory.flush(seconds);
+			//System.out.println("Flush Took "+(System.currentTimeMillis()-time)+"ms");
+		}
 		
 //		for(int i=0;i<getNumberOfLinks();i++){
 //			setDesiredJointAxisValue(i, jointSpaceVect[i],  seconds);
