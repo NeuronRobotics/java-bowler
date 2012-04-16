@@ -275,12 +275,17 @@ public class DyIOChannel implements IDyIOChannel {
 		modes.add(DyIOChannelMode.DIGITAL_IN);
 		modes.add(DyIOChannelMode.DIGITAL_OUT);
 		
-		if(number < 12 && device.getBankAState() != DyIOPowerState.REGULATED) {
-			modes.add(DyIOChannelMode.SERVO_OUT);	
-		}
-
-		if(number > 11 && device.getBankBState() != DyIOPowerState.REGULATED) {
-			modes.add(DyIOChannelMode.SERVO_OUT);	
+		
+		if(getDevice().isBrownOutDetect()){
+			if(number < 12 && device.getBankAState() != DyIOPowerState.REGULATED) {
+				modes.add(DyIOChannelMode.SERVO_OUT);	
+			}
+	
+			if(number > 11 && device.getBankBState() != DyIOPowerState.REGULATED) {
+				modes.add(DyIOChannelMode.SERVO_OUT);	
+			}
+		}else{
+			modes.add(DyIOChannelMode.SERVO_OUT);
 		}
 		
 		
