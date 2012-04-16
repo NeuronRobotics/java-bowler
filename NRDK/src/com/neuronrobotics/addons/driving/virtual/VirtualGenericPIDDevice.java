@@ -19,14 +19,14 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
 
 public class VirtualGenericPIDDevice extends GenericPIDDevice{
 	
-	private static final long threadTime=100;
+	private static final long threadTime=10;
 	
 	private ArrayList<DriveThread>  driveThreads = new  ArrayList<DriveThread>();
 	private ArrayList<PIDConfiguration>  configs = new  ArrayList<PIDConfiguration>();
 	SyncThread sync = new SyncThread ();
 	private double maxTicksPerSecond;
 	
-	private int numChannels = 100;
+	private int numChannels = 16;
 	
 	
 	public  VirtualGenericPIDDevice( double maxTicksPerSecond) {

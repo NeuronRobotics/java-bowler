@@ -116,14 +116,21 @@ public class LinkFactory {
 			lin.addLinkListener(l);
 		}
 	}
-	public void flush(double seconds){
-		
+	public void flush(final double seconds){
+		long time = System.currentTimeMillis();
 		if(hasServo){
 			dyio.flushCache(seconds);
-		}else if(hasPid){
+			
+		}
+		if(hasPid){
 			pid.flushPIDChannels(seconds);
 		}
-		virtual.flushPIDChannels(seconds);
+		new Thread(){
+			public void run(){
+				virtual.flushPIDChannels(seconds);
+			}
+		}.start();
+		//System.out.println("Flush Took "+(System.currentTimeMillis()-time)+"ms");
 	}
 	public IPIDControl getPid() {
 		return pid;

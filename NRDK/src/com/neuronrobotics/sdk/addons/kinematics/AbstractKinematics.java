@@ -333,9 +333,9 @@ public abstract class AbstractKinematics implements IPIDEventListener, ILinkList
 
 		factory.setCachedTargets(jointSpaceVect);
 		if(!isNoFlush()){
-			//long time = System.currentTimeMillis();
+			//
 			factory.flush(seconds);
-			//System.out.println("Flush Took "+(System.currentTimeMillis()-time)+"ms");
+			//
 		}
 		
 //		for(int i=0;i<getNumberOfLinks();i++){
