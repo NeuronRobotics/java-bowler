@@ -6,49 +6,49 @@ import Jama.Matrix;
 
 import com.neuronrobotics.addons.driving.virtual.VirtualGenericPIDDevice;
 import com.neuronrobotics.sdk.addons.kinematics.LinkFactory;
-import com.neuronrobotics.sdk.addons.kinematics.math.Rotation;
-import com.neuronrobotics.sdk.addons.kinematics.math.Transform;
+import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
+import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
 import com.neuronrobotics.sdk.genericdevice.GenericPIDDevice;
 //import com.neuronrobotics.sdk.pid.IPIDControl;
 
-public class GenericKinematicsModel extends AbstractKinematics {
+public class GenericKinematicsModelNR extends AbstractKinematicsNR {
 	
 	double deg2rad=Math.PI/180;
 	
-	public GenericKinematicsModel(InputStream configFile,GenericPIDDevice device ){
+	public GenericKinematicsModelNR(InputStream configFile,GenericPIDDevice device ){
 		super(configFile,new LinkFactory( device));
 	}
-	public GenericKinematicsModel(GenericPIDDevice dev){
+	public GenericKinematicsModelNR(GenericPIDDevice dev){
 		super(XmlFactory.getDefaultConfigurationStream("GenericKinematics.xml"),new LinkFactory( dev));
 	}
 
-	public GenericKinematicsModel() {
+	public GenericKinematicsModelNR() {
 		super(XmlFactory.getDefaultConfigurationStream("GenericKinematics.xml"),new LinkFactory( new VirtualGenericPIDDevice(1000000)));
 	}
 
 	@Override
-	public Transform forwardKinematics(double[] jointSpaceVector) {
+	public TransformNR forwardKinematics(double[] jointSpaceVector) {
 		double x  =  jointSpaceVector[0];
 		double y  =  jointSpaceVector[1];
 		double z  =  jointSpaceVector[2];
 		
-		Matrix rotX= new Matrix(Rotation.getRotationX(jointSpaceVector[3]).getRotationMatrix());
-		Matrix rotY= new Matrix(Rotation.getRotationY(jointSpaceVector[4]).getRotationMatrix());
-		Matrix rotZ= new Matrix(Rotation.getRotationZ(jointSpaceVector[5]).getRotationMatrix());
+		Matrix rotX= new Matrix(RotationNR.getRotationX(jointSpaceVector[3]).getRotationMatrix());
+		Matrix rotY= new Matrix(RotationNR.getRotationY(jointSpaceVector[4]).getRotationMatrix());
+		Matrix rotZ= new Matrix(RotationNR.getRotationZ(jointSpaceVector[5]).getRotationMatrix());
 		
 		Matrix rotAll = rotX.times(rotY).times(rotZ);
 
-		Transform back =new Transform(	x,
+		TransformNR back =new TransformNR(	x,
 										y,
 										z,
-										new Rotation(rotAll)
+										new RotationNR(rotAll)
 									  );
 		return back;
 	}
 
 	@Override
-	public double[] inverseKinematics(Transform cartesianSpaceVector)throws Exception {
+	public double[] inverseKinematics(TransformNR cartesianSpaceVector)throws Exception {
 		double [] inv = new double[getNumberOfLinks()];		
 		//Dump from cartesian to joint space, used as an example
 		inv[0]= cartesianSpaceVector.getX();

@@ -26,8 +26,8 @@ import com.neuronrobotics.sdk.addons.kinematics.AbstractLink;
 import com.neuronrobotics.sdk.addons.kinematics.ILinkListener;
 import com.neuronrobotics.sdk.addons.kinematics.LinkConfiguration;
 import com.neuronrobotics.sdk.addons.kinematics.LinkFactory;
-import com.neuronrobotics.sdk.addons.kinematics.math.Rotation;
-import com.neuronrobotics.sdk.addons.kinematics.math.Transform;
+import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
+import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
 //import com.neuronrobotics.sdk.addons.kinematics.PidRotoryLink;
 import com.neuronrobotics.sdk.common.Log;
@@ -40,29 +40,29 @@ import com.neuronrobotics.sdk.pid.PIDEvent;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
-public abstract class AbstractKinematics implements IPIDEventListener, ILinkListener {
+public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkListener {
 	
 	/** The configurations. */
 	private ArrayList<LinkConfiguration> linkConfigurations= new ArrayList<LinkConfiguration>();
 	private ArrayList<PIDConfiguration> pidConfigurations= new ArrayList<PIDConfiguration>();
 
-	private ArrayList<ITaskSpaceUpdateListener> taskSpaceUpdateListeners = new ArrayList<ITaskSpaceUpdateListener>();
-	private ArrayList<IJointSpaceUpdateListener> jointSpaceUpdateListeners = new ArrayList<IJointSpaceUpdateListener>();
-	private ArrayList<IRegistrationListener> regListeners= new ArrayList<IRegistrationListener>();	
+	private ArrayList<ITaskSpaceUpdateListenerNR> taskSpaceUpdateListeners = new ArrayList<ITaskSpaceUpdateListenerNR>();
+	private ArrayList<IJointSpaceUpdateListenerNR> jointSpaceUpdateListeners = new ArrayList<IJointSpaceUpdateListenerNR>();
+	private ArrayList<IRegistrationListenerNR> regListeners= new ArrayList<IRegistrationListenerNR>();	
 	
 	/*This is in RAW joint level ticks*/
 	private double[] currentJointSpacePositions=null;
 	private double [] currentJointSpaceTarget;
-	private Transform currentPoseTarget=new Transform();
-	private Transform base2Fiducial=new Transform();
-	private Transform fiducial2RAS=new Transform();
+	private TransformNR currentPoseTarget=new TransformNR();
+	private TransformNR base2Fiducial=new TransformNR();
+	private TransformNR fiducial2RAS=new TransformNR();
 	
 	private boolean noFlush = false;
 	/* The device */
 	//private IPIDControl device =null;
 	private LinkFactory factory=null;
 
-	public AbstractKinematics(InputStream configFile,LinkFactory f){
+	public AbstractKinematicsNR(InputStream configFile,LinkFactory f){
 		loadConfig(configFile);
 		setDevice(f);
 	}
@@ -118,10 +118,10 @@ public abstract class AbstractKinematics implements IPIDEventListener, ILinkList
 			Node zframeToRASConfig = doc.getElementsByTagName("ZframeToRAS").item(0);
 		    if (zframeToRASConfig.getNodeType() == Node.ELEMENT_NODE) {
 		    	Element eElement = (Element)zframeToRASConfig;	    		    
-		    	setZframeToGlobalTransform(new Transform(	Double.parseDouble(XmlFactory.getTagValue("x",eElement)),
+		    	setZframeToGlobalTransform(new TransformNR(	Double.parseDouble(XmlFactory.getTagValue("x",eElement)),
 							    			Double.parseDouble(XmlFactory.getTagValue("y",eElement)),
 							    			Double.parseDouble(XmlFactory.getTagValue("z",eElement)), 
-							    			new Rotation(	Double.parseDouble(XmlFactory.getTagValue("rotw",eElement)),
+							    			new RotationNR(	Double.parseDouble(XmlFactory.getTagValue("rotw",eElement)),
 							    							Double.parseDouble(XmlFactory.getTagValue("rotx",eElement)),
 							    							Double.parseDouble(XmlFactory.getTagValue("roty",eElement)),
 							    							Double.parseDouble(XmlFactory.getTagValue("rotz",eElement)))));	    	
@@ -136,10 +136,10 @@ public abstract class AbstractKinematics implements IPIDEventListener, ILinkList
 		    Node baseToZframeConfig = doc.getElementsByTagName("baseToZframe").item(0);
 		    if (baseToZframeConfig.getNodeType() == Node.ELEMENT_NODE) {
 		    	Element eElement = (Element)baseToZframeConfig;	    	    
-		    	setBaseToZframeTransform(new Transform(	Double.parseDouble(XmlFactory.getTagValue("x",eElement)),
+		    	setBaseToZframeTransform(new TransformNR(	Double.parseDouble(XmlFactory.getTagValue("x",eElement)),
 							    			Double.parseDouble(XmlFactory.getTagValue("y",eElement)),
 							    			Double.parseDouble(XmlFactory.getTagValue("z",eElement)), 
-							    			new Rotation(	Double.parseDouble(XmlFactory.getTagValue("rotw",eElement)),
+							    			new RotationNR(	Double.parseDouble(XmlFactory.getTagValue("rotw",eElement)),
 							    							Double.parseDouble(XmlFactory.getTagValue("rotx",eElement)),
 							    							Double.parseDouble(XmlFactory.getTagValue("roty",eElement)),
 							    							Double.parseDouble(XmlFactory.getTagValue("rotz",eElement)))));	    	
@@ -223,10 +223,10 @@ public abstract class AbstractKinematics implements IPIDEventListener, ILinkList
 	 * This vector is converted to task space and returned 
 	 * @return taskSpaceVector in mm,radians [x,y,z,rotx,rotY,rotZ]
 	 */
-	public Transform getCurrentTaskSpaceTransform() {
-		Transform fwd  = forwardKinematics(getCurrentJointSpaceVector());
+	public TransformNR getCurrentTaskSpaceTransform() {
+		TransformNR fwd  = forwardKinematics(getCurrentJointSpaceVector());
 		//Log.info("Getting robot task space "+fwd);
-		Transform taskSpaceTransform=forwardOffset(fwd);
+		TransformNR taskSpaceTransform=forwardOffset(fwd);
 		//Log.info("Getting global task space "+taskSpaceTransform);
 		return taskSpaceTransform;
 	}
@@ -283,7 +283,7 @@ public abstract class AbstractKinematics implements IPIDEventListener, ILinkList
 	 * @return The joint space vector is returned for target arrival referance
 	 * @throws Exception If there is a workspace error
 	 */
-	public double[] setDesiredTaskSpaceTransform(Transform taskSpaceTransform, double seconds) throws Exception{
+	public double[] setDesiredTaskSpaceTransform(TransformNR taskSpaceTransform, double seconds) throws Exception{
 		Log.info("Setting target pose: "+taskSpaceTransform);
 		setCurrentPoseTarget(taskSpaceTransform);
 		taskSpaceTransform = inverseOffset(taskSpaceTransform);
@@ -374,26 +374,26 @@ public abstract class AbstractKinematics implements IPIDEventListener, ILinkList
 	
 	private void firePoseUpdate(){
 		Log.info("Pose update");
-		for(ITaskSpaceUpdateListener p:taskSpaceUpdateListeners){
+		for(ITaskSpaceUpdateListenerNR p:taskSpaceUpdateListeners){
 			p.onTaskSpaceUpdate(this, getCurrentTaskSpaceTransform());
 		}
-		for(IJointSpaceUpdateListener p:jointSpaceUpdateListeners){
+		for(IJointSpaceUpdateListenerNR p:jointSpaceUpdateListeners){
 			p.onJointSpaceUpdate(this, getCurrentJointSpaceVector());
 		}
 	}
 
 	private void fireTargetJointsUpdate(){
-		Transform fwd  = forwardKinematics(currentJointSpaceTarget);
+		TransformNR fwd  = forwardKinematics(currentJointSpaceTarget);
 		setCurrentPoseTarget(forwardOffset(fwd));
-		for(ITaskSpaceUpdateListener p:taskSpaceUpdateListeners){
+		for(ITaskSpaceUpdateListenerNR p:taskSpaceUpdateListeners){
 			p.onTargetTaskSpaceUpdate(this, getCurrentPoseTarget());
 		}
-		for(IJointSpaceUpdateListener p:jointSpaceUpdateListeners){
+		for(IJointSpaceUpdateListenerNR p:jointSpaceUpdateListeners){
 			p.onJointSpaceTargetUpdate(this, currentJointSpaceTarget);
 		}
 	}
 	private void fireJointSpaceLimitUpdate(int axis,JointLimit event){
-		for(IJointSpaceUpdateListener p:jointSpaceUpdateListeners){
+		for(IJointSpaceUpdateListenerNR p:jointSpaceUpdateListeners){
 			p.onJointSpaceLimit(this, axis, event);
 		}
 	}
@@ -401,36 +401,36 @@ public abstract class AbstractKinematics implements IPIDEventListener, ILinkList
 	 * 
 	 * @return
 	 */
-	public Transform getFiducialToGlobalTransform() {
+	public TransformNR getFiducialToGlobalTransform() {
 		return fiducial2RAS;
 	}
 
-	private void setBaseToZframeTransform(Transform baseToFiducial) {
+	private void setBaseToZframeTransform(TransformNR baseToFiducial) {
 		Log.info("Setting Fiducial To base Transform "+baseToFiducial);
 		this.base2Fiducial = baseToFiducial;
-		for(IRegistrationListener r: regListeners){
+		for(IRegistrationListenerNR r: regListeners){
 			r.onBaseToFiducialUpdate(this, baseToFiducial);
 		}
 	}
 	
-	private void setZframeToGlobalTransform(Transform fiducialToRAS) {
+	private void setZframeToGlobalTransform(TransformNR fiducialToRAS) {
 		setGlobalToFiducialTransform(fiducialToRAS);
 	}
 
 		
-	public Transform getRobotToFiducialTransform() {
+	public TransformNR getRobotToFiducialTransform() {
 		return base2Fiducial;
 	}
 	
-	public void setGlobalToFiducialTransform(Transform frameToBase) {
+	public void setGlobalToFiducialTransform(TransformNR frameToBase) {
 		Log.info("Setting Global To Fiducial Transform "+frameToBase);
 		this.fiducial2RAS = frameToBase;
-		for(IRegistrationListener r: regListeners){
+		for(IRegistrationListenerNR r: regListeners){
 			r.onFiducialToGlobalUpdate(this, frameToBase);
 		}
 	}
 	
-	private Transform inverseOffset(Transform t){
+	private TransformNR inverseOffset(TransformNR t){
 		//System.out.println("RobotToFiducialTransform "+getRobotToFiducialTransform());
 		//System.out.println("FiducialToRASTransform "+getFiducialToRASTransform());		
 		Matrix rtz = getFiducialToGlobalTransform().getMatrixTransform().inverse();
@@ -439,44 +439,44 @@ public abstract class AbstractKinematics implements IPIDEventListener, ILinkList
 		Matrix current = t.getMatrixTransform();
 		Matrix mForward = rtz.times(ztr).times(current);
 		
-		return new Transform( mForward);
+		return new TransformNR( mForward);
 	}
-	private Transform forwardOffset(Transform t){
+	private TransformNR forwardOffset(TransformNR t){
 		Matrix btt = getRobotToFiducialTransform().getMatrixTransform();
 		Matrix ftb = getFiducialToGlobalTransform().getMatrixTransform();
 		Matrix current = t.getMatrixTransform();
 		Matrix mForward = ftb.times(btt).times(current);
 		
-		return new Transform( mForward);
+		return new TransformNR( mForward);
 	}
 	
-	public void addJointSpaceListener(IJointSpaceUpdateListener l){
+	public void addJointSpaceListener(IJointSpaceUpdateListenerNR l){
 		if(jointSpaceUpdateListeners.contains(l))
 			return;
 		jointSpaceUpdateListeners.add(l);
 	}
-	public void removeJointSpaceUpdateListener(IJointSpaceUpdateListener l){
+	public void removeJointSpaceUpdateListener(IJointSpaceUpdateListenerNR l){
 		if(jointSpaceUpdateListeners.contains(l))
 			jointSpaceUpdateListeners.remove(l);
 	}
 	
-	public void addRegistrationListener(IRegistrationListener l){
+	public void addRegistrationListener(IRegistrationListenerNR l){
 		if(regListeners.contains(l))
 			return;
 		regListeners.add(l);
 		l.onBaseToFiducialUpdate(this, getRobotToFiducialTransform());
 	}
-	public void removeRegestrationUpdateListener(IRegistrationListener l){
+	public void removeRegestrationUpdateListener(IRegistrationListenerNR l){
 		if(regListeners.contains(l))
 			regListeners.remove(l);
 	}
 	
-	public void addPoseUpdateListener(ITaskSpaceUpdateListener l){
+	public void addPoseUpdateListener(ITaskSpaceUpdateListenerNR l){
 		if(taskSpaceUpdateListeners.contains(l))
 			return;
 		taskSpaceUpdateListeners.add(l);
 	}
-	public void removePoseUpdateListener(ITaskSpaceUpdateListener l){
+	public void removePoseUpdateListener(ITaskSpaceUpdateListenerNR l){
 		if(taskSpaceUpdateListeners.contains(l))
 			taskSpaceUpdateListeners.remove(l);
 	}
@@ -628,22 +628,22 @@ public abstract class AbstractKinematics implements IPIDEventListener, ILinkList
 	 * @return Nx1 vector in task space, in mm where N is number of links
 	 * @throws Exception 
 	 */ 
-	public abstract double[] inverseKinematics(Transform taskSpaceTransform) throws Exception;
+	public abstract double[] inverseKinematics(TransformNR taskSpaceTransform) throws Exception;
 	
 	 /**
 		* Forward kinematics
 		* @param jointSpaceVector the joint space vector
 		* @return 6x1 vector in task space, unit in mm,radians [x,y,z,rotx,rotY,rotZ]
 		*/
-	public abstract Transform forwardKinematics(double[] jointSpaceVector);
+	public abstract TransformNR forwardKinematics(double[] jointSpaceVector);
 
-	public Transform getCurrentPoseTarget() {
+	public TransformNR getCurrentPoseTarget() {
 		if(currentPoseTarget == null)
-			currentPoseTarget = new Transform();
+			currentPoseTarget = new TransformNR();
 		return currentPoseTarget;
 	}
 
-	public void setCurrentPoseTarget(Transform currentPoseTarget) {
+	public void setCurrentPoseTarget(TransformNR currentPoseTarget) {
 		this.currentPoseTarget = currentPoseTarget;
 	}
 	public void setFactory(LinkFactory factory) {

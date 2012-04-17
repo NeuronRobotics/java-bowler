@@ -4,54 +4,54 @@ import java.text.DecimalFormat;
 
 import Jama.Matrix;
 
-public class Transform {
+public class TransformNR {
 	private final double x,y,z;
-	private final Rotation rotation;
+	private final RotationNR rotation;
 	
-	public Transform(Matrix m){
+	public TransformNR(Matrix m){
 		this.x=m.get(0, 3);
 		this.y=m.get(1, 3);
 		this.z=m.get(2, 3);
-		this.rotation = new Rotation(m);
+		this.rotation = new RotationNR(m);
 	}
 	
-	public Transform(double x, double y, double z, double w, double rotx, double roty, double rotz){
+	public TransformNR(double x, double y, double z, double w, double rotx, double roty, double rotz){
 		this.x=x;
 		this.y=y;
 		this.z=z;
-		this.rotation = new Rotation(w,rotx,roty,rotz);
+		this.rotation = new RotationNR(w,rotx,roty,rotz);
 	}
-	public Transform(double[] cartesianSpaceVector, double[][] rotationMatrix) {
+	public TransformNR(double[] cartesianSpaceVector, double[][] rotationMatrix) {
 		this.x=cartesianSpaceVector[0];
 		this.y=cartesianSpaceVector[1];
 		this.z=cartesianSpaceVector[2];
-		this.rotation = new Rotation(rotationMatrix);
+		this.rotation = new RotationNR(rotationMatrix);
 	}
-	public Transform(double[] cartesianSpaceVector, double[] quaternionVector) {
+	public TransformNR(double[] cartesianSpaceVector, double[] quaternionVector) {
 		this.x=cartesianSpaceVector[0];
 		this.y=cartesianSpaceVector[1];
 		this.z=cartesianSpaceVector[2];
-		this.rotation = new Rotation(quaternionVector);
+		this.rotation = new RotationNR(quaternionVector);
 	}
 	
-	public Transform(double x, double y, double z, Rotation q){
+	public TransformNR(double x, double y, double z, RotationNR q){
 		this.x=x;
 		this.y=y;
 		this.z=z;
 		this.rotation = q;
 	}
 	
-	public Transform(double[] cartesianSpaceVector, Rotation q) {
+	public TransformNR(double[] cartesianSpaceVector, RotationNR q) {
 		this.x=cartesianSpaceVector[0];
 		this.y=cartesianSpaceVector[1];
 		this.z=cartesianSpaceVector[2];
 		this.rotation = q;
 	}
-	public Transform() {
+	public TransformNR() {
 		this.x=0;
 		this.y=0;
 		this.z=0;
-		this.rotation = new Rotation();
+		this.rotation = new RotationNR();
 	}
 	public double getX() {
 		return x;
@@ -66,19 +66,19 @@ public class Transform {
 		return rotation.getRotationMatrix();
 	}
 
-	public Rotation getRotationMatrix() {
+	public RotationNR getRotationMatrix() {
 		return rotation;
 	}
 
 	public double getRotationValue(int i,int j) {
 		return rotation.getRotationMatrix()[i][j];
 	}
-	public Rotation getRotation() {
+	public RotationNR getRotation() {
 
 		return rotation;
 	}
-	public Transform times(Transform t) {
-		return new Transform(getMatrixTransform().times(t.getMatrixTransform()));
+	public TransformNR times(TransformNR t) {
+		return new TransformNR(getMatrixTransform().times(t.getMatrixTransform()));
 	}
 	
 	public String toString(){
@@ -125,14 +125,14 @@ public class Transform {
 		
 		return new Matrix(transform);
 	}
-	public double getOffsetOrentationMagnitude(Transform t){ 
+	public double getOffsetOrentationMagnitude(TransformNR t){ 
 		double x = getRotation().getRotationMatrix2QuaturnionX()-t.getRotation().getRotationMatrix2QuaturnionX();
 		double y = getRotation().getRotationMatrix2QuaturnionY()-t.getRotation().getRotationMatrix2QuaturnionY();
 		double z = getRotation().getRotationMatrix2QuaturnionZ()-t.getRotation().getRotationMatrix2QuaturnionZ();
 		double r = Math.sqrt((Math.pow(x, 2)+Math.pow(y, 2)+Math.pow(z, 2) ));
 		return r;
 	}
-	public double getOffsetVectorMagnitude(Transform t){
+	public double getOffsetVectorMagnitude(TransformNR t){
 		double x = getX()-t.getX();
 		double y = getY()-t.getY();
 		double z = getZ()-t.getZ();
@@ -142,12 +142,12 @@ public class Transform {
 		return r;
 	}
 	
-	public Transform inverse() {
-		return new Transform(getMatrixTransform().inverse());	
+	public TransformNR inverse() {
+		return new TransformNR(getMatrixTransform().inverse());	
 	}
 
-	public Transform copy() {
-		return new Transform(getMatrixTransform());
+	public TransformNR copy() {
+		return new TransformNR(getMatrixTransform());
 	}
 	
 

@@ -11,12 +11,12 @@ import javax.swing.JTable;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
-import com.neuronrobotics.sdk.addons.kinematics.math.Transform;
+import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 
 import Jama.Matrix;
 import net.miginfocom.swing.MigLayout;
 
-public class MatrixDisplay extends JPanel {
+public class MatrixDisplayNR extends JPanel {
 	/**
 	 * 
 	 */
@@ -24,7 +24,7 @@ public class MatrixDisplay extends JPanel {
 	private MyDefaultTableModel model = new MyDefaultTableModel();
 	private JTable table = new JTable(model);
 	private ArrayList<TableModelListener> listeners = new ArrayList<TableModelListener>();
-	public MatrixDisplay(String name){
+	public MatrixDisplayNR(String name){
 		setLayout(new MigLayout());
 		add(new JLabel(name),"wrap");		
 		getTable().setBorder(BorderFactory.createLoweredBevelBorder());		
@@ -45,7 +45,7 @@ public class MatrixDisplay extends JPanel {
 		setEditable(false);
 	}
 
-	public void setTransform(Transform m){
+	public void setTransform(TransformNR m){
 		getTable().setEnabled(false);
 		for(TableModelListener l:listeners){
 			getTable().getModel().removeTableModelListener(l);

@@ -1,13 +1,13 @@
 package com.neuronrobotics.sdk.addons.kinematics;
 
-import com.neuronrobotics.sdk.addons.kinematics.AbstractKinematics;
+import com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR;
 import com.neuronrobotics.sdk.addons.kinematics.LinkFactory;
-import com.neuronrobotics.sdk.addons.kinematics.math.Transform;
+import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
 import com.neuronrobotics.sdk.dyio.DyIO;
 
 
-public class TrobotKinematics extends AbstractKinematics {
+public class TrobotKinematics extends AbstractKinematicsNR {
 	
 	private DHChain chain=null;
 
@@ -26,14 +26,14 @@ public class TrobotKinematics extends AbstractKinematics {
 	}
 
 	@Override
-	public double[] inverseKinematics(Transform taskSpaceTransform)throws Exception {
+	public double[] inverseKinematics(TransformNR taskSpaceTransform)throws Exception {
 		return getDhChain().inverseKinematics(taskSpaceTransform, getCurrentJointSpaceVector());
 	}
 
 	@Override
-	public Transform forwardKinematics(double[] jointSpaceVector) {
+	public TransformNR forwardKinematics(double[] jointSpaceVector) {
 		if(jointSpaceVector == null || getDhChain() == null)
-			return new Transform();
+			return new TransformNR();
 		return getDhChain().forwardKinematics(jointSpaceVector);
 	}
 

@@ -1,10 +1,10 @@
 package com.neuronrobotics.sdk.addons.kinematics;
 
-import com.neuronrobotics.sdk.addons.kinematics.math.Transform;
+import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 
 
 public class GradiantDecentNode{
-	Transform target;
+	TransformNR target;
 	private int index;
 	double offset;
 
@@ -28,7 +28,7 @@ public class GradiantDecentNode{
 	double Kp = 1;
 	double Ki = 1;
 	
-	public GradiantDecentNode(DHChain chain,int index,double[] jointSpaceVector,Transform cartesianSpace, double u, double l){
+	public GradiantDecentNode(DHChain chain,int index,double[] jointSpaceVector,TransformNR cartesianSpace, double u, double l){
 		this.chain = chain;
 		this.offset=0;
 		this.setIndex(index);
@@ -46,7 +46,7 @@ public class GradiantDecentNode{
 		double none =  myStart+offset;
 		double start = offset;
 		jointSpaceVector[getIndex()]= bound (none);
-		Transform tmp =chain.forwardKinematics(jointSpaceVector);
+		TransformNR tmp =chain.forwardKinematics(jointSpaceVector);
 		tmp =chain.forwardKinematics(jointSpaceVector);
 		double noneOrent = tmp.getOffsetOrentationMagnitude(target);
 		
@@ -100,7 +100,7 @@ public class GradiantDecentNode{
 		double none =  myStart+offset;
 		double start = offset;
 		jointSpaceVector[getIndex()]= bound (none);
-		Transform tmp =chain.forwardKinematics(jointSpaceVector);
+		TransformNR tmp =chain.forwardKinematics(jointSpaceVector);
 		tmp =chain.forwardKinematics(jointSpaceVector);
 		double nonevect = tmp.getOffsetVectorMagnitude(target);
 		

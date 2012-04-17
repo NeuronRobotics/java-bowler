@@ -14,33 +14,33 @@ import net.miginfocom.swing.MigLayout;
 
 import Jama.Matrix;
 
-import com.neuronrobotics.sdk.addons.kinematics.AbstractKinematics;
-import com.neuronrobotics.sdk.addons.kinematics.IRegistrationListener;
-import com.neuronrobotics.sdk.addons.kinematics.math.Transform;
+import com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR;
+import com.neuronrobotics.sdk.addons.kinematics.IRegistrationListenerNR;
+import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 //import com.neuronrobotics.sdk.pid.IPIDControl;
 //import com.neuronrobotics.sdk.ui.ConnectionImageIconFactory;
 
 
-public class SampleGui extends JPanel{
+public class SampleGuiNR extends JPanel{
 	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -8543020276155087015L;
-	private AbstractKinematics model;
+	private AbstractKinematicsNR model;
 
 	private JButton homeAll;
 	private JButton estop = new JButton("E-Stop");
 	private JPanel links = new JPanel(new MigLayout());
-	private ArrayList<SampleGuiAxisWidget> axis = new ArrayList<SampleGuiAxisWidget>();
-	private MatrixDisplay ras;
-	private MatrixDisplay robReg;
-	private PosePanel setPanel;
-	public SampleGui(){
+	private ArrayList<SampleGuiAxisWidgetNR> axis = new ArrayList<SampleGuiAxisWidgetNR>();
+	private MatrixDisplayNR ras;
+	private MatrixDisplayNR robReg;
+	private PosePanelNR setPanel;
+	public SampleGuiNR(){
 		setLayout(new MigLayout());
 	}
-	public void setKinematicsModel( AbstractKinematics model ){
+	public void setKinematicsModel( AbstractKinematicsNR model ){
 		setModel(model);
 		populate();
 	}
@@ -70,35 +70,35 @@ public class SampleGui extends JPanel{
 		});
 		
 		for(int i=0;i<model.getNumberOfLinks();i++){
-			SampleGuiAxisWidget w = new SampleGuiAxisWidget(i,model);
+			SampleGuiAxisWidgetNR w = new SampleGuiAxisWidgetNR(i,model);
 			links.add(w,"wrap");
 			axis.add(w);
 		}
 		
-		setRas(new MatrixDisplay("Global to Base"));
+		setRas(new MatrixDisplayNR("Global to Base"));
 		getRas().setEditable(true);
 		getRas().setTransform(getModel().getFiducialToGlobalTransform());
 		getRas().addTableModelListener(new TableModelListener() {
 				public void tableChanged(TableModelEvent e) {
-					Transform m = new Transform( new Matrix(getRas().getTableData()));
+					TransformNR m = new TransformNR( new Matrix(getRas().getTableData()));
 					System.out.println("Setting ras transform: "+m);
 					getModel().setGlobalToFiducialTransform(m);
 				}
 		});
 		
-		getModel().addRegistrationListener(new IRegistrationListener() {
-			public void onFiducialToGlobalUpdate(AbstractKinematics source,Transform registration) {
+		getModel().addRegistrationListener(new IRegistrationListenerNR() {
+			public void onFiducialToGlobalUpdate(AbstractKinematicsNR source,TransformNR registration) {
 				getRas().setTransform(registration);
 			}
-			public void onBaseToFiducialUpdate(AbstractKinematics source,Transform registration) {}
+			public void onBaseToFiducialUpdate(AbstractKinematicsNR source,TransformNR registration) {}
 		});
 		
-		setRobReg(new MatrixDisplay("Base to Robot"));
+		setRobReg(new MatrixDisplayNR("Base to Robot"));
 		getRobReg().setEditable(true);
 		getRobReg().setTransform(getModel().getRobotToFiducialTransform());
-		getModel().addRegistrationListener(new IRegistrationListener() {
-			public void onFiducialToGlobalUpdate(AbstractKinematics source,Transform registration) {}
-			public void onBaseToFiducialUpdate(AbstractKinematics source,Transform registration) {
+		getModel().addRegistrationListener(new IRegistrationListenerNR() {
+			public void onFiducialToGlobalUpdate(AbstractKinematicsNR source,TransformNR registration) {}
+			public void onBaseToFiducialUpdate(AbstractKinematicsNR source,TransformNR registration) {
 				getRobReg().setTransform(registration);
 			}
 		});
@@ -109,9 +109,9 @@ public class SampleGui extends JPanel{
 		registration.add(getRas(),"wrap");
 		registration.add(getRobReg(),"wrap");
 		poses.add(registration);
-		poses.add(new PosePanel(getModel(),true,true,"Current Actual Pose"));
-		poses.add(new PosePanel(getModel(),false,true,"Current Target Pose"));
-		setPanel = new PosePanel(getModel(),false, false,"New Target Pose");
+		poses.add(new PosePanelNR(getModel(),true,true,"Current Actual Pose"));
+		poses.add(new PosePanelNR(getModel(),false,true,"Current Target Pose"));
+		setPanel = new PosePanelNR(getModel(),false, false,"New Target Pose");
 		poses.add(setPanel,"wrap");
 		
 		JPanel buttons = new JPanel(new MigLayout());
@@ -125,17 +125,17 @@ public class SampleGui extends JPanel{
 	
 	private void setButtonEnabled(boolean b){
 		setPanel.setButtonEnabled(b);
-		for(SampleGuiAxisWidget w:axis){
+		for(SampleGuiAxisWidgetNR w:axis){
 			w.setButtonEnabled(b);
 		}
 		getHomeAll().setEnabled(b);
 	}
 	
 
-	public void setModel(AbstractKinematics model2) {
+	public void setModel(AbstractKinematicsNR model2) {
 		this.model = model2;
 	}
-	public AbstractKinematics getModel() {
+	public AbstractKinematicsNR getModel() {
 		return model;
 	}
 	public void setHomeAll(JButton homeAll) {
@@ -145,19 +145,19 @@ public class SampleGui extends JPanel{
 		return homeAll;
 	}
 
-	public MatrixDisplay getRas() {
+	public MatrixDisplayNR getRas() {
 		return ras;
 	}
 
-	public void setRas(MatrixDisplay ras) {
+	public void setRas(MatrixDisplayNR ras) {
 		this.ras = ras;
 	}
 
-	public MatrixDisplay getRobReg() {
+	public MatrixDisplayNR getRobReg() {
 		return robReg;
 	}
 
-	public void setRobReg(MatrixDisplay robReg) {
+	public void setRobReg(MatrixDisplayNR robReg) {
 		this.robReg = robReg;
 	}
 

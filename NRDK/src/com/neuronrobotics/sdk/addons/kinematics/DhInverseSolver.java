@@ -1,7 +1,7 @@
 package com.neuronrobotics.sdk.addons.kinematics;
 
-import com.neuronrobotics.sdk.addons.kinematics.math.Transform;
+import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 
 public interface DhInverseSolver {
-	double[] inverseKinematics(Transform target,double[] jointSpaceVector );
+	double[] inverseKinematics(TransformNR target,double[] jointSpaceVector );
 }

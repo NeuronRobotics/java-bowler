@@ -4,13 +4,13 @@ import java.util.ArrayList;
 
 import javax.swing.JFrame;
 
-import com.neuronrobotics.sdk.addons.kinematics.math.Transform;
+import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 import Jama.Matrix;
 public  class DHChain {
 	private ArrayList<DHLink> links = new ArrayList<DHLink>();
-	private ArrayList<Transform> chain = new ArrayList<Transform>();
+	private ArrayList<TransformNR> chain = new ArrayList<TransformNR>();
 	private final double[] upperLimits;
 	private final double[] lowerLimits;
 	private boolean debug=false;
@@ -45,7 +45,7 @@ public  class DHChain {
 		forwardKinematics(new  double [] {0,0,0,0,0,0});
 	}
 
-	public double[] inverseKinematics(Transform target,double[] jointSpaceVector )throws Exception {
+	public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector )throws Exception {
 		
 		if(getLinks() == null)
 			return null;
@@ -64,15 +64,15 @@ public  class DHChain {
 		return inv;
 	}
 
-	public Transform forwardKinematics(double[] jointSpaceVector) {
+	public TransformNR forwardKinematics(double[] jointSpaceVector) {
 		if(getLinks() == null)
-			return new Transform();
+			return new TransformNR();
 		if (jointSpaceVector.length!=getLinks().size())
 			throw new IndexOutOfBoundsException("DH links do not match defined links");
-		Transform current = new Transform();
-		setChain(new ArrayList<Transform>());
+		TransformNR current = new TransformNR();
+		setChain(new ArrayList<TransformNR>());
 		for(int i=0;i<getLinks().size();i++) {
-			Transform step = getLinks().get(i).DhStepRotory(Math.toRadians(jointSpaceVector[i]));
+			TransformNR step = getLinks().get(i).DhStepRotory(Math.toRadians(jointSpaceVector[i]));
 			//System.out.println("Current:\n"+current+"Step:\n"+step);
 			current = current.times(step);
 			chain.add(current);
@@ -82,11 +82,11 @@ public  class DHChain {
 	}
 	
 
-	public void setChain(ArrayList<Transform> chain) {
+	public void setChain(ArrayList<TransformNR> chain) {
 		this.chain = chain;
 	}
 
-	public ArrayList<Transform> getChain(double[] jointSpaceVector) {
+	public ArrayList<TransformNR> getChain(double[] jointSpaceVector) {
 		forwardKinematics(jointSpaceVector);
 		return chain;
 	}
@@ -106,8 +106,8 @@ public  class DHChain {
 		// the expected Joint space vector is { -10,45,-45,45,45,45}
 		//double [] targetVect = new double [] { -85,10,-90,0,90,90};
 		double [] targetVect = new double [] { -10,45,-45,45,45,45};
-		Transform target = tk.forwardKinematics(targetVect);
-		Transform home = tk.forwardKinematics(new  double [] {0,0,0,0,0,0});
+		TransformNR target = tk.forwardKinematics(targetVect);
+		TransformNR home = tk.forwardKinematics(new  double [] {0,0,0,0,0,0});
 		try {
 			double [] back = tk.inverseKinematics(target, new  double [] {0,0,0,0,0,0});
 			System.out.print("\nJoint angles targeted: {");

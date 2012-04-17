@@ -11,15 +11,15 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import com.neuronrobotics.sdk.addons.kinematics.AbstractKinematics;
-import com.neuronrobotics.sdk.addons.kinematics.IRegistrationListener;
-import com.neuronrobotics.sdk.addons.kinematics.ITaskSpaceUpdateListener;
-import com.neuronrobotics.sdk.addons.kinematics.math.Transform;
+import com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR;
+import com.neuronrobotics.sdk.addons.kinematics.IRegistrationListenerNR;
+import com.neuronrobotics.sdk.addons.kinematics.ITaskSpaceUpdateListenerNR;
+import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.common.Log;
 
 import net.miginfocom.swing.MigLayout;
 
-public class PosePanel extends JPanel implements ITaskSpaceUpdateListener, IRegistrationListener {
+public class PosePanelNR extends JPanel implements ITaskSpaceUpdateListenerNR, IRegistrationListenerNR {
 	/**
 	 * 
 	 */
@@ -27,11 +27,11 @@ public class PosePanel extends JPanel implements ITaskSpaceUpdateListener, IRegi
 	private JButton set = new JButton("Set");
 	private JCheckBox updateTarget = new JCheckBox("Update Target");
 	private JTextField time = new JTextField(5);
-	private AbstractKinematics model;
+	private AbstractKinematicsNR model;
 	private boolean input;
 	private boolean displayOnly;
-	private MatrixDisplay matrix;
-	public PosePanel(AbstractKinematics m, boolean isSetTargetinput, boolean displayOnly, String text) {
+	private MatrixDisplayNR matrix;
+	public PosePanelNR(AbstractKinematicsNR m, boolean isSetTargetinput, boolean displayOnly, String text) {
 		setModel(m,isSetTargetinput);
 		//pose = getModel().getCurrentPose();
 		this.input = isSetTargetinput;
@@ -39,7 +39,7 @@ public class PosePanel extends JPanel implements ITaskSpaceUpdateListener, IRegi
 		setLayout(new MigLayout());
 		setBorder(BorderFactory.createLoweredBevelBorder());
 		JPanel control = new JPanel(new MigLayout());
-		matrix = new MatrixDisplay(text);
+		matrix = new MatrixDisplayNR(text);
 		
 		if(isSetTargetinput || displayOnly){
 			//add(new JLabel(text),"wrap");	
@@ -57,7 +57,7 @@ public class PosePanel extends JPanel implements ITaskSpaceUpdateListener, IRegi
 		if(displayOnly)
 			matrix.setTransform(m.getCurrentTaskSpaceTransform());
 		else
-			matrix.setTransform(new Transform());
+			matrix.setTransform(new TransformNR());
 
 		control.add(time, "wrap");
 		control.add(set,"wrap");
@@ -79,7 +79,7 @@ public class PosePanel extends JPanel implements ITaskSpaceUpdateListener, IRegi
 	public void setPose(){
 		if(!input){
 			double t = Double.parseDouble(time.getText());
-			Transform target = new Transform( matrix.getTableDataMatrix());
+			TransformNR target = new TransformNR( matrix.getTableDataMatrix());
 			try {
 				Log.info("GUI Seting pose :"+target);
 				getModel().setDesiredTaskSpaceTransform(target, t);
@@ -90,23 +90,23 @@ public class PosePanel extends JPanel implements ITaskSpaceUpdateListener, IRegi
 		}
 	}
 	
-	public void setModel(AbstractKinematics model, boolean usePoseListener) {
+	public void setModel(AbstractKinematicsNR model, boolean usePoseListener) {
 		this.model = model;
 		this.model.addPoseUpdateListener(this);	
 		this.model.addRegistrationListener(this);
 	}
-	public AbstractKinematics getModel() {
+	public AbstractKinematicsNR getModel() {
 		return model;
 	}
 	@Override
-	public void onTargetTaskSpaceUpdate(AbstractKinematics source, Transform pose) {
+	public void onTargetTaskSpaceUpdate(AbstractKinematicsNR source, TransformNR pose) {
 		if((!input) && (displayOnly || updateTarget.isSelected()) ){
 			
 			matrix.setTransform(pose);	
 		}
 	}
 	@Override
-	public void onTaskSpaceUpdate(AbstractKinematics source, Transform pose) {
+	public void onTaskSpaceUpdate(AbstractKinematicsNR source, TransformNR pose) {
 		if(input && displayOnly ){
 			matrix.setTransform(pose);
 		}
@@ -116,12 +116,12 @@ public class PosePanel extends JPanel implements ITaskSpaceUpdateListener, IRegi
 		set.setEnabled(b);
 	}
 	@Override
-	public void onBaseToFiducialUpdate(AbstractKinematics source,Transform regestration) {
+	public void onBaseToFiducialUpdate(AbstractKinematicsNR source,TransformNR regestration) {
 		if(displayOnly)
 			matrix.setTransform(source.getCurrentTaskSpaceTransform());
 	}
 	@Override
-	public void onFiducialToGlobalUpdate(AbstractKinematics source,Transform regestration) {
+	public void onFiducialToGlobalUpdate(AbstractKinematicsNR source,TransformNR regestration) {
 		if(displayOnly)
 			matrix.setTransform(source.getCurrentTaskSpaceTransform());
 	}

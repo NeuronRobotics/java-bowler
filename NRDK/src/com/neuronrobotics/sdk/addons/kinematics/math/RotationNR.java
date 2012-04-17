@@ -16,18 +16,18 @@ import Jama.Matrix;
  * http://introcs.cs.princeton.edu/java/32class/Quaternion.java.html
  *************************************************************************/
 
-public class Rotation {
+public class RotationNR {
 	double[][] rotationMatrix = new double[][] { { 1, 0, 0 }, { 0, 1, 0 },
 			{ 0, 0, 1 } };
 
-	public Rotation() {
+	public RotationNR() {
 	}
 
-	public Rotation(double[][] rotationMatrix) {
+	public RotationNR(double[][] rotationMatrix) {
 		loadRotations(rotationMatrix);
 	}
 
-	public Rotation(double[] values) {
+	public RotationNR(double[] values) {
 		this(values[0], values[1], values[2], values[3]);
 	}
 	/**
@@ -35,7 +35,7 @@ public class Rotation {
 	 * @param rotationAngleDegrees in degrees
 	 * @return the static matrix
 	 */
-	public static Rotation getRotationX(double rotationAngleDegrees) {
+	public static RotationNR getRotationX(double rotationAngleDegrees) {
 		double[][] rotation = new double[3][3];
 		double rotationAngleRadians = Math.PI / 180 * rotationAngleDegrees;
 
@@ -52,14 +52,14 @@ public class Rotation {
 		rotation[1][2] = -Math.sin(rotationAngleRadians);
 		rotation[2][2] = Math.cos(rotationAngleRadians);
 
-		return new Rotation(rotation);
+		return new RotationNR(rotation);
 	}
 	/**
 	 * Get a rotation matrix with a rotation around Y
 	 * @param rotationAngleDegrees in degrees
 	 * @return the static matrix
 	 */
-	public static Rotation getRotationY(double rotationAngleDegrees) {
+	public static RotationNR getRotationY(double rotationAngleDegrees) {
 		double[][] rotation = new double[3][3];
 		double rotationAngleRadians = Math.PI / 180 * rotationAngleDegrees;
 
@@ -76,7 +76,7 @@ public class Rotation {
 		rotation[1][2] = 0;
 		rotation[2][2] = Math.cos(rotationAngleRadians);
 
-		return new Rotation(rotation);
+		return new RotationNR(rotation);
 	}
 	
 	/**
@@ -84,7 +84,7 @@ public class Rotation {
 	 * @param rotationAngleDegrees in degrees
 	 * @return the static matrix
 	 */
-	public static Rotation getRotationZ(double rotationAngleDegrees) {
+	public static RotationNR getRotationZ(double rotationAngleDegrees) {
 		double[][] rotation = new double[3][3];
 		double rotationAngleRadians = Math.PI / 180 * rotationAngleDegrees;
 
@@ -101,15 +101,15 @@ public class Rotation {
 		rotation[1][2] = 0;
 		rotation[2][2] = 1;
 
-		return new Rotation(rotation);
+		return new RotationNR(rotation);
 	}
 
 	// create a new object with the given components
-	public Rotation(double w, double x, double y, double z) {
+	public RotationNR(double w, double x, double y, double z) {
 		quaternion2RotationMatrix(w, x, y, z);
 	}
 
-	public Rotation(Matrix m) {
+	public RotationNR(Matrix m) {
 		double[][] rotation = new double[3][3];
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {

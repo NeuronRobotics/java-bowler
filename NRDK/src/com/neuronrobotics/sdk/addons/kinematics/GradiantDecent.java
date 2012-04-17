@@ -1,6 +1,6 @@
 package com.neuronrobotics.sdk.addons.kinematics;
 
-import com.neuronrobotics.sdk.addons.kinematics.math.Transform;
+import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 
 
 public class GradiantDecent implements DhInverseSolver{
@@ -14,7 +14,7 @@ public class GradiantDecent implements DhInverseSolver{
 		this.debug = debug;
 	}
 	
-	public double[] inverseKinematics(Transform target,double[] jointSpaceVector ){
+	public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector ){
 		int linkNum = jointSpaceVector.length;
 		double [] inv = new double[linkNum];	
 		

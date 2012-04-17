@@ -1,6 +1,6 @@
 package com.neuronrobotics.sdk.addons.kinematics;
 
-import com.neuronrobotics.sdk.addons.kinematics.math.Transform;
+import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 
 import Jama.Matrix;
 
@@ -35,9 +35,9 @@ public class DHLink {
 		return alpha;
 	}
 	
-	public Transform DhStepRotory(double jointValue) {
+	public TransformNR DhStepRotory(double jointValue) {
 		
-		Transform transZ = new Transform(new Matrix( new double [][] {	
+		TransformNR transZ = new TransformNR(new Matrix( new double [][] {	
 				{1,0,0,0},
 				{0,1,0,0},
 				{0,0,1,getD()},
@@ -45,7 +45,7 @@ public class DHLink {
 																	  }
 													)
 											);
-		Transform rotZ = new Transform(new Matrix( new double [][] {	
+		TransformNR rotZ = new TransformNR(new Matrix( new double [][] {	
 				{Math.cos(getTheta()+jointValue),	-Math.sin(getTheta()+jointValue),	0,	0},
 				{Math.sin(getTheta()+jointValue),	Math.cos(getTheta()+jointValue),	0,	0},
 				{0,									0,									1,	0},
@@ -53,7 +53,7 @@ public class DHLink {
 																	  }
 														)
 														);
-		Transform transX =  new Transform(new Matrix( new double [][] {	
+		TransformNR transX =  new TransformNR(new Matrix( new double [][] {	
 				{1,0,0,getR()},
 				{0,1,0,0},
 				{0,0,1,0},
@@ -61,7 +61,7 @@ public class DHLink {
 																	  }
 														)
 														);
-		Transform rotX =  new Transform(new Matrix( new double [][] {	
+		TransformNR rotX =  new TransformNR(new Matrix( new double [][] {	
 				{1,	0,						0,							0},
 				{0,	Math.cos(getAlpha()),	-Math.sin(getAlpha()),		0},
 				{0,	Math.sin(getAlpha()),	Math.cos(getAlpha()),		0},
@@ -69,8 +69,8 @@ public class DHLink {
 																	  }
 														)
 														);
-		Transform z = transZ.times(rotZ);
-		Transform x = transX.times(rotX);
+		TransformNR z = transZ.times(rotZ);
+		TransformNR x = transX.times(rotX);
 		
 		return z.times(x);
 	}

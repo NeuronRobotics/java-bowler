@@ -9,20 +9,20 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import com.neuronrobotics.sdk.addons.kinematics.AbstractKinematics;
-import com.neuronrobotics.sdk.addons.kinematics.IJointSpaceUpdateListener;
+import com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR;
+import com.neuronrobotics.sdk.addons.kinematics.IJointSpaceUpdateListenerNR;
 import com.neuronrobotics.sdk.addons.kinematics.JointLimit;
 
 import net.miginfocom.swing.MigLayout;
 
-public class SampleGuiAxisWidget extends JPanel implements IJointSpaceUpdateListener{
+public class SampleGuiAxisWidgetNR extends JPanel implements IJointSpaceUpdateListenerNR{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1025603501934236961L;
 	private int axis;
-	private AbstractKinematics model;
+	private AbstractKinematicsNR model;
 	private double myJointValue = 0;
 	private JTextField value = new JTextField(7);
 	private JTextField newTarget = new JTextField(7);
@@ -37,7 +37,7 @@ public class SampleGuiAxisWidget extends JPanel implements IJointSpaceUpdateList
 	 * @param i which axis this is to represent
 	 * @param model
 	 */
-	public SampleGuiAxisWidget(int i, AbstractKinematics m) {
+	public SampleGuiAxisWidgetNR(int i, AbstractKinematicsNR m) {
 		setLayout(new MigLayout());
 		setBorder(BorderFactory.createLoweredBevelBorder());
 		setAxis(i);
@@ -149,11 +149,11 @@ public class SampleGuiAxisWidget extends JPanel implements IJointSpaceUpdateList
 			return 0;
 		}
 	}
-	private AbstractKinematics getModel() {
+	private AbstractKinematicsNR getModel() {
 		return model;
 	}
 	@Override
-	public void onJointSpaceUpdate(AbstractKinematics source, double[] joints) {
+	public void onJointSpaceUpdate(AbstractKinematicsNR source, double[] joints) {
 		myJointValue = joints[getAxis()];
 		updateAxisUI();
 	}
@@ -162,7 +162,7 @@ public class SampleGuiAxisWidget extends JPanel implements IJointSpaceUpdateList
 		value.setText(new DecimalFormat("000.000").format(myJointValue));
 	}
 	@Override
-	public void onJointSpaceTargetUpdate(AbstractKinematics source,double[] joints) {
+	public void onJointSpaceTargetUpdate(AbstractKinematicsNR source,double[] joints) {
 		String txt = new DecimalFormat("000.000").format(joints[getAxis()]);
 		newTarget.setText(txt);
 		target.setText(txt);
@@ -180,7 +180,7 @@ public class SampleGuiAxisWidget extends JPanel implements IJointSpaceUpdateList
 		jogm.setEnabled(b);
 	}
 	@Override
-	public void onJointSpaceLimit(AbstractKinematics source, int axis,
+	public void onJointSpaceLimit(AbstractKinematicsNR source, int axis,
 			JointLimit event) {		
 	}
 	public void setAxis(int axis) {
