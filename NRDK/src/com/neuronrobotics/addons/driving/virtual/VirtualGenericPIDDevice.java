@@ -32,6 +32,10 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 	public  VirtualGenericPIDDevice( double maxTicksPerSecond) {
 		this.setMaxTicksPerSecond(maxTicksPerSecond);
 		GetAllPIDPosition();
+		for(PIDConfiguration c:configs)
+			c.setEnabled(true);
+		sync.start();
+		
 	}
 	public boolean ConfigurePIDController(PIDConfiguration config) { 
 		configs.set(config.getGroup(), config);
@@ -68,7 +72,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 
 	@Override
 	public boolean SetPIDSetPoint(int group, int setpoint, double seconds) {
-		
+		Log.info("Virtual setpoiint, group="+group+" setpoint="+setpoint);
 		driveThreads.get(group).SetPIDSetPoint(setpoint, seconds);
 		return true;
 	}
@@ -121,7 +125,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 				driveThreads.add(d);
 				configs.add(new PIDConfiguration());
 			}
-			sync.start();
+
 		}
 		return back;
 	}

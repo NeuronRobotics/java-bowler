@@ -2,6 +2,7 @@ package com.neuronrobotics.sdk.addons.kinematics;
 import java.util.ArrayList;
 
 import com.neuronrobotics.addons.driving.virtual.VirtualGenericPIDDevice;
+import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.peripherals.AnalogInputChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
@@ -120,17 +121,19 @@ public class LinkFactory {
 		long time = System.currentTimeMillis();
 		if(hasServo){
 			dyio.flushCache(seconds);
-			
+			Log.info("Flushing DyIO");
 		}
 		if(hasPid){
 			pid.flushPIDChannels(seconds);
+			Log.info("Flushing PID");
 		}
 		new Thread(){
 			public void run(){
 				virtual.flushPIDChannels(seconds);
+				Log.info("Flushing Virtual");
 			}
 		}.start();
-		//System.out.println("Flush Took "+(System.currentTimeMillis()-time)+"ms");
+		System.out.println("Flush Took "+(System.currentTimeMillis()-time)+"ms");
 	}
 	public IPIDControl getPid() {
 		return pid;

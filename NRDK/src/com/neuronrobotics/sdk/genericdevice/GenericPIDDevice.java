@@ -195,6 +195,7 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 		for(int i=0;i<getNumberOfChannels();i++){
 			data[i]=getPIDChannel(i).getCachedTargetValue();
 		}
+		Log.info("Flushing in "+time+"ms");
 		SetAllPIDSetPoint(data, time);
 	}
 	/* (non-Javadoc)
