@@ -71,7 +71,7 @@ public class Leg {
 		try{
 			getHipLink().setTargetAngle(inc);
 		}catch(Exception ex){
-			ex.printStackTrace();
+			//ex.printStackTrace();
 		}
 		//getHipLink().flush(time);
 	}
@@ -88,7 +88,7 @@ public class Leg {
 	
 			getAnkleLink().setTargetAngle(inc);
 		}catch(Exception ex){
-			ex.printStackTrace();
+			//ex.printStackTrace();
 		}
 		//getAnkleLink().flush(time);
 	}
@@ -278,7 +278,7 @@ public class Leg {
 		try{
 			getHipLink().setTargetAngle(hip);
 		}catch(Exception ex){
-			ex.printStackTrace();
+			//ex.printStackTrace();
 		}
 
 		double [] adjusted = getCartesian();
