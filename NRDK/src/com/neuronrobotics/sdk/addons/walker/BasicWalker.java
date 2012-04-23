@@ -256,6 +256,7 @@ public class BasicWalker {
 			System.err.println("Invalid Power Switch configuration!");
 			throw new RuntimeException("Invalid Power Switch configuration for hexapod!");
 		}
+		dyio.enableBrownOutDetect(false);
 		this.dyio = dyio;
 	}
 	private DyIO getDyio() {
