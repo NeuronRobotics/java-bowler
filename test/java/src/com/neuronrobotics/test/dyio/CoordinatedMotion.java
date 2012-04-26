@@ -14,7 +14,7 @@ public class CoordinatedMotion {
 			System.exit(1);
 		}
 		dyio.connect();
-		
+		int [] vals = dyio.getAllChannelValues();
 		//Set up the array of channels
 		ArrayList<ServoChannel> chans = new ArrayList<ServoChannel>();
 		Log.enableDebugPrint(true);

@@ -28,6 +28,7 @@ import com.neuronrobotics.sdk.commands.bcs.io.SetAllChannelValuesCommand;
 import com.neuronrobotics.sdk.commands.bcs.io.setmode.SetChannelModeCommand;
 import com.neuronrobotics.sdk.commands.bcs.pid.DyPID.ConfigureDynamicPIDCommand;
 import com.neuronrobotics.sdk.commands.bcs.safe.SafeModeCommand;
+import com.neuronrobotics.sdk.commands.neuronrobotics.dyio.GetAllChannelValuesCommand;
 import com.neuronrobotics.sdk.commands.neuronrobotics.dyio.InfoCommand;
 import com.neuronrobotics.sdk.commands.neuronrobotics.dyio.InfoFirmwareRevisionCommand;
 import com.neuronrobotics.sdk.commands.neuronrobotics.dyio.PowerCommand;
@@ -564,7 +565,9 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 	 * @see com.neuronrobotics.sdk.common.IBowlerDatagramListener#onAllResponse(com.neuronrobotics.sdk.common.BowlerDatagram)
 	 */
 	public void onAllResponse(BowlerDatagram data) {
-
+		if(data.getRPC().equals("gacv")) {
+			Log.info("All channel values\n"+data.toString());
+		}
 		pid.onAllResponse(data);
 	}
 	
@@ -1013,6 +1016,15 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 		}
 		
 		return s;
+	}
+
+	public int[] getAllChannelValues() {
+		int [] back = new int[getInternalChannels().size()];
+		
+		BowlerDatagram gacv = send(new GetAllChannelValuesCommand());
+		Log.info("GACV RX<<\n"+gacv);
+		
+		return null;
 	}
 
 
