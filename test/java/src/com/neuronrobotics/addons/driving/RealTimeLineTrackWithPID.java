@@ -28,6 +28,7 @@ public class RealTimeLineTrackWithPID implements IPIDEventListener {
 		 * stopping. This could be encapsulated as a set of behaviors that can be called up as needed at runtime, and
 		 * the closed-loop control stays on the DyIO, while the High level command and decisions take place in Java. 
 		 */
+		double p = .1;
 		DyPIDConfiguration dypidR = new DyPIDConfiguration(	1,//PID group 1
 													
 															12,//Input channel number
@@ -38,7 +39,7 @@ public class RealTimeLineTrackWithPID implements IPIDEventListener {
 															true,//enabled
 															false,//inverted
 															true,//Async
-															.15,// Kp
+															p+.1,// Kp
 															0,// Ki
 															0,//Kd
 															//Latch values are only used with the Counter since analog is absolute and can not change its value
@@ -55,7 +56,7 @@ public class RealTimeLineTrackWithPID implements IPIDEventListener {
 															true,//enabled
 															true,//inverted
 															true,//Async
-															.15,// Kp
+															p,// Kp
 															0,// Ki
 															0,//Kd
 															//Latch values are only used with the Counter since analog is absolute and can not change its value
@@ -81,6 +82,9 @@ public class RealTimeLineTrackWithPID implements IPIDEventListener {
 			ThreadUtil.wait(100);
 			if(lVal >500 && rVal>500){
 				System.out.println("Stop Condition!");
+//				dyio.killAllPidGroups();
+//				dyio.disconnect();
+//				System.exit(0);
 			}
 		}
 	}
