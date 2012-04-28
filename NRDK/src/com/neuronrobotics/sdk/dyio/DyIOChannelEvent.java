@@ -56,9 +56,18 @@ public class DyIOChannelEvent {
 	}
 
 	public int getValue() {
-		Log.warning("This is junk data, should be parsed");
+		//Log.warning("This is junk data, should be parsed");
 		//DyIOChannelMode mode = getChannel().getCurrentMode();
-		int value =ByteList.convertToInt(getData().getBytes());
+		int value =ByteList.convertToInt(getData().getBytes(),false);
+		return value;
+	}
+	
+	public int getUnsignedValue() {
+		return getValue();
+	}
+	
+	public int getSignedValue() {
+		int value =ByteList.convertToInt(getData().getBytes(),true);
 		return value;
 	}
 }

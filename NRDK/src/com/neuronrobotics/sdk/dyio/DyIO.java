@@ -565,9 +565,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 	 * @see com.neuronrobotics.sdk.common.IBowlerDatagramListener#onAllResponse(com.neuronrobotics.sdk.common.BowlerDatagram)
 	 */
 	public void onAllResponse(BowlerDatagram data) {
-		if(data.getRPC().equals("gacv")) {
-			Log.info("All channel values\n"+data.toString());
-		}
+
 		pid.onAllResponse(data);
 	}
 	
@@ -639,6 +637,15 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 			DyIOChannel c = getChannel(b);
 			c.fireChannelEvent(new DyIOChannelEvent(c, bl));
 			return;
+		}if(data.getRPC().equals("gacv")) {
+			//Log.info("All channel values\n"+data.toString());
+			ByteList bl = data.getData();
+			for(DyIOChannel c:getChannels()){
+				ByteList val = new ByteList(bl.popList(4));
+				//Log.info("DyIO event "+c+" value: "+val);
+				c.fireChannelEvent(new DyIOChannelEvent(c,val));
+			}
+			
 		}else{
 			IDyIOEvent e = new DyIOAsyncEvent(data);
 			fireDyIOEvent(e);

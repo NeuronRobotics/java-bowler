@@ -381,11 +381,14 @@ public class DyIOChannel implements IDyIOChannel {
 	 * @param e the event to pass to all listeners
 	 */
 	protected void fireChannelEvent(DyIOChannelEvent e) {
-		if((getPreviousValue() == parseDyIOChannelEvent(e)) && !isStreamChannel() ){
-			Log.debug("Value is the same");
-			//return;
+		int value= parseDyIOChannelEvent(e);
+		if((getPreviousValue() == value) && !isStreamChannel() ){
+			//
+			return;
+		}else{
+			Log.info("Value is not the same, last was: "+getPreviousValue()+" current: "+value);
 		}
-		setPreviousValue(parseDyIOChannelEvent(e));
+		setPreviousValue(value);
 		for(IChannelEventListener l : listeners) {
 			l.onChannelEvent(e);
 		}

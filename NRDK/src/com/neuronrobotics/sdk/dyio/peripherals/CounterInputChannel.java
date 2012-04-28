@@ -133,9 +133,7 @@ public class CounterInputChannel extends DyIOAbstractPeripheral implements IChan
 	 */
 	 
 	public void onChannelEvent(DyIOChannelEvent e) {
-		byte []  b = e.getData().getBytes();
-		int data = ByteList.convertToInt(b,true);
-		fireOnCounterInput(data);
+		fireOnCounterInput(e.getSignedValue());
 	}
 	
 	/**

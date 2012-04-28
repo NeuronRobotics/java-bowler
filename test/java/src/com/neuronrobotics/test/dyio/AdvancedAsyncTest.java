@@ -1,6 +1,7 @@
 package com.neuronrobotics.test.dyio;
 
 import com.neuronrobotics.sdk.commands.bcs.io.AsyncThreshholdEdgeType;
+import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.peripherals.AnalogInputChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.IAnalogInputListener;
@@ -19,6 +20,7 @@ public class AdvancedAsyncTest implements IAnalogInputListener{
 		if (!ConnectionDialog.getBowlerDevice(dyio)){
 			System.exit(1);
 		}
+		Log.enableDebugPrint(true);
 		//Instantiate a new analog channel
 		//The second parameter tells the analog channel that is it an asynchronous channel
 		ana0 = new AnalogInputChannel(dyio.getChannel(8),true);	
@@ -26,7 +28,7 @@ public class AdvancedAsyncTest implements IAnalogInputListener{
 		 * Setup as auto sample
 		 * Take a sample evert 500ms and push an async packet
 		 */
-		ana0.configAdvancedAsyncAutoSample(500);//Take a sample evert 500ms and push an async packet
+		//ana0.configAdvancedAsyncAutoSample(500);//Take a sample evert 500ms and push an async packet
 		//Add this instance of the Tester class to the analog channel 
 		ana0.addAnalogInputListener(this);
 		

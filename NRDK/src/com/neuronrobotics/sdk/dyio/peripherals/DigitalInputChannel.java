@@ -140,7 +140,7 @@ public class DigitalInputChannel extends DyIOAbstractPeripheral implements IChan
 	 */
 	 
 	public void onChannelEvent(DyIOChannelEvent e) {
-		fireValueChanged(e.getData().get(0) != 0);
+		fireValueChanged(e.getUnsignedValue() != 0);
 	}
 
 	 

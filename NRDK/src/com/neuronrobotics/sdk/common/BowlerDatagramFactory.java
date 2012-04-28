@@ -34,6 +34,7 @@ public class BowlerDatagramFactory {
 	 * @param cmd 	The RPC
 	 * @return 		A valid Bowler Datagram.
 	 */
+	private static int failed=0;
 	public static BowlerDatagram build(MACAddress addr, BowlerAbstractCommand cmd, int id) {
 		ByteList data = new ByteList();
 		data.add(REVISION); // revision
@@ -57,14 +58,21 @@ public class BowlerDatagramFactory {
 			Log.warning("Datagram builder first byte warning: "+e.getMessage());
 			return null;
 		}
+		
 		while(fb!=BowlerDatagram.REVISION) {
-			Log.error("Junk byte: "+buffer.pop());
+			Log.error("Junk byte: "+String.format("%02x ", buffer.pop()));
+			failed++;
 			try{
-				if(buffer.size()==0)
+				if(buffer.size()==0){
+					if(failed>0)
+						Log.error("Failed out "+failed+" bytes");
 					return null;
+				}
 				fb = buffer.get(0);
 			}catch (Exception e){
 				Log.warning("Datagram builder warning: "+e.getMessage());
+				if(failed>0)
+					Log.error("Failed out "+failed+" bytes");
 				return null;
 			}
 		}
@@ -77,16 +85,21 @@ public class BowlerDatagramFactory {
 			try{
 				if( (buffer.get(0) != BowlerDatagram.REVISION)
 						|| (!BowlerDatagram.CheckCRC(buffer))){
-					Log.error("Junk byte: "+buffer.pop());
+					Log.error("Junk byte: "+String.format("%02x ", buffer.pop()));
+					failed++;
 				}else{
 					check=true;
 				}
 			}catch (Exception e){
 				Log.error("Datagram builder error: "+e.getMessage());
+				if(failed>0)
+					Log.error("Failed out "+failed+" bytes");
 				e.printStackTrace();
 				return null;
 			}
 			if (buffer.size()<BowlerDatagram.HEADER_SIZE) {
+				if(failed>0)
+					Log.error("Failed out "+failed+" bytes");
 				return null;//Not enough bytes to even be a header, try back later
 			}
 		}
@@ -96,12 +109,16 @@ public class BowlerDatagramFactory {
 		}
 		if(len<4){
 			Log.error("#*#*Warning, packet has no RPC, size: "+len);
+			
 		}
 		int totalLen = len+BowlerDatagram.HEADER_SIZE;
 		// See if all the data has arived for this packet
 		if (buffer.size()>=(totalLen) ){
+			failed=0;
 			return  new BowlerDatagram(new ByteList(buffer.popList(totalLen)));
 		}
+//		if(failed>0)
+//			Log.error("Failed out "+failed+" bytes");
 		return null;
 	}
 }

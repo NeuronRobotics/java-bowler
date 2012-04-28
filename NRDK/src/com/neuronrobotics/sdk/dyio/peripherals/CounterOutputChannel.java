@@ -169,9 +169,7 @@ public class CounterOutputChannel extends DyIOAbstractPeripheral implements ICha
 	 */
 	 
 	public void onChannelEvent(DyIOChannelEvent e) {
-		byte []  b = e.getData().getBytes();
-		int data = ByteList.convertToInt(b,true);
-		fireOnCounterOutput(data);
+		fireOnCounterOutput(e.getSignedValue());
 	}
 	 
 	public boolean hasAsync() {
