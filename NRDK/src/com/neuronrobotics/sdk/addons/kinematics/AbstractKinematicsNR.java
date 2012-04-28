@@ -259,20 +259,6 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 			jointSpaceVect[i] = currentJointSpacePositions[i];
 		}
 		
-		String jointString = "[";
-		for(int i=0;i<jointSpaceVect.length;i++){
-			jointString+=jointSpaceVect[i]+" ";
-		}
-		jointString+="]";
-		//Log.info("Getting pos joint space in mm/deg: "+jointString);
-		
-//		jointString = "[";
-//		for(int i=0;i<currentLinkSpacePositions.length;i++){
-//			jointString+=currentLinkSpacePositions[i]+" ";
-//		}
-//		jointString+="]";
-//		Log.info("Getting pos link space in ticks: "+jointString);
-		
 		return jointSpaceVect;
 	}
 	
@@ -377,8 +363,10 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 		for(ITaskSpaceUpdateListenerNR p:taskSpaceUpdateListeners){
 			p.onTaskSpaceUpdate(this, getCurrentTaskSpaceTransform());
 		}
+		double[] vect = getCurrentJointSpaceVector();
+		
 		for(IJointSpaceUpdateListenerNR p:jointSpaceUpdateListeners){
-			p.onJointSpaceUpdate(this, getCurrentJointSpaceVector());
+			p.onJointSpaceUpdate(this, vect);
 		}
 	}
 
@@ -451,7 +439,7 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 	}
 	
 	public void addJointSpaceListener(IJointSpaceUpdateListenerNR l){
-		if(jointSpaceUpdateListeners.contains(l))
+		if(jointSpaceUpdateListeners.contains(l) || l==null)
 			return;
 		jointSpaceUpdateListeners.add(l);
 	}
@@ -461,7 +449,7 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 	}
 	
 	public void addRegistrationListener(IRegistrationListenerNR l){
-		if(regListeners.contains(l))
+		if(regListeners.contains(l)|| l==null)
 			return;
 		regListeners.add(l);
 		l.onBaseToFiducialUpdate(this, getRobotToFiducialTransform());
@@ -472,7 +460,7 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 	}
 	
 	public void addPoseUpdateListener(ITaskSpaceUpdateListenerNR l){
-		if(taskSpaceUpdateListeners.contains(l))
+		if(taskSpaceUpdateListeners.contains(l) || l==null)
 			return;
 		taskSpaceUpdateListeners.add(l);
 	}

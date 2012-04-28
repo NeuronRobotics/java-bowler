@@ -151,8 +151,7 @@ public class AnalogInputChannel extends DyIOAbstractPeripheral implements IChann
 				l.onAnalogValueChange(this, value);
 			}
 		}catch(Exception e){
-			// TODO find out why this exception gets thrown
-			Log.error(e.getMessage());
+			e.printStackTrace();
 		}
 	}
 	
