@@ -56,14 +56,24 @@ public class DyIOChannelEvent {
 	}
 
 	public int getValue() {
-		//Log.warning("This is junk data, should be parsed");
-		//DyIOChannelMode mode = getChannel().getCurrentMode();
-		int value =ByteList.convertToInt(getData().getBytes(),false);
+		int value;
+		DyIOChannelMode mode = getChannel().getCurrentMode();
+		switch(mode){
+		case COUNT_IN_DIR:
+		case COUNT_IN_INT:
+		case COUNT_OUT_DIR:
+		case COUNT_OUT_INT:
+			value = getSignedValue();
+			break;
+		default:
+			value = getUnsignedValue();
+			break;
+		}
 		return value;
 	}
 	
 	public int getUnsignedValue() {
-		return getValue();
+		return ByteList.convertToInt(getData().getBytes(),false);
 	}
 	
 	public int getSignedValue() {

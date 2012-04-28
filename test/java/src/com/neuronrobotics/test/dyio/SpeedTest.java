@@ -101,7 +101,24 @@ public class SpeedTest {
 		}
 		System.out.println("Average cycle time for cache flush: "+(avg/(i+1))+" ms best="+ best+"ms worst="+worst);
 		
-
+		avg=0;
+		best=1000;
+		worst=0;
+		dyio.setCachedMode(true);
+		//Log.enableDebugPrint(true);
+		for(i=0;i<500;i++) {
+			start = System.currentTimeMillis();
+			dyio.getAllChannelValues();
+			double ms=System.currentTimeMillis()-start;
+			if (ms<best)
+				best=ms;
+			if(ms>worst)
+				worst=ms;
+			avg +=ms;
+			start = System.currentTimeMillis();
+			//System.out.println("Average cycle time: "+(int)(avg/i)+"ms\t\t\t this loop was: "+ms);
+		}
+		System.out.println("Average cycle time for values get: "+(avg/(i+1))+" ms best="+ best+"ms worst="+worst);
 		
 		System.exit(0);
 	}

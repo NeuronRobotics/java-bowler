@@ -1027,10 +1027,15 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 
 	public int[] getAllChannelValues() {
 		int [] back = new int[getInternalChannels().size()];
-		
 		BowlerDatagram gacv = send(new GetAllChannelValuesCommand());
 		Log.info("GACV RX<<\n"+gacv);
-		
+		ByteList bl = gacv.getData();
+		int i=0;
+		for(DyIOChannel c:getChannels()){
+			ByteList val = new ByteList(bl.popList(4));
+			DyIOChannelEvent ev =new DyIOChannelEvent(c,val);
+			back[i++]=ev.getValue();
+		}
 		return null;
 	}
 
