@@ -453,29 +453,15 @@ public class DyIOChannel implements IDyIOChannel {
 		} catch (InvalidResponseException e) {
 			response = getDevice().send(new GetValueCommand(number));
 		}
-		switch(getCurrentMode()) {
-		case ANALOG_IN:
-		case DIGITAL_IN:
-		case DIGITAL_OUT:
-		case SERVO_OUT: 
-		case PWM_OUT:
-		case DC_MOTOR_DIR:
-		case DC_MOTOR_VEL:
-			val=ByteList.convertToInt(response.getData().getBytes(1), false);
-			break;
-		case COUNT_IN_INT:
-		case COUNT_IN_DIR:
-		case COUNT_IN_HOME:
-		case COUNT_OUT_INT:
-		case COUNT_OUT_DIR:
-		case COUNT_OUT_HOME:
-			byte [] b=response.getData().getBytes(1);
-			val=  ByteList.convertToInt(b, true);
-			break;
-		default:
-			Log.error(this.getClass()+"Invalid mode for get: "+getCurrentMode());
+		ByteList bl = response.getData();
+		
+		Byte b = bl.pop();
+		if(b==null || b.intValue()!=number){
+			Log.error("Failed to get value");
 			return 0;
-		} 
+		}
+		
+		val = new DyIOChannelEvent(this,bl).getValue();
 		setCachedValue(val);
 		setPreviousValue(val);
 		return val;
