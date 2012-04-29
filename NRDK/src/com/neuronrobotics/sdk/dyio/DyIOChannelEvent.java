@@ -58,6 +58,8 @@ public class DyIOChannelEvent {
 	public int getValue() {
 		int value;
 		DyIOChannelMode mode = getChannel().getCurrentMode();
+		if(channel.isStreamChannel())
+			return 0;
 		switch(mode){
 		case COUNT_IN_DIR:
 		case COUNT_IN_INT:

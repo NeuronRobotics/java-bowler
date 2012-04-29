@@ -365,7 +365,7 @@ public class DyIOChannel implements IDyIOChannel {
 		return modes;
 	}
 	/**
-	 * THis method gets the value represented by the date portion of a DyIOChannelEvent
+	 * This method gets the value represented by the date portion of a DyIOChannelEvent
 	 * @param e the event to parse
 	 * @return the value represented by the data section
 	 */
@@ -785,7 +785,17 @@ public class DyIOChannel implements IDyIOChannel {
 		return previousValue;
 	}
 	public boolean isStreamChannel(){
-		return ((getMode() == DyIOChannelMode.PPM_IN) ||(getMode() == DyIOChannelMode.USART_RX)||(getMode() == DyIOChannelMode.USART_TX));
+		switch(getMode()){
+		case USART_RX:
+		case USART_TX:
+		case SPI_CLOCK:
+		case SPI_MISO:
+		case SPI_MOSI:
+		case PPM_IN:
+			return true;
+		default:
+			return false;
+		}
 	}
 	private void setDevice(DyIO device) {
 		this.device = device;
