@@ -133,7 +133,7 @@ public class LinkFactory {
 				Log.info("Flushing Virtual");
 			}
 		}.start();
-		System.out.println("Flush Took "+(System.currentTimeMillis()-time)+"ms");
+		//System.out.println("Flush Took "+(System.currentTimeMillis()-time)+"ms");
 	}
 	public IPIDControl getPid() {
 		return pid;

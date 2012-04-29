@@ -784,7 +784,7 @@ public class DyIOChannel implements IDyIOChannel {
 	private int getPreviousValue() {
 		return previousValue;
 	}
-	private boolean isStreamChannel(){
+	public boolean isStreamChannel(){
 		return ((getMode() == DyIOChannelMode.PPM_IN) ||(getMode() == DyIOChannelMode.USART_RX)||(getMode() == DyIOChannelMode.USART_TX));
 	}
 	private void setDevice(DyIO device) {

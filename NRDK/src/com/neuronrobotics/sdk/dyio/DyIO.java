@@ -643,7 +643,8 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 			for(DyIOChannel c:getChannels()){
 				ByteList val = new ByteList(bl.popList(4));
 				//Log.info("DyIO event "+c+" value: "+val);
-				c.fireChannelEvent(new DyIOChannelEvent(c,val));
+				if(!c.isStreamChannel())
+					c.fireChannelEvent(new DyIOChannelEvent(c,val));
 			}
 			
 		}else{
@@ -1024,7 +1025,10 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 		
 		return s;
 	}
-
+	/**
+	 * Gets the values of all channels as an array
+	 * @return the values of all non stream arrays. 
+	 */
 	public int[] getAllChannelValues() {
 		int [] back = new int[getInternalChannels().size()];
 		BowlerDatagram gacv = send(new GetAllChannelValuesCommand());
@@ -1032,11 +1036,15 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 		ByteList bl = gacv.getData();
 		int i=0;
 		for(DyIOChannel c:getChannels()){
-			ByteList val = new ByteList(bl.popList(4));
-			DyIOChannelEvent ev =new DyIOChannelEvent(c,val);
-			back[i++]=ev.getValue();
+			if(!c.isStreamChannel()){
+				ByteList val = new ByteList(bl.popList(4));
+				DyIOChannelEvent ev =new DyIOChannelEvent(c,val);
+				back[i++]=ev.getValue();
+			}else{
+				back[i++] = 0;
+			}
 		}
-		return null;
+		return back;
 	}
 
 
