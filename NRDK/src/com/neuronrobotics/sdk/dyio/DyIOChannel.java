@@ -770,10 +770,6 @@ public class DyIOChannel implements IDyIOChannel {
 	public void setAsync(boolean b) {
 		setMode(getMode(), b);
 	}
-	
-	
-
-	
 	/*
 	 * Helpers
 	 */
