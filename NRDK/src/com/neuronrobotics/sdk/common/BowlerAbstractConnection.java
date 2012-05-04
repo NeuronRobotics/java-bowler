@@ -200,7 +200,6 @@ public abstract class BowlerAbstractConnection {
 	 */
 	public void disconnect(){
 		if(!isConnected()) {
-
 			return;
 		}
 		Log.info("Disconnecting Bowler Connection");

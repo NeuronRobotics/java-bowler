@@ -798,7 +798,7 @@ public class DyIOChannel implements IDyIOChannel {
 	}
 
 	private boolean isDefaultAsync(DyIOChannelMode m) {
-		return false;
+		return true;
 	}
 	private boolean synced = false;
 	private void resyncIfNotSynced() {
@@ -819,7 +819,21 @@ public class DyIOChannel implements IDyIOChannel {
 		case SPI_MOSI:
 		case SPI_SELECT:
 		case USART_TX:
+		case DIGITAL_OUT:
+		case COUNT_OUT_DIR:
+		case COUNT_OUT_HOME:
+		case COUNT_OUT_INT:
 			return true;
+		case ANALOG_IN:
+		case COUNT_IN_DIR:
+		case COUNT_IN_HOME:
+		case COUNT_IN_INT:
+		case DIGITAL_IN:
+		case NO_CHANGE:
+		case OFF:
+		case PPM_IN:
+		case USART_RX:
+			return false;
 		}
 		return false;
 	}
