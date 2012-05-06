@@ -42,6 +42,8 @@ public abstract class DyIOAbstractPeripheral implements IDyIOChannel {
 		this.enabled = true;
 		if(channel.getMode() != myMode)
 			channel.setMode(myMode, async);
+		channel.removeAllChannelEventListeners();
+		channel.removeAllChannelModeChangeListener();
 	}
 	/**
 	 * This method retrieves the channel mode of this peripheral
