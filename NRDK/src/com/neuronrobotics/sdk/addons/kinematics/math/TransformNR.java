@@ -137,8 +137,6 @@ public class TransformNR {
 		double y = getY()-t.getY();
 		double z = getZ()-t.getZ();
 		double r = Math.sqrt((Math.pow(x, 2)+Math.pow(y, 2)+Math.pow(z, 2) ));
-	
-		
 		return r;
 	}
 	

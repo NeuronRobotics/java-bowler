@@ -72,6 +72,7 @@ public class LinkFactory {
 						(int)c.getLowerLimit(),
 						(int)c.getUpperLimit(),
 						c.getScale());
+				tmp.setUseLimits(false);
 			}else{
 				tmp=new PidRotoryLink(	pid.getPIDChannel(c.getHardwareIndex()),
 										(int)0,
@@ -90,6 +91,7 @@ public class LinkFactory {
 					(int)c.getLowerLimit(),
 					(int)c.getUpperLimit(),
 					c.getScale());
+			tmp.setUseLimits(false);
 		}
 		tmp.setLinkConfiguration(c);
 		links.add(tmp);

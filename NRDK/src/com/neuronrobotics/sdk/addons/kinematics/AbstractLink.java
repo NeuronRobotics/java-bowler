@@ -137,12 +137,20 @@ public abstract class AbstractLink {
 			if(val>getUpperLimit()){
 				this.targetValue = getUpperLimit();
 				cacheTargetValue();
-				throw new RuntimeException("Value upper limit bounded");
+				double ub = getMaxEngineeringUnits();
+				double lb = getMinEngineeringUnits();
+				throw new RuntimeException("Joint hit Upper software bound\nAttempted="+toEngineeringUnits(targetValue)
+						+" \nUpper Bound="+ub
+						+ "\nLower Bound="+lb);
 			}
 			if(val<getLowerLimit()) {
 				this.targetValue =getLowerLimit();
 				cacheTargetValue();
-				throw new RuntimeException("Value lower limit bounded");
+				double ub = getMaxEngineeringUnits();
+				double lb = getMinEngineeringUnits();
+				throw new RuntimeException("Joint hit Lower software bound\nAttempted="+toEngineeringUnits(targetValue)
+						+" \nUpper Bound="+ub
+						+ "\nLower Bound="+lb);
 			}
 		}
 		Log.info("Setting cached value :"+val);

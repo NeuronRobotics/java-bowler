@@ -53,7 +53,8 @@ public  class DHChain {
 		DhInverseSolver is;
 		
 		//is = new GradiantDecent(this,debug);
-		is = new ComputedGeometricModel(this,debug);
+		is = new SearchTreeSolver(this,debug);
+		//is = new ComputedGeometricModel(this,debug);
 		
 		double [] inv = is.inverseKinematics(target, jointSpaceVector);	
 		if(debug){
@@ -65,29 +66,38 @@ public  class DHChain {
 	}
 
 	public TransformNR forwardKinematics(double[] jointSpaceVector) {
+		return forwardKinematics(jointSpaceVector, false);
+	}
+	
+	public TransformNR forwardKinematics(double[] jointSpaceVector, boolean store) {
+		return new TransformNR(forwardKinematicsMatrix(jointSpaceVector, store) );
+	}
+	
+	public Matrix forwardKinematicsMatrix(double[] jointSpaceVector, boolean store) {
 		if(getLinks() == null)
-			return new TransformNR();
+			return new TransformNR().getMatrixTransform();
 		if (jointSpaceVector.length!=getLinks().size())
 			throw new IndexOutOfBoundsException("DH links do not match defined links");
-		TransformNR current = new TransformNR();
-		setChain(new ArrayList<TransformNR>());
+		Matrix current = new TransformNR().getMatrixTransform();
+		if(store)
+			setChain(new ArrayList<TransformNR>());
 		for(int i=0;i<getLinks().size();i++) {
-			TransformNR step = getLinks().get(i).DhStepRotory(Math.toRadians(jointSpaceVector[i]));
+			Matrix step = getLinks().get(i).DhStepRotory(Math.toRadians(jointSpaceVector[i]));
 			//System.out.println("Current:\n"+current+"Step:\n"+step);
 			current = current.times(step);
-			chain.add(current);
+			if(store)
+				chain.add(new TransformNR(current));
 		}
 		//System.out.println("Final:\n"+current);
 		return current;
 	}
-	
 
 	public void setChain(ArrayList<TransformNR> chain) {
 		this.chain = chain;
 	}
 
 	public ArrayList<TransformNR> getChain(double[] jointSpaceVector) {
-		forwardKinematics(jointSpaceVector);
+		forwardKinematics(jointSpaceVector,true);
 		return chain;
 	}
 	

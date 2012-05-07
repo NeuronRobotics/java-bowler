@@ -35,43 +35,47 @@ public class DHLink {
 		return alpha;
 	}
 	
-	public TransformNR DhStepRotory(double jointValue) {
+	public Matrix DhStepRotory(double jointValue) {	
+		return DhStep(jointValue,0);
+	}
+	public Matrix DhStepPrismatic(double jointValue) {
+		return DhStep(0,jointValue);
+	}
+	
+	public Matrix DhStep(double rotory,double prismatic) {
 		
-		TransformNR transZ = new TransformNR(new Matrix( new double [][] {	
+		 Matrix transZ = new Matrix( new double [][] {	
 				{1,0,0,0},
 				{0,1,0,0},
-				{0,0,1,getD()},
+				{0,0,1,getD()+prismatic},
 				{0,0,0,1}
-																	  }
-													)
-											);
-		TransformNR rotZ = new TransformNR(new Matrix( new double [][] {	
-				{Math.cos(getTheta()+jointValue),	-Math.sin(getTheta()+jointValue),	0,	0},
-				{Math.sin(getTheta()+jointValue),	Math.cos(getTheta()+jointValue),	0,	0},
+																	  });
+		 Matrix rotZ = new Matrix( new double [][] {	
+				{Math.cos(getTheta()+rotory),	-Math.sin(getTheta()+rotory),	0,	0},
+				{Math.sin(getTheta()+rotory),	Math.cos(getTheta()+rotory),	0,	0},
 				{0,									0,									1,	0},
 				{0,									0,									0,	1}
 																	  }
-														)
 														);
-		TransformNR transX =  new TransformNR(new Matrix( new double [][] {	
+		 Matrix transX =  new Matrix( new double [][] {	
 				{1,0,0,getR()},
 				{0,1,0,0},
 				{0,0,1,0},
 				{0,0,0,1}
 																	  }
-														)
+														
 														);
-		TransformNR rotX =  new TransformNR(new Matrix( new double [][] {	
+		 Matrix rotX =  new Matrix( new double [][] {	
 				{1,	0,						0,							0},
 				{0,	Math.cos(getAlpha()),	-Math.sin(getAlpha()),		0},
 				{0,	Math.sin(getAlpha()),	Math.cos(getAlpha()),		0},
 				{0,	0,						0,							1}
 																	  }
-														)
+														
 														);
-		TransformNR z = transZ.times(rotZ);
-		TransformNR x = transX.times(rotX);
+		 Matrix z = transZ.times(rotZ);
+		 Matrix x = transX.times(rotX);
 		
-		return z.times(x);
+		return  z.times(x);
 	}
 }

@@ -28,7 +28,6 @@ public class TrobotKinematics extends AbstractKinematicsNR {
 	@Override
 	public double[] inverseKinematics(TransformNR taskSpaceTransform)throws Exception {
 		return getDhChain().inverseKinematics(taskSpaceTransform, getCurrentJointSpaceVector());
-		//return new double[]{0,0,0,0,0,0};
 	}
 
 	@Override
