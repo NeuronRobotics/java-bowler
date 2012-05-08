@@ -966,7 +966,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 
 	}
 	/**
-	 * Sets the flag to represent if the DyIO is currently re-suncing itself with the device
+	 * Sets the flag to represent if the DyIO is currently re-syncing itself with the device
 	 * @param resyncing
 	 */
 	public void setResyncing(boolean resyncing) {
