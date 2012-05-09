@@ -39,7 +39,30 @@ public class DHViewer extends SimpleTransformViewer{
     	ArrayList<TransformNR> chain = tk.getChain(jointSpaceVector);
     	int i=0;
     	for(TransformNR t:chain){
-    		TransformGroup tmp = addTransform(t, "Link #"+i++,new Color(i*40));
+    		Color c;
+    		switch(i){
+    		case 0:
+    			c= Color.red;
+    			break;
+    		case 1:
+    			c= Color.yellow;
+    			break;
+    		case 2:
+    			c= Color.green;
+    			break;
+    		case 3:
+    			c= Color.blue;
+    			break;
+    		case 4:
+    			c= Color.cyan;
+    			break;
+    		case 5:
+    			c= Color.magenta;
+    			break;
+    		default:
+    			c=Color.white;
+    		}
+    		TransformGroup tmp = addTransform(t, "Link #"+i++,c);
     		links.add(tmp);
     	}
 	}

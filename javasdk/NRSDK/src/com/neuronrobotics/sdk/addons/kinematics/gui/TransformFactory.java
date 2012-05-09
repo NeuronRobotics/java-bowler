@@ -18,6 +18,7 @@ import javax.media.j3d.Text3D;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 import javax.vecmath.Color3f;
+import javax.vecmath.Point3d;
 import javax.vecmath.Vector3f;
 
 import Jama.Matrix;
@@ -57,10 +58,9 @@ public class TransformFactory {
 		
 		
 		Appearance textAppear = new Appearance();
-        ColoringAttributes textColor = new ColoringAttributes();
-        textColor.setColor(new Color3f(color));
-        textAppear.setMaterial(new Material());
-        textAppear.setColoringAttributes(textColor);
+        Material textMaterial = new Material();
+        textMaterial.setDiffuseColor(new Color3f(color));
+        textAppear.setMaterial(textMaterial);
         
         Font3D font3D = new Font3D(new Font("Helvetica", Font.PLAIN, 1), new FontExtrusion());
 		Text3D textGeom = new Text3D(font3D, new String(text));
@@ -85,7 +85,8 @@ public class TransformFactory {
 		back.setCapability(TransformGroup.ALLOW_BOUNDS_READ);
 		back.setCapability(TransformGroup.ALLOW_BOUNDS_WRITE);
 		back.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
-		//back.setBounds(pickBox);
+	
+		
 		back.setPickable(true);
 		return back;
 	}
