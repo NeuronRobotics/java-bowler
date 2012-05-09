@@ -1,5 +1,7 @@
 package com.neuronrobotics.sdk.addons.kinematics;
 
+import javax.swing.JFrame;
+
 import com.neuronrobotics.sdk.addons.kinematics.DHChain;
 import com.neuronrobotics.sdk.addons.kinematics.DhInverseSolver;
 import com.neuronrobotics.sdk.addons.kinematics.gui.SimpleTransformViewer;
@@ -8,13 +10,24 @@ import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 public class ComputedGeometricModel  implements DhInverseSolver{
 	private DHChain dhChain;
 	private boolean debug;
-	SimpleTransformViewer viewer = new  SimpleTransformViewer();
+	static SimpleTransformViewer viewer = new  SimpleTransformViewer();
+	static JFrame frame = null;
 	public ComputedGeometricModel(DHChain dhChain, boolean debug) {
 		this.dhChain = dhChain;
 		this.setDebug(debug);
 	}
 	
-	public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector ) {
+	public synchronized  double[] inverseKinematics(TransformNR target,double[] jointSpaceVector ) {
+		viewer.clearTransforms();
+		if(frame == null){
+			frame = new JFrame();
+			frame.add(viewer);
+			frame.setSize(720, 480);
+			frame.setVisible(true);
+		}
+			
+		viewer.addTransform(target, "Target");
+		
 		int linkNum = jointSpaceVector.length;
 		double [] inv = new double[linkNum];
 		if(!checkSphericalWrist() || dhChain.getLinks().size() != 6) {

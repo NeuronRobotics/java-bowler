@@ -1,8 +1,5 @@
 package com.neuronrobotics.sdk.addons.kinematics.gui;
 
-import java.awt.GraphicsConfiguration;
-import java.util.ArrayList;
-
 import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Canvas3D;
@@ -11,7 +8,6 @@ import javax.media.j3d.TransformGroup;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
-import com.neuronrobotics.sdk.addons.kinematics.DHChain;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.sun.j3d.utils.behaviors.mouse.MouseBehavior;
 import com.sun.j3d.utils.behaviors.mouse.MouseRotate;
@@ -25,46 +21,44 @@ public class SimpleTransformViewer extends Canvas3D {
 	 */
 	private static final long serialVersionUID = -5190028697311178389L;
 	SimpleUniverse simpleU ;
-	TransformGroup base;
 	private Transform3D baseLocation = null;
-	BranchGroup rootBranchGroup;
+	BranchGroup rootBranchGroup= new BranchGroup();
+	BranchGroup base= new BranchGroup();
 	public SimpleTransformViewer() {
 		super( SimpleUniverse.getPreferredConfiguration());
         resetView();
 	}
-	public BranchGroup createDefaultSceneGraph(SimpleUniverse su) {
-		//System.out.println("Current pose = "+tk.forwardKinematics(new  double [] {0,0,0,0,0,0}));
-		//System.out.println("Current pose = "+tk.forwardKinematics(new  double [] {0,90,0,0,0,0}));
-		simpleU = new SimpleUniverse(this);
+	public void createDefaultSceneGraph() {
+		
+		if(simpleU!=null){
+			simpleU.removeAllLocales();
+			simpleU.cleanup();
+		}else
+			simpleU = new SimpleUniverse(this);
     	// Create the root of the branch graph
-		rootBranchGroup = new BranchGroup();
+		rootBranchGroup.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
+		rootBranchGroup.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
+		rootBranchGroup.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+		rootBranchGroup.setCapability(BranchGroup.ALLOW_DETACH);
+		base.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
+		base.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
+		base.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+		base.setCapability(BranchGroup.ALLOW_DETACH);
+		
+		
+		rootBranchGroup.addChild(new Axis());
+		rootBranchGroup.addChild(base);
     	
-    	base = TransformFactory.getLabledAxis(new TransformNR(), "Base");
-    	//links.add(base);
-    	base.setTransform(getBaseLocation());
-    	rootBranchGroup.addChild(base); 
-    	
-//    	ArrayList<TransformNR> chain = tk.getChain(jointSpaceVector);
-//    	for(TransformNR t:chain){
-//    		TransformGroup tmp = TransformFactory.getLabledAxis(t, "Link #"+i++);
-//    		links.add(tmp);
-//    		base.addChild(tmp);
-//    	}
     	
         BoundingSphere mouseBounds = null;
 
-        TransformGroup  vpTrans = su.getViewingPlatform().getViewPlatformTransform();
-        //vpTrans = base; 
-
-        rootBranchGroup.addChild(new Axis());
+        TransformGroup  vpTrans = simpleU.getViewingPlatform().getViewPlatformTransform();
 
         mouseBounds = new BoundingSphere(new Point3d(), 100.0);
 
         MouseRotate myMouseRotate = new MouseRotate();
-        myMouseRotate.setTransformGroup(base);
+        myMouseRotate.setTransformGroup(new TransformGroup(getBaseLocation()));
         myMouseRotate.setSchedulingBounds(mouseBounds);
-        //rootBranchGroup.addChild(myMouseRotate);
-        //base.addChild(myMouseRotate);
 
         MouseTranslate myMouseTranslate = new MouseTranslate(MouseBehavior.INVERT_INPUT);
         myMouseTranslate.setTransformGroup(vpTrans);
@@ -76,22 +70,32 @@ public class SimpleTransformViewer extends Canvas3D {
         myMouseZoom.setTransformGroup(vpTrans);
         myMouseZoom.setSchedulingBounds(mouseBounds);
         rootBranchGroup.addChild(myMouseZoom);
-        //base.addChild(myMouseZoom);
+
     	// Let Java 3D perform optimizations on this scene graph.
     	rootBranchGroup.compile();
     	simpleU.addBranchGraph(rootBranchGroup);
-    	return rootBranchGroup;
 	} // end of CreateSceneGraph method of HelloJava3Db
 	
-	public void addTransform(TransformNR tr,String label) {
-		System.out.println("Adding a transform "+label);
+	public TransformGroup addTransform(TransformNR tr,String label) {
+		Transform3D trans = TransformFactory.getTransform(tr);
+		return addTransform(trans,label);
+	}
+	public TransformGroup addTransform(Transform3D tr,String label) {
+		//System.out.println("Adding a transform "+label);
 		TransformGroup tmp = TransformFactory.getLabledAxis(tr, label);
-		base.addChild(tmp);
-		rootBranchGroup.compile();
+		BranchGroup child = new BranchGroup();
+		child.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
+		child.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
+		child.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+		child.setCapability(BranchGroup.ALLOW_DETACH);
+		child.addChild(tmp);
+		base.addChild(child);
+		return tmp;
 	}
 	
 	public void resetView(){
-		createDefaultSceneGraph(simpleU);
+		createDefaultSceneGraph();
+		clearTransforms();
 		//System.out.println("Resetting view");
         TransformGroup viewTransform = simpleU.getViewingPlatform().getViewPlatformTransform();
         
@@ -102,7 +106,6 @@ public class SimpleTransformViewer extends Canvas3D {
         t3d.invert();
         
         viewTransform.setTransform(t3d);
-        base.setTransform(getBaseLocation());
 	}
 	public Transform3D getBaseLocation() {
 		if(baseLocation == null) {
@@ -115,6 +118,10 @@ public class SimpleTransformViewer extends Canvas3D {
 			baseLocation.mul(z);
 		}
 		return baseLocation;
+	}
+	public void clearTransforms() {
+		base.removeAllChildren();
+		addTransform(getBaseLocation() , "Base");
 	}
 
 }

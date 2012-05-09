@@ -54,7 +54,10 @@ public class DHViewer extends Canvas3D {
     	// Create the root of the branch graph
     	BranchGroup rootBranchGroup = new BranchGroup();
     	
-    	base = TransformFactory.getLabledAxis(new TransformNR(), "Base");
+    	if(base == null)
+    		base = TransformFactory.getLabledAxis(new TransformNR(), "Base");
+    	else
+    		base.removeAllChildren();
     	//links.add(base);
     	base.setTransform(getBaseLocation());
     	rootBranchGroup.addChild(base); 

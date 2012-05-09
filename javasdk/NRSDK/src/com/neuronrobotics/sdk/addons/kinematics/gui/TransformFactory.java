@@ -51,9 +51,7 @@ public class TransformFactory {
 		Transform3D t = new Transform3D(output);
 		return t;
 	}
-	public static TransformGroup getLabledAxis(TransformNR input, String text){
-		//System.out.println("Creating transform "+text+" with\n"+input);
-		Transform3D trans = getTransform(input);
+	public static TransformGroup getLabledAxis(Transform3D trans, String text){
 		TransformGroup back = new TransformGroup(trans);
 		
 		
@@ -104,5 +102,10 @@ public class TransformFactory {
 		back.setBounds(pickBox);
 		back.setPickable(true);
 		return back;
+	}
+	public static TransformGroup getLabledAxis(TransformNR input, String text){
+		//System.out.println("Creating transform "+text+" with\n"+input);
+		Transform3D trans = getTransform(input);
+		return getLabledAxis(trans, text);
 	}
 }
