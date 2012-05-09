@@ -16,6 +16,7 @@ public  class DHChain {
 	private boolean debug=false;
 	//private DHViewer viewer=null;
 	JFrame frame; 
+	DhInverseSolver is;
 	public DHChain(double [] upperLimits,double [] lowerLimits, boolean debugViewer ) {
 		this(upperLimits, lowerLimits);
 		if(debugViewer){
@@ -50,11 +51,12 @@ public  class DHChain {
 		if(getLinks() == null)
 			return null;
 		long start = System.currentTimeMillis();
-		DhInverseSolver is;
+		
 		
 		//is = new GradiantDecent(this,debug);
 		//is = new SearchTreeSolver(this,debug);
-		is = new ComputedGeometricModel(this,debug);
+		if(is == null)
+			is = new ComputedGeometricModel(this,debug);
 		
 		double [] inv = is.inverseKinematics(target, jointSpaceVector);	
 		if(debug){

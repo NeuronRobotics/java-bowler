@@ -128,7 +128,7 @@ public class SimpleTransformViewer extends Canvas3D {
         
         Transform3D t3d = new Transform3D(); 
 
-        t3d.lookAt(new Point3d(20,20,20),//Position of camera
+        t3d.lookAt(new Point3d(-20,20,20),//Position of camera
         		new Point3d(0,0,0), //position of base frame
         		new Vector3d(0,0,1)); // orentation of camera
         t3d.invert();

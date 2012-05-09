@@ -2,6 +2,7 @@ package com.neuronrobotics.sdk.addons.kinematics.gui;
 
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.GraphicsConfiguration;
 
 import javax.media.j3d.BoundingSphere;
@@ -18,6 +19,7 @@ import com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR;
 import com.neuronrobotics.sdk.addons.kinematics.IJointSpaceUpdateListenerNR;
 import com.neuronrobotics.sdk.addons.kinematics.JointLimit;
 import com.neuronrobotics.sdk.addons.kinematics.TrobotKinematics;
+import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
@@ -124,5 +126,8 @@ public class TrobotViewer  extends JPanel implements IJointSpaceUpdateListenerNR
 				//System.out.println("Display Update");
 			}
 		}
+	}
+	public void addTransform(TransformNR pose, String label) {
+		dh.addTransform(pose, label, Color.yellow);
 	}
 }

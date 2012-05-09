@@ -94,42 +94,7 @@ public class DHLink {
 		return  z.times(x);
 	}
 	public Matrix DhStepInverse(Matrix end,double rotory,double prismatic) {
-
-		transZ = new Matrix( new double [][] {	
-				{1,0,0,0},
-				{0,1,0,0},
-				{0,0,1,getD()+prismatic},
-				{0,0,0,1}
-																	  });
 		
-		rotZ = new Matrix( new double [][] {	
-				{Math.cos(getTheta()+rotory),	-Math.sin(getTheta()+rotory),	0,	0},
-				{Math.sin(getTheta()+rotory),	Math.cos(getTheta()+rotory),	0,	0},
-				{0,									0,									1,	0},
-				{0,									0,									0,	1}
-																	  }
-														);
-		
-		 if(transX == null){
-			 transX =  new Matrix( new double [][] {	
-					{1,0,0,getR()},
-					{0,1,0,0},
-					{0,0,1,0},
-					{0,0,0,1}
-															  }
-														
-														);
-		 }	
-		 if(rotX == null){
-			 rotX =  new Matrix( new double [][] {	
-				{1,	0,						0,							0},
-				{0,	Math.cos(getAlpha()),	-Math.sin(getAlpha()),		0},
-				{0,	Math.sin(getAlpha()),	Math.cos(getAlpha()),		0},
-				{0,	0,						0,							1}
-																	  }
-														
-														);
-		 }
-		 return rotX.inverse().times(transX.inverse()).times(rotZ.inverse()).times(transZ.inverse()).times(end);
+		return end.times(DhStep(rotory, prismatic).inverse());
 	}
 }

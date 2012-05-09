@@ -13,16 +13,14 @@ public class ComputedGeometricModel  implements DhInverseSolver{
 	private DHChain dhChain;
 	private boolean debug;
 	static SimpleTransformViewer viewer = new  SimpleTransformViewer();
-	static JFrame frame = null;
+	static JFrame frame = new JFrame();
 	public ComputedGeometricModel(DHChain dhChain, boolean debug) {
 		this.dhChain = dhChain;
 		this.setDebug(debug);
-		if(frame == null){
-			frame = new JFrame();
-			frame.add(viewer);
-			frame.setSize(720, 480);
-			frame.setVisible(true);
-		}
+		frame.add(viewer);
+		frame.setSize(720, 480);
+		frame.setVisible(true);
+		
 	}
 	
 	public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector ) {
