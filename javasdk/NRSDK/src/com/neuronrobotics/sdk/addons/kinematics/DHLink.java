@@ -51,8 +51,7 @@ public class DHLink {
 		return DhStep(0,jointValue);
 	}
 	
-	public Matrix DhStep(double rotory,double prismatic) {
-
+	private void setMatrix(double rotory,double prismatic){
 		transZ = new Matrix( new double [][] {	
 				{1,0,0,0},
 				{0,1,0,0},
@@ -88,13 +87,23 @@ public class DHLink {
 														
 														);
 		 }
-		 Matrix z = transZ.times(rotZ);
-		 Matrix x = transX.times(rotX);
+	}
+	
+	public Matrix DhStep(double rotory,double prismatic) {
+
+		setMatrix(rotory, prismatic);
+		
+		Matrix z = transZ.times(rotZ);
+		Matrix x = transX.times(rotX);
 		
 		return  z.times(x);
 	}
 	public Matrix DhStepInverse(Matrix end,double rotory,double prismatic) {
+		setMatrix(rotory, prismatic);
 		
-		return end.times(DhStep(rotory, prismatic).inverse());
+		Matrix z = rotZ.inverse().times(transZ.inverse());
+		Matrix x = rotX.inverse().times(transX.inverse());
+		
+		return end.times(x.times(rotZ.inverse()).times(transZ.inverse()));
 	}
 }
