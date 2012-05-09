@@ -93,17 +93,21 @@ public class DHLink {
 
 		setMatrix(rotory, prismatic);
 		
-		Matrix z = transZ.times(rotZ);
-		Matrix x = transX.times(rotX);
+		Matrix step = transZ;
+		step = step.times(rotZ);
+		step = step.times(transX);
+		step = step.times(rotX);
 		
-		return  z.times(x);
+		return step;
 	}
 	public Matrix DhStepInverse(Matrix end,double rotory,double prismatic) {
 		setMatrix(rotory, prismatic);
 		
-		Matrix z = rotZ.inverse().times(transZ.inverse());
-		Matrix x = rotX.inverse().times(transX.inverse());
+		Matrix step = end.times(transZ.inverse());
+		step = step.times(rotZ.inverse());
+		step = step.times(transX.inverse());
+		step = step.times(rotX.inverse());
 		
-		return end.times(x.times(rotZ.inverse()).times(transZ.inverse()));
+		return step;
 	}
 }

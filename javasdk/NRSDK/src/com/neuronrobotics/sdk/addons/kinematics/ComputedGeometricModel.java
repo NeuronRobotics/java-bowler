@@ -44,7 +44,7 @@ public class ComputedGeometricModel  implements DhInverseSolver{
         	inv[i]=0;
         }
         
-        TransformNR sphericalCenter = new TransformNR(dhChain.getLinks().get(0).DhStepInverseRotory(target.getMatrixTransform(), 0));
+        TransformNR sphericalCenter = new TransformNR(dhChain.getLinks().get(5).DhStepInverseRotory(target.getMatrixTransform(), 0));
         
         viewer.addTransform(sphericalCenter, "Spherical Center",Color.GREEN);
         
