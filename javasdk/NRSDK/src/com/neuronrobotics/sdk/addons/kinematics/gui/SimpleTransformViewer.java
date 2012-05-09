@@ -99,10 +99,11 @@ public class SimpleTransformViewer extends Canvas3D {
 		//System.out.println("Resetting view");
         TransformGroup viewTransform = simpleU.getViewingPlatform().getViewPlatformTransform();
         
-        Transform3D t3d = new Transform3D();        
+        Transform3D t3d = new Transform3D(); 
+
         t3d.lookAt(new Point3d(20,20,20),//Position of camera
         		new Point3d(0,0,0), //position of base frame
-        		new Vector3d(0,1,0)); // orentation of camera
+        		new Vector3d(0,0,1)); // orentation of camera
         t3d.invert();
         
         viewTransform.setTransform(t3d);
@@ -110,12 +111,6 @@ public class SimpleTransformViewer extends Canvas3D {
 	public Transform3D getBaseLocation() {
 		if(baseLocation == null) {
 			baseLocation = new Transform3D();
-			Transform3D x = new Transform3D();
-			x.rotX(Math.toRadians(-90));
-			Transform3D z = new Transform3D();
-			z.rotZ(Math.toRadians(180));
-			baseLocation.mul(x);
-			baseLocation.mul(z);
 		}
 		return baseLocation;
 	}
