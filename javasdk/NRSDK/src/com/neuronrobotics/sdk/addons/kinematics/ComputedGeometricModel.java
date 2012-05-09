@@ -1,5 +1,7 @@
 package com.neuronrobotics.sdk.addons.kinematics;
 
+import java.awt.Color;
+
 import javax.swing.JFrame;
 
 import com.neuronrobotics.sdk.addons.kinematics.DHChain;
@@ -15,18 +17,16 @@ public class ComputedGeometricModel  implements DhInverseSolver{
 	public ComputedGeometricModel(DHChain dhChain, boolean debug) {
 		this.dhChain = dhChain;
 		this.setDebug(debug);
-	}
-	
-	public synchronized  double[] inverseKinematics(TransformNR target,double[] jointSpaceVector ) {
-		viewer.clearTransforms();
 		if(frame == null){
 			frame = new JFrame();
 			frame.add(viewer);
 			frame.setSize(720, 480);
 			frame.setVisible(true);
 		}
-			
-		viewer.addTransform(target, "Target");
+	}
+	
+	public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector ) {
+		viewer.addTransform(target, "Target",Color.pink);
 		
 		int linkNum = jointSpaceVector.length;
 		double [] inv = new double[linkNum];
@@ -47,6 +47,8 @@ public class ComputedGeometricModel  implements DhInverseSolver{
         }
         
         TransformNR sphericalCenter = new TransformNR(dhChain.getLinks().get(0).DhStepInverseRotory(target.getMatrixTransform(), 0));
+        
+        viewer.addTransform(sphericalCenter, "Spherical Center",Color.GREEN);
         
 
 		return inv;

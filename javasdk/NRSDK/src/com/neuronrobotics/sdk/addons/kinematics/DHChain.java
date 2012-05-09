@@ -61,7 +61,7 @@ public  class DHChain {
 			//getViewer().updatePoseDisplay(getChain(jointSpaceVector));
 		}
 		
-		System.out.println("Inverse Kinematics took "+(System.currentTimeMillis()-start)+"ms");
+		//System.out.println("Inverse Kinematics took "+(System.currentTimeMillis()-start)+"ms");
 		return inv;
 	}
 

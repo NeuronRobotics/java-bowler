@@ -1,5 +1,6 @@
 package com.neuronrobotics.sdk.addons.kinematics.gui;
 
+import java.awt.Color;
 import java.awt.Font;
 
 import javax.media.j3d.AmbientLight;
@@ -51,15 +52,15 @@ public class TransformFactory {
 		Transform3D t = new Transform3D(output);
 		return t;
 	}
-	public static TransformGroup getLabledAxis(Transform3D trans, String text){
+	public static TransformGroup getLabledAxis(Transform3D trans, String text,Color color){
 		TransformGroup back = new TransformGroup(trans);
 		
 		
 		Appearance textAppear = new Appearance();
         ColoringAttributes textColor = new ColoringAttributes();
-        textColor.setColor(1.0f, 0.0f, 0.0f);
-        textAppear.setColoringAttributes(textColor);
+        textColor.setColor(new Color3f(color));
         textAppear.setMaterial(new Material());
+        textAppear.setColoringAttributes(textColor);
         
         Font3D font3D = new Font3D(new Font("Helvetica", Font.PLAIN, 1), new FontExtrusion());
 		Text3D textGeom = new Text3D(font3D, new String(text));
@@ -68,7 +69,6 @@ public class TransformFactory {
 		textShape.setGeometry(textGeom);
 		textShape.setAppearance(textAppear);
 		
-		//back.addChild(new ColorCube(.5));
 		back.addChild(new Axis());
 		Transform3D txtTrans = new Transform3D();
 		txtTrans.mul(trans);
@@ -79,33 +79,19 @@ public class TransformFactory {
 		textGroup.addChild(textShape);
 		
 		back.addChild(textGroup);
-        // a bounding sphere specifies a region a behavior is active
-        // create a sphere centered at the origin with radius of 100
-        BoundingSphere bounds = new BoundingSphere();;
-
-        DirectionalLight lightD = new DirectionalLight();
-        lightD.setInfluencingBounds(bounds);
-        lightD.setDirection(new Vector3f(0.0f, 0.0f, -1.0f));
-        lightD.setColor(new Color3f(1.0f, 0.0f, 1.0f));
-        back.addChild(lightD);
-
-        AmbientLight lightA = new AmbientLight();
-        lightA.setInfluencingBounds(bounds);
-        back.addChild(lightA);
-        BoundingBox pickBox = new BoundingBox();
 
 		back.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
 		back.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 		back.setCapability(TransformGroup.ALLOW_BOUNDS_READ);
 		back.setCapability(TransformGroup.ALLOW_BOUNDS_WRITE);
 		back.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
-		back.setBounds(pickBox);
+		//back.setBounds(pickBox);
 		back.setPickable(true);
 		return back;
 	}
-	public static TransformGroup getLabledAxis(TransformNR input, String text){
+	public static TransformGroup getLabledAxis(TransformNR input, String text,Color color){
 		//System.out.println("Creating transform "+text+" with\n"+input);
 		Transform3D trans = getTransform(input);
-		return getLabledAxis(trans, text);
+		return getLabledAxis(trans, text,color);
 	}
 }

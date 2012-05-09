@@ -1,12 +1,20 @@
 package com.neuronrobotics.sdk.addons.kinematics.gui;
 
+import java.awt.Color;
+import java.util.ArrayList;
+
+import javax.media.j3d.AmbientLight;
+import javax.media.j3d.BoundingBox;
 import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Canvas3D;
+import javax.media.j3d.DirectionalLight;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
+import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
+import javax.vecmath.Vector3f;
 
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.sun.j3d.utils.behaviors.mouse.MouseBehavior;
@@ -24,11 +32,12 @@ public class SimpleTransformViewer extends Canvas3D {
 	private Transform3D baseLocation = null;
 	BranchGroup rootBranchGroup= new BranchGroup();
 	BranchGroup base= new BranchGroup();
-	public SimpleTransformViewer() {
+	ArrayList<TransformHolder> transforms = new ArrayList<TransformHolder> ();
+ 	public SimpleTransformViewer() {
 		super( SimpleUniverse.getPreferredConfiguration());
-        resetView();
+		createDefaultSceneGraph();
 	}
-	public void createDefaultSceneGraph() {
+	private void createDefaultSceneGraph() {
 		
 		if(simpleU!=null){
 			simpleU.removeAllLocales();
@@ -70,19 +79,39 @@ public class SimpleTransformViewer extends Canvas3D {
         myMouseZoom.setTransformGroup(vpTrans);
         myMouseZoom.setSchedulingBounds(mouseBounds);
         rootBranchGroup.addChild(myMouseZoom);
+        
+        BoundingSphere bounds = new BoundingSphere(new Point3d(0,0,0), 10000);
+        DirectionalLight lightD = new DirectionalLight();
+        lightD.setInfluencingBounds(bounds);
+        lightD.setDirection(new Vector3f(0.0f, 0.0f, -1.0f));
+        lightD.setColor(new Color3f(Color.white));
+        rootBranchGroup.addChild(lightD);
+
+        AmbientLight lightA = new AmbientLight();
+        lightA.setInfluencingBounds(bounds);
+        rootBranchGroup.addChild(lightA);
 
     	// Let Java 3D perform optimizations on this scene graph.
     	rootBranchGroup.compile();
     	simpleU.addBranchGraph(rootBranchGroup);
+    	resetView();
+    	clearTransforms();
 	} // end of CreateSceneGraph method of HelloJava3Db
 	
-	public TransformGroup addTransform(TransformNR tr,String label) {
+	public TransformGroup addTransform(TransformNR tr,String label, Color color) {
 		Transform3D trans = TransformFactory.getTransform(tr);
-		return addTransform(trans,label);
+		return addTransform(trans,label,color);
 	}
-	public TransformGroup addTransform(Transform3D tr,String label) {
-		//System.out.println("Adding a transform "+label);
-		TransformGroup tmp = TransformFactory.getLabledAxis(tr, label);
+	public synchronized TransformGroup addTransform(Transform3D tr,String label, Color color) {
+		for(TransformHolder h:transforms){
+			if(h.getLabel().equals(label)){
+				h.getTransform().setTransform(tr);
+				return h.getTransform();
+			}
+		}
+		System.out.println("Adding a transform "+label);
+		TransformGroup tmp = TransformFactory.getLabledAxis(tr, label,color);
+		transforms.add(new TransformHolder(tmp, label));
 		BranchGroup child = new BranchGroup();
 		child.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
 		child.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
@@ -94,8 +123,6 @@ public class SimpleTransformViewer extends Canvas3D {
 	}
 	
 	public void resetView(){
-		createDefaultSceneGraph();
-		clearTransforms();
 		//System.out.println("Resetting view");
         TransformGroup viewTransform = simpleU.getViewingPlatform().getViewPlatformTransform();
         
@@ -116,7 +143,26 @@ public class SimpleTransformViewer extends Canvas3D {
 	}
 	public void clearTransforms() {
 		base.removeAllChildren();
-		addTransform(getBaseLocation() , "Base");
+		addTransform(getBaseLocation() , "Base",Color.cyan);
+	}
+	
+	private class TransformHolder{
+		private final TransformGroup mine;
+		private final String label;
+
+		public TransformHolder(TransformGroup mine,String label){
+			this.mine = mine;
+			this.label = label;
+			
+		}
+
+		public String getLabel() {
+			return label;
+		}
+
+		public TransformGroup getTransform() {
+			return mine;
+		}
 	}
 
 }
