@@ -18,7 +18,7 @@ public class ComputedGeometricModel  implements DhInverseSolver{
 		this.dhChain = dhChain;
 		this.setDebug(debug);
 		frame.add(viewer);
-		frame.setSize(720, 480);
+		frame.setSize(720, 640);
 		frame.setVisible(true);
 		
 	}
