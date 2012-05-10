@@ -75,6 +75,14 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 	
 			firePIDEvent(e);
 		}
+		if(data.getRPC().contains("apid")){
+			int [] pos = new int[getNumberOfChannels()];
+			for(int i=0;i<getNumberOfChannels();i++) {
+				pos[i] = ByteList.convertToInt( data.getData().getBytes(i*4, (i*4)+4),true);
+				PIDEvent e =new PIDEvent(i,pos[i],0,0);
+				firePIDEvent(e);
+			}	
+		}
 		if(data.getRPC().contains("pidl")){
 			firePIDLimitEvent(new PIDLimitEvent(data));
 		}
@@ -278,6 +286,7 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 			for(IPIDEventListener l: PIDEventListeners)
 				l.onPIDLimitEvent(e);
 		}
+		//channels.get(e.getGroup()).firePIDLimitEvent(e);
 	}
 	public void firePIDEvent(PIDEvent e){
 		if(lastPacketTime != null){
@@ -292,11 +301,13 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 			for(IPIDEventListener l: PIDEventListeners)
 				l.onPIDEvent(e);
 		}
+		//channels.get(e.getGroup()).firePIDEvent(e);
 	}
 	public void firePIDResetEvent(int group,int value){
 		SetCachedPosition(group, value);
 		for(IPIDEventListener l: PIDEventListeners)
 			l.onPIDReset(group,value);
+		//channels.get(group).firePIDResetEvent(group, value);
 	}
 
 }
