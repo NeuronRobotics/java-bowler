@@ -1,0 +1,430 @@
+	[2012/05/14 14:20:11:158]  Warning com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR:loadConfig :
+No Z frame to RAS transform defined
+	[2012/05/14 14:20:11:170]  Info com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR:setBaseToZframeTransform :
+Setting Fiducial To base Transform {
+{ 0001.00,	0000.00,	0000.00,	0000.00	 },
+{ 0000.00,	0001.00,	0000.00,	0000.00	 },
+{ 0000.00,	0000.00,	0001.00,	0000.00	 },
+{ 0000.00,	0000.00,	0000.00,	0001.00	 }
+}
+Quaturnion: W=1.0, x=0.0, y=0.0, z=0.0
+	[2012/05/14 14:20:11:170]  Info com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR:setDevice :
+Loading device: class com.neuronrobotics.sdk.addons.kinematics.LinkFactory com.neuronrobotics.sdk.addons.kinematics.LinkFactory@59c9b9ca
+	[2012/05/14 14:20:11:171]  Info com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR:setDevice :
+Axis #11 Configuration:
+LinkConfiguration: 
+	Name: basePan
+	Type: servo-rotory
+	Hardware Board Index: 11
+	Scale: 0.796
+	Upper Limit: 196.0
+	Lower Limit: 41.0
+	Homing Ticks Per Second: 0
+	[2012/05/14 14:20:11:171]  Info com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR:setDevice :
+Axis #10 Configuration:
+LinkConfiguration: 
+	Name: baseTilt
+	Type: servo-rotory
+	Hardware Board Index: 10
+	Scale: 0.796
+	Upper Limit: 205.0
+	Lower Limit: 41.0
+	Homing Ticks Per Second: 0
+	[2012/05/14 14:20:11:171]  Info com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR:setDevice :
+Axis #9 Configuration:
+LinkConfiguration: 
+	Name: elbow
+	Type: servo-rotory
+	Hardware Board Index: 9
+	Scale: 0.796
+	Upper Limit: 205.0
+	Lower Limit: 41.0
+	Homing Ticks Per Second: 0
+	[2012/05/14 14:20:11:171]  Info com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR:setDevice :
+Axis #8 Configuration:
+LinkConfiguration: 
+	Name: wrist1
+	Type: servo-rotory
+	Hardware Board Index: 8
+	Scale: 0.756
+	Upper Limit: 197.0
+	Lower Limit: 0.0
+	Homing Ticks Per Second: 0
+	[2012/05/14 14:20:11:172]  Info com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR:setDevice :
+Axis #7 Configuration:
+LinkConfiguration: 
+	Name: wrist2
+	Type: servo-rotory
+	Hardware Board Index: 7
+	Scale: 0.756
+	Upper Limit: 240.0
+	Lower Limit: 0.0
+	Homing Ticks Per Second: 0
+	[2012/05/14 14:20:11:172]  Info com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR:setDevice :
+Axis #6 Configuration:
+LinkConfiguration: 
+	Name: wrist3
+	Type: servo-rotory
+	Hardware Board Index: 6
+	Scale: 0.756
+	Upper Limit: 255.0
+	Lower Limit: 0.0
+	Homing Ticks Per Second: 0
+	[2012/05/14 14:20:11:172]  Info com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR:firePoseUpdate :
+Pose update
+	[2012/05/14 14:20:14:553]  Info com.neuronrobotics.sdk.ui.SerialConnectionPanel:getConnection :
+Using port:/dev/DyIO0
+
+	[2012/05/14 14:20:14:554]  Info com.neuronrobotics.sdk.ui.ConnectionDialog$1:actionPerformed :
+Using connection/dev/DyIO0
+
+	[2012/05/14 14:20:14:555]  Info com.neuronrobotics.sdk.ui.SerialConnectionPanel:getConnection :
+Using port:/dev/DyIO0
+
+	[2012/05/14 14:20:14:584]  Debug com.neuronrobotics.sdk.common.BowlerAbstractDevice:send :
+TX>>
+	Raw Packet:	03 00 00 00 00 00 00 10 00 04 17 61 70 69 64 
+	Revision: 	3
+	MAC address: 	00:00:00:00:00:00
+	Method: 	GET
+	Direction: 	(0) Syncronous
+	Session ID: 	0
+	Data Size: 	4
+	CRC: 		23
+	RPC: 		apid
+	Data: 		
+
+	[2012/05/14 14:20:14:606]  Debug com.neuronrobotics.sdk.common.BowlerAbstractDevice:send :
+RX<<
+	Raw Packet:	03 74 f7 26 00 00 6f 20 80 24 c7 61 70 69 64 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+	Revision: 	3
+	MAC address: 	74:F7:26:00:00:6F
+	Method: 	POST
+	Direction: 	(0) Syncronous
+	Session ID: 	0
+	Data Size: 	36
+	CRC: 		199
+	RPC: 		apid
+	Data: 		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+
+	[2012/05/14 14:20:14:607]  Info com.neuronrobotics.sdk.pid.PIDChannel:setCachedTargetValue :
+Cacheing PID position group=0, setpoint=0 ticks
+	[2012/05/14 14:20:14:607]  Info com.neuronrobotics.sdk.pid.PIDChannel:setCachedTargetValue :
+Cacheing PID position group=1, setpoint=0 ticks
+	[2012/05/14 14:20:14:607]  Info com.neuronrobotics.sdk.pid.PIDChannel:setCachedTargetValue :
+Cacheing PID position group=2, setpoint=0 ticks
+	[2012/05/14 14:20:14:608]  Info com.neuronrobotics.sdk.pid.PIDChannel:setCachedTargetValue :
+Cacheing PID position group=3, setpoint=0 ticks
+	[2012/05/14 14:20:14:608]  Info com.neuronrobotics.sdk.pid.PIDChannel:setCachedTargetValue :
+Cacheing PID position group=4, setpoint=0 ticks
+	[2012/05/14 14:20:14:608]  Info com.neuronrobotics.sdk.pid.PIDChannel:setCachedTargetValue :
+Cacheing PID position group=5, setpoint=0 ticks
+	[2012/05/14 14:20:14:608]  Info com.neuronrobotics.sdk.pid.PIDChannel:setCachedTargetValue :
+Cacheing PID position group=6, setpoint=0 ticks
+	[2012/05/14 14:20:14:609]  Info com.neuronrobotics.sdk.pid.PIDChannel:setCachedTargetValue :
+Cacheing PID position group=7, setpoint=0 ticks
+	[2012/05/14 14:20:14:611]  Debug com.neuronrobotics.sdk.common.BowlerAbstractDevice:send :
+TX>>
+	Raw Packet:	03 74 f7 26 00 00 6f 10 00 04 17 61 70 69 64 
+	Revision: 	3
+	MAC address: 	74:F7:26:00:00:6F
+	Method: 	GET
+	Direction: 	(0) Syncronous
+	Session ID: 	0
+	Data Size: 	4
+	CRC: 		23
+	RPC: 		apid
+	Data: 		
+
+	[2012/05/14 14:20:14:621]  Debug com.neuronrobotics.sdk.common.BowlerAbstractDevice:send :
+RX<<
+	Raw Packet:	03 74 f7 26 00 00 6f 20 80 24 c7 61 70 69 64 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+	Revision: 	3
+	MAC address: 	74:F7:26:00:00:6F
+	Method: 	POST
+	Direction: 	(0) Syncronous
+	Session ID: 	0
+	Data Size: 	36
+	CRC: 		199
+	RPC: 		apid
+	Data: 		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+
+	[2012/05/14 14:20:14:623]  Debug com.neuronrobotics.sdk.common.BowlerAbstractDevice:send :
+TX>>
+	Raw Packet:	03 74 f7 26 00 00 6f 10 00 04 17 5f 70 77 72 
+	Revision: 	3
+	MAC address: 	74:F7:26:00:00:6F
+	Method: 	GET
+	Direction: 	(0) Syncronous
+	Session ID: 	0
+	Data Size: 	4
+	CRC: 		23
+	RPC: 		_pwr
+	Data: 		
+
+	[2012/05/14 14:20:14:636]  Debug com.neuronrobotics.sdk.common.BowlerAbstractDevice:send :
+RX<<
+	Raw Packet:	03 74 f7 26 00 00 6f 20 80 08 ab 5f 70 77 72 01 01 01 62 
+	Revision: 	3
+	MAC address: 	74:F7:26:00:00:6F
+	Method: 	POST
+	Direction: 	(0) Syncronous
+	Session ID: 	0
+	Data Size: 	8
+	CRC: 		171
+	RPC: 		_pwr
+	Data: 		01 01 01 62 
+
+	[2012/05/14 14:20:14:638]  Debug com.neuronrobotics.sdk.common.BowlerAbstractDevice:send :
+TX>>
+	Raw Packet:	03 74 f7 26 00 00 6f 20 00 07 2a 73 61 66 65 01 0b b8 
+	Revision: 	3
+	MAC address: 	74:F7:26:00:00:6F
+	Method: 	POST
+	Direction: 	(0) Syncronous
+	Session ID: 	0
+	Data Size: 	7
+	CRC: 		42
+	RPC: 		safe
+	Data: 		01 0b b8 
+
+	[2012/05/14 14:20:14:650]  Debug com.neuronrobotics.sdk.common.BowlerAbstractDevice:send :
+RX<<
+	Raw Packet:	03 74 f7 26 00 00 6f 00 80 06 89 5f 72 64 79 02 07 
+	Revision: 	3
+	MAC address: 	74:F7:26:00:00:6F
+	Method: 	STATUS
+	Direction: 	(0) Syncronous
+	Session ID: 	0
+	Data Size: 	6
+	CRC: 		137
+	RPC: 		_rdy
+	Data: 		02 07 
+
+	[2012/05/14 14:20:14:650]  Info com.neuronrobotics.sdk.dyio.DyIO:resync :
+Re-syncing...
+	[2012/05/14 14:20:14:652]  Debug com.neuronrobotics.sdk.common.BowlerAbstractDevice:send :
+TX>>
+	Raw Packet:	03 74 f7 26 00 00 6f 10 00 04 17 5f 70 77 72 
+	Revision: 	3
+	MAC address: 	74:F7:26:00:00:6F
+	Method: 	GET
+	Direction: 	(0) Syncronous
+	Session ID: 	0
+	Data Size: 	4
+	CRC: 		23
+	RPC: 		_pwr
+	Data: 		
+
+	[2012/05/14 14:20:14:659]  Debug com.neuronrobotics.sdk.common.BowlerAbstractDevice:send :
+RX<<
+	Raw Packet:	03 74 f7 26 00 00 6f 20 80 08 ab 5f 70 77 72 01 01 01 61 
+	Revision: 	3
+	MAC address: 	74:F7:26:00:00:6F
+	Method: 	POST
+	Direction: 	(0) Syncronous
+	Session ID: 	0
+	Data Size: 	8
+	CRC: 		171
+	RPC: 		_pwr
+	Data: 		01 01 01 61 
+
+	[2012/05/14 14:20:14:667]  Debug com.neuronrobotics.sdk.common.BowlerAbstractDevice:send :
+TX>>
+	Raw Packet:	03 74 f7 26 00 00 6f 10 00 04 17 5f 72 65 76 
+	Revision: 	3
+	MAC address: 	74:F7:26:00:00:6F
+	Method: 	GET
+	Direction: 	(0) Syncronous
+	Session ID: 	0
+	Data Size: 	4
+	CRC: 		23
+	RPC: 		_rev
+	Data: 		
+
+	[2012/05/14 14:20:14:685]  Debug com.neuronrobotics.sdk.common.BowlerAbstractDevice:send :
+RX<<
+	Raw Packet:	03 74 f7 26 00 00 6f 10 80 0a 9d 5f 72 65 76 03 08 03 03 07 01 
+	Revision: 	3
+	MAC address: 	74:F7:26:00:00:6F
+	Method: 	GET
+	Direction: 	(0) Syncronous
+	Session ID: 	0
+	Data Size: 	10
+	CRC: 		157
+	RPC: 		_rev
+	Data: 		03 08 03 03 07 01 
+
+	[2012/05/14 14:20:14:686]  Debug com.neuronrobotics.sdk.common.BowlerAbstractDevice:getRevisions :
+FW info:
+	Raw Packet:	03 74 f7 26 00 00 6f 10 80 0a 9d 5f 72 65 76 03 08 03 03 07 01 
+	Revision: 	3
+	MAC address: 	74:F7:26:00:00:6F
+	Method: 	GET
+	Direction: 	(0) Syncronous
+	Session ID: 	0
+	Data Size: 	10
+	CRC: 		157
+	RPC: 		_rev
+	Data: 		03 08 03 03 07 01 
+
+	[2012/05/14 14:20:14:687]  Debug com.neuronrobotics.sdk.dyio.DyIO:checkFirmwareRev :
+Not checking firmware version for DyIO
+	[2012/05/14 14:20:14:688]  Debug com.neuronrobotics.sdk.common.BowlerAbstractDevice:send :
+TX>>
+	Raw Packet:	03 74 f7 26 00 00 6f 10 00 04 17 69 6e 66 6f 
+	Revision: 	3
+	MAC address: 	74:F7:26:00:00:6F
+	Method: 	GET
+	Direction: 	(0) Syncronous
+	Session ID: 	0
+	Data Size: 	4
+	CRC: 		23
+	RPC: 		info
+	Data: 		
+
+	[2012/05/14 14:20:14:702]  Debug com.neuronrobotics.sdk.common.BowlerAbstractDevice:send :
+RX<<
+	Raw Packet:	03 74 f7 26 00 00 6f 20 80 15 b8 69 6e 66 6f 44 79 49 4f 20 4d 6f 64 75 6c 65 20 20 20 20 20 00 
+	Revision: 	3
+	MAC address: 	74:F7:26:00:00:6F
+	Method: 	POST
+	Direction: 	(0) Syncronous
+	Session ID: 	0
+	Data Size: 	21
+	CRC: 		184
+	RPC: 		info
+	Data: 		44 79 49 4f 20 4d 6f 64 75 6c 65 20 20 20 20 20 00 
+
+	[2012/05/14 14:20:14:703]  Debug com.neuronrobotics.sdk.common.BowlerAbstractDevice:send :
+TX>>
+	Raw Packet:	03 74 f7 26 00 00 6f 10 00 04 17 67 61 63 6d 
+	Revision: 	3
+	MAC address: 	74:F7:26:00:00:6F
+	Method: 	GET
+	Direction: 	(0) Syncronous
+	Session ID: 	0
+	Data Size: 	4
+	CRC: 		23
+	RPC: 		gacm
+	Data: 		
+
+	[2012/05/14 14:20:14:713]  Debug com.neuronrobotics.sdk.common.BowlerAbstractDevice:send :
+RX<<
+	Raw Packet:	03 74 f7 26 00 00 6f 20 80 1c bf 67 61 63 6d 02 03 02 02 02 02 02 02 04 04 04 04 04 04 04 04 02 02 02 02 02 02 02 03 
+	Revision: 	3
+	MAC address: 	74:F7:26:00:00:6F
+	Method: 	POST
+	Direction: 	(0) Syncronous
+	Session ID: 	0
+	Data Size: 	28
+	CRC: 		191
+	RPC: 		gacm
+	Data: 		02 03 02 02 02 02 02 02 04 04 04 04 04 04 04 04 02 02 02 02 02 02 02 03 
+
+	[2012/05/14 14:20:14:717]  Debug com.neuronrobotics.sdk.dyio.DyIOChannel:setMode :
+class com.neuronrobotics.sdk.dyio.DyIOChannel First time setting mode.
+	[2012/05/14 14:20:14:717]  Debug com.neuronrobotics.sdk.dyio.DyIOChannel:setMode :
+class com.neuronrobotics.sdk.dyio.DyIOChannel First time setting mode.
+	[2012/05/14 14:20:14:718]  Debug com.neuronrobotics.sdk.dyio.DyIOChannel:setMode :
+class com.neuronrobotics.sdk.dyio.DyIOChannel First time setting mode.
+	[2012/05/14 14:20:14:718]  Debug com.neuronrobotics.sdk.dyio.DyIOChannel:setMode :
+class com.neuronrobotics.sdk.dyio.DyIOChannel First time setting mode.
+	[2012/05/14 14:20:14:718]  Debug com.neuronrobotics.sdk.dyio.DyIOChannel:setMode :
+class com.neuronrobotics.sdk.dyio.DyIOChannel First time setting mode.
+	[2012/05/14 14:20:14:719]  Debug com.neuronrobotics.sdk.dyio.DyIOChannel:setMode :
+class com.neuronrobotics.sdk.dyio.DyIOChannel First time setting mode.
+	[2012/05/14 14:20:14:719]  Debug com.neuronrobotics.sdk.dyio.DyIOChannel:setMode :
+class com.neuronrobotics.sdk.dyio.DyIOChannel First time setting mode.
+	[2012/05/14 14:20:14:719]  Debug com.neuronrobotics.sdk.dyio.DyIOChannel:setMode :
+class com.neuronrobotics.sdk.dyio.DyIOChannel First time setting mode.
+	[2012/05/14 14:20:14:720]  Debug com.neuronrobotics.sdk.dyio.DyIOChannel:setMode :
+class com.neuronrobotics.sdk.dyio.DyIOChannel First time setting mode.
+	[2012/05/14 14:20:14:720]  Debug com.neuronrobotics.sdk.dyio.DyIOChannel:setMode :
+class com.neuronrobotics.sdk.dyio.DyIOChannel First time setting mode.
+	[2012/05/14 14:20:14:720]  Debug com.neuronrobotics.sdk.dyio.DyIOChannel:setMode :
+class com.neuronrobotics.sdk.dyio.DyIOChannel First time setting mode.
+	[2012/05/14 14:20:14:721]  Debug com.neuronrobotics.sdk.dyio.DyIOChannel:setMode :
+class com.neuronrobotics.sdk.dyio.DyIOChannel First time setting mode.
+	[2012/05/14 14:20:14:721]  Debug com.neuronrobotics.sdk.dyio.DyIOChannel:setMode :
+class com.neuronrobotics.sdk.dyio.DyIOChannel First time setting mode.
+	[2012/05/14 14:20:14:722]  Debug com.neuronrobotics.sdk.dyio.DyIOChannel:setMode :
+class com.neuronrobotics.sdk.dyio.DyIOChannel First time setting mode.
+	[2012/05/14 14:20:14:722]  Debug com.neuronrobotics.sdk.dyio.DyIOChannel:setMode :
+class com.neuronrobotics.sdk.dyio.DyIOChannel First time setting mode.
+	[2012/05/14 14:20:14:722]  Debug com.neuronrobotics.sdk.dyio.DyIOChannel:setMode :
+class com.neuronrobotics.sdk.dyio.DyIOChannel First time setting mode.
+	[2012/05/14 14:20:14:723]  Debug com.neuronrobotics.sdk.dyio.DyIOChannel:setMode :
+class com.neuronrobotics.sdk.dyio.DyIOChannel First time setting mode.
+	[2012/05/14 14:20:14:723]  Debug com.neuronrobotics.sdk.dyio.DyIOChannel:setMode :
+class com.neuronrobotics.sdk.dyio.DyIOChannel First time setting mode.
+	[2012/05/14 14:20:14:723]  Debug com.neuronrobotics.sdk.dyio.DyIOChannel:setMode :
+class com.neuronrobotics.sdk.dyio.DyIOChannel First time setting mode.
+	[2012/05/14 14:20:14:724]  Debug com.neuronrobotics.sdk.dyio.DyIOChannel:setMode :
+class com.neuronrobotics.sdk.dyio.DyIOChannel First time setting mode.
+	[2012/05/14 14:20:14:724]  Debug com.neuronrobotics.sdk.dyio.DyIOChannel:setMode :
+class com.neuronrobotics.sdk.dyio.DyIOChannel First time setting mode.
+	[2012/05/14 14:20:14:724]  Debug com.neuronrobotics.sdk.dyio.DyIOChannel:setMode :
+class com.neuronrobotics.sdk.dyio.DyIOChannel First time setting mode.
+	[2012/05/14 14:20:14:725]  Debug com.neuronrobotics.sdk.dyio.DyIOChannel:setMode :
+class com.neuronrobotics.sdk.dyio.DyIOChannel First time setting mode.
+	[2012/05/14 14:20:14:725]  Debug com.neuronrobotics.sdk.dyio.DyIOChannel:setMode :
+class com.neuronrobotics.sdk.dyio.DyIOChannel First time setting mode.
+	[2012/05/14 14:20:14:727]  Debug com.neuronrobotics.sdk.common.BowlerAbstractDevice:send :
+TX>>
+	Raw Packet:	03 74 f7 26 00 00 6f 30 00 04 37 6b 70 69 64 
+	Revision: 	3
+	MAC address: 	74:F7:26:00:00:6F
+	Method: 	CRITICAL
+	Direction: 	(0) Syncronous
+	Session ID: 	0
+	Data Size: 	4
+	CRC: 		55
+	RPC: 		kpid
+	Data: 		
+
+	[2012/05/14 14:20:14:733]  Debug com.neuronrobotics.sdk.common.BowlerAbstractDevice:send :
+RX<<
+	Raw Packet:	03 74 f7 26 00 00 6f 00 80 06 89 5f 72 64 79 42 00 
+	Revision: 	3
+	MAC address: 	74:F7:26:00:00:6F
+	Method: 	STATUS
+	Direction: 	(0) Syncronous
+	Session ID: 	0
+	Data Size: 	6
+	CRC: 		137
+	RPC: 		_rdy
+	Data: 		42 00 
+
+	[2012/05/14 14:20:14:734]  Info com.neuronrobotics.sdk.pid.PIDChannel:setCachedTargetValue :
+Cacheing PID position group=0, setpoint=0 ticks
+	[2012/05/14 14:20:14:734]  Info com.neuronrobotics.sdk.pid.PIDChannel:setCachedTargetValue :
+Cacheing PID position group=1, setpoint=0 ticks
+	[2012/05/14 14:20:14:734]  Info com.neuronrobotics.sdk.pid.PIDChannel:setCachedTargetValue :
+Cacheing PID position group=2, setpoint=0 ticks
+	[2012/05/14 14:20:14:734]  Info com.neuronrobotics.sdk.pid.PIDChannel:setCachedTargetValue :
+Cacheing PID position group=3, setpoint=0 ticks
+	[2012/05/14 14:20:14:735]  Info com.neuronrobotics.sdk.pid.PIDChannel:setCachedTargetValue :
+Cacheing PID position group=4, setpoint=0 ticks
+	[2012/05/14 14:20:14:735]  Info com.neuronrobotics.sdk.pid.PIDChannel:setCachedTargetValue :
+Cacheing PID position group=5, setpoint=0 ticks
+	[2012/05/14 14:20:14:735]  Info com.neuronrobotics.sdk.pid.PIDChannel:setCachedTargetValue :
+Cacheing PID position group=6, setpoint=0 ticks
+	[2012/05/14 14:20:14:735]  Info com.neuronrobotics.sdk.pid.PIDChannel:setCachedTargetValue :
+Cacheing PID position group=7, setpoint=0 ticks
+	[2012/05/14 14:20:14:735]  Info com.neuronrobotics.sdk.pid.PIDChannel:setCachedTargetValue :
+Cacheing PID position group=8, setpoint=0 ticks
+	[2012/05/14 14:20:14:735]  Info com.neuronrobotics.sdk.pid.PIDChannel:setCachedTargetValue :
+Cacheing PID position group=9, setpoint=0 ticks
+	[2012/05/14 14:20:14:736]  Info com.neuronrobotics.sdk.pid.PIDChannel:setCachedTargetValue :
+Cacheing PID position group=10, setpoint=0 ticks
+	[2012/05/14 14:20:14:736]  Info com.neuronrobotics.sdk.pid.PIDChannel:setCachedTargetValue :
+Cacheing PID position group=11, setpoint=0 ticks
+	[2012/05/14 14:20:14:736]  Info com.neuronrobotics.sdk.pid.PIDChannel:setCachedTargetValue :
+Cacheing PID position group=12, setpoint=0 ticks
+	[2012/05/14 14:20:14:736]  Info com.neuronrobotics.sdk.pid.PIDChannel:setCachedTargetValue :
+Cacheing PID position group=13, setpoint=0 ticks
+	[2012/05/14 14:20:14:736]  Info com.neuronrobotics.sdk.pid.PIDChannel:setCachedTargetValue :
+Cacheing PID position group=14, setpoint=0 ticks
+	[2012/05/14 14:20:14:737]  Info com.neuronrobotics.sdk.pid.PIDChannel:setCachedTargetValue :
+Cacheing PID position group=15, setpoint=0 ticks
