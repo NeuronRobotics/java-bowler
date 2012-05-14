@@ -5,5 +5,12 @@
 	<classpathentry kind="lib" path="/NRSDK/lib/Jama-1.0.2.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/NRSDK"/>
 	<classpathentry kind="lib" path="/NRSDK/lib/nrjavaserial-3.8.2.jar"/>
+	<classpathentry kind="lib" path="/NRSDK/lib/bluecove-2.1.1.jar"/>
+	<classpathentry kind="lib" path="/NRSDK/lib/bluecove-gpl-2.1.1.jar"/>
+	<classpathentry kind="lib" path="/NRSDK/lib/j3dcore.jar"/>
+	<classpathentry kind="lib" path="/NRSDK/lib/j3dutils.jar"/>
+	<classpathentry kind="lib" path="/NRSDK/lib/miglayout-3.7.2-swing.jar"/>
+	<classpathentry kind="lib" path="/NRSDK/lib/motej.0.9.jar"/>
+	<classpathentry kind="lib" path="/NRSDK/lib/vecmath.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
