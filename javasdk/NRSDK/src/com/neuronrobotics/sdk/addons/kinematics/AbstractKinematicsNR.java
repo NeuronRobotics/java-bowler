@@ -519,7 +519,7 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 	 * @param link The link to be homed
 	 */
 	private long homeTime;
-	private synchronized void runHome(PIDChannel joint, int tps){
+	private void runHome(PIDChannel joint, int tps){
 		IPIDEventListener listen = new IPIDEventListener() {
 			
 			@Override
