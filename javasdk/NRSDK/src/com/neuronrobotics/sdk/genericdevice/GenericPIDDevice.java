@@ -122,7 +122,9 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 	 */
 	public int GetPIDPosition(int group) {
 		BowlerDatagram b = send(new  ControlPIDCommand((char) group));
-		return ByteList.convertToInt(b.getData().getBytes(1, 4),true);
+		return ByteList.convertToInt(b.getData().getBytes(	1,//Starting index
+															4),//number of bytes
+															true);//True for signed data
 	}
 
 	public int GetCachedPosition(int group) {
