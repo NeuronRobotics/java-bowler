@@ -97,7 +97,10 @@ public class DrivingTest implements IRobotDriveEventListener,ISensorListener{
 														true,//Async
 														1,// Kp
 														1,// Ki
-														.5);//Kd
+														.5,//Kd
+														0,//Value to latch on index pulse
+														false,//Use the latch system
+														false);//Stop PID controller on index latch event
 		dyio.ConfigureDynamicPIDChannels(dypid);
 		dyio.ConfigurePIDController(pid);
 		

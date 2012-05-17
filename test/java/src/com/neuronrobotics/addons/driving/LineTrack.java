@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class LineTrack implements IRobotDriveEventListener,ISensorListener{
 	AbstractRobotDrive mainRobot;
 	AbstractSensor line;
-	private final int driveVel = 5;
+	private final int driveVel = 2;
 	public void runTrack(AbstractRobotDrive m,AbstractSensor l) {
 		mainRobot=m;
 		line=l;
@@ -30,7 +30,7 @@ public class LineTrack implements IRobotDriveEventListener,ISensorListener{
 			mainRobot.DriveVelocityStraight(driveVel);
 		}else {
 			//System.out.println("turn");
-			mainRobot.DriveVelocityArc((diff)/30, 10*((diff>0)?1:-1));
+			mainRobot.DriveVelocityArc((diff)/60, 2*((diff>0)?1:-1));
 		}
 	}
 	@Override
