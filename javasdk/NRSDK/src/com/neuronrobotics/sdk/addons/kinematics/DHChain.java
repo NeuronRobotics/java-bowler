@@ -75,6 +75,12 @@ public  class DHChain {
 		return new TransformNR(forwardKinematicsMatrix(jointSpaceVector, store) );
 	}
 	
+	public Matrix getJacobian(double[] jointSpaceVector){
+		double [][] m = new double [6][getLinks().size()];
+		
+		return new Matrix(m);
+	}
+	
 	public Matrix forwardKinematicsMatrix(double[] jointSpaceVector, boolean store) {
 		if(getLinks() == null)
 			return new TransformNR().getMatrixTransform();

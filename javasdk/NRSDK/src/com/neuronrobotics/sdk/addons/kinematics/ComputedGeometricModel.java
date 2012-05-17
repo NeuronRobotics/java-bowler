@@ -4,6 +4,8 @@ import java.awt.Color;
 
 import javax.swing.JFrame;
 
+import Jama.Matrix;
+
 import com.neuronrobotics.sdk.addons.kinematics.DHChain;
 import com.neuronrobotics.sdk.addons.kinematics.DhInverseSolver;
 import com.neuronrobotics.sdk.addons.kinematics.gui.SimpleTransformViewer;
@@ -31,23 +33,39 @@ public class ComputedGeometricModel  implements DhInverseSolver{
 		if(!checkSphericalWrist() || dhChain.getLinks().size() != 6) {
 			throw new RuntimeException("This is not a 6DOF arm with a spherical wrist, this solver will not work");
 		}
-        double theta[] = new double[6];
-        double alpha[] = new double[6];
-        double r[] = new double[6];
-        double d[] = new double[6];
-        for(int i=0;i<6;i++){
-        	DHLink l = dhChain.getLinks().get(i);
-        	theta[i]=l.getTheta();
-        	alpha[i]=l.getAlpha();
-        	d[i]=l.getD();
-        	r[i]=l.getR();
-        	inv[i]=0;
-        }
-        
-        TransformNR sphericalCenter = new TransformNR(dhChain.getLinks().get(5).DhStepInverseRotory(target.getMatrixTransform(), 0));
-        
-        viewer.addTransform(sphericalCenter, "SC",Color.GREEN);
-        
+		//Attempting to implement:
+		//http://www.ri.cmu.edu/pub_files/pub1/xu_yangsheng_1993_1/xu_yangsheng_1993_1.pdf
+		TransformNR current = dhChain.forwardKinematics(jointSpaceVector);
+		viewer.addTransform(current, "CURRENT",Color.GREEN);
+		
+		//Procedure:
+		/*
+		Calculate the Jacobian
+		matrix J(Θ).
+		*/
+		
+		Matrix jacobian = dhChain.getJacobian(jointSpaceVector);
+		jacobian.getColumnDimension();
+		
+		/*
+		Determine the minima and
+		maxima for each of the Jij
+		elements of J(Θ).
+		*/
+		
+		/*
+		Generate p input/output data
+		vectors (dri, Jij, dθij).
+		*/
+		
+		/*
+		 * Apply fuzzy mapping to the
+				relation: dθij= dri /Jij
+		 */
+		
+        /*
+         * Combine weighted dθij terms to form the dθi terms.
+         */
 
 		return inv;
 	}
