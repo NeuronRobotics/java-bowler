@@ -319,14 +319,17 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 	 */
 	public boolean resync() {
 		if(getConnection() == null) {
+			Log.info("Not connected");
 			return false;
 		}
 		if(!getConnection().isConnected()) {
+			Log.info("Not connected");
 			return false;
 		}
-		if(isResyncing())
+		if(isResyncing()) {
+			Log.info("Already resyncing");
 			return true;
-		
+		}
 		setResyncing(true);
 		setMuteResyncOnModeChange(true);
 		Log.info("Re-syncing...");
@@ -357,11 +360,14 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 					response = send(new GetChannelModeCommand());
 				}catch(Exception e2){
 					e2.printStackTrace();
+					setMuteResyncOnModeChange(false);
 					throw new DyIOCommunicationException("DyIO failed to report during initialization. Could not determine DyIO configuration: "+e2.getMessage());
 				}
 			}
-			else
+			else {
+				setMuteResyncOnModeChange(false);
 				return false;
+			}
 		}
 		if(response == null)
 			checkFirmwareRev();
@@ -369,8 +375,10 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 			setAddress(response.getAddress());
 		//}
 		
-		if (response.getData().size()<24)
+		if (response.getData().size()<24) {
+			setMuteResyncOnModeChange(false);
 			throw new DyIOCommunicationException("Not enough channels, not a valid DyIO"+response.toString());
+		}
 		for (int i = 0; i < response.getData().size(); i++){
 			DyIOChannelMode cm = DyIOChannelMode.get(response.getData().getByte(i));
 			boolean editable = true;
@@ -381,12 +389,13 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 					Log.error("Mode get failed, setting to default");
 					send(new SetChannelModeCommand(i, cm));
 				} catch(Exception e) {
+					setMuteResyncOnModeChange(false);
 					throw new DyIOCommunicationException("Setting a pin to Digital In failed");
 				}
 			}
 			try{
+				Log.info("\n\nUpdating channel: "+i);
 				getInternalChannels().get(i).update(this, i, cm, editable);
-				//System.out.println("Updating channel: "+i);
 			}catch(IndexOutOfBoundsException e){
 				//System.out.println("New channel "+i);
 				getInternalChannels().add(new DyIOChannel(this, i, cm, editable));
@@ -398,9 +407,10 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 //			DyIOChannel dc =getInternalChannels().get(i);
 //			dc.fireModeChangeEvent(dc.getCurrentMode());
 //		}
+		setMuteResyncOnModeChange(false);
 		if (getInternalChannels().size()==0)
 			throw new DyIOCommunicationException("DyIO failed to report during initialization");
-		setMuteResyncOnModeChange(false);
+		
 		haveBeenSynced =true;
 		setResyncing(false);
 		return true;

@@ -70,7 +70,7 @@ public class DyIOChannel implements IDyIOChannel {
 	 * @param mode
 	 * @param isEditable
 	 */
-	public synchronized void update(DyIO dyio, int channel, DyIOChannelMode mode, boolean isEditable) {
+	public void update(DyIO dyio, int channel, DyIOChannelMode mode, boolean isEditable) {
 		setDevice(dyio);
 		number = channel;
 		editable = isEditable;
@@ -410,11 +410,12 @@ public class DyIOChannel implements IDyIOChannel {
 			e = DyIOChannelMode.DIGITAL_IN;
 		}
 		if(e==getMode()) {
-			//Log.info("Mode not changed: "+getChannelNumber()+" mode: "+getMode());
+			Log.info("Mode not changed: "+getChannelNumber()+" mode: "+getMode());
 		}
 		setCurrentMode(e);
-		for(IDyIOChannelModeChangeListener l : modeListeners) {
-			l.onModeChange(e);
+		for(int i=0;i<modeListeners.size();i++) {
+			Log.info("Notifying: "+modeListeners.get(i).getClass());
+			modeListeners.get(i).onModeChange(e);
 		}
 	}
 	/* (non-Javadoc)
@@ -471,7 +472,7 @@ public class DyIOChannel implements IDyIOChannel {
 	 * @see com.neuronrobotics.sdk.dyio.IDyIOChannel#setMode(com.neuronrobotics.sdk.dyio.DyIOChannelMode, boolean)
 	 */
 	
-	public synchronized boolean setMode(DyIOChannelMode mode, boolean async) {
+	public boolean setMode(DyIOChannelMode mode, boolean async) {
 		if(settingMode)
 			return true;
 		
@@ -504,11 +505,12 @@ public class DyIOChannel implements IDyIOChannel {
 					try {
 						getDevice().resync();
 					}catch(RuntimeException e) {
-						//e.printStackTrace();
+						e.printStackTrace();
 						getDevice().setMuteResyncOnModeChange(true);
 					}
 				}else{
 					Log.debug("Not resyncing from channel: "+getChannelNumber());
+					fireModeChangeEvent(mode); 
 				}
 				settingMode=false;
 				return true;

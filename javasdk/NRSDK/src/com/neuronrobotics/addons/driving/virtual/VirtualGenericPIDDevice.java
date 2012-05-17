@@ -72,7 +72,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 
 	@Override
 	public boolean SetPIDSetPoint(int group, int setpoint, double seconds) {
-		Log.info("Virtual setpoiint, group="+group+" setpoint="+setpoint);
+		Log.info("Virtual setpoint, group="+group+" setpoint="+setpoint);
 		driveThreads.get(group).SetPIDSetPoint(setpoint, seconds);
 		return true;
 	}
@@ -233,19 +233,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 			}	
 			return false;
 		}
-//		public void run() {
-//			while(true) {
-//				while(isPause()){
-//					ThreadUtil.wait(10);
-//				}
-//				try {Thread.sleep(threadTime);} catch (InterruptedException e) {}
-//				interpolate();
-//				if((ticks!=lastTick) && !isPause()) {
-//					lastTick=ticks;
-//					firePIDEvent(new PIDEvent(getChan(), (int)ticks, System.currentTimeMillis(),0));
-//				}
-//			}
-//		}
+
 		public synchronized  void ResetEncoder(int value) {
 			System.out.println("Resetting channel "+getChan());
 			velocityRun=false;
