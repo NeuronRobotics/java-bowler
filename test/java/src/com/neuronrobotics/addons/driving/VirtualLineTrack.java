@@ -16,7 +16,7 @@ public class VirtualLineTrack {
 				VirtualWorld w = new VirtualWorld();
 				AbstractRobotDrive a = new VirtualAckermanBot(w); 
 				AbstractSensor line = new VirtualLineSensor(a,w);
-				//new LineTrack().runTrack(a,line);
+				new LineTrack().runTrack(a,line);
 			}
 		}.start();
 
