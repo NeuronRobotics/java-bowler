@@ -1,6 +1,7 @@
 package com.neuronrobotics.sdk.addons.kinematics;
 
 import java.awt.Color;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 
@@ -33,6 +34,7 @@ public class ComputedGeometricModel  implements DhInverseSolver{
 		if(!checkSphericalWrist() || dhChain.getLinks().size() != 6) {
 			throw new RuntimeException("This is not a 6DOF arm with a spherical wrist, this solver will not work");
 		}
+
 		//Attempting to implement:
 		//http://www.ri.cmu.edu/pub_files/pub1/xu_yangsheng_1993_1/xu_yangsheng_1993_1.pdf
 		TransformNR current = dhChain.forwardKinematics(jointSpaceVector);
@@ -66,6 +68,8 @@ public class ComputedGeometricModel  implements DhInverseSolver{
         /*
          * Combine weighted dθij terms to form the dθi terms.
          */
+        
+        
 
 		return inv;
 	}

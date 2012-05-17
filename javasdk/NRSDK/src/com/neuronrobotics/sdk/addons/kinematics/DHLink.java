@@ -1,7 +1,5 @@
 package com.neuronrobotics.sdk.addons.kinematics;
 
-import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
-
 import Jama.Matrix;
 
 public class DHLink {
@@ -10,10 +8,10 @@ public class DHLink {
 	private final double theta;
 	private final double r;
 	private final double alpha;
-	Matrix transX;
-	Matrix rotX;
-	Matrix transZ;
-	Matrix rotZ;
+	private Matrix transX;
+	private Matrix rotX;
+	private Matrix transZ;
+	private Matrix rotZ;
 	public DHLink(double d, double theta,double r, double alpha) {
 		this.d = d;
 		this.theta = theta;
@@ -52,62 +50,93 @@ public class DHLink {
 	}
 	
 	private void setMatrix(double rotory,double prismatic){
-		transZ = new Matrix( new double [][] {	
+		setTransZ(new Matrix( new double [][] {	
 				{1,0,0,0},
 				{0,1,0,0},
 				{0,0,1,getD()+prismatic},
 				{0,0,0,1}
-																	  });
+																	  }));
 		
-		rotZ = new Matrix( new double [][] {	
+		setRotZ(new Matrix( new double [][] {	
 				{Math.cos(getTheta()+rotory),	-Math.sin(getTheta()+rotory),	0,	0},
 				{Math.sin(getTheta()+rotory),	Math.cos(getTheta()+rotory),	0,	0},
 				{0,									0,									1,	0},
 				{0,									0,									0,	1}
 																	  }
-														);
-		
-		 if(transX == null){
-			 transX =  new Matrix( new double [][] {	
-					{1,0,0,getR()},
-					{0,1,0,0},
-					{0,0,1,0},
-					{0,0,0,1}
-															  }
-														
-														);
-		 }	
-		 if(rotX == null){
-			 rotX =  new Matrix( new double [][] {	
-				{1,	0,						0,							0},
-				{0,	Math.cos(getAlpha()),	-Math.sin(getAlpha()),		0},
-				{0,	Math.sin(getAlpha()),	Math.cos(getAlpha()),		0},
-				{0,	0,						0,							1}
-																	  }
-														
-														);
-		 }
+														));
 	}
 	
 	public Matrix DhStep(double rotory,double prismatic) {
 
 		setMatrix(rotory, prismatic);
 		
-		Matrix step = transZ;
-		step = step.times(rotZ);
-		step = step.times(transX);
-		step = step.times(rotX);
+		Matrix step = getTransZ();
+		step = step.times(getRotZ());
+		step = step.times(getTransX());
+		step = step.times(getRotX());
 		
 		return step;
 	}
 	public Matrix DhStepInverse(Matrix end,double rotory,double prismatic) {
 		setMatrix(rotory, prismatic);
 		
-		Matrix step = end.times(transZ.inverse());
-		step = step.times(rotZ.inverse());
-		step = step.times(transX.inverse());
-		step = step.times(rotX.inverse());
+		Matrix step = end.times(getTransZ().inverse());
+		step = step.times(getRotZ().inverse());
+		step = step.times(getTransX().inverse());
+		step = step.times(getRotX().inverse());
 		
 		return step;
+	}
+
+	public void setTransX(Matrix transX) {
+		this.transX = transX;
+	}
+
+	public Matrix getTransX() {
+		 if(transX == null){
+			 setTransX(new Matrix( new double [][] {	
+					{1,0,0,getR()},
+					{0,1,0,0},
+					{0,0,1,0},
+					{0,0,0,1}
+															  }
+														
+														));
+		 }	
+		return transX;
+	}
+
+	public void setRotX(Matrix rotX) {
+		this.rotX = rotX;
+	}
+
+	public Matrix getRotX() {
+		 if(rotX == null){
+			 setRotX(new Matrix( new double [][] {	
+				{1,	0,						0,							0},
+				{0,	Math.cos(getAlpha()),	-Math.sin(getAlpha()),		0},
+				{0,	Math.sin(getAlpha()),	Math.cos(getAlpha()),		0},
+				{0,	0,						0,							1}
+																	  }
+														
+														));
+		 }
+		return rotX;
+	}
+
+	public void setTransZ(Matrix transZ) {
+		this.transZ = transZ;
+	}
+
+	public Matrix getTransZ() {
+		return transZ;
+	}
+
+	public void setRotZ(Matrix rotZ) {
+		this.rotZ = rotZ;
+	}
+
+	public Matrix getRotZ() {
+		return rotZ;
 	}
 }

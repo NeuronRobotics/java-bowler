@@ -14,21 +14,11 @@ public  class DHChain {
 	private final double[] upperLimits;
 	private final double[] lowerLimits;
 	private boolean debug=false;
-	//private DHViewer viewer=null;
-	JFrame frame; 
+
 	DhInverseSolver is;
 	public DHChain(double [] upperLimits,double [] lowerLimits, boolean debugViewer ) {
 		this(upperLimits, lowerLimits);
-		if(debugViewer){
-			this.debug=true;
-			//setViewer(new DHViewer(this, new double[]{0,0,0,0,0,0}));
-			frame = new JFrame();
-			//frame.getContentPane().add(getViewer());
-			frame.setSize(1024, 768);
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			frame.setLocationRelativeTo(null);
-			frame.setVisible(true);
-		}
+
 	}
 	
 	public DHChain(double [] upperLimits,double [] lowerLimits ) {
