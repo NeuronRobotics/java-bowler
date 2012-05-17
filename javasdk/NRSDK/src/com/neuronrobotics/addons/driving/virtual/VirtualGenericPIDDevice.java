@@ -175,13 +175,13 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 	
 	private class DriveThread {
 		
-		private long ticks=0;
-		private long lastTick=ticks;
-		private long lastInterpolationTime;
-		private long setPoint;
-		private long duration;
-		private long startTime;
-		private long startPoint;
+		private double ticks=0;
+		private double lastTick=ticks;
+		private double lastInterpolationTime;
+		private double setPoint;
+		private double duration;
+		private double startTime;
+		private double startPoint;
 		private boolean pause = false;
 		private boolean velocityRun=false;
 		private double unitsPerMs;
@@ -191,9 +191,13 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 		}
 		public void SetVelocity(double unitsPerSecond) {
 			//System.out.println("Setting velocity to "+unitsPerSecond+"ticks/second");
+			setPause(true);
+			
 			this.unitsPerMs=unitsPerSecond/1000;
 			lastInterpolationTime=System.currentTimeMillis();
 			velocityRun=true;
+			
+			setPause(false);
 		}
 		public int getPosition() {
 			return (int) ticks;
@@ -287,11 +291,11 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 				duration = 0;
 			}
 			if(velocityRun){
-				long ms = System.currentTimeMillis()-lastInterpolationTime;
-				//System.out.println("Time Diff="+ms+" tick difference="+unitsPerMs*ms+" ticksPerMs="+unitsPerMs);
+				double ms = (double) (System.currentTimeMillis()-lastInterpolationTime);
 				back=(ticks+unitsPerMs*ms);
+				System.out.println("Time Diff="+ms+" \n\ttick difference="+unitsPerMs*ms+" \n\tticksPerMs="+unitsPerMs +" \n\tCurrent value="+back );
 			}
-			ticks = (long) back;
+			ticks = back;
 			lastInterpolationTime=System.currentTimeMillis();
 		}
 		public boolean isPause() {
