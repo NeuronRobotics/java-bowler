@@ -123,6 +123,7 @@ public class BasicWalker {
 			    		if(useHardware){
 				    		ServoChannel srv = new ServoChannel(getDyio().getChannel(channel));
 				    		WalkerServoLink tmpLink = new WalkerServoLink(srv,home,llimit,ulimit,(scale*inverse),linkLen,type);
+				
 				    		legLinks.add(tmpLink);
 			    		}
 		    		}
@@ -138,6 +139,7 @@ public class BasicWalker {
 	public void loadHomeValuesFromDyIO() {
 		for(Leg l:legs) {
 			l.loadHomeValuesFromDyIO();
+			l.save();
 		}
 	}
 	public String getXML() {
