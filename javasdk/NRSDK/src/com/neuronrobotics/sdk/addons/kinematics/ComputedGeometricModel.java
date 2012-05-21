@@ -46,8 +46,8 @@ public class ComputedGeometricModel  implements DhInverseSolver{
 		matrix J(Θ).
 		*/
 		
-		Matrix jacobian = dhChain.getJacobian(jointSpaceVector);
-		jacobian.getColumnDimension();
+		//Matrix jacobian = dhChain.getJacobian(jointSpaceVector);
+		//jacobian.getColumnDimension();
 		
 		/*
 		Determine the minima and

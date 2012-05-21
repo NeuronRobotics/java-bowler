@@ -11,6 +11,7 @@ import Jama.Matrix;
 public  class DHChain {
 	private ArrayList<DHLink> links = new ArrayList<DHLink>();
 	private ArrayList<TransformNR> chain = new ArrayList<TransformNR>();
+	private ArrayList<TransformNR> intChain = new ArrayList<TransformNR>();
 	private final double[] upperLimits;
 	private final double[] lowerLimits;
 	private boolean debug=false;
@@ -64,11 +65,58 @@ public  class DHChain {
 	public TransformNR forwardKinematics(double[] jointSpaceVector, boolean store) {
 		return new TransformNR(forwardKinematicsMatrix(jointSpaceVector, store) );
 	}
-	
-	public Matrix getJacobian(double[] jointSpaceVector){
-		double [][] m = new double [6][getLinks().size()];
+	/**
+	 * Gets the task space velocites from the joint space velocity vector
+	 * @param jointSpaceVelocityVector the joint velocities
+	 * @return a matrix of the task space velocities
+	 */
+	public Matrix getTaskSpaceVelocites(double[] jointSpaceVelocityVector,double[] jointSpaceVector, TransformNR currentTip){
+		double [][] data = new double[6][getLinks().size()]; 
+		getChain(jointSpaceVector);
+		for(int i=0;i<getLinks().size();i++){
+			
+			double [] zVect = new double [3];
+			
+			if(i==0){
+				zVect[0]=0;
+				zVect[1]=0;
+				zVect[2]=1;
+			}else{
+				//Get the rz vector from matrix
+				zVect[0]=chain.get(i-1).getRotationMatrix().getRotationMatrix()[0][2];
+				zVect[1]=chain.get(i-1).getRotationMatrix().getRotationMatrix()[1][2];
+				zVect[2]=chain.get(i-1).getRotationMatrix().getRotationMatrix()[2][2];
+			}
+			//Assume all rotational joints
+			//Set to zero if prismatic
+			data[i][3]=zVect[0];
+			data[i][4]=zVect[1];
+			data[i][5]=zVect[2];
+			
+			//Figure out the current 
+			Matrix current = new TransformNR().getMatrixTransform();
+			for(int j=i;j<getLinks().size();j++) {
+				Matrix step = getLinks().get(j).DhStepRotory(Math.toRadians(jointSpaceVector[j]));
+				//System.out.println("Current:\n"+current+"Step:\n"+step);
+				current = current.times(step);
+			}
+			double [] rVect = new double [3];
+			TransformNR tmp = new TransformNR(current);
+			rVect[0]=tmp.getX();
+			rVect[1]=tmp.getY();
+			rVect[2]=tmp.getZ();
+			
+			double [] xProd = new double [3];
+			
+			//Cross product of rVect and Z vect
+			
+			data[i][0]=xProd[0];
+			data[i][1]=xProd[1];
+			data[i][2]=xProd[2];
+			
+		}
 		
-		return new Matrix(m);
+		return new Matrix(data);
 	}
 	
 	public Matrix forwardKinematicsMatrix(double[] jointSpaceVector, boolean store) {
@@ -83,8 +131,10 @@ public  class DHChain {
 			Matrix step = getLinks().get(i).DhStepRotory(Math.toRadians(jointSpaceVector[i]));
 			//System.out.println("Current:\n"+current+"Step:\n"+step);
 			current = current.times(step);
-			if(store)
+			if(store){
+				intChain.add(new TransformNR(step));
 				chain.add(new TransformNR(current));
+			}
 		}
 		//System.out.println("Final:\n"+current);
 		return current;
