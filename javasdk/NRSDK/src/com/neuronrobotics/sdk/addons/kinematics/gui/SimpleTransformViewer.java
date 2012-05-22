@@ -96,22 +96,38 @@ public class SimpleTransformViewer extends Canvas3D {
     	simpleU.addBranchGraph(rootBranchGroup);
     	resetView();
     	clearTransforms();
-	} // end of CreateSceneGraph method of HelloJava3Db
+	} 
+	
+	public void removeTransform(String label) {
+		for (int i=0; i< transforms.size();i++){
+			if(transforms.get(i).getLabel().equals(label)){
+				transforms.remove(i);
+			}
+		}
+		@SuppressWarnings("unchecked")
+		ArrayList<TransformHolder> tmp = (ArrayList<TransformHolder>) transforms.clone();
+		transforms.clear();
+		base.removeAllChildren();
+		for(int i=0;i< tmp.size();i++){
+			addTransform(tmp.get(i).getLocation(),tmp.get(i).getLabel(), tmp.get(i).getColor());
+		}
+	}
 	
 	public TransformGroup addTransform(TransformNR tr,String label, Color color) {
 		Transform3D trans = TransformFactory.getTransform(tr);
 		return addTransform(trans,label,color);
 	}
-	public synchronized TransformGroup addTransform(Transform3D tr,String label, Color color) {
+	public TransformGroup addTransform(Transform3D tr,String label, Color color) {
 		for(TransformHolder h:transforms){
 			if(h.getLabel().equals(label)){
-				h.getTransform().setTransform(tr);
+				
+				h.setLocation(tr);
 				return h.getTransform();
 			}
 		}
 		System.out.println("Adding a transform "+label);
 		TransformGroup tmp = TransformFactory.getLabledAxis(tr, label,color);
-		transforms.add(new TransformHolder(tmp, label));
+		transforms.add(new TransformHolder(tmp, label,color,tr));
 		BranchGroup child = new BranchGroup();
 		child.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
 		child.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
@@ -149,10 +165,14 @@ public class SimpleTransformViewer extends Canvas3D {
 	private class TransformHolder{
 		private final TransformGroup mine;
 		private final String label;
+		private final Color color;
+		private Transform3D location;
 
-		public TransformHolder(TransformGroup mine,String label){
+		public TransformHolder(TransformGroup mine,String label, Color color,Transform3D location){
 			this.mine = mine;
 			this.label = label;
+			this.color = color;
+			this.setLocation(location);
 			
 		}
 
@@ -162,6 +182,19 @@ public class SimpleTransformViewer extends Canvas3D {
 
 		public TransformGroup getTransform() {
 			return mine;
+		}
+
+		public Transform3D getLocation() {
+			return location;
+		}
+
+		public void setLocation(Transform3D location) {
+			this.location = location;
+			getTransform().setTransform(location);
+		}
+
+		public Color getColor() {
+			return color;
 		}
 	}
 
