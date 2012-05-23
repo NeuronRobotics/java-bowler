@@ -11,9 +11,9 @@
 	<classpathentry kind="lib" path="lib/bluecove-gpl-2.1.1.jar"/>
 	<classpathentry kind="lib" path="lib/Jama-1.0.2.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/nrjavaserial-3.8.2.jar"/>
 	<classpathentry kind="lib" path="lib/j3dcore.jar"/>
 	<classpathentry kind="lib" path="lib/j3dutils.jar"/>
 	<classpathentry kind="lib" path="lib/vecmath.jar"/>
+	<classpathentry kind="lib" path="lib/nrjavaserial-3.8.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

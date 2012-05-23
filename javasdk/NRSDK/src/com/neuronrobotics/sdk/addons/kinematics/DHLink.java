@@ -12,6 +12,12 @@ public class DHLink {
 	private Matrix rotX;
 	private Matrix transZ;
 	private Matrix rotZ;
+	
+	private Matrix transX_J;
+	private Matrix rotX_J;
+	private Matrix transZ_J;
+	private Matrix rotZ_J;
+	
 	public DHLink(double d, double theta,double r, double alpha) {
 		this.d = d;
 		this.theta = theta;
@@ -49,23 +55,6 @@ public class DHLink {
 		return DhStep(0,jointValue);
 	}
 	
-	private void setMatrix(double rotory,double prismatic){
-		setTransZ(new Matrix( new double [][] {	
-				{1,0,0,0},
-				{0,1,0,0},
-				{0,0,1,getD()+prismatic},
-				{0,0,0,1}
-																	  }));
-		
-		setRotZ(new Matrix( new double [][] {	
-				{Math.cos(getTheta()+rotory),	-Math.sin(getTheta()+rotory),	0,	0},
-				{Math.sin(getTheta()+rotory),	Math.cos(getTheta()+rotory),	0,	0},
-				{0,									0,									1,	0},
-				{0,									0,									0,	1}
-																	  }
-														));
-	}
-	
 	public Matrix DhStep(double rotory,double prismatic) {
 
 		setMatrix(rotory, prismatic);
@@ -77,6 +66,7 @@ public class DHLink {
 		
 		return step;
 	}
+	
 	public Matrix DhStepInverse(Matrix end,double rotory,double prismatic) {
 		setMatrix(rotory, prismatic);
 		
@@ -88,55 +78,122 @@ public class DHLink {
 		return step;
 	}
 
+
 	public void setTransX(Matrix transX) {
 		this.transX = transX;
-	}
-
-	public Matrix getTransX() {
-		 if(transX == null){
-			 setTransX(new Matrix( new double [][] {	
-					{1,0,0,getR()},
-					{0,1,0,0},
-					{0,0,1,0},
-					{0,0,0,1}
-															  }
-														
-														));
-		 }	
-		return transX;
 	}
 
 	public void setRotX(Matrix rotX) {
 		this.rotX = rotX;
 	}
+	
+	
+	private void setMatrix(double rotory,double prismatic){
+		transZ = new Matrix( new double [][] {	
+				{1,0,0,0},
+				{0,1,0,0},
+				{0,0,1,getD()+prismatic},
+				{0,0,0,1}});
+		
+		rotZ=new Matrix( new double [][] {	
+				{Math.cos(getTheta()+rotory),	 -Math.sin(getTheta()+rotory),	0,	0},
+				{Math.sin(getTheta()+rotory),	  Math.cos(getTheta()+rotory),	0,	0},
+				{0,															0,	1,	0},
+				{0,															0,	0,	1}});
+	}
+	public Matrix getTransX() {
+		 if(transX == null){
+			 transX=new Matrix( new double [][] {	
+					{1,0,0,getR()},
+					{0,1,0,0},
+					{0,0,1,0},
+					{0,0,0,1}});
+		}	
+		return transX;
+	}
 
 	public Matrix getRotX() {
 		 if(rotX == null){
-			 setRotX(new Matrix( new double [][] {	
+			 rotX=new Matrix( new double [][] {	
 				{1,	0,						0,							0},
 				{0,	Math.cos(getAlpha()),	-Math.sin(getAlpha()),		0},
 				{0,	Math.sin(getAlpha()),	Math.cos(getAlpha()),		0},
-				{0,	0,						0,							1}
-																	  }
-														
-														));
+				{0,	0,						0,							1}});
 		 }
 		return rotX;
 	}
-
-	public void setTransZ(Matrix transZ) {
-		this.transZ = transZ;
-	}
-
 	public Matrix getTransZ() {
 		return transZ;
-	}
-
-	public void setRotZ(Matrix rotZ) {
-		this.rotZ = rotZ;
 	}
 
 	public Matrix getRotZ() {
 		return rotZ;
 	}
+	
+	/**
+	 * Gets a jacobian matrix of this link
+	 * @param rotoryVelocity
+	 * @param prismaticVelocity
+	 * @return the Jacobian
+	 */
+	public Matrix DhStepJacobian(double rotoryVelocity,double prismaticVelocity) {
+
+		setJacobianMatrix(rotoryVelocity, prismaticVelocity);
+		
+		Matrix step = getTransZ_J();
+		step = step.times(getRotZ_J());
+		step = step.times(getTransX_J());
+		step = step.times(getRotX_J());
+		
+		return step;
+	}
+	/**
+	 * Sets up the 2 alterable Jacobian matrixs 
+	 * @param rotory the rotory velocity of the Theta link
+	 * @param prismatic the linear velocity of the D link
+	 */
+	private void setJacobianMatrix(double rotory,double prismatic){
+		rotZ_J = new Matrix( new double [][] {	
+				{1,0,0,					0	},
+				{0,1,0,					0	},
+				{0,0,1,	getD()+prismatic	},
+				{0,0,0,					1	}});
+		
+		transZ_J  = new Matrix( new double [][] {	
+				{Math.cos(getTheta()+rotory),-Math.sin(getTheta()+rotory),	0,	0},
+				{Math.sin(getTheta()+rotory), Math.cos(getTheta()+rotory),	0,	0},
+				{0,														0,	1,	0},
+				{0,														0,	0,	1}});
+	}
+	public Matrix getRotX_J() {
+		 if(rotX_J == null){
+			 rotX_J = new Matrix( new double [][] {	
+				{1,	0,						0,							0},
+				{0,	Math.cos(getAlpha()),	-Math.sin(getAlpha()),		0},
+				{0,	Math.sin(getAlpha()),	Math.cos(getAlpha()),		0},
+				{0,	0,						0,							1}});
+		 }
+		return rotX_J;
+	}
+	
+	public Matrix getTransX_J() {
+		 if(transX_J == null){
+			 transX_J= new Matrix( new double [][] {	
+					{1,0,0,getR()},
+					{0,1,0,0},
+					{0,0,1,0},
+					{0,0,0,1}});
+		 }	
+		return transX_J;
+	}
+
+
+
+	public Matrix getTransZ_J() {
+		return transZ_J;
+	}
+	public Matrix getRotZ_J() {
+		return rotZ_J;
+	}
+
 }

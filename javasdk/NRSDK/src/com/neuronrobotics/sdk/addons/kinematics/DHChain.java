@@ -15,8 +15,7 @@ public  class DHChain {
 	private final double[] upperLimits;
 	private final double[] lowerLimits;
 	private boolean debug=false;
-
-	DhInverseSolver is;
+	private DhInverseSolver is;
 	public DHChain(double [] upperLimits,double [] lowerLimits, boolean debugViewer ) {
 		this(upperLimits, lowerLimits);
 
@@ -70,7 +69,7 @@ public  class DHChain {
 	 * @param jointSpaceVelocityVector the joint velocities
 	 * @return a matrix of the task space velocities
 	 */
-	public Matrix getTaskSpaceVelocites(double[] jointSpaceVelocityVector,double[] jointSpaceVector, TransformNR currentTip){
+	public Matrix getJacobian(double[] jointSpaceVector){
 		double [][] data = new double[6][getLinks().size()]; 
 		getChain(jointSpaceVector);
 		for(int i=0;i<getLinks().size();i++){
@@ -149,64 +148,6 @@ public  class DHChain {
 		return chain;
 	}
 	
-
-	public static void main(String [] args){
-
-		DHChain tk = new DHChain(new double[]{90,90,90,90,90,90}, new double[]{-90,-90,-90,-90,-90,-90}, true);
-
-		ThreadUtil.wait(2000);
-//		Transform target = new Transform(new Matrix(new double [][] {
-//				{ -000.46,	0000.63,	-000.63,	-252.29	 },
-//				{ 0000.21,	0000.76,	0000.61,	0051.07	 },
-//				{ 0000.86,	0000.15,	-000.48,	0083.43	 },
-//				{ 0000.00,	0000.00,	0000.00,	0001.00	 }
-//				}));
-		// the expected Joint space vector is { -10,45,-45,45,45,45}
-		//double [] targetVect = new double [] { -85,10,-90,0,90,90};
-		double [] targetVect = new double [] { -10,45,-45,45,45,45};
-		TransformNR target = tk.forwardKinematics(targetVect);
-		TransformNR home = tk.forwardKinematics(new  double [] {0,0,0,0,0,0});
-		try {
-			double [] back = tk.inverseKinematics(target, new  double [] {0,0,0,0,0,0});
-			System.out.print("\nJoint angles targeted: {");
-			for(int i=0;i<6;i++){
-				System.out.print(" "+targetVect[i]);
-			}
-			System.out.print("} \n");
-			System.out.print("\nJoint angles difference: {");
-			for(int i=0;i<6;i++){
-				System.out.print(" "+(back[i]-targetVect[i]));
-			}
-			System.out.print("} \n");
-			//System.out.println("Attempted\n"+target+"\nArrived at \n"+tk.forwardKinematics(back));
-			ThreadUtil.wait(5000);
-			
-			back = tk.inverseKinematics( home,back);
-			System.out.print("\nJoint angles targeted: {");
-			for(int i=0;i<6;i++){
-				System.out.print(" "+0);
-			}
-			System.out.print("} \n");
-			System.out.print("\nJoint angles difference: {");
-			for(int i=0;i<6;i++){
-				System.out.print(" "+(back[i]));
-			}
-			System.out.print("} \n");
-			//System.out.println("Attempted\n"+target+"\nArrived at \n"+tk.forwardKinematics(back));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-//	public void setViewer(DHViewer viewer) {
-//		this.viewer = viewer;
-//	}
-//
-//	public DHViewer getViewer() {
-//		return viewer;
-//	}
-
 	public double[] getUpperLimits() {
 		// TODO Auto-generated method stub
 		return upperLimits;
