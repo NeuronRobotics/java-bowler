@@ -63,6 +63,11 @@
     <tstamp>
       <format property="TODAY" pattern="yyyy-MM-dd" />
     </tstamp>
+  	<jar jarfile="${dist.home}/external-libs.jar">
+	  <zipgroupfileset dir="lib/">
+	    <include name="**/*.jar"/>
+	  </zipgroupfileset>
+	</jar>
     <jar jarfile="${dist.home}/${app.name}-${app.version}-jar-with-dependencies.jar">
       <manifest>
         <attribute name="Sealed" value="true"/>
@@ -75,7 +80,11 @@
       	<include name="**/*.properties"/>
         <exclude name="test/*.class"/>
       </fileset>
-      <zipgroupfileset dir="lib" includes="*.jar" />
+      <!--<zipgroupfileset dir="lib" includes="*.jar" />-->
+    	<zipfileset src="${dist.home}/external-libs.jar">
+	  	    <exclude name="META-INF/SUN_MICR.SF"/>
+	  		<exclude name="META-INF/SUN_MICR.RSA"/>
+	  	</zipfileset>
     </jar>
   	
     <copy todir="${dist.home}/lib">
