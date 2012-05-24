@@ -87,7 +87,7 @@
    description="Create Javadoc API documentation">
     
     <javadoc sourcepath="${src.home}" destdir="${dist.home}/docs/api" packagenames="*" 
-    	source="1.6" splitindex="true" use="true" version="true">
+    	source="1.7" splitindex="true" use="true" version="true">
       <classpath refid="compile.classpath"/> 
       <bottom><![CDATA[<script type="text/javascript" src="/googleanalytics.js"></script>]]></bottom>
    	</javadoc>
