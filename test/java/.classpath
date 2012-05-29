@@ -16,5 +16,6 @@
 	<classpathentry kind="lib" path="/NRSDK/lib/vecmath.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/NRSDK"/>
 	<classpathentry kind="lib" path="/NRSDK/lib/nrjavaserial-3.8.4.jar"/>
+	<classpathentry kind="lib" path="lib/PIDSIm.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
