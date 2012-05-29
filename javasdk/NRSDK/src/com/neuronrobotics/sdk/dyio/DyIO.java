@@ -285,6 +285,13 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 	}
 	
 	/**
+	 * This static method can be called before connection a DyIO object to enable the firmware verification step
+	 */
+	public static void enableFWCheck() {
+		checkFirmware=true;
+	}
+	
+	/**
 	 * Sync the state cache with the live device. 
 	 * This method will query the device for its firmware revision and its info string. 
 	 * The default opperation will be to throw a DyIOFirmwareOutOfDateException is the firmware version does not match
@@ -298,7 +305,8 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 				if(firmware[i] != sdkRev[i]){
 					DyIOFirmwareOutOfDateException e = new DyIOFirmwareOutOfDateException( 	"\nNRDK version = "+new ByteList(sdkRev)+
 																"\nDyIO version = "+ new ByteList(firmware)+
-																"\nTry updating your firmware using the firmware update instructions from http://neuronrobotics.com/");
+																"\nTry updating your firmware using the firmware update instructions from"+
+																"\nhttp://wiki.neuronrobotics.com/NR_Console_Update_Firmware");
 					//e.printStackTrace();
 					throw e;
 				}
