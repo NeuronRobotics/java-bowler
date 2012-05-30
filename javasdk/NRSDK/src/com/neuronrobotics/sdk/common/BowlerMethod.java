@@ -34,7 +34,11 @@ public enum BowlerMethod implements ISendable {
 	POST(0x20),
 	
 	/** The CRITICAL. */
-	CRITICAL(0x30);
+	CRITICAL(0x30),
+	
+	/** The ASYNCHRONOUS. */
+	ASYNCHRONOUS(0x40);
+	
 	
 	/** The Constant lookup. */
 	private static final Map<Byte,BowlerMethod> lookup = new HashMap<Byte,BowlerMethod>();
