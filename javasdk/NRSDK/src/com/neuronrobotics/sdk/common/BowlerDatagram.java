@@ -176,7 +176,7 @@ public class BowlerDatagram implements ISendable {
 	 * @return true if Syncronous
 	 */
 	public boolean isSyncronous() {
-		return transactionID == 0;
+		return transactionID == 0 || method == BowlerMethod.ASYNCHRONOUS;
 	}
 	
 	/**
