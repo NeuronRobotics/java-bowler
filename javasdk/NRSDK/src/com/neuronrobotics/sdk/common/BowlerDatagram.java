@@ -54,7 +54,7 @@ public class BowlerDatagram implements ISendable {
 	private BowlerMethod method;
 	
 	/** The transaction id. */
-	private byte transactionID;
+	private byte namespaceResolutionID;
 	
 	/** The upstream. */
 	private boolean upstream;
@@ -106,7 +106,7 @@ public class BowlerDatagram implements ISendable {
 
 		address = new MACAddress(raw.getBytes(1,6));
 		method = BowlerMethod.get(raw.getByte(7));
-		transactionID = (byte) (raw.getByte(8)&0x7f);
+		namespaceResolutionID = (byte) (raw.getByte(8)&0x7f);
 		upstream=(raw.getByte(8)<0);
 		// Make sure that the size of the data payload is the stated length
 		if(raw.getByte(9) != raw.getBytes(11).length) {
@@ -166,8 +166,8 @@ public class BowlerDatagram implements ISendable {
 	 *
 	 * @return the current transaction id
 	 */
-	public byte getTransactionID() {
-		return transactionID;
+	public byte getNamespaceResolutionID() {
+		return (byte) getSessionID();
 	}
 
 	/**
@@ -176,10 +176,10 @@ public class BowlerDatagram implements ISendable {
 	 * @return true if Syncronous
 	 */
 	public boolean isSyncronous() {
-		if(transactionID != 0 && method == BowlerMethod.ASYNCHRONOUS){
+		if(namespaceResolutionID != 0 && method == BowlerMethod.ASYNCHRONOUS){
 			Log.error("Device firmware out of date, should be using BowlerMethod.ASYNCHRONOUS rather than transactionID != 0");
 		}
-		return transactionID == 0 && method != BowlerMethod.ASYNCHRONOUS;
+		return namespaceResolutionID == 0 && method != BowlerMethod.ASYNCHRONOUS;
 	}
 	
 	/**
@@ -197,7 +197,7 @@ public class BowlerDatagram implements ISendable {
 	 * @return the transaction upstream
 	 */
 	public byte getTransactionUpstream(){
-		byte back=(byte) (getTransactionID()|(isUpstream()?0x80:0));
+		byte back=(byte) (getNamespaceResolutionID()|(isUpstream()?0x80:0));
 		return back;
 	}
 
@@ -222,8 +222,8 @@ public class BowlerDatagram implements ISendable {
 	 *
 	 * @return The Session ID
 	 */
-	public int getSessionID() {
-		return transactionID >= 0 ? (int) transactionID:(int) transactionID+256;
+	private int getSessionID() {
+		return namespaceResolutionID >= 0 ? (int) namespaceResolutionID:(int) namespaceResolutionID+256;
 	}
 	
 	/**
@@ -275,7 +275,7 @@ public class BowlerDatagram implements ISendable {
 		str += "\tMAC address: \t" + address + '\n';
 		str += "\tMethod: \t" + method + '\n';
 		str += "\tDirection: \t";
-		str += "(" + (int) transactionID + ") ";
+		str += "(" + (int) namespaceResolutionID + ") ";
 		str += isSyncronous() ? "Syncronous\n" : "Asyncronous\n";
 		str += "\tSession ID: \t" + getSessionID();
 		str += "\n\tData Size: \t" + (int) data.size() + '\n';
@@ -318,7 +318,7 @@ public class BowlerDatagram implements ISendable {
 	}
 
 	public void setAsAsync(int id) {
-		transactionID=(byte) id;
+		namespaceResolutionID=(byte) id;
 		method = BowlerMethod.ASYNCHRONOUS;
 	}
 }
