@@ -5,11 +5,15 @@
  
   <property name="app.path"      value="/${app.name}"/>
   <property name="build.home"    value="${basedir}/build"/>
-  <property name="lib.home"      value="${basedir}/lib"/>
+
   <property name="dist.home"     value="${basedir}/target"/>
   <property name="docs.home"     value="${basedir}/docs"/>
-  <property name="srcCore.home"      value="${basedir}/src"/>
-  <property name="srcAddon.home"      value="${basedir}/addons"/>
+	
+	<property name="libCore.home"      value="${basedir}/lib"/>
+	<property name="srcCore.home"      value="${basedir}/src"/>
+	
+	<property name="libAddon.home"      value="${basedir}/lib_addons"/>
+	<property name="srcAddon.home"      value="${basedir}/addons"/>
 	
   <property name="compile.debug"       value="true"/>
   <property name="compile.deprecation" value="false"/>
