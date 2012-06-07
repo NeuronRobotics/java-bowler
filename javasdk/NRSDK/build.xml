@@ -98,7 +98,7 @@
   	</target>
   	
   	
-    <target name="compileAddon" depends="prepare"
+    <target name="compileAddon" depends="clean,prepare"
      description="Compile Java sources">
       <mkdir    dir="${build.home}"/>
       <javac srcdir="${srcAddon.home}"
