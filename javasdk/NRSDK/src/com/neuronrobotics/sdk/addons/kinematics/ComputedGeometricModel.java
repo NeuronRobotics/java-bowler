@@ -1,33 +1,27 @@
 package com.neuronrobotics.sdk.addons.kinematics;
 
-import java.awt.Color;
-import java.util.ArrayList;
-
 import javax.swing.JFrame;
-
-import Jama.Matrix;
 
 import com.neuronrobotics.sdk.addons.kinematics.DHChain;
 import com.neuronrobotics.sdk.addons.kinematics.DhInverseSolver;
-import com.neuronrobotics.sdk.addons.kinematics.gui.SimpleTransformViewer;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 
 public class ComputedGeometricModel  implements DhInverseSolver{
 	private DHChain dhChain;
 	private boolean debug;
-	static SimpleTransformViewer viewer = new  SimpleTransformViewer();
+	//static SimpleTransformViewer viewer = new  SimpleTransformViewer();
 	static JFrame frame = new JFrame();
 	public ComputedGeometricModel(DHChain dhChain, boolean debug) {
 		this.dhChain = dhChain;
 		this.setDebug(debug);
-		frame.add(viewer);
+		//frame.add(viewer);
 		frame.setSize(720, 640);
 		frame.setVisible(true);
 		
 	}
 	
 	public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector ) {
-		viewer.addTransform(target, "Target",Color.pink);
+		//viewer.addTransform(target, "Target",Color.pink);
 		
 		int linkNum = jointSpaceVector.length;
 		double [] inv = new double[linkNum];
@@ -38,7 +32,7 @@ public class ComputedGeometricModel  implements DhInverseSolver{
 		//Attempting to implement:
 		//http://www.ri.cmu.edu/pub_files/pub1/xu_yangsheng_1993_1/xu_yangsheng_1993_1.pdf
 		TransformNR current = dhChain.forwardKinematics(jointSpaceVector);
-		viewer.addTransform(current, "CURRENT",Color.GREEN);
+		//viewer.addTransform(current, "CURRENT",Color.GREEN);
 		
 		//Procedure:
 		/*

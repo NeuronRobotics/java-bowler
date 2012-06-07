@@ -4,13 +4,13 @@ import java.io.InputStream;
 
 import Jama.Matrix;
 
-import com.neuronrobotics.addons.driving.virtual.VirtualGenericPIDDevice;
 import com.neuronrobotics.sdk.addons.kinematics.LinkFactory;
 import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
 import com.neuronrobotics.sdk.genericdevice.GenericPIDDevice;
 //import com.neuronrobotics.sdk.pid.IPIDControl;
+import com.neuronrobotics.sdk.pid.VirtualGenericPIDDevice;
 
 public class GenericKinematicsModelNR extends AbstractKinematicsNR {
 	

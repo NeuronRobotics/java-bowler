@@ -1,4 +1,4 @@
-package com.neuronrobotics.addons.driving.virtual;
+package com.neuronrobotics.sdk.pid;
 
 import java.util.ArrayList;
 
@@ -11,10 +11,6 @@ import com.neuronrobotics.sdk.common.InvalidResponseException;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.NoConnectionAvailableException;
 import com.neuronrobotics.sdk.genericdevice.GenericPIDDevice;
-import com.neuronrobotics.sdk.pid.PIDChannel;
-import com.neuronrobotics.sdk.pid.PIDCommandException;
-import com.neuronrobotics.sdk.pid.PIDConfiguration;
-import com.neuronrobotics.sdk.pid.PIDEvent;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 public class VirtualGenericPIDDevice extends GenericPIDDevice{

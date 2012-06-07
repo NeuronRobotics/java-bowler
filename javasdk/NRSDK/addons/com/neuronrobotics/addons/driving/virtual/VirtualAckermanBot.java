@@ -1,26 +1,26 @@
 package com.neuronrobotics.addons.driving.virtual;
 
-import com.neuronrobotics.addons.driving.IPuckBotKinematics;
-import com.neuronrobotics.addons.driving.PuckBot;
-import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
+import com.neuronrobotics.addons.driving.AckermanBot;
 import com.neuronrobotics.sdk.pid.IPIDEventListener;
 import com.neuronrobotics.sdk.pid.PIDEvent;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
+import com.neuronrobotics.sdk.pid.VirtualGenericPIDDevice;
 
-public class VirtualPuckBot extends PuckBot{
+public class VirtualAckermanBot extends AckermanBot {
 	private VirtualWorld world;
-
 	VirtualGenericPIDDevice controller;
-	public VirtualPuckBot(VirtualWorld w,int botStartX ,int botStartY){
+
+	public VirtualAckermanBot(VirtualWorld w,int botStartX ,int botStartY){
 		init(w,botStartX,botStartY);
 	}
-	public VirtualPuckBot(VirtualWorld w){
+	public VirtualAckermanBot(VirtualWorld w){
 		init(w,300,300);
 	}
+	
 	private void init(VirtualWorld w ,int botStartX ,int botStartY){
 		world=w;
 		world.addRobot(this,botStartX , botStartY);
-		controller = new VirtualGenericPIDDevice(getMaxTicksPerSeconds());
+		controller = new VirtualGenericPIDDevice(getMaxTicksPerSecond());
 		controller.addPIDEventListener(new IPIDEventListener() {
 			public void onPIDReset(int group, int currentValue) {}
 			public void onPIDLimitEvent(PIDLimitEvent e) {}
@@ -29,14 +29,11 @@ public class VirtualPuckBot extends PuckBot{
 			}
 		});
 		
-		setPIDChanels(controller.getPIDChannel(0),controller.getPIDChannel(1));
-		
-	}
-	@Override
-	public void setPuckBotKinematics(IPuckBotKinematics pk) {
-		super.setPuckBotKinematics(pk);
-		controller.setMaxTicksPerSecond(pk.getMaxTicksPerSeconds());
+		setPIDChanel(controller.getPIDChannel(0));
 	}
 	
-
+	@Override
+	public void setSteeringHardwareAngle(double s) {
+		//do nothing
+	}
 }

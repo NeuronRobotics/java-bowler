@@ -41,15 +41,18 @@
   </target>
 
   <path id="compile.classpath">
-    <fileset dir="${lib.home}">
+    <fileset dir="${libCore.home}">
       <include name="*.jar"/>
-    </fileset>  	
+    </fileset>  
+  	<fileset dir="${libAddon.home}">
+      <include name="*.jar"/>
+    </fileset>  
   </path>
 	
-  <target name="compile" depends="prepare"
+  <target name="compileCore" depends="prepare"
    description="Compile Java sources">
     <mkdir    dir="${build.home}"/>
-    <javac srcdir="${src.home}"
+    <javac srcdir="${srcCore.home}"
           destdir="${build.home}"
             debug="${compile.debug}"
       deprecation="${compile.deprecation}"
@@ -59,22 +62,22 @@
     </javac>
   	
     <copy  todir="${build.home}">
-      <fileset dir="${src.home}" excludes="**/*.java"/>
+      <fileset dir="${srcCore.home}" excludes="**/*.java"/>
     </copy>
   </target>
-
-  <target name="dist"
+  <target name="distCore"
    description="Create binary distribution">
   	<mkdir dir="${dist.home}/docs/api"/>
     <tstamp>
       <format property="TODAY" pattern="yyyy-MM-dd" />
     </tstamp>
-  	<jar jarfile="${dist.home}/external-libs.jar">
-	  <zipgroupfileset dir="lib/">
+  	<jar jarfile="${dist.home}/external-libs-core.jar">
+	  <zipgroupfileset dir="${libCore.home}">
 	    <include name="**/*.jar"/>
 	  </zipgroupfileset>
 	</jar>
-    <jar jarfile="${dist.home}/${app.name}-${app.version}-jar-with-dependencies.jar">
+  	
+    <jar jarfile="${dist.home}/${app.name}-${app.version}-core.jar">
       <manifest>
         <attribute name="Sealed" value="true"/>
       	<attribute name="Built-Date" value="${TODAY}"/> 
@@ -87,27 +90,85 @@
         <exclude name="test/*.class"/>
       </fileset>
       <!--<zipgroupfileset dir="lib" includes="*.jar" />-->
-    	<zipfileset src="${dist.home}/external-libs.jar">
+    	<zipfileset src="${dist.home}/external-libs-core.jar">
 	  	    <exclude name="META-INF/SUN_MICR.SF"/>
 	  		<exclude name="META-INF/SUN_MICR.RSA"/>
 	  	</zipfileset>
     </jar>
+  	</target>
+  	
+  	
+    <target name="compileAddon" depends="prepare"
+     description="Compile Java sources">
+      <mkdir    dir="${build.home}"/>
+      <javac srcdir="${srcAddon.home}"
+            destdir="${build.home}"
+              debug="${compile.debug}"
+        deprecation="${compile.deprecation}"
+           optimize="${compile.optimize}"
+      	target="${app.javac.version}">
+          <classpath refid="compile.classpath"/>
+      </javac>
+    	
+      <copy  todir="${build.home}">
+        <fileset dir="${srcAddon.home}" excludes="**/*.java"/>
+      </copy>
+    </target>
+  	
+    <target name="distAddon"
+     description="Create binary distribution">
+    	<mkdir dir="${dist.home}/docs/api"/>
+      <tstamp>
+        <format property="TODAY" pattern="yyyy-MM-dd" />
+      </tstamp>
+    	<jar jarfile="${dist.home}/external-libs-addon.jar">
+  	  <zipgroupfileset dir="${libAddon.home}">
+  	    <include name="**/*.jar"/>
+  	  </zipgroupfileset>
+  	</jar>
+      <jar jarfile="${dist.home}/${app.name}-${app.version}-jar-with-dependencies.jar">
+        <manifest>
+          <attribute name="Sealed" value="true"/>
+        	<attribute name="Built-Date" value="${TODAY}"/> 
+        </manifest>
+        <fileset dir="build">
+          <include name="**/*.class"/>
+        	<include name="**/*.png"/>
+        	<include name="**/*.xml"/>
+        	<include name="**/*.properties"/>
+          <exclude name="test/*.class"/>
+        </fileset>
+        <!--<zipgroupfileset dir="lib" includes="*.jar" />-->
+      	<zipfileset src="${dist.home}/external-libs-addon.jar">
+  	  	    <exclude name="META-INF/SUN_MICR.SF"/>
+  	  		<exclude name="META-INF/SUN_MICR.RSA"/>
+  	  	</zipfileset>
+      	<zipfileset src="${dist.home}/${app.name}-${app.version}-core.jar">
+  	  	    <exclude name="META-INF/SUN_MICR.SF"/>
+  	  		<exclude name="META-INF/SUN_MICR.RSA"/>
+  	  	</zipfileset>
+      </jar>
   	
     <copy todir="${dist.home}/lib">
       <fileset dir="${basedir}/native/" includes="**/*"/>
     </copy>
   </target>	
 	
-  <target name="javadoc" depends="compile"
+  <target name="javadoc" depends="compileCore,compileAddon"
    description="Create Javadoc API documentation">
     
-    <javadoc sourcepath="${src.home}" destdir="${dist.home}/docs/api" packagenames="*" 
+    <javadoc sourcepath="${srcCore.home}" destdir="${dist.home}/docs/api" packagenames="*" 
+    	source="1.7" splitindex="true" use="true" version="true">
+      <classpath refid="compile.classpath"/> 
+      <bottom><![CDATA[<script type="text/javascript" src="/googleanalytics.js"></script>]]></bottom>
+   	</javadoc>
+  	<javadoc sourcepath="${srcAddon.home}" destdir="${dist.home}/docs/api" packagenames="*" 
     	source="1.7" splitindex="true" use="true" version="true">
       <classpath refid="compile.classpath"/> 
       <bottom><![CDATA[<script type="text/javascript" src="/googleanalytics.js"></script>]]></bottom>
    	</javadoc>
   </target>
 
-  <target name="deploy" depends="clean, prepare, compile, dist, javadoc"
+  <target name="deploy" depends="clean, prepare, compileCore,distCore,compileAddon, distCore,distAddon, javadoc"
    description="Builds the full deployment" />
 </project>
