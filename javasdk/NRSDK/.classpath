@@ -12,9 +12,9 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib_addons/j3dcore.jar"/>
 	<classpathentry kind="lib" path="lib_addons/j3dutils.jar"/>
-	<classpathentry kind="lib" path="lib_addons/Jama-1.0.2.jar"/>
 	<classpathentry kind="lib" path="lib_addons/miglayout-3.7.2-swing.jar"/>
 	<classpathentry kind="lib" path="lib_addons/motej.0.9.jar"/>
 	<classpathentry kind="lib" path="lib_addons/vecmath.jar"/>
+	<classpathentry kind="lib" path="lib/Jama-1.0.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
