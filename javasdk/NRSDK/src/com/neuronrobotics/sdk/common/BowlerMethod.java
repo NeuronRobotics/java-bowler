@@ -102,6 +102,8 @@ public enum BowlerMethod implements ISendable {
 			return "POST";
 		case 0x30:
 			return "CRITICAL";
+		case 0x40:
+			return "ASYNCHRONOUS";
 		}
 		return s;
 	}
