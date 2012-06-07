@@ -275,9 +275,8 @@ public class BowlerDatagram implements ISendable {
 		str += "\tMAC address: \t" + address + '\n';
 		str += "\tMethod: \t" + method + '\n';
 		str += "\tDirection: \t";
-		str += "(" + (int) namespaceResolutionID + ") ";
-		str += isSyncronous() ? "Syncronous\n" : "Asyncronous\n";
-		str += "\tSession ID: \t" + getSessionID();
+		str += isUpstream() ? "Upstream\n" : "Downstream\n";
+		str += "\tRPC Namespace Index: \t" + getSessionID();
 		str += "\n\tData Size: \t" + (int) data.size() + '\n';
 		str += "\tCRC: \t\t";
 		str += ( getCRC()>=0) ? (int) getCRC():(int) getCRC()+256 ;

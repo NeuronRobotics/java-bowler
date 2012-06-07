@@ -93,6 +93,9 @@
     	<zipfileset src="${dist.home}/external-libs-core.jar">
 	  	    <exclude name="META-INF/SUN_MICR.SF"/>
 	  		<exclude name="META-INF/SUN_MICR.RSA"/>
+    		<exclude name="**/*.so"/>
+    		<exclude name="**/*.jnilib"/>
+    		<exclude name="**/*.dll"/>
 	  	</zipfileset>
     </jar>
   	</target>
@@ -143,7 +146,7 @@
   	  	    <exclude name="META-INF/SUN_MICR.SF"/>
   	  		<exclude name="META-INF/SUN_MICR.RSA"/>
   	  	</zipfileset>
-      	<zipfileset src="${dist.home}/${app.name}-${app.version}-core.jar">
+      	<zipfileset src="${dist.home}/external-libs-core.jar">
   	  	    <exclude name="META-INF/SUN_MICR.SF"/>
   	  		<exclude name="META-INF/SUN_MICR.RSA"/>
   	  	</zipfileset>
