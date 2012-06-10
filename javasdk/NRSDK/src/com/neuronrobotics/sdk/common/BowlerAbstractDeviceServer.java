@@ -64,8 +64,8 @@ public abstract class BowlerAbstractDeviceServer extends BowlerAbstractDevice {
 	 * @param sendable the sendable without expecting a response
 	 * @throws IOException 
 	 */
-	public void sendAsync(BowlerAbstractCommand command, int asyncID) throws IOException {
-		BowlerDatagram bd = BowlerDatagramFactory.build(getAddress(), command,asyncID);
+	public void sendAsync(BowlerAbstractCommand command, int rpcIndexID) throws IOException {
+		BowlerDatagram bd = BowlerDatagramFactory.build(getAddress(), command,rpcIndexID);
 		//Log.debug("ASYN>>\n"+bd.toString());
 		getConnection().sendAsync(bd);
 		getConnection().getDataOuts().flush();

@@ -17,8 +17,6 @@ package com.neuronrobotics.sdk.dyio;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.sql.ConnectionEvent;
-import javax.sql.ConnectionEventListener;
 
 import com.neuronrobotics.sdk.commands.bcs.io.AsyncMode;
 import com.neuronrobotics.sdk.commands.bcs.io.AsyncThreshholdEdgeType;
@@ -30,15 +28,12 @@ import com.neuronrobotics.sdk.commands.bcs.pid.DyPID.ConfigureDynamicPIDCommand;
 import com.neuronrobotics.sdk.commands.bcs.safe.SafeModeCommand;
 import com.neuronrobotics.sdk.commands.neuronrobotics.dyio.GetAllChannelValuesCommand;
 import com.neuronrobotics.sdk.commands.neuronrobotics.dyio.InfoCommand;
-import com.neuronrobotics.sdk.commands.neuronrobotics.dyio.InfoFirmwareRevisionCommand;
 import com.neuronrobotics.sdk.commands.neuronrobotics.dyio.PowerCommand;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
 import com.neuronrobotics.sdk.common.BowlerDatagram;
-import com.neuronrobotics.sdk.common.BowlerRuntimeException;
 import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.IConnectionEventListener;
-import com.neuronrobotics.sdk.common.ISendable;
 import com.neuronrobotics.sdk.common.InvalidConnectionException;
 import com.neuronrobotics.sdk.common.InvalidResponseException;
 import com.neuronrobotics.sdk.common.Log;
@@ -355,7 +350,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 				}
 			}
 			
-		}catch (InvalidResponseException e){
+		}catch (Exception e){
 			checkFirmwareRev();
 		}
 		
