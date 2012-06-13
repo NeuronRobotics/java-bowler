@@ -31,13 +31,13 @@ public class RealTimeLineTrackWithPID implements IPIDEventListener {
 		double p = .1;
 		DyPIDConfiguration dypidR = new DyPIDConfiguration(	1,//PID group 1
 													
-															12,//Input channel number
+															10,//Input channel number
 															DyIOChannelMode.ANALOG_IN,//Input mode
-															11,//Output Channel
+															22,//Output Channel
 															DyIOChannelMode.SERVO_OUT);//Output mode
 		PIDConfiguration pidR =new PIDConfiguration (		1,//PID group
 															true,//enabled
-															false,//inverted
+															true,//inverted
 															true,//Async
 															p+.1,// Kp
 															0,// Ki
@@ -48,13 +48,13 @@ public class RealTimeLineTrackWithPID implements IPIDEventListener {
 															false);//Set the setpoint to the current location when index it reached
 
 		DyPIDConfiguration dypidL = new DyPIDConfiguration(	0,//PID group 0
-															13,//Input channel number
+															11,//Input channel number
 															DyIOChannelMode.ANALOG_IN,//Input mode
-															10,//Output Channel
+															23,//Output Channel
 															DyIOChannelMode.SERVO_OUT);//Output mode
 		PIDConfiguration pidL =new PIDConfiguration (		0,//PID group
 															true,//enabled
-															true,//inverted
+															false,//inverted
 															true,//Async
 															p,// Kp
 															0,// Ki
@@ -72,10 +72,10 @@ public class RealTimeLineTrackWithPID implements IPIDEventListener {
 		
 		//Set a single setpoint to the controler
 		dyio.SetPIDSetPoint(	0,//Group 0
-								512,//Tell the controller to go to position 500
+								970,//Tell the controller to go to position 500
 								0);//Take 0 secoinds to get there
 		dyio.SetPIDSetPoint(	1,//Group 1
-								512,//Tell the controller to go to position 500
+								970,//Tell the controller to go to position 500
 								0);//Take 0 secoinds to get there
 		
 		while(true){
