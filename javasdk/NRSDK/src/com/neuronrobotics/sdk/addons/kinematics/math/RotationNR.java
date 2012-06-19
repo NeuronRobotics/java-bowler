@@ -118,6 +118,7 @@ public class RotationNR {
 		}
 		loadRotations(rotation);
 	}
+	
 
 	private void loadRotations(double[][] rotM) {
 		if (rotM.length != 3)
@@ -180,7 +181,7 @@ public class RotationNR {
 		return "Matrix = " + s ;
 	}
 
-	private void quaternion2RotationMatrix(double w, double x, double y, double z) {
+	protected void quaternion2RotationMatrix(double w, double x, double y, double z) {
 		double norm = Math.sqrt(w * w + x * x + y * y + z * z);
 		// we explicitly test norm against one here, saving a division
 		// at the cost of a test and branch. Is it worth it?

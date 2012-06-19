@@ -66,7 +66,7 @@ public class TransformNR {
 		return rotation.getRotationMatrix();
 	}
 
-	public RotationNR getRotationNRMatrix() {
+	public RotationNR getRotationMatrix() {
 		return rotation;
 	}
 
@@ -80,7 +80,7 @@ public class TransformNR {
 	public TransformNR times(TransformNR t) {
 		return new TransformNR(getMatrixTransform().times(t.getMatrixTransform()));
 	}
-	
+	@Override
 	public String toString(){
 		String s = "{\n";
 		double [][] m = getMatrixTransform().getArray();
@@ -110,6 +110,7 @@ public class TransformNR {
 		double [][] transform = new double [4][4];
 		double [][] rotation = getRotationMatrixArray();
 		
+		
 		for(int i=0;i<3;i++){
 			for(int j=0;j<3;j++){
 				transform[i][j]=rotation[i][j];
@@ -122,6 +123,7 @@ public class TransformNR {
 		transform[0][3]=getX();
 		transform[1][3]=getY();
 		transform[2][3]=getZ();
+		
 		
 		return new Matrix(transform);
 	}

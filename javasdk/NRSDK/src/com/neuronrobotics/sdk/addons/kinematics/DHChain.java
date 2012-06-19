@@ -82,9 +82,9 @@ public  class DHChain {
 				zVect[2]=1;
 			}else{
 				//Get the rz vector from matrix
-				zVect[0]=chain.get(i-1).getRotationNRMatrix().getRotationMatrix()[0][2];
-				zVect[1]=chain.get(i-1).getRotationNRMatrix().getRotationMatrix()[1][2];
-				zVect[2]=chain.get(i-1).getRotationNRMatrix().getRotationMatrix()[2][2];
+				zVect[0]=chain.get(i-1).getRotationMatrix().getRotationMatrix()[0][2];
+				zVect[1]=chain.get(i-1).getRotationMatrix().getRotationMatrix()[1][2];
+				zVect[2]=chain.get(i-1).getRotationMatrix().getRotationMatrix()[2][2];
 			}
 			//Assume all rotational joints
 			//Set to zero if prismatic
