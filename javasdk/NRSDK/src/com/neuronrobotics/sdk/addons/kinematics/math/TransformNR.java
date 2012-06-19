@@ -66,7 +66,7 @@ public class TransformNR {
 		return rotation.getRotationMatrix();
 	}
 
-	public RotationNR getRotationMatrix() {
+	public RotationNR getRotationNRMatrix() {
 		return rotation;
 	}
 
