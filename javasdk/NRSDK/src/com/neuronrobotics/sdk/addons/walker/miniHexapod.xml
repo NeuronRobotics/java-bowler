@@ -6,7 +6,7 @@
 		<link>
 			<ulimit>180</ulimit>
 			<llimit>112</llimit>
-			<home>113</home>
+			<home>124</home>
 			<channel>9</channel>
 			<inverse>-1</inverse>
 			<linkLen>0.59</linkLen>
@@ -16,7 +16,7 @@
 		<link>
 			<ulimit>203</ulimit>
 			<llimit>56</llimit>
-			<home>132</home>
+			<home>137</home>
 			<channel>10</channel>
 			<inverse>1</inverse>
 			<linkLen>1.41</linkLen>
@@ -25,8 +25,8 @@
 		</link>
 		<link>
 			<ulimit>185</ulimit>
-			<llimit>36</llimit>
-			<home>48</home>
+			<llimit>47</llimit>
+			<home>54</home>
 			<channel>11</channel>
 			<inverse>-1</inverse>
 			<linkLen>1.97</linkLen>
@@ -41,7 +41,7 @@
 		<link>
 			<ulimit>146</ulimit>
 			<llimit>106</llimit>
-			<home>124</home>
+			<home>131</home>
 			<channel>6</channel>
 			<inverse>-1</inverse>
 			<linkLen>0.59</linkLen>
@@ -51,7 +51,7 @@
 		<link>
 			<ulimit>203</ulimit>
 			<llimit>50</llimit>
-			<home>128</home>
+			<home>127</home>
 			<channel>7</channel>
 			<inverse>-1</inverse>
 			<linkLen>1.41</linkLen>
@@ -61,7 +61,7 @@
 		<link>
 			<ulimit>203</ulimit>
 			<llimit>53</llimit>
-			<home>192</home>
+			<home>197</home>
 			<channel>8</channel>
 			<inverse>1</inverse>
 			<linkLen>1.97</linkLen>
@@ -76,7 +76,7 @@
 		<link>
 			<ulimit>129</ulimit>
 			<llimit>71</llimit>
-			<home>128</home>
+			<home>124</home>
 			<channel>3</channel>
 			<inverse>-1</inverse>
 			<linkLen>0.59</linkLen>
@@ -85,8 +85,8 @@
 		</link>
 		<link>
 			<ulimit>203</ulimit>
-			<llimit>36</llimit>
-			<home>130</home>
+			<llimit>47</llimit>
+			<home>136</home>
 			<channel>4</channel>
 			<inverse>-1</inverse>
 			<linkLen>1.41</linkLen>
@@ -94,9 +94,9 @@
 			<type>knee</type>
 		</link>
 		<link>
-			<ulimit>203</ulimit>
+			<ulimit>210</ulimit>
 			<llimit>36</llimit>
-			<home>200</home>
+			<home>206</home>
 			<channel>5</channel>
 			<inverse>1</inverse>
 			<linkLen>1.97</linkLen>
@@ -111,7 +111,7 @@
 		<link>
 			<ulimit>197</ulimit>
 			<llimit>127</llimit>
-			<home>128</home>
+			<home>137</home>
 			<channel>20</channel>
 			<inverse>-1</inverse>
 			<linkLen>0.59</linkLen>
@@ -120,8 +120,8 @@
 		</link>
 		<link>
 			<ulimit>203</ulimit>
-			<llimit>36</llimit>
-			<home>117</home>
+			<llimit>47</llimit>
+			<home>107</home>
 			<channel>19</channel>
 			<inverse>1</inverse>
 			<linkLen>1.41</linkLen>
@@ -130,8 +130,8 @@
 		</link>
 		<link>
 			<ulimit>204</ulimit>
-			<llimit>36</llimit>
-			<home>36</home>
+			<llimit>47</llimit>
+			<home>63</home>
 			<channel>18</channel>
 			<inverse>-1</inverse>
 			<linkLen>1.97</linkLen>
@@ -146,7 +146,7 @@
 		<link>
 			<ulimit>142</ulimit>
 			<llimit>106</llimit>
-			<home>125</home>
+			<home>131</home>
 			<channel>17</channel>
 			<inverse>-1</inverse>
 			<linkLen>0.59</linkLen>
@@ -156,7 +156,7 @@
 		<link>
 			<ulimit>203</ulimit>
 			<llimit>36</llimit>
-			<home>129</home>
+			<home>132</home>
 			<channel>16</channel>
 			<inverse>1</inverse>
 			<linkLen>1.41</linkLen>
@@ -165,8 +165,8 @@
 		</link>
 		<link>
 			<ulimit>203</ulimit>
-			<llimit>36</llimit>
-			<home>55</home>
+			<llimit>47</llimit>
+			<home>68</home>
 			<channel>15</channel>
 			<inverse>-1</inverse>
 			<linkLen>1.97</linkLen>
@@ -181,7 +181,7 @@
 		<link>
 			<ulimit>139</ulimit>
 			<llimit>83</llimit>
-			<home>138</home>
+			<home>134</home>
 			<channel>14</channel>
 			<inverse>-1</inverse>
 			<linkLen>0.59</linkLen>
@@ -190,8 +190,8 @@
 		</link>
 		<link>
 			<ulimit>203</ulimit>
-			<llimit>36</llimit>
-			<home>123</home>
+			<llimit>47</llimit>
+			<home>128</home>
 			<channel>13</channel>
 			<inverse>-1</inverse>
 			<linkLen>1.41</linkLen>
@@ -200,8 +200,8 @@
 		</link>
 		<link>
 			<ulimit>203</ulimit>
-			<llimit>36</llimit>
-			<home>194</home>
+			<llimit>47</llimit>
+			<home>186</home>
 			<channel>12</channel>
 			<inverse>1</inverse>
 			<linkLen>1.97</linkLen>
