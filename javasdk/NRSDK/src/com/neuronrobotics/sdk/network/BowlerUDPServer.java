@@ -37,8 +37,7 @@ public class BowlerUDPServer extends BowlerAbstractConnection {
 	 * 
 	 */
 	public BowlerUDPServer(){
-		setPollTimeoutTime(pollTimeoutTime);
-		setSleepTime(sleepTime);
+		setSynchronusPacketTimeoutTime(sleepTime);
 		setChunkSize(5210);
 	}
 	
@@ -48,8 +47,7 @@ public class BowlerUDPServer extends BowlerAbstractConnection {
 	 * @param port
 	 */
 	public BowlerUDPServer(int port){
-		setPollTimeoutTime(pollTimeoutTime);
-		setSleepTime(sleepTime);
+		setSynchronusPacketTimeoutTime(sleepTime);
 		setChunkSize(5210);
 		this.port=port;
 	}

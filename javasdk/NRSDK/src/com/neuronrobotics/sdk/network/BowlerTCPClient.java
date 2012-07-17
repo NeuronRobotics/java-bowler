@@ -47,8 +47,7 @@ public class BowlerTCPClient extends BowlerAbstractConnection{
 	 * 
 	 */
 	public BowlerTCPClient(){
-		setPollTimeoutTime(pollTimeoutTime);
-		setSleepTime(sleepTime);
+		setSynchronusPacketTimeoutTime(sleepTime);
 	}
 	
 	/**
@@ -61,8 +60,7 @@ public class BowlerTCPClient extends BowlerAbstractConnection{
 	public BowlerTCPClient(String addr,int port) throws IOException{
 		if(isConnected())
 			return;
-		setPollTimeoutTime(pollTimeoutTime);
-		setSleepTime(sleepTime);
+		setSynchronusPacketTimeoutTime(sleepTime);
 		Log.info("Bowler TCP connection on: "+addr+":"+port);
 		try {
 			setTCPSocket(new Socket(addr,port));
@@ -84,8 +82,7 @@ public class BowlerTCPClient extends BowlerAbstractConnection{
 	public BowlerTCPClient(InetAddress addr,int port) throws IOException {
 		if(isConnected())
 			return;
-		setPollTimeoutTime(pollTimeoutTime);
-		setSleepTime(sleepTime);
+		setSynchronusPacketTimeoutTime(sleepTime);
 		try {
 			setTCPSocket(new Socket(addr,port));
 		} catch (IOException e) {

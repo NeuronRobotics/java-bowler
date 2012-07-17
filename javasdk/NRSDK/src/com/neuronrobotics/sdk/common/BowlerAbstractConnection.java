@@ -212,7 +212,7 @@ public abstract class BowlerAbstractConnection {
 	 *
 	 * @param pollTimeoutTime the new poll timeout time
 	 */
-	public void setPollTimeoutTime(int pollTimeoutTime) {
+	private void setPollTimeoutTime(int pollTimeoutTime) {
 		this.pollTimeoutTime = pollTimeoutTime;
 	}
 
@@ -221,7 +221,7 @@ public abstract class BowlerAbstractConnection {
 	 *
 	 * @return the poll timeout time
 	 */
-	public int getPollTimeoutTime() {
+	private int getPollTimeoutTime() {
 		return pollTimeoutTime;
 	}
 

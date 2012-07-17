@@ -74,8 +74,7 @@ public class BowlerUDPClient extends BowlerAbstractConnection{
     }
 	
 	private void init(){
-		setPollTimeoutTime(pollTimeoutTime);
-		setSleepTime(sleepTime);
+		setSynchronusPacketTimeoutTime(sleepTime);
 		setChunkSize(5210);
 		if(connect()){
 			sendAsync(BowlerDatagramFactory.build(new MACAddress(), new PingCommand(),0));

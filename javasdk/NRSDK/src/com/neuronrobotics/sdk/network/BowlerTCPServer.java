@@ -46,8 +46,7 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 	 * 
 	 */
 	public BowlerTCPServer(){
-		setPollTimeoutTime(pollTimeoutTime);
-		setSleepTime(sleepTime);
+		setSynchronusPacketTimeoutTime(sleepTime);
 		setChunkSize(5210);
 		try {
 			setTCPSocket(port);
@@ -64,8 +63,7 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 	 * @param port
 	 */
 	public BowlerTCPServer(int port){
-		setPollTimeoutTime(pollTimeoutTime);
-		setSleepTime(sleepTime);
+		setSynchronusPacketTimeoutTime(sleepTime);
 		setChunkSize(5210);
 		this.port=port;
 		try {

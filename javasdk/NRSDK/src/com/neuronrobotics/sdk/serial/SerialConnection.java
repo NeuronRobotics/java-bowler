@@ -57,8 +57,7 @@ public class SerialConnection extends BowlerAbstractConnection {
 	 * The baudrate will default to 115200bps.
 	 */
 	public SerialConnection() {
-		setPollTimeoutTime(pollTimeoutTime);
-		setSleepTime(sleepTime);
+		setSynchronusPacketTimeoutTime(sleepTime);
 	}
 	
 	/**
@@ -70,8 +69,7 @@ public class SerialConnection extends BowlerAbstractConnection {
 	 */
 	public SerialConnection(String port) {
 		setPort(port);	
-		setPollTimeoutTime(pollTimeoutTime);
-		setSleepTime(sleepTime);
+		setSynchronusPacketTimeoutTime(sleepTime);
 	}
 	
 	/**
@@ -83,8 +81,7 @@ public class SerialConnection extends BowlerAbstractConnection {
 	public SerialConnection(String port, int baud) {
 		setPort(port);
 		setBaud(baud);
-		setPollTimeoutTime(pollTimeoutTime);
-		setSleepTime(sleepTime);
+		setSynchronusPacketTimeoutTime(sleepTime);
 	}
 	
 	/**

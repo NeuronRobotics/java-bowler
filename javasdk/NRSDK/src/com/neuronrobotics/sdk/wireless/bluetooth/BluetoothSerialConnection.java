@@ -65,8 +65,7 @@ public class BluetoothSerialConnection extends BowlerAbstractConnection{
 		}
 		
 		private void init(){
-			setPollTimeoutTime(pollTimeoutTime);
-			setSleepTime(sleepTime);
+			setSynchronusPacketTimeoutTime(sleepTime);
 			//
 		}
 		
