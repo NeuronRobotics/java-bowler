@@ -230,8 +230,19 @@ public abstract class BowlerAbstractConnection {
 	 *
 	 * @param sleepTime the new sleep time
 	 */
-	public void setSleepTime(int sleepTime) {
+	public void setSynchronusPacketTimeoutTime(int sleepTime) {
 		this.sleepTime = sleepTime;
+	}
+	
+	
+	/**
+	 * Sets the sleep time.
+	 *
+	 * @param sleepTime the new sleep time
+	 */
+	@Deprecated 
+	public void setSleepTime(int sleepTime) {
+		setSynchronusPacketTimeoutTime(sleepTime);
 	}
 	
 	/**
