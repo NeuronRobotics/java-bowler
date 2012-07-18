@@ -51,7 +51,7 @@ public class SimpleDHTest {
 		
 		try {
 			model.setDesiredJointAxisValue(0, 45, 1);
-			model.setDesiredJointAxisValue(1, 45, 1);
+			model.setDesiredJointAxisValue(1, -45, 1);
 			ThreadUtil.wait(2000);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
