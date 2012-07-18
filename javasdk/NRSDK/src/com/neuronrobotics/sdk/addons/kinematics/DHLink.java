@@ -1,13 +1,17 @@
 package com.neuronrobotics.sdk.addons.kinematics;
 
+import org.w3c.dom.Element;
+
+import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
+
 import Jama.Matrix;
 
 public class DHLink {
 	
-	private final double d;
-	private final double theta;
-	private final double r;
-	private final double alpha;
+	private double d;
+	private double theta;
+	private double r;
+	private double alpha;
 	private Matrix transX;
 	private Matrix rotX;
 	private Matrix transZ;
@@ -24,6 +28,13 @@ public class DHLink {
 		this.r = r;
 		this.alpha = alpha;
 		
+	}
+
+	public DHLink(Element nNode) {
+		d		=				XmlFactory.getTagValueDouble("Delta", nNode);
+		theta	=Math.toRadians(XmlFactory.getTagValueDouble("Theta", nNode));
+		r		=				XmlFactory.getTagValueDouble("Radius", nNode);
+		alpha	=Math.toRadians(XmlFactory.getTagValueDouble("Alpha", nNode));
 	}
 
 	public double getD() {
@@ -194,6 +205,16 @@ public class DHLink {
 	}
 	public Matrix getRotZ_J() {
 		return rotZ_J;
+	}
+	
+	@Override 
+	public String toString(){
+		String s="";
+		s+=" Delta = "+d;
+		s+=" Theta = "+Math.toDegrees(theta)+" deg";
+		s+=" Radius = "+r;
+		s+=" Alpha = "+Math.toDegrees(alpha)+" deg";
+		return s;
 	}
 
 }

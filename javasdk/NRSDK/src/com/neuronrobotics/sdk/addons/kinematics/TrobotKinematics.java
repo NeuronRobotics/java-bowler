@@ -21,7 +21,13 @@ public class TrobotKinematics extends AbstractKinematicsNR {
 	}
 	public TrobotKinematics( DyIO dev, String configFile) {
 		super(XmlFactory.getDefaultConfigurationStream(configFile),new LinkFactory( dev));
-		chain = new DHChain(getFactory().getUpperLimits(), getFactory().getLowerLimits(),false);
+		chain = new DHChain(XmlFactory.getDefaultConfigurationStream(configFile),getFactory());
+		try {
+			setDesiredJointSpaceVector(new double[] {0,0,0,0,0,0}, 1.0);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 

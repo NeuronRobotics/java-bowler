@@ -1,10 +1,17 @@
 package com.neuronrobotics.sdk.addons.kinematics;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
 
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
+import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
+import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 import Jama.Matrix;
@@ -12,29 +19,44 @@ public  class DHChain {
 	private ArrayList<DHLink> links = new ArrayList<DHLink>();
 	private ArrayList<TransformNR> chain = new ArrayList<TransformNR>();
 	private ArrayList<TransformNR> intChain = new ArrayList<TransformNR>();
-	private final double[] upperLimits;
-	private final double[] lowerLimits;
+	private double[] upperLimits;
+	private double[] lowerLimits;
 	private boolean debug=false;
 	private DhInverseSolver is;
-	public DHChain(double [] upperLimits,double [] lowerLimits, boolean debugViewer ) {
-		this(upperLimits, lowerLimits);
-
-	}
 	
-	public DHChain(double [] upperLimits,double [] lowerLimits ) {
-		
-		this.upperLimits = upperLimits;
-		this.lowerLimits = lowerLimits;
-		getLinks().add(new DHLink(	13, 	Math.toRadians(180), 	32, 	Math.toRadians(-90)));//0->1
-		getLinks().add(new DHLink(	25, 	Math.toRadians(-90), 	93, 	Math.toRadians(180)));//1->2
-		getLinks().add(new DHLink(	11, 	Math.toRadians(90), 	24, 	Math.toRadians(90)));//2->3 
-		getLinks().add(new DHLink(	128, 	Math.toRadians(-90), 		0, 		Math.toRadians(90)));//3->4
-		
-		getLinks().add(new DHLink(	0, 		Math.toRadians(0), 			0, 		Math.toRadians(-90)));//4->5
-		getLinks().add(new DHLink(	25, 	Math.toRadians(90), 		0, 		Math.toRadians(0)));//5->tool
-		
+	public DHChain(InputStream configFile,LinkFactory f){
+		NodeList nList = XmlFactory.getAllNodesFromTag("DHParameters", configFile);
+		for (int i = 0; i < nList.getLength(); i++) {			
+		    Node nNode = nList.item(i);
+		    if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+		    	getLinks().add(new DHLink((Element)	nNode));//0->1
+		  
+		    }
+		}
+		upperLimits = f.getUpperLimits();
+		lowerLimits = f.getLowerLimits();
 		forwardKinematics(new  double [] {0,0,0,0,0,0});
 	}
+	
+//	public DHChain(double [] upperLimits,double [] lowerLimits, boolean debugViewer ) {
+//		this(upperLimits, lowerLimits);
+//
+//	}
+//	
+//	public DHChain(double [] upperLimits,double [] lowerLimits ) {
+//		
+//		this.upperLimits = upperLimits;
+//		this.lowerLimits = lowerLimits;
+//		getLinks().add(new DHLink(	13, 	Math.toRadians(180), 	32, 	Math.toRadians(-90)));//0->1
+//		getLinks().add(new DHLink(	25, 	Math.toRadians(-90), 	93, 	Math.toRadians(180)));//1->2
+//		getLinks().add(new DHLink(	11, 	Math.toRadians(90), 	24, 	Math.toRadians(90)));//2->3 
+//		getLinks().add(new DHLink(	128, 	Math.toRadians(-90), 		0, 		Math.toRadians(90)));//3->4
+//		
+//		getLinks().add(new DHLink(	0, 		Math.toRadians(0), 			0, 		Math.toRadians(-90)));//4->5
+//		getLinks().add(new DHLink(	25, 	Math.toRadians(90), 		0, 		Math.toRadians(0)));//5->tool
+//		
+//		forwardKinematics(new  double [] {0,0,0,0,0,0});
+//	}
 
 	public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector )throws Exception {
 		
@@ -164,6 +186,15 @@ public  class DHChain {
 
 	public ArrayList<DHLink> getLinks() {
 		return links;
+	}
+	
+	public String toString(){
+		String s="";
+		for(DHLink l:getLinks()){
+			s+=l.toString()+"\n";
+		}
+		return s;
+				
 	}
 
 }

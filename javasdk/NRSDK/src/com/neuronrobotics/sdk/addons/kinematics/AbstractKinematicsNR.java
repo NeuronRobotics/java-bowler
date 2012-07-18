@@ -87,26 +87,11 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 		Log.enableSystemPrint(true);
 		Log.enableDebugPrint(true);
 		
-		//InputStream config = XmlFactory.getDefaultConfigurationStream("DyioServo.xml");
-		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-	    DocumentBuilder dBuilder;
-	    Document doc = null;
-	    try {
-			dBuilder = dbFactory.newDocumentBuilder();
-			doc = dBuilder.parse(config);
-			doc.getDocumentElement().normalize();
-		} catch (ParserConfigurationException e) {
-			throw new RuntimeException(e);
-		} catch (SAXException e) {
-			throw new RuntimeException(e);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-
+		
 		//Parsing XML File and store in LinkConfiguration
-		NodeList nList = doc.getElementsByTagName("link");
-		for (int temp = 0; temp < nList.getLength(); temp++) {			
-		    Node nNode = nList.item(temp);
+		NodeList nList = XmlFactory.getAllNodesFromTag("link", config);
+		for (int i = 0; i < nList.getLength(); i++) {			
+		    Node nNode = nList.item(i);
 		    if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 		    	getLinkConfigurations().add(new LinkConfiguration((Element) nNode));
 		    }else{
@@ -115,7 +100,8 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 		}
 		
 		try{
-			Node zframeToRASConfig = doc.getElementsByTagName("ZframeToRAS").item(0);
+			NodeList zf = XmlFactory.getAllNodesFromTag("ZframeToRAS", config);
+			Node zframeToRASConfig = zf.item(0);
 		    if (zframeToRASConfig.getNodeType() == Node.ELEMENT_NODE) {
 		    	Element eElement = (Element)zframeToRASConfig;	    		    
 		    	setZframeToGlobalTransform(new TransformNR(	Double.parseDouble(XmlFactory.getTagValue("x",eElement)),
@@ -133,7 +119,8 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 		}
 		
 		try{
-		    Node baseToZframeConfig = doc.getElementsByTagName("baseToZframe").item(0);
+			NodeList bf = XmlFactory.getAllNodesFromTag("ZframeToRAS", config);
+		    Node baseToZframeConfig = bf.item(0);
 		    if (baseToZframeConfig.getNodeType() == Node.ELEMENT_NODE) {
 		    	Element eElement = (Element)baseToZframeConfig;	    	    
 		    	setBaseToZframeTransform(new TransformNR(	Double.parseDouble(XmlFactory.getTagValue("x",eElement)),

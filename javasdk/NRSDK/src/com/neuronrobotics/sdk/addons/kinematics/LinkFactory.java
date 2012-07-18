@@ -84,8 +84,8 @@ public class LinkFactory {
 		}else{
 			
 			int home=0;
-			if(c.getType().equals("servo-rotory"))
-				home = c.getIndexLatch();
+//			if(c.getType().equals("servo-rotory"))
+//				home = c.getIndexLatch();
 			tmp=new PidRotoryLink(	virtual.getPIDChannel(c.getHardwareIndex()),
 					(int)home,
 					(int)c.getLowerLimit(),
