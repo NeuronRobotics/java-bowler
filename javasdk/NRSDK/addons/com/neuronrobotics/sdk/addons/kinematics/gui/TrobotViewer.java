@@ -18,7 +18,7 @@ import javax.vecmath.Point3d;
 import com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR;
 import com.neuronrobotics.sdk.addons.kinematics.IJointSpaceUpdateListenerNR;
 import com.neuronrobotics.sdk.addons.kinematics.JointLimit;
-import com.neuronrobotics.sdk.addons.kinematics.TrobotKinematics;
+import com.neuronrobotics.sdk.addons.kinematics.DHParameterKinematics;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.Log;
@@ -55,12 +55,12 @@ public class TrobotViewer  extends JPanel implements IJointSpaceUpdateListenerNR
 	 * 
 	 */
 	private static final long serialVersionUID = 4624867202513493512L;
-	TrobotKinematics robot;
+	DHParameterKinematics robot;
 	DHViewer dh;
 	private double[] joints;
 	
 	
-	public TrobotViewer(TrobotKinematics bot){
+	public TrobotViewer(DHParameterKinematics bot){
 		robot = bot;
 		
 		JPanel controls = new JPanel(new MigLayout());

@@ -11,16 +11,17 @@ import javax.swing.JTabbedPane;
 
 import net.miginfocom.swing.MigLayout;
 
-import com.neuronrobotics.sdk.addons.kinematics.TrobotKinematics;
+import com.neuronrobotics.sdk.addons.kinematics.DHParameterKinematics;
 import com.neuronrobotics.sdk.addons.kinematics.gui.SampleGuiNR;
 import com.neuronrobotics.sdk.addons.kinematics.gui.TrobotViewer;
+import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 
 public class TrobotGuiMain {
 	double [] startVect = new double [] { 0,0,0,0,0,0};
-	TrobotKinematics model;
+	DHParameterKinematics model;
 	
 	private TrobotGuiMain(){
 		
@@ -45,7 +46,7 @@ public class TrobotGuiMain {
 						throw new RuntimeException("Not a bowler Device on connection: "+connection);
 					}
 					mcon.killAllPidGroups();
-					model = new TrobotKinematics(mcon,"TrobotMaster.xml");
+					model = new DHParameterKinematics(mcon,XmlFactory.getDefaultConfigurationStream("TrobotMaster.xml"));
 					gui.setKinematicsModel(model);
 					try{
 						tabs.add("Display",new TrobotViewer(model));
@@ -69,7 +70,7 @@ public class TrobotGuiMain {
 					 * First create the Bowler device connection
 					 */
 
-					model = new TrobotKinematics();
+					model = new DHParameterKinematics();
 					gui.setKinematicsModel(model);
 					try{
 						tabs.add("Display",new TrobotViewer(model));

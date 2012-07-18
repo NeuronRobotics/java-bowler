@@ -13,18 +13,19 @@ import net.miginfocom.swing.MigLayout;
 
 import com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR;
 import com.neuronrobotics.sdk.addons.kinematics.ITaskSpaceUpdateListenerNR;
-import com.neuronrobotics.sdk.addons.kinematics.TrobotKinematics;
+import com.neuronrobotics.sdk.addons.kinematics.DHParameterKinematics;
 import com.neuronrobotics.sdk.addons.kinematics.gui.SampleGuiNR;
 import com.neuronrobotics.sdk.addons.kinematics.gui.TrobotViewer;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
+import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 
 public class KinematicsDeveopmentMain implements ITaskSpaceUpdateListenerNR {
 	double [] startVect = new double [] { 0,0,0,0,0,0};
-	private TrobotKinematics master;
-	TrobotKinematics slave = new TrobotKinematics(); 
+	private DHParameterKinematics master;
+	DHParameterKinematics slave = new DHParameterKinematics(); 
 	private KinematicsDeveopmentMain(){
 		
 		try{
@@ -47,7 +48,7 @@ public class KinematicsDeveopmentMain implements ITaskSpaceUpdateListenerNR {
 						throw new RuntimeException("Not a bowler Device on connection: "+connection);
 					}
 					mcon.killAllPidGroups();
-					setMaster(new TrobotKinematics(mcon,"TrobotMaster.xml"));
+					setMaster(new DHParameterKinematics(mcon,XmlFactory.getDefaultConfigurationStream("TrobotMaster.xml")));
 					gui.setKinematicsModel(getMaster());
 					try {
 						slave.setDesiredJointSpaceVector(new double [] {0,0,0,0,0,0},0);
@@ -104,11 +105,11 @@ public class KinematicsDeveopmentMain implements ITaskSpaceUpdateListenerNR {
 		new KinematicsDeveopmentMain();
 	}
 
-	public TrobotKinematics getMaster() {
+	public DHParameterKinematics getMaster() {
 		return master;
 	}
 
-	public void setMaster(TrobotKinematics master) {
+	public void setMaster(DHParameterKinematics master) {
 		this.master = master;
 		master.addPoseUpdateListener(this);
 	}
