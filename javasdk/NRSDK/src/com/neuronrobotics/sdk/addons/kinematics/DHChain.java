@@ -85,10 +85,10 @@ public  class DHChain {
 	public TransformNR forwardKinematics(double[] jointSpaceVector, boolean store) {
 		return new TransformNR(forwardKinematicsMatrix(jointSpaceVector, store) );
 	}
+	
 	/**
-	 * Gets the task space velocites from the joint space velocity vector
-	 * @param jointSpaceVelocityVector the joint velocities
-	 * @return a matrix of the task space velocities
+	 * Gets the Jacobian matrix
+	 * @return a matrix representing the Jacobian for the current configuration
 	 */
 	public Matrix getJacobian(double[] jointSpaceVector){
 		double [][] data = new double[getLinks().size()][6]; 

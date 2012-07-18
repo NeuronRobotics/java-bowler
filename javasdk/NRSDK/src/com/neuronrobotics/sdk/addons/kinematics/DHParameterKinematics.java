@@ -46,9 +46,8 @@ public class DHParameterKinematics extends AbstractKinematicsNR {
 	}
 	
 	/**
-	 * Gets the task space velocites from the joint space velocity vector
-	 * @param jointSpaceVelocityVector the joint velocities
-	 * @return a matrix of the task space velocities
+	 * Gets the Jacobian matrix
+	 * @return a matrix representing the Jacobian for the current configuration
 	 */
 	public Matrix getJacobian(){
 		return chain.getJacobian(getCurrentJointSpaceVector());
