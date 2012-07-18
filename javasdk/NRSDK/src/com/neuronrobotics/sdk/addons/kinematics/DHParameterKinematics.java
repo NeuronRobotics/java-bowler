@@ -2,6 +2,8 @@ package com.neuronrobotics.sdk.addons.kinematics;
 
 import java.io.InputStream;
 
+import Jama.Matrix;
+
 import com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR;
 import com.neuronrobotics.sdk.addons.kinematics.LinkFactory;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
@@ -22,18 +24,12 @@ public class DHParameterKinematics extends AbstractKinematicsNR {
 
 	}
 	public DHParameterKinematics( DyIO dev, String file) {
-		this(dev,XmlFactory.getDefaultConfigurationStream(file));
+		this(dev,XmlFactory.getDefaultConfigurationStream(file),XmlFactory.getDefaultConfigurationStream(file));
 		
 	}
-	public DHParameterKinematics( DyIO dev, InputStream stream) {
-		super(stream,new LinkFactory( dev));
-		chain = new DHChain(stream,getFactory());
-		try {
-			setDesiredJointSpaceVector(new double[] {0,0,0,0,0,0}, 1.0);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public DHParameterKinematics( DyIO dev, InputStream linkStream, InputStream dhStream) {
+		super(linkStream,new LinkFactory( dev));
+		chain = new DHChain(dhStream,getFactory());
 		
 	}
 
@@ -47,6 +43,15 @@ public class DHParameterKinematics extends AbstractKinematicsNR {
 		if(jointSpaceVector == null || getDhChain() == null)
 			return new TransformNR();
 		return getDhChain().forwardKinematics(jointSpaceVector);
+	}
+	
+	/**
+	 * Gets the task space velocites from the joint space velocity vector
+	 * @param jointSpaceVelocityVector the joint velocities
+	 * @return a matrix of the task space velocities
+	 */
+	public Matrix getJacobian(){
+		return chain.getJacobian(getCurrentJointSpaceVector());
 	}
 
 	public void setDhChain(DHChain chain) {

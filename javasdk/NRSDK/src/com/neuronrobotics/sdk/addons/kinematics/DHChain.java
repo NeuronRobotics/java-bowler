@@ -35,7 +35,6 @@ public  class DHChain {
 		}
 		upperLimits = f.getUpperLimits();
 		lowerLimits = f.getLowerLimits();
-		forwardKinematics(new  double [] {0,0,0,0,0,0});
 	}
 	
 //	public DHChain(double [] upperLimits,double [] lowerLimits, boolean debugViewer ) {
@@ -92,7 +91,7 @@ public  class DHChain {
 	 * @return a matrix of the task space velocities
 	 */
 	public Matrix getJacobian(double[] jointSpaceVector){
-		double [][] data = new double[6][getLinks().size()]; 
+		double [][] data = new double[getLinks().size()][6]; 
 		getChain(jointSpaceVector);
 		for(int i=0;i<getLinks().size();i++){
 			
@@ -121,15 +120,14 @@ public  class DHChain {
 				//System.out.println("Current:\n"+current+"Step:\n"+step);
 				current = current.times(step);
 			}
-			double [] rVect = new double [3];
+			double []rVect = new double [3];
 			TransformNR tmp = new TransformNR(current);
 			rVect[0]=tmp.getX();
 			rVect[1]=tmp.getY();
 			rVect[2]=tmp.getZ();
 			
-			double [] xProd = new double [3];
-			
 			//Cross product of rVect and Z vect
+			double []xProd = crossProduct(rVect, zVect);
 			
 			data[i][0]=xProd[0];
 			data[i][1]=xProd[1];
@@ -138,6 +136,16 @@ public  class DHChain {
 		}
 		
 		return new Matrix(data);
+	}
+	
+	private double [] crossProduct(double[] a, double[] b){
+		double [] xProd = new double [3];
+		
+		xProd[0]=a[1]*b[2]-a[2]*b[1];
+		xProd[1]=a[2]*b[0]-a[0]*b[2];
+		xProd[2]=a[0]*b[1]-a[1]*b[0];
+		
+		return xProd;
 	}
 	
 	public Matrix forwardKinematicsMatrix(double[] jointSpaceVector, boolean store) {

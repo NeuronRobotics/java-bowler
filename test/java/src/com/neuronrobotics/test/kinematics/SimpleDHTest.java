@@ -8,9 +8,14 @@ import javax.swing.JTabbedPane;
 
 import net.miginfocom.swing.MigLayout;
 
+import Jama.Matrix;
+
 import com.neuronrobotics.sdk.addons.kinematics.DHParameterKinematics;
 import com.neuronrobotics.sdk.addons.kinematics.gui.SampleGuiNR;
 import com.neuronrobotics.sdk.addons.kinematics.gui.TrobotViewer;
+import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
+import com.neuronrobotics.sdk.common.Log;
+import com.neuronrobotics.sdk.util.ThreadUtil;
 
 public class SimpleDHTest {
 	DHParameterKinematics model = new DHParameterKinematics(null,
@@ -41,6 +46,19 @@ public class SimpleDHTest {
 		frame.setLocationRelativeTo(null);
 		frame.pack();
 		frame.setVisible(true);
+		
+		Log.enableDebugPrint(false);
+		
+		try {
+			model.setDesiredJointAxisValue(0, 45, 1);
+			model.setDesiredJointAxisValue(1, 45, 1);
+			ThreadUtil.wait(2000);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Matrix m = model.getJacobian();
+		System.out.println("Jacobian = "+TransformNR.getMatrixString(m));
 		
 	}
 	

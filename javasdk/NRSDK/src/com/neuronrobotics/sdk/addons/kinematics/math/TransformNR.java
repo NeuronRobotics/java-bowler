@@ -82,26 +82,35 @@ public class TransformNR {
 	}
 	@Override
 	public String toString(){
+		return getMatrixString(getMatrixTransform())+getRotation().toString();
+	}
+	
+	public static String getMatrixString(Matrix matrix){
 		String s = "{\n";
-		double [][] m = getMatrixTransform().getArray();
-		for(int i=0;i<4;i++){
+		double [][] m = matrix.getArray();
+		
+		int across = m.length;
+		int down = m[0].length;
+		
+		for(int i=0;i<across;i++){
 			s+="{ ";
-			for(int j=0;j<4;j++){
+			for(int j=0;j<down;j++){
 				if(m[i][j]<0)
 					s+=new DecimalFormat( "000.00" ).format(m[i][j]);
 				else
 					s+=new DecimalFormat( "0000.00" ).format(m[i][j]);
-				if(j<3)
+				if(j<down-1)
 					s+=",";
 				s+="\t";
 			}
 			s+=" }";
-			if(i<3)
+			if(i<across-1)
 				s+=",";
 			s+="\n";
 		}
-		return s+"}\n"+getRotation().toString();
+		return s+"}\n";
 	}
+	
 	public double[] getPositionArray() {
 		return new double[] {getX(),getY(),getZ()};
 	}
