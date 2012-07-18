@@ -48,7 +48,7 @@ public class KinematicsDeveopmentMain implements ITaskSpaceUpdateListenerNR {
 						throw new RuntimeException("Not a bowler Device on connection: "+connection);
 					}
 					mcon.killAllPidGroups();
-					setMaster(new DHParameterKinematics(mcon,XmlFactory.getDefaultConfigurationStream("TrobotMaster.xml")));
+					setMaster(new DHParameterKinematics(mcon,"TrobotMaster.xml"));
 					gui.setKinematicsModel(getMaster());
 					try {
 						slave.setDesiredJointSpaceVector(new double [] {0,0,0,0,0,0},0);

@@ -46,7 +46,7 @@ public class TrobotGuiMain {
 						throw new RuntimeException("Not a bowler Device on connection: "+connection);
 					}
 					mcon.killAllPidGroups();
-					model = new DHParameterKinematics(mcon,XmlFactory.getDefaultConfigurationStream("TrobotMaster.xml"));
+					model = new DHParameterKinematics(mcon,"TrobotMaster.xml");
 					gui.setKinematicsModel(model);
 					try{
 						tabs.add("Display",new TrobotViewer(model));
