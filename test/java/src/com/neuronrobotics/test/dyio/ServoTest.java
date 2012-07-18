@@ -15,6 +15,11 @@ public class ServoTest {
 		if (!ConnectionDialog.getBowlerDevice(dyio)){
 			System.exit(1);
 		}
+		
+		//If your DyIO is using a lower voltage power source, you need to disable the brownout detect
+		dyio.enableBrownOutDetect(false);
+		
+		
 		ServoChannel srv = new ServoChannel (dyio.getChannel(11));
 		srv.enablePowerOverride();
                 //Loop 10 times setting the position of the servo 
