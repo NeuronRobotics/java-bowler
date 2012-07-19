@@ -258,6 +258,7 @@ public class BlueCoveManager implements DiscoveryListener {
 				StreamConnection c =(StreamConnection) Connector.open(url);
 				conn = c;
 			}catch (IOException ex){
+				System.err.println("Failed to connect to "+url);
 				if(!ex.getMessage().contains("Device or resource busy"))
 					throw ex;
 			}

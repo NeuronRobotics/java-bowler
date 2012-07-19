@@ -160,12 +160,12 @@
   <target name="javadoc" depends="compileCore,compileAddon"
    description="Create Javadoc API documentation">
     
-    <javadoc sourcepath="${srcCore.home}" destdir="${dist.home}/docs/api" packagenames="*" 
+    <javadoc sourcepath="${srcCore.home}" destdir="${dist.home}/docs/coreApi" packagenames="*" 
     	source="1.7" splitindex="true" use="true" version="true">
       <classpath refid="compile.classpath"/> 
       <bottom><![CDATA[<script type="text/javascript" src="/googleanalytics.js"></script>]]></bottom>
    	</javadoc>
-  	<javadoc sourcepath="${srcAddon.home}" destdir="${dist.home}/docs/api" packagenames="*" 
+  	<javadoc sourcepath="${srcAddon.home}" destdir="${dist.home}/docs/addonApi" packagenames="*" 
     	source="1.7" splitindex="true" use="true" version="true">
       <classpath refid="compile.classpath"/> 
       <bottom><![CDATA[<script type="text/javascript" src="/googleanalytics.js"></script>]]></bottom>

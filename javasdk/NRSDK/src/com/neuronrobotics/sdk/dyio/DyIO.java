@@ -940,7 +940,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 	 * Tells the application whether or not to use the brownout detect
 	 * @return
 	 */
-	public boolean isBrownOutDetect() {
+	public boolean isBrownOutDetectEnabled() {
 		return enableBrownOut;
 	}
 	

@@ -2,24 +2,19 @@ package com.neuronrobotics.sdk.addons.kinematics.math;
 
 import Jama.Matrix;
 
-/*************************************************************************
- * Compilation: javac Quaternion.java Execution: java Quaternion
- * 
- * Data type for quaternions.
- * 
- * http://mathworld.wolfram.com/Quaternion.html
- * 
- * The data type is "immutable" so once you create and initialize a Quaternion,
- * you cannot change it.
- * 
- * % java Quaternion source:
- * http://introcs.cs.princeton.edu/java/32class/Quaternion.java.html
- *************************************************************************/
+/**
+ * This class is to represent a 3x3 rotation sub-matrix
+ * This class also contains static methods for dealing with 3x3 rotations.
+ * @author Kevin Harrington
+ *
+ */
 
 public class RotationNR {
 	double[][] rotationMatrix = new double[][] { { 1, 0, 0 }, { 0, 1, 0 },
 			{ 0, 0, 1 } };
-
+	/**
+	 * Null constructor forms a 
+	 */
 	public RotationNR() {
 	}
 

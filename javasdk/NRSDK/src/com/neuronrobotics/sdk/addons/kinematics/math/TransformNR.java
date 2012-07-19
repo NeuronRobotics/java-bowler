@@ -8,6 +8,8 @@ public class TransformNR {
 	private final double x,y,z;
 	private final RotationNR rotation;
 	
+	
+	
 	public TransformNR(Matrix m){
 		this.x=m.get(0, 3);
 		this.y=m.get(1, 3);
