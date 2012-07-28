@@ -35,7 +35,15 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 	}
 	public boolean ConfigurePIDController(PIDConfiguration config) { 
 		configs.set(config.getGroup(), config);
+		
 		return true;
+	}
+	
+	@Override 
+	public ArrayList<String> getNamespaces(){
+		ArrayList<String> s = new ArrayList<String>();
+		s.add("bcs.pid.*");
+		return s;
 	}
 
 	@Override
