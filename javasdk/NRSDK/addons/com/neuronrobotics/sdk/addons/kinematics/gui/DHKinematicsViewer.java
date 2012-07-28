@@ -79,15 +79,16 @@ public class DHKinematicsViewer  extends JPanel implements IJointSpaceUpdateList
  
         dh = new DHViewer(robot.getDhChain(), robot.getCurrentJointSpaceVector());
         add("North", controls);
-        add("Center", dh);
-//        JFrame jf = new JFrame();
-//        jf.setSize(640, 480);
-//        jf.add(dh);
-//        jf.setVisible(true);
+        //add("Center", dh);
+        JFrame jf = new JFrame();
+        jf.setSize(640, 480);
+        jf.add(dh);
+        jf.setVisible(true);
         
         joints = robot.getCurrentJointSpaceVector();
         robot.addJointSpaceListener(this);
         new updater().start();
+        setSize(640, 480);
 	}
 
 

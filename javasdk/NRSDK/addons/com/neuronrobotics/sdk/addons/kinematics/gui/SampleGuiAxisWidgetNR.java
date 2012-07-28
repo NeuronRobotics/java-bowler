@@ -43,7 +43,7 @@ public class SampleGuiAxisWidgetNR extends JPanel implements IJointSpaceUpdateLi
 		setAxis(i);
 		model=m;
 		model.addJointSpaceListener(this);
-		add(new JLabel("Axis #"+getAxis()+" Name=\""+model.getLinkConfiguration(i).getName()+"\""));
+		add(new JLabel("#"+getAxis()+" \""+model.getLinkConfiguration(i).getName()+"\""));
 		
 		value.setEnabled(false);
 		target.setEnabled(false);
@@ -124,7 +124,7 @@ public class SampleGuiAxisWidgetNR extends JPanel implements IJointSpaceUpdateLi
 		posPanel.add(jogInc);
 		posPanel.add(jogm);
 		posPanel.add(home);
-		add(posPanel,"pos 150 20");
+		add(posPanel,"pos 0 20");
 		myJointValue = model.getCurrentJointSpaceVector()[getAxis()];
 		updateAxisUI();
 	}

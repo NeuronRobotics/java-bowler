@@ -47,9 +47,8 @@ public class TrobotGuiMain {
 					}
 					mcon.killAllPidGroups();
 					model = new DHParameterKinematics(mcon,"TrobotMaster.xml");
-					gui.setKinematicsModel(model);
 					try{
-						tabs.add("Display",new DHKinematicsViewer(model));
+						gui.addExtraPanel(new DHKinematicsViewer(model));
 					}catch(Error ex){
 						JPanel error = new JPanel(new MigLayout());
 						error.add(new JLabel("Error while loading Java3d library:"),"wrap");
@@ -57,7 +56,8 @@ public class TrobotGuiMain {
 						tabs.add("Display [ERROR]",error);
 						ex.printStackTrace();
 					}
-					frame.pack();
+					gui.setKinematicsModel(model);
+					//frame.pack();
 					frame.setLocationRelativeTo(null);
 					zero();
 				}
@@ -71,9 +71,9 @@ public class TrobotGuiMain {
 					 */
 
 					model = new DHParameterKinematics();
-					gui.setKinematicsModel(model);
+					
 					try{
-						tabs.add("Display",new DHKinematicsViewer(model));
+						gui.addExtraPanel(new DHKinematicsViewer(model));
 					}catch(Error ex){
 						JPanel error = new JPanel(new MigLayout());
 						error.add(new JLabel("Error while loading Java3d library:"),"wrap");
@@ -81,7 +81,8 @@ public class TrobotGuiMain {
 						tabs.add("Display [ERROR]",error);
 						ex.printStackTrace();
 					}
-					frame.pack();
+					gui.setKinematicsModel(model);
+					//frame.pack();
 					frame.setLocationRelativeTo(null);
 					zero();
 				}

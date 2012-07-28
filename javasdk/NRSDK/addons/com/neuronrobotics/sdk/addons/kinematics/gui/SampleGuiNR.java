@@ -37,6 +37,7 @@ public class SampleGuiNR extends JPanel{
 	private MatrixDisplayNR ras;
 	private MatrixDisplayNR robReg;
 	private PosePanelNR setPanel;
+	private JPanel extra = new JPanel();
 	public SampleGuiNR(){
 		setLayout(new MigLayout());
 	}
@@ -47,6 +48,7 @@ public class SampleGuiNR extends JPanel{
 	
 	private void populate() {		
 		removeAll();
+		
 		setHomeAll(new JButton("Home All"));
 		getHomeAll().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -117,10 +119,19 @@ public class SampleGuiNR extends JPanel{
 		JPanel buttons = new JPanel(new MigLayout());
 		buttons.add(estop);
 		buttons.add(getHomeAll());
-		add(poses,"wrap");
-		add(buttons,"wrap");
-		add(links,"wrap");
 		
+		JPanel standard = new JPanel(new MigLayout());
+		standard.add(poses,"wrap");
+		standard.add(buttons,"wrap");
+		standard.add(links,"wrap");
+		
+		add(extra,"wrap");
+		add(standard,"wrap");
+		
+	}
+	
+	public void addExtraPanel(JPanel jp){
+		extra.add(jp);
 	}
 	
 	private void setButtonEnabled(boolean b){
