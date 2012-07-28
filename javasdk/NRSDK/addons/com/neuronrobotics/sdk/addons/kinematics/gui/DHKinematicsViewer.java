@@ -49,7 +49,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 
 
-public class TrobotViewer  extends JPanel implements IJointSpaceUpdateListenerNR{
+public class DHKinematicsViewer  extends JPanel implements IJointSpaceUpdateListenerNR{
 
 	/**
 	 * 
@@ -60,7 +60,7 @@ public class TrobotViewer  extends JPanel implements IJointSpaceUpdateListenerNR
 	private double[] joints;
 	
 	
-	public TrobotViewer(DHParameterKinematics bot){
+	public DHKinematicsViewer(DHParameterKinematics bot){
 		robot = bot;
 		
 		JPanel controls = new JPanel(new MigLayout());

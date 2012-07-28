@@ -13,7 +13,7 @@ import net.miginfocom.swing.MigLayout;
 
 import com.neuronrobotics.sdk.addons.kinematics.DHParameterKinematics;
 import com.neuronrobotics.sdk.addons.kinematics.gui.SampleGuiNR;
-import com.neuronrobotics.sdk.addons.kinematics.gui.TrobotViewer;
+import com.neuronrobotics.sdk.addons.kinematics.gui.DHKinematicsViewer;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.dyio.DyIO;
@@ -49,7 +49,7 @@ public class TrobotGuiMain {
 					model = new DHParameterKinematics(mcon,"TrobotMaster.xml");
 					gui.setKinematicsModel(model);
 					try{
-						tabs.add("Display",new TrobotViewer(model));
+						tabs.add("Display",new DHKinematicsViewer(model));
 					}catch(Error ex){
 						JPanel error = new JPanel(new MigLayout());
 						error.add(new JLabel("Error while loading Java3d library:"),"wrap");
@@ -73,7 +73,7 @@ public class TrobotGuiMain {
 					model = new DHParameterKinematics();
 					gui.setKinematicsModel(model);
 					try{
-						tabs.add("Display",new TrobotViewer(model));
+						tabs.add("Display",new DHKinematicsViewer(model));
 					}catch(Error ex){
 						JPanel error = new JPanel(new MigLayout());
 						error.add(new JLabel("Error while loading Java3d library:"),"wrap");

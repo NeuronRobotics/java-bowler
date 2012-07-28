@@ -55,8 +55,8 @@ public class KinematicsDeveopmentMain implements ITaskSpaceUpdateListenerNR {
 						e.printStackTrace();
 					}
 					try{
-						tabs.add("Master",new TrobotViewer(getMaster()));
-						tabs.add("Slave",new TrobotViewer(slave));
+						tabs.add("Master",new DHKinematicsViewer(getMaster()));
+						tabs.add("Slave",new DHKinematicsViewer(slave));
 					}catch(Error ex){
 						JPanel error = new JPanel(new MigLayout());
 						error.add(new JLabel("Error while loading Java3d library:"),"wrap");

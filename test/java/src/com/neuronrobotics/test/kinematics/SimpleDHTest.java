@@ -1,6 +1,5 @@
 package com.neuronrobotics.test.kinematics;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -12,7 +11,7 @@ import Jama.Matrix;
 
 import com.neuronrobotics.sdk.addons.kinematics.DHParameterKinematics;
 import com.neuronrobotics.sdk.addons.kinematics.gui.SampleGuiNR;
-import com.neuronrobotics.sdk.addons.kinematics.gui.TrobotViewer;
+import com.neuronrobotics.sdk.addons.kinematics.gui.DHKinematicsViewer;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.util.ThreadUtil;
@@ -28,7 +27,7 @@ public class SimpleDHTest {
 		final JTabbedPane tabs = new JTabbedPane();
 		gui.setKinematicsModel(model);
 		try{
-			tabs.add("Display",new TrobotViewer(model));
+			tabs.add("Display",new DHKinematicsViewer(model));
 		}catch(Error ex){
 			JPanel error = new JPanel(new MigLayout());
 			error.add(new JLabel("Error while loading Java3d library:"),"wrap");
