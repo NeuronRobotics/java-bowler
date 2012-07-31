@@ -50,7 +50,10 @@ public class DHParameterKinematics extends AbstractKinematicsNR {
 	 * @return a matrix representing the Jacobian for the current configuration
 	 */
 	public Matrix getJacobian(){
-		return chain.getJacobian(getCurrentJointSpaceVector());
+		long time = System.currentTimeMillis();
+		Matrix m = chain.getJacobian(getCurrentJointSpaceVector());
+		System.out.println("Jacobian calc took: "+(System.currentTimeMillis()-time));
+		return m;
 	}
 
 	public void setDhChain(DHChain chain) {
