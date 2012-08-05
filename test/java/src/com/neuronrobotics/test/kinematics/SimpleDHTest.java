@@ -20,7 +20,7 @@ public class SimpleDHTest {
 	DHParameterKinematics model = new DHParameterKinematics(null,
 			SimpleDHTest.class.getResourceAsStream("SimpleDH.xml"),
 			SimpleDHTest.class.getResourceAsStream("SimpleDH.xml"));
-	double [] startVect = new double [] { 0,0};
+	double [] startVect = new double [] { 0,0,0,0};
 	public SimpleDHTest(){
 		final SampleGuiNR gui = new SampleGuiNR();
 		final JFrame frame = new JFrame();
@@ -49,8 +49,10 @@ public class SimpleDHTest {
 		Log.enableDebugPrint(false);
 		
 		try {
-			model.setDesiredJointAxisValue(0, 45, 1);
-			model.setDesiredJointAxisValue(1, -45, 1);
+			for(int i=0;i<startVect.length;i++){
+				double val = 45*(i%2>0?-1:1);
+				model.setDesiredJointAxisValue(i, val, 1);
+			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
