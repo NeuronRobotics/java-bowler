@@ -65,7 +65,7 @@ public class DHKinematicsViewer  extends JPanel implements IJointSpaceUpdateList
 		
 		JPanel controls = new JPanel(new MigLayout());
 		
-        setLayout(new BorderLayout());
+
         JButton resetViewButton = new JButton("Reset View");
         resetViewButton.addActionListener(new ActionListener() {
 			
@@ -78,12 +78,14 @@ public class DHKinematicsViewer  extends JPanel implements IJointSpaceUpdateList
         controls.add(resetViewButton);
  
         dh = new DHViewer(robot.getDhChain(), robot.getCurrentJointSpaceVector());
-        add("North", controls);
-        add("Center", dh);
-//        JFrame jf = new JFrame();
-//        jf.setSize(640, 480);
-//        jf.add(dh);
-//        jf.setVisible(true);
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.add("North", controls);
+        panel.add("Center", dh);
+        
+        JFrame jf = new JFrame();
+        jf.setSize(640, 480);
+        jf.add(panel);
+        jf.setVisible(true);
         
         joints = robot.getCurrentJointSpaceVector();
         robot.addJointSpaceListener(this);
