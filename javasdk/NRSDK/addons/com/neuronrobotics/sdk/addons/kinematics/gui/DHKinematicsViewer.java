@@ -58,7 +58,7 @@ public class DHKinematicsViewer  extends JPanel implements IJointSpaceUpdateList
 	DHParameterKinematics robot;
 	DHViewer dh;
 	private double[] joints;
-	
+	private JFrame jf;
 	
 	public DHKinematicsViewer(DHParameterKinematics bot){
 		robot = bot;
@@ -82,7 +82,7 @@ public class DHKinematicsViewer  extends JPanel implements IJointSpaceUpdateList
         panel.add("North", controls);
         panel.add("Center", dh);
         
-        JFrame jf = new JFrame();
+        jf = new JFrame();
         jf.setSize(640, 480);
         jf.add(panel);
         jf.setVisible(true);
@@ -137,5 +137,11 @@ public class DHKinematicsViewer  extends JPanel implements IJointSpaceUpdateList
 	}
 	public void addTransform(TransformNR pose, String label) {
 		dh.addTransform(pose, label, Color.yellow);
+	}
+
+
+	public JFrame getFrame() {
+		// TODO Auto-generated method stub
+		return jf;
 	}
 }

@@ -88,6 +88,7 @@ public  class DHChain {
 	
 	/**
 	 * Gets the Jacobian matrix
+	 * 
 	 * @return a matrix representing the Jacobian for the current configuration
 	 */
 	public Matrix getJacobian(double[] jointSpaceVector){
