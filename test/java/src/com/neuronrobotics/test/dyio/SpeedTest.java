@@ -30,6 +30,7 @@ public class SpeedTest {
 		dyio.connect();
 		System.out.println("Startup time: "+(System.currentTimeMillis()-start)+" ms");
 		//dyio.enableDebug();
+		dyio.setServoPowerSafeMode(false);
 		for (int i=0;i<24;i++){
 			dyio.getChannel(i).setAsync(false);
 		}
@@ -46,22 +47,27 @@ public class SpeedTest {
 		
 		avg=0;
 		start = System.currentTimeMillis();
+		double best=1000;
+		double worst=0;
 		for(i=0;i<500;i++) {
 			dyio.ping();
 			double ms=System.currentTimeMillis()-start;
 			avg +=ms;
 			start = System.currentTimeMillis();
-			//System.out.println("Average cycle time: "+(int)(avg/i)+"ms\t\t\t this loop was: "+ms);
+			if (ms<best)
+				best=ms;
+			if(ms>worst)
+				worst=ms;
 		}
-		System.out.println("Average cycle time for ping: "+(avg/i)+" ms");
+		System.out.println("Average cycle time for ping: "+(avg/i)+" ms"+" best="+ best/2+"ms worst="+worst/2);
 		
 
 		boolean high = false;
 		//dyio.setCachedMode(true);
 		
 		avg=0;
-		double best=1000;
-		double worst=0;
+		best=1000;
+		worst=0;
 		for(i=0;i<500;i++) {
 			start = System.currentTimeMillis();
 			try {
@@ -119,7 +125,7 @@ public class SpeedTest {
 			//System.out.println("Average cycle time: "+(int)(avg/i)+"ms\t\t\t this loop was: "+ms);
 		}
 		System.out.println("Average cycle time for values get: "+(avg/(i+1))+" ms best="+ best+"ms worst="+worst);
-		
+		dyio.setServoPowerSafeMode(true);
 		System.exit(0);
 	}
 

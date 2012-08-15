@@ -17,7 +17,7 @@ import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 public class SimpleDHTest {
-	DHParameterKinematics model = new DHParameterKinematics(null,
+	DHParameterKinematics model = new DHParameterKinematics(
 			SimpleDHTest.class.getResourceAsStream("SimpleDH.xml"),
 			SimpleDHTest.class.getResourceAsStream("SimpleDH.xml"));
 	double [] startVect = new double [] { 0,0,0,0};

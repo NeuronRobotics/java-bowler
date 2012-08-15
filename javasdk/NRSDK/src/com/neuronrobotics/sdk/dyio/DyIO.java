@@ -932,7 +932,25 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 	 * @param enable true to enable the borwnout, false to disable
 	 * @return True is success
 	 */
+	@Deprecated
 	public boolean enableBrownOutDetect(boolean enable) {
+		return setServoPowerSafeMode(enable);
+	}
+	/**
+	 * Tells the application whether or not to use the brownout detect
+	 * @return
+	 */
+	@Deprecated
+	public boolean isBrownOutDetectEnabled() {
+		return isServoPowerSafeMode();
+	}
+	
+	/**
+	 * This method allows you to disable the brown out detect for the servo subsystem. If true is passed 
+	 * @param enable true to enable the borwnout, false to disable
+	 * @return True is success
+	 */
+	public boolean setServoPowerSafeMode(boolean enable) {
 		enableBrownOut=enable;
 		return send(new PowerCommand(!enableBrownOut))!=null;
 	}
@@ -940,7 +958,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 	 * Tells the application whether or not to use the brownout detect
 	 * @return
 	 */
-	public boolean isBrownOutDetectEnabled() {
+	public boolean isServoPowerSafeMode() {
 		return enableBrownOut;
 	}
 	

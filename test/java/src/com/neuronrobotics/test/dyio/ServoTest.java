@@ -17,7 +17,7 @@ public class ServoTest {
 		}
 		
 		//If your DyIO is using a lower voltage power source, you need to disable the brownout detect
-		dyio.enableBrownOutDetect(false);
+		dyio.setServoPowerSafeMode(false);
 		
 		
 		ServoChannel srv = new ServoChannel (dyio.getChannel(11));
