@@ -78,7 +78,7 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 		if(data.getRPC().contains("apid")){
 			int [] pos = new int[getNumberOfChannels()];
 			for(int i=0;i<getNumberOfChannels();i++) {
-				pos[i] = ByteList.convertToInt( data.getData().getBytes(i*4, (i*4)+4),true);
+				pos[i] = ByteList.convertToInt( data.getData().getBytes(i*4, 4),true);
 				PIDEvent e =new PIDEvent(i,pos[i],0,0);
 				firePIDEvent(e);
 			}	
@@ -139,11 +139,14 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 	 * @see com.neuronrobotics.sdk.pid.IPIDControl#GetAllPIDPosition
 	 */
 	public int [] GetAllPIDPosition() {
+		Log.debug("Getting All PID Positions");
 		BowlerDatagram b = send(new ControlAllPIDCommand());
 		ByteList data = b.getData();
 		int [] back = new int[data.size()/4];
 		for(int i=0;i<back.length;i++) {
-			back[i] = ByteList.convertToInt( data.getBytes(i*4, (i*4)+4),true);
+			int start = i*4;
+			byte [] tmp = data.getBytes(start, 4);
+			back[i] = ByteList.convertToInt( tmp,true);
 		}
 		if(back.length != getNumberOfChannels()){
 			channels =  new ArrayList<PIDChannel>();
