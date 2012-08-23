@@ -663,7 +663,10 @@ public class ByteList implements ISendable, List<Byte> {
 	 */
 
 	public static int convertToInt(byte[] b,boolean Signed){
+		
 		long bytes = b.length;
+		if(bytes>4)
+			throw new RuntimeException("Ints can only have 2 or 4 bytes");
 		long out = 0;
 		long tmp = 0;
 		for (int i=0;i<bytes;i++){
@@ -683,7 +686,8 @@ public class ByteList implements ISendable, List<Byte> {
                 out=(int) (-1*abs_val);
             }
 		}
-		return (int) out;
+		int ret = (int) out;
+		return ret;
 	}
 
 	/**
