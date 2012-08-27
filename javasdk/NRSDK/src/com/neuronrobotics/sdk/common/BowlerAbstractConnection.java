@@ -380,6 +380,7 @@ public abstract class BowlerAbstractConnection {
 	
 	protected void fireAsyncOnResponse(BowlerDatagram datagram) {
 		if(!datagram.isSyncronous()){
+			//Log.debug("\nASYNC<<"+datagram);
 			if(isThreadedUpstreamPackets()){
 				//synchronized(listeners){
 					for(IBowlerDatagramListener l : listeners) {

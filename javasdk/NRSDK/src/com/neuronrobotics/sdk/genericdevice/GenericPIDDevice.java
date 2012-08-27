@@ -70,7 +70,9 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 	}
 
 	public void onAsyncResponse(BowlerDatagram data) {
+		Log.debug("\nPID ASYNC<<"+data);
 		if(data.getRPC().contains("_pid")){
+			
 			PIDEvent e =new PIDEvent(data);
 	
 			firePIDEvent(e);

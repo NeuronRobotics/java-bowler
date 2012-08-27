@@ -305,14 +305,18 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 			while (connection.isConnected()){
 				if((connection.msSinceLastSend())>heartBeatTime){
 					try{
-						if(ping()==null)
+						if(ping()==null){
+							Log.debug("Ping failed, disconnecting");
 							connection.disconnect();
+						}
 					}catch(Exception e){
+						Log.debug("Ping failed, disconnecting");
 						connection.disconnect();
 					}
 				}
 				ThreadUtil.wait(10);
 				if(getInstance() == null){
+					Log.debug("Instance null, disconnecting");
 					connection.disconnect();
 				}
 			}

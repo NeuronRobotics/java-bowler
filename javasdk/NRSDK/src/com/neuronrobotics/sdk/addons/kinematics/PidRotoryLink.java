@@ -1,5 +1,6 @@
 package com.neuronrobotics.sdk.addons.kinematics;
 
+import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.pid.IPIDEventListener;
 import com.neuronrobotics.sdk.pid.PIDChannel;
 import com.neuronrobotics.sdk.pid.PIDEvent;
@@ -43,6 +44,7 @@ public class PidRotoryLink extends AbstractRotoryLink{
 			
 			@Override
 			public void onPIDEvent(PIDEvent e) {
+				Log.debug("\nRotory Link Async<<"+e);
 				fireLinkListener(e.getValue());
 			}
 		});
