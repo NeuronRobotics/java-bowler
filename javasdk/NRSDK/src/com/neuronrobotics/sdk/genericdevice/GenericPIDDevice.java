@@ -81,7 +81,7 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 			int [] pos = new int[getNumberOfChannels()];
 			for(int i=0;i<getNumberOfChannels();i++) {
 				pos[i] = ByteList.convertToInt( data.getData().getBytes(i*4, 4),true);
-				PIDEvent e =new PIDEvent(i,pos[i],0,0);
+				PIDEvent e =new PIDEvent(i,pos[i],System.currentTimeMillis(),0);
 				firePIDEvent(e);
 			}	
 		}

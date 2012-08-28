@@ -19,7 +19,7 @@ public class PIDEvent {
 			throw new RuntimeException("Datagram is not a PID event");
 		setGroup(data.getData().getByte(0));
 		setValue(ByteList.convertToInt(data.getData().getBytes(1, 4),true));
-		setTimeStamp(ByteList.convertToInt(data.getData().getBytes(5, 4),false));
+		setTimeStamp(System.currentTimeMillis());
 		setVelocity(ByteList.convertToInt(data.getData().getBytes(9, 4),true));
 	}
 	public void setGroup(int channel) {
