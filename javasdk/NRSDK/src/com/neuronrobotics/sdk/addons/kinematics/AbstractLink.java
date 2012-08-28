@@ -57,16 +57,16 @@ public abstract class AbstractLink {
 	}
 	
 	public void addLinkListener(ILinkListener l){
-		Log.info("Adding link listener: "+l);
+		//Log.info("Adding link listener: "+l);
 		if(links.contains(l))
 			return;
 		links.add(l);
 	}
 	public void removeLinkListener(ILinkListener l){
-		Log.info("Removing link listener: "+l);
+		//Log.info("Removing link listener: "+l);
 		if(links.contains(l))
 			links.remove(l);
-		throw new RuntimeException();
+		//throw new RuntimeException();
 	}
 	/**
 	 * This method sends the updated angle value to all listeners
