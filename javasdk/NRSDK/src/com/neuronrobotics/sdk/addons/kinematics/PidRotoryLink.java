@@ -44,7 +44,7 @@ public class PidRotoryLink extends AbstractRotoryLink{
 			
 			@Override
 			public void onPIDEvent(PIDEvent e) {
-				Log.debug("\nRotory Link Async<<"+e);
+				//Log.debug("\nRotory Link Async<<"+e);
 				fireLinkListener(e.getValue());
 			}
 		});
