@@ -87,9 +87,11 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 		Log.enableSystemPrint(true);
 		Log.enableDebugPrint(true);
 		
+		Document doc =XmlFactory.getAllNodesDocument(config);
+		NodeList nList = doc.getElementsByTagName("link");
+		NodeList zf = 	 doc.getElementsByTagName("ZframeToRAS");
+		NodeList bf = 	 doc.getElementsByTagName("baseToZframe");
 		
-		//Parsing XML File and store in LinkConfiguration
-		NodeList nList = XmlFactory.getAllNodesFromTag("link", config);
 		for (int i = 0; i < nList.getLength(); i++) {			
 		    Node nNode = nList.item(i);
 		    if (nNode.getNodeType() == Node.ELEMENT_NODE) {
@@ -100,7 +102,6 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 		}
 		
 		try{
-			NodeList zf = XmlFactory.getAllNodesFromTag("ZframeToRAS", config);
 			Node zframeToRASConfig = zf.item(0);
 		    if (zframeToRASConfig.getNodeType() == Node.ELEMENT_NODE) {
 		    	Element eElement = (Element)zframeToRASConfig;	    		    
@@ -115,11 +116,12 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 		    	throw new RuntimeException("No Z frame to RAS transform defined");
 		    }
 		}catch (Exception ex){
+			ex.printStackTrace();
 			Log.warning("No Z frame to RAS transform defined");
 		}
 		
 		try{
-			NodeList bf = XmlFactory.getAllNodesFromTag("ZframeToRAS", config);
+			
 		    Node baseToZframeConfig = bf.item(0);
 		    if (baseToZframeConfig.getNodeType() == Node.ELEMENT_NODE) {
 		    	Element eElement = (Element)baseToZframeConfig;	    	    
@@ -134,6 +136,7 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 		    	throw new RuntimeException("No base to Z frame transform defined");
 		    }
 		}catch (Exception ex){
+			ex.printStackTrace();
 			Log.warning("No base to Z frame transform defined");
 		}
 		
@@ -163,9 +166,11 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 		Log.info("Loading device: "+f.getClass()+" "+f);
 		setFactory(f);
 		//Log.enableDebugPrint(true);
-		for(LinkConfiguration c:getLinkConfigurations()){
+		for(int i=0;i<getLinkConfigurations().size();i++){
+			LinkConfiguration c = getLinkConfigurations().get(i);
+			c.setLinkIndex(i);
 			getFactory().getLink(c);
-			Log.info("Axis #"+c.getHardwareIndex()+" Configuration:\n"+c);
+			Log.info("\nAxis #"+i+" Configuration:\n"+c);
 			if(c.getType().contains("pid")){
 				IPIDControl device = getFactory().getPid();
 				try{
@@ -182,13 +187,13 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 					tmpConf.setIndexLatch(c.getIndexLatch());
 					tmpConf.setStopOnIndex(false);
 					
-					Log.info("Axis #"+c.getHardwareIndex()+tmpConf);
+					Log.info("\nAxis #"+i+" "+tmpConf);
 					getAxisPidConfiguration().add(tmpConf);
-					setLinkCurrentConfiguration(c.getHardwareIndex(),tmpConf);
+					setLinkCurrentConfiguration(i,tmpConf);
 					//Send configuration for ONE axis
 					device.ConfigurePIDController(tmpConf);		
 				}catch(Exception ex){				
-					System.err.println("Configuration #"+c.getHardwareIndex()+" failed!!");
+					System.err.println("Configuration #"+i+" failed!!");
 					ex.printStackTrace();
 				}
 				device.addPIDEventListener(this);

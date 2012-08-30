@@ -40,6 +40,8 @@ public class LinkFactory {
 	public LinkFactory (GenericPIDDevice d){
 		if(d==null){
 			forceVirtual=true;
+			pid=virtual;
+			hasPid=true;
 			return;
 		}
 		pid=d;

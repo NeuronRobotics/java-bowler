@@ -17,8 +17,7 @@ public class XmlFactory {
 	public static InputStream getDefaultConfigurationStream(String file) {
 		return XmlFactory.class.getResourceAsStream(file);
 	}
-	
-	public static NodeList getAllNodesFromTag(String sTag, InputStream config){
+	public static Document getAllNodesDocument(InputStream config) {
 		//InputStream config = XmlFactory.getDefaultConfigurationStream("DyioServo.xml");
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 	    DocumentBuilder dBuilder;
@@ -34,7 +33,12 @@ public class XmlFactory {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-
+	    return doc;
+	}
+	
+	
+	public static NodeList getAllNodesFromTag(String sTag, InputStream config){
+		Document doc =getAllNodesDocument(config);
 		//Parsing XML File and store in LinkConfiguration
 		return doc.getElementsByTagName(sTag);
 	}

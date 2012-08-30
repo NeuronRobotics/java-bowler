@@ -12,6 +12,7 @@ public class LinkConfiguration {
 	private String name;// = getTagValue("name",eElement);
 	private String type;
 	private int index;// = Double.parseDouble(getTagValue("index",eElement));
+	private int linkIndex = 0;
 	//private double length;// = Double.parseDouble(getTagValue("length",eElement));
 	private double scale;// = Double.parseDouble(getTagValue("scale",eElement));
 	private double upperLimit;// = Double.parseDouble(getTagValue("upperLimit",eElement));
@@ -68,6 +69,7 @@ public class LinkConfiguration {
 		s+=	"\n\tHoming Ticks Per Second: "+getHomingTicksPerSecond();
 		return s;
 	}
+	
 
 	public void setName(String name) {
 		this.name = name;
@@ -160,6 +162,12 @@ public class LinkConfiguration {
 	}
 	public double getLowerVelocity() {
 		return lowerVelocity;
+	}
+	public int getLinkIndex() {
+		return linkIndex;
+	}
+	public void setLinkIndex(int linkIndex) {
+		this.linkIndex = linkIndex;
 	}
 	
 }
