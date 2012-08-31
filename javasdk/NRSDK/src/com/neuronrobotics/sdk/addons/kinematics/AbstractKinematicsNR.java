@@ -351,7 +351,7 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 	}
 	
 	private void firePoseUpdate(){
-		Log.info("Pose update");
+		//Log.info("Pose update");
 		for(ITaskSpaceUpdateListenerNR p:taskSpaceUpdateListeners){
 			p.onTaskSpaceUpdate(this, getCurrentTaskSpaceTransform());
 		}
@@ -466,7 +466,7 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 		for(LinkConfiguration c:getLinkConfigurations()){
 			AbstractLink tmp = getFactory().getLink(c);
 			if(tmp == source){//Check to see if this lines up with a known link
-				Log.info("Got PID event "+source+" value="+engineeringUnitsValue);
+				//Log.info("Got PID event "+source+" value="+engineeringUnitsValue);
 				
 				currentJointSpacePositions[getLinkConfigurations().indexOf(c)]=engineeringUnitsValue;
 				firePoseUpdate();
