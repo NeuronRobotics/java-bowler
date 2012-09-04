@@ -1,17 +1,16 @@
 package com.neuronrobotics.test.dyio;
+import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
+import com.neuronrobotics.sdk.dyio.peripherals.IServoPositionUpdateListener;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
-public class ServoTest {
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
+public class ServoTest implements IServoPositionUpdateListener{
+	
+	private ServoTest(){
 		DyIO dyio=new DyIO();
-		dyio.enableDebug();
+		//dyio.enableDebug();
 		if (!ConnectionDialog.getBowlerDevice(dyio)){
 			System.exit(1);
 		}
@@ -19,16 +18,17 @@ public class ServoTest {
 		//If your DyIO is using a lower voltage power source, you need to disable the brownout detect
 		dyio.setServoPowerSafeMode(false);
 		
+
 		
-		ServoChannel srv = new ServoChannel (dyio.getChannel(11));
-		srv.enablePowerOverride();
+		ServoChannel srv = new ServoChannel (dyio.getChannel(0));
+		srv.addIServoPositionUpdateListener(this);
                 //Loop 10 times setting the position of the servo 
                 //the time the loop waits will be the time it takes for the servo to arrive
 		srv.SetPosition(0);
 		float time = 5;
 		
 		System.out.println("Moving with time");
-		for(int i = 0; i < 30; i++) {
+		for(int i = 0; i < 2; i++) {
 			// Set the value high every other time, exit if unsuccessful
 			int pos = ((i%2==0)?204:50);
                         //This will move the servo from the position it is currentlly in
@@ -46,8 +46,20 @@ public class ServoTest {
 
         dyio.disconnect();
         System.exit(0);
+	}
 
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
 
+		new ServoTest();
+
+	}
+
+	@Override
+	public void onServoPositionUpdate(ServoChannel srv, int position,double time) {
+		System.out.println("Servo Position update = "+ position+ " time= "+time );
 	}
 
 }
