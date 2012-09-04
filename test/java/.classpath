@@ -11,11 +11,11 @@
 	<classpathentry kind="lib" path="/NRSDK/lib/bluecove-gpl-2.1.1.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/NRSDK"/>
 	<classpathentry kind="lib" path="lib/PIDSIm.jar"/>
-	<classpathentry kind="lib" path="/NRSDK/lib/nrjavaserial-3.8.5.jar"/>
 	<classpathentry kind="lib" path="/NRSDK/lib_addons/j3dcore.jar"/>
 	<classpathentry kind="lib" path="/NRSDK/lib_addons/j3dutils.jar"/>
 	<classpathentry kind="lib" path="/NRSDK/lib_addons/miglayout-3.7.2-swing.jar"/>
 	<classpathentry kind="lib" path="/NRSDK/lib_addons/motej.0.9.jar"/>
 	<classpathentry kind="lib" path="/NRSDK/lib_addons/vecmath.jar"/>
+	<classpathentry kind="lib" path="/NRSDK/lib/nrjavaserial-3.8.6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
