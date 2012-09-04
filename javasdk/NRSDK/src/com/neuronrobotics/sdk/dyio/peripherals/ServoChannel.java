@@ -20,13 +20,15 @@ import com.neuronrobotics.sdk.common.BowlerMethod;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIOChannel;
+import com.neuronrobotics.sdk.dyio.DyIOChannelEvent;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.dyio.DyIORegestry;
+import com.neuronrobotics.sdk.dyio.IChannelEventListener;
 
 /**
  * 
  */
-public class ServoChannel extends DyIOAbstractPeripheral {
+public class ServoChannel extends DyIOAbstractPeripheral implements IChannelEventListener {
 	private ArrayList<IServoPositionUpdateListener >listeners = new ArrayList<IServoPositionUpdateListener >();
 	
 	/**
@@ -60,6 +62,7 @@ public class ServoChannel extends DyIOAbstractPeripheral {
 			throw new DyIOPeripheralException("Could not set channel " + channel + " to " + DyIOChannelMode.SERVO_OUT +  " mode");
 		}
 		channel.setDap(this);
+		channel.addChannelEventListener(this);
 	}
 	
 	/**
@@ -95,7 +98,7 @@ public class ServoChannel extends DyIOAbstractPeripheral {
 		if(!validate()) {
 			return false;
 		}
-		firePositionUpdate(pos,time);
+		//firePositionUpdate(pos,time);
 		getChannel().setCachedValue(pos);
 		getChannel().setCachedTime(time);
 		if(getChannel().getCachedMode()) {
@@ -161,6 +164,11 @@ public class ServoChannel extends DyIOAbstractPeripheral {
 			setOpCode("povr");
 			getCallingDataStorage().add(ovr?1:0);
 		}
+	}
+
+	@Override
+	public void onChannelEvent(DyIOChannelEvent e) {
+		firePositionUpdate(e.getUnsignedValue(), System.currentTimeMillis());
 	}
 	
 }
