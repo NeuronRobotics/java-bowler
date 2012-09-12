@@ -8,6 +8,7 @@ import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
 
+import com.neuronrobotics.application.xmpp.GoogleChat.IChatLog;
 import com.neuronrobotics.sdk.dyio.DyIOChannelEvent;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.dyio.DyIORegestry;
@@ -16,15 +17,25 @@ import com.neuronrobotics.sdk.dyio.IChannelEventListener;
 
 public class DyIOConversation implements IConversation, MessageListener, IChannelEventListener {
 	private ArrayList<ChatAsyncListener> listeners = new ArrayList<ChatAsyncListener>();
-	
-	
+	private IChatLog log;
+	public DyIOConversation(IChatLog log) {
+		this.log=log;
+	}
+
 	public void processMessage(Chat chat, Message message) {
 		Message msg = new Message(message.getFrom(), Message.Type.chat);
 	    if(message.getType().equals(Message.Type.chat) && message.getBody() != null) {
 	        System.out.println("Received: " + message.getBody()+" from: "+message.getFrom());
+	        if(log!=null){
+	        	log.onLogEvent(""+message.getFrom()+">> "+ message.getBody());
+	        }
 	        try {
-	        	msg.setBody(onMessage(message.getBody(),chat, message.getFrom()));
+	        	String ret =onMessage(message.getBody(),chat, message.getFrom());
+	        	msg.setBody(ret);
 	        	System.out.println("Sending: "+msg.getBody());
+	        	 if(log!=null){
+	 	        	log.onLogEvent(""+message.getFrom()+"<< "+ ret);
+	 	        }
 	            chat.sendMessage(msg);
 	        } catch (XMPPException ex) {
 	            ex.printStackTrace();

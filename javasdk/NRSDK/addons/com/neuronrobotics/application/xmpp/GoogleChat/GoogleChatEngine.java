@@ -19,7 +19,6 @@ import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 
-import org.jivesoftware.smack.packet.Message;
 
 import org.jivesoftware.smack.packet.Presence;
 import org.w3c.dom.Document;
@@ -49,18 +48,19 @@ public class GoogleChatEngine implements ChatManagerListener {
 	private ChatManager chatmanager;
 	ArrayList<GoogleChat> googleChats = new ArrayList<GoogleChat> ();
 	private IConversationFactory responder;
-	public GoogleChatEngine(IConversationFactory responder,String user,String pass) throws XMPPException{
+	public GoogleChatEngine(IConversationFactory responder,String user,String pass) throws XMPPException {
 		username=user;
         password=pass;
         setup(responder);
 	}
 	
-	public GoogleChatEngine(IConversationFactory responder,InputStream config) throws XMPPException{
+	public GoogleChatEngine(IConversationFactory responder,InputStream config) throws XMPPException {
         setLoginInfo(config);
         setup(responder);
 	}
 	
-	private void setup(IConversationFactory responder) throws XMPPException{
+	private void setup(IConversationFactory responder) throws XMPPException {
+		this.responder=responder;
 		if((MessageListener.class.isInstance(responder)))
 			throw new RuntimeException("Instance of IConversationFactory must also implement org.jivesoftware.smack.MessageListener");
 		connConfig = new ConnectionConfiguration(host, port, service);
@@ -147,5 +147,7 @@ public class GoogleChatEngine implements ChatManagerListener {
 	public void disconnect(){
 		connection.disconnect();
 	}
+
+	
 
 }
