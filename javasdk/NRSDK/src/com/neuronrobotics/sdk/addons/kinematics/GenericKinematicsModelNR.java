@@ -10,6 +10,7 @@ import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
 import com.neuronrobotics.sdk.genericdevice.GenericPIDDevice;
 //import com.neuronrobotics.sdk.pid.IPIDControl;
+import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 import com.neuronrobotics.sdk.pid.VirtualGenericPIDDevice;
 
 public class GenericKinematicsModelNR extends AbstractKinematicsNR {
@@ -64,6 +65,11 @@ public class GenericKinematicsModelNR extends AbstractKinematicsNR {
 		//Z rotation
 		inv[5]=Math.atan2(-rotationMatrixArray.get(0, 1), rotationMatrixArray.get(0, 0))*180/Math.PI;
 		return inv;
+	}
+	@Override
+	public void onLinkLimit(AbstractLink source, PIDLimitEvent event) {
+		// TODO Auto-generated method stub
+		
 	}
 
 

@@ -672,5 +672,13 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 	public void setRetryNumberBeforeFail(int retryNumberBeforeFail) {
 		this.retryNumberBeforeFail = retryNumberBeforeFail;
 	}
+	
+	@Override
+	public void onLinkLimit(AbstractLink arg0, PIDLimitEvent arg1) {
+		for(int i=0;i<getNumberOfLinks();i++){
+			if(getLinkConfiguration(i).getHardwareIndex() == arg0.getLinkConfiguration().getHardwareIndex())
+				fireJointSpaceLimitUpdate(i,new JointLimit(i, arg1, arg0.getLinkConfiguration()));
+		}
+	}
 
 }

@@ -42,7 +42,9 @@ public class PidRotoryLink extends AbstractRotoryLink{
 			}
 			
 			@Override
-			public void onPIDLimitEvent(PIDLimitEvent e) {}
+			public void onPIDLimitEvent(PIDLimitEvent e) {
+				fireLinkLimitEvent(e);
+			}
 			
 			@Override
 			public void onPIDEvent(PIDEvent e) {

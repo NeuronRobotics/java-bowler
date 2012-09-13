@@ -11,6 +11,7 @@ import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.genericdevice.GenericPIDDevice;
 import com.neuronrobotics.sdk.pid.IPIDControl;
+import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 
 
 public class DHParameterKinematics extends AbstractKinematicsNR {
@@ -81,6 +82,12 @@ public class DHParameterKinematics extends AbstractKinematicsNR {
 
 	public DHChain getDhChain() {
 		return chain;
+	}
+
+	@Override
+	public void onLinkLimit(AbstractLink source, PIDLimitEvent event) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

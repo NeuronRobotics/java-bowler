@@ -3,6 +3,7 @@ package com.neuronrobotics.sdk.addons.kinematics;
 import java.util.ArrayList;
 
 import com.neuronrobotics.sdk.common.Log;
+import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 
 // Kevin Shouldn't the Link's channel be kept in this level of Abstraction? The way I designg AbstractCartesianPositonDevice  Requires this
 public abstract class AbstractLink {
@@ -80,7 +81,16 @@ public abstract class AbstractLink {
 		}
 	}
 	
-	
+	/**
+	 * This fires off a limit event
+	 * @param e
+	 */
+	public void fireLinkLimitEvent(PIDLimitEvent e){
+		for(ILinkListener l:links){
+			//Log.info("Link Event, RAW="+linkUnitsValue);
+			l.onLinkLimit(this, e);
+		}
+	}
 	
 	public void Home(){
 		setTargetValue(getHome());
