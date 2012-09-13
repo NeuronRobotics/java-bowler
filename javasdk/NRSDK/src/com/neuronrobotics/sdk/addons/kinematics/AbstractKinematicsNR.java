@@ -61,6 +61,8 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 	/* The device */
 	//private IPIDControl device =null;
 	private LinkFactory factory=null;
+	
+	private int retryNumberBeforeFail = 5;
 
 	public AbstractKinematicsNR(InputStream configFile,LinkFactory f){
 		loadConfig(configFile);
@@ -308,13 +310,25 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 //			}
 //			targets[c.getHardwareIndex()]=scaled;
 //		}
-
-		factory.setCachedTargets(jointSpaceVect);
-		if(!isNoFlush()){
-			//
-			factory.flush(seconds);
-			//
-		}
+		int except=0;
+		Exception e = null;
+		do{
+			try{
+				factory.setCachedTargets(jointSpaceVect);
+				if(!isNoFlush()){
+					//
+					factory.flush(seconds);
+					//
+				}
+				except=0;
+				e = null;
+			}catch(Exception ex){
+				except++;
+				e=ex;
+			}
+		}while(except>0 && except <getRetryNumberBeforeFail());
+		if(e!=null)
+			throw e;
 		
 //		for(int i=0;i<getNumberOfLinks();i++){
 //			setDesiredJointAxisValue(i, jointSpaceVect[i],  seconds);
@@ -344,8 +358,22 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 		}catch (Exception ex){
 			throw new Exception("Joint hit software bound, index "+axis+" attempted: "+value+" boundes: U="+c.getUpperLimit()+ ", L="+c.getLowerLimit());
 		}
-		if(!isNoFlush())
-			getFactory().getLink(c).flush(seconds);
+		if(!isNoFlush()){
+			int except=0;
+			Exception e = null;
+			do{
+				try{
+					getFactory().getLink(c).flush(seconds);
+					except=0;
+					e = null;
+				}catch(Exception ex){
+					except++;
+					e=ex;
+				}
+			}while(except>0 && except <getRetryNumberBeforeFail());
+			if(e!=null)
+				throw e;	
+		}
 		fireTargetJointsUpdate();
 		return;
 	}
@@ -637,6 +665,12 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 	}
 	public boolean isNoFlush() {
 		return noFlush;
+	}
+	public int getRetryNumberBeforeFail() {
+		return retryNumberBeforeFail;
+	}
+	public void setRetryNumberBeforeFail(int retryNumberBeforeFail) {
+		this.retryNumberBeforeFail = retryNumberBeforeFail;
 	}
 
 }
