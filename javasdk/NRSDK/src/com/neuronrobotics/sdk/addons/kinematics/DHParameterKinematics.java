@@ -84,10 +84,5 @@ public class DHParameterKinematics extends AbstractKinematicsNR {
 		return chain;
 	}
 
-	@Override
-	public void onLinkLimit(AbstractLink source, PIDLimitEvent event) {
-		// TODO Auto-generated method stub
-		
-	}
 
 }

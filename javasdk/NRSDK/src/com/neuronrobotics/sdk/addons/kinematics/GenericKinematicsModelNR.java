@@ -66,11 +66,5 @@ public class GenericKinematicsModelNR extends AbstractKinematicsNR {
 		inv[5]=Math.atan2(-rotationMatrixArray.get(0, 1), rotationMatrixArray.get(0, 0))*180/Math.PI;
 		return inv;
 	}
-	@Override
-	public void onLinkLimit(AbstractLink source, PIDLimitEvent event) {
-		// TODO Auto-generated method stub
-		
-	}
-
 
 }
