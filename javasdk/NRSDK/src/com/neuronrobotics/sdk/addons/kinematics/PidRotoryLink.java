@@ -37,7 +37,9 @@ public class PidRotoryLink extends AbstractRotoryLink{
 	public void setPIDChannel(PIDChannel channel) {
 		channel.addPIDEventListener(new IPIDEventListener() {
 			@Override
-			public void onPIDReset(int group, int currentValue) {}
+			public void onPIDReset(int group, int currentValue) {
+				fireLinkListener(currentValue);
+			}
 			
 			@Override
 			public void onPIDLimitEvent(PIDLimitEvent e) {}
