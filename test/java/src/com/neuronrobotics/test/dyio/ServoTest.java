@@ -1,10 +1,8 @@
 package com.neuronrobotics.test.dyio;
-import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.peripherals.IServoPositionUpdateListener;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
-import com.neuronrobotics.sdk.util.ThreadUtil;
 
 public class ServoTest implements IServoPositionUpdateListener{
 	
