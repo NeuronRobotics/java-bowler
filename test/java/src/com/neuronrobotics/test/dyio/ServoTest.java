@@ -20,7 +20,7 @@ public class ServoTest implements IServoPositionUpdateListener{
 		
 
 		
-		ServoChannel srv = new ServoChannel (dyio.getChannel(0));
+		ServoChannel srv = new ServoChannel (dyio.getChannel(11));
 		srv.addIServoPositionUpdateListener(this);
                 //Loop 10 times setting the position of the servo 
                 //the time the loop waits will be the time it takes for the servo to arrive
@@ -28,7 +28,7 @@ public class ServoTest implements IServoPositionUpdateListener{
 		float time = 5;
 		
 		System.out.println("Moving with time");
-		for(int i = 0; i < 2; i++) {
+		for(int i = 0; i < 10; i++) {
 			// Set the value high every other time, exit if unsuccessful
 			int pos = ((i%2==0)?204:50);
                         //This will move the servo from the position it is currentlly in
