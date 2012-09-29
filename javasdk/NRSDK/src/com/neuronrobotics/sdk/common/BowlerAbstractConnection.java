@@ -288,10 +288,10 @@ public abstract class BowlerAbstractConnection {
 	 * @param connected the new connected
 	 */
 	public void setConnected(boolean c) {
-		if(isConnected() == c)
+		if(connected == c)
 			return;
 		connected = c;
-		if(isConnected()){
+		if(connected){
 			updater = new Updater();
 			updater.start();
 			setSyncQueue(new QueueManager());
