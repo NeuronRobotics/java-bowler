@@ -47,6 +47,15 @@ public class LinkFactory {
 		pid=d;
 		hasPid=true;
 	}
+	
+	public AbstractLink getLink(String name) {
+		for(AbstractLink l:links){
+			if(l.getLinkConfiguration().getName().equalsIgnoreCase(name))
+				return l;
+		}
+		throw new RuntimeException("No linke of name '"+name+"' exists");
+	}
+	
 	public AbstractLink getLink(LinkConfiguration c){
 		for(AbstractLink l:links){
 			if(l.getLinkConfiguration() == c)
@@ -81,7 +90,6 @@ public class LinkFactory {
 										(int)c.getLowerLimit(),
 										(int)c.getUpperLimit(),
 										c.getScale());
-				
 			}
 		}else{
 			
