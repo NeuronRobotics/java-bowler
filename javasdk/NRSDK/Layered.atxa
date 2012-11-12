@@ -1,0 +1,3095 @@
+@prefix atxa-rse-eclipse: <http://www.architexa.com/rdf/rse-eclipse#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix atxa-strata: <http://www.architexa.com/rdf/strata#> .
+@prefix atxa-jdt-wkspc: <http://www.architexa.com/rdf/jdt-wkspc#> .
+@prefix atxa-core: <http://www.architexa.com/rdf/core#> .
+@prefix atxa: <http://www.architexa.com/rdf/> .
+
+<http://www.architexa.com/rdf/rse-eclipse#Layered.atxa> a atxa-core:strataFile .
+
+atxa:DetailNode atxa-core:detailLevel "0" .
+
+atxa-core:docRoot atxa-core:browseModel "com.architexa.diagrams.relo.jdt/com.architexa.diagrams.relo.jdt.browse.ClassStrucBrowseModel" ;
+	atxa-core:contains _:node17bokavsrx516 .
+
+_:node17bokavsrx516 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#net.*> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "true" , "true" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#net.*> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#net.java.games.*> , <http://www.architexa.com/rdf/jdt-wkspc#net.neuronrobotics.sdk.utils> .
+
+_:node17bokavsrx516 atxa-core:contains _:node17bokavsrx518 .
+
+_:node17bokavsrx518 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#net.java.games.*> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#net.java.games.*> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#net.java.games.util.*> , <http://www.architexa.com/rdf/jdt-wkspc#net.java.games.input.*> .
+
+_:node17bokavsrx518 atxa-core:contains _:node17bokavsrx519 .
+
+_:node17bokavsrx519 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#net.java.games.util.*> ;
+	atxa-strata:nestedLayerIndexes "" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#net.java.games.util.*> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#net.java.games.util> , <http://www.architexa.com/rdf/jdt-wkspc#net.java.games.util.plugins.*> .
+
+_:node17bokavsrx519 atxa-core:contains _:node17bokavsrx520 .
+
+_:node17bokavsrx520 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#net.java.games.util> ;
+	atxa-strata:nestedLayerIndexes "" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx519 atxa-core:contains _:node17bokavsrx521 .
+
+_:node17bokavsrx521 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#net.java.games.util.plugins.*> ;
+	atxa-strata:nestedLayerIndexes "" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#net.java.games.util.plugins.*> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#net.java.games.util.plugins> .
+
+_:node17bokavsrx521 atxa-core:contains _:node17bokavsrx522 .
+
+_:node17bokavsrx522 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#net.java.games.util.plugins> ;
+	atxa-strata:nestedLayerIndexes "" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx518 atxa-core:contains _:node17bokavsrx523 .
+
+_:node17bokavsrx523 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#net.java.games.input.*> ;
+	atxa-strata:nestedLayerIndexes "" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#net.java.games.input.*> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#net.java.games.input> .
+
+_:node17bokavsrx523 atxa-core:contains _:node17bokavsrx524 .
+
+_:node17bokavsrx524 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#net.java.games.input> ;
+	atxa-strata:nestedLayerIndexes "" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx516 atxa-core:contains _:node17bokavsrx528 .
+
+_:node17bokavsrx528 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#net.neuronrobotics.sdk.utils> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+atxa-core:docRoot atxa-core:contains _:node17bokavsrx539 .
+
+_:node17bokavsrx539 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.*> ;
+	atxa-strata:nestedLayerIndexes ":3,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "3" ;
+	atxa-core:containerState "true" , "true" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.*> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.*> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving.*> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.application.xmpp.*> .
+
+_:node17bokavsrx539 atxa-core:contains _:node17bokavsrx540 .
+
+_:node17bokavsrx540 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.*> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:1,false,false,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "true" , "true" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.*> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.*> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.*> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.pid> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.serial> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.ui> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.types> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.util> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.network> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.wireless.bluetooth> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.utils> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.config> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.mock.dyio> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.genericdevice.*> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.bowlercam.*> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics.*> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.*> .
+
+_:node17bokavsrx540 atxa-core:contains _:node17bokavsrx541 .
+
+_:node17bokavsrx541 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.*> ;
+	atxa-strata:nestedLayerIndexes ":2,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "2" ;
+	atxa-core:containerState "true" , "true" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.*> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.irobot> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.walker> .
+
+_:node17bokavsrx541 atxa-core:contains _:node17bokavsrx551 .
+
+_:node17bokavsrx551 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.irobot> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true:1,true,true,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "true" , "true" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.irobot> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.irobot$CreateSensorRequest> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.irobot$CreateSensors> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.irobot$Create> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.irobot$ICreateSensorListener> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.irobot$CreateArm> .
+
+_:node17bokavsrx551 atxa-core:contains _:node17bokavsrx5748 .
+
+_:node17bokavsrx5748 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.irobot$CreateSensorRequest> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:1,false,false,true:1,true,true,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx551 atxa-core:contains _:node17bokavsrx5749 .
+
+_:node17bokavsrx5749 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.irobot$CreateSensors> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true:1,true,true,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx551 atxa-core:contains _:node17bokavsrx5750 .
+
+_:node17bokavsrx5750 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.irobot$Create> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx551 atxa-core:contains _:node17bokavsrx5751 .
+
+_:node17bokavsrx5751 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.irobot$ICreateSensorListener> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:1,false,false,true:1,true,true,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx551 atxa-core:contains _:node17bokavsrx5752 .
+
+_:node17bokavsrx5752 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.irobot$CreateArm> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:0,false,false,true:1,true,true,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx541 atxa-core:contains _:node17bokavsrx553 .
+
+_:node17bokavsrx553 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.walker> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "true" , "true" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.walker> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.walker$WalkerServoLink> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.walker$BasicWalker> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.walker$BasicWalkerConfig> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.walker$Leg> .
+
+_:node17bokavsrx553 atxa-core:contains _:node17bokavsrx5753 .
+
+_:node17bokavsrx5753 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.walker$WalkerServoLink> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:1,false,false,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx553 atxa-core:contains _:node17bokavsrx5754 .
+
+_:node17bokavsrx5754 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.walker$BasicWalker> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx553 atxa-core:contains _:node17bokavsrx5755 .
+
+_:node17bokavsrx5755 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.walker$BasicWalkerConfig> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:1,false,false,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx553 atxa-core:contains _:node17bokavsrx5756 .
+
+_:node17bokavsrx5756 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.walker$Leg> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx540 atxa-core:contains _:node17bokavsrx575 .
+
+_:node17bokavsrx575 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.*> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:1,false,false,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "true" , "true" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.*> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.peripherals> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.sequencer> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.dypid> .
+
+_:node17bokavsrx575 atxa-core:contains _:node17bokavsrx576 .
+
+_:node17bokavsrx576 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:1,false,false,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "true" , "true" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio$DyIOCommunicationException> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio$DyIOPowerEvent> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio$IDyIOEvent> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio$DyIOPowerState> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio$InvalidChannelOperationException> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio$DyIO> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio$DyIOChannelMode> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio$DyIOUARTEvent> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio$DyIORegestry> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio$IDyIOChannelModeChangeListener> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio$DyIOChannelEvent> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio$IChannelEventListener> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio$DyIOChannel> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio$IDyIOStateChangeListener> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio$IDyIOChannel> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio$DyIOOutputStream> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio$DyIOChannelEventType> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio$InvalidChannelException> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio$DyIOFirmwareOutOfDateException> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio$IDyIOEventListener> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio$DyIOInputStream> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio$DyIOAsyncEvent> .
+
+_:node17bokavsrx576 atxa-core:contains _:node17bokavsrx5791 .
+
+_:node17bokavsrx5791 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio$DyIOCommunicationException> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:1,false,false,true:3,true,true,true" ;
+	atxa-strata:layerIndex "3" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx576 atxa-core:contains _:node17bokavsrx5792 .
+
+_:node17bokavsrx5792 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio$DyIOPowerEvent> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:2,false,false,true" ;
+	atxa-strata:layerIndex "2" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx576 atxa-core:contains _:node17bokavsrx5793 .
+
+_:node17bokavsrx5793 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio$IDyIOEvent> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:2,false,false,true:3,true,true,true" ;
+	atxa-strata:layerIndex "3" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx576 atxa-core:contains _:node17bokavsrx5794 .
+
+_:node17bokavsrx5794 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio$DyIOPowerState> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true:3,true,true,true" ;
+	atxa-strata:layerIndex "3" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx576 atxa-core:contains _:node17bokavsrx5795 .
+
+_:node17bokavsrx5795 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio$InvalidChannelOperationException> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:1,false,false,true:3,true,true,true" ;
+	atxa-strata:layerIndex "3" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx576 atxa-core:contains _:node17bokavsrx5796 .
+
+_:node17bokavsrx5796 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio$DyIO> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:1,false,false,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx576 atxa-core:contains _:node17bokavsrx5797 .
+
+_:node17bokavsrx5797 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio$DyIOChannelMode> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:2,false,false,true:3,true,true,true" ;
+	atxa-strata:layerIndex "3" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx576 atxa-core:contains _:node17bokavsrx5798 .
+
+_:node17bokavsrx5798 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio$DyIOUARTEvent> ;
+	atxa-strata:nestedLayerIndexes ":2,false,false,true:2,false,false,true" ;
+	atxa-strata:layerIndex "2" ;
+	atxa-strata:indexWithinLayer "2" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx576 atxa-core:contains _:node17bokavsrx5799 .
+
+_:node17bokavsrx5799 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio$DyIORegestry> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx576 atxa-core:contains _:node17bokavsrx5800 .
+
+_:node17bokavsrx5800 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio$IDyIOChannelModeChangeListener> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:0,false,false,true:3,true,true,true" ;
+	atxa-strata:layerIndex "3" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx576 atxa-core:contains _:node17bokavsrx5801 .
+
+_:node17bokavsrx5801 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio$DyIOChannelEvent> ;
+	atxa-strata:nestedLayerIndexes ":3,false,false,true:2,false,false,true" ;
+	atxa-strata:layerIndex "2" ;
+	atxa-strata:indexWithinLayer "3" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx576 atxa-core:contains _:node17bokavsrx5802 .
+
+_:node17bokavsrx5802 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio$IChannelEventListener> ;
+	atxa-strata:nestedLayerIndexes ":2,false,false,true:1,false,false,true:3,true,true,true" ;
+	atxa-strata:layerIndex "3" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx576 atxa-core:contains _:node17bokavsrx5803 .
+
+_:node17bokavsrx5803 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio$DyIOChannel> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:1,false,false,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx576 atxa-core:contains _:node17bokavsrx5804 .
+
+_:node17bokavsrx5804 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio$IDyIOStateChangeListener> ;
+	atxa-strata:nestedLayerIndexes ":2,false,false,true:2,false,false,true:3,true,true,true" ;
+	atxa-strata:layerIndex "3" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx576 atxa-core:contains _:node17bokavsrx5805 .
+
+_:node17bokavsrx5805 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio$IDyIOChannel> ;
+	atxa-strata:nestedLayerIndexes ":2,false,false,true:0,false,false,true:3,true,true,true" ;
+	atxa-strata:layerIndex "3" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx576 atxa-core:contains _:node17bokavsrx5806 .
+
+_:node17bokavsrx5806 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio$DyIOOutputStream> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx576 atxa-core:contains _:node17bokavsrx5807 .
+
+_:node17bokavsrx5807 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio$DyIOChannelEventType> ;
+	atxa-strata:nestedLayerIndexes ":3,false,false,true:1,false,false,true:3,true,true,true" ;
+	atxa-strata:layerIndex "3" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx576 atxa-core:contains _:node17bokavsrx5808 .
+
+_:node17bokavsrx5808 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio$InvalidChannelException> ;
+	atxa-strata:nestedLayerIndexes ":3,false,false,true:2,false,false,true:3,true,true,true" ;
+	atxa-strata:layerIndex "3" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx576 atxa-core:contains _:node17bokavsrx5809 .
+
+_:node17bokavsrx5809 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio$DyIOFirmwareOutOfDateException> ;
+	atxa-strata:nestedLayerIndexes ":3,false,false,true:0,false,false,true:3,true,true,true" ;
+	atxa-strata:layerIndex "3" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx576 atxa-core:contains _:node17bokavsrx5810 .
+
+_:node17bokavsrx5810 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio$IDyIOEventListener> ;
+	atxa-strata:nestedLayerIndexes ":4,false,false,true:1,false,false,true:3,true,true,true" ;
+	atxa-strata:layerIndex "3" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx576 atxa-core:contains _:node17bokavsrx5811 .
+
+_:node17bokavsrx5811 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio$DyIOInputStream> ;
+	atxa-strata:nestedLayerIndexes ":2,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "2" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx576 atxa-core:contains _:node17bokavsrx5812 .
+
+_:node17bokavsrx5812 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio$DyIOAsyncEvent> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:2,false,false,true" ;
+	atxa-strata:layerIndex "2" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx575 atxa-core:contains _:node17bokavsrx580 .
+
+_:node17bokavsrx580 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.peripherals> ;
+	atxa-strata:nestedLayerIndexes ":2,false,false,true:1,false,false,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "2" ;
+	atxa-core:containerState "true" , "true" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.peripherals> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.peripherals$IPPMReaderListener> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.peripherals$ServoChannel> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.peripherals$AnalogInputChannel> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.peripherals$IDigitalInputListener> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.peripherals$DigitalInputChannel> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.peripherals$SPIChannel> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.peripherals$IUARTStreamListener> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.peripherals$UARTChannel> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.peripherals$DyIOPeripheralException> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.peripherals$PPMReaderChannel> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.peripherals$DyIOAbstractPeripheral> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.peripherals$PWMOutputChannel> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.peripherals$DigitalOutputChannel> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.peripherals$CounterOutputChannel> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.peripherals$ICounterOutputListener> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.peripherals$IAnalogInputListener> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.peripherals$IServoPositionUpdateListener> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.peripherals$ICounterInputListener> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.peripherals$CounterInputChannel> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.peripherals$DCMotorOutputChannel> .
+
+_:node17bokavsrx580 atxa-core:contains _:node17bokavsrx5813 .
+
+_:node17bokavsrx5813 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.peripherals$IPPMReaderListener> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:1,false,false,true:1,true,true,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx580 atxa-core:contains _:node17bokavsrx5814 .
+
+_:node17bokavsrx5814 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.peripherals$ServoChannel> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:1,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx580 atxa-core:contains _:node17bokavsrx5815 .
+
+_:node17bokavsrx5815 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.peripherals$AnalogInputChannel> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx580 atxa-core:contains _:node17bokavsrx5816 .
+
+_:node17bokavsrx5816 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.peripherals$IDigitalInputListener> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true:1,true,true,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx580 atxa-core:contains _:node17bokavsrx5817 .
+
+_:node17bokavsrx5817 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.peripherals$DigitalInputChannel> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:1,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx580 atxa-core:contains _:node17bokavsrx5818 .
+
+_:node17bokavsrx5818 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.peripherals$SPIChannel> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:1,false,false,true:1,true,true,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx580 atxa-core:contains _:node17bokavsrx5819 .
+
+_:node17bokavsrx5819 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.peripherals$IUARTStreamListener> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:0,false,false,true:1,true,true,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx580 atxa-core:contains _:node17bokavsrx5820 .
+
+_:node17bokavsrx5820 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.peripherals$UARTChannel> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:0,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx580 atxa-core:contains _:node17bokavsrx5821 .
+
+_:node17bokavsrx5821 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.peripherals$DyIOPeripheralException> ;
+	atxa-strata:nestedLayerIndexes ":2,false,false,true:1,false,false,true:1,true,true,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx580 atxa-core:contains _:node17bokavsrx5822 .
+
+_:node17bokavsrx5822 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.peripherals$PPMReaderChannel> ;
+	atxa-strata:nestedLayerIndexes ":2,false,false,true:1,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx580 atxa-core:contains _:node17bokavsrx5823 .
+
+_:node17bokavsrx5823 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.peripherals$DyIOAbstractPeripheral> ;
+	atxa-strata:nestedLayerIndexes ":2,false,false,true:0,false,false,true:1,true,true,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx580 atxa-core:contains _:node17bokavsrx5824 .
+
+_:node17bokavsrx5824 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.peripherals$PWMOutputChannel> ;
+	atxa-strata:nestedLayerIndexes ":2,false,false,true:0,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx580 atxa-core:contains _:node17bokavsrx5825 .
+
+_:node17bokavsrx5825 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.peripherals$DigitalOutputChannel> ;
+	atxa-strata:nestedLayerIndexes ":3,false,false,true:1,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx580 atxa-core:contains _:node17bokavsrx5826 .
+
+_:node17bokavsrx5826 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.peripherals$CounterOutputChannel> ;
+	atxa-strata:nestedLayerIndexes ":3,false,false,true:0,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx580 atxa-core:contains _:node17bokavsrx5827 .
+
+_:node17bokavsrx5827 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.peripherals$ICounterOutputListener> ;
+	atxa-strata:nestedLayerIndexes ":3,false,false,true:1,false,false,true:1,true,true,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx580 atxa-core:contains _:node17bokavsrx5828 .
+
+_:node17bokavsrx5828 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.peripherals$IAnalogInputListener> ;
+	atxa-strata:nestedLayerIndexes ":3,false,false,true:0,false,false,true:1,true,true,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx580 atxa-core:contains _:node17bokavsrx5829 .
+
+_:node17bokavsrx5829 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.peripherals$IServoPositionUpdateListener> ;
+	atxa-strata:nestedLayerIndexes ":4,false,false,true:1,false,false,true:1,true,true,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx580 atxa-core:contains _:node17bokavsrx5830 .
+
+_:node17bokavsrx5830 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.peripherals$ICounterInputListener> ;
+	atxa-strata:nestedLayerIndexes ":4,false,false,true:0,false,false,true:1,true,true,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx580 atxa-core:contains _:node17bokavsrx5831 .
+
+_:node17bokavsrx5831 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.peripherals$CounterInputChannel> ;
+	atxa-strata:nestedLayerIndexes ":4,false,false,true:1,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx580 atxa-core:contains _:node17bokavsrx5832 .
+
+_:node17bokavsrx5832 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.peripherals$DCMotorOutputChannel> ;
+	atxa-strata:nestedLayerIndexes ":4,false,false,true:0,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx575 atxa-core:contains _:node17bokavsrx582 .
+
+_:node17bokavsrx582 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.sequencer> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx575 atxa-core:contains _:node17bokavsrx578 .
+
+_:node17bokavsrx578 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.dypid> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:1,false,false,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "true" , "false" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.dypid> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.dypid$DyPIDConfiguration> .
+
+_:node17bokavsrx578 atxa-core:contains _:node17bokavsrx5833 .
+
+_:node17bokavsrx5833 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.dyio.dypid$DyPIDConfiguration> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx540 atxa-core:contains _:node17bokavsrx592 .
+
+_:node17bokavsrx592 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.pid> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:2,false,false,true" ;
+	atxa-strata:layerIndex "2" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "true" , "true" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.pid> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.pid$PIDConfiguration> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.pid$PIDLimitEventType> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.pid$PIDLimitEvent> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.pid$IPIDEventListener> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.pid$PIDEvent> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.pid$IPIDControl> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.pid$PIDChannel> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.pid$VirtualGenericPIDDevice> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.pid$PIDCommandException> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.pid$VirtualGenericPidDeviceConnection> .
+
+_:node17bokavsrx592 atxa-core:contains _:node17bokavsrx3907 .
+
+_:node17bokavsrx3907 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.pid$PIDConfiguration> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:1,false,false,true:2,true,true,true" ;
+	atxa-strata:layerIndex "2" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx592 atxa-core:contains _:node17bokavsrx3908 .
+
+_:node17bokavsrx3908 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.pid$PIDLimitEventType> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true:2,true,true,true" ;
+	atxa-strata:layerIndex "2" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx592 atxa-core:contains _:node17bokavsrx3909 .
+
+_:node17bokavsrx3909 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.pid$PIDLimitEvent> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:1,false,false,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx592 atxa-core:contains _:node17bokavsrx3910 .
+
+_:node17bokavsrx3910 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.pid$IPIDEventListener> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:1,false,false,true:2,true,true,true" ;
+	atxa-strata:layerIndex "2" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx592 atxa-core:contains _:node17bokavsrx3911 .
+
+_:node17bokavsrx3911 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.pid$PIDEvent> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:0,false,false,true:2,true,true,true" ;
+	atxa-strata:layerIndex "2" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx592 atxa-core:contains _:node17bokavsrx3912 .
+
+_:node17bokavsrx3912 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.pid$IPIDControl> ;
+	atxa-strata:nestedLayerIndexes ":2,false,false,true:1,false,false,true:2,true,true,true" ;
+	atxa-strata:layerIndex "2" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx592 atxa-core:contains _:node17bokavsrx3913 .
+
+_:node17bokavsrx3913 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.pid$PIDChannel> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:1,false,false,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx592 atxa-core:contains _:node17bokavsrx3914 .
+
+_:node17bokavsrx3914 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.pid$VirtualGenericPIDDevice> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx592 atxa-core:contains _:node17bokavsrx3915 .
+
+_:node17bokavsrx3915 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.pid$PIDCommandException> ;
+	atxa-strata:nestedLayerIndexes ":2,false,false,true:0,false,false,true:2,true,true,true" ;
+	atxa-strata:layerIndex "2" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx592 atxa-core:contains _:node17bokavsrx3916 .
+
+_:node17bokavsrx3916 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.pid$VirtualGenericPidDeviceConnection> ;
+	atxa-strata:nestedLayerIndexes ":3,false,false,true:1,false,false,true:2,true,true,true" ;
+	atxa-strata:layerIndex "2" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx540 atxa-core:contains _:node17bokavsrx594 .
+
+_:node17bokavsrx594 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.serial> ;
+	atxa-strata:nestedLayerIndexes ":2,false,false,true:2,false,false,true" ;
+	atxa-strata:layerIndex "2" ;
+	atxa-strata:indexWithinLayer "2" ;
+	atxa-core:containerState "true" , "false" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.serial> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.serial$SerialConnection> .
+
+_:node17bokavsrx594 atxa-core:contains _:node17bokavsrx5834 .
+
+_:node17bokavsrx5834 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.serial$SerialConnection> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx540 atxa-core:contains _:node17bokavsrx611 .
+
+_:node17bokavsrx611 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.ui> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "true" , "true" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.ui> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.ui$ConnectionDialog> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.ui$TCPConnectionPanel> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.ui$BluetoothConnectionPanel> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.ui$AbstractConnectionPanel> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.ui$ConnectionImageIconFactory> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.ui$SerialConnectionPanel> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.ui$UDPConnectionPanel> .
+
+_:node17bokavsrx611 atxa-core:contains _:node17bokavsrx3917 .
+
+_:node17bokavsrx3917 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.ui$ConnectionDialog> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx611 atxa-core:contains _:node17bokavsrx3918 .
+
+_:node17bokavsrx3918 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.ui$TCPConnectionPanel> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:1,false,false,true:1,true,true,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx611 atxa-core:contains _:node17bokavsrx3919 .
+
+_:node17bokavsrx3919 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.ui$BluetoothConnectionPanel> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true:1,true,true,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx611 atxa-core:contains _:node17bokavsrx3920 .
+
+_:node17bokavsrx3920 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.ui$AbstractConnectionPanel> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:2,false,false,true" ;
+	atxa-strata:layerIndex "2" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx611 atxa-core:contains _:node17bokavsrx3921 .
+
+_:node17bokavsrx3921 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.ui$ConnectionImageIconFactory> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:2,false,false,true" ;
+	atxa-strata:layerIndex "2" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx611 atxa-core:contains _:node17bokavsrx3922 .
+
+_:node17bokavsrx3922 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.ui$SerialConnectionPanel> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:1,false,false,true:1,true,true,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx611 atxa-core:contains _:node17bokavsrx3923 .
+
+_:node17bokavsrx3923 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.ui$UDPConnectionPanel> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:0,false,false,true:1,true,true,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx540 atxa-core:contains _:node17bokavsrx596 .
+
+_:node17bokavsrx596 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.types> ;
+	atxa-strata:nestedLayerIndexes ":3,false,false,true:2,false,false,true" ;
+	atxa-strata:layerIndex "2" ;
+	atxa-strata:indexWithinLayer "3" ;
+	atxa-core:containerState "true" , "true" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.types> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.types$IDataType> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.types$TypeException> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.types$DigitalInput> .
+
+_:node17bokavsrx596 atxa-core:contains _:node17bokavsrx5835 .
+
+_:node17bokavsrx5835 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.types$IDataType> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:1,false,false,true:1,true,true,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx596 atxa-core:contains _:node17bokavsrx5836 .
+
+_:node17bokavsrx5836 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.types$TypeException> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true:1,true,true,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx596 atxa-core:contains _:node17bokavsrx5837 .
+
+_:node17bokavsrx5837 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.types$DigitalInput> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx540 atxa-core:contains _:node17bokavsrx598 .
+
+_:node17bokavsrx598 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.util> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:4,false,false,true" ;
+	atxa-strata:layerIndex "4" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "true" , "true" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.util> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.util$ThreadUtil> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.util$ProcessMonitor> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.util$IMonitorable> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.util$IProgressMonitorListener> .
+
+_:node17bokavsrx598 atxa-core:contains _:node17bokavsrx3924 .
+
+_:node17bokavsrx3924 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.util$ThreadUtil> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx598 atxa-core:contains _:node17bokavsrx3925 .
+
+_:node17bokavsrx3925 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.util$ProcessMonitor> ;
+	atxa-strata:nestedLayerIndexes ":3,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "3" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx598 atxa-core:contains _:node17bokavsrx3926 .
+
+_:node17bokavsrx3926 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.util$IMonitorable> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx598 atxa-core:contains _:node17bokavsrx3927 .
+
+_:node17bokavsrx3927 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.util$IProgressMonitorListener> ;
+	atxa-strata:nestedLayerIndexes ":2,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "2" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx540 atxa-core:contains _:node17bokavsrx590 .
+
+_:node17bokavsrx590 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.network> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:2,false,false,true" ;
+	atxa-strata:layerIndex "2" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "true" , "true" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.network> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.network$BowlerTCPClient> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.network$UDPStream> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.network$BowlerUDPClient> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.network$BowlerTCPServer> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.network$AvailibleSocket> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.network$BowlerUDPServer> .
+
+_:node17bokavsrx590 atxa-core:contains _:node17bokavsrx5838 .
+
+_:node17bokavsrx5838 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.network$BowlerTCPClient> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:1,false,false,true:1,true,true,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx590 atxa-core:contains _:node17bokavsrx5839 .
+
+_:node17bokavsrx5839 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.network$UDPStream> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true:1,true,true,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx590 atxa-core:contains _:node17bokavsrx5840 .
+
+_:node17bokavsrx5840 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.network$BowlerUDPClient> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx590 atxa-core:contains _:node17bokavsrx5841 .
+
+_:node17bokavsrx5841 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.network$BowlerTCPServer> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:1,false,false,true:1,true,true,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx590 atxa-core:contains _:node17bokavsrx5842 .
+
+_:node17bokavsrx5842 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.network$AvailibleSocket> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:0,false,false,true:1,true,true,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx590 atxa-core:contains _:node17bokavsrx5843 .
+
+_:node17bokavsrx5843 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.network$BowlerUDPServer> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx540 atxa-core:contains _:node17bokavsrx609 .
+
+_:node17bokavsrx609 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.wireless.bluetooth> ;
+	atxa-strata:nestedLayerIndexes ":6,false,false,true:2,false,false,true" ;
+	atxa-strata:layerIndex "2" ;
+	atxa-strata:indexWithinLayer "6" ;
+	atxa-core:containerState "true" , "true" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.wireless.bluetooth> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.wireless.bluetooth$BluetoothSerialConnection> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.wireless.bluetooth$BlueCoveManager> .
+
+_:node17bokavsrx609 atxa-core:contains _:node17bokavsrx5844 .
+
+_:node17bokavsrx5844 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.wireless.bluetooth$BluetoothSerialConnection> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx609 atxa-core:contains _:node17bokavsrx5845 .
+
+_:node17bokavsrx5845 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.wireless.bluetooth$BlueCoveManager> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx540 atxa-core:contains _:node17bokavsrx600 .
+
+_:node17bokavsrx600 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.utils> ;
+	atxa-strata:nestedLayerIndexes ":2,false,false,true:4,false,false,true" ;
+	atxa-strata:layerIndex "4" ;
+	atxa-strata:indexWithinLayer "2" ;
+	atxa-core:containerState "true" , "true" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.utils> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.utils$NRNativeLoader> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.utils$NativeResourceException> .
+
+_:node17bokavsrx600 atxa-core:contains _:node17bokavsrx5846 .
+
+_:node17bokavsrx5846 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.utils$NRNativeLoader> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx600 atxa-core:contains _:node17bokavsrx5847 .
+
+_:node17bokavsrx5847 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.utils$NativeResourceException> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx540 atxa-core:contains _:node17bokavsrx586 .
+
+_:node17bokavsrx586 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.config> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:4,false,false,true" ;
+	atxa-strata:layerIndex "4" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "true" , "false" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.config> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.config$SDKBuildInfo> .
+
+_:node17bokavsrx586 atxa-core:contains _:node17bokavsrx5848 .
+
+_:node17bokavsrx5848 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.config$SDKBuildInfo> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx540 atxa-core:contains _:node17bokavsrx606 .
+
+_:node17bokavsrx606 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.mock.dyio> ;
+	atxa-strata:nestedLayerIndexes ":5,false,false,true:2,false,false,true" ;
+	atxa-strata:layerIndex "2" ;
+	atxa-strata:indexWithinLayer "5" ;
+	atxa-core:containerState "true" , "true" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.mock.dyio> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.mock.dyio$IMockDevice> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.mock.dyio$MockDyIO> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.mock.dyio$MockConnection> .
+
+_:node17bokavsrx606 atxa-core:contains _:node17bokavsrx5849 .
+
+_:node17bokavsrx5849 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.mock.dyio$IMockDevice> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:1,false,false,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx606 atxa-core:contains _:node17bokavsrx5850 .
+
+_:node17bokavsrx5850 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.mock.dyio$MockDyIO> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:1,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx606 atxa-core:contains _:node17bokavsrx5851 .
+
+_:node17bokavsrx5851 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.mock.dyio$MockConnection> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx540 atxa-core:contains _:node17bokavsrx5852 .
+
+_:node17bokavsrx5852 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.genericdevice.*> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:1,false,false,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "true" , "false" , "true" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.genericdevice.*> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.genericdevice$GenericDevice> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.genericdevice$GenericPIDDevice> .
+
+_:node17bokavsrx5852 atxa-core:contains _:node17bokavsrx5853 .
+
+_:node17bokavsrx5853 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.genericdevice$GenericDevice> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:1,false,false,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "false" , "false" .
+
+_:node17bokavsrx5852 atxa-core:contains _:node17bokavsrx5854 .
+
+_:node17bokavsrx5854 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.genericdevice$GenericPIDDevice> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx540 atxa-core:contains _:node17bokavsrx5855 .
+
+_:node17bokavsrx5855 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.bowlercam.*> ;
+	atxa-strata:nestedLayerIndexes ":4,false,false,true:2,false,false,true" ;
+	atxa-strata:layerIndex "2" ;
+	atxa-strata:indexWithinLayer "4" ;
+	atxa-core:containerState "true" , "false" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.bowlercam.*> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.bowlercam.device$IWebcamImageListener> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.bowlercam.device$BowlerCamDevice> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.bowlercam.device$ItemMarker> .
+
+_:node17bokavsrx5855 atxa-core:contains _:node17bokavsrx5856 .
+
+_:node17bokavsrx5856 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.bowlercam.device$IWebcamImageListener> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:1,false,false,true:1,true,true,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx5855 atxa-core:contains _:node17bokavsrx5857 .
+
+_:node17bokavsrx5857 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.bowlercam.device$BowlerCamDevice> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx5855 atxa-core:contains _:node17bokavsrx5858 .
+
+_:node17bokavsrx5858 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.bowlercam.device$ItemMarker> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true:1,true,true,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx540 atxa-core:contains _:node17bokavsrx542 .
+
+_:node17bokavsrx542 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics.*> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "true" , "true" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics.*> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics.xml> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics.gui> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics.math> .
+
+_:node17bokavsrx542 atxa-core:contains _:node17bokavsrx543 .
+
+_:node17bokavsrx543 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics> ;
+	atxa-strata:nestedLayerIndexes ":2,false,false,true:1,false,false,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "2" ;
+	atxa-core:containerState "true" , "true" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$LinkConfiguration> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$LinkFactory> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$ILinkListener> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$AbstractLink> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$DHParameterKinematics> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$AbstractKinematicsNR> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$GenericKinematicsModelNR> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$IRegistrationListenerNR> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$MockRotoryLink> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$AbstractRotoryLink> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$DHChain> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$DhInverseSolver> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$DHLink> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$ComputedGeometricModel> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$ServoRotoryLink> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$AnalogRotoryLink> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$PidRotoryLink> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$StepperPrismaticLink> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$AbstractPrismaticLink> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$JointLimit> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$StepperRotoryLink> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$SearchTreeSolver> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$IJointSpaceUpdateListenerNR> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$ITaskSpaceUpdateListenerNR> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$PidPrismaticLink> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$GradiantDecent> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$GradiantDecentNode> .
+
+_:node17bokavsrx543 atxa-core:contains _:node17bokavsrx3880 .
+
+_:node17bokavsrx3880 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$LinkConfiguration> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:7,false,false,true" ;
+	atxa-strata:layerIndex "7" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx543 atxa-core:contains _:node17bokavsrx3881 .
+
+_:node17bokavsrx3881 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$LinkFactory> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:3,false,false,true" ;
+	atxa-strata:layerIndex "3" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx543 atxa-core:contains _:node17bokavsrx3882 .
+
+_:node17bokavsrx3882 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$ILinkListener> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:7,false,false,true" ;
+	atxa-strata:layerIndex "7" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx543 atxa-core:contains _:node17bokavsrx3883 .
+
+_:node17bokavsrx3883 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$AbstractLink> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:6,false,false,true" ;
+	atxa-strata:layerIndex "6" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx543 atxa-core:contains _:node17bokavsrx3884 .
+
+_:node17bokavsrx3884 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$DHParameterKinematics> ;
+	atxa-strata:nestedLayerIndexes ":3,false,false,true:1,false,false,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "3" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx543 atxa-core:contains _:node17bokavsrx3885 .
+
+_:node17bokavsrx3885 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$AbstractKinematicsNR> ;
+	atxa-strata:nestedLayerIndexes ":2,false,false,true:2,false,false,true" ;
+	atxa-strata:layerIndex "2" ;
+	atxa-strata:indexWithinLayer "2" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx543 atxa-core:contains _:node17bokavsrx3886 .
+
+_:node17bokavsrx3886 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$GenericKinematicsModelNR> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:1,false,false,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx543 atxa-core:contains _:node17bokavsrx3887 .
+
+_:node17bokavsrx3887 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$IRegistrationListenerNR> ;
+	atxa-strata:nestedLayerIndexes ":2,false,false,true:7,false,false,true" ;
+	atxa-strata:layerIndex "7" ;
+	atxa-strata:indexWithinLayer "2" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx543 atxa-core:contains _:node17bokavsrx3888 .
+
+_:node17bokavsrx3888 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$MockRotoryLink> ;
+	atxa-strata:nestedLayerIndexes ":3,false,false,true:4,false,false,true" ;
+	atxa-strata:layerIndex "4" ;
+	atxa-strata:indexWithinLayer "3" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx543 atxa-core:contains _:node17bokavsrx3889 .
+
+_:node17bokavsrx3889 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$AbstractRotoryLink> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:5,false,false,true" ;
+	atxa-strata:layerIndex "5" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx543 atxa-core:contains _:node17bokavsrx3890 .
+
+_:node17bokavsrx3890 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$DHChain> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:2,false,false,true" ;
+	atxa-strata:layerIndex "2" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx543 atxa-core:contains _:node17bokavsrx3891 .
+
+_:node17bokavsrx3891 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$DhInverseSolver> ;
+	atxa-strata:nestedLayerIndexes ":3,false,false,true:7,false,false,true" ;
+	atxa-strata:layerIndex "7" ;
+	atxa-strata:indexWithinLayer "3" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx543 atxa-core:contains _:node17bokavsrx3892 .
+
+_:node17bokavsrx3892 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$DHLink> ;
+	atxa-strata:nestedLayerIndexes ":4,false,false,true:7,false,false,true" ;
+	atxa-strata:layerIndex "7" ;
+	atxa-strata:indexWithinLayer "4" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx543 atxa-core:contains _:node17bokavsrx3893 .
+
+_:node17bokavsrx3893 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$ComputedGeometricModel> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:2,false,false,true" ;
+	atxa-strata:layerIndex "2" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx543 atxa-core:contains _:node17bokavsrx3894 .
+
+_:node17bokavsrx3894 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$ServoRotoryLink> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:4,false,false,true" ;
+	atxa-strata:layerIndex "4" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx543 atxa-core:contains _:node17bokavsrx3895 .
+
+_:node17bokavsrx3895 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$AnalogRotoryLink> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:4,false,false,true" ;
+	atxa-strata:layerIndex "4" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx543 atxa-core:contains _:node17bokavsrx3896 .
+
+_:node17bokavsrx3896 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$PidRotoryLink> ;
+	atxa-strata:nestedLayerIndexes ":2,false,false,true:4,false,false,true" ;
+	atxa-strata:layerIndex "4" ;
+	atxa-strata:indexWithinLayer "2" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx543 atxa-core:contains _:node17bokavsrx3897 .
+
+_:node17bokavsrx3897 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$StepperPrismaticLink> ;
+	atxa-strata:nestedLayerIndexes ":6,false,false,true:4,false,false,true" ;
+	atxa-strata:layerIndex "4" ;
+	atxa-strata:indexWithinLayer "6" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx543 atxa-core:contains _:node17bokavsrx3898 .
+
+_:node17bokavsrx3898 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$AbstractPrismaticLink> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:5,false,false,true" ;
+	atxa-strata:layerIndex "5" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx543 atxa-core:contains _:node17bokavsrx3899 .
+
+_:node17bokavsrx3899 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$JointLimit> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:6,false,false,true" ;
+	atxa-strata:layerIndex "6" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx543 atxa-core:contains _:node17bokavsrx3900 .
+
+_:node17bokavsrx3900 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$StepperRotoryLink> ;
+	atxa-strata:nestedLayerIndexes ":4,false,false,true:4,false,false,true" ;
+	atxa-strata:layerIndex "4" ;
+	atxa-strata:indexWithinLayer "4" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx543 atxa-core:contains _:node17bokavsrx3901 .
+
+_:node17bokavsrx3901 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$SearchTreeSolver> ;
+	atxa-strata:nestedLayerIndexes ":2,false,false,true:1,false,false,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "2" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx543 atxa-core:contains _:node17bokavsrx3902 .
+
+_:node17bokavsrx3902 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$IJointSpaceUpdateListenerNR> ;
+	atxa-strata:nestedLayerIndexes ":5,false,false,true:7,false,false,true" ;
+	atxa-strata:layerIndex "7" ;
+	atxa-strata:indexWithinLayer "5" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx543 atxa-core:contains _:node17bokavsrx3903 .
+
+_:node17bokavsrx3903 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$ITaskSpaceUpdateListenerNR> ;
+	atxa-strata:nestedLayerIndexes ":6,false,false,true:7,false,false,true" ;
+	atxa-strata:layerIndex "7" ;
+	atxa-strata:indexWithinLayer "6" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx543 atxa-core:contains _:node17bokavsrx3904 .
+
+_:node17bokavsrx3904 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$PidPrismaticLink> ;
+	atxa-strata:nestedLayerIndexes ":5,false,false,true:4,false,false,true" ;
+	atxa-strata:layerIndex "4" ;
+	atxa-strata:indexWithinLayer "5" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx543 atxa-core:contains _:node17bokavsrx3905 .
+
+_:node17bokavsrx3905 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$GradiantDecent> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx543 atxa-core:contains _:node17bokavsrx3906 .
+
+_:node17bokavsrx3906 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics$GradiantDecentNode> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:1,false,false,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx542 atxa-core:contains _:node17bokavsrx547 .
+
+_:node17bokavsrx547 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics.xml> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:1,false,false,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "true" , "false" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics.xml> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics.xml$XmlFactory> .
+
+_:node17bokavsrx547 atxa-core:contains _:node17bokavsrx5733 .
+
+_:node17bokavsrx5733 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics.xml$XmlFactory> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx542 atxa-core:contains _:node17bokavsrx549 .
+
+_:node17bokavsrx549 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics.gui> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "true" , "true" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics.gui> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics.gui$TransformFactory> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics.gui$Axis> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics.gui$TrobotGuiMain> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics.gui$SampleGuiNR> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics.gui$DHKinematicsViewer> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics.gui$PosePanelNR> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics.gui$MatrixDisplayNR> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics.gui$SampleGuiAxisWidgetNR> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics.gui$DHViewer> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics.gui$Java3dNativeLoader> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics.gui$SimpleTransformViewer> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics.gui$KinematicsDeveopmentMain> .
+
+_:node17bokavsrx549 atxa-core:contains _:node17bokavsrx5734 .
+
+_:node17bokavsrx5734 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics.gui$TransformFactory> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:3,false,false,true" ;
+	atxa-strata:layerIndex "3" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx549 atxa-core:contains _:node17bokavsrx5735 .
+
+_:node17bokavsrx5735 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics.gui$Axis> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:4,false,false,true" ;
+	atxa-strata:layerIndex "4" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx549 atxa-core:contains _:node17bokavsrx5736 .
+
+_:node17bokavsrx5736 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics.gui$TrobotGuiMain> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx549 atxa-core:contains _:node17bokavsrx5737 .
+
+_:node17bokavsrx5737 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics.gui$SampleGuiNR> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:2,false,false,true" ;
+	atxa-strata:layerIndex "2" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx549 atxa-core:contains _:node17bokavsrx5738 .
+
+_:node17bokavsrx5738 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics.gui$DHKinematicsViewer> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:1,false,false,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx549 atxa-core:contains _:node17bokavsrx5739 .
+
+_:node17bokavsrx5739 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics.gui$PosePanelNR> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:3,false,false,true" ;
+	atxa-strata:layerIndex "3" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx549 atxa-core:contains _:node17bokavsrx5740 .
+
+_:node17bokavsrx5740 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics.gui$MatrixDisplayNR> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:4,false,false,true" ;
+	atxa-strata:layerIndex "4" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx549 atxa-core:contains _:node17bokavsrx5741 .
+
+_:node17bokavsrx5741 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics.gui$SampleGuiAxisWidgetNR> ;
+	atxa-strata:nestedLayerIndexes ":2,false,false,true:4,false,false,true" ;
+	atxa-strata:layerIndex "4" ;
+	atxa-strata:indexWithinLayer "2" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx549 atxa-core:contains _:node17bokavsrx5742 .
+
+_:node17bokavsrx5742 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics.gui$DHViewer> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:1,false,false,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx549 atxa-core:contains _:node17bokavsrx5743 .
+
+_:node17bokavsrx5743 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics.gui$Java3dNativeLoader> ;
+	atxa-strata:nestedLayerIndexes ":3,false,false,true:4,false,false,true" ;
+	atxa-strata:layerIndex "4" ;
+	atxa-strata:indexWithinLayer "3" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx549 atxa-core:contains _:node17bokavsrx5744 .
+
+_:node17bokavsrx5744 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics.gui$SimpleTransformViewer> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:2,false,false,true" ;
+	atxa-strata:layerIndex "2" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx549 atxa-core:contains _:node17bokavsrx5745 .
+
+_:node17bokavsrx5745 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics.gui$KinematicsDeveopmentMain> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx542 atxa-core:contains _:node17bokavsrx545 .
+
+_:node17bokavsrx545 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics.math> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:1,false,false,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "true" , "true" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics.math> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics.math$RotationNR> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics.math$TransformNR> .
+
+_:node17bokavsrx545 atxa-core:contains _:node17bokavsrx5746 .
+
+_:node17bokavsrx5746 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics.math$RotationNR> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx545 atxa-core:contains _:node17bokavsrx5747 .
+
+_:node17bokavsrx5747 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.addons.kinematics.math$TransformNR> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx540 atxa-core:contains _:node17bokavsrx584 .
+
+_:node17bokavsrx584 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:3,false,false,true" ;
+	atxa-strata:layerIndex "3" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "true" , "true" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$BowlerAbstractDevice> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$InvalidResponseException> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$Log> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$BowlerAbstractCommand> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$BowlerMethod> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$ByteList> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$BowlerAbstractConnection> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$BowlerDatagram> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$DeviceConnectionException> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$MissingNativeLibraryException> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$Tracer> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$BowlerRuntimeException> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$ConfigManager> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$ISendable> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$IBowlerDatagramListener> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$ConnectionUnavailableException> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$NoConnectionAvailableException> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$MACAddress> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$IConnectionEventListener> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$InvalidConnectionException> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$InvalidMACAddressException> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$BowlerDatagramFactory> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$ResponseTimeoutException> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$InvalidDataLengthException> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$MalformattedDatagram> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$BowlerAbstractDeviceServer> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$SDKInfo> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$ThreadedTimeout> .
+
+_:node17bokavsrx584 atxa-core:contains _:node17bokavsrx2464 .
+
+_:node17bokavsrx2464 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$BowlerAbstractDevice> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:1,false,false,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx584 atxa-core:contains _:node17bokavsrx2465 .
+
+_:node17bokavsrx2465 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$InvalidResponseException> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:4,false,false,true" ;
+	atxa-strata:layerIndex "4" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx584 atxa-core:contains _:node17bokavsrx2466 .
+
+_:node17bokavsrx2466 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$Log> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:1,false,false,true:5,true,true,true" ;
+	atxa-strata:layerIndex "5" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx584 atxa-core:contains _:node17bokavsrx2467 .
+
+_:node17bokavsrx2467 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$BowlerAbstractCommand> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:3,false,false,true" ;
+	atxa-strata:layerIndex "3" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx584 atxa-core:contains _:node17bokavsrx2468 .
+
+_:node17bokavsrx2468 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$BowlerMethod> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:4,false,false,true" ;
+	atxa-strata:layerIndex "4" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx584 atxa-core:contains _:node17bokavsrx2469 .
+
+_:node17bokavsrx2469 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$ByteList> ;
+	atxa-strata:nestedLayerIndexes ":2,false,false,true:4,false,false,true" ;
+	atxa-strata:layerIndex "4" ;
+	atxa-strata:indexWithinLayer "2" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx584 atxa-core:contains _:node17bokavsrx2470 .
+
+_:node17bokavsrx2470 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$BowlerAbstractConnection> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:1,false,false,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx584 atxa-core:contains _:node17bokavsrx2471 .
+
+_:node17bokavsrx2471 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$BowlerDatagram> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:3,false,false,true" ;
+	atxa-strata:layerIndex "3" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx584 atxa-core:contains _:node17bokavsrx2472 .
+
+_:node17bokavsrx2472 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$DeviceConnectionException> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true:5,true,true,true" ;
+	atxa-strata:layerIndex "5" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx584 atxa-core:contains _:node17bokavsrx2473 .
+
+_:node17bokavsrx2473 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$MissingNativeLibraryException> ;
+	atxa-strata:nestedLayerIndexes ":5,false,false,true:4,false,false,true" ;
+	atxa-strata:layerIndex "4" ;
+	atxa-strata:indexWithinLayer "5" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx584 atxa-core:contains _:node17bokavsrx2474 .
+
+_:node17bokavsrx2474 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$Tracer> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:1,false,false,true:5,true,true,true" ;
+	atxa-strata:layerIndex "5" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx584 atxa-core:contains _:node17bokavsrx2475 .
+
+_:node17bokavsrx2475 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$BowlerRuntimeException> ;
+	atxa-strata:nestedLayerIndexes ":6,false,false,true:4,false,false,true" ;
+	atxa-strata:layerIndex "4" ;
+	atxa-strata:indexWithinLayer "6" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx584 atxa-core:contains _:node17bokavsrx2476 .
+
+_:node17bokavsrx2476 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$ConfigManager> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:0,false,false,true:5,true,true,true" ;
+	atxa-strata:layerIndex "5" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx584 atxa-core:contains _:node17bokavsrx2477 .
+
+_:node17bokavsrx2477 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$ISendable> ;
+	atxa-strata:nestedLayerIndexes ":2,false,false,true:1,false,false,true:5,true,true,true" ;
+	atxa-strata:layerIndex "5" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx584 atxa-core:contains _:node17bokavsrx2478 .
+
+_:node17bokavsrx2478 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$IBowlerDatagramListener> ;
+	atxa-strata:nestedLayerIndexes ":2,false,false,true:0,false,false,true:5,true,true,true" ;
+	atxa-strata:layerIndex "5" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx584 atxa-core:contains _:node17bokavsrx2479 .
+
+_:node17bokavsrx2479 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$ConnectionUnavailableException> ;
+	atxa-strata:nestedLayerIndexes ":7,false,false,true:4,false,false,true" ;
+	atxa-strata:layerIndex "4" ;
+	atxa-strata:indexWithinLayer "7" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx584 atxa-core:contains _:node17bokavsrx2480 .
+
+_:node17bokavsrx2480 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$NoConnectionAvailableException> ;
+	atxa-strata:nestedLayerIndexes ":3,false,false,true:1,false,false,true:5,true,true,true" ;
+	atxa-strata:layerIndex "5" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx584 atxa-core:contains _:node17bokavsrx2481 .
+
+_:node17bokavsrx2481 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$MACAddress> ;
+	atxa-strata:nestedLayerIndexes ":3,false,false,true:4,false,false,true" ;
+	atxa-strata:layerIndex "4" ;
+	atxa-strata:indexWithinLayer "3" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx584 atxa-core:contains _:node17bokavsrx2482 .
+
+_:node17bokavsrx2482 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$IConnectionEventListener> ;
+	atxa-strata:nestedLayerIndexes ":3,false,false,true:0,false,false,true:5,true,true,true" ;
+	atxa-strata:layerIndex "5" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx584 atxa-core:contains _:node17bokavsrx2483 .
+
+_:node17bokavsrx2483 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$InvalidConnectionException> ;
+	atxa-strata:nestedLayerIndexes ":4,false,false,true:1,false,false,true:5,true,true,true" ;
+	atxa-strata:layerIndex "5" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx584 atxa-core:contains _:node17bokavsrx2484 .
+
+_:node17bokavsrx2484 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$InvalidMACAddressException> ;
+	atxa-strata:nestedLayerIndexes ":4,false,false,true:0,false,false,true:5,true,true,true" ;
+	atxa-strata:layerIndex "5" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx584 atxa-core:contains _:node17bokavsrx2485 .
+
+_:node17bokavsrx2485 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$BowlerDatagramFactory> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:2,false,false,true" ;
+	atxa-strata:layerIndex "2" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx584 atxa-core:contains _:node17bokavsrx2486 .
+
+_:node17bokavsrx2486 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$ResponseTimeoutException> ;
+	atxa-strata:nestedLayerIndexes ":5,false,false,true:1,false,false,true:5,true,true,true" ;
+	atxa-strata:layerIndex "5" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx584 atxa-core:contains _:node17bokavsrx2487 .
+
+_:node17bokavsrx2487 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$InvalidDataLengthException> ;
+	atxa-strata:nestedLayerIndexes ":5,false,false,true:0,false,false,true:5,true,true,true" ;
+	atxa-strata:layerIndex "5" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx584 atxa-core:contains _:node17bokavsrx2488 .
+
+_:node17bokavsrx2488 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$MalformattedDatagram> ;
+	atxa-strata:nestedLayerIndexes ":4,false,false,true:4,false,false,true" ;
+	atxa-strata:layerIndex "4" ;
+	atxa-strata:indexWithinLayer "4" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx584 atxa-core:contains _:node17bokavsrx2489 .
+
+_:node17bokavsrx2489 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$BowlerAbstractDeviceServer> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx584 atxa-core:contains _:node17bokavsrx2490 .
+
+_:node17bokavsrx2490 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$SDKInfo> ;
+	atxa-strata:nestedLayerIndexes ":6,false,false,true:1,false,false,true:5,true,true,true" ;
+	atxa-strata:layerIndex "5" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx584 atxa-core:contains _:node17bokavsrx2491 .
+
+_:node17bokavsrx2491 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.common$ThreadedTimeout> ;
+	atxa-strata:nestedLayerIndexes ":6,false,false,true:0,false,false,true:5,true,true,true" ;
+	atxa-strata:layerIndex "5" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx540 atxa-core:contains _:node17bokavsrx554 .
+
+_:node17bokavsrx554 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.*> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:3,false,false,true" ;
+	atxa-strata:layerIndex "3" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "true" , "true" , "true" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.*> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.*> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.neuronrobotics.*> .
+
+_:node17bokavsrx554 atxa-core:contains _:node17bokavsrx555 .
+
+_:node17bokavsrx555 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.*> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:1,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "true" , "true" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.*> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.io.*> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.pid.*> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.core> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.safe> .
+
+_:node17bokavsrx555 atxa-core:contains _:node17bokavsrx556 .
+
+_:node17bokavsrx556 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.io.*> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:1,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "true" , "true" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.io.*> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.io> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.io.setmode> .
+
+_:node17bokavsrx556 atxa-core:contains _:node17bokavsrx557 .
+
+_:node17bokavsrx557 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.io> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:1,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "true" , "true" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.io> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.io$ConfigAsyncCommand> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.io$AsyncMode> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.io$AsyncThreshholdEdgeType> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.io$SetChannelValueCommand> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.io$GetValueCommand> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.io$SetUARTBaudrateCommand> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.io$SetAllChannelValuesCommand> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.io$GetChannelModeCommand> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.io$AsyncCommand> .
+
+_:node17bokavsrx557 atxa-core:contains _:node17bokavsrx5757 .
+
+_:node17bokavsrx5757 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.io$ConfigAsyncCommand> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx557 atxa-core:contains _:node17bokavsrx5758 .
+
+_:node17bokavsrx5758 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.io$AsyncMode> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:1,false,false,true:1,true,true,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx557 atxa-core:contains _:node17bokavsrx5759 .
+
+_:node17bokavsrx5759 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.io$AsyncThreshholdEdgeType> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true:1,true,true,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx557 atxa-core:contains _:node17bokavsrx5760 .
+
+_:node17bokavsrx5760 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.io$SetChannelValueCommand> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:1,false,false,true:1,true,true,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx557 atxa-core:contains _:node17bokavsrx5761 .
+
+_:node17bokavsrx5761 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.io$GetValueCommand> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:0,false,false,true:1,true,true,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx557 atxa-core:contains _:node17bokavsrx5762 .
+
+_:node17bokavsrx5762 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.io$SetUARTBaudrateCommand> ;
+	atxa-strata:nestedLayerIndexes ":2,false,false,true:1,false,false,true:1,true,true,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx557 atxa-core:contains _:node17bokavsrx5763 .
+
+_:node17bokavsrx5763 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.io$SetAllChannelValuesCommand> ;
+	atxa-strata:nestedLayerIndexes ":2,false,false,true:0,false,false,true:1,true,true,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx557 atxa-core:contains _:node17bokavsrx5764 .
+
+_:node17bokavsrx5764 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.io$GetChannelModeCommand> ;
+	atxa-strata:nestedLayerIndexes ":3,false,false,true:1,false,false,true:1,true,true,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx557 atxa-core:contains _:node17bokavsrx5765 .
+
+_:node17bokavsrx5765 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.io$AsyncCommand> ;
+	atxa-strata:nestedLayerIndexes ":3,false,false,true:0,false,false,true:1,true,true,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx556 atxa-core:contains _:node17bokavsrx559 .
+
+_:node17bokavsrx559 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.io.setmode> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "true" , "false" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.io.setmode> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.io.setmode$SetChannelModeCommand> .
+
+_:node17bokavsrx559 atxa-core:contains _:node17bokavsrx5766 .
+
+_:node17bokavsrx5766 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.io.setmode$SetChannelModeCommand> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx555 atxa-core:contains _:node17bokavsrx560 .
+
+_:node17bokavsrx560 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.pid.*> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "true" , "true" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.pid.*> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.pid> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.pid.DyPID> .
+
+_:node17bokavsrx560 atxa-core:contains _:node17bokavsrx561 .
+
+_:node17bokavsrx561 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.pid> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:1,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "true" , "true" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.pid> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.pid$ControlPIDCommand> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.pid$ConfigurePIDCommand> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.pid$PDVelocityCommand> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.pid$ControlAllPIDCommand> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.pid$ResetPIDCommand> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.pid$KillAllPIDCommand> .
+
+_:node17bokavsrx561 atxa-core:contains _:node17bokavsrx5767 .
+
+_:node17bokavsrx5767 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.pid$ControlPIDCommand> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:1,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx561 atxa-core:contains _:node17bokavsrx5768 .
+
+_:node17bokavsrx5768 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.pid$ConfigurePIDCommand> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:2,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx561 atxa-core:contains _:node17bokavsrx5769 .
+
+_:node17bokavsrx5769 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.pid$PDVelocityCommand> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx561 atxa-core:contains _:node17bokavsrx5770 .
+
+_:node17bokavsrx5770 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.pid$ControlAllPIDCommand> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:1,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx561 atxa-core:contains _:node17bokavsrx5771 .
+
+_:node17bokavsrx5771 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.pid$ResetPIDCommand> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:2,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx561 atxa-core:contains _:node17bokavsrx5772 .
+
+_:node17bokavsrx5772 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.pid$KillAllPIDCommand> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:0,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx560 atxa-core:contains _:node17bokavsrx563 .
+
+_:node17bokavsrx563 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.pid.DyPID> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "true" , "false" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.pid.DyPID> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.pid.DyPID$ConfigureDynamicPIDCommand> .
+
+_:node17bokavsrx563 atxa-core:contains _:node17bokavsrx5773 .
+
+_:node17bokavsrx5773 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.pid.DyPID$ConfigureDynamicPIDCommand> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx555 atxa-core:contains _:node17bokavsrx565 .
+
+_:node17bokavsrx565 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.core> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:1,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "true" , "true" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.core> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.core$ErrorCommand> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.core$PingCommand> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.core$NamespaceCommand> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.core$ReadyCommand> .
+
+_:node17bokavsrx565 atxa-core:contains _:node17bokavsrx5774 .
+
+_:node17bokavsrx5774 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.core$ErrorCommand> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:1,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx565 atxa-core:contains _:node17bokavsrx5775 .
+
+_:node17bokavsrx5775 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.core$PingCommand> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx565 atxa-core:contains _:node17bokavsrx5776 .
+
+_:node17bokavsrx5776 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.core$NamespaceCommand> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:1,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx565 atxa-core:contains _:node17bokavsrx5777 .
+
+_:node17bokavsrx5777 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.core$ReadyCommand> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:0,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx555 atxa-core:contains _:node17bokavsrx567 .
+
+_:node17bokavsrx567 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.safe> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:0,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "true" , "false" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.safe> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.safe$SafeModeCommand> .
+
+_:node17bokavsrx567 atxa-core:contains _:node17bokavsrx5778 .
+
+_:node17bokavsrx5778 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.bcs.safe$SafeModeCommand> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx554 atxa-core:contains _:node17bokavsrx568 .
+
+_:node17bokavsrx568 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.neuronrobotics.*> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "true" , "true" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.neuronrobotics.*> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.neuronrobotics.bootloader> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.neuronrobotics.dyio> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.neuronrobotics.bowlercam> .
+
+_:node17bokavsrx568 atxa-core:contains _:node17bokavsrx570 .
+
+_:node17bokavsrx570 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.neuronrobotics.bootloader> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:1,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "true" , "true" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.neuronrobotics.bootloader> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.neuronrobotics.bootloader$ResetChipCommand> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.neuronrobotics.bootloader$ProgramSectionCommand> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.neuronrobotics.bootloader$BootloaderIDCommand> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.neuronrobotics.bootloader$EraseFlashCommand> .
+
+_:node17bokavsrx570 atxa-core:contains _:node17bokavsrx5779 .
+
+_:node17bokavsrx5779 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.neuronrobotics.bootloader$ResetChipCommand> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:1,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx570 atxa-core:contains _:node17bokavsrx5780 .
+
+_:node17bokavsrx5780 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.neuronrobotics.bootloader$ProgramSectionCommand> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx570 atxa-core:contains _:node17bokavsrx5781 .
+
+_:node17bokavsrx5781 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.neuronrobotics.bootloader$BootloaderIDCommand> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:1,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx570 atxa-core:contains _:node17bokavsrx5782 .
+
+_:node17bokavsrx5782 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.neuronrobotics.bootloader$EraseFlashCommand> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:0,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx568 atxa-core:contains _:node17bokavsrx574 .
+
+_:node17bokavsrx574 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.neuronrobotics.dyio> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "true" , "true" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.neuronrobotics.dyio> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.neuronrobotics.dyio$InfoCommand> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.neuronrobotics.dyio$InfoFirmwareRevisionCommand> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.neuronrobotics.dyio$PowerCommand> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.neuronrobotics.dyio$ProvisionCommand> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.neuronrobotics.dyio$GetAllChannelValuesCommand> .
+
+_:node17bokavsrx574 atxa-core:contains _:node17bokavsrx5783 .
+
+_:node17bokavsrx5783 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.neuronrobotics.dyio$InfoCommand> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:1,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx574 atxa-core:contains _:node17bokavsrx5784 .
+
+_:node17bokavsrx5784 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.neuronrobotics.dyio$InfoFirmwareRevisionCommand> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx574 atxa-core:contains _:node17bokavsrx5785 .
+
+_:node17bokavsrx5785 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.neuronrobotics.dyio$PowerCommand> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:1,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx574 atxa-core:contains _:node17bokavsrx5786 .
+
+_:node17bokavsrx5786 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.neuronrobotics.dyio$ProvisionCommand> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:0,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx574 atxa-core:contains _:node17bokavsrx5787 .
+
+_:node17bokavsrx5787 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.neuronrobotics.dyio$GetAllChannelValuesCommand> ;
+	atxa-strata:nestedLayerIndexes ":2,false,false,true:1,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx568 atxa-core:contains _:node17bokavsrx572 .
+
+_:node17bokavsrx572 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.neuronrobotics.bowlercam> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:2,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "true" , "true" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.neuronrobotics.bowlercam> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.neuronrobotics.bowlercam$BlobCommand> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.neuronrobotics.bowlercam$ImageCommand> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.neuronrobotics.bowlercam$ImageURLCommand> .
+
+_:node17bokavsrx572 atxa-core:contains _:node17bokavsrx5788 .
+
+_:node17bokavsrx5788 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.neuronrobotics.bowlercam$BlobCommand> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:1,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx572 atxa-core:contains _:node17bokavsrx5789 .
+
+_:node17bokavsrx5789 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.neuronrobotics.bowlercam$ImageCommand> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:2,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx572 atxa-core:contains _:node17bokavsrx5790 .
+
+_:node17bokavsrx5790 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.sdk.commands.neuronrobotics.bowlercam$ImageURLCommand> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx539 atxa-core:contains _:node17bokavsrx613 .
+
+_:node17bokavsrx613 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving.*> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:1,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "true" , "true" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving.*> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving.virtual> .
+
+_:node17bokavsrx613 atxa-core:contains _:node17bokavsrx614 .
+
+_:node17bokavsrx614 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "true" , "true" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$NrMap> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$LinearRangeSensor> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$AbstractSensor> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$AckermanBot> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$AbstractRobotDrive> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$Rbe3002Robot> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$PuckBot> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$IPuckBotKinematics> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$PuckBotDriveData> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$PuckBotVelocityData> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$RobotLocationData> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$PuckBotDefaultKinematics> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$LaserRangeSensor> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$HokuyoURGDevice> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$URG2Packet> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$ISensorListener> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$PuckBotConfiguration> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$IRobotDriveEventListener> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$AckermanBotVelocityData> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$DataPoint> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$AckermanBotDriveData> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$IAckermanBotKinematics> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$AckermanConfiguration> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$AckermanDefaultKinematics> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$LineSensor> .
+
+_:node17bokavsrx614 atxa-core:contains _:node17bokavsrx5859 .
+
+_:node17bokavsrx5859 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$NrMap> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:1,false,false,true:3,true,true,true" ;
+	atxa-strata:layerIndex "3" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx614 atxa-core:contains _:node17bokavsrx5860 .
+
+_:node17bokavsrx5860 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$LinearRangeSensor> ;
+	atxa-strata:nestedLayerIndexes ":2,false,false,true:1,false,false,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "2" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx614 atxa-core:contains _:node17bokavsrx5861 .
+
+_:node17bokavsrx5861 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$AbstractSensor> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:2,false,false,true" ;
+	atxa-strata:layerIndex "2" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx614 atxa-core:contains _:node17bokavsrx5862 .
+
+_:node17bokavsrx5862 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$AckermanBot> ;
+	atxa-strata:nestedLayerIndexes ":3,false,false,true:1,false,false,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "3" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx614 atxa-core:contains _:node17bokavsrx5863 .
+
+_:node17bokavsrx5863 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$AbstractRobotDrive> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:2,false,false,true" ;
+	atxa-strata:layerIndex "2" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx614 atxa-core:contains _:node17bokavsrx5864 .
+
+_:node17bokavsrx5864 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$Rbe3002Robot> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx614 atxa-core:contains _:node17bokavsrx5865 .
+
+_:node17bokavsrx5865 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$PuckBot> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:1,false,false,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx614 atxa-core:contains _:node17bokavsrx5866 .
+
+_:node17bokavsrx5866 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$IPuckBotKinematics> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true:3,true,true,true" ;
+	atxa-strata:layerIndex "3" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx614 atxa-core:contains _:node17bokavsrx5867 .
+
+_:node17bokavsrx5867 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$PuckBotDriveData> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:1,false,false,true:3,true,true,true" ;
+	atxa-strata:layerIndex "3" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx614 atxa-core:contains _:node17bokavsrx5868 .
+
+_:node17bokavsrx5868 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$PuckBotVelocityData> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:0,false,false,true:3,true,true,true" ;
+	atxa-strata:layerIndex "3" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx614 atxa-core:contains _:node17bokavsrx5869 .
+
+_:node17bokavsrx5869 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$RobotLocationData> ;
+	atxa-strata:nestedLayerIndexes ":2,false,false,true:1,false,false,true:3,true,true,true" ;
+	atxa-strata:layerIndex "3" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx614 atxa-core:contains _:node17bokavsrx5870 .
+
+_:node17bokavsrx5870 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$PuckBotDefaultKinematics> ;
+	atxa-strata:nestedLayerIndexes ":2,false,false,true:2,false,false,true" ;
+	atxa-strata:layerIndex "2" ;
+	atxa-strata:indexWithinLayer "2" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx614 atxa-core:contains _:node17bokavsrx5871 .
+
+_:node17bokavsrx5871 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$LaserRangeSensor> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx614 atxa-core:contains _:node17bokavsrx5872 .
+
+_:node17bokavsrx5872 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$HokuyoURGDevice> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:1,false,false,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx614 atxa-core:contains _:node17bokavsrx5873 .
+
+_:node17bokavsrx5873 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$URG2Packet> ;
+	atxa-strata:nestedLayerIndexes ":3,false,false,true:2,false,false,true" ;
+	atxa-strata:layerIndex "2" ;
+	atxa-strata:indexWithinLayer "3" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx614 atxa-core:contains _:node17bokavsrx5874 .
+
+_:node17bokavsrx5874 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$ISensorListener> ;
+	atxa-strata:nestedLayerIndexes ":2,false,false,true:0,false,false,true:3,true,true,true" ;
+	atxa-strata:layerIndex "3" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx614 atxa-core:contains _:node17bokavsrx5875 .
+
+_:node17bokavsrx5875 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$PuckBotConfiguration> ;
+	atxa-strata:nestedLayerIndexes ":3,false,false,true:1,false,false,true:3,true,true,true" ;
+	atxa-strata:layerIndex "3" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx614 atxa-core:contains _:node17bokavsrx5876 .
+
+_:node17bokavsrx5876 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$IRobotDriveEventListener> ;
+	atxa-strata:nestedLayerIndexes ":3,false,false,true:0,false,false,true:3,true,true,true" ;
+	atxa-strata:layerIndex "3" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx614 atxa-core:contains _:node17bokavsrx5877 .
+
+_:node17bokavsrx5877 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$AckermanBotVelocityData> ;
+	atxa-strata:nestedLayerIndexes ":4,false,false,true:1,false,false,true:3,true,true,true" ;
+	atxa-strata:layerIndex "3" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx614 atxa-core:contains _:node17bokavsrx5878 .
+
+_:node17bokavsrx5878 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$DataPoint> ;
+	atxa-strata:nestedLayerIndexes ":4,false,false,true:0,false,false,true:3,true,true,true" ;
+	atxa-strata:layerIndex "3" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx614 atxa-core:contains _:node17bokavsrx5879 .
+
+_:node17bokavsrx5879 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$AckermanBotDriveData> ;
+	atxa-strata:nestedLayerIndexes ":5,false,false,true:1,false,false,true:3,true,true,true" ;
+	atxa-strata:layerIndex "3" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx614 atxa-core:contains _:node17bokavsrx5880 .
+
+_:node17bokavsrx5880 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$IAckermanBotKinematics> ;
+	atxa-strata:nestedLayerIndexes ":5,false,false,true:0,false,false,true:3,true,true,true" ;
+	atxa-strata:layerIndex "3" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx614 atxa-core:contains _:node17bokavsrx5881 .
+
+_:node17bokavsrx5881 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$AckermanConfiguration> ;
+	atxa-strata:nestedLayerIndexes ":6,false,false,true:1,false,false,true:3,true,true,true" ;
+	atxa-strata:layerIndex "3" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx614 atxa-core:contains _:node17bokavsrx5882 .
+
+_:node17bokavsrx5882 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$AckermanDefaultKinematics> ;
+	atxa-strata:nestedLayerIndexes ":4,false,false,true:2,false,false,true" ;
+	atxa-strata:layerIndex "2" ;
+	atxa-strata:indexWithinLayer "4" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx614 atxa-core:contains _:node17bokavsrx5883 .
+
+_:node17bokavsrx5883 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving$LineSensor> ;
+	atxa-strata:nestedLayerIndexes ":4,false,false,true:1,false,false,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "4" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx613 atxa-core:contains _:node17bokavsrx616 .
+
+_:node17bokavsrx616 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving.virtual> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "true" , "true" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving.virtual> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving.virtual$DrivingRobotUI> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving.virtual$ObsticleType> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving.virtual$VirtualAckermanBot> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving.virtual$VirtualWorld> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving.virtual$VirtualRangeSensor> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving.virtual$VirtualLineSensor> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving.virtual$VirtualPuckBot> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving.virtual$VirtualFlameSensor> .
+
+_:node17bokavsrx616 atxa-core:contains _:node17bokavsrx5884 .
+
+_:node17bokavsrx5884 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving.virtual$DrivingRobotUI> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:2,false,false,true" ;
+	atxa-strata:layerIndex "2" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx616 atxa-core:contains _:node17bokavsrx5885 .
+
+_:node17bokavsrx5885 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving.virtual$ObsticleType> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:3,false,false,true" ;
+	atxa-strata:layerIndex "3" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx616 atxa-core:contains _:node17bokavsrx5886 .
+
+_:node17bokavsrx5886 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving.virtual$VirtualAckermanBot> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true:1,true,true,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx616 atxa-core:contains _:node17bokavsrx5887 .
+
+_:node17bokavsrx5887 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving.virtual$VirtualWorld> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:2,false,false,true" ;
+	atxa-strata:layerIndex "2" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx616 atxa-core:contains _:node17bokavsrx5888 .
+
+_:node17bokavsrx5888 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving.virtual$VirtualRangeSensor> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:1,false,false,true:1,true,true,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx616 atxa-core:contains _:node17bokavsrx5889 .
+
+_:node17bokavsrx5889 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving.virtual$VirtualLineSensor> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:1,false,false,true:1,true,true,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx616 atxa-core:contains _:node17bokavsrx5890 .
+
+_:node17bokavsrx5890 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving.virtual$VirtualPuckBot> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:0,false,false,true:1,true,true,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx616 atxa-core:contains _:node17bokavsrx5891 .
+
+_:node17bokavsrx5891 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.addons.driving.virtual$VirtualFlameSensor> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx539 atxa-core:contains _:node17bokavsrx618 .
+
+_:node17bokavsrx618 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.application.xmpp.*> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "true" , "true" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.application.xmpp.*> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.application.xmpp> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.application.xmpp.GoogleChat> .
+
+_:node17bokavsrx618 atxa-core:contains _:node17bokavsrx619 .
+
+_:node17bokavsrx619 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.application.xmpp> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "true" , "true" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.application.xmpp> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.application.xmpp$IConversation> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.application.xmpp$DyIOConversationFactory> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.application.xmpp$IConversationFactory> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.application.xmpp$DyIOConversation> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.application.xmpp$Parser> .
+
+_:node17bokavsrx619 atxa-core:contains _:node17bokavsrx5892 .
+
+_:node17bokavsrx5892 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.application.xmpp$IConversation> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:1,false,false,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx619 atxa-core:contains _:node17bokavsrx5893 .
+
+_:node17bokavsrx5893 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.application.xmpp$DyIOConversationFactory> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx619 atxa-core:contains _:node17bokavsrx5894 .
+
+_:node17bokavsrx5894 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.application.xmpp$IConversationFactory> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:1,false,false,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx619 atxa-core:contains _:node17bokavsrx5895 .
+
+_:node17bokavsrx5895 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.application.xmpp$DyIOConversation> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx619 atxa-core:contains _:node17bokavsrx5896 .
+
+_:node17bokavsrx5896 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.application.xmpp$Parser> ;
+	atxa-strata:nestedLayerIndexes ":2,false,false,true:1,false,false,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "2" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx618 atxa-core:contains _:node17bokavsrx621 .
+
+_:node17bokavsrx621 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.application.xmpp.GoogleChat> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "true" , "true" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.application.xmpp.GoogleChat> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.application.xmpp.GoogleChat$GoogleChatConversation> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.application.xmpp.GoogleChat$IChatLog> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.application.xmpp.GoogleChat$IGoogleChatInterface> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.application.xmpp.GoogleChat$GoogleChatConversationFactory> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.application.xmpp.GoogleChat$GoogleChat> , <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.application.xmpp.GoogleChat$GoogleChatEngine> .
+
+_:node17bokavsrx621 atxa-core:contains _:node17bokavsrx5897 .
+
+_:node17bokavsrx5897 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.application.xmpp.GoogleChat$GoogleChatConversation> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:1,false,false,true:1,true,true,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx621 atxa-core:contains _:node17bokavsrx5898 .
+
+_:node17bokavsrx5898 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.application.xmpp.GoogleChat$IChatLog> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true:1,true,true,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx621 atxa-core:contains _:node17bokavsrx5899 .
+
+_:node17bokavsrx5899 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.application.xmpp.GoogleChat$IGoogleChatInterface> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:1,false,false,true:1,true,true,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx621 atxa-core:contains _:node17bokavsrx5900 .
+
+_:node17bokavsrx5900 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.application.xmpp.GoogleChat$GoogleChatConversationFactory> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx621 atxa-core:contains _:node17bokavsrx5901 .
+
+_:node17bokavsrx5901 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.application.xmpp.GoogleChat$GoogleChat> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:0,false,false,true:1,true,true,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx621 atxa-core:contains _:node17bokavsrx5902 .
+
+_:node17bokavsrx5902 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#com.neuronrobotics.application.xmpp.GoogleChat$GoogleChatEngine> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+atxa-core:docRoot atxa-core:contains _:node17bokavsrx3928 .
+
+_:node17bokavsrx3928 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#gnu.*> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "true" , "false" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#gnu.*> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#gnu.io$NRSerialPort> , <http://www.architexa.com/rdf/jdt-wkspc#gnu.io$CommDriver> , <http://www.architexa.com/rdf/jdt-wkspc#gnu.io$CommPort> , <http://www.architexa.com/rdf/jdt-wkspc#gnu.io$CommPortIdentifier> , <http://www.architexa.com/rdf/jdt-wkspc#gnu.io$NoSuchPortException> , <http://www.architexa.com/rdf/jdt-wkspc#gnu.io$CommPortEnumerator> , <http://www.architexa.com/rdf/jdt-wkspc#gnu.io$RXTXPort> , <http://www.architexa.com/rdf/jdt-wkspc#gnu.io$CommPortOwnershipListener> , <http://www.architexa.com/rdf/jdt-wkspc#gnu.io$RXTXCommDriver> , <http://www.architexa.com/rdf/jdt-wkspc#gnu.io$UnsupportedCommOperationException> , <http://www.architexa.com/rdf/jdt-wkspc#gnu.io$PortInUseException> , <http://www.architexa.com/rdf/jdt-wkspc#gnu.io$SerialManager> , <http://www.architexa.com/rdf/jdt-wkspc#gnu.io$NativeResourceException> , <http://www.architexa.com/rdf/jdt-wkspc#gnu.io$NativeResource> , <http://www.architexa.com/rdf/jdt-wkspc#gnu.io$RXTXVersion> , <http://www.architexa.com/rdf/jdt-wkspc#gnu.io$Zystem> , <http://www.architexa.com/rdf/jdt-wkspc#gnu.io$SerialPort> , <http://www.architexa.com/rdf/jdt-wkspc#gnu.io$SerialPortEventListener> , <http://www.architexa.com/rdf/jdt-wkspc#gnu.io$SerialPortEvent> , <http://www.architexa.com/rdf/jdt-wkspc#gnu.io$UnSupportedLoggerException> .
+
+_:node17bokavsrx3928 atxa-core:contains _:node17bokavsrx3929 .
+
+_:node17bokavsrx3929 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#gnu.io$NRSerialPort> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx3928 atxa-core:contains _:node17bokavsrx3930 .
+
+_:node17bokavsrx3930 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#gnu.io$CommDriver> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:1,false,false,true:5,true,true,true" ;
+	atxa-strata:layerIndex "5" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx3928 atxa-core:contains _:node17bokavsrx3931 .
+
+_:node17bokavsrx3931 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#gnu.io$CommPort> ;
+	atxa-strata:nestedLayerIndexes ":2,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "2" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx3928 atxa-core:contains _:node17bokavsrx3932 .
+
+_:node17bokavsrx3932 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#gnu.io$CommPortIdentifier> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:1,false,false,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx3928 atxa-core:contains _:node17bokavsrx3933 .
+
+_:node17bokavsrx3933 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#gnu.io$NoSuchPortException> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true:5,true,true,true" ;
+	atxa-strata:layerIndex "5" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx3928 atxa-core:contains _:node17bokavsrx3934 .
+
+_:node17bokavsrx3934 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#gnu.io$CommPortEnumerator> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx3928 atxa-core:contains _:node17bokavsrx3935 .
+
+_:node17bokavsrx3935 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#gnu.io$RXTXPort> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:2,false,false,true" ;
+	atxa-strata:layerIndex "2" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx3928 atxa-core:contains _:node17bokavsrx3936 .
+
+_:node17bokavsrx3936 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#gnu.io$CommPortOwnershipListener> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:1,false,false,true:5,true,true,true" ;
+	atxa-strata:layerIndex "5" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx3928 atxa-core:contains _:node17bokavsrx3937 .
+
+_:node17bokavsrx3937 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#gnu.io$RXTXCommDriver> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:1,false,false,true" ;
+	atxa-strata:layerIndex "1" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx3928 atxa-core:contains _:node17bokavsrx3938 .
+
+_:node17bokavsrx3938 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#gnu.io$UnsupportedCommOperationException> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:0,false,false,true:5,true,true,true" ;
+	atxa-strata:layerIndex "5" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx3928 atxa-core:contains _:node17bokavsrx3939 .
+
+_:node17bokavsrx3939 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#gnu.io$PortInUseException> ;
+	atxa-strata:nestedLayerIndexes ":2,false,false,true:1,false,false,true:5,true,true,true" ;
+	atxa-strata:layerIndex "5" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx3928 atxa-core:contains _:node17bokavsrx3940 .
+
+_:node17bokavsrx3940 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#gnu.io$SerialManager> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:2,false,false,true" ;
+	atxa-strata:layerIndex "2" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx3928 atxa-core:contains _:node17bokavsrx3941 .
+
+_:node17bokavsrx3941 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#gnu.io$NativeResourceException> ;
+	atxa-strata:nestedLayerIndexes ":2,false,false,true:0,false,false,true:5,true,true,true" ;
+	atxa-strata:layerIndex "5" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx3928 atxa-core:contains _:node17bokavsrx3942 .
+
+_:node17bokavsrx3942 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#gnu.io$NativeResource> ;
+	atxa-strata:nestedLayerIndexes ":3,false,false,true:3,false,false,true" ;
+	atxa-strata:layerIndex "3" ;
+	atxa-strata:indexWithinLayer "3" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx3928 atxa-core:contains _:node17bokavsrx3943 .
+
+_:node17bokavsrx3943 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#gnu.io$RXTXVersion> ;
+	atxa-strata:nestedLayerIndexes ":2,false,false,true:3,false,false,true" ;
+	atxa-strata:layerIndex "3" ;
+	atxa-strata:indexWithinLayer "2" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx3928 atxa-core:contains _:node17bokavsrx3944 .
+
+_:node17bokavsrx3944 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#gnu.io$Zystem> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:4,false,false,true" ;
+	atxa-strata:layerIndex "4" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx3928 atxa-core:contains _:node17bokavsrx3945 .
+
+_:node17bokavsrx3945 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#gnu.io$SerialPort> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:3,false,false,true" ;
+	atxa-strata:layerIndex "3" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx3928 atxa-core:contains _:node17bokavsrx3946 .
+
+_:node17bokavsrx3946 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#gnu.io$SerialPortEventListener> ;
+	atxa-strata:nestedLayerIndexes ":3,false,false,true:1,false,false,true:5,true,true,true" ;
+	atxa-strata:layerIndex "5" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx3928 atxa-core:contains _:node17bokavsrx3947 .
+
+_:node17bokavsrx3947 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#gnu.io$SerialPortEvent> ;
+	atxa-strata:nestedLayerIndexes ":1,false,false,true:3,false,false,true" ;
+	atxa-strata:layerIndex "3" ;
+	atxa-strata:indexWithinLayer "1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx3928 atxa-core:contains _:node17bokavsrx3948 .
+
+_:node17bokavsrx3948 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#gnu.io$UnSupportedLoggerException> ;
+	atxa-strata:nestedLayerIndexes ":3,false,false,true:0,false,false,true:5,true,true,true" ;
+	atxa-strata:layerIndex "5" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+atxa-core:docRoot atxa-core:contains _:node17bokavsrx3949 .
+
+_:node17bokavsrx3949 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#javazoom.*> ;
+	atxa-strata:nestedLayerIndexes ":2,false,false,true:0,false,false,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "2" ;
+	atxa-core:containerState "true" , "false" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#javazoom.*> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#javazoom.jl.player.*> , <http://www.architexa.com/rdf/jdt-wkspc#javazoom.jl.converter> , <http://www.architexa.com/rdf/jdt-wkspc#javazoom.jl.decoder> .
+
+_:node17bokavsrx3949 atxa-core:contains _:node17bokavsrx530 .
+
+_:node17bokavsrx530 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#javazoom.jl.player.*> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:1,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#javazoom.jl.player.*> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#javazoom.jl.player> , <http://www.architexa.com/rdf/jdt-wkspc#javazoom.jl.player.advanced.*> .
+
+_:node17bokavsrx530 atxa-core:contains _:node17bokavsrx531 .
+
+_:node17bokavsrx531 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#javazoom.jl.player> ;
+	atxa-strata:nestedLayerIndexes "" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx530 atxa-core:contains _:node17bokavsrx532 .
+
+_:node17bokavsrx532 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#javazoom.jl.player.advanced.*> ;
+	atxa-strata:nestedLayerIndexes "" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#javazoom.jl.player.advanced.*> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#javazoom.jl.player.advanced> .
+
+_:node17bokavsrx532 atxa-core:contains _:node17bokavsrx533 .
+
+_:node17bokavsrx533 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#javazoom.jl.player.advanced> ;
+	atxa-strata:nestedLayerIndexes "" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "0" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx3949 atxa-core:contains _:node17bokavsrx535 .
+
+_:node17bokavsrx535 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#javazoom.jl.converter> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:2,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+_:node17bokavsrx3949 atxa-core:contains _:node17bokavsrx537 .
+
+_:node17bokavsrx537 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#javazoom.jl.decoder> ;
+	atxa-strata:nestedLayerIndexes ":0,false,false,true:0,false,false,true:0,true,true,true" ;
+	atxa-strata:layerIndex "0" ;
+	atxa-strata:indexWithinLayer "-1" ;
+	atxa-core:containerState "false" , "true" , "false" .
+
+@prefix atxa-rse-eclipse: <http://www.architexa.com/rdf/rse-eclipse#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix atxa-strata: <http://www.architexa.com/rdf/strata#> .
+@prefix atxa-jdt-wkspc: <http://www.architexa.com/rdf/jdt-wkspc#> .
+@prefix atxa-core: <http://www.architexa.com/rdf/core#> .
+@prefix atxa: <http://www.architexa.com/rdf/> .
+
+<http://www.architexa.com/rdf/rse-eclipse#Layered.atxa> a atxa-core:strataFile ;
+	atxa-core:contains _:node17bokavsrx520 , _:node17bokavsrx522 , _:node17bokavsrx521 , _:node17bokavsrx519 , _:node17bokavsrx524 , _:node17bokavsrx523 , _:node17bokavsrx518 , _:node17bokavsrx528 , _:node17bokavsrx516 , _:node17bokavsrx5748 , _:node17bokavsrx5749 , _:node17bokavsrx5750 , _:node17bokavsrx5751 , _:node17bokavsrx5752 , _:node17bokavsrx551 , _:node17bokavsrx5753 , _:node17bokavsrx5754 , _:node17bokavsrx5755 , _:node17bokavsrx5756 , _:node17bokavsrx553 , _:node17bokavsrx541 , _:node17bokavsrx5791 , _:node17bokavsrx5792 , _:node17bokavsrx5793 , _:node17bokavsrx5794 , _:node17bokavsrx5795 , _:node17bokavsrx5796 , _:node17bokavsrx5797 , _:node17bokavsrx5798 , _:node17bokavsrx5799 , _:node17bokavsrx5800 , _:node17bokavsrx5801 , _:node17bokavsrx5802 , _:node17bokavsrx5803 , _:node17bokavsrx5804 , _:node17bokavsrx5805 , _:node17bokavsrx5806 , _:node17bokavsrx5807 , _:node17bokavsrx5808 , _:node17bokavsrx5809 , _:node17bokavsrx5810 , _:node17bokavsrx5811 , _:node17bokavsrx5812 , _:node17bokavsrx576 , _:node17bokavsrx5813 , _:node17bokavsrx5814 , _:node17bokavsrx5815 , _:node17bokavsrx5816 , _:node17bokavsrx5817 , _:node17bokavsrx5818 , _:node17bokavsrx5819 , _:node17bokavsrx5820 , _:node17bokavsrx5821 , _:node17bokavsrx5822 , _:node17bokavsrx5823 , _:node17bokavsrx5824 , _:node17bokavsrx5825 , _:node17bokavsrx5826 , _:node17bokavsrx5827 , _:node17bokavsrx5828 , _:node17bokavsrx5829 , _:node17bokavsrx5830 , _:node17bokavsrx5831 , _:node17bokavsrx5832 , _:node17bokavsrx580 , _:node17bokavsrx582 , _:node17bokavsrx5833 , _:node17bokavsrx578 , _:node17bokavsrx575 , _:node17bokavsrx3907 , _:node17bokavsrx3908 , _:node17bokavsrx3909 , _:node17bokavsrx3910 , _:node17bokavsrx3911 , _:node17bokavsrx3912 , _:node17bokavsrx3913 , _:node17bokavsrx3914 , _:node17bokavsrx3915 , _:node17bokavsrx3916 , _:node17bokavsrx592 , _:node17bokavsrx5834 , _:node17bokavsrx594 , _:node17bokavsrx3917 , _:node17bokavsrx3918 , _:node17bokavsrx3919 , _:node17bokavsrx3920 , _:node17bokavsrx3921 , _:node17bokavsrx3922 , _:node17bokavsrx3923 , _:node17bokavsrx611 , _:node17bokavsrx5835 , _:node17bokavsrx5836 , _:node17bokavsrx5837 , _:node17bokavsrx596 , _:node17bokavsrx3924 , _:node17bokavsrx3925 , _:node17bokavsrx3926 , _:node17bokavsrx3927 , _:node17bokavsrx598 , _:node17bokavsrx5838 , _:node17bokavsrx5839 , _:node17bokavsrx5840 , _:node17bokavsrx5841 , _:node17bokavsrx5842 , _:node17bokavsrx5843 , _:node17bokavsrx590 , _:node17bokavsrx5844 , _:node17bokavsrx5845 , _:node17bokavsrx609 , _:node17bokavsrx5846 , _:node17bokavsrx5847 , _:node17bokavsrx600 , _:node17bokavsrx5848 , _:node17bokavsrx586 , _:node17bokavsrx5849 , _:node17bokavsrx5850 , _:node17bokavsrx5851 , _:node17bokavsrx606 , _:node17bokavsrx5853 , _:node17bokavsrx5854 , _:node17bokavsrx5852 , _:node17bokavsrx5856 , _:node17bokavsrx5857 , _:node17bokavsrx5858 , _:node17bokavsrx5855 , _:node17bokavsrx3880 , _:node17bokavsrx3881 , _:node17bokavsrx3882 , _:node17bokavsrx3883 , _:node17bokavsrx3884 , _:node17bokavsrx3885 , _:node17bokavsrx3886 , _:node17bokavsrx3887 , _:node17bokavsrx3888 , _:node17bokavsrx3889 , _:node17bokavsrx3890 , _:node17bokavsrx3891 , _:node17bokavsrx3892 , _:node17bokavsrx3893 , _:node17bokavsrx3894 , _:node17bokavsrx3895 , _:node17bokavsrx3896 , _:node17bokavsrx3897 , _:node17bokavsrx3898 , _:node17bokavsrx3899 , _:node17bokavsrx3900 , _:node17bokavsrx3901 , _:node17bokavsrx3902 , _:node17bokavsrx3903 , _:node17bokavsrx3904 , _:node17bokavsrx3905 , _:node17bokavsrx3906 , _:node17bokavsrx543 , _:node17bokavsrx5733 , _:node17bokavsrx547 , _:node17bokavsrx5734 , _:node17bokavsrx5735 , _:node17bokavsrx5736 , _:node17bokavsrx5737 , _:node17bokavsrx5738 , _:node17bokavsrx5739 , _:node17bokavsrx5740 , _:node17bokavsrx5741 , _:node17bokavsrx5742 , _:node17bokavsrx5743 , _:node17bokavsrx5744 , _:node17bokavsrx5745 , _:node17bokavsrx549 , _:node17bokavsrx5746 , _:node17bokavsrx5747 , _:node17bokavsrx545 , _:node17bokavsrx542 , _:node17bokavsrx2464 , _:node17bokavsrx2465 , _:node17bokavsrx2466 , _:node17bokavsrx2467 , _:node17bokavsrx2468 , _:node17bokavsrx2469 , _:node17bokavsrx2470 , _:node17bokavsrx2471 , _:node17bokavsrx2472 , _:node17bokavsrx2473 , _:node17bokavsrx2474 , _:node17bokavsrx2475 , _:node17bokavsrx2476 , _:node17bokavsrx2477 , _:node17bokavsrx2478 , _:node17bokavsrx2479 , _:node17bokavsrx2480 , _:node17bokavsrx2481 , _:node17bokavsrx2482 , _:node17bokavsrx2483 , _:node17bokavsrx2484 , _:node17bokavsrx2485 , _:node17bokavsrx2486 , _:node17bokavsrx2487 , _:node17bokavsrx2488 , _:node17bokavsrx2489 , _:node17bokavsrx2490 , _:node17bokavsrx2491 , _:node17bokavsrx584 , _:node17bokavsrx5757 , _:node17bokavsrx5758 , _:node17bokavsrx5759 , _:node17bokavsrx5760 , _:node17bokavsrx5761 , _:node17bokavsrx5762 , _:node17bokavsrx5763 , _:node17bokavsrx5764 , _:node17bokavsrx5765 , _:node17bokavsrx557 , _:node17bokavsrx5766 , _:node17bokavsrx559 , _:node17bokavsrx556 , _:node17bokavsrx5767 , _:node17bokavsrx5768 , _:node17bokavsrx5769 , _:node17bokavsrx5770 , _:node17bokavsrx5771 , _:node17bokavsrx5772 , _:node17bokavsrx561 , _:node17bokavsrx5773 , _:node17bokavsrx563 , _:node17bokavsrx560 , _:node17bokavsrx5774 , _:node17bokavsrx5775 , _:node17bokavsrx5776 , _:node17bokavsrx5777 , _:node17bokavsrx565 , _:node17bokavsrx5778 , _:node17bokavsrx567 , _:node17bokavsrx555 , _:node17bokavsrx5779 , _:node17bokavsrx5780 , _:node17bokavsrx5781 , _:node17bokavsrx5782 , _:node17bokavsrx570 , _:node17bokavsrx5783 , _:node17bokavsrx5784 , _:node17bokavsrx5785 , _:node17bokavsrx5786 , _:node17bokavsrx5787 , _:node17bokavsrx574 , _:node17bokavsrx5788 , _:node17bokavsrx5789 , _:node17bokavsrx5790 , _:node17bokavsrx572 , _:node17bokavsrx568 , _:node17bokavsrx554 , _:node17bokavsrx540 , _:node17bokavsrx5859 , _:node17bokavsrx5860 , _:node17bokavsrx5861 , _:node17bokavsrx5862 , _:node17bokavsrx5863 , _:node17bokavsrx5864 , _:node17bokavsrx5865 , _:node17bokavsrx5866 , _:node17bokavsrx5867 , _:node17bokavsrx5868 , _:node17bokavsrx5869 , _:node17bokavsrx5870 , _:node17bokavsrx5871 , _:node17bokavsrx5872 , _:node17bokavsrx5873 , _:node17bokavsrx5874 , _:node17bokavsrx5875 , _:node17bokavsrx5876 , _:node17bokavsrx5877 , _:node17bokavsrx5878 , _:node17bokavsrx5879 , _:node17bokavsrx5880 , _:node17bokavsrx5881 , _:node17bokavsrx5882 , _:node17bokavsrx5883 , _:node17bokavsrx614 , _:node17bokavsrx5884 , _:node17bokavsrx5885 , _:node17bokavsrx5886 , _:node17bokavsrx5887 , _:node17bokavsrx5888 , _:node17bokavsrx5889 , _:node17bokavsrx5890 , _:node17bokavsrx5891 , _:node17bokavsrx616 , _:node17bokavsrx613 , _:node17bokavsrx5892 , _:node17bokavsrx5893 , _:node17bokavsrx5894 , _:node17bokavsrx5895 , _:node17bokavsrx5896 , _:node17bokavsrx619 , _:node17bokavsrx5897 , _:node17bokavsrx5898 , _:node17bokavsrx5899 , _:node17bokavsrx5900 , _:node17bokavsrx5901 , _:node17bokavsrx5902 , _:node17bokavsrx621 , _:node17bokavsrx618 , _:node17bokavsrx539 , _:node17bokavsrx3929 , _:node17bokavsrx3930 , _:node17bokavsrx3931 , _:node17bokavsrx3932 , _:node17bokavsrx3933 , _:node17bokavsrx3934 , _:node17bokavsrx3935 , _:node17bokavsrx3936 , _:node17bokavsrx3937 , _:node17bokavsrx3938 , _:node17bokavsrx3939 , _:node17bokavsrx3940 , _:node17bokavsrx3941 , _:node17bokavsrx3942 , _:node17bokavsrx3943 , _:node17bokavsrx3944 , _:node17bokavsrx3945 , _:node17bokavsrx3946 , _:node17bokavsrx3947 , _:node17bokavsrx3948 , _:node17bokavsrx3928 , _:node17bokavsrx531 , _:node17bokavsrx533 , _:node17bokavsrx532 , _:node17bokavsrx530 , _:node17bokavsrx535 , _:node17bokavsrx537 , _:node17bokavsrx3949 , atxa-core:docRoot , _:node17bokavsrx520 , _:node17bokavsrx522 , _:node17bokavsrx521 , _:node17bokavsrx519 , _:node17bokavsrx524 , _:node17bokavsrx523 , _:node17bokavsrx518 , _:node17bokavsrx528 , _:node17bokavsrx516 , _:node17bokavsrx5748 , _:node17bokavsrx5749 , _:node17bokavsrx5750 , _:node17bokavsrx5751 , _:node17bokavsrx5752 , _:node17bokavsrx551 , _:node17bokavsrx5753 , _:node17bokavsrx5754 , _:node17bokavsrx5755 , _:node17bokavsrx5756 , _:node17bokavsrx553 , _:node17bokavsrx541 , _:node17bokavsrx5791 , _:node17bokavsrx5792 , _:node17bokavsrx5793 , _:node17bokavsrx5794 , _:node17bokavsrx5795 , _:node17bokavsrx5796 , _:node17bokavsrx5797 , _:node17bokavsrx5798 , _:node17bokavsrx5799 , _:node17bokavsrx5800 , _:node17bokavsrx5801 , _:node17bokavsrx5802 , _:node17bokavsrx5803 , _:node17bokavsrx5804 , _:node17bokavsrx5805 , _:node17bokavsrx5806 , _:node17bokavsrx5807 , _:node17bokavsrx5808 , _:node17bokavsrx5809 , _:node17bokavsrx5810 , _:node17bokavsrx5811 , _:node17bokavsrx5812 , _:node17bokavsrx576 , _:node17bokavsrx5813 , _:node17bokavsrx5814 , _:node17bokavsrx5815 , _:node17bokavsrx5816 , _:node17bokavsrx5817 , _:node17bokavsrx5818 , _:node17bokavsrx5819 , _:node17bokavsrx5820 , _:node17bokavsrx5821 , _:node17bokavsrx5822 , _:node17bokavsrx5823 , _:node17bokavsrx5824 , _:node17bokavsrx5825 , _:node17bokavsrx5826 , _:node17bokavsrx5827 , _:node17bokavsrx5828 , _:node17bokavsrx5829 , _:node17bokavsrx5830 , _:node17bokavsrx5831 , _:node17bokavsrx5832 , _:node17bokavsrx580 , _:node17bokavsrx582 , _:node17bokavsrx5833 , _:node17bokavsrx578 , _:node17bokavsrx575 , _:node17bokavsrx3907 , _:node17bokavsrx3908 , _:node17bokavsrx3909 , _:node17bokavsrx3910 , _:node17bokavsrx3911 , _:node17bokavsrx3912 , _:node17bokavsrx3913 , _:node17bokavsrx3914 , _:node17bokavsrx3915 , _:node17bokavsrx3916 , _:node17bokavsrx592 , _:node17bokavsrx5834 , _:node17bokavsrx594 , _:node17bokavsrx3917 , _:node17bokavsrx3918 , _:node17bokavsrx3919 , _:node17bokavsrx3920 , _:node17bokavsrx3921 , _:node17bokavsrx3922 , _:node17bokavsrx3923 , _:node17bokavsrx611 , _:node17bokavsrx5835 , _:node17bokavsrx5836 , _:node17bokavsrx5837 , _:node17bokavsrx596 , _:node17bokavsrx3924 , _:node17bokavsrx3925 , _:node17bokavsrx3926 , _:node17bokavsrx3927 , _:node17bokavsrx598 , _:node17bokavsrx5838 , _:node17bokavsrx5839 , _:node17bokavsrx5840 , _:node17bokavsrx5841 , _:node17bokavsrx5842 , _:node17bokavsrx5843 , _:node17bokavsrx590 , _:node17bokavsrx5844 , _:node17bokavsrx5845 , _:node17bokavsrx609 , _:node17bokavsrx5846 , _:node17bokavsrx5847 , _:node17bokavsrx600 , _:node17bokavsrx5848 , _:node17bokavsrx586 , _:node17bokavsrx5849 , _:node17bokavsrx5850 , _:node17bokavsrx5851 , _:node17bokavsrx606 , _:node17bokavsrx5853 , _:node17bokavsrx5854 , _:node17bokavsrx5852 , _:node17bokavsrx5856 , _:node17bokavsrx5857 , _:node17bokavsrx5858 , _:node17bokavsrx5855 , _:node17bokavsrx3880 , _:node17bokavsrx3881 , _:node17bokavsrx3882 , _:node17bokavsrx3883 , _:node17bokavsrx3884 , _:node17bokavsrx3885 , _:node17bokavsrx3886 , _:node17bokavsrx3887 , _:node17bokavsrx3888 , _:node17bokavsrx3889 , _:node17bokavsrx3890 , _:node17bokavsrx3891 , _:node17bokavsrx3892 , _:node17bokavsrx3893 , _:node17bokavsrx3894 , _:node17bokavsrx3895 , _:node17bokavsrx3896 , _:node17bokavsrx3897 , _:node17bokavsrx3898 , _:node17bokavsrx3899 , _:node17bokavsrx3900 , _:node17bokavsrx3901 , _:node17bokavsrx3902 , _:node17bokavsrx3903 , _:node17bokavsrx3904 , _:node17bokavsrx3905 , _:node17bokavsrx3906 , _:node17bokavsrx543 , _:node17bokavsrx5733 , _:node17bokavsrx547 , _:node17bokavsrx5734 , _:node17bokavsrx5735 , _:node17bokavsrx5736 , _:node17bokavsrx5737 , _:node17bokavsrx5738 , _:node17bokavsrx5739 , _:node17bokavsrx5740 , _:node17bokavsrx5741 , _:node17bokavsrx5742 , _:node17bokavsrx5743 , _:node17bokavsrx5744 , _:node17bokavsrx5745 , _:node17bokavsrx549 , _:node17bokavsrx5746 , _:node17bokavsrx5747 , _:node17bokavsrx545 , _:node17bokavsrx542 , _:node17bokavsrx2464 , _:node17bokavsrx2465 , _:node17bokavsrx2466 , _:node17bokavsrx2467 , _:node17bokavsrx2468 , _:node17bokavsrx2469 , _:node17bokavsrx2470 , _:node17bokavsrx2471 , _:node17bokavsrx2472 , _:node17bokavsrx2473 , _:node17bokavsrx2474 , _:node17bokavsrx2475 , _:node17bokavsrx2476 , _:node17bokavsrx2477 , _:node17bokavsrx2478 , _:node17bokavsrx2479 , _:node17bokavsrx2480 , _:node17bokavsrx2481 , _:node17bokavsrx2482 , _:node17bokavsrx2483 , _:node17bokavsrx2484 , _:node17bokavsrx2485 , _:node17bokavsrx2486 , _:node17bokavsrx2487 , _:node17bokavsrx2488 , _:node17bokavsrx2489 , _:node17bokavsrx2490 , _:node17bokavsrx2491 , _:node17bokavsrx584 , _:node17bokavsrx5757 , _:node17bokavsrx5758 , _:node17bokavsrx5759 , _:node17bokavsrx5760 , _:node17bokavsrx5761 , _:node17bokavsrx5762 , _:node17bokavsrx5763 , _:node17bokavsrx5764 , _:node17bokavsrx5765 , _:node17bokavsrx557 , _:node17bokavsrx5766 , _:node17bokavsrx559 , _:node17bokavsrx556 , _:node17bokavsrx5767 , _:node17bokavsrx5768 , _:node17bokavsrx5769 , _:node17bokavsrx5770 , _:node17bokavsrx5771 , _:node17bokavsrx5772 , _:node17bokavsrx561 , _:node17bokavsrx5773 , _:node17bokavsrx563 , _:node17bokavsrx560 , _:node17bokavsrx5774 , _:node17bokavsrx5775 , _:node17bokavsrx5776 , _:node17bokavsrx5777 , _:node17bokavsrx565 , _:node17bokavsrx5778 , _:node17bokavsrx567 , _:node17bokavsrx555 , _:node17bokavsrx5779 , _:node17bokavsrx5780 , _:node17bokavsrx5781 , _:node17bokavsrx5782 , _:node17bokavsrx570 , _:node17bokavsrx5783 , _:node17bokavsrx5784 , _:node17bokavsrx5785 , _:node17bokavsrx5786 , _:node17bokavsrx5787 , _:node17bokavsrx574 , _:node17bokavsrx5788 , _:node17bokavsrx5789 , _:node17bokavsrx5790 , _:node17bokavsrx572 , _:node17bokavsrx568 , _:node17bokavsrx554 , _:node17bokavsrx540 , _:node17bokavsrx5859 , _:node17bokavsrx5860 , _:node17bokavsrx5861 , _:node17bokavsrx5862 , _:node17bokavsrx5863 , _:node17bokavsrx5864 , _:node17bokavsrx5865 , _:node17bokavsrx5866 , _:node17bokavsrx5867 , _:node17bokavsrx5868 , _:node17bokavsrx5869 , _:node17bokavsrx5870 , _:node17bokavsrx5871 , _:node17bokavsrx5872 , _:node17bokavsrx5873 , _:node17bokavsrx5874 , _:node17bokavsrx5875 , _:node17bokavsrx5876 , _:node17bokavsrx5877 , _:node17bokavsrx5878 , _:node17bokavsrx5879 , _:node17bokavsrx5880 , _:node17bokavsrx5881 , _:node17bokavsrx5882 , _:node17bokavsrx5883 , _:node17bokavsrx614 , _:node17bokavsrx5884 , _:node17bokavsrx5885 , _:node17bokavsrx5886 , _:node17bokavsrx5887 , _:node17bokavsrx5888 , _:node17bokavsrx5889 , _:node17bokavsrx5890 , _:node17bokavsrx5891 , _:node17bokavsrx616 , _:node17bokavsrx613 , _:node17bokavsrx5892 , _:node17bokavsrx5893 , _:node17bokavsrx5894 , _:node17bokavsrx5895 , _:node17bokavsrx5896 , _:node17bokavsrx619 , _:node17bokavsrx5897 , _:node17bokavsrx5898 , _:node17bokavsrx5899 , _:node17bokavsrx5900 , _:node17bokavsrx5901 , _:node17bokavsrx5902 , _:node17bokavsrx621 , _:node17bokavsrx618 , _:node17bokavsrx539 , _:node17bokavsrx3929 , _:node17bokavsrx3930 , _:node17bokavsrx3931 , _:node17bokavsrx3932 , _:node17bokavsrx3933 , _:node17bokavsrx3934 , _:node17bokavsrx3935 , _:node17bokavsrx3936 , _:node17bokavsrx3937 , _:node17bokavsrx3938 , _:node17bokavsrx3939 , _:node17bokavsrx3940 , _:node17bokavsrx3941 , _:node17bokavsrx3942 , _:node17bokavsrx3943 , _:node17bokavsrx3944 , _:node17bokavsrx3945 , _:node17bokavsrx3946 , _:node17bokavsrx3947 , _:node17bokavsrx3948 , _:node17bokavsrx3928 , _:node17bokavsrx531 , _:node17bokavsrx533 , _:node17bokavsrx532 , _:node17bokavsrx530 , _:node17bokavsrx535 , _:node17bokavsrx537 , _:node17bokavsrx3949 , atxa-core:docRoot .
+

@@ -101,7 +101,7 @@ public class LinkFactory {
 					(int)c.getLowerLimit(),
 					(int)c.getUpperLimit(),
 					c.getScale());
-			tmp.setUseLimits(false);
+			//tmp.setUseLimits(false);
 		}
 		tmp.setLinkConfiguration(c);
 		links.add(tmp);

@@ -146,28 +146,27 @@ public abstract class AbstractLink {
 	}
 	private boolean useLimits=true;
 	protected void setTargetValue(int val) {
+		Log.info("Setting cached value :"+val);
+		this.targetValue = val;
 		if(isUseLimits()){
+			double ub = getMaxEngineeringUnits();
+			double lb = getMinEngineeringUnits();
+			String execpt = "Attempted="+toEngineeringUnits(targetValue)+" (engineering units) Device Units="+targetValue
+					+" \nUpper Bound="+ub+" (engineering units) Device Units="+getUpperLimit()
+					+ "\nLower Bound="+lb+" (engineering units) Device Units="+getLowerLimit();
 			if(val>getUpperLimit()){
 				this.targetValue = getUpperLimit();
 				cacheTargetValue();
-				double ub = getMaxEngineeringUnits();
-				double lb = getMinEngineeringUnits();
-				throw new RuntimeException("Joint hit Upper software bound\nAttempted="+toEngineeringUnits(targetValue)
-						+" \nUpper Bound="+ub
-						+ "\nLower Bound="+lb);
+				throw new RuntimeException("Joint hit Upper software bound\n"+execpt);
 			}
 			if(val<getLowerLimit()) {
 				this.targetValue =getLowerLimit();
 				cacheTargetValue();
-				double ub = getMaxEngineeringUnits();
-				double lb = getMinEngineeringUnits();
-				throw new RuntimeException("Joint hit Lower software bound\nAttempted="+toEngineeringUnits(targetValue)
-						+" \nUpper Bound="+ub
-						+ "\nLower Bound="+lb);
+				throw new RuntimeException("Joint hit Lower software bound\n"+execpt);
 			}
+		}else{
+			Log.info("Abstract Link: limits disabled");
 		}
-		Log.info("Setting cached value :"+val);
-		this.targetValue = val;
 	}
 	public int getTargetValue() {
 		return targetValue;
@@ -208,6 +207,11 @@ public abstract class AbstractLink {
 
 	public void setUseLimits(boolean useLimits) {
 		this.useLimits = useLimits;
+		try{
+			throw new RuntimeException();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 
 	public boolean isUseLimits() {
