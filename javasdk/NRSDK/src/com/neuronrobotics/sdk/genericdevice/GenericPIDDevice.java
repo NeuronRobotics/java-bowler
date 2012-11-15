@@ -298,13 +298,16 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 	public void firePIDEvent(PIDEvent e){
 		if(lastPacketTime != null){
 			if(lastPacketTime[e.getGroup()]>e.getTimeStamp()){
+				Log.error("This event timestamp is out of date, aborting"+e);
 				return;
 			}else{
+				//Log.info("Pid event "+e);
 				lastPacketTime[e.getGroup()]=e.getTimeStamp();
 			}
 		}
-		SetCachedPosition(e.getGroup(), e.getValue());
+		
 		synchronized(PIDEventListeners){
+			SetCachedPosition(e.getGroup(), e.getValue());
 			for(IPIDEventListener l: PIDEventListeners)
 				l.onPIDEvent(e);
 		}

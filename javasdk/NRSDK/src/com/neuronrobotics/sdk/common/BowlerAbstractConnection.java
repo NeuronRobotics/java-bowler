@@ -132,9 +132,9 @@ public abstract class BowlerAbstractConnection {
 		clearLastSyncronousResponse();
 		long start = System.currentTimeMillis();
 		if((!getSyncQueue().isEmpty() ||!getAsyncQueue().isEmpty())){
-			Log.debug("Waiting for byte and packet buffers to clear...");
-			Log.info("Synchronus queue size: " + getSyncQueue().size());
-			Log.info("Asynchronus queue size: " + getAsyncQueue().size());
+			//Log.debug("Waiting for byte and packet buffers to clear...");
+			//Log.info("Synchronus queue size: " + getSyncQueue().size());
+			//Log.info("Asynchronus queue size: " + getAsyncQueue().size());
 			//Log.info("Byte Buffer: " + builder.size());
 		}
 		while ((!getSyncQueue().isEmpty() ||!getAsyncQueue().isEmpty())) {
@@ -142,7 +142,7 @@ public abstract class BowlerAbstractConnection {
 		}
 		long diff = System.currentTimeMillis()-start;
 		if(diff>2){
-			Log.debug("Buffers cleared in : "+diff+"ms");
+			//Log.debug("Buffers cleared in : "+diff+"ms");
 		}
 		try {
 			long send = System.currentTimeMillis();
@@ -608,8 +608,11 @@ public abstract class BowlerAbstractConnection {
 						}
 						if(!queueBuffer.isEmpty()){
 							try{
-								send(queueBuffer.remove(queueBuffer.size()-1)	);
-							}catch(Exception e){}
+								//send(queueBuffer.remove(queueBuffer.size()-1)	);
+								send(queueBuffer.remove(0)	);
+							}catch(Exception e){
+								e.printStackTrace();
+							}
 						}else{
 							ThreadUtil.wait(1);
 						}
@@ -618,7 +621,7 @@ public abstract class BowlerAbstractConnection {
 						while(queueBuffer.size()>max){
 							if(!queueBuffer.get(index).isSyncronous() && queueBuffer.get(index).getMethod() != BowlerMethod.CRITICAL){
 								Log.enableDebugPrint(true);
-								Log.debug("Removing packet from overflow: "+queueBuffer.remove(index));
+								Log.error("Removing packet from overflow: "+queueBuffer.remove(index));
 							}else{
 								index++;
 							}
