@@ -182,11 +182,10 @@ public class BowlerDatagram implements ISendable {
 	 * @return true if Syncronous
 	 */
 	public boolean isSyncronous() {
-		if(namespaceResolutionID != 0 && method == BowlerMethod.ASYNCHRONOUS){
-			Log.error("Device firmware out of date, should be using BowlerMethod.ASYNCHRONOUS rather than transactionID != 0" + this);
-			
-		}
-		return namespaceResolutionID == 0 && method != BowlerMethod.ASYNCHRONOUS;
+//		if(namespaceResolutionID != 0 && method == BowlerMethod.ASYNCHRONOUS){
+//			Log.error("Device firmware out of date, should be using BowlerMethod.ASYNCHRONOUS rather than transactionID != 0" + this);
+//		}
+		return method != BowlerMethod.ASYNCHRONOUS;
 	}
 	
 	/**
