@@ -21,6 +21,8 @@ import java.util.Collection;
 import com.neuronrobotics.sdk.commands.bcs.io.AsyncMode;
 import com.neuronrobotics.sdk.commands.bcs.io.AsyncThreshholdEdgeType;
 import com.neuronrobotics.sdk.commands.bcs.io.ConfigAsyncCommand;
+import com.neuronrobotics.sdk.commands.bcs.io.GetChannelModeListCommand;
+import com.neuronrobotics.sdk.commands.bcs.io.GetDyIOChannelCountCommand;
 import com.neuronrobotics.sdk.commands.bcs.io.GetChannelModeCommand;
 import com.neuronrobotics.sdk.commands.bcs.io.SetAllChannelValuesCommand;
 import com.neuronrobotics.sdk.commands.bcs.io.setmode.SetChannelModeCommand;
@@ -32,6 +34,7 @@ import com.neuronrobotics.sdk.commands.neuronrobotics.dyio.PowerCommand;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
 import com.neuronrobotics.sdk.common.BowlerDatagram;
+import com.neuronrobotics.sdk.common.BowlerMethod;
 import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.IConnectionEventListener;
 import com.neuronrobotics.sdk.common.InvalidConnectionException;
@@ -1095,6 +1098,20 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 	public int getPIDChannelCount() {
 		// TODO Auto-generated method stub
 		return pid.getPIDChannelCount();
+	}
+	
+	public int getDyIOChannelCount(){
+		BowlerDatagram dg = send (new GetDyIOChannelCountCommand());
+		return dg.getData().getUnsigned(0);
+	}
+	
+	public ArrayList<DyIOChannelMode> getAvailibleChannelModes(int channel){
+		ArrayList<DyIOChannelMode> modes = new ArrayList<DyIOChannelMode>();
+		ByteList m = send(new GetChannelModeListCommand(channel)).getData();
+		for(int i=0;i<m.size();i++){
+			modes.add(DyIOChannelMode.get(m.getByte(i)));
+		}
+		return modes;
 	}
 	
 	

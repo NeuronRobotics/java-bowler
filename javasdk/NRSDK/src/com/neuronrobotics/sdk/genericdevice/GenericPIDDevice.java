@@ -338,7 +338,7 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 	@Override
 	public int getPIDChannelCount() {
 		BowlerDatagram dg = send (new GetPIDChannelCountCommand());
-		return dg.getData().getUnsigned(0);
+		return ByteList.convertToInt(dg.getData().getBytes(0, 4));
 	}
 
 }

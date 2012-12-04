@@ -1,9 +1,11 @@
 package com.neuronrobotics.test.dyio;
 
+import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.dyio.dypid.DyPIDConfiguration;
 import com.neuronrobotics.sdk.pid.IPIDEventListener;
+import com.neuronrobotics.sdk.pid.PDVelocityConfiguration;
 import com.neuronrobotics.sdk.pid.PIDChannel;
 import com.neuronrobotics.sdk.pid.PIDConfiguration;
 import com.neuronrobotics.sdk.pid.PIDEvent;
@@ -19,6 +21,16 @@ public class PID_test implements IPIDEventListener{
 		if (!ConnectionDialog.getBowlerDevice(dyio)){
 			System.exit(0);
 		}
+		Log.enableSystemPrint(false);
+		System.out.println("Availible PID channels = "+dyio.getPIDChannelCount());
+		PDVelocityConfiguration conf = dyio.getPDVelocityConfiguration(2);
+		System.out.println("VPDa = "+conf);
+		
+		conf.setKP(.2);
+		dyio.ConfigurePDVelovityController(conf);
+		
+		System.out.println("VPDb = "+dyio.getPDVelocityConfiguration(2));
+		
 		
 		dyio.addPIDEventListener(this);
 		DyPIDConfiguration dypid = new DyPIDConfiguration(	0,//PID group 0
@@ -77,7 +89,7 @@ public class PID_test implements IPIDEventListener{
 	}
 	@Override
 	public void onPIDEvent(PIDEvent e) {
-		System.out.println(e);
+		//System.out.println(e);
 	}
 	@Override
 	public void onPIDReset(int group, int currentValue) {
