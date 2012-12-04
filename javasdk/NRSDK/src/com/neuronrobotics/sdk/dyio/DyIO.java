@@ -43,6 +43,7 @@ import com.neuronrobotics.sdk.dyio.dypid.DyPIDConfiguration;
 import com.neuronrobotics.sdk.genericdevice.GenericPIDDevice;
 import com.neuronrobotics.sdk.pid.IPIDControl;
 import com.neuronrobotics.sdk.pid.IPIDEventListener;
+import com.neuronrobotics.sdk.pid.PDVelocityConfiguration;
 import com.neuronrobotics.sdk.pid.PIDChannel;
 import com.neuronrobotics.sdk.pid.PIDCommandException;
 import com.neuronrobotics.sdk.pid.PIDConfiguration;
@@ -1077,6 +1078,26 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 		}
 		return back;
 	}
+
+	@Override
+	public boolean ConfigurePDVelovityController(PDVelocityConfiguration config) {
+		// TODO Auto-generated method stub
+		return pid.ConfigurePDVelovityController(config);
+	}
+
+	@Override
+	public PDVelocityConfiguration getPDVelocityConfiguration(int group) {
+		// TODO Auto-generated method stub
+		return pid.getPDVelocityConfiguration(group);
+	}
+
+	@Override
+	public int getPIDChannelCount() {
+		// TODO Auto-generated method stub
+		return pid.getPIDChannelCount();
+	}
+	
+	
 
 
 

@@ -22,6 +22,27 @@ public interface IPIDControl {
 	 * @return the configuration object
 	 */
 	public PIDConfiguration getPIDConfiguration(int group);
+	
+	/**
+	 * This method sends a PID configuration object to the device. THe controller can be enabled/disabled with this method
+	 * All PID parameters are stored in the PIDConfiguration ojbect prior to calling this method will be sent to the device. 
+	 * @param config the configuration wrapper object
+	 * @return true if success
+	 */
+	public boolean ConfigurePDVelovityController(PDVelocityConfiguration config);
+	/**
+	 * Gets the current state of the PID group. The PIDConfiguration object will contain the current configuration state of the requested 
+	 * PID controller. 
+	 * @param group  the index of the PID group 
+	 * @return the configuration object
+	 */
+	public PDVelocityConfiguration getPDVelocityConfiguration(int group);
+	
+	/**
+	 * Requests the current number of PID channels
+	 * @return
+	 */
+	public int getPIDChannelCount();
 	/**
 	 * This method sets the target setpoint for the specified PID controller group. 
 	 * This method will set up a linear interpolation from current position to target position which will take the specified number of seconds to make that transition

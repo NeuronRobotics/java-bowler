@@ -3,9 +3,11 @@ package com.neuronrobotics.sdk.genericdevice;
 import java.util.ArrayList;
 
 import com.neuronrobotics.sdk.commands.bcs.io.GetChannelModeCommand;
+import com.neuronrobotics.sdk.commands.bcs.pid.ConfigurePDVelocityCommand;
 import com.neuronrobotics.sdk.commands.bcs.pid.ConfigurePIDCommand;
 import com.neuronrobotics.sdk.commands.bcs.pid.ControlAllPIDCommand;
 import com.neuronrobotics.sdk.commands.bcs.pid.ControlPIDCommand;
+import com.neuronrobotics.sdk.commands.bcs.pid.GetPIDChannelCountCommand;
 import com.neuronrobotics.sdk.commands.bcs.pid.KillAllPIDCommand;
 import com.neuronrobotics.sdk.commands.bcs.pid.PDVelocityCommand;
 import com.neuronrobotics.sdk.commands.bcs.pid.ResetPIDCommand;
@@ -18,6 +20,7 @@ import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.MACAddress;
 import com.neuronrobotics.sdk.pid.IPIDControl;
 import com.neuronrobotics.sdk.pid.IPIDEventListener;
+import com.neuronrobotics.sdk.pid.PDVelocityConfiguration;
 import com.neuronrobotics.sdk.pid.PIDChannel;
 import com.neuronrobotics.sdk.pid.PIDCommandException;
 import com.neuronrobotics.sdk.pid.PIDConfiguration;
@@ -318,6 +321,24 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 		for(IPIDEventListener l: PIDEventListeners)
 			l.onPIDReset(group,value);
 		//channels.get(group).firePIDResetEvent(group, value);
+	}
+
+	@Override
+	public boolean ConfigurePDVelovityController(PDVelocityConfiguration config) {
+		// TODO Auto-generated method stub
+		return send(new ConfigurePDVelocityCommand(config))!=null;
+	}
+
+	@Override
+	public PDVelocityConfiguration getPDVelocityConfiguration(int group) {
+		// TODO Auto-generated method stub
+		return new PDVelocityConfiguration(send(new ConfigurePDVelocityCommand(group)));
+	}
+
+	@Override
+	public int getPIDChannelCount() {
+		BowlerDatagram dg = send (new GetPIDChannelCountCommand());
+		return dg.getData().getUnsigned(0);
 	}
 
 }
