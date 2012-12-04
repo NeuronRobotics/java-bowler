@@ -28,6 +28,8 @@ public class SpeedTest {
 		//dyio.setThreadedUpstreamPackets(false);
 		long start = System.currentTimeMillis();
 		dyio.connect();
+		dyio.setServoPowerSafeMode(false);
+		
 		System.out.println("Startup time: "+(System.currentTimeMillis()-start)+" ms");
 		//dyio.enableDebug();
 		dyio.setServoPowerSafeMode(false);
@@ -35,7 +37,7 @@ public class SpeedTest {
 			dyio.getChannel(i).setAsync(false);
 		}
 		DigitalInputChannel dip = new DigitalInputChannel(dyio.getChannel(0));
-		DigitalOutputChannel dop = new DigitalOutputChannel(dyio.getChannel(1));
+		ServoChannel dop = new ServoChannel(dyio.getChannel(1));
 //		new PPMReaderChannel(dyio.getChannel(23));
 //		new ServoChannel(dyio.getChannel(11));
 		
@@ -68,12 +70,12 @@ public class SpeedTest {
 		avg=0;
 		best=1000;
 		worst=0;
-		for(i=0;i<500;i++) {
+		double numLoops =500.0;
+		for(i=0;i< numLoops;i++) {
 			start = System.currentTimeMillis();
 			try {
-				high = !high;
-				high = dip.getValue()==1;
-				dop.setHigh(high);
+				dip.getValue();
+				dop.SetPosition((int) ((((double)i)/ numLoops)*255.0));
 			}catch(Exception ex) {
 				ex.printStackTrace();
 			}
@@ -86,6 +88,7 @@ public class SpeedTest {
 			start = System.currentTimeMillis();
 			//System.out.println("Average cycle time: "+(int)(avg/i)/2+"ms\t\t\t this loop was: "+ms/2+"\t\tindex="+i);
 		}
+		dop.SetPosition(128);
 		System.out.println("Average cycle time for IO : "+(avg/(i+1))/2+" ms best="+ best/2+"ms worst="+worst/2);
 		
 		avg=0;
