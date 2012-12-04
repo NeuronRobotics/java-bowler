@@ -270,99 +270,31 @@ public class DyIOChannel implements IDyIOChannel {
 	 * This method gets a collection of all of the possible channel modes for this channel.
 	 * @return all of the possible modes
 	 */
+	private ArrayList<DyIOChannelMode> myModes;
+	
 	public Collection<DyIOChannelMode> getAvailableModes() {
-		Collection<DyIOChannelMode> modes = new ArrayList<DyIOChannelMode>();
-		modes.add(DyIOChannelMode.DIGITAL_IN);
-		modes.add(DyIOChannelMode.DIGITAL_OUT);
+		if(myModes== null)
+			myModes = getDevice().getAvailibleChannelModes(getChannelNumber());
 		
-		
-		if(getDevice().isBrownOutDetectEnabled()){
-			if(number < 12 && device.getBankAState() != DyIOPowerState.REGULATED) {
-				modes.add(DyIOChannelMode.SERVO_OUT);	
+		for(int i=0;i<myModes.size();i++){
+			if(myModes.get(i) == DyIOChannelMode.SERVO_OUT){
+				myModes.remove(i);
+			}
+		}
+			
+		if(getDevice().isServoPowerSafeMode()){
+			if(number < (getDevice().getDyIOChannelCount()/2) && device.getBankAState() != DyIOPowerState.REGULATED) {
+				myModes.add(DyIOChannelMode.SERVO_OUT);	
 			}
 	
-			if(number > 11 && device.getBankBState() != DyIOPowerState.REGULATED) {
-				modes.add(DyIOChannelMode.SERVO_OUT);	
+			if(number >= (getDevice().getDyIOChannelCount()/2) && device.getBankBState() != DyIOPowerState.REGULATED) {
+				myModes.add(DyIOChannelMode.SERVO_OUT);	
 			}
 		}else{
-			modes.add(DyIOChannelMode.SERVO_OUT);
+			myModes.add(DyIOChannelMode.SERVO_OUT);	
 		}
-		
-		
-		switch(number) {
-		case 0:
-			modes.add(DyIOChannelMode.SPI_CLOCK);
-			break;
-		case 1:
-			modes.add(DyIOChannelMode.SPI_MISO);
-			break;
-		case 2:
-			modes.add(DyIOChannelMode.SPI_MOSI);
-			break;
 
-		}
-		switch(number) {
-		case 0:
-		case 1:
-		case 2:
-		case 3:
-			modes.add(DyIOChannelMode.COUNT_IN_HOME);
-			modes.add(DyIOChannelMode.COUNT_OUT_HOME);
-			break;
-		case 16:
-		case 18:
-		case 20:
-		case 22:
-			modes.add(DyIOChannelMode.COUNT_IN_DIR);
-			modes.add(DyIOChannelMode.COUNT_OUT_DIR);
-			break;
-		case 17:
-		case 19:
-		case 21:
-		case 23:
-			modes.add(DyIOChannelMode.COUNT_IN_INT);
-			modes.add(DyIOChannelMode.COUNT_OUT_INT);
-			break;
-		}
-		switch(number) {
-		case 8:
-		case 9:
-		case 10:
-		case 11:
-		case 12:
-		case 13:
-		case 14:
-		case 15:
-			modes.add(DyIOChannelMode.ANALOG_IN);
-			break;
-		}
-		switch(number) {
-		case 4:
-		case 5:
-		case 6:
-		case 7:
-			modes.add(DyIOChannelMode.PWM_OUT);
-			modes.add(DyIOChannelMode.DC_MOTOR_VEL);
-			break;
-		case 8:
-		case 9:
-		case 10:
-		case 11:
-			modes.add(DyIOChannelMode.DC_MOTOR_DIR);
-			break;
-		}
-		switch(number) {
-		case 16:
-			modes.add(DyIOChannelMode.USART_TX);
-			break;
-		case 17:
-			modes.add(DyIOChannelMode.USART_RX);
-			break;
-		}
-		if(number == 23) {
-			modes.add(DyIOChannelMode.PPM_IN);
-		}
-		return modes;
+		return myModes;
 	}
 	/**
 	 * This method gets the value represented by the date portion of a DyIOChannelEvent

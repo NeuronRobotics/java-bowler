@@ -382,7 +382,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 			setAddress(response.getAddress());
 		//}
 		
-		if (response.getData().size()<24) {
+		if (response.getData().size()!=getDyIOChannelCount()) {
 			setMuteResyncOnModeChange(false);
 			throw new DyIOCommunicationException("Not enough channels, not a valid DyIO"+response.toString());
 		}
@@ -642,6 +642,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 		}
 		Log.info("<< Async\n"+data.toString());
 		if(data.getRPC().equals("_pwr")) {
+			
 			powerEvent(data);
 		}
 		if(data.getRPC().equals("gchv")) {
@@ -1100,9 +1101,13 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 		return pid.getPIDChannelCount();
 	}
 	
+	private Integer dyioChanCount = null;
 	public int getDyIOChannelCount(){
-		BowlerDatagram dg = send (new GetDyIOChannelCountCommand());
-		return ByteList.convertToInt(dg.getData().getBytes(0, 4));
+		if(dyioChanCount == null){
+			BowlerDatagram dg = send (new GetDyIOChannelCountCommand());
+			dyioChanCount = ByteList.convertToInt(dg.getData().getBytes(0, 4));
+		}
+		return dyioChanCount;
 	}
 	
 	public ArrayList<DyIOChannelMode> getAvailibleChannelModes(int channel){
