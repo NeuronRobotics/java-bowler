@@ -1102,7 +1102,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 	
 	public int getDyIOChannelCount(){
 		BowlerDatagram dg = send (new GetDyIOChannelCountCommand());
-		return dg.getData().getUnsigned(0);
+		return ByteList.convertToInt(dg.getData().getBytes(0, 4));
 	}
 	
 	public ArrayList<DyIOChannelMode> getAvailibleChannelModes(int channel){
