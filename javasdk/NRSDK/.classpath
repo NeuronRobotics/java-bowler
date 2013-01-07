@@ -16,8 +16,8 @@
 	<classpathentry kind="lib" path="lib_addons/vecmath.jar"/>
 	<classpathentry kind="lib" path="lib/Jama-1.0.2.jar"/>
 	<classpathentry kind="lib" path="lib_addons/nr-jinput.jar"/>
-	<classpathentry kind="lib" path="lib/nrjavaserial-3.8.6.jar"/>
 	<classpathentry kind="lib" path="lib_addons/smack.jar"/>
 	<classpathentry kind="lib" path="lib_addons/smackx.jar"/>
+	<classpathentry kind="lib" path="lib/nrjavaserial-3.8.8.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
