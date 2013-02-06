@@ -16,6 +16,7 @@
 
 import java.nio.ByteBuffer;
 import java.nio.LongBuffer;
+import java.nio.channels.ReadPendingException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -28,10 +29,9 @@ import java.util.Vector;
  */
 public class ByteList implements ISendable, List<Byte> {
 	
-	private static boolean useStaticBuffer = false;
-	
-	private byte [] staticBuffer = null;
-	private int staticBufferSize = 10240;
+	private static boolean useStaticBuffer = true;
+	private int staticBufferSize = 512;
+	private byte [] staticBuffer = new byte[staticBufferSize];
 	private int staticBufferReadPointer = 0;
 	private int staticBufferWritePointer = 0;
 	
@@ -44,10 +44,10 @@ public class ByteList implements ISendable, List<Byte> {
 	 */
 	public ByteList() {
 		if(isUseStaticBuffer()){
-			Log.debug("Starting Static ByteList");
-			staticBuffer = new byte[staticBufferSize];
-			staticBufferReadPointer = 0;
-			staticBufferWritePointer = 0;
+			//Log.debug("Starting Static ByteList");
+			setStaticBufferSize(staticBufferSize);
+		}else{
+			staticBuffer=null;
 		}
 	}
 	
@@ -111,14 +111,27 @@ public class ByteList implements ISendable, List<Byte> {
 	 * @param data the data
 	 * @return if the addition was successful
 	 */
-	public boolean add(byte data) {
+	public synchronized boolean add(byte data) {
 		if(isUseStaticBuffer()){
-			if(getStaticBufferByteCount()>=staticBuffer.length){
-				throw new RuntimeException("Bytelist static buffer overflow");
+			if(staticBuffer == null){
+				setStaticBufferSize(staticBufferSize);
 			}
-			staticBuffer[staticBufferWritePointer] = data;
-			staticBufferWritePointer++;
-			if(staticBufferWritePointer == staticBuffer.length){
+			if(getStaticBufferByteCount()>=(staticBuffer.length-1)){
+				int newSize = staticBufferSize*2;
+				Log.error("Bytelist static buffer overflow, resizing to "+newSize);
+				byte tmpBuff[] = getBytes();
+				// Double the buffer size
+				setStaticBufferSize(newSize);
+				//load the old data into newly resized buffer
+				for(int i=0;i<tmpBuff.length;i++){
+					staticBuffer[staticBufferWritePointer++] = tmpBuff[i];
+					if(staticBufferWritePointer == (staticBuffer.length)){
+						staticBufferWritePointer=0;
+					}
+				}
+			}
+			staticBuffer[staticBufferWritePointer++] = data;
+			if(staticBufferWritePointer == (staticBuffer.length)){
 				staticBufferWritePointer=0;
 			}
 			return true;
@@ -303,6 +316,9 @@ public class ByteList implements ISendable, List<Byte> {
 	 * @return true, if is empty
 	 */
 	public boolean isEmpty() {
+		if(isUseStaticBuffer()){
+			return getStaticBufferByteCount() == 0;
+		}
 		return store.isEmpty();
 	}
 	
@@ -321,7 +337,7 @@ public class ByteList implements ISendable, List<Byte> {
 	 * @param len Desired Length
 	 * @return 	The desired Bytes.
 	 */
-	public byte[] getBytes(int start, int len) {
+	public  synchronized  byte[] getBytes(int start, int len) {
 		
 		// starting offset that is less than 0
 		if(start < 0) {
@@ -347,11 +363,29 @@ public class ByteList implements ISendable, List<Byte> {
 		}
 
 		byte out[] = new byte[len];
-		List<Byte> iter = store.subList(start, start+len);
-		for(int i=0;i<iter.size();i++) {
-			out[i] = iter.get(i);
-		}
 		
+		if(isUseStaticBuffer()){
+			int tmpRead = staticBufferReadPointer;
+			//Allign the start pointer
+			if(start != 0){
+				for(int i=0;i<start;i++){
+					tmpRead++;
+					if(tmpRead== staticBuffer.length)
+						tmpRead=0;
+				}
+			}
+			//do the peek read
+			for(int i=0;i<len;i++) {
+				out[i] = staticBuffer[tmpRead++];
+				if(tmpRead== staticBuffer.length)
+					tmpRead=0;
+			}
+		}else{
+			List<Byte> iter = store.subList(start, start+len);
+			for(int i=0;i<len;i++) {
+				out[i] = iter.get(i);
+			}
+		}
 		return out;
 	}
 	
@@ -372,11 +406,12 @@ public class ByteList implements ISendable, List<Byte> {
 	 * @return the byte
 	 */
 	public byte getByte(int index) {
-		if(index < 0 || index > size()-1) {
+		int size = size();
+		if(index < 0 || index >  size-1) {
 			throw new IndexOutOfBoundsException();
 		}
 		
-		return store.get(index);
+		return getBytes(index,1)[0];
 		
 	}
 	
@@ -386,6 +421,9 @@ public class ByteList implements ISendable, List<Byte> {
 	 * @return the int
 	 */
 	public int size() {
+		if(isUseStaticBuffer()){
+			return getStaticBufferByteCount();
+		}
 		return store.size();
 	}
 	
@@ -405,8 +443,8 @@ public class ByteList implements ISendable, List<Byte> {
 			clear();
 			return null;
 		}
-		
-		store = store.subList(index-1, store.size());
+		for(int i=0;i<index;i++)
+			pop();
 		
 		return pop();
 	}
@@ -437,11 +475,17 @@ public class ByteList implements ISendable, List<Byte> {
 		if(index < size()) {
 			//The first param is inclusive, the second is exclusive
 			rtn = getBytes(0, index);
-			//The first param is inclusive, the second is exclusive
-			store = store.subList(index, store.size());
+			if(isUseStaticBuffer()){
+				for(int i=0;i<index;i++){
+					remove(0);
+				}
+			}else{
+				//The first param is inclusive, the second is exclusive
+				store = store.subList(index, store.size());
+			}
 		} else {
 			rtn = getBytes();
-			store.clear();
+			clear();
 		}
 		return rtn;
 	}
@@ -496,6 +540,10 @@ public class ByteList implements ISendable, List<Byte> {
 	 */
 	 
 	public void clear() {
+		if(isUseStaticBuffer()){
+			setStaticBufferSize(staticBufferSize);
+			return;
+		}
 		store.clear();
 	}
 
@@ -504,6 +552,9 @@ public class ByteList implements ISendable, List<Byte> {
 	 */
 	 
 	public <T> T[] toArray(T[] a) {
+		if(isUseStaticBuffer()){
+			throw new UnsupportedOperationException();
+		}
 		return store.toArray(a);
 	}
 	
@@ -512,6 +563,9 @@ public class ByteList implements ISendable, List<Byte> {
 	 */
 	 
 	public boolean contains(Object o) {
+		if(isUseStaticBuffer()){
+			throw new UnsupportedOperationException();
+		}
 		return store.contains(o);
 	}
 
@@ -520,6 +574,9 @@ public class ByteList implements ISendable, List<Byte> {
 	 */
 	 
 	public boolean containsAll(Collection<?> c) {
+		if(isUseStaticBuffer()){
+			throw new UnsupportedOperationException();
+		}
 		return store.containsAll(c);
 	}
 
@@ -528,8 +585,8 @@ public class ByteList implements ISendable, List<Byte> {
 	 */
 	 
 	public Byte get(int index) {
-		if(store.size()>0)	
-			return store.get(index);
+		if(size()>0)	
+			return getByte(index);
 		Log.error("Requesting data out of an empty ByteList");
 		throw new RuntimeException("Requesting data out of an empty ByteList");
 	}
@@ -551,6 +608,9 @@ public class ByteList implements ISendable, List<Byte> {
 	 */
 	 
 	public int indexOf(Object o) {
+		if(isUseStaticBuffer()){
+			throw new UnsupportedOperationException();
+		}
 		return store.indexOf(o);
 	}
 
@@ -559,6 +619,28 @@ public class ByteList implements ISendable, List<Byte> {
 	 */
 	 
 	public Iterator<Byte> iterator() {
+		if(isUseStaticBuffer()){
+			return new Iterator<Byte>() {
+				int size = getStaticBufferByteCount();
+				int readIndex=0;
+				byte [] data = getBytes();
+				@Override
+				public boolean hasNext() {
+					return readIndex != size;
+				}
+
+				@Override
+				public Byte next() {
+					// TODO Auto-generated method stub
+					return data[readIndex++];
+				}
+
+				@Override
+				public void remove() {
+					readIndex++;
+				}
+			};
+		}
 		return store.iterator();
 	}
 
@@ -567,6 +649,9 @@ public class ByteList implements ISendable, List<Byte> {
 	 */
 	 
 	public int lastIndexOf(Object o) {
+		if(isUseStaticBuffer()){
+			throw new UnsupportedOperationException();
+		}
 		return store.lastIndexOf(o);
 	}
 
@@ -575,6 +660,9 @@ public class ByteList implements ISendable, List<Byte> {
 	 */
 	 
 	public ListIterator<Byte> listIterator() {
+		if(isUseStaticBuffer()){
+			throw new UnsupportedOperationException();
+		}
 		return store.listIterator();
 	}
 
@@ -583,6 +671,9 @@ public class ByteList implements ISendable, List<Byte> {
 	 */
 	 
 	public ListIterator<Byte> listIterator(int index) {
+		if(isUseStaticBuffer()){
+			throw new UnsupportedOperationException();
+		}
 		return store.listIterator(index);
 	}
 
@@ -591,6 +682,9 @@ public class ByteList implements ISendable, List<Byte> {
 	 */
 	 
 	public boolean remove(Object o) {
+		if(isUseStaticBuffer()){
+			throw new UnsupportedOperationException();
+		}
 		return store.remove(o);
 	}
 
@@ -598,7 +692,15 @@ public class ByteList implements ISendable, List<Byte> {
 	 * @see java.util.List#remove(int)
 	 */
 	 
-	public Byte remove(int index) {
+	public synchronized Byte remove(int index) {
+		if(isUseStaticBuffer()){
+			Byte b = staticBuffer[staticBufferReadPointer++];
+			if(staticBufferReadPointer == staticBuffer.length){
+				staticBufferReadPointer=0;
+			}
+			return b;
+		}
+		
 		return store.remove(index);
 	}
 
@@ -607,6 +709,10 @@ public class ByteList implements ISendable, List<Byte> {
 	 */
 	 
 	public List<Byte> subList(int fromIndex, int toIndex) {
+		if(isUseStaticBuffer()){
+			byte [] content = getBytes(fromIndex, toIndex-fromIndex);
+			return new ByteList(content);
+		}
 		return store.subList(fromIndex, toIndex);
 	}
 
@@ -615,6 +721,9 @@ public class ByteList implements ISendable, List<Byte> {
 	 */
 	 
 	public Object[] toArray() {
+		if(isUseStaticBuffer()){
+			throw new UnsupportedOperationException();
+		}
 		return store.toArray();
 	}
 	
@@ -796,8 +905,18 @@ public class ByteList implements ISendable, List<Byte> {
 	 * @param val the val
 	 */
 	public void insert(int index,byte val){
-		
-		store.add(index, val);
+		if(isUseStaticBuffer()){
+			byte [] current = getBytes();
+			clear();
+			for(int i=0;i<current.length;i++){
+				if(i==index){
+					add(val);
+				}
+				add(current[i]);
+			}
+		}else{
+			store.add(index, val);
+		}
 	}
 	
 	/**
@@ -837,5 +956,17 @@ public class ByteList implements ISendable, List<Byte> {
 
 	public static void setUseStaticBuffer(boolean useStaticBuffer) {
 		ByteList.useStaticBuffer = useStaticBuffer;
+	}
+
+	public int getStaticBufferSize() {
+		return staticBufferSize;
+	}
+
+	public void setStaticBufferSize(int staticBufferSize) {
+		this.staticBufferSize = staticBufferSize;
+		staticBuffer = new byte[getStaticBufferSize()];
+		staticBufferReadPointer = 0;
+		staticBufferWritePointer = 0;	
+		store = null;
 	}
 }
