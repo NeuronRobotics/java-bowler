@@ -23,13 +23,15 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Vector;
 
+import com.neuronrobotics.sdk.config.SDKBuildInfo;
+
 // TODO: Auto-generated Javadoc
 /**
  * The Class ByteList.
  */
 public class ByteList implements ISendable, List<Byte> {
 	
-	private static boolean useStaticBuffer = true;
+	private static boolean useStaticBuffer = false;
 	private int staticBufferSize = 512;
 	private byte [] staticBuffer = new byte[staticBufferSize];
 	private int staticBufferReadPointer = 0;
@@ -43,6 +45,8 @@ public class ByteList implements ISendable, List<Byte> {
 	 * Constructs a ByteList that has no data.
 	 */
 	public ByteList() {
+		if (SDKBuildInfo.isLinux() && SDKBuildInfo.isARM())
+			useStaticBuffer = true;
 		if(isUseStaticBuffer()){
 			//Log.debug("Starting Static ByteList");
 			setStaticBufferSize(staticBufferSize);
