@@ -566,8 +566,12 @@ public abstract class BowlerAbstractConnection {
 						BowlerDatagram bd = BowlerDatagramFactory.build(buffer,pool[readPointer]);
 						if (bd!=null) {
 							readPointer++;
-							if(readPointer == pool.length)
+							if(readPointer == pool.length){
 								readPointer=0;
+								for(int i=0;i<pool.length;i++){
+									pool[i]=new BowlerDatagram();
+								}
+							}
 							//Log.info("Got :\n"+bd);
 							onDataReceived(bd);
 							buffer.clear();
