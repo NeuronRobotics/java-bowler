@@ -381,8 +381,11 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 		//if(getAddress().equals(new MACAddress(MACAddress.BROADCAST))) {
 			setAddress(response.getAddress());
 		//}
-		
-		if (response.getData().size()!=getDyIOChannelCount()) {
+		int count =24;
+		if(getDyIOChannelCount() != null){
+			count = getDyIOChannelCount();
+		}
+		if (response.getData().size()!=count) {
 			setMuteResyncOnModeChange(false);
 			throw new DyIOCommunicationException("Not enough channels, not a valid DyIO"+response.toString());
 		}
@@ -1102,10 +1105,14 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 	}
 	
 	private Integer dyioChanCount = null;
-	public int getDyIOChannelCount(){
+	public Integer getDyIOChannelCount(){
 		if(dyioChanCount == null){
-			BowlerDatagram dg = send (new GetDyIOChannelCountCommand());
-			dyioChanCount = ByteList.convertToInt(dg.getData().getBytes(0, 4));
+			try{
+				BowlerDatagram dg = send (new GetDyIOChannelCountCommand());
+				dyioChanCount = ByteList.convertToInt(dg.getData().getBytes(0, 4));
+			}catch(InvalidResponseException ex){
+				
+			}
 		}
 		return dyioChanCount;
 	}
