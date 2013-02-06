@@ -32,7 +32,7 @@ import com.neuronrobotics.sdk.config.SDKBuildInfo;
 public class ByteList implements ISendable, List<Byte> {
 	
 	private static boolean useStaticBuffer = false;
-	private int staticBufferSize = 512;
+	private int staticBufferSize = BowlerDatagram.MAX_PACKET_SIZE;
 	private byte [] staticBuffer = new byte[staticBufferSize];
 	private int staticBufferReadPointer = 0;
 	private int staticBufferWritePointer = 0;
@@ -70,6 +70,7 @@ public class ByteList implements ISendable, List<Byte> {
 	 * @param data the initial data to load into the bytelist after construction
 	 */
 	public ByteList(byte[] data) {
+		
 		add(data);
 	}
 

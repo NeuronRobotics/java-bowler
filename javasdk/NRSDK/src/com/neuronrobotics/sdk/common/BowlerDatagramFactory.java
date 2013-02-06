@@ -47,8 +47,10 @@ public class BowlerDatagramFactory {
 		data.add(cmd.getBytes()); // packet
 		return new BowlerDatagram(data);
 	}
-	
 	public static BowlerDatagram build(ByteList buffer ){
+		return build(buffer, new BowlerDatagram() );
+	}
+	public static BowlerDatagram build(ByteList buffer, BowlerDatagram staticMemory){
 		if((buffer.size()==0))
 			return null;
 		byte fb;
@@ -122,7 +124,9 @@ public class BowlerDatagramFactory {
 		// See if all the data has arived for this packet
 		if (buffer.size()>=(totalLen) ){
 			failed=0;
-			return  new BowlerDatagram(new ByteList(buffer.popList(totalLen)));
+			ByteList rawContent = new ByteList(buffer.popList(totalLen));
+			staticMemory.parse(rawContent);
+			return  staticMemory;
 		}
 //		if(failed>0)
 //			Log.error("Failed out "+failed+" bytes");

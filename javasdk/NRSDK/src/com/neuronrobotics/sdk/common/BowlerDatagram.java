@@ -46,6 +46,8 @@ public class BowlerDatagram implements ISendable {
 	
 	/** The Constant CRC_INDEX. */
 	public static final int CRC_INDEX = 10;
+
+	public static final int MAX_PACKET_SIZE = HEADER_SIZE+255;
 	
 	/** The address. */
 	private MACAddress address;
@@ -93,7 +95,7 @@ public class BowlerDatagram implements ISendable {
 	 * 
 	 * @param raw the chunk of data
 	 */
-	private void parse(ByteList raw) {		
+	public void parse(ByteList raw) {		
 		// Every valid Bowler packet has 11 characters from the header.
 		if(raw.size() < HEADER_SIZE) {
 			throw new MalformattedDatagram("Datagram does not have a valid Bowler header size.");
@@ -128,7 +130,8 @@ public class BowlerDatagram implements ISendable {
 		}
 		
 		// Put the remaining data into the data payload 
-		data = new ByteList(raw.getBytes(HEADER_SIZE));
+		data.clear();
+		data.add(raw.getBytes(HEADER_SIZE));
 	}
 	
 	/**

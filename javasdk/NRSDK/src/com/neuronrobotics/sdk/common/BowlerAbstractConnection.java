@@ -164,9 +164,11 @@ public abstract class BowlerAbstractConnection {
 				Log.error("No response from device...");
 				reconnect();
 			} catch (IOException e) {
+				clearLastSyncronousResponse();
 				throw new RuntimeException(e);
 			}
 		}
+		clearLastSyncronousResponse();
 		return b;
 	}
 	
@@ -546,7 +548,12 @@ public abstract class BowlerAbstractConnection {
 	
 	private class Updater extends Thread{
 		private ByteList buffer = new ByteList();
+		private BowlerDatagram pool [] = new   BowlerDatagram [100];
+		private int readPointer = 0;
 		public void run() {
+			for(int i=0;i<pool.length;i++){
+				pool[i]=new BowlerDatagram();
+			}
 			//wait for the data stream to stabilize
 			while(getDataIns() == null){
 				ThreadUtil.wait(100);
@@ -556,11 +563,14 @@ public abstract class BowlerAbstractConnection {
 					if(getDataIns().available()>0){
 						//updateBuffer();
 						buffer.add(getDataIns().read());
-						BowlerDatagram bd = BowlerDatagramFactory.build(buffer);
+						BowlerDatagram bd = BowlerDatagramFactory.build(buffer,pool[readPointer]);
 						if (bd!=null) {
+							readPointer++;
+							if(readPointer == pool.length)
+								readPointer=0;
 							//Log.info("Got :\n"+bd);
 							onDataReceived(bd);
-							buffer = new ByteList();
+							buffer.clear();
 						}
 						//Log.info("buffer: "+buffer);
 					}else{
