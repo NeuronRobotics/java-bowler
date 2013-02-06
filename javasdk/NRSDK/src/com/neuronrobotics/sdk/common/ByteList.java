@@ -28,6 +28,13 @@ import java.util.Vector;
  */
 public class ByteList implements ISendable, List<Byte> {
 	
+	private static boolean useStaticBuffer = false;
+	
+	private byte [] staticBuffer = null;
+	private int staticBufferSize = 10240;
+	private int staticBufferReadPointer = 0;
+	private int staticBufferWritePointer = 0;
+	
 	/** The store. */
 	private List<Byte> store = new Vector<Byte>();
 
@@ -36,7 +43,12 @@ public class ByteList implements ISendable, List<Byte> {
 	 * Constructs a ByteList that has no data.
 	 */
 	public ByteList() {
-		// left blank for default constructor
+		if(isUseStaticBuffer()){
+			Log.debug("Starting Static ByteList");
+			staticBuffer = new byte[staticBufferSize];
+			staticBufferReadPointer = 0;
+			staticBufferWritePointer = 0;
+		}
 	}
 	
 	/**
@@ -80,6 +92,18 @@ public class ByteList implements ISendable, List<Byte> {
 			add(data[i]);
 		}
 	}
+	
+	private int getStaticBufferByteCount(){
+		int w =staticBufferWritePointer;
+		int r = staticBufferReadPointer;
+		if(w>r){
+			return w-r;
+		}else if(w==r){
+			return  0;
+		}else{
+			return (w+staticBuffer.length)-r;
+		}
+	}
 
 	/**
 	 * Adds a single byte to the bytelist and return the status of the additon.
@@ -88,6 +112,17 @@ public class ByteList implements ISendable, List<Byte> {
 	 * @return if the addition was successful
 	 */
 	public boolean add(byte data) {
+		if(isUseStaticBuffer()){
+			if(getStaticBufferByteCount()>=staticBuffer.length){
+				throw new RuntimeException("Bytelist static buffer overflow");
+			}
+			staticBuffer[staticBufferWritePointer] = data;
+			staticBufferWritePointer++;
+			if(staticBufferWritePointer == staticBuffer.length){
+				staticBufferWritePointer=0;
+			}
+			return true;
+		}
 		return store.add(data);
 	}
 	
@@ -142,7 +177,7 @@ public class ByteList implements ISendable, List<Byte> {
 				
 				// remove all the added bytes if there was an error adding a byte
 				for(int i = 0; i < index; i++) {
-					store.remove(store.size());
+					remove(size());
 				}
 			}
 			index++;
@@ -164,7 +199,7 @@ public class ByteList implements ISendable, List<Byte> {
 				
 				// remove all the added bytes if there was an error adding a byte
 				for(int i = 0; i < index; i++) {
-					store.remove(store.size());
+					remove(size());
 				}
 			}
 			index++;
@@ -186,7 +221,7 @@ public class ByteList implements ISendable, List<Byte> {
 				
 				// remove all the added bytes if there was an error adding a byte
 				for(int i = 0; i < index; i++) {
-					store.remove(store.size());
+					remove(size());
 				}
 			}
 			index++;
@@ -276,7 +311,7 @@ public class ByteList implements ISendable, List<Byte> {
 	 */
 	 
 	public byte[] getBytes() {
-		return getBytes(0, 	store.size());
+		return getBytes(0, 	size());
 	}
 	
 	/**
@@ -299,13 +334,13 @@ public class ByteList implements ISendable, List<Byte> {
 		}
 
 		// starting offset is further then the last element
-		if(start > store.size()) {
+		if(start > size()) {
 			return new byte [0];
 		}
 				
 		// the ending position is 
-		if(start+len > store.size()) {
-			len = store.size() - start - 1;
+		if(start+len > size()) {
+			len = size() - start - 1;
 		}
 		if(len < 0) {
 			throw new RuntimeException("Requesting more bytes then in the list");
@@ -327,7 +362,7 @@ public class ByteList implements ISendable, List<Byte> {
 	 * @return the bytes
 	 */
 	public byte[] getBytes(int index) {
-		return getBytes(index, store.size()-index);
+		return getBytes(index, size()-index);
 	}
 
 	/**
@@ -337,7 +372,7 @@ public class ByteList implements ISendable, List<Byte> {
 	 * @return the byte
 	 */
 	public byte getByte(int index) {
-		if(index < 0 || index > store.size()-1) {
+		if(index < 0 || index > size()-1) {
 			throw new IndexOutOfBoundsException();
 		}
 		
@@ -366,8 +401,8 @@ public class ByteList implements ISendable, List<Byte> {
 			return null;
 		}
 		
-		if(index > store.size()) {
-			store.clear();
+		if(index > size()) {
+			clear();
 			return null;
 		}
 		
@@ -384,7 +419,7 @@ public class ByteList implements ISendable, List<Byte> {
 	public Byte pop() {	
 		Byte b=null;;
 		try {
-			b = store.remove(0);
+			b = remove(0);
 		} catch (Exception e) {
 			b = null;
 		}
@@ -399,7 +434,7 @@ public class ByteList implements ISendable, List<Byte> {
 	public byte[] popList(int index) {
 		byte[] rtn;
 		
-		if(index < store.size()) {
+		if(index < size()) {
 			//The first param is inclusive, the second is exclusive
 			rtn = getBytes(0, index);
 			//The first param is inclusive, the second is exclusive
@@ -502,8 +537,8 @@ public class ByteList implements ISendable, List<Byte> {
 	 * @see java.util.List#get(int)
 	 */
 	public int getUnsigned(int index) {
-		if(store.size()>0){
-			int val =store.get(index);
+		if(size()>0){
+			int val =get(index);
 			if(val<0)
 				val+=256;
 			return val;
@@ -587,7 +622,7 @@ public class ByteList implements ISendable, List<Byte> {
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		if(getBytes().length == 0) {
+		if(size() == 0) {
 			return "";
 		}
 		String rtn = "";
@@ -761,6 +796,7 @@ public class ByteList implements ISendable, List<Byte> {
 	 * @param val the val
 	 */
 	public void insert(int index,byte val){
+		
 		store.add(index, val);
 	}
 	
@@ -785,13 +821,21 @@ public class ByteList implements ISendable, List<Byte> {
 	 * @return
 	 */
 	public byte[] popList(int off, int len) {
-		if (store.size() >= off+len) {
+		if (size() >= off+len) {
 			byte [] ret = new byte[len];
 			for(int i=0;i<len;i++) {
-				ret[i]=store.remove(off);
+				ret[i]=remove(off);
 			}
 			return ret;
 		}
 		throw new IndexOutOfBoundsException();
+	}
+
+	public static boolean isUseStaticBuffer() {
+		return useStaticBuffer;
+	}
+
+	public static void setUseStaticBuffer(boolean useStaticBuffer) {
+		ByteList.useStaticBuffer = useStaticBuffer;
 	}
 }
