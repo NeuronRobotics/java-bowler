@@ -11,7 +11,7 @@ import com.neuronrobotics.sdk.ui.ConnectionDialog;
 public class DyIONamespaceTest {
 
 	@Test
-	public void test() {
+	public void dyioNamespaceTest() {
 
 		DyIO dyio=new DyIO();
 		
