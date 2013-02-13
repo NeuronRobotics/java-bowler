@@ -16,7 +16,6 @@
 
 import java.nio.ByteBuffer;
 import java.nio.LongBuffer;
-import java.nio.channels.ReadPendingException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
