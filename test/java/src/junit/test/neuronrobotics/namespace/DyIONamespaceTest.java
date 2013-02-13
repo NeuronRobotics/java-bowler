@@ -2,22 +2,36 @@ package junit.test.neuronrobotics.namespace;
 
 import static org.junit.Assert.*;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.dyio.DyIO;
+import com.neuronrobotics.sdk.dyio.DyIORegestry;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 
 public class DyIONamespaceTest {
+	
+	@Before
+	public void setUp() throws Exception {
+		if(!DyIORegestry.get().isAvailable()){
+			if(ConnectionDialog.getBowlerDevice(DyIORegestry.get())){
+				return;
+			}
+		}else{
+			return;
+		}
+		fail("No device availible");
+	}
 
 	@Test
 	public void dyioNamespaceTest() {
-
-		DyIO dyio=new DyIO();
+		DyIO dyio= DyIORegestry.get();
 		
-		if (!ConnectionDialog.getBowlerDevice(dyio)){
-			System.exit(1);
-		}
+		if(!dyio.isAvailable())
+			fail();
+		assertTrue(DyIORegestry.get().hasNamespace("neuronrobotics.dyio.*"));
+		
 		dyio.enableDebug();
 		
 		dyio.getRevisions();
@@ -40,7 +54,6 @@ public class DyIONamespaceTest {
 		assertTrue(setName.contains(newName));
 		assertTrue(name.contains(dyio.getInfo()));
 		
-		dyio.disconnect();
 		
 	}
 
