@@ -1,6 +1,7 @@
 package com.neuronrobotics.test.dyio;
 
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
+import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
@@ -18,9 +19,12 @@ public class SpeedTest {
 	 */
 	public static void main(String[] args) {
 		DyIO.disableFWCheck();
+		ByteList.setUseStaticBuffer(true);
+		
 //		BowlerAbstractConnection c =  new SerialConnection("/dev/DyIO0")
 //		BowlerAbstractConnection c =  new SerialConnection("COM65")
 		BowlerAbstractConnection c = ConnectionDialog.promptConnection();
+		c.setThreadedUpstreamPackets(false);
 		if(c==null)
 			System.exit(1);
 		System.out.println("Starting test");

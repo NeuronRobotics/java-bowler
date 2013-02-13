@@ -918,6 +918,14 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 			checkFirmwareRev();
 		}
 	}
+	
+	public int getHeartBeatTime(){
+		BowlerDatagram b = send(new SafeModeCommand());
+		if(b==null)
+			return 0;
+		return ByteList.convertToInt(b.getData().getBytes(1, 2));
+	}
+	
 	/**
 	 * This method stops the heart beat and tells the device to stop expecting a heart beat. This will DISABLE the safe mode detect.
 	 */
