@@ -10,7 +10,7 @@ public class DyIONamespaceTester {
 	 */
 	public static void main(String[] args) {
 		DyIO dyio=new DyIO();
-		dyio.enableDebug();
+		
 		if (!ConnectionDialog.getBowlerDevice(dyio)){
 			System.exit(1);
 		}
@@ -24,14 +24,18 @@ public class DyIONamespaceTester {
 		
 		String newName = dyio.getInfo();
 		
+		dyio.disableDebug();
 		dyio.setInfo(name);
+		dyio.enableDebug();
 		
 		double volts = dyio.getBatteryVoltage(true);
+		
+		dyio.setServoPowerSafeMode(true);
 		
 		System.out.println("Name was: "+name+" set to "+newName);
 		System.out.println("Set to "+newName);
 		System.out.println("Voltage = "+volts+" bank A = "+dyio.getBankAState()+" bank B = "+dyio.getBankBState());
-		System.exit(0);
+		//System.exit(0);
 	}
 
 }

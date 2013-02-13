@@ -15,7 +15,7 @@ public class SafeModeWatchDog {
 			System.exit(1);
 		}
 		
-		int heartbeatTime=5000;
+		int heartbeatTime=3000;
 		
 		dyio.startHeartBeat(heartbeatTime);
 		

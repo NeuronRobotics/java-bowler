@@ -756,7 +756,7 @@ public class ByteList implements ISendable, List<Byte> {
 			return "";
 		}
 		
-		return new String(getBytes());
+		return new String(getBytes())+"\0";
 	}
 
 	/**
