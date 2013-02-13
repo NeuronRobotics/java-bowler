@@ -17,5 +17,6 @@
 	<classpathentry kind="lib" path="/NRSDK/lib_addons/motej.0.9.jar"/>
 	<classpathentry kind="lib" path="/NRSDK/lib_addons/vecmath.jar"/>
 	<classpathentry kind="lib" path="/NRSDK/lib/nrjavaserial-3.8.8.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
