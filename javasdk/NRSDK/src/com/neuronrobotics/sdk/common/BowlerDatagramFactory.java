@@ -25,7 +25,7 @@ package com.neuronrobotics.sdk.common;
 public class BowlerDatagramFactory {
 	
 	/** The Constant REVISION. */
-	public static final byte REVISION = BowlerDatagram.REVISION;
+	//public static final byte REVISION = BowlerDatagram.REVISION;
 	
 	/**
 	 * This builds a datagram with the given RPC and MAC address.
@@ -37,7 +37,7 @@ public class BowlerDatagramFactory {
 	private static int failed=0;
 	public static BowlerDatagram build(MACAddress addr, BowlerAbstractCommand cmd, int id) {
 		ByteList data = new ByteList();
-		data.add(REVISION); // revision
+		data.add(BowlerDatagram.REVISION); // revision
 		data.add(addr.getBytes()); // mac address
 		data.add(cmd.getMethod().getValue()); // method id
 		data.add(id); // transaction id

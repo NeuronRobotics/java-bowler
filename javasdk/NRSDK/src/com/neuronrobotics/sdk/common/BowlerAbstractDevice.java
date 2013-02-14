@@ -174,6 +174,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 			//Log.debug("sending ping");
 		}else
 			Log.debug("TX>>\n"+sendable.toString());
+		
 		BowlerDatagram b =connection.send(sendable);
 		if(b != null) {
 			if(b.getRPC().toLowerCase().contains("_png")){
@@ -183,6 +184,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 						(b.toString())
 						);
 		}else {
+			//switch protocol version, try again
 			Log.debug("RX<<: No response");
 		}
 		lastPacketTime = System.currentTimeMillis();
