@@ -284,6 +284,19 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 			}
 		}
 	}
+	/**
+	 * Check the device to see if it has the requested namespace
+	 * @param string
+	 * @return
+	 */
+	public boolean hasNamespace(String string) {
+		ArrayList<String> list = getNamespaces();
+		for(String s:list){
+			if(s.contains(string))
+				return true;
+		}
+		return false;
+	}
 	
 	public void startHeartBeat(){
 		lastPacketTime=System.currentTimeMillis();

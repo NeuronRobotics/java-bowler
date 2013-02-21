@@ -82,7 +82,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 	 */
 	public DyIO() {
 		setAddress(new MACAddress(MACAddress.BROADCAST));
-		pid.setAddress(new MACAddress(MACAddress.BROADCAST));
+		getPid().setAddress(new MACAddress(MACAddress.BROADCAST));
 	}
 
 	/**
@@ -91,7 +91,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 	 */
 	public DyIO(MACAddress address) {
 		setAddress(address);
-		pid.setAddress(address);
+		getPid().setAddress(address);
 	}
 	
 	/**
@@ -101,8 +101,8 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 	public DyIO(BowlerAbstractConnection connection) {
 		setAddress(new MACAddress(MACAddress.BROADCAST));
 		setConnection(connection);
-		pid.setConnection(connection);
-		pid.setAddress(new MACAddress(MACAddress.BROADCAST));
+		getPid().setConnection(connection);
+		getPid().setAddress(new MACAddress(MACAddress.BROADCAST));
 	}
 
 	/**
@@ -113,8 +113,8 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 	public DyIO(MACAddress address, BowlerAbstractConnection connection) {
 		setAddress(address);
 		setConnection(connection);
-		pid.setConnection(connection);
-		pid.setAddress(address);
+		getPid().setConnection(connection);
+		getPid().setAddress(address);
 	}
 
 	/**
@@ -586,7 +586,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 	 */
 	public void onAllResponse(BowlerDatagram data) {
 
-		pid.onAllResponse(data);
+		getPid().onAllResponse(data);
 	}
 	
 	/**
@@ -674,7 +674,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 		}
 		
 
-		pid.onAsyncResponse(data);
+		getPid().onAsyncResponse(data);
 	}
 
 	
@@ -704,75 +704,75 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 	 * @see com.neuronrobotics.sdk.pid.IPIDControl#ResetPIDChannel
 	 */
 	public boolean ResetPIDChannel(int group, int valueToSetCurrentTo) {
-		return pid.ResetPIDChannel(group, valueToSetCurrentTo);
+		return getPid().ResetPIDChannel(group, valueToSetCurrentTo);
 	}
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.pid.IPIDControl#ResetPIDChannel
 	 */
 	public boolean ResetPIDChannel(int group) {
-		return pid.ResetPIDChannel(group);
+		return getPid().ResetPIDChannel(group);
 	}
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.pid.IPIDControl#SetPIDSetPoint
 	 */
 	public boolean SetPIDSetPoint(int group,int setpoint, double seconds){
-		return pid.SetPIDSetPoint(group, setpoint,seconds);
+		return getPid().SetPIDSetPoint(group, setpoint,seconds);
 	}
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.pid.IPIDControl#SetAllPIDSetPoint
 	 */
 	public boolean SetAllPIDSetPoint(int []setpoints, double seconds){
-		return pid.SetAllPIDSetPoint(setpoints,seconds);
+		return getPid().SetAllPIDSetPoint(setpoints,seconds);
 	}
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.pid.IPIDControl#GetPIDPosition
 	 */
 	public int GetPIDPosition(int group) {
-		return pid.GetPIDPosition(group);
+		return getPid().GetPIDPosition(group);
 	}
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.pid.IPIDControl#GetAllPIDPosition
 	 */
 	public int [] GetAllPIDPosition() {
-		return pid.GetAllPIDPosition();
+		return getPid().GetAllPIDPosition();
 	}
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.pid.IPIDControl#ConfigurePIDController
 	 */
 	public boolean ConfigurePIDController(PIDConfiguration config) {
-		return pid.ConfigurePIDController(config);
+		return getPid().ConfigurePIDController(config);
 	}
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.pid.IPIDControl#getPIDConfiguration
 	 */
 	public PIDConfiguration getPIDConfiguration(int group) {
-		return pid.getPIDConfiguration(group);
+		return getPid().getPIDConfiguration(group);
 	}
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.pid.IPIDControl#addPIDEventListener
 	 */
 	public void addPIDEventListener(IPIDEventListener l) {
-		pid.addPIDEventListener(l);
+		getPid().addPIDEventListener(l);
 	}
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.pid.IPIDControl#removePIDEventListener
 	 */
 	public void removePIDEventListener(IPIDEventListener l) {
-		pid.removePIDEventListener(l);
+		getPid().removePIDEventListener(l);
 	}
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.pid.IPIDControl#flushPIDChannels
 	 */
 	@Override
 	public void flushPIDChannels(double time) {
-		pid.flushPIDChannels(time);
+		getPid().flushPIDChannels(time);
 	}
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.pid.IPIDControl#getPIDChannel
 	 */
 	@Override
 	public PIDChannel getPIDChannel(int group) {
-		return pid.getPIDChannel(group);
+		return getPid().getPIDChannel(group);
 		
 	}
 	/* (non-Javadoc)
@@ -780,21 +780,21 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 	 */
 	@Override
 	public boolean SetPIDInterpolatedVelocity(int group, int unitsPerSecond, double seconds) throws PIDCommandException {
-		return pid.SetPIDInterpolatedVelocity(group, unitsPerSecond, seconds);
+		return getPid().SetPIDInterpolatedVelocity(group, unitsPerSecond, seconds);
 	}
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.pid.IPIDControl#SetPDVelocity
 	 */
 	@Override
 	public boolean SetPDVelocity(int group, int unitsPerSecond, double seconds)throws PIDCommandException {
-		return pid.SetPDVelocity(group, unitsPerSecond, seconds);
+		return getPid().SetPDVelocity(group, unitsPerSecond, seconds);
 	}
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.pid.IPIDControl#killAllPidGroups
 	 */
 	@Override
 	public boolean killAllPidGroups() {
-		return pid.killAllPidGroups();
+		return getPid().killAllPidGroups();
 	}
 	
 	/*
@@ -890,9 +890,9 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 			getConnection().addConnectionEventListener(this);
 		}
 		if(super.connect()) {
-			pid.setConnection(getConnection());
-			pid.setAddress(getAddress());
-			pid.connect();
+			getPid().setConnection(getConnection());
+			getPid().setAddress(getAddress());
+			getPid().connect();
 			send( new PowerCommand());
 			startHeartBeat(3000);
 			resync();
@@ -1097,19 +1097,19 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 	@Override
 	public boolean ConfigurePDVelovityController(PDVelocityConfiguration config) {
 		// TODO Auto-generated method stub
-		return pid.ConfigurePDVelovityController(config);
+		return getPid().ConfigurePDVelovityController(config);
 	}
 
 	@Override
 	public PDVelocityConfiguration getPDVelocityConfiguration(int group) {
 		// TODO Auto-generated method stub
-		return pid.getPDVelocityConfiguration(group);
+		return getPid().getPDVelocityConfiguration(group);
 	}
 
 	@Override
 	public int getPIDChannelCount() {
 		// TODO Auto-generated method stub
-		return pid.getPIDChannelCount();
+		return getPid().getPIDChannelCount();
 	}
 	
 	private Integer dyioChanCount = null;
@@ -1133,8 +1133,10 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 		}
 		return modes;
 	}
-	
-	
+
+	public GenericPIDDevice getPid() {
+		return pid;
+	}
 
 
 

@@ -752,14 +752,18 @@ public class ByteList implements ISendable, List<Byte> {
 	 * @return the string
 	 */
 	public String asString() {
-		if(getBytes().length == 0) {
+		byte [] data = getBytes();
+		if(data.length == 0) {
 			return "";
 		}
 		String s="";
-		byte [] data = getBytes();
+		
 		int i=0;
-		while(data[i] != 0){
-			s+=(char)data[i++];
+		while(i<data.length ){
+			if(data[i] != 0)
+				s+=(char)data[i++];
+			else
+				break;
 		}
 		return s;
 	}
