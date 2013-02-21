@@ -22,6 +22,8 @@ public class PIDNamespaceTest {
 		
 		assertTrue(pid.hasNamespace("bcs.pid.*"));
 		
+		
+		
 	}
 
 
