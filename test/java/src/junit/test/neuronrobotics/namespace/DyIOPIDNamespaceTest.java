@@ -14,12 +14,14 @@ public class DyIOPIDNamespaceTest extends PIDNamespaceTest {
 	@Before
 	public void setUp() throws Exception {
 		if(!DyIORegestry.get().isAvailable()){
+			System.out.println("DyIO test setting up DyIO");
 			Log.enableDebugPrint(true);
 			if(!ConnectionDialog.getBowlerDevice(DyIORegestry.get())){
 				fail("No device availible");
 			}
 		}
-		pid = DyIORegestry.get().getPid();
+		System.out.println("Setting up PID device");
+		PIDNamespaceTest.setPid(DyIORegestry.get().getPid());
 	}
 
 	@Test

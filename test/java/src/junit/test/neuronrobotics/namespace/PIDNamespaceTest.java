@@ -7,39 +7,78 @@ import org.junit.Test;
 
 import com.neuronrobotics.sdk.dyio.DyIORegestry;
 import com.neuronrobotics.sdk.genericdevice.GenericPIDDevice;
+import com.neuronrobotics.sdk.pid.PIDConfiguration;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 
 public class PIDNamespaceTest {
-	protected GenericPIDDevice pid = null;
+	private static GenericPIDDevice pid = null;
 	@Before
 	public void setup(){
-		if(pid == null){
-			pid = new GenericPIDDevice();
-			System.out.println("Creating PID device");
-			if(!ConnectionDialog.getBowlerDevice(pid)){
-				fail("Device not availible");
-			}
-		}
+		getPid();
 	}
 	@Test
 	public void PIDTestNs() {
 		try{
-			assertTrue(pid.hasNamespace("bcs.pid.*"));	
+			assertTrue(getPid().hasNamespace("bcs.pid.*"));	
 		}catch (Exception e){
 			e.printStackTrace();
 			assert false;
 		}
 	}
 
-	@Test public void setPid(){
+	@Test public void setPidNsTest(){
 		try{
-			assertTrue(pid.SetPIDSetPoint(0, 100, 1000));	
-			int [] values = pid.GetAllPIDPosition();
-			assertTrue(pid.SetAllPIDSetPoint(values, 1000));	
+			assertTrue(getPid().SetPIDSetPoint(0, 100, 1000));	
 		}catch (Exception e){
 			e.printStackTrace();
 			assert false;
 		}
+	}
+	@Test public void getSetAllPidNsTest(){
+		try{
+			int [] values = getPid().GetAllPIDPosition();
+			assertTrue(getPid().SetAllPIDSetPoint(values, 1000));	
+		}catch (Exception e){
+			e.printStackTrace();
+			assert false;
+		}
+	}
+	@Test public void configurePidNsTest(){
+		try{
+			PIDConfiguration conf = getPid().getPIDConfiguration(0);	
+			conf.setKP(1.5);
+			conf.setKI(.01);
+			conf.setKD(1);
+			
+			getPid().ConfigurePIDController(conf);
+			
+			PIDConfiguration tmp = getPid().getPIDConfiguration(0);	
+			
+			assertTrue(conf.getKP() == tmp.getKP());
+			assertTrue(conf.getKI() == tmp.getKI());
+			assertTrue(conf.getKD() == tmp.getKD());
+			
+		}catch (Exception e){
+			e.printStackTrace();
+			assert false;
+		}
+	}
+	
+	
+	
+	public static GenericPIDDevice getPid() {
+		if( DyIORegestry.get().isAvailable() == false||
+				PIDNamespaceTest.pid == null ){
+			setPid(new GenericPIDDevice());
+			System.out.println("Creating PID device");
+			if(!ConnectionDialog.getBowlerDevice(getPid())){
+				fail("Device not availible");
+			}
+		}
+		return PIDNamespaceTest.pid;
+	}
+	public static void setPid(GenericPIDDevice pid) {
+		PIDNamespaceTest.pid = pid;
 	}
 
 }

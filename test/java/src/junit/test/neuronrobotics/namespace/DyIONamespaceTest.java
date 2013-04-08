@@ -15,10 +15,14 @@ public class DyIONamespaceTest {
 	@Before
 	public void setUp() throws Exception {
 		if(!DyIORegestry.get().isAvailable()){
+			System.out.println("DyIO test setting up DyIO");
+			DyIO.disableFWCheck();
 			if(ConnectionDialog.getBowlerDevice(DyIORegestry.get())){
 				return;
 			}
+			PIDNamespaceTest.setPid(DyIORegestry.get().getPid());
 		}else{
+			PIDNamespaceTest.setPid(DyIORegestry.get().getPid());
 			return;
 		}
 		fail("No device availible");
@@ -53,6 +57,7 @@ public class DyIONamespaceTest {
 	
 		assertTrue(setName.contains(newName));
 		assertTrue(name.contains(dyio.getInfo()));
+		assertTrue(dyio.ping() != null);
 		
 		
 	}
