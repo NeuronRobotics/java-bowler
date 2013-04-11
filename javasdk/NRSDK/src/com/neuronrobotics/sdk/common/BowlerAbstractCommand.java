@@ -135,7 +135,7 @@ public abstract class BowlerAbstractCommand implements ISendable {
 				case 0x7f:
 					throw new InvalidResponseException("The method provided is invalid.");
 				case 0:
-					throw new InvalidResponseException("The packet was not sent syncronously.");
+					throw new InvalidResponseException("RPC undefined on device");
 				case 1:
 					throw new InvalidResponseException("The RPC sent in undefined with GET method.");
 				case 2:
