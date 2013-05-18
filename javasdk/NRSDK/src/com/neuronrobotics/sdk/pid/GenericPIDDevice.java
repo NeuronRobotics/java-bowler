@@ -1,4 +1,4 @@
-package com.neuronrobotics.sdk.genericdevice;
+package com.neuronrobotics.sdk.pid;
 
 import java.util.ArrayList;
 
@@ -18,14 +18,6 @@ import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.IConnectionEventListener;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.MACAddress;
-import com.neuronrobotics.sdk.pid.IPIDControl;
-import com.neuronrobotics.sdk.pid.IPIDEventListener;
-import com.neuronrobotics.sdk.pid.PDVelocityConfiguration;
-import com.neuronrobotics.sdk.pid.PIDChannel;
-import com.neuronrobotics.sdk.pid.PIDCommandException;
-import com.neuronrobotics.sdk.pid.PIDConfiguration;
-import com.neuronrobotics.sdk.pid.PIDEvent;
-import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 
 /**
  * This class is a generic implementation of the PID system. This can be used as a template, superclass or internal object class for 
