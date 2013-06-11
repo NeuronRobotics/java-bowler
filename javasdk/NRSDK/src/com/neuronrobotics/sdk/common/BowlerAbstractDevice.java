@@ -35,6 +35,7 @@ import java.util.ArrayList;
 
 import com.neuronrobotics.sdk.commands.bcs.core.NamespaceCommand;
 import com.neuronrobotics.sdk.commands.bcs.core.PingCommand;
+import com.neuronrobotics.sdk.commands.bcs.core.RpcCommand;
 import com.neuronrobotics.sdk.commands.neuronrobotics.dyio.InfoFirmwareRevisionCommand;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
@@ -74,6 +75,8 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	 * @param connection the new connection
 	 */
 	private static ArrayList<IConnectionEventListener> disconnectListeners = new ArrayList<IConnectionEventListener> ();
+	private ArrayList<String> list;
+	private ArrayList<RpcEncapsulation> rpcs;
 	
 	public void addConnectionEventListener(IConnectionEventListener l ) {
 		if(!disconnectListeners.contains(l)) {
@@ -257,31 +260,36 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	 * @return the namespaces
 	 */
 	public ArrayList<String>  getNamespaces(){
-		ArrayList<String> list = new ArrayList<String>();
-		while(true){
-			try {
-				BowlerDatagram b = send(new NamespaceCommand());
-				
-				int num = b.getData().getByte(0);
-				if(num<1){
-					Log.error("Namespace request failed:\n"+b);
-				}else{
-					Log.info("Number of Namespaces="+num);
+		if(list == null)
+			list = new ArrayList<String>();
+		if(list.size()<1){
+			while(true){
+				try {
+					BowlerDatagram b = send(new NamespaceCommand());
+					
+					int num = b.getData().getByte(0);
+					if(num<1){
+						Log.error("Namespace request failed:\n"+b);
+					}else{
+						Log.info("Number of Namespaces="+num);
+					}
+					Log.debug("There are "+num+" namespaces on this device");
+					for (int i=0;i<num;i++){
+						b = send(new NamespaceCommand(i));
+						String space = b.getData().asString();
+						Log.debug(space);
+						list.add(space);
+					}
+					return list;
+				} catch (InvalidResponseException e) {
+					Log.error("Invalid response from Namespace");
+					
+				} catch (NoConnectionAvailableException e) {
+					Log.error("No connection is available.");
 				}
-				Log.debug("There are "+num+" namespaces on this device");
-				for (int i=0;i<num;i++){
-					b = send(new NamespaceCommand(i));
-					String space = b.getData().asString();
-					Log.debug(space);
-					list.add(space);
-				}
-				return list;
-			} catch (InvalidResponseException e) {
-				Log.error("Invalid response from Namespace");
-				
-			} catch (NoConnectionAvailableException e) {
-				Log.error("No connection is available.");
 			}
+		}else{
+			return list;
 		}
 	}
 	/**
@@ -345,6 +353,47 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 		if(connection != null){
 			connection.setThreadedUpstreamPackets(up);
 		}
+	}
+	/**
+	 * Requests all of the RPC's from a namespace
+	 * @param s
+	 * @return
+	 */
+	public ArrayList<RpcEncapsulation> getRpcList(String namespace) {
+		ArrayList<RpcEncapsulation> rpcs = new ArrayList<RpcEncapsulation>();
+		int namespaceIndex = 0;
+		for (int i=0;i<list.size();i++){
+			if(list.get(i).contains(namespace)){
+				namespaceIndex=i;
+			}
+		}
+		
+		try{
+			BowlerDatagram b = send(new  RpcCommand(namespaceIndex));
+			int ns = b.getData().getByte(0);// gets the index of the namespace
+			int rpcIndex = b.getData().getByte(1);// gets the index of the selected RPC
+			int numRpcs = b.getData().getByte(2);// gets the number of RPC's
+			if(numRpcs<1){
+				Log.error("RPC request failed:\n"+b);
+			}else{
+				Log.info("Number of RPC's = "+numRpcs);
+			}
+			Log.debug("There are "+numRpcs+" RPC's in "+namespace);
+			for (int i=0;i<numRpcs;i++){
+				b = send(new RpcCommand(namespaceIndex,i));
+				String space = new String(b.getData().getBytes(3, 4));
+				BowlerMethod meth = BowlerMethod.get(b.getData().getByte(7));
+				RpcEncapsulation tmpRpc = new RpcEncapsulation(namespace, space, meth);
+				rpcs.add(tmpRpc);
+			}
+			
+		}catch(InvalidResponseException ex){
+			Log.debug("Older version of core, discovery disabled");
+		}
+
+		
+		return rpcs;
+		
 	}
 	
 }
