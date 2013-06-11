@@ -9,7 +9,9 @@ public class RpcEncapsulation {
 	private String[] upstreamArguments;
 	private BowlerMethod upStreamMethod;
 
-	public RpcEncapsulation(String namespace, String rpc, BowlerMethod downStreamMethod,String[] downstreamArguments, BowlerMethod upStreamMethod,String[] upstreamArguments){
+	public RpcEncapsulation(String namespace, String rpc, 
+			BowlerMethod downStreamMethod,String[] downstreamArguments, 
+			BowlerMethod upStreamMethod,String[] upstreamArguments){
 		this.setNamespace(namespace);
 		this.setRpc(rpc);
 		setArguments( downStreamMethod,downstreamArguments, upStreamMethod, upstreamArguments);
@@ -31,16 +33,16 @@ public class RpcEncapsulation {
 		BowlerAbstractCommand command = new BowlerAbstractCommand() {};
 		
 		command.setOpCode(getRpc());
-		command.setMethod(getMethod());
+		command.setMethod(getDownstreamMethod());
 		
 		for(int i=0;(i<downstreamArguments.length && i < doswnstreamData.length);i++ ){
-			if(downstreamArguments[i].contains("i08")){
+			if(downstreamArguments[i].contains("I08")){
 				command.getCallingDataStorage().add(doswnstreamData[i]);
 			}else
-			if(downstreamArguments[i].contains("i16")){
+			if(downstreamArguments[i].contains("I16")){
 				command.getCallingDataStorage().addAs16(doswnstreamData[i]);
 			}else
-			if(downstreamArguments[i].contains("i32")){
+			if(downstreamArguments[i].contains("I32")){
 				command.getCallingDataStorage().addAs32(doswnstreamData[i]);
 			}
 		}
@@ -52,13 +54,13 @@ public class RpcEncapsulation {
 		int [] response = new int [upstreamArguments.length];
 		ByteList data = datagram.getData();
 		for(int i=0;(i<upstreamArguments.length);i++ ){
-			if(upstreamArguments[i].contains("i08")){
+			if(upstreamArguments[i].contains("I08")){
 				response [i] = data.pop();
 			}else
-			if(upstreamArguments[i].contains("i16")){
+			if(upstreamArguments[i].contains("I16")){
 				response [i] = ByteList.convertToInt(data.popList(1));
 			}else
-			if(upstreamArguments[i].contains("i32")){
+			if(upstreamArguments[i].contains("I32")){
 				response [i] = ByteList.convertToInt(data.popList(3));
 			}
 		}
@@ -82,7 +84,7 @@ public class RpcEncapsulation {
 		this.rpc = rpc;
 	}
 
-	public BowlerMethod getMethod() {
+	public BowlerMethod getDownstreamMethod() {
 		return method;
 	}
 
@@ -122,6 +124,22 @@ public class RpcEncapsulation {
 		this.upStreamMethod = upStreamMethod;
 	}
 
-
+	@Override
+	public String toString(){
+		String s=getNamespace()+" "+getRpc()+" "+getDownstreamMethod();
+		if(getDownstreamArguments()!=null){
+			s+=" (";
+			for(int i=0;i<getDownstreamArguments().length;i++){
+				s+=getDownstreamArguments()[i]+ " ";
+			}
+			s+=") ";
+			s+=" "+getUpStreamMethod()+" (";
+			for(int i=0;i<getUpstreamArguments().length;i++){
+				s+=getUpstreamArguments()[i]+ " ";
+			}
+			s+=") ";
+		}
+		return s;	
+	}
 
 }

@@ -35,6 +35,7 @@ import java.util.ArrayList;
 
 import com.neuronrobotics.sdk.commands.bcs.core.NamespaceCommand;
 import com.neuronrobotics.sdk.commands.bcs.core.PingCommand;
+import com.neuronrobotics.sdk.commands.bcs.core.RpcArgumentsCommand;
 import com.neuronrobotics.sdk.commands.bcs.core.RpcCommand;
 import com.neuronrobotics.sdk.commands.neuronrobotics.dyio.InfoFirmwareRevisionCommand;
 import com.neuronrobotics.sdk.util.ThreadUtil;
@@ -381,9 +382,26 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 			Log.debug("There are "+numRpcs+" RPC's in "+namespace);
 			for (int i=0;i<numRpcs;i++){
 				b = send(new RpcCommand(namespaceIndex,i));
-				String space = new String(b.getData().getBytes(3, 4));
-				BowlerMethod meth = BowlerMethod.get(b.getData().getByte(7));
-				RpcEncapsulation tmpRpc = new RpcEncapsulation(namespace, space, meth);
+				String rpcStr = new String(b.getData().getBytes(3, 4));
+				
+				b = send(new RpcArgumentsCommand(namespaceIndex,i));
+				
+				byte []data = b.getData().getBytes(2);
+				BowlerMethod downstreamMethod = BowlerMethod.get(data[0]);
+				int numDownArgs = data[1];
+				BowlerMethod upstreamMethod   = BowlerMethod.get(data[numDownArgs+3]);
+				int numUpArgs = data[numDownArgs+4];
+				String [] downArgs = new String[numDownArgs];
+				String [] upArgs = new String[numUpArgs];
+				
+				for(int k=0;k<numDownArgs;k++){
+					downArgs[k] = BowlerDataType.get(data[k+2]).toString();
+				}
+				for(int k=0;k<numUpArgs;k++){
+					upArgs[k] = BowlerDataType.get(data[k+numDownArgs+5]).toString();
+				}
+				RpcEncapsulation tmpRpc = new RpcEncapsulation(namespace, rpcStr, downstreamMethod,downArgs,upstreamMethod,upArgs);
+				System.out.println(tmpRpc);
 				rpcs.add(tmpRpc);
 			}
 			
