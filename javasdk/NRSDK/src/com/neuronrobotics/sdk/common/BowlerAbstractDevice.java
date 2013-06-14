@@ -266,9 +266,19 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 		if(list.size()<1){
 			while(true){
 				try {
-					BowlerDatagram b = send(new NamespaceCommand());
+					BowlerDatagram b = send(new NamespaceCommand(0));
+					int num;
+					String tmpNs =b.getData().asString();
+					if(tmpNs.length() ==  b.getData().size()){
+						//System.out.println("Ns = "+tmpNs+" len = "+tmpNs.length()+" data = "+b.getData().size());
+						b = send(new NamespaceCommand());
+						num= b.getData().getByte(0);		
+						Log.warning("This is an older implementation of core, depricated");
+					}else{
+						num= b.getData().getByte(b.getData().size()-1);
+						Log.info("This is the new core");
+					}
 					
-					int num = b.getData().getByte(0);
 					if(num<1){
 						Log.error("Namespace request failed:\n"+b);
 					}else{
@@ -389,16 +399,17 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 				byte []data = b.getData().getBytes(2);
 				BowlerMethod downstreamMethod = BowlerMethod.get(data[0]);
 				int numDownArgs = data[1];
-				BowlerMethod upstreamMethod   = BowlerMethod.get(data[numDownArgs+3]);
-				int numUpArgs = data[numDownArgs+4];
-				String [] downArgs = new String[numDownArgs];
-				String [] upArgs = new String[numUpArgs];
+				BowlerMethod upstreamMethod   = BowlerMethod.get(data[numDownArgs+2]);
+				int numUpArgs = data[numDownArgs+3];
+				
+				BowlerDataType [] downArgs = new BowlerDataType[numDownArgs];
+				BowlerDataType [] upArgs = new BowlerDataType[numUpArgs];
 				
 				for(int k=0;k<numDownArgs;k++){
-					downArgs[k] = BowlerDataType.get(data[k+2]).toString();
+					downArgs[k] = BowlerDataType.get(data[k+2]);
 				}
 				for(int k=0;k<numUpArgs;k++){
-					upArgs[k] = BowlerDataType.get(data[k+numDownArgs+5]).toString();
+					upArgs[k] = BowlerDataType.get(data[k+numDownArgs+4]);
 				}
 				RpcEncapsulation tmpRpc = new RpcEncapsulation(namespace, rpcStr, downstreamMethod,downArgs,upstreamMethod,upArgs);
 				System.out.println(tmpRpc);

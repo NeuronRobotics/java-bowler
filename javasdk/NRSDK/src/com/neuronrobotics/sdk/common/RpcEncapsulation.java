@@ -5,13 +5,23 @@ public class RpcEncapsulation {
 	private String namespace;
 	private String rpc;
 	private BowlerMethod method;
-	private String[] downstreamArguments;
-	private String[] upstreamArguments;
+	private BowlerDataType[] downstreamArguments;
+	private BowlerDataType[] upstreamArguments;
 	private BowlerMethod upStreamMethod;
 
+	/**
+	 * This is an encapsulation object for a given RPC
+	 * 
+	 * @param namespace 			The corosponding Namespace
+	 * @param rpc					The 4 byte RPC code
+	 * @param downStreamMethod		The method for sending messages
+	 * @param downstreamArguments	The array of data types for a downstream message
+	 * @param upStreamMethod		The return method type
+	 * @param upstreamArguments 	THe return method arguments
+	 */
 	public RpcEncapsulation(String namespace, String rpc, 
-			BowlerMethod downStreamMethod,String[] downstreamArguments, 
-			BowlerMethod upStreamMethod,String[] upstreamArguments){
+			BowlerMethod downStreamMethod,BowlerDataType[] downstreamArguments, 
+			BowlerMethod upStreamMethod,BowlerDataType[] upstreamArguments){
 		this.setNamespace(namespace);
 		this.setRpc(rpc);
 		setArguments( downStreamMethod,downstreamArguments, upStreamMethod, upstreamArguments);
@@ -22,46 +32,120 @@ public class RpcEncapsulation {
 		this.setDownStreamMethod(downStreamMethod);
 	}
 	
-	public void setArguments(BowlerMethod downStreamMethod,String[] downstreamArguments, BowlerMethod upStreamMethod,String[] upstreamArguments){
+	public void setArguments(BowlerMethod downStreamMethod,BowlerDataType[] downstreamArguments, BowlerMethod upStreamMethod,BowlerDataType[] upstreamArguments){
 		this.setUpStreamMethod(upStreamMethod);
 		this.setDownstreamArguments(downstreamArguments);
 		this.setUpstreamArguments(upstreamArguments);
 		this.setDownStreamMethod(downStreamMethod);
 	}
 	
-	public BowlerAbstractCommand getCommand(int [] doswnstreamData){
+	public BowlerAbstractCommand getCommand(Object [] doswnstreamData){
 		BowlerAbstractCommand command = new BowlerAbstractCommand() {};
 		
 		command.setOpCode(getRpc());
 		command.setMethod(getDownstreamMethod());
 		
 		for(int i=0;(i<downstreamArguments.length && i < doswnstreamData.length);i++ ){
-			if(downstreamArguments[i].contains("I08")){
-				command.getCallingDataStorage().add(doswnstreamData[i]);
-			}else
-			if(downstreamArguments[i].contains("I16")){
-				command.getCallingDataStorage().addAs16(doswnstreamData[i]);
-			}else
-			if(downstreamArguments[i].contains("I32")){
-				command.getCallingDataStorage().addAs32(doswnstreamData[i]);
+			switch(downstreamArguments[i]){
+			case ASCII:
+				command.getCallingDataStorage().add(doswnstreamData[i].toString());
+				command.getCallingDataStorage().add(0);
+				break;
+			case FIXED100:
+				double d = Double.parseDouble(doswnstreamData[i].toString())*100;
+				command.getCallingDataStorage().addAs32((int)d);
+				break;
+			case FIXED1k:
+				double k = Double.parseDouble(doswnstreamData[i].toString())*1000;
+				command.getCallingDataStorage().addAs32((int)k);
+				break;
+			case I08:
+				command.getCallingDataStorage().add(Integer.parseInt(doswnstreamData[i].toString()));
+				break;
+			case I16:
+				command.getCallingDataStorage().addAs16(Integer.parseInt(doswnstreamData[i].toString()));
+				break;
+			case I32:
+				command.getCallingDataStorage().addAs32(Integer.parseInt(doswnstreamData[i].toString()));
+				break;
+			case I32STR:
+				Integer [] data32 = (Integer [])doswnstreamData[i];
+				command.getCallingDataStorage().add(data32.length);
+				for(int i1=0;i1<data32.length;i1++){
+					command.getCallingDataStorage().addAs32(data32[i1]);
+				}
+				break;
+			case INVALID:
+				break;
+			case STR:
+				Integer [] data = (Integer [])doswnstreamData[i];
+				command.getCallingDataStorage().add(data.length);
+				for(int i1=0;i1<data.length;i1++){
+					command.getCallingDataStorage().add(data[i1]);
+				}
+				break;
+			default:
+				break;
 			}
 		}
 		
 		return command;
 	}
 	
-	public int [] parseResponse(BowlerDatagram datagram){
-		int [] response = new int [upstreamArguments.length];
+	public Object [] parseResponse(BowlerDatagram datagram){
+		Object [] response = new Object[upstreamArguments.length];
 		ByteList data = datagram.getData();
 		for(int i=0;(i<upstreamArguments.length);i++ ){
-			if(upstreamArguments[i].contains("I08")){
-				response [i] = data.pop();
-			}else
-			if(upstreamArguments[i].contains("I16")){
-				response [i] = ByteList.convertToInt(data.popList(1));
-			}else
-			if(upstreamArguments[i].contains("I32")){
-				response [i] = ByteList.convertToInt(data.popList(3));
+			
+			switch(upstreamArguments[i]){
+			case ASCII:
+				String s = data.asString();
+				data.popList(s.length()+1);
+				response [i] = s;
+				break;
+			case FIXED100:
+				response [i] = new Double(ByteList.convertToInt(data.popList(3)))/100;
+				break;
+			case FIXED1k:
+				response [i] = new Double(ByteList.convertToInt(data.popList(3)))/1000;
+				break;
+			case I08:
+				response [i] = new Integer(data.getUnsigned(0));
+				data.pop();
+				break;
+			case I16:
+				response [i] = new Integer(ByteList.convertToInt(data.popList(1)));
+				break;
+			case I32:
+				response [i] = new Integer(ByteList.convertToInt(data.popList(3)));
+				break;
+			case I32STR:
+				int numVals32 = data.getUnsigned(0);
+				data.pop();
+				ByteList d32 = new ByteList(data.pop(numVals32*4));
+				Integer [] i32Data = new Integer[numVals32];
+				for(int j=0;j<numVals32;j++){
+					i32Data[j]=new Integer(ByteList.convertToInt(d32.popList(3)));
+				}
+				break;
+			case INVALID:
+				break;
+			case STR:
+				int numVals = data.getUnsigned(0);
+				data.pop();
+				ByteList iData = new ByteList();
+				response [i] = iData;
+				if(numVals>0){
+					ByteList d = new ByteList(data.popList(numVals));
+					for(int j=0;j<numVals;j++){
+						iData.add(new Integer(d.getUnsigned(j)));
+					}
+					
+				}
+				
+				break;
+			default:
+				break;
 			}
 		}
 		
@@ -92,27 +176,19 @@ public class RpcEncapsulation {
 		this.method = method;
 	}
 
-
-
-	public String[] getDownstreamArguments() {
+	public BowlerDataType[] getDownstreamArguments() {
 		return downstreamArguments;
 	}
 
-
-
-	public void setDownstreamArguments(String[] downstreamArguments) {
+	public void setDownstreamArguments(BowlerDataType[] downstreamArguments) {
 		this.downstreamArguments = downstreamArguments;
 	}
 
-
-
-	public String[] getUpstreamArguments() {
+	public BowlerDataType[] getUpstreamArguments() {
 		return upstreamArguments;
 	}
 
-
-
-	public void setUpstreamArguments(String[] upstreamArguments) {
+	public void setUpstreamArguments(BowlerDataType[] upstreamArguments) {
 		this.upstreamArguments = upstreamArguments;
 	}
 

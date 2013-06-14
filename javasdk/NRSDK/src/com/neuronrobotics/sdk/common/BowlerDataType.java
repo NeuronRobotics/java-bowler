@@ -14,7 +14,6 @@
  ******************************************************************************/
 package com.neuronrobotics.sdk.common;
 
-import java.lang.Character.UnicodeScript;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,8 +33,20 @@ public enum BowlerDataType implements ISendable {
 	/** 32 bit int */
 	I32(32),
 	
-	/** String/stream*/
+	/** stream of 8 bit ints*/
 	STR(37),
+	
+	/** stream of 32 bit ints*/
+	I32STR(38),
+	
+	/** String*/
+	ASCII(39),
+	
+	/** Fixed point times 100*/
+	FIXED100(41),
+	
+	/** Fixed point times 1000*/
+	FIXED1k(42),
 	
 	/** Unknown**/
 	INVALID(0);
@@ -104,13 +115,21 @@ public enum BowlerDataType implements ISendable {
 		String s="NOT VALID";
 		switch (value){
 		case 8:
-			return "I08";
+			return "Int 8";
 		case 16:
-			return "I16";
+			return "Int 16";
 		case 32:
-			return "I32";
+			return "Int 32";
 		case 37:
-			return "STR";
+			return "Int 8 Stream";
+		case 38:
+			return "Int 32 Stream";
+		case 39:
+			return "ASCII";
+		case 41:
+			return "Fixed 100";
+		case 42:
+			return "Fixed 1k";
 		}
 		return s;
 	}

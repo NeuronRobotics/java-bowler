@@ -763,7 +763,7 @@ public class ByteList implements ISendable, List<Byte> {
 			if(data[i] != 0)
 				s+=(char)data[i++];
 			else
-				break;
+				return s;
 		}
 		return s;
 	}
