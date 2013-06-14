@@ -49,7 +49,7 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
  */
 public abstract class BowlerAbstractConnection {
 	
-	private boolean threadedUpstreamPackets=true;
+	private boolean threadedUpstreamPackets=false;
 	
 	/** The sleep time. */
 	private int sleepTime = 10;
