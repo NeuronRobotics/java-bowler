@@ -112,24 +112,24 @@ public enum BowlerDataType implements ISendable {
 	 * @see java.lang.Enum#toString()
 	 */
 	public String toString(){
-		String s="NOT VALID";
+		String s="(NOT VALID)";
 		switch (value){
 		case 8:
-			return "Int 8";
+			return "(Int 8)";
 		case 16:
-			return "Int 16";
+			return "(Int 16)";
 		case 32:
-			return "Int 32";
+			return "(Int 32)";
 		case 37:
-			return "Int 8 Stream";
+			return "(Int 8 Stream)";
 		case 38:
-			return "Int 32 Stream";
+			return "(Int 32 Stream)";
 		case 39:
-			return "ASCII";
+			return "(ASCII)";
 		case 41:
-			return "Fixed 100";
+			return "(Fixed 100)";
 		case 42:
-			return "Fixed 1k";
+			return "(Fixed 1k)";
 		}
 		return s;
 	}

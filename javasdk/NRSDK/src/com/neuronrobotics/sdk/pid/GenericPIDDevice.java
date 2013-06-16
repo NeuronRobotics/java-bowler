@@ -140,7 +140,7 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 		BowlerDatagram b = send(new ControlAllPIDCommand());
 		ByteList data = b.getData();
 		int [] back = new int[data.size()/4];
-		for(int i=0;i<back.length;i++) {
+		for(int i=1;i<back.length;i++) {
 			int start = i*4;
 			byte [] tmp = data.getBytes(start, 4);
 			back[i] = ByteList.convertToInt( tmp,true);
