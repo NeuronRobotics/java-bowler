@@ -122,7 +122,7 @@ public class RpcEncapsulation {
 			case I32STR:
 				int numVals32 = data.getUnsigned(0);
 				data.pop();
-				ByteList d32 = new ByteList(data.pop(numVals32*4));
+				ByteList d32 = new ByteList(data.popList(numVals32*4));
 				Integer [] i32Data = new Integer[numVals32];
 				for(int j=0;j<numVals32;j++){
 					i32Data[j]=new Integer(ByteList.convertToInt(d32.popList(3)));
