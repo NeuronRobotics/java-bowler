@@ -115,17 +115,17 @@ public enum BowlerDataType implements ISendable {
 		String s="(NOT VALID)";
 		switch (value){
 		case 8:
-			return "(Int 8)";
+			return "(char)";
 		case 16:
-			return "(Int 16)";
+			return "(short)";
 		case 32:
-			return "(Int 32)";
+			return "(int)";
 		case 37:
-			return "(Int 8 Stream)";
+			return "(char [])";
 		case 38:
-			return "(Int 32 Stream)";
+			return "(int [])";
 		case 39:
-			return "(ASCII)";
+			return "(String)";
 		case 41:
 			return "(Fixed 100)";
 		case 42:

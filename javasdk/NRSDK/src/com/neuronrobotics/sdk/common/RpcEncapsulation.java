@@ -104,28 +104,30 @@ public class RpcEncapsulation {
 				response [i] = s;
 				break;
 			case FIXED100:
-				response [i] = new Double(ByteList.convertToInt(data.popList(3)))/100;
+				response [i] = new Double(ByteList.convertToInt(data.popList(4)))/100;
 				break;
 			case FIXED1k:
-				response [i] = new Double(ByteList.convertToInt(data.popList(3)))/1000;
+				response [i] = new Double(ByteList.convertToInt(data.popList(4)))/1000;
 				break;
 			case I08:
 				response [i] = new Integer(data.getUnsigned(0));
 				data.pop();
 				break;
 			case I16:
-				response [i] = new Integer(ByteList.convertToInt(data.popList(1)));
+				response [i] = new Integer(ByteList.convertToInt(data.popList(2)));
 				break;
 			case I32:
-				response [i] = new Integer(ByteList.convertToInt(data.popList(3)));
+				byte [] i32 = data.popList(4);
+				response [i] = new Integer(ByteList.convertToInt(i32,true));
 				break;
 			case I32STR:
 				int numVals32 = data.getUnsigned(0);
 				data.pop();
 				ByteList d32 = new ByteList(data.popList(numVals32*4));
 				Integer [] i32Data = new Integer[numVals32];
+				response [i] = i32Data;
 				for(int j=0;j<numVals32;j++){
-					i32Data[j]=new Integer(ByteList.convertToInt(d32.popList(3)));
+					i32Data[j]=new Integer(ByteList.convertToInt(d32.popList(4)));
 				}
 				break;
 			case INVALID:
