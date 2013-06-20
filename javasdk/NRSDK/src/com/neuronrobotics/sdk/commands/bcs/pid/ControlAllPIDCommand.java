@@ -6,15 +6,11 @@ import com.neuronrobotics.sdk.common.BowlerMethod;
 
 public class ControlAllPIDCommand extends BowlerAbstractCommand {
 	
-	public ControlAllPIDCommand() {
-		setOpCode("apid");
-		setMethod(BowlerMethod.GET);
-	}
-	
 	public ControlAllPIDCommand( int []setpoint) {
 		setOpCode("apid");
 		setMethod(BowlerMethod.POST);
 		getCallingDataStorage().addAs32(0);
+		getCallingDataStorage().add(setpoint.length);
 		for(int i=0;i<setpoint.length;i++){
 			getCallingDataStorage().addAs32(setpoint[i]);
 		}
@@ -23,6 +19,7 @@ public class ControlAllPIDCommand extends BowlerAbstractCommand {
 		setOpCode("apid");
 		setMethod(BowlerMethod.POST);
 		getCallingDataStorage().addAs32((int)(seconds*1000));
+		getCallingDataStorage().add(setpoint.length);
 		for(int i=0;i<setpoint.length;i++){
 			getCallingDataStorage().addAs32(setpoint[i]);
 		}
