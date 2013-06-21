@@ -5,7 +5,11 @@ import com.neuronrobotics.sdk.common.BowlerMethod;
 
 
 public class ControlAllPIDCommand extends BowlerAbstractCommand {
-	
+	public ControlAllPIDCommand() {
+		setOpCode("apid");
+		setMethod(BowlerMethod.GET);
+
+	}
 	public ControlAllPIDCommand( int []setpoint) {
 		setOpCode("apid");
 		setMethod(BowlerMethod.POST);
