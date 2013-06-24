@@ -35,12 +35,12 @@ public class BowlerDatagramFactory {
 	 * @return 		A valid Bowler Datagram.
 	 */
 	private static int failed=0;
-	public static BowlerDatagram build(MACAddress addr, BowlerAbstractCommand cmd, int id) {
+	public static BowlerDatagram build(MACAddress addr, BowlerAbstractCommand cmd) {
 		ByteList data = new ByteList();
 		data.add(BowlerDatagram.REVISION); // revision
 		data.add(addr.getBytes()); // mac address
 		data.add(cmd.getMethod().getValue()); // method id
-		data.add(id); // transaction id
+		data.add(cmd.getNamespaceIndex()); // Rpc Index id
 		data.add(cmd.getLength()); // data length
 		byte crc = data.genCRC();
 		data.add(crc); // crc

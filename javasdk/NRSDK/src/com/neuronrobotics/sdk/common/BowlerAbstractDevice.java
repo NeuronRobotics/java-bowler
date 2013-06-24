@@ -76,8 +76,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	 * @param connection the new connection
 	 */
 	private static ArrayList<IConnectionEventListener> disconnectListeners = new ArrayList<IConnectionEventListener> ();
-	private ArrayList<String> list;
-	private ArrayList<RpcEncapsulation> rpcs;
+	private ArrayList<NamespaceEncapsulation> namespaceList;
 	
 	public void addConnectionEventListener(IConnectionEventListener l ) {
 		if(!disconnectListeners.contains(l)) {
@@ -209,7 +208,32 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 			throw new NoConnectionAvailableException();
 		}
 		
-		return command.validate(send(BowlerDatagramFactory.build(getAddress(), command,0)));
+		return command.validate(send(BowlerDatagramFactory.build(getAddress(), command)));
+	}
+	/**
+	 * THis is the scripting interface to Bowler devices. THis allows a user to describe a namespace, rpc, and array or 
+	 * arguments to be paced into the packet based on the data types of the argument. The response in likewise unpacked 
+	 * into an array of objects.
+	 * @param namespace The string of the desired namespace
+	 * @param rpcString The string of the desired RPC
+	 * @param arguments An array of objects corosponding to the data to be stuffed into the packet.
+	 * @return The return arguments parsed and packet into an array of arguments
+	 * @throws DeviceConnectionException If the desired RPC's are not availible then this will be thrown
+	 */
+	public Object [] send(String namespace, String rpcString, Object[] arguments) throws DeviceConnectionException{
+		for (NamespaceEncapsulation ns:namespaceList){
+			if(ns.getNamespace().toLowerCase().contains(namespace.toLowerCase())){
+				//found the namespace
+				for(RpcEncapsulation rpc:ns.getRpcList()){
+					if(rpc.getRpc().toLowerCase().contains(rpcString.toLowerCase())){
+						//Found the command in the namespace
+						BowlerDatagram dg =  send(rpc.getCommand(arguments));
+						return rpc.parseResponse(dg);
+					}
+				}
+			}
+		}
+		throw new DeviceConnectionException("Device does not contain command '"+namespace+" "+rpcString+"'");
 	}
 		
 	/**
@@ -261,9 +285,10 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	 * @return the namespaces
 	 */
 	public ArrayList<String>  getNamespaces(){
-		if(list == null)
-			list = new ArrayList<String>();
-		if(list.size()<1){
+		 ArrayList<String> ret = new ArrayList<String>();
+		if(namespaceList == null)
+			namespaceList = new ArrayList<NamespaceEncapsulation>();
+		if(namespaceList.size()<1){
 			while(true){
 				try {
 					BowlerDatagram b = send(new NamespaceCommand(0));
@@ -289,9 +314,9 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 						b = send(new NamespaceCommand(i));
 						String space = b.getData().asString();
 						Log.debug(space);
-						list.add(space);
+						namespaceList.add(new NamespaceEncapsulation(space));
 					}
-					return list;
+
 				} catch (InvalidResponseException e) {
 					Log.error("Invalid response from Namespace");
 					
@@ -299,9 +324,13 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 					Log.error("No connection is available.");
 				}
 			}
-		}else{
-			return list;
 		}
+		for(NamespaceEncapsulation ns:namespaceList){
+			ret.add(ns.getNamespace());
+		}
+		
+		return ret;
+		
 	}
 	/**
 	 * Check the device to see if it has the requested namespace
@@ -373,13 +402,26 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	public ArrayList<RpcEncapsulation> getRpcList(String namespace) {
 		ArrayList<RpcEncapsulation> rpcs = new ArrayList<RpcEncapsulation>();
 		int namespaceIndex = 0;
-		for (int i=0;i<list.size();i++){
-			if(list.get(i).contains(namespace)){
+		boolean hasCoreRpcNS = false;
+		for (int i=0;i<namespaceList.size();i++){
+			if(namespaceList.get(i).getNamespace().contains(namespace)){
 				namespaceIndex=i;
 			}
+			if(namespaceList.get(i).getNamespace().contains("bcs.rpc.*")){
+				hasCoreRpcNS=true;
+			}
+		}
+		if(!hasCoreRpcNS){
+			//this device has no RPC namespace, failing out
+			return rpcs;
+		}
+		if(namespaceList.get(namespaceIndex).getRpcList()!=null){
+			//fast return if list is already populated
+			return namespaceList.get(namespaceIndex).getRpcList();
 		}
 		
 		try{
+			//populate RPC set
 			BowlerDatagram b = send(new  RpcCommand(namespaceIndex));
 			int ns = b.getData().getByte(0);// gets the index of the namespace
 			int rpcIndex = b.getData().getByte(1);// gets the index of the selected RPC
@@ -411,18 +453,16 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 				for(int k=0;k<numUpArgs;k++){
 					upArgs[k] = BowlerDataType.get(data[k+numDownArgs+4]);
 				}
-				RpcEncapsulation tmpRpc = new RpcEncapsulation(namespace, rpcStr, downstreamMethod,downArgs,upstreamMethod,upArgs);
+				RpcEncapsulation tmpRpc = new RpcEncapsulation(namespaceIndex,namespace, rpcStr, downstreamMethod,downArgs,upstreamMethod,upArgs);
 				System.out.println(tmpRpc);
 				rpcs.add(tmpRpc);
 			}
+			namespaceList.get(namespaceIndex).setRpcList(rpcs);
 			
 		}catch(InvalidResponseException ex){
 			Log.debug("Older version of core, discovery disabled");
 		}
-
-		
 		return rpcs;
-		
 	}
 	
 }

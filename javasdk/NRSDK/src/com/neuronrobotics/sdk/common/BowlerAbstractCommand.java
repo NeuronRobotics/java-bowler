@@ -47,6 +47,8 @@ public abstract class BowlerAbstractCommand implements ISendable {
 	/** The method. */
 	private BowlerMethod method;
 	private ByteList data = new ByteList();
+
+	private int namespaceIndex=0;//default used when no conflicts are expected
 	
 	/**
 	 * Get the data that will be used to call the RPC (i.e. parameters for the RPC).
@@ -224,4 +226,10 @@ public abstract class BowlerAbstractCommand implements ISendable {
 		return data;
 	}
 
+	public void setNamespaceIndex(int namespaceIndex){
+		this.namespaceIndex = namespaceIndex;		
+	}
+	public int getNamespaceIndex(){
+		return this.namespaceIndex;		
+	}
 }

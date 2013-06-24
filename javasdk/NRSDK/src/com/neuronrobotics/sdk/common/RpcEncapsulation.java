@@ -8,6 +8,7 @@ public class RpcEncapsulation {
 	private BowlerDataType[] downstreamArguments;
 	private BowlerDataType[] upstreamArguments;
 	private BowlerMethod upStreamMethod;
+	private int namespaceIndex;
 
 	/**
 	 * This is an encapsulation object for a given RPC
@@ -19,17 +20,13 @@ public class RpcEncapsulation {
 	 * @param upStreamMethod		The return method type
 	 * @param upstreamArguments 	THe return method arguments
 	 */
-	public RpcEncapsulation(String namespace, String rpc, 
+	public RpcEncapsulation(int namespaceIndex,String namespace, String rpc, 
 			BowlerMethod downStreamMethod,BowlerDataType[] downstreamArguments, 
 			BowlerMethod upStreamMethod,BowlerDataType[] upstreamArguments){
+		this.setNamespaceIndex(namespaceIndex);
 		this.setNamespace(namespace);
 		this.setRpc(rpc);
 		setArguments( downStreamMethod,downstreamArguments, upStreamMethod, upstreamArguments);
-	}
-	public RpcEncapsulation(String namespace, String rpc, BowlerMethod downStreamMethod){
-		this.setNamespace(namespace);
-		this.setRpc(rpc);
-		this.setDownStreamMethod(downStreamMethod);
 	}
 	
 	public void setArguments(BowlerMethod downStreamMethod,BowlerDataType[] downstreamArguments, BowlerMethod upStreamMethod,BowlerDataType[] upstreamArguments){
@@ -44,6 +41,7 @@ public class RpcEncapsulation {
 		
 		command.setOpCode(getRpc());
 		command.setMethod(getDownstreamMethod());
+		command.setNamespaceIndex(getNamespaceIndex());
 		
 		for(int i=0;(i<downstreamArguments.length && i < doswnstreamData.length);i++ ){
 			switch(downstreamArguments[i]){
@@ -218,6 +216,14 @@ public class RpcEncapsulation {
 			s+=") ";
 		}
 		return s;	
+	}
+
+	public int getNamespaceIndex() {
+		return namespaceIndex;
+	}
+
+	public void setNamespaceIndex(int namespaceIndex) {
+		this.namespaceIndex = namespaceIndex;
 	}
 
 }

@@ -20,6 +20,10 @@ package com.neuronrobotics.sdk.common;
  */
 public class DeviceConnectionException extends Exception {
 
+	public DeviceConnectionException(String string) {
+		super(string);
+	}
+
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 

@@ -65,7 +65,8 @@ public abstract class BowlerAbstractDeviceServer extends BowlerAbstractDevice {
 	 * @throws IOException 
 	 */
 	public void sendAsync(BowlerAbstractCommand command, int rpcIndexID) throws IOException {
-		BowlerDatagram bd = BowlerDatagramFactory.build(getAddress(), command,rpcIndexID);
+		command.setNamespaceIndex(rpcIndexID);
+		BowlerDatagram bd = BowlerDatagramFactory.build(getAddress(), command);
 		//Log.debug("ASYN>>\n"+bd.toString());
 		getConnection().sendAsync(bd);
 		getConnection().getDataOuts().flush();
@@ -77,7 +78,7 @@ public abstract class BowlerAbstractDeviceServer extends BowlerAbstractDevice {
 	 * @throws IOException 
 	 */
 	public void sendSyncResponse(BowlerAbstractCommand command) throws IOException {
-		BowlerDatagram bd =BowlerDatagramFactory.build(getAddress(), command,0);
+		BowlerDatagram bd =BowlerDatagramFactory.build(getAddress(), command);
 		//Log.debug("RESP>>\n"+bd.toString());
 		getConnection().sendAsync(bd);
 		getConnection().getDataOuts().flush();
