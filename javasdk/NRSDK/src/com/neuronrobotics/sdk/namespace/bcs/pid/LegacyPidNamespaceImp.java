@@ -158,12 +158,12 @@ public class LegacyPidNamespaceImp extends GenericPidNamespaceImp {
 			back[i] = ByteList.convertToInt( tmp,true);
 		}
 		if(back.length != getNumberOfChannels()){
-			channels =  new ArrayList<PIDChannel>();
+			setChannels(new ArrayList<PIDChannel>());
 			lastPacketTime =  new long[back.length];
 			for(int i=0;i<back.length;i++){
 				PIDChannel c =new PIDChannel(this,i);
 				c.setCachedTargetValue(back[i]);
-				channels.add(c);
+				getChannels().add(c);
 			}
 		}
 		return back;
@@ -190,8 +190,8 @@ public class LegacyPidNamespaceImp extends GenericPidNamespaceImp {
 	 */
 	@Override
 	public boolean killAllPidGroups() {
-		 getDevice().getConnection().setSleepTime(10000);
-		return  getDevice().send(new KillAllPIDCommand())==null;
+		getDevice().getConnection().setSleepTime(10000);
+		return getDevice().send(new KillAllPIDCommand())==null;
 	}
 
 

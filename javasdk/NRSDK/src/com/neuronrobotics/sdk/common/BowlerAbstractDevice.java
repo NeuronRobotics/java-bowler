@@ -475,4 +475,14 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 		return namespaceList.get(namespaceIndex).getRpcList();
 	}
 	
+	/**
+	 * On all response.
+	 *
+	 * @param data the data
+	 */
+	@Deprecated
+	public void onAllResponse(BowlerDatagram data){
+		// this is here to prevent the breaking of an interface, 
+	}
+	
 }

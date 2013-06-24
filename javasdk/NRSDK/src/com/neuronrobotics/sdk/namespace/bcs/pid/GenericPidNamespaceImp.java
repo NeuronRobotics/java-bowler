@@ -16,7 +16,7 @@ import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 public abstract class GenericPidNamespaceImp implements IPIDControl{
 
 	private ArrayList<IPIDEventListener> PIDEventListeners = new ArrayList<IPIDEventListener>();
-	protected ArrayList<PIDChannel> channels = new ArrayList<PIDChannel>();
+	private ArrayList<PIDChannel> channels = new ArrayList<PIDChannel>();
 	protected long [] lastPacketTime = null;
 	private BowlerAbstractDevice device;
 
@@ -73,7 +73,7 @@ public abstract class GenericPidNamespaceImp implements IPIDControl{
 	 * @return
 	 */
 	public int getNumberOfChannels(){
-		return channels.size();
+		return getChannels().size();
 	}
 	
 	
@@ -144,9 +144,9 @@ public abstract class GenericPidNamespaceImp implements IPIDControl{
 		}
 		while(!(group < getNumberOfChannels() )){
 			PIDChannel c =new PIDChannel(this,group);
-			channels.add(c);
+			getChannels().add(c);
 		}
-		return channels.get(group);
+		return getChannels().get(group);
 	}
 	@Override
 	public boolean isAvailable() {
@@ -154,6 +154,16 @@ public abstract class GenericPidNamespaceImp implements IPIDControl{
 	}
 
 	public abstract void onAsyncResponse(BowlerDatagram data);
+
+
+	public ArrayList<PIDChannel> getChannels() {
+		return channels;
+	}
+
+
+	public void setChannels(ArrayList<PIDChannel> channels) {
+		this.channels = channels;
+	}
 
 
 }

@@ -18,6 +18,9 @@ import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.IConnectionEventListener;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.MACAddress;
+import com.neuronrobotics.sdk.namespace.bcs.pid.GenericPidNamespaceImp;
+import com.neuronrobotics.sdk.namespace.bcs.pid.LegacyPidNamespaceImp;
+import com.neuronrobotics.sdk.namespace.bcs.pid.PidNamespaceImp;
 
 /**
  * This class is a generic implementation of the PID system. This can be used as a template, superclass or internal object class for 
@@ -26,313 +29,151 @@ import com.neuronrobotics.sdk.common.MACAddress;
  *
  */
 public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDControl {
-	private ArrayList<IPIDEventListener> PIDEventListeners = new ArrayList<IPIDEventListener>();
-	protected ArrayList<PIDChannel> channels = new ArrayList<PIDChannel>();
-	protected long [] lastPacketTime = null;
+	private boolean isInit=false;
+	private GenericPidNamespaceImp implementation;
 	
-	
+	public GenericPIDDevice() {
+		setAddress(new MACAddress(MACAddress.BROADCAST));
+	}
 	public GenericPIDDevice(BowlerAbstractConnection connection) {
 		setAddress(new MACAddress(MACAddress.BROADCAST));
 		setConnection(connection);
-	}
-
-	public GenericPIDDevice() {
-		addPIDEventListener(new IPIDEventListener() {
-			public void onPIDReset(int group, int currentValue) {}
-			public void onPIDLimitEvent(PIDLimitEvent e) {}
-			public void onPIDEvent(PIDEvent e) {
-				getPIDChannel(e.getGroup()).setCurrentCachedPosition(e.getValue());
-			}
-		});
 	}
 	
 	@Override
 	public void setConnection(BowlerAbstractConnection connection) {
 		super.setConnection(connection);
 		if(connection.isConnected())
-			GetAllPIDPosition();
+			init();
 	}
 	
 	@Override
 	public boolean connect(){
 		if(super.connect()){
-			GetAllPIDPosition();
+			init();
 			return true;
 		}
 		return false;
 	}
-	public void onAllResponse(BowlerDatagram data) {
-
-	}
-
-	public void onAsyncResponse(BowlerDatagram data) {
-		//Log.debug("\nPID ASYNC<<"+data);
-		if(data.getRPC().contains("_pid")){
-			
-			PIDEvent e =new PIDEvent(data);
 	
-			firePIDEvent(e);
+	private void init(){
+		if(isInit){
+			return;
 		}
-		if(data.getRPC().contains("apid")){
-			int [] pos = new int[getNumberOfChannels()];
-			for(int i=0;i<getNumberOfChannels();i++) {
-				pos[i] = ByteList.convertToInt( data.getData().getBytes(i*4, 4),true);
-				PIDEvent e =new PIDEvent(i,pos[i],System.currentTimeMillis(),0);
-				firePIDEvent(e);
-			}	
-		}
-		if(data.getRPC().contains("pidl")){
-			firePIDLimitEvent(new PIDLimitEvent(data));
-		}
-
-	}
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#SetPIDSetPoint
-	 */
-	public boolean SetPIDSetPoint(int group,int setpoint,double seconds){
-		getPIDChannel(group).setCachedTargetValue(setpoint);
-		Log.info("Setting PID position group="+group+", setpoint="+setpoint+" ticks, time="+seconds+" sec.");
-		return send(new  ControlPIDCommand((char) group,setpoint, seconds))!=null;
-	}
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#SetAllPIDSetPoint
-	 */
-	public boolean SetAllPIDSetPoint(int []setpoints,double seconds){
-		int[] sp;
-		if(setpoints.length<getNumberOfChannels()) {
-			sp = new int[getNumberOfChannels()];
-			for(int i=0;i<sp.length;i++) {
-				sp[i]=getPIDChannel(i).getCachedTargetValue();
+		if(implementation == null){
+			if(hasNamespace("bcs.pid.*;0.3;;")){
+				implementation = new LegacyPidNamespaceImp(this);
 			}
-			for(int i=0;i<setpoints.length;i++) {
-				sp[i]=setpoints[i];
-			}
-		}else {
-			sp=setpoints;
-		}
-		for(int i=0;i<getNumberOfChannels();i++){
-			getPIDChannel(i).setCachedTargetValue(sp[i]);
-		}
-		return send(new  ControlAllPIDCommand(sp, seconds))!=null;
-	}
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#GetPIDPosition
-	 */
-	public int GetPIDPosition(int group) {
-		BowlerDatagram b = send(new  ControlPIDCommand((char) group));
-		return ByteList.convertToInt(b.getData().getBytes(	1,//Starting index
-															4),//number of bytes
-															true);//True for signed data
-	}
-
-	public int GetCachedPosition(int group) {
-		return getPIDChannel(group).getCurrentCachedPosition();
-	}
-
-	public void SetCachedPosition(int group, int value) {
-
-		getPIDChannel(group).setCurrentCachedPosition(value);
-	}
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#GetAllPIDPosition
-	 */
-	public int [] GetAllPIDPosition() {
-		Log.debug("Getting All PID Positions");
-		BowlerDatagram b = send(new ControlAllPIDCommand());
-		ByteList data = b.getData();
-		int [] back = new int[data.size()/4];
-		//Start at 1 because of the number of values 
-		for(int i=1;i<back.length;i++) {
-			int start = i*4;
-			byte [] tmp = data.getBytes(start, 4);
-			back[i] = ByteList.convertToInt( tmp,true);
-		}
-		if(back.length != getNumberOfChannels()){
-			channels =  new ArrayList<PIDChannel>();
-			lastPacketTime =  new long[back.length];
-			for(int i=0;i<back.length;i++){
-				PIDChannel c =new PIDChannel(this,i);
-				c.setCachedTargetValue(back[i]);
-				channels.add(c);
+			else{
+				implementation = new PidNamespaceImp(this);
 			}
 		}
-		return back;
-	}
-	
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#ConfigurePIDController
-	 */
-	public boolean ConfigurePIDController(PIDConfiguration config) {
-		return send(new  ConfigurePIDCommand(config))!=null;
+		isInit = true;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#getPIDConfiguration
-	 */
-	public PIDConfiguration getPIDConfiguration(int group) {
-		BowlerDatagram conf = send(new ConfigurePIDCommand( (char) group) );
-		PIDConfiguration back=new PIDConfiguration (conf);
-		return back;
-	}
-
-	public boolean ResetPIDChannel(int group) {
-		BowlerDatagram rst = send(new  ResetPIDCommand((char) group));
-		if(rst==null)
-			return false;
-		int val = GetPIDPosition(group);
-		firePIDResetEvent(group,val);
-		return true;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#ResetPIDChannel
-	 */
+	@Override
 	public boolean ResetPIDChannel(int group, int valueToSetCurrentTo) {
-		BowlerDatagram rst = send(new  ResetPIDCommand((char) group,valueToSetCurrentTo));
-		if(rst==null)
-			return false;
-		int val = GetPIDPosition(group);
-		firePIDResetEvent(group,val);
-		return true;
+		return implementation.ResetPIDChannel(group, valueToSetCurrentTo);
 	}
-	
-	
 
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#flushPIDChannels
-	 */
 	@Override
-	public void flushPIDChannels(double time) {
-		int [] data = new int[getNumberOfChannels()];
-		for(int i=0;i<getNumberOfChannels();i++){
-			data[i]=getPIDChannel(i).getCachedTargetValue();
-		}
-		Log.info("Flushing in "+time+"ms");
-		SetAllPIDSetPoint(data, time);
+	public boolean ConfigurePIDController(PIDConfiguration config) {
+		return implementation.ConfigurePIDController(config);
 	}
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#SetPIDInterpolatedVelocity
-	 */
+
 	@Override
-	public boolean SetPIDInterpolatedVelocity(int group, int unitsPerSecond, double seconds) throws PIDCommandException {
-		long dist = (long)unitsPerSecond*(long)seconds;
-		long delt = ((long) (GetCachedPosition(group))-dist);
-		if(delt>2147483646 || delt<-2147483646){
-			throw new PIDCommandException("(Current Position) - (Velocity * Time) too large: "+delt+"\nTry resetting the encoders");
-		}
-		return SetPIDSetPoint(group, (int) delt, seconds);
-	}
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#SetPDVelocity
-	 */
-	@Override
-	public boolean SetPDVelocity(int group, int unitsPerSecond, double seconds)throws PIDCommandException {
-		try{
-			Log.debug("Setting hardware velocity control");
-			return send(new PDVelocityCommand(group, unitsPerSecond, seconds))!=null;
-		}catch (Exception ex){
-			Log.error("Failed! Setting interpolated velocity control..");
-			return SetPIDInterpolatedVelocity( group, unitsPerSecond,  seconds);
-		}
-	}
-	/**
-	 * Gets the number of PID channels availible to the system. It is determined by how many PID channels the device reports
-	 * back after a calling GetAllPIDPosition();
-	 * @return
-	 */
-	public int getNumberOfChannels(){
-		return channels.size();
-	}
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#getPIDChannel
-	 */
-	@Override
-	public PIDChannel getPIDChannel(int group) {
-		if(getNumberOfChannels()==0) {
-			GetAllPIDPosition();
-		}
-		while(!(group < getNumberOfChannels() )){
-			PIDChannel c =new PIDChannel(this,group);
-			channels.add(c);
-		}
-		return channels.get(group);
-	}
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#illAllPidGroups
-	 */
-	@Override
-	public boolean killAllPidGroups() {
-		getConnection().setSleepTime(10000);
-		return send(new KillAllPIDCommand())==null;
-	}
-	
-	
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#addPIDEventListener
-	 */
-	public void addPIDEventListener(IPIDEventListener l) {
-		synchronized(PIDEventListeners){
-			if(!PIDEventListeners.contains(l))
-				PIDEventListeners.add(l);
-		}
-	}
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#removePIDEventListener
-	 */
-	public void removePIDEventListener(IPIDEventListener l) {
-		synchronized(PIDEventListeners){
-			if(PIDEventListeners.contains(l))
-				PIDEventListeners.remove(l);
-		}
-	}
-	public void firePIDLimitEvent(PIDLimitEvent e){
-		synchronized(PIDEventListeners){
-			for(IPIDEventListener l: PIDEventListeners)
-				l.onPIDLimitEvent(e);
-		}
-		//channels.get(e.getGroup()).firePIDLimitEvent(e);
-	}
-	public void firePIDEvent(PIDEvent e){
-		if(lastPacketTime != null){
-			if(lastPacketTime[e.getGroup()]>e.getTimeStamp()){
-				Log.error("This event timestamp is out of date, aborting"+e);
-				return;
-			}else{
-				//Log.info("Pid event "+e);
-				lastPacketTime[e.getGroup()]=e.getTimeStamp();
-			}
-		}
-		
-		synchronized(PIDEventListeners){
-			SetCachedPosition(e.getGroup(), e.getValue());
-			for(IPIDEventListener l: PIDEventListeners)
-				l.onPIDEvent(e);
-		}
-		//channels.get(e.getGroup()).firePIDEvent(e);
-	}
-	public void firePIDResetEvent(int group,int value){
-		SetCachedPosition(group, value);
-		for(IPIDEventListener l: PIDEventListeners)
-			l.onPIDReset(group,value);
-		//channels.get(group).firePIDResetEvent(group, value);
+	public PIDConfiguration getPIDConfiguration(int group) {
+		return implementation.getPIDConfiguration(group);
 	}
 
 	@Override
 	public boolean ConfigurePDVelovityController(PDVelocityConfiguration config) {
-
-		return send(new ConfigurePDVelocityCommand(config))!=null;
+		return implementation.ConfigurePDVelovityController(config);
 	}
 
 	@Override
 	public PDVelocityConfiguration getPDVelocityConfiguration(int group) {
-		// TODO Auto-generated method stub
-		return new PDVelocityConfiguration(send(new ConfigurePDVelocityCommand(group)));
+		return implementation.getPDVelocityConfiguration(group);
 	}
 
 	@Override
 	public int getPIDChannelCount() {
-		BowlerDatagram dg = send (new GetPIDChannelCountCommand());
-		return ByteList.convertToInt(dg.getData().getBytes(0, 4));
+		return implementation.getNumberOfChannels();
 	}
 
+	@Override
+	public boolean SetPIDSetPoint(int group, int setpoint, double seconds) {
+		return implementation.SetPIDSetPoint(group, setpoint, seconds);
+	}
+
+	@Override
+	public boolean SetAllPIDSetPoint(int[] setpoints, double seconds) {
+		return implementation.SetAllPIDSetPoint(setpoints, seconds);
+	}
+
+	@Override
+	public int GetPIDPosition(int group) {
+		return implementation.GetPIDPosition(group);
+	}
+
+	@Override
+	public int[] GetAllPIDPosition() {
+		return implementation.GetAllPIDPosition();
+	}
+
+	@Override
+	public void addPIDEventListener(IPIDEventListener l) {
+		implementation.addPIDEventListener(l);
+	}
+
+	@Override
+	public void removePIDEventListener(IPIDEventListener l) {
+		implementation.removePIDEventListener(l);
+	}
+
+	@Override
+	public void flushPIDChannels(double time) {
+		implementation.flushPIDChannels(time);
+	}
+
+	@Override
+	public boolean SetPIDInterpolatedVelocity(int group, int unitsPerSecond,
+			double seconds) throws PIDCommandException {
+		return implementation.SetPIDInterpolatedVelocity(group, unitsPerSecond, seconds);
+	}
+
+	@Override
+	public boolean SetPDVelocity(int group, int unitsPerSecond, double seconds)
+			throws PIDCommandException {
+		return implementation.SetPDVelocity(group, unitsPerSecond, seconds);
+	}
+
+	@Override
+	public PIDChannel getPIDChannel(int group) {
+		return implementation.getPIDChannel(group);
+	}
+
+	@Override
+	public boolean killAllPidGroups() {
+		return implementation.killAllPidGroups();
+	}
+
+	@Override
+	public void onAsyncResponse(BowlerDatagram data) {
+		implementation.onAsyncResponse(data);
+	}
+	
+	protected void firePIDResetEvent(int group, int val) {
+		implementation.firePIDResetEvent(group, val);
+	}
+	protected void firePIDEvent(PIDEvent pidEvent) {
+		implementation.firePIDEvent(pidEvent);
+	}
+	public ArrayList<PIDChannel> getChannels() {
+		return implementation.getChannels();
+	}
+	public void setChannels(ArrayList<PIDChannel> channels) {
+		implementation.setChannels(channels);
+	}
+	
 }

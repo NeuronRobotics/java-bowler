@@ -23,7 +23,6 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 	
 	private int numChannels = 16;
 	
-	
 	public  VirtualGenericPIDDevice( double maxTicksPerSecond) {
 		this.setMaxTicksPerSecond(maxTicksPerSecond);
 		GetAllPIDPosition();
@@ -73,6 +72,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 		return true;
 	}
 
+	
 	@Override
 	public boolean SetPIDSetPoint(int group, int setpoint, double seconds) {
 		Log.info("Virtual setpoint, group="+group+" setpoint="+setpoint);
@@ -116,14 +116,14 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 	public int[] GetAllPIDPosition() {
 		//This is the trigger to populate the number of PID channels
 		int [] back = new int[numChannels];
-		if(back.length != channels.size()){
-			channels =  new ArrayList<PIDChannel>();
-			lastPacketTime =  new long[back.length];
+		if(back.length != getChannels().size()){
+			setChannels(  new ArrayList<PIDChannel>());
+			//lastPacketTime =  new long[back.length];
 			for(int i=0;i<back.length;i++){
 				back[i]=0;
 				PIDChannel c =new PIDChannel(this,i);
 				c.setCachedTargetValue(back[i]);
-				channels.add(c);
+				getChannels().add(c);
 				DriveThread d = new DriveThread(i);
 				driveThreads.add(d);
 				configs.add(new PIDConfiguration());
@@ -166,6 +166,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 				}
 			}
 		}
+	
 		public boolean isPause() {
 			return pause;
 		}

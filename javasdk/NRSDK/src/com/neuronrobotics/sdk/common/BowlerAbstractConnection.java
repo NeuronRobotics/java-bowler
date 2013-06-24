@@ -372,12 +372,13 @@ public abstract class BowlerAbstractConnection {
 	 *
 	 * @param datagram the datagram
 	 */
+	@Deprecated
 	protected void fireSyncOnResponse(BowlerDatagram datagram) {
-		if(datagram.isSyncronous()){
-			for(IBowlerDatagramListener l : listeners) {
-				l.onAllResponse(datagram);
-			}
-		}
+//		if(datagram.isSyncronous()){
+//			for(IBowlerDatagramListener l : listeners) {
+//				l.onAllResponse(datagram);
+//			}
+//		}
 	}
 	
 	protected void fireAsyncOnResponse(BowlerDatagram datagram) {
@@ -386,13 +387,13 @@ public abstract class BowlerAbstractConnection {
 			if(isThreadedUpstreamPackets()){
 				//synchronized(listeners){
 					for(IBowlerDatagramListener l : listeners) {
-						new SyncSender(l,datagram).start();
+						//new SyncSender(l,datagram).start();
 						new AsyncSender(l,datagram).start();
 					}
 				//}
 			}else{
 				for(IBowlerDatagramListener l : listeners) {
-					l.onAllResponse(datagram);
+					//l.onAllResponse(datagram);
 					l.onAsyncResponse(datagram);
 				}
 			
@@ -400,17 +401,17 @@ public abstract class BowlerAbstractConnection {
 		}
 		
 	}
-	private class SyncSender extends Thread{
-		IBowlerDatagramListener l;
-		BowlerDatagram datagram;
-		public SyncSender(IBowlerDatagramListener l,BowlerDatagram datagram){
-			 this.l=l;
-			 this.datagram=datagram;
-		}
-		public void run(){
-			l.onAllResponse(datagram);
-		}
-	}
+//	private class SyncSender extends Thread{
+//		IBowlerDatagramListener l;
+//		BowlerDatagram datagram;
+//		public SyncSender(IBowlerDatagramListener l,BowlerDatagram datagram){
+//			 this.l=l;
+//			 this.datagram=datagram;
+//		}
+//		public void run(){
+//			l.onAllResponse(datagram);
+//		}
+//	}
 	private class AsyncSender extends Thread{
 		IBowlerDatagramListener l;
 		BowlerDatagram datagram;

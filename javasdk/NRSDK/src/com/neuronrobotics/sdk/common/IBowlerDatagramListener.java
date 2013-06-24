@@ -28,10 +28,5 @@ public interface IBowlerDatagramListener {
 	 */
 	public void onAsyncResponse(BowlerDatagram data);
 	
-	/**
-	 * On all response.
-	 *
-	 * @param data the data
-	 */
-	public void onAllResponse(BowlerDatagram data);
+
 }

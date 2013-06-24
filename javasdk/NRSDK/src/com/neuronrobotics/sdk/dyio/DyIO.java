@@ -710,7 +710,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 	 * @see com.neuronrobotics.sdk.pid.IPIDControl#ResetPIDChannel
 	 */
 	public boolean ResetPIDChannel(int group) {
-		return getPid().ResetPIDChannel(group);
+		return getPid().ResetPIDChannel(group,0);
 	}
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.pid.IPIDControl#SetPIDSetPoint
