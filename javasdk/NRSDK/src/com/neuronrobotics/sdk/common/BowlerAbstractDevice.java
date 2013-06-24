@@ -220,12 +220,13 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	 * @return The return arguments parsed and packet into an array of arguments
 	 * @throws DeviceConnectionException If the desired RPC's are not available then this will be thrown
 	 */
-	public Object [] send(String namespace, String rpcString, Object[] arguments) throws DeviceConnectionException{
+	public Object [] send(String namespace,BowlerMethod method, String rpcString, Object[] arguments) throws DeviceConnectionException{
 		for (NamespaceEncapsulation ns:namespaceList){
 			if(ns.getNamespace().toLowerCase().contains(namespace.toLowerCase())){
 				//found the namespace
 				for(RpcEncapsulation rpc:ns.getRpcList()){
-					if(rpc.getRpc().toLowerCase().contains(rpcString.toLowerCase())){
+					if(		rpc.getRpc().toLowerCase().contains(rpcString.toLowerCase()) &&
+							rpc.getDownstreamMethod() == method){
 						//Found the command in the namespace
 						BowlerDatagram dg =  send(rpc.getCommand(arguments));
 						return rpc.parseResponse(dg);//parse and return
@@ -233,7 +234,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 				}
 			}
 		}
-		throw new DeviceConnectionException("Device does not contain command '"+namespace+" "+rpcString+"'");
+		throw new DeviceConnectionException("Device does not contain command '"+namespace+" "+method+" "+rpcString+"'");
 	}
 		
 	/**

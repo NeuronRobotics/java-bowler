@@ -18,7 +18,7 @@ package com.neuronrobotics.sdk.common;
 /**
  * The Class DeviceConnectionException.
  */
-public class DeviceConnectionException extends Exception {
+public class DeviceConnectionException extends RuntimeException {
 
 	public DeviceConnectionException(String string) {
 		super(string);

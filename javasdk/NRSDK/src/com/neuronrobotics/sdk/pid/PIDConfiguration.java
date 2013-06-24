@@ -17,20 +17,7 @@ public class PIDConfiguration {
 	public PIDConfiguration(){
 		
 	}
-	/**
-	 * 
-	 * @param group This is the PID group this configuration object represents
-	 * @param enabled True if the controller is running, false otherwise
-	 * @param inverted This inverts the output value. Set true if the controller diverges
-	 * @param async sets the flag to send this channels async values upstream
-	 * @param KP Proportional constant
-	 * @param KI Integral constant
-	 * @param KD Derivative constant
-	 */
-	@Deprecated
-	public PIDConfiguration(int group,boolean enabled,boolean inverted,boolean async,double KP,double KI,double KD){
-		this( group, enabled, inverted,async, KP, KI, KD,0, false, false);
-	}
+
 	/**
 	 * 
 	 * @param group This is the PID group this configuration object represents
@@ -77,6 +64,25 @@ public class PIDConfiguration {
 		}catch(Exception e){
 			System.err.println("No latch value sent");
 		}
+	}
+	
+	
+	/**
+	 * Used to parse a PID configuration out of a PID packet
+	 * @param conf
+	 */
+
+	public PIDConfiguration(Object [] args) {
+		setGroup((Integer) args[0]);
+		setEnabled((Integer) args[1]==1?true:false);
+		setInverted((Integer) args[2]==1?true:false);
+		setAsync((Integer) args[3]==1?true:false);
+		setKP((Double) args[4]);
+		setKI((Double) args[5]);
+		setKD((Double) args[6]);
+		setIndexLatch((Double) args[7]);
+		setUseLatch((Integer) args[8]==1?true:false);
+		setStopOnIndex((Integer) args[9]==1?true:false);
 	}
 	@Override
 	public String toString(){
@@ -149,5 +155,20 @@ public class PIDConfiguration {
 	}
 	public boolean isStopOnIndex() {
 		return stopOnIndex;
+	}
+	public Object[] getArgs() {
+		Object[] args = new Object[]{
+		group,
+		enabled?1:0,
+		inverted?1:0,
+		async?1:0,
+		KP,
+		KI,
+		KD,
+		latch,
+		useLatch?1:0,
+		stopOnIndex?1:0
+		};
+		return args;
 	}
 }
