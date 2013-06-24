@@ -26,6 +26,7 @@ import com.neuronrobotics.sdk.common.MACAddress;
  *
  */
 public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDControl {
+	private ArrayList<IPIDEventListener> PIDEventListeners = new ArrayList<IPIDEventListener>();
 	protected ArrayList<PIDChannel> channels = new ArrayList<PIDChannel>();
 	protected long [] lastPacketTime = null;
 	
@@ -86,7 +87,7 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 
 	}
 	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.pid.IPIDControl#SetPIDSetPoint
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#SetPIDSetPoint
 	 */
 	public boolean SetPIDSetPoint(int group,int setpoint,double seconds){
 		getPIDChannel(group).setCachedTargetValue(setpoint);
@@ -94,7 +95,7 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 		return send(new  ControlPIDCommand((char) group,setpoint, seconds))!=null;
 	}
 	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.pid.IPIDControl#SetAllPIDSetPoint
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#SetAllPIDSetPoint
 	 */
 	public boolean SetAllPIDSetPoint(int []setpoints,double seconds){
 		int[] sp;
@@ -115,7 +116,7 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 		return send(new  ControlAllPIDCommand(sp, seconds))!=null;
 	}
 	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.pid.IPIDControl#GetPIDPosition
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#GetPIDPosition
 	 */
 	public int GetPIDPosition(int group) {
 		BowlerDatagram b = send(new  ControlPIDCommand((char) group));
@@ -133,13 +134,14 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 		getPIDChannel(group).setCurrentCachedPosition(value);
 	}
 	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.pid.IPIDControl#GetAllPIDPosition
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#GetAllPIDPosition
 	 */
 	public int [] GetAllPIDPosition() {
 		Log.debug("Getting All PID Positions");
 		BowlerDatagram b = send(new ControlAllPIDCommand());
 		ByteList data = b.getData();
 		int [] back = new int[data.size()/4];
+		//Start at 1 because of the number of values 
 		for(int i=1;i<back.length;i++) {
 			int start = i*4;
 			byte [] tmp = data.getBytes(start, 4);
@@ -158,14 +160,14 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 	}
 	
 	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.pid.IPIDControl#ConfigurePIDController
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#ConfigurePIDController
 	 */
 	public boolean ConfigurePIDController(PIDConfiguration config) {
 		return send(new  ConfigurePIDCommand(config))!=null;
 	}
 
 	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.pid.IPIDControl#getPIDConfiguration
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#getPIDConfiguration
 	 */
 	public PIDConfiguration getPIDConfiguration(int group) {
 		BowlerDatagram conf = send(new ConfigurePIDCommand( (char) group) );
@@ -183,7 +185,7 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 	}
 
 	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.pid.IPIDControl#ResetPIDChannel
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#ResetPIDChannel
 	 */
 	public boolean ResetPIDChannel(int group, int valueToSetCurrentTo) {
 		BowlerDatagram rst = send(new  ResetPIDCommand((char) group,valueToSetCurrentTo));
@@ -197,7 +199,7 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 	
 
 	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.pid.IPIDControl#flushPIDChannels
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#flushPIDChannels
 	 */
 	@Override
 	public void flushPIDChannels(double time) {
@@ -209,7 +211,7 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 		SetAllPIDSetPoint(data, time);
 	}
 	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.pid.IPIDControl#SetPIDInterpolatedVelocity
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#SetPIDInterpolatedVelocity
 	 */
 	@Override
 	public boolean SetPIDInterpolatedVelocity(int group, int unitsPerSecond, double seconds) throws PIDCommandException {
@@ -221,7 +223,7 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 		return SetPIDSetPoint(group, (int) delt, seconds);
 	}
 	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.pid.IPIDControl#SetPDVelocity
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#SetPDVelocity
 	 */
 	@Override
 	public boolean SetPDVelocity(int group, int unitsPerSecond, double seconds)throws PIDCommandException {
@@ -242,7 +244,7 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 		return channels.size();
 	}
 	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.pid.IPIDControl#getPIDChannel
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#getPIDChannel
 	 */
 	@Override
 	public PIDChannel getPIDChannel(int group) {
@@ -256,7 +258,7 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 		return channels.get(group);
 	}
 	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.pid.IPIDControl#illAllPidGroups
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#illAllPidGroups
 	 */
 	@Override
 	public boolean killAllPidGroups() {
@@ -264,9 +266,9 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 		return send(new KillAllPIDCommand())==null;
 	}
 	
-	private ArrayList<IPIDEventListener> PIDEventListeners = new ArrayList<IPIDEventListener>();
+	
 	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.pid.IPIDControl#addPIDEventListener
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#addPIDEventListener
 	 */
 	public void addPIDEventListener(IPIDEventListener l) {
 		synchronized(PIDEventListeners){
@@ -275,7 +277,7 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 		}
 	}
 	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.pid.IPIDControl#removePIDEventListener
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#removePIDEventListener
 	 */
 	public void removePIDEventListener(IPIDEventListener l) {
 		synchronized(PIDEventListeners){
@@ -317,7 +319,7 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 
 	@Override
 	public boolean ConfigurePDVelovityController(PDVelocityConfiguration config) {
-		// TODO Auto-generated method stub
+
 		return send(new ConfigurePDVelocityCommand(config))!=null;
 	}
 

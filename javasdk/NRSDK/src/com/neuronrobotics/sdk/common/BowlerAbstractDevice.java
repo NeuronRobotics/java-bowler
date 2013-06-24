@@ -216,9 +216,9 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	 * into an array of objects.
 	 * @param namespace The string of the desired namespace
 	 * @param rpcString The string of the desired RPC
-	 * @param arguments An array of objects corosponding to the data to be stuffed into the packet.
+	 * @param arguments An array of objects corresponding to the data to be stuffed into the packet.
 	 * @return The return arguments parsed and packet into an array of arguments
-	 * @throws DeviceConnectionException If the desired RPC's are not availible then this will be thrown
+	 * @throws DeviceConnectionException If the desired RPC's are not available then this will be thrown
 	 */
 	public Object [] send(String namespace, String rpcString, Object[] arguments) throws DeviceConnectionException{
 		for (NamespaceEncapsulation ns:namespaceList){
@@ -228,7 +228,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 					if(rpc.getRpc().toLowerCase().contains(rpcString.toLowerCase())){
 						//Found the command in the namespace
 						BowlerDatagram dg =  send(rpc.getCommand(arguments));
-						return rpc.parseResponse(dg);
+						return rpc.parseResponse(dg);//parse and return
 					}
 				}
 			}
@@ -289,7 +289,9 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 		if(namespaceList == null)
 			namespaceList = new ArrayList<NamespaceEncapsulation>();
 		if(namespaceList.size()<1){
+			int numTry=0;
 			while(true){
+				numTry++;
 				try {
 					BowlerDatagram b = send(new NamespaceCommand(0));
 					int num;
@@ -316,15 +318,23 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 						Log.debug(space);
 						namespaceList.add(new NamespaceEncapsulation(space));
 					}
-
+					for(NamespaceEncapsulation ns:namespaceList){
+						getRpcList(ns.getNamespace());
+					}
+					break;
 				} catch (InvalidResponseException e) {
 					Log.error("Invalid response from Namespace");
+					if(numTry>3)
+						throw e;
 					
 				} catch (NoConnectionAvailableException e) {
 					Log.error("No connection is available.");
+					if(numTry>3)
+						throw e;
 				}
 			}
 		}
+		
 		for(NamespaceEncapsulation ns:namespaceList){
 			ret.add(ns.getNamespace());
 		}
@@ -400,7 +410,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	 * @return
 	 */
 	public ArrayList<RpcEncapsulation> getRpcList(String namespace) {
-		ArrayList<RpcEncapsulation> rpcs = new ArrayList<RpcEncapsulation>();
+		//ArrayList<RpcEncapsulation> rpcs = new ArrayList<RpcEncapsulation>();
 		int namespaceIndex = 0;
 		boolean hasCoreRpcNS = false;
 		for (int i=0;i<namespaceList.size();i++){
@@ -413,7 +423,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 		}
 		if(!hasCoreRpcNS){
 			//this device has no RPC namespace, failing out
-			return rpcs;
+			return new ArrayList<RpcEncapsulation>();
 		}
 		if(namespaceList.get(namespaceIndex).getRpcList()!=null){
 			//fast return if list is already populated
@@ -432,6 +442,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 				Log.info("Number of RPC's = "+numRpcs);
 			}
 			Log.debug("There are "+numRpcs+" RPC's in "+namespace);
+			namespaceList.get(namespaceIndex).setRpcList(new ArrayList<RpcEncapsulation>());
 			for (int i=0;i<numRpcs;i++){
 				b = send(new RpcCommand(namespaceIndex,i));
 				String rpcStr = new String(b.getData().getBytes(3, 4));
@@ -455,14 +466,13 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 				}
 				RpcEncapsulation tmpRpc = new RpcEncapsulation(namespaceIndex,namespace, rpcStr, downstreamMethod,downArgs,upstreamMethod,upArgs);
 				System.out.println(tmpRpc);
-				rpcs.add(tmpRpc);
+				namespaceList.get(namespaceIndex).getRpcList().add(tmpRpc);
 			}
-			namespaceList.get(namespaceIndex).setRpcList(rpcs);
 			
 		}catch(InvalidResponseException ex){
 			Log.debug("Older version of core, discovery disabled");
 		}
-		return rpcs;
+		return namespaceList.get(namespaceIndex).getRpcList();
 	}
 	
 }
