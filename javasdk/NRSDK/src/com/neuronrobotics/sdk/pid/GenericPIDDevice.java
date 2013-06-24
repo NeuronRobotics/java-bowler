@@ -60,12 +60,12 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 		if(isInit){
 			return;
 		}
-		if(implementation == null){
+		if(getImplementation() == null){
 			if(hasNamespace("bcs.pid.*;0.3;;")){
-				implementation = new LegacyPidNamespaceImp(this);
+				setImplementation(new LegacyPidNamespaceImp(this));
 			}
 			else{
-				implementation = new PidNamespaceImp(this);
+				setImplementation(new PidNamespaceImp(this));
 			}
 		}
 		isInit = true;
@@ -73,107 +73,113 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 
 	@Override
 	public boolean ResetPIDChannel(int group, int valueToSetCurrentTo) {
-		return implementation.ResetPIDChannel(group, valueToSetCurrentTo);
+		return getImplementation().ResetPIDChannel(group, valueToSetCurrentTo);
 	}
 
 	@Override
 	public boolean ConfigurePIDController(PIDConfiguration config) {
-		return implementation.ConfigurePIDController(config);
+		return getImplementation().ConfigurePIDController(config);
 	}
 
 	@Override
 	public PIDConfiguration getPIDConfiguration(int group) {
-		return implementation.getPIDConfiguration(group);
+		return getImplementation().getPIDConfiguration(group);
 	}
 
 	@Override
 	public boolean ConfigurePDVelovityController(PDVelocityConfiguration config) {
-		return implementation.ConfigurePDVelovityController(config);
+		return getImplementation().ConfigurePDVelovityController(config);
 	}
 
 	@Override
 	public PDVelocityConfiguration getPDVelocityConfiguration(int group) {
-		return implementation.getPDVelocityConfiguration(group);
+		return getImplementation().getPDVelocityConfiguration(group);
 	}
 
 	@Override
 	public int getPIDChannelCount() {
-		return implementation.getNumberOfChannels();
+		return getImplementation().getNumberOfChannels();
 	}
 
 	@Override
 	public boolean SetPIDSetPoint(int group, int setpoint, double seconds) {
-		return implementation.SetPIDSetPoint(group, setpoint, seconds);
+		return getImplementation().SetPIDSetPoint(group, setpoint, seconds);
 	}
 
 	@Override
 	public boolean SetAllPIDSetPoint(int[] setpoints, double seconds) {
-		return implementation.SetAllPIDSetPoint(setpoints, seconds);
+		return getImplementation().SetAllPIDSetPoint(setpoints, seconds);
 	}
 
 	@Override
 	public int GetPIDPosition(int group) {
-		return implementation.GetPIDPosition(group);
+		return getImplementation().GetPIDPosition(group);
 	}
 
 	@Override
 	public int[] GetAllPIDPosition() {
-		return implementation.GetAllPIDPosition();
+		return getImplementation().GetAllPIDPosition();
 	}
 
 	@Override
 	public void addPIDEventListener(IPIDEventListener l) {
-		implementation.addPIDEventListener(l);
+		getImplementation().addPIDEventListener(l);
 	}
 
 	@Override
 	public void removePIDEventListener(IPIDEventListener l) {
-		implementation.removePIDEventListener(l);
+		getImplementation().removePIDEventListener(l);
 	}
 
 	@Override
 	public void flushPIDChannels(double time) {
-		implementation.flushPIDChannels(time);
+		getImplementation().flushPIDChannels(time);
 	}
 
 	@Override
 	public boolean SetPIDInterpolatedVelocity(int group, int unitsPerSecond,
 			double seconds) throws PIDCommandException {
-		return implementation.SetPIDInterpolatedVelocity(group, unitsPerSecond, seconds);
+		return getImplementation().SetPIDInterpolatedVelocity(group, unitsPerSecond, seconds);
 	}
 
 	@Override
 	public boolean SetPDVelocity(int group, int unitsPerSecond, double seconds)
 			throws PIDCommandException {
-		return implementation.SetPDVelocity(group, unitsPerSecond, seconds);
+		return getImplementation().SetPDVelocity(group, unitsPerSecond, seconds);
 	}
 
 	@Override
 	public PIDChannel getPIDChannel(int group) {
-		return implementation.getPIDChannel(group);
+		return getImplementation().getPIDChannel(group);
 	}
 
 	@Override
 	public boolean killAllPidGroups() {
-		return implementation.killAllPidGroups();
+		return getImplementation().killAllPidGroups();
 	}
 
 	@Override
 	public void onAsyncResponse(BowlerDatagram data) {
-		implementation.onAsyncResponse(data);
+		getImplementation().onAsyncResponse(data);
 	}
 	
 	protected void firePIDResetEvent(int group, int val) {
-		implementation.firePIDResetEvent(group, val);
+		getImplementation().firePIDResetEvent(group, val);
 	}
 	protected void firePIDEvent(PIDEvent pidEvent) {
-		implementation.firePIDEvent(pidEvent);
+		getImplementation().firePIDEvent(pidEvent);
 	}
 	public ArrayList<PIDChannel> getChannels() {
-		return implementation.getChannels();
+		return getImplementation().getChannels();
 	}
 	public void setChannels(ArrayList<PIDChannel> channels) {
-		implementation.setChannels(channels);
+		getImplementation().setChannels(channels);
+	}
+	public GenericPidNamespaceImp getImplementation() {
+		return implementation;
+	}
+	public void setImplementation(GenericPidNamespaceImp implementation) {
+		this.implementation = implementation;
 	}
 	
 }
