@@ -10,6 +10,7 @@ public class ControlAllPIDCommand extends BowlerAbstractCommand {
 		setMethod(BowlerMethod.GET);
 
 	}
+	
 	public ControlAllPIDCommand( int []setpoint) {
 		setOpCode("apid");
 		setMethod(BowlerMethod.POST);

@@ -41,6 +41,12 @@ public class PDVelocityConfiguration {
 		setKP(((double)ByteList.convertToInt(conf.getData().getBytes(1, 4),false))/100);
 		setKD(((double)ByteList.convertToInt(conf.getData().getBytes(5, 4),false))/100);
 	}
+	public PDVelocityConfiguration(Object[] args) {
+		setGroup((Integer) args[0]);
+		setKP((Double) args[1]);
+		setKD((Double) args[2]);
+	}
+
 	@Override
 	public String toString(){
 		String s="PD Velocity configuration group #"+getGroup();
@@ -66,5 +72,13 @@ public class PDVelocityConfiguration {
 	}
 	public double getKD() {
 		return KD;
+	}
+
+	public Object[] getArgs() {
+		return  new Object[]{
+				group,
+				KP,
+				KD,
+				};
 	}
 }

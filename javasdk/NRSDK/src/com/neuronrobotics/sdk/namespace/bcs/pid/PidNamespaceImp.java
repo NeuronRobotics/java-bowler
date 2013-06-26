@@ -10,7 +10,7 @@ import com.neuronrobotics.sdk.pid.PIDCommandException;
 import com.neuronrobotics.sdk.pid.PIDConfiguration;
 
 public class PidNamespaceImp extends GenericPidNamespaceImp {
-
+	private final String ns = "bcs.pid.*";
 	public PidNamespaceImp(BowlerAbstractDevice device) {
 		super(device);
 	}
@@ -18,56 +18,56 @@ public class PidNamespaceImp extends GenericPidNamespaceImp {
 	@Override
 	public boolean ResetPIDChannel(int group, int valueToSetCurrentTo) throws DeviceConnectionException {
 		Object[] args = new Object[]{group,valueToSetCurrentTo};
-		getDevice().send("bcs.pid.*",BowlerMethod.POST,"rpid",args);
+		getDevice().send(ns,BowlerMethod.POST,"rpid",args);
 		return true;
 	}
 
 	@Override
 	public boolean ConfigurePIDController(PIDConfiguration config) {		
-		getDevice().send("bcs.pid.*",BowlerMethod.CRITICAL,"cpid",config.getArgs());
+		getDevice().send(ns,BowlerMethod.CRITICAL,"cpid",config.getArgs());
 		return true;
 	}
 
 	@Override
 	public PIDConfiguration getPIDConfiguration(int group) {
 		
-		return new PIDConfiguration(getDevice().send("bcs.pid.*",BowlerMethod.GET,"cpid",new Object[]{group}));
+		return new PIDConfiguration(getDevice().send(ns,BowlerMethod.GET,"cpid",new Object[]{group}));
 	}
 
 	@Override
 	public boolean ConfigurePDVelovityController(PDVelocityConfiguration config) {
-		// TODO Auto-generated method stub
-		return false;
+		getDevice().send(ns,BowlerMethod.CRITICAL,"cpdv",config.getArgs());
+		return true;
 	}
 
 	@Override
 	public PDVelocityConfiguration getPDVelocityConfiguration(int group) {
-		// TODO Auto-generated method stub
-		return null;
+		Object [] args = getDevice().send(ns,BowlerMethod.GET,"cpdv",new Object[]{group});
+		return new PDVelocityConfiguration(args);
 	}
 
 	@Override
 	public int getPIDChannelCount() {
-		// TODO Auto-generated method stub
-		return 0;
+		Object [] args = getDevice().send(ns,BowlerMethod.GET,"gpdc",new Object[]{});
+		return (Integer)args[0];
 	}
 
 	@Override
 	public boolean SetPIDSetPoint(int group, int setpoint, double seconds) {
-		// TODO Auto-generated method stub
-		return false;
+		getDevice().send(ns,BowlerMethod.POST,"_pid",new Object[]{group,setpoint,seconds});
+		return true;
 	}
 
 	@Override
 	public boolean SetAllPIDSetPoint(int[] setpoints, double seconds) {
-		// TODO Auto-generated method stub
+		getDevice().send(ns,BowlerMethod.POST,"apid",new Object[]{seconds,setpoints});
 		return false;
 	}
 
 	@Override
 	public int GetPIDPosition(int group) {
-		// TODO Auto-generated method stub
-		return 0;
+		Object [] args = getDevice().send(ns,BowlerMethod.GET,"_pid",new Object[]{group});
+		return (Integer)args[0];
 	}
 
 	@Override
