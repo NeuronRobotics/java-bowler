@@ -61,12 +61,7 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 			return;
 		}
 		if(getImplementation() == null){
-			if(hasNamespace("bcs.pid.*;0.3;;")){
-				setImplementation(new LegacyPidNamespaceImp(this));
-			}
-			else{
-				setImplementation(new PidNamespaceImp(this));
-			}
+			
 		}
 		isInit = true;
 	}
@@ -176,6 +171,16 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDContro
 		getImplementation().setChannels(channels);
 	}
 	public GenericPidNamespaceImp getImplementation() {
+		if(implementation==null){
+			if(hasNamespace("bcs.pid.*;0.3;;")){
+				//Log.info("Using legacy PID namespace");
+				setImplementation(new LegacyPidNamespaceImp(this));
+			}
+			else{
+				//Log.info("Using new PID namespace");
+				setImplementation(new PidNamespaceImp(this));
+			}
+		}
 		return implementation;
 	}
 	public void setImplementation(GenericPidNamespaceImp implementation) {

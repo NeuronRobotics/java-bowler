@@ -11,7 +11,7 @@ public class PIDConfiguration {
 	private double KP=1;
 	private double KI=0;
 	private double KD=0;
-	private double latch=0;
+	private int latch=0;
 	private boolean useLatch=false;
 	private boolean stopOnIndex=false;
 	public PIDConfiguration(){
@@ -39,7 +39,7 @@ public class PIDConfiguration {
 		setKP(KP);
 		setKI(KI);
 		setKD(KD);
-		setIndexLatch(latch);
+		setIndexLatch((int)latch);
 		setUseLatch(useLatch);
 		setStopOnIndex(stopOnLatch);
 	}
@@ -58,7 +58,7 @@ public class PIDConfiguration {
 		setKI(((double)ByteList.convertToInt(conf.getData().getBytes(8, 4),false))/100);
 		setKD(((double)ByteList.convertToInt(conf.getData().getBytes(12, 4),false))/100);
 		try{
-			setIndexLatch(((double)ByteList.convertToInt(conf.getData().getBytes(16, 4),true)));
+			setIndexLatch(((int)ByteList.convertToInt(conf.getData().getBytes(16, 4),true)));
 			setUseLatch(conf.getData().getBytes(20, 1)[0]>0);
 			setStopOnIndex(conf.getData().getBytes(21, 1)[0]>0);
 		}catch(Exception e){
@@ -80,7 +80,7 @@ public class PIDConfiguration {
 		setKP((Double) args[4]);
 		setKI((Double) args[5]);
 		setKD((Double) args[6]);
-		setIndexLatch((Double) args[7]);
+		setIndexLatch((Integer) args[7]);
 		setUseLatch((Integer) args[8]==1?true:false);
 		setStopOnIndex((Integer) args[9]==1?true:false);
 	}
@@ -142,7 +142,7 @@ public class PIDConfiguration {
 		return latch;
 	}
 	public void setIndexLatch(double latch) {
-		this.latch=latch;
+		this.latch=(int)latch;
 	}
 	public void setUseLatch(boolean useLatch) {
 		this.useLatch = useLatch;

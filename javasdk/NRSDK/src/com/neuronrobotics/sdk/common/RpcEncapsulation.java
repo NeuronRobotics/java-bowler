@@ -102,10 +102,10 @@ public class RpcEncapsulation {
 				response [i] = s;
 				break;
 			case FIXED100:
-				response [i] = new Double(ByteList.convertToInt(data.popList(4)))/100;
+				response [i] = new Double(ByteList.convertToInt(data.popList(4)))/100.0;
 				break;
 			case FIXED1k:
-				response [i] = new Double(ByteList.convertToInt(data.popList(4)))/1000;
+				response [i] = new Double(ByteList.convertToInt(data.popList(4)))/1000.0;
 				break;
 			case I08:
 				response [i] = new Integer(data.getUnsigned(0));

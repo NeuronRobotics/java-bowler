@@ -106,7 +106,12 @@ public class PidNamespaceImp extends GenericPidNamespaceImp {
 		Object [] args = send(BowlerMethod.GET,
 				"apid",
 				new Object[]{});
-		return (int [])args[0];
+		int[] data=new int[((Integer[])args[0]).length];
+		for(int i=0;i<data.length;i++){
+			data[i] = ((Integer[])args[0])[i];
+		}
+		
+		return data;
 	}
 
 	@Override

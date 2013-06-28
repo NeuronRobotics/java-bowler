@@ -71,7 +71,7 @@ public class PIDNamespaceTest {
 				PIDNamespaceTest.pid == null ){
 			setPid(new GenericPIDDevice());
 			System.out.println("Creating PID device");
-			if(!ConnectionDialog.getBowlerDevice(getPid())){
+			if(!ConnectionDialog.getBowlerDevice(PIDNamespaceTest.pid)){
 				fail("Device not availible");
 			}
 		}

@@ -30,7 +30,10 @@ public class Rbe3002Robot extends PuckBot {
 														true,//Async
 														KP,// Kp
 														KI,// Ki
-														KD);//Kd
+														KD,//Kd
+														0,//latch
+														false,//use latch
+														false);//stop on latch
 		
 		
 		DyPIDConfiguration rdypid = new DyPIDConfiguration(	2,//PID group 2
@@ -44,7 +47,10 @@ public class Rbe3002Robot extends PuckBot {
 														true,//Async
 														KP,// Kp
 														KI,// Ki
-														KD);//Kd
+														KD,//Kd
+														0,//latch
+														false,//use latch
+														false);//stop on latch
 		dyio.ConfigureDynamicPIDChannels(ldypid);
 		dyio.ConfigurePIDController(lpid);
 		dyio.ConfigureDynamicPIDChannels(rdypid);
