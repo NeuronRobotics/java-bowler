@@ -5,6 +5,7 @@ import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.common.BowlerMethod;
 import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.DeviceConnectionException;
+import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.pid.PDVelocityConfiguration;
 import com.neuronrobotics.sdk.pid.PIDChannel;
 import com.neuronrobotics.sdk.pid.PIDCommandException;
@@ -134,7 +135,7 @@ public class PidNamespaceImp extends GenericPidNamespaceImp {
 
 	@Override
 	public void onAsyncResponse(BowlerDatagram data) {
-		//Log.debug("\nPID ASYNC<<"+data);
+		Log.debug("\nPID ASYNC<<"+data);
 		if(data.getRPC().contains("_pid")){
 			
 			PIDEvent e =new PIDEvent(data);

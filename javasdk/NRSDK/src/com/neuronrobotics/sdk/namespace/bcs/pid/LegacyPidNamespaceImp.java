@@ -158,7 +158,6 @@ public class LegacyPidNamespaceImp extends GenericPidNamespaceImp {
 			back[i] = ByteList.convertToInt( tmp,true);
 		}
 		if(back.length != getNumberOfChannels()){
-			setChannels(new ArrayList<PIDChannel>());
 			lastPacketTime =  new long[back.length];
 			for(int i=0;i<back.length;i++){
 				PIDChannel c =new PIDChannel(this,i);
