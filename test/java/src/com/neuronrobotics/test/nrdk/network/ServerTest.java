@@ -15,13 +15,13 @@ public class ServerTest implements IBowlerDatagramListener{
 	}
 	
 	
-	@Override
-	public void onAllResponse(BowlerDatagram data) {
-
-		System.out.println("Got Packet:\n"+data);
-		srv.sendAsync(data);
-
-	}
+//	@Override
+//	public void onAllResponse(BowlerDatagram data) {
+//
+//		System.out.println("Got Packet:\n"+data);
+//		srv.sendAsync(data);
+//
+//	}
 
 	@Override
 	public void onAsyncResponse(BowlerDatagram data) {

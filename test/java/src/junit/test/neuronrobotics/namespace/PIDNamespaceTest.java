@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.neuronrobotics.sdk.dyio.DyIORegestry;
-import com.neuronrobotics.sdk.genericdevice.GenericPIDDevice;
+import com.neuronrobotics.sdk.pid.GenericPIDDevice;
 import com.neuronrobotics.sdk.pid.PIDConfiguration;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 

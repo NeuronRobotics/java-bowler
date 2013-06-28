@@ -28,7 +28,7 @@ public class KeepDistance implements IRobotDriveEventListener,IAnalogInputListen
 					true,//Async
 					1,// Kp
 					0,// Ki
-					0);//Kd
+					0,0,false,false);//Kd
 		dyio.ConfigureDynamicPIDChannels(dypid);
 		dyio.ConfigurePIDController(pid);
 		

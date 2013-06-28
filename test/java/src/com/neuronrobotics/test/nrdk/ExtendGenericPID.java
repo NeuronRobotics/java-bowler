@@ -7,7 +7,7 @@ import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.common.BowlerMethod;
 import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.Log;
-import com.neuronrobotics.sdk.genericdevice.GenericPIDDevice;
+import com.neuronrobotics.sdk.pid.GenericPIDDevice;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 
 public class ExtendGenericPID {
