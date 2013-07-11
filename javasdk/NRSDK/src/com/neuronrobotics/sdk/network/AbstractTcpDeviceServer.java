@@ -5,11 +5,11 @@ import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.common.IBowlerDatagramListener;
 import com.neuronrobotics.sdk.common.ISynchronousDatagramListener;
 
-public abstract class AbstractUdpDeviceServer implements ISynchronousDatagramListener {
+public abstract class AbstractTcpDeviceServer implements ISynchronousDatagramListener {
 
 	private BowlerAbstractConnection device;
-	private BowlerUDPServer srv;
-	public AbstractUdpDeviceServer(BowlerAbstractConnection device) {
+	private BowlerTCPServer srv;
+	public AbstractTcpDeviceServer(BowlerAbstractConnection device) {
 		this.device = device;
 		device.addDatagramListener(new IBowlerDatagramListener() {
 			@Override
@@ -18,18 +18,18 @@ public abstract class AbstractUdpDeviceServer implements ISynchronousDatagramLis
 			}
 		});
 
-		setServer(new BowlerUDPServer(1865));
+		setServer(new BowlerTCPServer(1965));
 		getServer().connect();
 		getServer().addSynchronousDatagramListener(this);
 		
 		//Log.enableDebugPrint(true);
 	}
 
-	public BowlerUDPServer getServer() {
+	public BowlerTCPServer getServer() {
 		return srv;
 	}
 
-	public void setServer(BowlerUDPServer srv) {
+	public void setServer(BowlerTCPServer srv) {
 		this.srv = srv;
 		srv.addSynchronousDatagramListener(this);
 	}
