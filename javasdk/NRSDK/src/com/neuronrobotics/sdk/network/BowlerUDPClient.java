@@ -71,6 +71,7 @@ public class BowlerUDPClient extends BowlerAbstractConnection{
 	 */
 	public void setAddress(InetAddress set){
     	udp.setAddress(set);
+    	
     }
 	
 	private void init(){
@@ -78,7 +79,7 @@ public class BowlerUDPClient extends BowlerAbstractConnection{
 		setChunkSize(5210);
 		if(connect()){
 			sendAsync(BowlerDatagramFactory.build(new MACAddress(), new PingCommand()));
-			try {Thread.sleep(1000);} catch (InterruptedException e) {}
+			try {Thread.sleep(3000);} catch (InterruptedException e) {}
 		}
 	}
 	

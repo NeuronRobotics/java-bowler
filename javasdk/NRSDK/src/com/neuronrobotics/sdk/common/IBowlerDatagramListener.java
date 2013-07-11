@@ -27,6 +27,6 @@ public interface IBowlerDatagramListener {
 	 * @param data the data
 	 */
 	public void onAsyncResponse(BowlerDatagram data);
-	
 
+	
 }

@@ -64,7 +64,7 @@ public abstract class BowlerAbstractConnection {
 	
 	/** The listeners. */
 	private ArrayList<IBowlerDatagramListener> listeners = new ArrayList<IBowlerDatagramListener>();
-	
+	private ArrayList< ISynchronousDatagramListener> syncListen = new ArrayList<ISynchronousDatagramListener>();
 	/** The queue. */
 	private QueueManager syncQueue = null;
 	//private QueueManager asyncQueue = null;
@@ -372,13 +372,13 @@ public abstract class BowlerAbstractConnection {
 	 *
 	 * @param datagram the datagram
 	 */
-	@Deprecated
+
 	protected void fireSyncOnResponse(BowlerDatagram datagram) {
-//		if(datagram.isSyncronous()){
-//			for(IBowlerDatagramListener l : listeners) {
-//				l.onAllResponse(datagram);
-//			}
-//		}
+		if(datagram.isSyncronous()){
+			for(ISynchronousDatagramListener l : syncListen) {
+				l.onSyncReceive(datagram);
+			}
+		}
 	}
 	
 	protected void fireAsyncOnResponse(BowlerDatagram datagram) {
@@ -387,13 +387,11 @@ public abstract class BowlerAbstractConnection {
 			if(isThreadedUpstreamPackets()){
 				//synchronized(listeners){
 					for(IBowlerDatagramListener l : listeners) {
-						//new SyncSender(l,datagram).start();
 						new AsyncSender(l,datagram).start();
 					}
 				//}
 			}else{
 				for(IBowlerDatagramListener l : listeners) {
-					//l.onAllResponse(datagram);
 					l.onAsyncResponse(datagram);
 				}
 			
@@ -707,6 +705,18 @@ public abstract class BowlerAbstractConnection {
 			l.onConnect();
 		}
 	}
+	
+	public void addSynchronousDatagramListener(ISynchronousDatagramListener l ) {
+		if(!syncListen.contains(l)) {
+			syncListen.add(l);
+		}
+	}
+	public void removeSynchronousDatagramListener(ISynchronousDatagramListener l ) {
+		if(syncListen.contains(l)) {
+			syncListen.remove(l);
+		}
+	} 
+
 
 
 }

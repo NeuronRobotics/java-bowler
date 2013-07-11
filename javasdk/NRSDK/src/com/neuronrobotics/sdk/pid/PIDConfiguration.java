@@ -142,7 +142,7 @@ public class PIDConfiguration {
 		return latch;
 	}
 	public void setIndexLatch(double latch) {
-		this.latch=(int)latch;
+		this.latch=(int) latch;
 	}
 	public void setUseLatch(boolean useLatch) {
 		this.useLatch = useLatch;

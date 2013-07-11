@@ -106,7 +106,9 @@ public class UDPStream {
 			//Log.info("Starting UDP as client");
 			serverSocket = new DatagramSocket();
 		}
-		while(!serverSocket.isBound());
+		while(!serverSocket.isBound()){
+			ThreadUtil.wait(10);
+		}
 		udpSock = serverSocket;
 		if(udpSock == null)
 			throw new RuntimeException();
