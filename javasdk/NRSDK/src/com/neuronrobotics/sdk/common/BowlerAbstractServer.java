@@ -6,13 +6,13 @@ public class BowlerAbstractServer implements ISynchronousDatagramListener  {
 
 	private BowlerAbstractConnection srv;
 	
-	private ArrayList<IBowlerDeviceServerNamespace> namespaces = new ArrayList<IBowlerDeviceServerNamespace>();
+	private ArrayList<BowlerAbstractDeviceServerNamespace> namespaces = new ArrayList<BowlerAbstractDeviceServerNamespace>();
 	
-	public void addBowlerDeviceServerNamespace(IBowlerDeviceServerNamespace ns){
+	public void addBowlerDeviceServerNamespace(BowlerAbstractDeviceServerNamespace ns){
 		if(!namespaces.contains(ns))
 			namespaces.add(ns);
 	}
-	public void removeBowlerDeviceServerNamespace(IBowlerDeviceServerNamespace ns){
+	public void removeBowlerDeviceServerNamespace(BowlerAbstractDeviceServerNamespace ns){
 		if(namespaces.contains(ns))
 			namespaces.remove(ns);
 	}
@@ -20,12 +20,16 @@ public class BowlerAbstractServer implements ISynchronousDatagramListener  {
 		if(namespaces.size()==0){
 			throw new RuntimeException("No namespaces defined");
 		}
-		for(IBowlerDeviceServerNamespace n:namespaces){
-			BowlerDatagram d= n.process(data);
-			if (d!=null)
-				return d;
+		for(BowlerAbstractDeviceServerNamespace n:namespaces){
+			if (n.checkRpc(data)){
+				BowlerDatagram d= n.process(data);
+				if (d!=null){
+					if(!d.getRPC().contains("_err"))
+						return d;
+				}
+			}
 		}
-		
+		System.err.println("No namespace found for "+data);
 		return null;
 	}
 	

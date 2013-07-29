@@ -1,8 +1,10 @@
 package com.neuronrobotics.sdk.common;
 
+import java.util.ArrayList;
+
 import com.neuronrobotics.sdk.genericdevice.GenericDevice;
 
-public class BowlerDeviceReServerNamespace implements IBowlerDeviceServerNamespace{
+public class BowlerDeviceReServerNamespace extends BowlerAbstractDeviceServerNamespace{
 	
 	private BowlerAbstractConnection device;
 	private GenericDevice gen;
@@ -33,6 +35,16 @@ public class BowlerDeviceReServerNamespace implements IBowlerDeviceServerNamespa
 
 	public void setServer(BowlerAbstractServer server) {
 		this.server = server;
+	}
+
+	@Override
+	public ArrayList<String> getNamespaces() {
+		return gen.getNamespaces();
+	}
+
+	@Override
+	public ArrayList<RpcEncapsulation> getRpcList(String namespace) {
+		return gen.getRpcList(namespace);
 	}
 
 }
