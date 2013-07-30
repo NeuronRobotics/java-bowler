@@ -1,10 +1,15 @@
-package com.neuronrobotics.sdk.common;
+package com.neuronrobotics.sdk.common.device.server;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 import com.neuronrobotics.sdk.commands.bcs.core.NamespaceCommand;
 import com.neuronrobotics.sdk.commands.bcs.core.PingCommand;
+import com.neuronrobotics.sdk.common.BowlerAbstractCommand;
+import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
+import com.neuronrobotics.sdk.common.BowlerDatagram;
+import com.neuronrobotics.sdk.common.BowlerDatagramFactory;
+import com.neuronrobotics.sdk.common.Log;
 
 
 public abstract class BowlerAbstractDeviceServer extends BowlerAbstractDevice {
@@ -35,7 +40,7 @@ public abstract class BowlerAbstractDeviceServer extends BowlerAbstractDevice {
 			if(data.getData().size() == 1) {
 				int index = data.getData().get(0);
 				try {
-					sendSyncResponse(new NamespaceCommand(namespaces.get(index)));	
+					sendSyncResponse(new NamespaceCommand(namespaces.size(),namespaces.get(index)));	
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

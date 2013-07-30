@@ -58,10 +58,12 @@ public class NamespaceCommand extends BowlerAbstractCommand {
 		getCallingDataStorage().add(name);
 	}
 	
-	public NamespaceCommand(String name) {
+	public NamespaceCommand(int index,String name) {
 		setOpCode("_nms");
 		setMethod(BowlerMethod.POST);
 		getCallingDataStorage().add(name);
+		getCallingDataStorage().add(0);// null terminate the string
+		getCallingDataStorage().add(index);// set the size of the list of namespaces
 	}
 	/**
 	 * Determine if the return response was successful; throw an InvalidResponseExpection otherwise. Commands
