@@ -300,7 +300,7 @@ public abstract class BowlerAbstractConnection {
 			getSyncQueue().start();
 			fireConnectEvent();
 			if (SDKBuildInfo.isLinux() && SDKBuildInfo.isARM())
-				System.out.println("Is arm, no packet threads");
+				Log.info("Is arm, no packet threads");
 		}else{
 			try {
 				getDataIns().close();
