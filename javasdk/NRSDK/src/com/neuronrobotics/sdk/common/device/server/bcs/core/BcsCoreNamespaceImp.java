@@ -1,12 +1,6 @@
 package com.neuronrobotics.sdk.common.device.server.bcs.core;
 
-import java.util.ArrayList;
-
-import com.neuronrobotics.sdk.commands.bcs.core.NamespaceCommand;
-import com.neuronrobotics.sdk.commands.bcs.core.PingCommand;
 import com.neuronrobotics.sdk.common.BowlerDataType;
-import com.neuronrobotics.sdk.common.BowlerDatagram;
-import com.neuronrobotics.sdk.common.BowlerDatagramFactory;
 import com.neuronrobotics.sdk.common.BowlerMethod;
 import com.neuronrobotics.sdk.common.MACAddress;
 import com.neuronrobotics.sdk.common.RpcEncapsulation;
@@ -18,12 +12,11 @@ public class BcsCoreNamespaceImp extends BowlerAbstractDeviceServerNamespace{
 	
 	private BowlerAbstractServer server;
 
-	public BcsCoreNamespaceImp(BowlerAbstractServer server){
+	public BcsCoreNamespaceImp(BowlerAbstractServer server, MACAddress mac){
+		super( mac ,"bcs.core.*;;");
 		this.server = server;
-		String core ="bcs.core.*;;"; 
-		setNamespace(core );
 		rpc.add(new RpcEncapsulation(0, 
-				core , 
+				getNamespace() , 
 				"_png", 
 				BowlerMethod.GET, 
 				new BowlerDataType[]{}, 
@@ -31,38 +24,35 @@ public class BcsCoreNamespaceImp extends BowlerAbstractDeviceServerNamespace{
 				new BowlerDataType[]{}));
 		
 		rpc.add(new RpcEncapsulation(0, 
-				core , 
+				getNamespace() , 
 				"_nms", 
 				BowlerMethod.GET, 
 				new BowlerDataType[]{BowlerDataType.I08}, 
 				BowlerMethod.POST, 
 				new BowlerDataType[]{BowlerDataType.ASCII,BowlerDataType.I08}));
 	}
-
-
-
-
-
 	/**
 	 * This is the Core namespace processor
 	 */
+
 	@Override
-	public BowlerDatagram process(BowlerDatagram data) {
+	public Object[] process(Object[] data, String rpc, BowlerMethod method) {
 		//System.out.println("Rx >> "+data);
 		if(data== null)
-			return null;
-		if(data.getRPC().contains("_png")){
-			return BowlerDatagramFactory.build(	new MACAddress("74:F7:26:01:01:01"), 
-												new PingCommand());
-		}if(data.getRPC().contains("_nms")){
-			int index=0;
-			if(data.getData().size()==1){
-				index = data.getData().getUnsigned(0);
-			}
-			return BowlerDatagramFactory.build(	new MACAddress("74:F7:26:01:01:01"),
-												new NamespaceCommand(index,server.getNamespaces().get(index).getNamespace()));
+			return new Object[0];
+		if(rpc.contains("_png")){
+			Object[] back = new Object[0];
+			return back;
+		}if(rpc.contains("_nms")){
+			int nsIndex = 	(Integer) data[0];
+			Object[] back = new Object[2];
+			
+			back[0] = server.getNamespaces().get(nsIndex).getNamespace();
+			back[1] = server.getNamespaces().size();
+
+			return back;
 		}
-		return null;
+		return new Object[0];
 	}
 
 }

@@ -79,6 +79,7 @@ public class BowlerDatagram implements ISendable {
 		timestamp = System.currentTimeMillis();
 	}
 	
+
 	/**
 	 * Constructs a BowlerDatagram that will parse the given data into a packet.
 	 * Data must be at least the size of a standard Bowler packet header (11 bytes long)

@@ -23,10 +23,15 @@ public  abstract class BowlerAbstractServer  implements ISynchronousDatagramList
 	
 	private ArrayList<BowlerAbstractDeviceServerNamespace> namespaces = new ArrayList<BowlerAbstractDeviceServerNamespace>();
 	
-	private BcsCoreNamespaceImp bcsCore = new BcsCoreNamespaceImp(this);
-	private BcsRpcNamespaceImp  bcsRpc = 	new BcsRpcNamespaceImp(this);
+	private BcsCoreNamespaceImp bcsCore;
+	private BcsRpcNamespaceImp  bcsRpc;
+
+	private MACAddress macAddress;
 	
-	public BowlerAbstractServer(){
+	public BowlerAbstractServer(MACAddress mac){
+		this.setMacAddress(mac);
+		bcsCore = new BcsCoreNamespaceImp(this,mac);
+		bcsRpc = 	new BcsRpcNamespaceImp(this,mac);
 		setup();
 	}
 	
@@ -88,10 +93,10 @@ public  abstract class BowlerAbstractServer  implements ISynchronousDatagramList
 	
 	@Override
 	public void onSyncReceive(BowlerDatagram data) {
-		System.out.println("Rx >> "+data);
+		//System.out.println("Got >> "+data);
 		BowlerDatagram bd = processLocal(data);
 		if(bd != null){
-			System.out.println("Tx << "+bd);
+			//System.out.println("Response << "+bd);
 			pushAsyncPacket(bd);
 		}
 	}
@@ -106,6 +111,14 @@ public  abstract class BowlerAbstractServer  implements ISynchronousDatagramList
 
 	public void setNamespaces(ArrayList<BowlerAbstractDeviceServerNamespace> namespaces) {
 		this.namespaces = namespaces;
+	}
+
+	public MACAddress getMacAddress() {
+		return macAddress;
+	}
+
+	public void setMacAddress(MACAddress macAddress) {
+		this.macAddress = macAddress;
 	}
 
 

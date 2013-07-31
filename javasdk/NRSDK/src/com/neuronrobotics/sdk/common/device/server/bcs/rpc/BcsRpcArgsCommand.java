@@ -9,16 +9,19 @@ public class BcsRpcArgsCommand extends BowlerAbstractCommand {
 	public BcsRpcArgsCommand(int ns, int rpc, BowlerMethod downstreamMethod,
 			BowlerDataType[] downstreamArguments, BowlerMethod upStreamMethod,
 			BowlerDataType[] upstreamArguments) {
-		setOpCode("_rpc");
+		setOpCode("args");
 		setMethod(BowlerMethod.POST);
 		getCallingDataStorage().add(ns);
 		getCallingDataStorage().add(rpc);
+		
 		getCallingDataStorage().add(downstreamMethod);
 		
 		getCallingDataStorage().add(downstreamArguments.length);
 		for(int i=0;i< downstreamArguments.length;i++){
 			getCallingDataStorage().add(downstreamArguments[i]);
 		}
+		
+		getCallingDataStorage().add(upStreamMethod);
 		
 		getCallingDataStorage().add(upstreamArguments.length);
 		for(int i=0;i< upstreamArguments.length;i++){

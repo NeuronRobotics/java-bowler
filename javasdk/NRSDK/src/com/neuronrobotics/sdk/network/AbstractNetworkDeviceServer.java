@@ -15,17 +15,15 @@ public class AbstractNetworkDeviceServer  extends BowlerAbstractServer{
 	private GenericDevice gen;
 	ArrayList<String> namespaces;
 	
-	public AbstractNetworkDeviceServer(BowlerAbstractConnection device,boolean useAsync,BowlerAbstractConnection serverConnection) {
-		gen = new GenericDevice(device);
+	public AbstractNetworkDeviceServer(GenericDevice device,boolean useAsync,BowlerAbstractConnection serverConnection) {
+		super(device.getAddress());
+		gen = device;
 		namespaces = gen.getNamespaces();
 		for(int i=0;i<namespaces.size();i++){
-			BowlerAbstractDeviceServerNamespace ns = new BowlerDeviceReServerNamespace(device, this,useAsync,i,namespaces.get(i), gen);
-			
+			BowlerAbstractDeviceServerNamespace ns = new BowlerDeviceReServerNamespace(device.getConnection(), this,useAsync,i,namespaces.get(i), gen);
 			addBowlerDeviceServerNamespace(ns);
 		}
-		
 		setServer(serverConnection);
-		
 	}
 		
 }

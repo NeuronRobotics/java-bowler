@@ -2,14 +2,24 @@ package com.neuronrobotics.sdk.common.device.server;
 
 import java.util.ArrayList;
 
+import com.neuronrobotics.sdk.common.BowlerAbstractCommand;
 import com.neuronrobotics.sdk.common.BowlerDatagram;
+import com.neuronrobotics.sdk.common.BowlerDatagramFactory;
+import com.neuronrobotics.sdk.common.BowlerMethod;
+import com.neuronrobotics.sdk.common.MACAddress;
 import com.neuronrobotics.sdk.common.RpcEncapsulation;
 
 public abstract class BowlerAbstractDeviceServerNamespace {
 	
 	protected ArrayList<RpcEncapsulation> rpc=new ArrayList<RpcEncapsulation>();
 
-	protected String  ns =new String("test.fail.*");
+	protected final String  ns ;
+	private final MACAddress mac ;
+	
+	public BowlerAbstractDeviceServerNamespace( MACAddress addr, String namespaceString){
+		ns = namespaceString;
+		mac = addr;
+	}
 	
 	public boolean checkRpc(BowlerDatagram data){
 		for(RpcEncapsulation enc: getRpcList()){
@@ -19,9 +29,7 @@ public abstract class BowlerAbstractDeviceServerNamespace {
 		}
 		return false;
 	}
-	protected void setNamespace(String namespaceString) {
-		ns = namespaceString;
-	}
+
 	
 	public String getNamespace() {
 		return ns;
@@ -32,7 +40,27 @@ public abstract class BowlerAbstractDeviceServerNamespace {
 		return rpc;
 	}
 
+	public MACAddress getAddress() {
+		return mac;
+	}
+
+	public BowlerDatagram process(BowlerDatagram data) {
+		Object [] dataParsed=null;
+		RpcEncapsulation parser=null;
+		for(RpcEncapsulation enc:	getRpcList()){
+			if(enc.getRpc().contains(data.getRPC())&& enc.getDownstreamMethod() == data.getMethod()){
+				parser = enc;
+			}
+		}
+		if(parser == null)
+			return null;
+		dataParsed = parser.parseResponseDownstream(data);
+		
+		BowlerAbstractCommand back = parser.getCommandUpstream(process(dataParsed, data.getRPC(), data.getMethod()));
+		return BowlerDatagramFactory.build(getAddress(), back);
+		
+	}
 	
-	public abstract BowlerDatagram process(BowlerDatagram data);
+	public abstract Object [] process(Object [] data, String rpc, BowlerMethod method);
 	
 }

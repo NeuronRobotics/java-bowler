@@ -37,14 +37,23 @@ public class RpcEncapsulation {
 	}
 	
 	public BowlerAbstractCommand getCommand(Object [] doswnstreamData){
+		return getCommand(doswnstreamData, downstreamArguments);
+	}
+	
+	public BowlerAbstractCommand getCommandUpstream(Object [] doswnstreamData){
+		return getCommand(doswnstreamData, upstreamArguments);
+	}
+	
+	
+	public BowlerAbstractCommand getCommand(Object [] doswnstreamData, BowlerDataType [] arguments){
 		BowlerAbstractCommand command = new BowlerAbstractCommand() {};
 		
 		command.setOpCode(getRpc());
 		command.setMethod(getDownstreamMethod());
 		command.setNamespaceIndex(getNamespaceIndex());
 		
-		for(int i=0;(i<downstreamArguments.length && i < doswnstreamData.length);i++ ){
-			switch(downstreamArguments[i]){
+		for(int i=0;(i<arguments.length && i < doswnstreamData.length);i++ ){
+			switch(arguments[i]){
 			case ASCII:
 				command.getCallingDataStorage().add(doswnstreamData[i].toString());
 				command.getCallingDataStorage().add(0);
@@ -91,11 +100,19 @@ public class RpcEncapsulation {
 	}
 	
 	public Object [] parseResponse(BowlerDatagram datagram){
-		Object [] response = new Object[upstreamArguments.length];
+		return parseResponse(datagram, upstreamArguments);
+	}
+	
+	public Object [] parseResponseDownstream(BowlerDatagram datagram){
+		return parseResponse(datagram, downstreamArguments);
+	}
+	
+	public Object [] parseResponse(BowlerDatagram datagram, BowlerDataType [] arguments){
+		Object [] response = new Object[arguments.length];
 		ByteList data = datagram.getData();
-		for(int i=0;(i<upstreamArguments.length);i++ ){
+		for(int i=0;(i<arguments.length);i++ ){
 			
-			switch(upstreamArguments[i]){
+			switch(arguments[i]){
 			case ASCII:
 				String s = data.asString();
 				data.popList(s.length()+1);
@@ -115,8 +132,7 @@ public class RpcEncapsulation {
 				response [i] = new Integer(ByteList.convertToInt(data.popList(2)));
 				break;
 			case I32:
-				byte [] i32 = data.popList(4);
-				response [i] = new Integer(ByteList.convertToInt(i32,true));
+				response [i] = new Integer(ByteList.convertToInt(data.popList(4),true));
 				break;
 			case I32STR:
 				int numVals32 = data.getUnsigned(0);

@@ -232,4 +232,5 @@ public abstract class BowlerAbstractCommand implements ISendable {
 	public int getNamespaceIndex(){
 		return this.namespaceIndex;		
 	}
+
 }

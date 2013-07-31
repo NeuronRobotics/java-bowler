@@ -13,13 +13,12 @@ public class BcsRpcNamespaceImp extends BowlerAbstractDeviceServerNamespace{
 	
 	private BowlerAbstractServer server;
 	
-	public BcsRpcNamespaceImp(BowlerAbstractServer server){
+	public BcsRpcNamespaceImp(BowlerAbstractServer server,MACAddress mac){
+		super( mac,"bcs.rpc.*;;");
 		this.server = server;
-		String bcsRpc ="bcs.rpc.*;;"; 
-		setNamespace(bcsRpc );
 		
 		rpc.add(new RpcEncapsulation(1, 
-				bcsRpc , 
+				getNamespace() , 
 				"_rpc", 
 				BowlerMethod.GET, 
 				new BowlerDataType[]{	BowlerDataType.I08,//namespace index
@@ -31,7 +30,7 @@ public class BcsRpcNamespaceImp extends BowlerAbstractDeviceServerNamespace{
 										BowlerDataType.ASCII}));//RPC
 		
 		rpc.add(new RpcEncapsulation(1, 
-				bcsRpc , 
+				getNamespace() , 
 				"args", 
 				BowlerMethod.GET, 
 				new BowlerDataType[]{	BowlerDataType.I08,//namespace index
@@ -47,34 +46,40 @@ public class BcsRpcNamespaceImp extends BowlerAbstractDeviceServerNamespace{
 	}
 
 	@Override
-	public BowlerDatagram process(BowlerDatagram data) {
+	public Object[] process(Object[] data, String rpc, BowlerMethod method) {
 		//System.out.println("Rx >> "+data);
 		if(data== null)
-			return null;
-		if(data.getRPC().contains("_rpc")){
-			int ns = data.getData().getUnsigned(0);
-			int rpc = data.getData().getUnsigned(1);
+			return new Object[0];
+		if(rpc.contains("_rpc")){
+			int nsIndex = 	(Integer) data[0];
+			int rpcIndex = 	(Integer) data[1];
+			Object[] back = new Object[4];
 			
-			return BowlerDatagramFactory.build(	new MACAddress("74:F7:26:01:01:01"), 
-												new BcsRpcCommand(	ns,
-																	rpc,
-																	server.getNamespaces().size(),
-																	server.getNamespaces().get(ns).getRpcList().get(rpc).getRpc()));
-		}if(data.getRPC().contains("args")){
-			int ns = data.getData().getUnsigned(0);
-			int rpc = data.getData().getUnsigned(1);
-			RpcEncapsulation myRpc = server.getNamespaces().get(ns).getRpcList().get(rpc);
-			return BowlerDatagramFactory.build(	new MACAddress("74:F7:26:01:01:01"),
-												new BcsRpcArgsCommand(	ns,
-																		rpc,
-																		myRpc.getDownstreamMethod(),
-																		myRpc.getDownstreamArguments(),
-																		myRpc.getUpStreamMethod(),
-																		myRpc.getUpstreamArguments()
-																		));
+			back[0] = nsIndex;
+			back[1] = rpcIndex;
+			
+			back[2] = server.getNamespaces().size();
+			back[3] = server.getNamespaces().get(nsIndex).getRpcList().get(rpcIndex).getRpc();
+			return back;
+		}if(rpc.contains("args")){
+			int nsIndex = 	(Integer) data[0];
+			int rpcIndex = 	(Integer) data[1];
+			Object[] back = new Object[6];
+			RpcEncapsulation myRpc = server.getNamespaces().get(nsIndex).getRpcList().get(rpcIndex );
+			
+			back[0] = nsIndex;
+			back[1] = rpcIndex;
+			
+			back[2] = myRpc.getDownstreamMethod();
+			back[3] =myRpc.getDownstreamArguments();
+			back[4] =myRpc.getUpStreamMethod();
+			back[5] =back;
+			return back;
 		}
-		return null;
+		return new Object[0];
 	}
+	
+	
 
 	
 
