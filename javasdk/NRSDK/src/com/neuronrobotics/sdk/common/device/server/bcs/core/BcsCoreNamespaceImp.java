@@ -48,7 +48,7 @@ public class BcsCoreNamespaceImp extends BowlerAbstractDeviceServerNamespace{
 			Object[] back = new Object[2];
 			
 			back[0] = server.getNamespaces().get(nsIndex).getNamespace();
-			back[1] = server.getNamespaces().size();
+			back[1] = new Integer(server.getNamespaces().size());
 
 			return back;
 		}

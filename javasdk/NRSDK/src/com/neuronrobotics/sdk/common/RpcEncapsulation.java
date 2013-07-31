@@ -85,10 +85,10 @@ public class RpcEncapsulation {
 			case INVALID:
 				break;
 			case STR:
-				Integer [] data = (Integer [])doswnstreamData[i];
-				command.getCallingDataStorage().add(data.length);
-				for(int i1=0;i1<data.length;i1++){
-					command.getCallingDataStorage().add(data[i1]);
+				ByteList data = (ByteList )doswnstreamData[i];
+				command.getCallingDataStorage().add(data.size());
+				for(int i1=0;i1<data.size();i1++){
+					command.getCallingDataStorage().add(data.get(i1));
 				}
 				break;
 			default:
@@ -195,6 +195,7 @@ public class RpcEncapsulation {
 	public BowlerDataType[] getDownstreamArguments() {
 		return downstreamArguments;
 	}
+	
 
 	public void setDownstreamArguments(BowlerDataType[] downstreamArguments) {
 		this.downstreamArguments = downstreamArguments;

@@ -4,6 +4,7 @@ import com.neuronrobotics.sdk.common.BowlerDataType;
 import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.common.BowlerDatagramFactory;
 import com.neuronrobotics.sdk.common.BowlerMethod;
+import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.MACAddress;
 import com.neuronrobotics.sdk.common.RpcEncapsulation;
 import com.neuronrobotics.sdk.common.device.server.BowlerAbstractDeviceServerNamespace;
@@ -55,10 +56,10 @@ public class BcsRpcNamespaceImp extends BowlerAbstractDeviceServerNamespace{
 			int rpcIndex = 	(Integer) data[1];
 			Object[] back = new Object[4];
 			
-			back[0] = nsIndex;
-			back[1] = rpcIndex;
+			back[0] = new Integer(nsIndex);
+			back[1] = new Integer(rpcIndex);
 			
-			back[2] = server.getNamespaces().size();
+			back[2] = new Integer(server.getNamespaces().get(nsIndex).getRpcList().size());
 			back[3] = server.getNamespaces().get(nsIndex).getRpcList().get(rpcIndex).getRpc();
 			return back;
 		}if(rpc.contains("args")){
@@ -67,13 +68,13 @@ public class BcsRpcNamespaceImp extends BowlerAbstractDeviceServerNamespace{
 			Object[] back = new Object[6];
 			RpcEncapsulation myRpc = server.getNamespaces().get(nsIndex).getRpcList().get(rpcIndex );
 			
-			back[0] = nsIndex;
-			back[1] = rpcIndex;
+			back[0] = new Integer(nsIndex);
+			back[1] = new Integer(rpcIndex);
 			
-			back[2] = myRpc.getDownstreamMethod();
-			back[3] =myRpc.getDownstreamArguments();
-			back[4] =myRpc.getUpStreamMethod();
-			back[5] =back;
+			back[2] = new Integer(myRpc.getDownstreamMethod().getValue());
+			back[3] = new ByteList(myRpc.getDownstreamArguments());
+			back[4] = new Integer(myRpc.getUpStreamMethod().getValue());
+			back[5] = new ByteList( myRpc.getUpstreamArguments());
 			return back;
 		}
 		return new Object[0];

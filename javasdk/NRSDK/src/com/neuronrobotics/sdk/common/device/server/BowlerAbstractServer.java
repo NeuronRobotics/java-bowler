@@ -37,10 +37,12 @@ public  abstract class BowlerAbstractServer  implements ISynchronousDatagramList
 	
 	private void setup(){
 		if(!getNamespaces().contains(bcsCore )){
-			getNamespaces().add(0,bcsCore );
+			getNamespaces().add(bcsCore );
+			bcsCore.setNamespaceIndex(0);
 		}
 		if(!getNamespaces().contains(bcsRpc  )){
-			getNamespaces().add(1,bcsRpc );
+			bcsRpc.setNamespaceIndex(1);
+			getNamespaces().add(bcsRpc );
 		}
 	}
 	
@@ -53,7 +55,8 @@ public  abstract class BowlerAbstractServer  implements ISynchronousDatagramList
 					return;
 				}
 			}
-			getNamespaces().add(2,ns);
+			ns.setNamespaceIndex(getNamespaces().size());
+			getNamespaces().add(ns);
 		}
 	}
 	public void removeBowlerDeviceServerNamespace(BowlerAbstractDeviceServerNamespace ns){
@@ -93,11 +96,13 @@ public  abstract class BowlerAbstractServer  implements ISynchronousDatagramList
 	
 	@Override
 	public void onSyncReceive(BowlerDatagram data) {
-		//System.out.println("Got >> "+data);
+		Log.info("Got >> "+data);
 		BowlerDatagram bd = processLocal(data);
 		if(bd != null){
-			//System.out.println("Response << "+bd);
+			Log.info("Response << "+bd);
 			pushAsyncPacket(bd);
+		}else{
+			Log.error("Packet unknown"+data);
 		}
 	}
 

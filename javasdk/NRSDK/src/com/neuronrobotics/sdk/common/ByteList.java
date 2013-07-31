@@ -97,6 +97,12 @@ public class ByteList implements ISendable, List<Byte> {
 		}
 	}
 	
+	public ByteList(BowlerDataType[] arguments) {
+		for(int i=0;i<arguments.length;i++){
+			add(arguments[i].getValue());
+		}
+	}
+
 	private int getStaticBufferByteCount(){
 		int w =staticBufferWritePointer;
 		int r = staticBufferReadPointer;
