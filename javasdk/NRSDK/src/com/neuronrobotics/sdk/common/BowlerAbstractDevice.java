@@ -221,6 +221,9 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	 * @throws DeviceConnectionException If the desired RPC's are not available then this will be thrown
 	 */
 	public Object [] send(String namespace,BowlerMethod method, String rpcString, Object[] arguments) throws DeviceConnectionException{
+		if(namespaceList == null){
+			getNamespaces();
+		}
 		for (NamespaceEncapsulation ns:namespaceList){
 			if(ns.getNamespace().toLowerCase().contains(namespace.toLowerCase())){
 				//found the namespace
@@ -290,11 +293,6 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	 * @return the namespaces
 	 */
 	public ArrayList<String>  getNamespaces(){
-		try{
-			//throw new RuntimeException("Called getNamespaces");
-		}catch(Exception ex){
-			ex.printStackTrace();
-		}
 		ArrayList<String> ret = new ArrayList<String>();
 		if(namespaceList == null)
 			namespaceList = new ArrayList<NamespaceEncapsulation>();
