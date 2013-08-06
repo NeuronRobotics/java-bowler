@@ -175,30 +175,40 @@ public class UDPStream {
                 	while(udpSock==null && isAlive) {
                 		ThreadUtil.wait(100);
                 	}
-					udpSock.receive(receivePacket);
-					
-					byte [] data = receivePacket.getData();
-					byte [] tmp = new byte [receivePacket.getLength()];
-					
-					for (int i=0;i<receivePacket.getLength();i++){
-						tmp[i]=data[i];
-					}
-					
-					if(IPAddressSet != null){
-						if(IPAddressSet.equals(IPAddress) ){
-							////Log.info("Got data from MY address");
-							add(tmp);
-						}else{
-							//Log.error("Data not from My host");
-							IPAddress = null;
-							return;
+                	if(receivePacket !=null){
+						udpSock.receive(receivePacket);
+						
+						byte [] data = receivePacket.getData();
+						byte [] tmp = new byte [receivePacket.getLength()];
+						
+						for (int i=0;i<receivePacket.getLength();i++){
+							tmp[i]=data[i];
 						}
-					}else{
-						////Log.info("Got data from .. someone");
-						add(tmp);
-					}
+						
+						if(IPAddressSet != null){
+							if(IPAddressSet.equals(IPAddress) ){
+								////Log.info("Got data from MY address");
+								add(tmp);
+							}else{
+								//Log.error("Data not from My host");
+								IPAddress = null;
+								return;
+							}
+						}else{
+							////Log.info("Got data from .. someone");
+							add(tmp);
+						}
+                	}
 				} catch (IOException e) {
-					disconnect();
+					e.printStackTrace();
+					if(udpSock != null)
+						 udpSock.close();
+					try {
+						setUDPSocket(port);
+					} catch (SocketException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
 
 			}
@@ -274,6 +284,9 @@ public class UDPStream {
 							}
 						}
 						try {
+							//HACK making all packets broadcast
+							myAddr = broadcast;
+							//END HACK
 							DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, myAddr, myPort);
 							udpSock.send(sendPacket);
 						} catch (IOException e) {
