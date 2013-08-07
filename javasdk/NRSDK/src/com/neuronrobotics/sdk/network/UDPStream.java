@@ -26,7 +26,6 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
-import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
@@ -36,7 +35,7 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
 public class UDPStream {
 	private int port = 1865;
 	private DatagramSocket udpSock = null;
-	byte[] receiveData=new byte[1024];
+	
     byte[] sendData;
     ArrayList<InetAddress>  addrs = new ArrayList<InetAddress>();
     InetAddress IPAddress=null;
@@ -98,21 +97,19 @@ public class UDPStream {
     	} catch (UnknownHostException e) {}
 		if(udpSock != null)
 			udpSock.close();
-		DatagramSocket serverSocket;
 		if(isServer){
 			//Log.info("Starting UDP as server");
-			serverSocket = new DatagramSocket(port);
+			udpSock = new DatagramSocket(port);
 		}else{
 			//Log.info("Starting UDP as client");
-			serverSocket = new DatagramSocket();
+			udpSock = new DatagramSocket();
 		}
-		while(!serverSocket.isBound()){
+		while(!udpSock.isBound()){
 			ThreadUtil.wait(10);
 		}
-		udpSock = serverSocket;
 		if(udpSock == null)
 			throw new RuntimeException();
-		
+		System.err.println("Socket Set up");
 	}
     
 	/**
@@ -120,14 +117,20 @@ public class UDPStream {
 	 */
 	public void start(){
 		//Log.info("Starting the UDP Stream Manager...");
-		isAlive = true;
+		setUdpAlive(true);
 		INS.start();
 		OUTS.start();
 		
 	}
+	/**
+	 * Private class for input streams
+	 * @author hephaestus
+	 *
+	 */
 	private class UDPins extends Thread {
 		private ByteList inputData = new ByteList();
-		DatagramPacket receivePacket;
+		private byte[] receiveData=new byte[65500];
+		private DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);;
 		private InputStream ins = new InputStream() {
 			public int available(){
 				if(inputData.size()>0) {
@@ -168,14 +171,14 @@ public class UDPStream {
 			}
 		};
 		public void run(){
-			while(isAlive){
+			while(isUdpAlive()){
 				try {Thread.sleep(10);} catch (InterruptedException e) {}
-				receivePacket = new DatagramPacket(receiveData, receiveData.length);
                 try {
-                	while(udpSock==null && isAlive) {
+                	while(udpSock==null && isUdpAlive()) {
                 		ThreadUtil.wait(100);
                 	}
                 	if(receivePacket !=null){
+                		
 						udpSock.receive(receivePacket);
 						
 						byte [] data = receivePacket.getData();
@@ -199,19 +202,23 @@ public class UDPStream {
 							add(tmp);
 						}
                 	}
-				} catch (IOException e) {
+				} catch (Exception e) {
+					System.err.println("Fixing the socket");
 					e.printStackTrace();
-					if(udpSock != null)
+					if(udpSock != null){
 						 udpSock.close();
+					}
 					try {
 						setUDPSocket(port);
 					} catch (SocketException e1) {
-						// TODO Auto-generated catch block
+						System.err.println("FAILED to reconnect");
 						e1.printStackTrace();
+						setUdpAlive(false);
 					}
 				}
 
 			}
+			System.err.println("UDPins failed out here");
 		}
 		private void add(byte[] b){
 			//Use most recent address as output
@@ -227,6 +234,13 @@ public class UDPStream {
 			return new DataInputStream(ins);
 		}
 	}
+	
+	
+	/**
+	 * Private class for output stream
+	 * @author hephaestus
+	 *
+	 */
 	private class UDPouts extends Thread{
 		private ByteList outputData = new ByteList();
 		private InetAddress myAddr=null;
@@ -248,9 +262,9 @@ public class UDPStream {
 			}
 		};
 		public void run(){
-			while(isAlive ){
+			while(isUdpAlive() ){
 				ThreadUtil.wait(1);
-				while(udpSock==null && isAlive){
+				while(udpSock==null && isUdpAlive()){
             		ThreadUtil.wait(100);
             	}
 				try {				
@@ -325,7 +339,7 @@ public class UDPStream {
 	public void disconnect() {
 		if(udpSock != null)
 			 udpSock.close();
-		isAlive = false;
+		setUdpAlive(false);
 		udpSock=null;
 	}
 	
@@ -336,6 +350,22 @@ public class UDPStream {
 	 */
 	public ArrayList<InetAddress>  getAllAddresses(){
 		return addrs;
+	}
+
+	public boolean isUdpAlive() {
+		return isAlive;
+	}
+
+	public void setUdpAlive(boolean isAlive) {
+		this.isAlive = isAlive;
+		if(isAlive == false){
+			try{
+				throw new RuntimeException();
+			}catch(Exception e){
+				System.err.println("Stopping socket");
+				e.printStackTrace();
+			}
+		}
 	}
 }
 

@@ -31,6 +31,7 @@
  */
 package com.neuronrobotics.sdk.common;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import com.neuronrobotics.sdk.commands.bcs.core.NamespaceCommand;
@@ -49,6 +50,7 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
  *
  */
 public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
+	private boolean keepAlive = true;
 	
 	private long heartBeatTime=1000;
 	private long lastPacketTime=0;
@@ -205,7 +207,8 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	 */
 	public BowlerDatagram send(BowlerAbstractCommand command) throws NoConnectionAvailableException, InvalidResponseException {	
 		if(!connection.isConnected()) {
-			throw new NoConnectionAvailableException();
+			if(!connect())
+				throw new NoConnectionAvailableException();
 		}
 		
 		return command.validate(send(BowlerDatagramFactory.build(getAddress(), command)));
@@ -396,11 +399,13 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 					try{
 						if(ping()==null){
 							Log.debug("Ping failed, disconnecting");
-							connection.disconnect();
+							if(!isKeepAlive())
+								connection.disconnect();
 						}
 					}catch(Exception e){
 						Log.debug("Ping failed, disconnecting");
-						connection.disconnect();
+						if(!isKeepAlive())
+							connection.disconnect();
 					}
 				}
 				ThreadUtil.wait(10);
@@ -499,6 +504,12 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	@Deprecated
 	public void onAllResponse(BowlerDatagram data){
 		// this is here to prevent the breaking of an interface, 
+	}
+	public boolean isKeepAlive() {
+		return keepAlive;
+	}
+	public void setKeepAlive(boolean keepAlive) {
+		this.keepAlive = keepAlive;
 	}
 	
 }
