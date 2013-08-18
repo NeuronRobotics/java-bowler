@@ -18,7 +18,9 @@ package com.neuronrobotics.sdk.network;
 import java.io.IOException;
 import java.net.SocketException;
 
+import com.neuronrobotics.sdk.commands.bcs.core.PingCommand;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
+import com.neuronrobotics.sdk.common.BowlerDatagramFactory;
 
 
 /**
@@ -76,6 +78,7 @@ public class BowlerUDPServer extends BowlerAbstractConnection {
 			setDataIns(udp.getDataInputStream());
 			setDataOuts(udp.getDataOutptStream());
 			setConnected(true);
+			
 		} catch (SocketException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

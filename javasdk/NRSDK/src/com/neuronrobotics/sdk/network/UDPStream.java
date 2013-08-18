@@ -27,6 +27,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import com.neuronrobotics.sdk.common.ByteList;
+import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 /**
@@ -37,9 +38,9 @@ public class UDPStream {
 	private DatagramSocket udpSock = null;
 	
     byte[] sendData;
-    ArrayList<InetAddress>  addrs = new ArrayList<InetAddress>();
-    InetAddress IPAddress=null;
-    private int incomingPort = port;
+    ArrayList<UdpInterfaceData>  addrs = new ArrayList<UdpInterfaceData>();
+    
+    //InetAddress IPAddress=null;
     byte [] bcast = {(byte) 255,(byte) 255,(byte) 255,(byte) 255};
     InetAddress broadcast = null;
     InetAddress localHost = null;
@@ -129,8 +130,8 @@ public class UDPStream {
 	 */
 	private class UDPins extends Thread {
 		private ByteList inputData = new ByteList();
-		private byte[] receiveData=new byte[65500];
-		private DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);;
+		
+		
 		private InputStream ins = new InputStream() {
 			public int available(){
 				if(inputData.size()>0) {
@@ -171,6 +172,8 @@ public class UDPStream {
 			}
 		};
 		public void run(){
+			byte[] receiveData=new byte[65500];
+			DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);;
 			while(isUdpAlive()){
 				try {Thread.sleep(10);} catch (InterruptedException e) {}
                 try {
@@ -184,23 +187,39 @@ public class UDPStream {
 						byte [] data = receivePacket.getData();
 						byte [] tmp = new byte [receivePacket.getLength()];
 						
-						for (int i=0;i<receivePacket.getLength();i++){
-							tmp[i]=data[i];
-						}
-						
-						if(IPAddressSet != null){
-							if(IPAddressSet.equals(IPAddress) ){
-								////Log.info("Got data from MY address");
-								add(tmp);
+						if(	receivePacket.getLength()>0){
+							boolean packetOk=false;
+							if(IPAddressSet!= null){
+								for(int i=0;i<getAllIntetAddresses().size();i++){
+									if(IPAddressSet.equals(getAllAddresses().get(i))){
+										packetOk=true;
+									}
+								}
 							}else{
-								//Log.error("Data not from My host");
-								IPAddress = null;
-								return;
+								packetOk=true;
+							}
+							if(packetOk){
+								Log.warning("Got packet "+receivePacket.getAddress()+
+										"\nGot Port: "+receivePacket.getPort()+
+										"\nLH: "+InetAddress.getLocalHost()+
+										"\nlocal port: "+udpSock.getLocalPort()+
+										"\nInetAddress: "+udpSock.getInetAddress()+
+										"\ngetLocalSocketAddress(): "+udpSock.getLocalSocketAddress()+
+										"\nRemoteSocketAddress(): "+udpSock.getRemoteSocketAddress()+
+										"\nPort: "+udpSock.getPort()+
+										"\nLocalAddress: "+udpSock.getLocalAddress());
+								for (int i=0;i<receivePacket.getLength();i++){
+									tmp[i]=data[i];
+								}
+								
+								add(tmp, receivePacket);
 							}
 						}else{
-							////Log.info("Got data from .. someone");
-							add(tmp);
+							if(receivePacket.getLength()<=0){
+								Log.warning("Packet Filtered, from localhost "+receivePacket.getAddress());
+							}
 						}
+						
                 	}
 				} catch (Exception e) {
 					System.err.println("Fixing the socket");
@@ -220,12 +239,24 @@ public class UDPStream {
 			}
 			System.err.println("UDPins failed out here");
 		}
-		private void add(byte[] b){
+		private void add(byte[] b, DatagramPacket receivePacket){
 			//Use most recent address as output
-			IPAddress = receivePacket.getAddress();
-			incomingPort = receivePacket.getPort();
-			if(!addrs.contains(IPAddress))
-				addrs.add(IPAddress);
+			InetAddress IPAddress = receivePacket.getAddress();
+			if(addrs.size() ==0){
+				addrs.add(new UdpInterfaceData(receivePacket.getAddress(), receivePacket.getPort()));
+			}else{
+				boolean adderInList=false;
+				for(int i=0;i<addrs.size();i++){
+					if(addrs.get(i).getAddr().toString().contains(IPAddress.toString())){
+						adderInList=true;
+						//Log.warning("Repeated IP address  "+IPAddress.toString());
+					}
+				}
+				if(!adderInList){
+					addrs.add(new UdpInterfaceData(receivePacket.getAddress(), receivePacket.getPort()));
+					Log.warning("Adding IP address "+IPAddress.toString());
+				}
+			}
 			synchronized(inputData){
 				inputData.add(b);
 			}
@@ -243,8 +274,7 @@ public class UDPStream {
 	 */
 	private class UDPouts extends Thread{
 		private ByteList outputData = new ByteList();
-		private InetAddress myAddr=null;
-		private int myPort;
+		//private InetAddress myAddr=null;
 		private OutputStream outs = new OutputStream() {
 			public void write(byte [] raw){
 				synchronized(outputData){
@@ -278,31 +308,23 @@ public class UDPStream {
 						lastSent=sendData;
 						if(udpSock == null)
 							throw new RuntimeException("Udp Socket is null!!");
-						if(IPAddress == null){
-							//Log.info("Sending as broadcast");
-							myAddr = broadcast;
-							myPort = port;
-						}else {
-							try {
-								if (!IPAddress.equals(InetAddress.getLocalHost())){
-									myAddr = IPAddress;
-									myPort = incomingPort;
-								}
-								else{
-									myAddr = broadcast;
-									myPort = port;
-								}
-							} catch (UnknownHostException e) {
-								myAddr = broadcast;
-								myPort = port;
-							}
-						}
+
+						
 						try {
-							//HACK making all packets broadcast
-							myAddr = broadcast;
-							//END HACK
-							DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, myAddr, myPort);
-							udpSock.send(sendPacket);
+							if(getAllAddresses().size()==0){
+								DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, broadcast, port);
+								udpSock.send(sendPacket);
+								Log.warning("Sending message to broadcast");
+							}else{
+								for(int i=0;i< getAllAddresses().size();i++){
+									DatagramPacket sendPacket = new DatagramPacket(	sendData, 
+																					sendData.length, 
+																					getAllAddresses().get(i).getAddr(),
+																					getAllAddresses().get(i).getPort());
+									udpSock.send(sendPacket);
+								}
+							}
+							
 						} catch (IOException e) {
 							return;
 						}	
@@ -348,7 +370,7 @@ public class UDPStream {
 	 * 
 	 * @return
 	 */
-	public ArrayList<InetAddress>  getAllAddresses(){
+	public ArrayList<UdpInterfaceData>  getAllAddresses(){
 		return addrs;
 	}
 
@@ -367,6 +389,41 @@ public class UDPStream {
 			}
 		}
 	}
+	private class UdpInterfaceData{
+		private InetAddress addr;
+		private int port2;
+
+		public UdpInterfaceData(InetAddress addr, int port){
+			this.setAddr(addr);
+			setPort(port);
+			
+		}
+
+		public InetAddress getAddr() {
+			return addr;
+		}
+
+		public void setAddr(InetAddress addr) {
+			this.addr = addr;
+		}
+
+		public int getPort() {
+			return port2;
+		}
+
+		public void setPort(int port2) {
+			this.port2 = port2;
+		}
+	}
+
+	public ArrayList<InetAddress> getAllIntetAddresses() {
+		ArrayList<InetAddress> back=new ArrayList<InetAddress>();
+		for(int i=0;i<getAllAddresses().size();i++){
+			 back.add(getAllAddresses().get(i).getAddr());
+		}
+		return back;
+	}
+	
 }
 
 

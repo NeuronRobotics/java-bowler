@@ -24,6 +24,7 @@ import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.BowlerDatagramFactory;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.MACAddress;
+import com.sun.org.apache.bcel.internal.generic.NEWARRAY;
 
 /**
  * 
@@ -143,8 +144,10 @@ public class BowlerUDPClient extends BowlerAbstractConnection{
 	 * @return
 	 */
 	public ArrayList<InetAddress>  getAllAddresses(){
-		if (udp!= null)
-			return udp.getAllAddresses();
+		if (udp!= null){
+			return udp.getAllIntetAddresses();
+		}
+			
 		return new ArrayList<InetAddress>();
 	}
 
