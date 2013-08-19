@@ -43,6 +43,9 @@ public class BowlerTCPClient extends BowlerAbstractConnection{
 
 	private Socket tcpSock = null;
 	private InetAddress tcpAddr=null;
+
+
+	private int port;
 	
 	
 	/**
@@ -60,6 +63,7 @@ public class BowlerTCPClient extends BowlerAbstractConnection{
 	 * @throws IOException 
 	 */
 	public BowlerTCPClient(String addr,int port) throws IOException{
+		this.port = port;
 		if(isConnected())
 			return;
 		setSynchronusPacketTimeoutTime(sleepTime);
@@ -180,17 +184,21 @@ public class BowlerTCPClient extends BowlerAbstractConnection{
 	 */
 	@Override
 	public boolean reconnect() {
-		// TODO Auto-generated method stub
-		return false;
+		Log.warning("Reconnecting..");
+		disconnect();
+		try {
+			setTCPSocket(new Socket(tcpAddr,port));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return true;
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.common.BowlerAbstractConnection#waitingForConnection()
-	 */
+
 	@Override
 	public boolean waitingForConnection() {
 		// TODO Auto-generated method stub
 		return false;
 	}
-
+	
 }

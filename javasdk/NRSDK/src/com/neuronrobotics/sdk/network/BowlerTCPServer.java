@@ -18,6 +18,7 @@ package com.neuronrobotics.sdk.network;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -40,8 +41,8 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 	private TCPListener tcp = null;
 
 	private int port = 1866;
-	
-	private boolean clientConnected=false;
+
+	private PrintWriter out;
 	
 	/**
 	 * 
@@ -100,7 +101,7 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 				return false;
 			}
 		}
-		if(tcp != null){
+		if(tcp == null){
 			tcp = new TCPListener();
 			tcp.start();
 			setConnected(true);
@@ -147,8 +148,8 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 					Log.info("\nGot connection..");
 					setDataIns(new DataInputStream(connectionSocket.getInputStream()));
 					setDataOuts(new DataOutputStream(connectionSocket.getOutputStream()));
+					out = new PrintWriter(connectionSocket.getOutputStream(), true);
 					setConnected(true);
-					setClientConnected(true);
 				} catch (Exception e1) {
 					setConnected(false);
 					throw new RuntimeException(e1);
@@ -179,11 +180,10 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 	}
 
 	public boolean isClientConnected() {
-		return clientConnected;
+		if(out==null)
+			return false;
+		return !out.checkError();
 	}
 
-	public void setClientConnected(boolean clientConnected) {
-		this.clientConnected = clientConnected;
-	}
 
 }

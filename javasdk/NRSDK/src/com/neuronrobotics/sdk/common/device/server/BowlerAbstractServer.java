@@ -116,6 +116,8 @@ public  abstract class BowlerAbstractServer  implements ISynchronousDatagramList
 				if(getServers().get(i).getClass() == BowlerTCPServer.class){
 					if(((BowlerTCPServer)getServers().get(i)).isClientConnected()){
 						run=true;
+					}else{
+						Log.warning("Bowler client not detected, dropping\n"+data);
 					}
 				}else{
 					run=true;
