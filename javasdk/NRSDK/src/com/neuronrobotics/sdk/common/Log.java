@@ -30,14 +30,16 @@ import com.neuronrobotics.sdk.config.SDKBuildInfo;
  */
 public class Log {
 	
-	/** The Constant DEBUG. */
-	public static final int DEBUG = -1;
+	
 	
 	/** The Constant LOG. */
-	public static final int LOG = 0;
+	public static final int LOG =-1;
 	
 	/** The Constant INFO. */
-	public static final int INFO = 1;
+	public static final int INFO = 0;
+	
+	/** The Constant DEBUG. */
+	public static final int DEBUG = 1;
 	
 	/** The Constant WARNING. */
 	public static final int WARNING = 2;
@@ -208,7 +210,7 @@ public class Log {
 	
 	public static void enableDebugPrint(boolean debugprint) {
 		Log.enableSystemPrint(debugprint);
-		Log.setMinimumPrintLevel(debugprint?DEBUG:INFO);
+		Log.setMinimumPrintLevel(debugprint?WARNING:INFO);
 	}
 	/**
 	 * Set the minimum level of importance to dsplay.
@@ -331,7 +333,7 @@ public class Log {
 		 * @see java.lang.Object#toString()
 		 */
 		public String toString() {
-			return "[" + dateFormat.format(datetime) + "] " + " " + getImportance(importance) +" "+callingClass+ " \t\t\t:"+ message;
+			return "[" + dateFormat.format(datetime) + "] " + " " + getImportance(importance) +" "+callingClass+ " \t\t\t:\n"+ message;
 		}
 	}
 	

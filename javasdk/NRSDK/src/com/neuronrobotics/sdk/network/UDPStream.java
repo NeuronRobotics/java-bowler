@@ -22,6 +22,7 @@ import java.io.OutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.MulticastSocket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
  */
 public class UDPStream {
 	private int port = 1865;
-	private DatagramSocket udpSock = null;
+	private MulticastSocket udpSock = null;
 	
     byte[] sendData;
     ArrayList<UdpInterfaceData>  addrs = new ArrayList<UdpInterfaceData>();
@@ -100,10 +101,20 @@ public class UDPStream {
 			udpSock.close();
 		if(isServer){
 			//Log.info("Starting UDP as server");
-			udpSock = new DatagramSocket(port);
+			try {
+				udpSock = new MulticastSocket(port);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}else{
 			//Log.info("Starting UDP as client");
-			udpSock = new DatagramSocket();
+			try {
+				udpSock = new MulticastSocket();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		while(!udpSock.isBound()){
 			ThreadUtil.wait(10);
@@ -199,15 +210,15 @@ public class UDPStream {
 								packetOk=true;
 							}
 							if(packetOk){
-								Log.warning("Got packet "+receivePacket.getAddress()+
-										"\nGot Port: "+receivePacket.getPort()+
-										"\nLH: "+InetAddress.getLocalHost()+
-										"\nlocal port: "+udpSock.getLocalPort()+
-										"\nInetAddress: "+udpSock.getInetAddress()+
-										"\ngetLocalSocketAddress(): "+udpSock.getLocalSocketAddress()+
-										"\nRemoteSocketAddress(): "+udpSock.getRemoteSocketAddress()+
-										"\nPort: "+udpSock.getPort()+
-										"\nLocalAddress: "+udpSock.getLocalAddress());
+//								Log.warning("Got packet "+receivePacket.getAddress()+
+//										"\nGot Port: "+receivePacket.getPort()+
+//										"\nLH: "+InetAddress.getLocalHost()+
+//										"\nlocal port: "+udpSock.getLocalPort()+
+//										"\nInetAddress: "+udpSock.getInetAddress()+
+//										"\ngetLocalSocketAddress(): "+udpSock.getLocalSocketAddress()+
+//										"\nRemoteSocketAddress(): "+udpSock.getRemoteSocketAddress()+
+//										"\nPort: "+udpSock.getPort()+
+//										"\nLocalAddress: "+udpSock.getLocalAddress());
 								for (int i=0;i<receivePacket.getLength();i++){
 									tmp[i]=data[i];
 								}
@@ -244,6 +255,7 @@ public class UDPStream {
 			InetAddress IPAddress = receivePacket.getAddress();
 			if(addrs.size() ==0){
 				addrs.add(new UdpInterfaceData(receivePacket.getAddress(), receivePacket.getPort()));
+				Log.warning("Adding IP address "+IPAddress.toString());
 			}else{
 				boolean adderInList=false;
 				for(int i=0;i<addrs.size();i++){
@@ -254,6 +266,12 @@ public class UDPStream {
 				}
 				if(!adderInList){
 					addrs.add(new UdpInterfaceData(receivePacket.getAddress(), receivePacket.getPort()));
+					try {
+						udpSock.joinGroup(receivePacket.getAddress());
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					Log.warning("Adding IP address "+IPAddress.toString());
 				}
 			}

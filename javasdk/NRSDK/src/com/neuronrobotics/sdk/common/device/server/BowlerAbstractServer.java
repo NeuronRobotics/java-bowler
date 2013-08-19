@@ -91,6 +91,7 @@ public  abstract class BowlerAbstractServer  implements ISynchronousDatagramList
 	public void setServer(BowlerAbstractConnection srv) {
 		this.srv = srv;
 		srv.connect();
+		//pushAsyncPacket(BowlerDatagramFactory.build(getMacAddress(), new PingCommand()));
 		srv.addSynchronousDatagramListener(this);
 	}
 	
