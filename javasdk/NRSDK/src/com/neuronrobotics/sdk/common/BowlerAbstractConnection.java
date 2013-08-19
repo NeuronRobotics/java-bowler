@@ -181,7 +181,7 @@ public abstract class BowlerAbstractConnection {
 	 */
 	public void sendAsync(BowlerDatagram sendable){
 		if(!isConnected()) {
-			Log.error("Can not send message because the engine is not connected.");
+			//Log.error("Can not send message because the engine is not connected.");
 			return;
 		}
 		try {

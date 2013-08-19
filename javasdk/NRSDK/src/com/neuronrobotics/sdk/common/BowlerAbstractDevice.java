@@ -260,10 +260,12 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 			setAddress(bd.getAddress());
 			return bd;
 		} catch (InvalidResponseException e) {
-			Log.error("Invalid response from Ping");
+			Log.error("Invalid response from Ping ");
+			e.printStackTrace();
 			return null;
 		} catch (NoConnectionAvailableException e) {
 			Log.error("No connection is available.");
+			e.printStackTrace();
 			return null;
 		}
 	}

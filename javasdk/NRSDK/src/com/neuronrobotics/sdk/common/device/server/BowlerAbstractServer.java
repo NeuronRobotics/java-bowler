@@ -81,7 +81,7 @@ public  abstract class BowlerAbstractServer  implements ISynchronousDatagramList
 				}
 			}
 		}
-		System.err.println("No namespace found for "+data);
+		Log.error("No namespace found for "+data);
 		return null;
 	}
 	
@@ -99,10 +99,10 @@ public  abstract class BowlerAbstractServer  implements ISynchronousDatagramList
 	
 	@Override
 	public void onSyncReceive(BowlerDatagram data) {
-		Log.info("Got >> "+data);
+		Log.warning("Got >> "+data);
 		BowlerDatagram bd = processLocal(data);
 		if(bd != null){
-			Log.info("Response << "+bd);
+			Log.warning("Response << "+bd);
 			pushAsyncPacket(bd);
 		}else{
 			Log.error("Packet unknown"+data);

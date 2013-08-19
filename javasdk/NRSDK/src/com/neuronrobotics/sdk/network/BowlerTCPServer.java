@@ -32,14 +32,14 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
  * 
  */
 public class BowlerTCPServer extends BowlerAbstractConnection{
-	private int sleepTime = 1000;
+	private int sleepTime = 5000;
 	
 	private ServerSocket tcpSock = null;
 	private Socket connectionSocket=null;
 
 	private TCPListener tcp = null;
 
-	private int port = 1965;
+	private int port = 1866;
 	
 	private boolean clientConnected=false;
 	
@@ -52,9 +52,9 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 		try {
 			setTCPSocket(port);
 		} catch (UnknownHostException e) {
-			System.err.println("No such host");
+			Log.error("No such host");
 		} catch (IOException e) {
-			System.err.println("Port un-availible");
+			Log.error("Port un-availible");
 		}
 	}
 	
@@ -70,20 +70,19 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 		try {
 			setTCPSocket(port);
 		} catch (UnknownHostException e) {
-			System.err.println("No such host");
+			Log.error("No such host");
 		} catch (IOException e) {
-			System.err.println("Port un-availible");
+			Log.error("Port un-availible");
 		}
 	}
 	
 	private void setTCPSocket(int port) throws IOException{
 		if(tcpSock != null)
 			tcpSock.close();
-		ServerSocket serverSocket = new ServerSocket(port);
-		while(!serverSocket.isBound()){
-			ThreadUtil.wait(100);
+		tcpSock = new ServerSocket(port);
+		while(!tcpSock.isBound()){
+			ThreadUtil.wait(10);
 		}
-		tcpSock = serverSocket;
 		connect();
 	}
 	
@@ -101,9 +100,12 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 				return false;
 			}
 		}
-		tcp = new TCPListener();
-		tcp.start();
-		setConnected(true);
+		if(tcp != null){
+			tcp = new TCPListener();
+			tcp.start();
+			setConnected(true);
+			Log.warning("Connecting...OK");
+		}
 		return isConnected();	
 	}
 	
@@ -122,9 +124,10 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 	 */
 	@Override
 	public void disconnect() {
-		Log.info("Disconnecting..");
+		Log.warning("Disconnecting..");
 		try {
 			tcpSock.close();
+			tcp=null;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

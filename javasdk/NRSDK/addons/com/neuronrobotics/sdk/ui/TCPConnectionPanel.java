@@ -15,6 +15,12 @@
 package com.neuronrobotics.sdk.ui;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.Socket;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.util.Enumeration;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -37,9 +43,9 @@ import com.neuronrobotics.sdk.network.BowlerTCPClient;
 public class TCPConnectionPanel extends AbstractConnectionPanel {
 
 	private static final long serialVersionUID = 1L;
-	private static int defaultPortNum = 1965;
+	private static int defaultPortNum = 1866;
 	private static String defaultServer = "localhost";
-	private JComboBox connectionCbo = null;
+	private JComboBox<String> connectionCbo = null;
 	private JTextField port = new JTextField(8);
 	BowlerTCPClient clnt=null;
 	
@@ -59,13 +65,28 @@ public class TCPConnectionPanel extends AbstractConnectionPanel {
 				               ));
 
 		add(new JLabel("Server:"), "cell 0 0");
-		connectionCbo = new JComboBox();
+		connectionCbo = new JComboBox<String>();
 		connectionCbo.setEditable(true);
-		connectionCbo.addItem(defaultServer);
+		
+		Socket s;
+		try {
+			s = new Socket("google.com", 80);
+			connectionCbo.addItem(s.getLocalAddress().getHostAddress());
+			//System.out.println(s.getLocalAddress().getHostAddress());
+			s.close();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
 		add(connectionCbo, "cell 1 0");
 		
 		add(new JLabel("Port:"), "cell 0 1");
 		add(port, "cell 1 1");
+		
 	}
 	
 	public static void setDefaultServer(String server){

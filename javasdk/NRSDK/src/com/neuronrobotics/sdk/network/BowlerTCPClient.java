@@ -20,9 +20,11 @@ import java.io.DataOutputStream;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 
 import java.util.List;
 
@@ -37,8 +39,8 @@ import com.neuronrobotics.sdk.common.Log;
  */
 public class BowlerTCPClient extends BowlerAbstractConnection{
 	private int sleepTime = 5000;
-	private int pollTimeoutTime = 5;
 	
+
 	private Socket tcpSock = null;
 	private InetAddress tcpAddr=null;
 	
@@ -65,9 +67,9 @@ public class BowlerTCPClient extends BowlerAbstractConnection{
 		try {
 			setTCPSocket(new Socket(addr,port));
 		} catch (UnknownHostException e) {
-			System.err.println("No such host");
+			Log.error("No such host");
 		} catch (IOException e) {
-			System.err.println("Port un-availible");
+			Log.error("Port un-availible");
 			throw e;
 		}
 	}
