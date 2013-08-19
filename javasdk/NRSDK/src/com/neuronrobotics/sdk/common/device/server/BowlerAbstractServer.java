@@ -15,11 +15,12 @@ import com.neuronrobotics.sdk.common.MACAddress;
 import com.neuronrobotics.sdk.common.RpcEncapsulation;
 import com.neuronrobotics.sdk.common.device.server.bcs.core.BcsCoreNamespaceImp;
 import com.neuronrobotics.sdk.common.device.server.bcs.rpc.BcsRpcNamespaceImp;
+import com.neuronrobotics.sdk.network.BowlerTCPServer;
 
 public  abstract class BowlerAbstractServer  implements ISynchronousDatagramListener  {
 
 	
-	private BowlerAbstractConnection srv;
+	private ArrayList<BowlerAbstractConnection> servers = new ArrayList<BowlerAbstractConnection>();
 	
 	private ArrayList<BowlerAbstractDeviceServerNamespace> namespaces = new ArrayList<BowlerAbstractDeviceServerNamespace>();
 	
@@ -84,15 +85,16 @@ public  abstract class BowlerAbstractServer  implements ISynchronousDatagramList
 		return null;
 	}
 	
-	public BowlerAbstractConnection getServer() {
-		return srv;
+	public ArrayList<BowlerAbstractConnection> getServers() {
+		return servers;
 	}
 
-	public void setServer(BowlerAbstractConnection srv) {
-		this.srv = srv;
-		srv.connect();
-		//pushAsyncPacket(BowlerDatagramFactory.build(getMacAddress(), new PingCommand()));
-		srv.addSynchronousDatagramListener(this);
+	public void addServer(BowlerAbstractConnection srv) {
+		if(!servers.contains(srv)){
+			srv.connect();
+			srv.addSynchronousDatagramListener(this);
+			servers.add(srv);
+		}
 	}
 	
 	@Override
@@ -108,7 +110,22 @@ public  abstract class BowlerAbstractServer  implements ISynchronousDatagramList
 	}
 
 	public void pushAsyncPacket(BowlerDatagram data) {
-		getServer().sendAsync(data);
+		for(int i=0;i<servers.size();i++){
+			try{
+				boolean run = false;
+				if(getServers().get(i).getClass() == BowlerTCPServer.class){
+					if(((BowlerTCPServer)getServers().get(i)).isClientConnected()){
+						run=true;
+					}
+				}else{
+					run=true;
+				}
+				if(run)
+					getServers().get(i).sendAsync(data);
+			}catch(Exception e){
+				Log.error("No client connected to this connection");
+			}
+		}
 	}
 
 	public ArrayList<BowlerAbstractDeviceServerNamespace> getNamespaces() {
