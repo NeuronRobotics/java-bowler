@@ -33,7 +33,6 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
  */
 public class BowlerTCPServer extends BowlerAbstractConnection{
 	private int sleepTime = 1000;
-	private int pollTimeoutTime = 20;
 	
 	private ServerSocket tcpSock = null;
 	private Socket connectionSocket=null;
@@ -41,6 +40,8 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 	private TCPListener tcp = null;
 
 	private int port = 1965;
+	
+	private boolean clientConnected=false;
 	
 	/**
 	 * 
@@ -106,6 +107,16 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 		return isConnected();	
 	}
 	
+	/**
+	 * Checks if is connected.
+	 *
+	 * @return true, if is connected
+	 */
+	@Override
+	public boolean isConnected() {
+		
+		return super.isConnected();
+	}
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.common.BowlerAbstractConnection#disconnect()
 	 */
@@ -134,6 +145,7 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 					setDataIns(new DataInputStream(connectionSocket.getInputStream()));
 					setDataOuts(new DataOutputStream(connectionSocket.getOutputStream()));
 					setConnected(true);
+					setClientConnected(true);
 				} catch (Exception e1) {
 					setConnected(false);
 					throw new RuntimeException(e1);
@@ -161,6 +173,14 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 	@Override
 	public boolean waitingForConnection() {
 		return false;
+	}
+
+	public boolean isClientConnected() {
+		return clientConnected;
+	}
+
+	public void setClientConnected(boolean clientConnected) {
+		this.clientConnected = clientConnected;
 	}
 
 }

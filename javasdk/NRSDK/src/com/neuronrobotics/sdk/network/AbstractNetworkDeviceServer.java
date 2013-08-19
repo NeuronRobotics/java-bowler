@@ -23,7 +23,7 @@ public class AbstractNetworkDeviceServer  extends BowlerAbstractServer{
 			BowlerAbstractDeviceServerNamespace ns = new BowlerDeviceReServerNamespace(device.getConnection(), this,useAsync,i,namespaces.get(i), gen);
 			addBowlerDeviceServerNamespace(ns);
 		}
-		setServer(serverConnection);
+		addServer(serverConnection);
 	}
 		
 }

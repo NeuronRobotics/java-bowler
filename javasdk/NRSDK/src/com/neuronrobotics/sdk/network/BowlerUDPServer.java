@@ -28,7 +28,6 @@ import com.neuronrobotics.sdk.common.BowlerDatagramFactory;
  */
 public class BowlerUDPServer extends BowlerAbstractConnection {
 	private int sleepTime = 1000;
-	private int pollTimeoutTime = 5;
 	
 	
 	private UDPStream udp = null;

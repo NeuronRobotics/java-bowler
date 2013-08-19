@@ -332,7 +332,7 @@ public class UDPStream {
 							if(getAllAddresses().size()==0){
 								DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, broadcast, port);
 								udpSock.send(sendPacket);
-								Log.warning("Sending message to broadcast");
+								Log.info("Sending message to broadcast");
 							}else{
 								for(int i=0;i< getAllAddresses().size();i++){
 									DatagramPacket sendPacket = new DatagramPacket(	sendData, 
