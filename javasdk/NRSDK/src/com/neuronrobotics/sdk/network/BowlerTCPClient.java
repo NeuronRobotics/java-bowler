@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -29,8 +30,12 @@ import java.util.Enumeration;
 import java.util.List;
 
 
+import com.neuronrobotics.sdk.commands.bcs.core.PingCommand;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
+import com.neuronrobotics.sdk.common.BowlerDatagram;
+import com.neuronrobotics.sdk.common.BowlerDatagramFactory;
 import com.neuronrobotics.sdk.common.Log;
+import com.neuronrobotics.sdk.common.MACAddress;
 
 
 
@@ -171,10 +176,29 @@ public class BowlerTCPClient extends BowlerAbstractConnection{
 	 * the availible TCP sockets
 	 * @return list of devices that responded 
 	 */
-	public static List<AvailibleSocket> getAvailableSockets() {
-        ArrayList<AvailibleSocket> available = new ArrayList<AvailibleSocket>();
-        
-        return available;
+	public static ArrayList<InetAddress> getAvailableSockets() {
+        ArrayList<InetAddress> available = new  ArrayList<InetAddress> ();
+        UDPStream udp;
+        try {
+			udp = new UDPStream(1865,false);
+			udp.start();
+			try {
+				//Generate a ping command
+				BowlerDatagram ping = BowlerDatagramFactory.build(new MACAddress(), new PingCommand());
+				//send it to the UDP socket
+				udp.getDataOutptStream().write(ping.getBytes());
+				//wait for all devices to report back
+				try {Thread.sleep(3000);} catch (InterruptedException e) {}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	        return  udp.getAllIntetAddresses();
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return available;
     }
 	
 
