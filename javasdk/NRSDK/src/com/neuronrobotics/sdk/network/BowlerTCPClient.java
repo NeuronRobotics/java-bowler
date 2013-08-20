@@ -193,7 +193,7 @@ public class BowlerTCPClient extends BowlerAbstractConnection{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-	        return  udp.getAllIntetAddresses();
+	        return  udp.getAllAddresses();
 		} catch (SocketException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

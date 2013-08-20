@@ -36,9 +36,9 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 	private int sleepTime = 5000;
 	
 	private ServerSocket tcpSock = null;
-	private Socket connectionSocket=null;
+	
 
-	private TCPListener tcp = null;
+	private TCPListener tcpServerThread = null;
 
 	private int port = 1866;
 
@@ -101,9 +101,9 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 				return false;
 			}
 		}
-		if(tcp == null){
-			tcp = new TCPListener();
-			tcp.start();
+		if(tcpServerThread == null){
+			tcpServerThread = new TCPListener();
+			tcpServerThread.start();
 			setConnected(true);
 			Log.warning("Connecting...OK");
 		}
@@ -127,8 +127,10 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 	public void disconnect() {
 		Log.warning("Disconnecting..");
 		try {
-			tcpSock.close();
-			tcp=null;
+			if(isClientConnected())
+				tcpSock.close();
+			tcpServerThread=null;
+			tcpSock=null;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -138,24 +140,30 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 	
 	
 	private class TCPListener extends Thread {
+		private Socket connectionSocket=null;
 		public void run(){
 			//Log.info("Starting the TCP listener...");
 			
-			while(isConnected()){
-				try {
-					//Log.info("Waiting for next connection...");
+			try{
+				while(isConnected()){
+					Log.warning("\n\nWaiting for next connection...");
 					connectionSocket = tcpSock.accept();
-					Log.info("\nGot connection..");
+					Log.warning("\n\nGot connection..");
 					setDataIns(new DataInputStream(connectionSocket.getInputStream()));
 					setDataOuts(new DataOutputStream(connectionSocket.getOutputStream()));
 					out = new PrintWriter(connectionSocket.getOutputStream(), true);
 					setConnected(true);
-				} catch (Exception e1) {
-					setConnected(false);
-					throw new RuntimeException(e1);
 				}
-				//Log.info("..OK!\n");
+			}catch(Exception ex){
+				// catch the loop break
 			}
+			try {
+				connectionSocket.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			Log.error("TCP server loop exit");
 		}
 	}
 
@@ -166,8 +174,17 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 	 */
 	@Override
 	public boolean reconnect() {
-		disconnect();
-		connect();
+		Log.warning("TCP Reconnect");
+		try {			
+			out.close();
+			tcpSock.close();
+			tcpServerThread=null;
+			tcpSock=null;
+			connect();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return false;
 	}
 	
