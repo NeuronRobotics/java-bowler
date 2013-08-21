@@ -268,20 +268,18 @@ public abstract class BowlerAbstractConnection {
 	public void write(byte[] data) throws IOException {
 		waitForConnectioToBeReady();
 		lastWrite = System.currentTimeMillis();
-		if(getDataOuts() != null){
+		if(dataOuts != null){
 			try{
 				//Log.info("Writing: "+data.length+" bytes");
 				ByteList outgoing = new ByteList(data);
 				while(outgoing.size()>0){
-					getDataOuts().write(outgoing.popList(getChunkSize()));
+					byte[] b =outgoing.popList(getChunkSize());
+					getDataOuts().write(b);
 					getDataOuts().flush();
 				}
 			}catch (IOException e){
-				e.printStackTrace();
-				Log.error("Write failed...");
+				Log.error("Write failed. "+e.getMessage());
 				reconnect();
-				getDataOuts().write(data);
-				getDataOuts().flush();
 			}
 		}else{
 			Log.warning("No data sent, stream closed");
@@ -309,11 +307,13 @@ public abstract class BowlerAbstractConnection {
 		}else{
 			try {
 				getDataIns().close();
+				setDataIns(null);
 			} catch (Exception e) {
 				//return;
 			}
 			try {
 				getDataOuts().close();
+				setDataOuts(null);
 			} catch (Exception e) {
 				//return;
 			}
@@ -486,7 +486,9 @@ public abstract class BowlerAbstractConnection {
 	 *
 	 * @return the data ins
 	 */
-	public DataInputStream getDataIns() {
+	public DataInputStream getDataIns() throws NullPointerException{
+		if(dataIns==null)
+			throw new NullPointerException();
 		return dataIns;
 	}
 
@@ -496,6 +498,7 @@ public abstract class BowlerAbstractConnection {
 	 * @param dataOuts the new data outs
 	 */
 	public void setDataOuts(DataOutputStream dataOuts) {
+		
 		this.dataOuts = dataOuts;
 	}
 
@@ -504,7 +507,9 @@ public abstract class BowlerAbstractConnection {
 	 *
 	 * @return the data outs
 	 */
-	public DataOutputStream getDataOuts() {
+	public DataOutputStream getDataOuts() throws NullPointerException{
+		if(dataOuts==null)
+			throw new NullPointerException();
 		return dataOuts;
 	}
 	
@@ -559,12 +564,12 @@ public abstract class BowlerAbstractConnection {
 				pool[i]=new BowlerDatagram();
 			}
 			//wait for the data stream to stabilize
-			while(getDataIns() == null){
+			while(dataIns == null){
 				ThreadUtil.wait(100);
 			}
 			while(isConnected()) {
 				try {
-					if(getDataIns()!=null){
+					if(dataIns!=null){
 						if(getDataIns().available()>0){
 							//updateBuffer();
 							buffer.add(getDataIns().read());
@@ -591,8 +596,13 @@ public abstract class BowlerAbstractConnection {
 						ThreadUtil.wait(10);
 					}
 				} catch (Exception e) {
-					e.printStackTrace();
-					disconnect();
+					Log.error("Data read failed "+e.getMessage());
+					try {
+						reconnect();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
 			}
 		}

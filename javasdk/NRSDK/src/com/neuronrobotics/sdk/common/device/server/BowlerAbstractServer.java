@@ -99,10 +99,12 @@ public  abstract class BowlerAbstractServer  implements ISynchronousDatagramList
 	
 	@Override
 	public void onSyncReceive(BowlerDatagram data) {
-		Log.warning("Got >> "+data);
+		if(!data.getRPC().contains("_png"))
+			Log.warning("Got >> "+data);
 		BowlerDatagram bd = processLocal(data);
 		if(bd != null){
-			Log.warning("Response << "+bd);
+			if(!data.getRPC().contains("_png"))
+				Log.warning("Response << "+bd);
 			pushAsyncPacket(bd);
 		}else{
 			Log.error("Packet unknown"+data);
@@ -123,7 +125,7 @@ public  abstract class BowlerAbstractServer  implements ISynchronousDatagramList
 				}else{
 					run=true;
 				}
-				if(run)
+				if(run && getServers().get(i).isConnected())
 					getServers().get(i).sendAsync(data);
 			}catch(Exception e){
 				Log.error("No client connected to this connection "+getServers().get(i).getClass());

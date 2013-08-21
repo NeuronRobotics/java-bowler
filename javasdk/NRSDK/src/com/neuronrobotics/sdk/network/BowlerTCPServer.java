@@ -43,6 +43,7 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 	private int port = 1866;
 
 	private PrintWriter out;
+
 	
 	/**
 	 * 
@@ -90,6 +91,10 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 	 */
 	@Override
 	public boolean connect() {
+		
+		if(isConnected())
+			return true;
+		Log.warning("Connecting..");
 		if (getTcpSock() == null){
 			try {
 				setTCPSocket(port);
@@ -102,7 +107,7 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 		if(getTcpServerThread() == null){
 			setTcpServerThread(new TCPListener());
 			getTcpServerThread().start();
-			setConnected(true);
+			
 			Log.warning("Connecting...OK");
 		}
 		return isConnected();	
@@ -123,26 +128,29 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 	 */
 	@Override
 	public void disconnect() {
+		if(!isConnected())
+			return;
 		Log.warning("Disconnecting..");
+		super.disconnect();
 		try {
 			if(getTcpSock() !=null){
 				getTcpSock().close();
 			}
 			setTcpServerThread(null);
 			setTcpSock(null);
+			out=null;
 			Log.warning("\n\nWaiting for sockets to shut down...\n\n");
-			ThreadUtil.wait(sleepTime*3);
+			ThreadUtil.wait(5000);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		super.disconnect();
+		
 		try{
 			throw new RuntimeException();
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		connect();// Servers should never exit
 	}
 	
 	
@@ -150,7 +158,7 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 		private Socket connectionSocket=null;
 		public void run(){
 			//Log.info("Starting the TCP listener...");
-			
+			setConnected(true);
 			try{
 				while(isConnected()){
 					Log.warning("\n\nWaiting for next connection...");
@@ -185,6 +193,9 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 		Log.warning("TCP Reconnect");
 		try {			
 			disconnect();
+			if(!isConnected()){
+				connect();
+			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
