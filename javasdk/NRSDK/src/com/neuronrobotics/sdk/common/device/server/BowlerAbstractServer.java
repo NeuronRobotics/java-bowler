@@ -100,11 +100,15 @@ public  abstract class BowlerAbstractServer  implements ISynchronousDatagramList
 	@Override
 	public void onSyncReceive(BowlerDatagram data) {
 		if(!data.getRPC().contains("_png"))
-			Log.warning("Got >> "+data);
+			Log.debug("Got >> "+data);
+		else
+			Log.info("Got >> "+data);
 		BowlerDatagram bd = processLocal(data);
 		if(bd != null){
 			if(!data.getRPC().contains("_png"))
-				Log.warning("Response << "+bd);
+				Log.debug("Response << "+bd);
+			else
+				Log.info("Response << "+bd);
 			pushAsyncPacket(bd);
 		}else{
 			Log.error("Packet unknown"+data);
