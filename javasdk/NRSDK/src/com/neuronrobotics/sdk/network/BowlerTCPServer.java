@@ -33,7 +33,7 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
  * 
  */
 public class BowlerTCPServer extends BowlerAbstractConnection{
-	private int sleepTime = 5000;
+	private int sleepTime = 500;
 	
 	private ServerSocket tcpSock = null;
 	
@@ -78,10 +78,8 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 	}
 	
 	private void setTCPSocket(int port) throws IOException{
-		if(tcpSock != null)
-			tcpSock.close();
-		tcpSock = new ServerSocket(port);
-		while(!tcpSock.isBound()){
+		setTcpSock(new ServerSocket(port));
+		while(!getTcpSock().isBound()){
 			ThreadUtil.wait(10);
 		}
 		connect();
@@ -92,7 +90,7 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 	 */
 	@Override
 	public boolean connect() {
-		if (tcpSock == null){
+		if (getTcpSock() == null){
 			try {
 				setTCPSocket(port);
 			} catch (IOException e) {
@@ -101,9 +99,9 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 				return false;
 			}
 		}
-		if(tcpServerThread == null){
-			tcpServerThread = new TCPListener();
-			tcpServerThread.start();
+		if(getTcpServerThread() == null){
+			setTcpServerThread(new TCPListener());
+			getTcpServerThread().start();
 			setConnected(true);
 			Log.warning("Connecting...OK");
 		}
@@ -127,15 +125,24 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 	public void disconnect() {
 		Log.warning("Disconnecting..");
 		try {
-			if(isClientConnected())
-				tcpSock.close();
-			tcpServerThread=null;
-			tcpSock=null;
+			if(getTcpSock() !=null){
+				getTcpSock().close();
+			}
+			setTcpServerThread(null);
+			setTcpSock(null);
+			Log.warning("\n\nWaiting for sockets to shut down...\n\n");
+			ThreadUtil.wait(sleepTime*3);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		super.disconnect();
+		try{
+			throw new RuntimeException();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		connect();// Servers should never exit
 	}
 	
 	
@@ -147,7 +154,7 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 			try{
 				while(isConnected()){
 					Log.warning("\n\nWaiting for next connection...");
-					connectionSocket = tcpSock.accept();
+					connectionSocket = getTcpSock().accept();
 					Log.warning("\n\nGot connection..");
 					setDataIns(new DataInputStream(connectionSocket.getInputStream()));
 					setDataOuts(new DataOutputStream(connectionSocket.getOutputStream()));
@@ -158,7 +165,8 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 				// catch the loop break
 			}
 			try {
-				connectionSocket.close();
+				if(connectionSocket!=null)
+					connectionSocket.close();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -176,12 +184,8 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 	public boolean reconnect() {
 		Log.warning("TCP Reconnect");
 		try {			
-			out.close();
-			tcpSock.close();
-			tcpServerThread=null;
-			tcpSock=null;
-			connect();
-		} catch (IOException e) {
+			disconnect();
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -198,8 +202,32 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 
 	public boolean isClientConnected() {
 		if(out==null)
-			return false;
+			return true;
 		return !out.checkError();
+	}
+
+	public ServerSocket getTcpSock() {
+		return tcpSock;
+	}
+
+	public void setTcpSock(ServerSocket tcpSock) {
+		if(this.tcpSock!= null){
+			try {
+				this.tcpSock.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		this.tcpSock = tcpSock;
+	}
+
+	public TCPListener getTcpServerThread() {
+		return tcpServerThread;
+	}
+
+	public void setTcpServerThread(TCPListener tcpServerThread) {
+		this.tcpServerThread = tcpServerThread;
 	}
 
 

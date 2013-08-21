@@ -268,18 +268,23 @@ public abstract class BowlerAbstractConnection {
 	public void write(byte[] data) throws IOException {
 		waitForConnectioToBeReady();
 		lastWrite = System.currentTimeMillis();
-		try{
-			//Log.info("Writing: "+data.length+" bytes");
-			ByteList outgoing = new ByteList(data);
-			while(outgoing.size()>0){
-				getDataOuts().write(outgoing.popList(getChunkSize()));
+		if(getDataOuts() != null){
+			try{
+				//Log.info("Writing: "+data.length+" bytes");
+				ByteList outgoing = new ByteList(data);
+				while(outgoing.size()>0){
+					getDataOuts().write(outgoing.popList(getChunkSize()));
+					getDataOuts().flush();
+				}
+			}catch (IOException e){
+				e.printStackTrace();
+				Log.error("Write failed...");
+				reconnect();
+				getDataOuts().write(data);
 				getDataOuts().flush();
 			}
-		}catch (IOException e){
-			Log.error("Write failed...");
-			reconnect();
-			getDataOuts().write(data);
-			getDataOuts().flush();
+		}else{
+			Log.warning("No data sent, stream closed");
 		}
 		
 	}
@@ -559,29 +564,34 @@ public abstract class BowlerAbstractConnection {
 			}
 			while(isConnected()) {
 				try {
-					if(getDataIns().available()>0){
-						//updateBuffer();
-						buffer.add(getDataIns().read());
-						BowlerDatagram bd = BowlerDatagramFactory.build(buffer,pool[readPointer]);
-						if (bd!=null) {
-							readPointer++;
-							if(readPointer == pool.length){
-								readPointer=0;
-								for(int i=0;i<pool.length;i++){
-									pool[i]=new BowlerDatagram();
+					if(getDataIns()!=null){
+						if(getDataIns().available()>0){
+							//updateBuffer();
+							buffer.add(getDataIns().read());
+							BowlerDatagram bd = BowlerDatagramFactory.build(buffer,pool[readPointer]);
+							if (bd!=null) {
+								readPointer++;
+								if(readPointer == pool.length){
+									readPointer=0;
+									for(int i=0;i<pool.length;i++){
+										pool[i]=new BowlerDatagram();
+									}
 								}
+								//Log.info("Got :\n"+bd);
+								onDataReceived(bd);
+								buffer.clear();
 							}
-							//Log.info("Got :\n"+bd);
-							onDataReceived(bd);
-							buffer.clear();
+							//Log.info("buffer: "+buffer);
+						}else{
+							// prevents the thread from locking
+							ThreadUtil.wait(1);
 						}
-						//Log.info("buffer: "+buffer);
 					}else{
 						// prevents the thread from locking
-						ThreadUtil.wait(1);
+						ThreadUtil.wait(10);
 					}
 				} catch (Exception e) {
-					//e.printStackTrace();
+					e.printStackTrace();
 					disconnect();
 				}
 			}
@@ -680,7 +690,8 @@ public abstract class BowlerAbstractConnection {
 		 * Kill.
 		 */
 		public void kill() {
-			disconnect();
+			if(isConnected())
+				disconnect();
 		}
 	}
 	ArrayList<IConnectionEventListener> disconnectListeners = new ArrayList<IConnectionEventListener> ();

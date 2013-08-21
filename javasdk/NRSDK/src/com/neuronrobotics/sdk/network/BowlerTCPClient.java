@@ -168,6 +168,7 @@ public class BowlerTCPClient extends BowlerAbstractConnection{
 		tcpSock = null;
 		setDataIns(null);
 		setDataOuts(null);
+		
 	}
 	
 	/**
