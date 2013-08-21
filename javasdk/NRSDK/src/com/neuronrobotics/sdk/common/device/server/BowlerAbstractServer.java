@@ -115,7 +115,7 @@ public  abstract class BowlerAbstractServer  implements ISynchronousDatagramList
 		}
 	}
 
-	public void pushAsyncPacket(BowlerDatagram data) {
+	public synchronized void pushAsyncPacket(BowlerDatagram data) {
 		for(int i=0;i<servers.size();i++){
 			try{
 				boolean run = false;

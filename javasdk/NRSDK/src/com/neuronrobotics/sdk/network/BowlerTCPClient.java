@@ -31,11 +31,13 @@ import java.util.List;
 
 
 import com.neuronrobotics.sdk.commands.bcs.core.PingCommand;
+import com.neuronrobotics.sdk.commands.bcs.io.SetAllChannelValuesCommand;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.common.BowlerDatagramFactory;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.MACAddress;
+import com.neuronrobotics.sdk.util.ThreadUtil;
 
 
 
@@ -45,7 +47,7 @@ import com.neuronrobotics.sdk.common.MACAddress;
 public class BowlerTCPClient extends BowlerAbstractConnection{
 	private int sleepTime = 5000;
 	
-
+	private int reconnectRetry = 10;
 	private Socket tcpSock = null;
 	private InetAddress tcpAddr=null;
 
@@ -74,9 +76,12 @@ public class BowlerTCPClient extends BowlerAbstractConnection{
 		setSynchronusPacketTimeoutTime(sleepTime);
 		Log.info("Bowler TCP connection on: "+addr+":"+port);
 		try {
-			setTCPSocket(new Socket(addr,port));
+			InetAddress address = InetAddress.getByName(addr);
+			setTCPAddress(address);
+			setTCPSocket(new Socket(address,port));
 		} catch (UnknownHostException e) {
 			Log.error("No such host");
+			throw e;
 		} catch (IOException e) {
 			Log.error("Port un-availible");
 			throw e;
@@ -91,15 +96,7 @@ public class BowlerTCPClient extends BowlerAbstractConnection{
 	 * @throws IOException 
 	 */
 	public BowlerTCPClient(InetAddress addr,int port) throws IOException {
-		if(isConnected())
-			return;
-		setSynchronusPacketTimeoutTime(sleepTime);
-		try {
-			setTCPSocket(new Socket(addr,port));
-		} catch (IOException e) {
-			System.err.println("Port un-availible");
-			throw e;
-		}
+		this(addr.getHostName(),port);
 	}
 	
 	/**
@@ -211,19 +208,32 @@ public class BowlerTCPClient extends BowlerAbstractConnection{
 	public boolean reconnect() {
 		Log.warning("Reconnecting..");
 		disconnect();
-		try {
-			setTCPSocket(new Socket(tcpAddr,port));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		for(int i=0;i<getReconnectRetry();i++){
+			try {
+				setTCPSocket(new Socket(tcpAddr,port));
+				if(isConnected())
+					return true;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			ThreadUtil.wait(i*1000);
 		}
-		return true;
+		return false;
 	}
 
 	@Override
 	public boolean waitingForConnection() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	public int getReconnectRetry() {
+		return reconnectRetry;
+	}
+
+	public void setReconnectRetry(int reconnectRetry) {
+		this.reconnectRetry = reconnectRetry;
 	}
 	
 }
