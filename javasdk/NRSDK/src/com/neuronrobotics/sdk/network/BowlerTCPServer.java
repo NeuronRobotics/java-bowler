@@ -33,7 +33,7 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
  * 
  */
 public class BowlerTCPServer extends BowlerAbstractConnection{
-	private int sleepTime = 500;
+	private int sleepTime = 5000;
 	
 	private ServerSocket tcpSock = null;
 	

@@ -92,13 +92,13 @@ public  abstract class BowlerAbstractServer  implements ISynchronousDatagramList
 	public void addServer(BowlerAbstractConnection srv) {
 		if(!servers.contains(srv)){
 			srv.connect();
-			srv.addSynchronousDatagramListener(this);
+			srv.setSynchronousDatagramListener(this);
 			servers.add(srv);
 		}
 	}
 	
 	@Override
-	public void onSyncReceive(BowlerDatagram data) {
+	public BowlerDatagram onSyncReceive(BowlerDatagram data) {
 		if(!data.getRPC().contains("_png"))
 			Log.debug("Got >> "+data);
 		else
@@ -109,10 +109,11 @@ public  abstract class BowlerAbstractServer  implements ISynchronousDatagramList
 				Log.debug("Response << "+bd);
 			else
 				Log.info("Response << "+bd);
-			pushAsyncPacket(bd);
+			return bd;
 		}else{
 			Log.error("Packet unknown"+data);
 		}
+		return null;
 	}
 
 	public synchronized void pushAsyncPacket(BowlerDatagram data) {

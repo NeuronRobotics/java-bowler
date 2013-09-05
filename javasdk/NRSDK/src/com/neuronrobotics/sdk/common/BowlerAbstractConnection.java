@@ -64,7 +64,7 @@ public abstract class BowlerAbstractConnection {
 	
 	/** The listeners. */
 	private ArrayList<IBowlerDatagramListener> listeners = new ArrayList<IBowlerDatagramListener>();
-	private ArrayList< ISynchronousDatagramListener> syncListen = new ArrayList<ISynchronousDatagramListener>();
+	private ISynchronousDatagramListener syncListen = null;
 	/** The queue. */
 	private QueueManager syncQueue = null;
 	//private QueueManager asyncQueue = null;
@@ -365,7 +365,7 @@ public abstract class BowlerAbstractConnection {
 		}else{
 			if(data.isSyncronous()) {
 				response = data;
-				fireSyncOnResponse(data) ;
+				fireSyncOnReceive(data) ;
 			}else{
 				fireAsyncOnResponse(data);
 			}
@@ -378,12 +378,13 @@ public abstract class BowlerAbstractConnection {
 	 * @param datagram the datagram
 	 */
 
-	protected void fireSyncOnResponse(BowlerDatagram datagram) {
+	protected BowlerDatagram  fireSyncOnReceive(BowlerDatagram datagram) {
 		if(datagram.isSyncronous()){
-			for(ISynchronousDatagramListener l : syncListen) {
-				l.onSyncReceive(datagram);
+			if (syncListen!=null){
+				return syncListen.onSyncReceive(datagram);
 			}
 		}
+		return null;
 	}
 	
 	protected void fireAsyncOnResponse(BowlerDatagram datagram) {
@@ -668,15 +669,17 @@ public abstract class BowlerAbstractConnection {
 		}
 		
 		private void send(BowlerDatagram b){
-			if(b.isSyncronous())
-				fireSyncOnResponse(b);
-			else
+			if(b.isSyncronous()){
+				BowlerDatagram ret = fireSyncOnReceive(b);
+				if(ret !=null){
+					// Sending response to server
+					sendAsync(ret);
+				}
+			}else
 				fireAsyncOnResponse(b);
+
 		}
 		
-		public int size() {
-			return queueBuffer.size();
-		}
 		
 		/**
 		 * check the buffer state
@@ -727,15 +730,22 @@ public abstract class BowlerAbstractConnection {
 		}
 	}
 	
-	public void addSynchronousDatagramListener(ISynchronousDatagramListener l ) {
-		if(!syncListen.contains(l)) {
-			syncListen.add(l);
+	public void setSynchronousDatagramListener(ISynchronousDatagramListener l ) {
+		if (syncListen == null){
+			syncListen = l;
+		}else{
+			if(syncListen == l)
+				return;
+			throw new RuntimeException("There is already a listener "+syncListen);
 		}
 	}
 	public void removeSynchronousDatagramListener(ISynchronousDatagramListener l ) {
-		if(syncListen.contains(l)) {
-			syncListen.remove(l);
+		if(syncListen!= null){
+			if(syncListen!= l){
+				throw new RuntimeException("There is a different listener "+syncListen);
+			}
 		}
+		syncListen=null;
 	} 
 
 

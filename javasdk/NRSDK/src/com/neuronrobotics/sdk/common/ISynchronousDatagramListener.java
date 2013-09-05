@@ -7,5 +7,5 @@ public interface ISynchronousDatagramListener {
 	 *
 	 * @param data the data
 	 */
-	public void onSyncReceive(BowlerDatagram data);
+	public BowlerDatagram onSyncReceive(BowlerDatagram data);
 }
