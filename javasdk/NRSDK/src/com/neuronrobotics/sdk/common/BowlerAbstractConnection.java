@@ -49,7 +49,7 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
  */
 public abstract class BowlerAbstractConnection {
 	
-	private boolean threadedUpstreamPackets=true;
+	private boolean threadedUpstreamPackets=false;
 	
 	/** The sleep time. */
 	private int sleepTime = 10;
@@ -355,20 +355,17 @@ public abstract class BowlerAbstractConnection {
 	 * @param data the data
 	 */
 	protected void onDataReceived(BowlerDatagram data) {
+		if(data.isSyncronous()) {
+			response = data;
+		}
 		if(isThreadedUpstreamPackets()){
 			if(data.isSyncronous()) {
 				getSyncQueue().addDatagram(data);
-				response = data;
 			}else {
 				getAsyncQueue().addDatagram(data);
 			}
 		}else{
-			if(data.isSyncronous()) {
-				response = data;
-				fireSyncOnReceive(data) ;
-			}else{
-				fireAsyncOnResponse(data);
-			}
+			pushUp(data);
 		}
 	}
 	
@@ -635,7 +632,7 @@ public abstract class BowlerAbstractConnection {
 						for(int i=0;i<len;i++){
 							try{
 								if(queueBuffer.get(i).isSyncronous()){
-									send(queueBuffer.remove(i));
+									pushUp(queueBuffer.remove(i));
 								}
 							}catch(Exception e){}
 							
@@ -643,7 +640,7 @@ public abstract class BowlerAbstractConnection {
 						if(!queueBuffer.isEmpty()){
 							try{
 								//send(queueBuffer.remove(queueBuffer.size()-1)	);
-								send(queueBuffer.remove(0)	);
+								pushUp(queueBuffer.remove(0)	);
 							}catch(Exception e){
 								e.printStackTrace();
 							}
@@ -668,17 +665,7 @@ public abstract class BowlerAbstractConnection {
 			}
 		}
 		
-		private void send(BowlerDatagram b){
-			if(b.isSyncronous()){
-				BowlerDatagram ret = fireSyncOnReceive(b);
-				if(ret !=null){
-					// Sending response to server
-					sendAsync(ret);
-				}
-			}else
-				fireAsyncOnResponse(b);
 
-		}
 		
 		
 		/**
@@ -707,6 +694,19 @@ public abstract class BowlerAbstractConnection {
 				disconnect();
 		}
 	}
+	
+	private void pushUp(BowlerDatagram b){
+		if(b.isSyncronous()){
+			BowlerDatagram ret = fireSyncOnReceive(b);
+			if(ret !=null){
+				// Sending response to server
+				sendAsync(ret);
+			}
+		}else
+			fireAsyncOnResponse(b);
+
+	}
+	
 	ArrayList<IConnectionEventListener> disconnectListeners = new ArrayList<IConnectionEventListener> ();
 	
 	public void addConnectionEventListener(IConnectionEventListener l ) {

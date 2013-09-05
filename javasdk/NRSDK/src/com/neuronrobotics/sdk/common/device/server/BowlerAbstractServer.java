@@ -102,13 +102,13 @@ public  abstract class BowlerAbstractServer  implements ISynchronousDatagramList
 		if(!data.getRPC().contains("_png"))
 			Log.debug("Got >> "+data);
 		else
-			Log.info("Got >> "+data);
+			Log.debug("Got >> ping");
 		BowlerDatagram bd = processLocal(data);
 		if(bd != null){
 			if(!data.getRPC().contains("_png"))
 				Log.debug("Response << "+bd);
 			else
-				Log.info("Response << "+bd);
+				Log.debug("Response << ping");
 			return bd;
 		}else{
 			Log.error("Packet unknown"+data);
