@@ -23,7 +23,7 @@ public class PidNamespaceImp extends GenericPidNamespaceImp {
 	}
 	
 	private Object[] send(BowlerMethod method, String rpcString, Object[] arguments){
-		return getDevice().send(ns,method,rpcString,arguments);
+		return getDevice().send(ns,method,rpcString,arguments,2);
 	}
 
 	@Override

@@ -129,14 +129,16 @@ public  abstract class BowlerAbstractServer  implements ISynchronousDatagramList
 	public BowlerDatagram onSyncReceive(BowlerDatagram data) {
 		if(!data.getRPC().contains("_png"))
 			Log.debug("Got >> "+data);
-		else
-			Log.debug("Got >> ping");
+		else{
+			//Log.debug("Got >> ping");
+		}
 		BowlerDatagram bd = processLocal(data);
 		if(bd != null){
 			if(!data.getRPC().contains("_png"))
 				Log.debug("Response << "+bd);
-			else
-				Log.debug("Response << ping");
+			else{
+				//Log.debug("Response << ping");
+			}
 			return bd;
 		}else{
 			Log.error("Packet unknown"+data);

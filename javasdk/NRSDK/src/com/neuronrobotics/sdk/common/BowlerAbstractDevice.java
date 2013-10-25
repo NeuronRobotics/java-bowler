@@ -213,6 +213,30 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 		
 		return command.validate(send(BowlerDatagramFactory.build(getAddress(), command)));
 	}
+	
+	/**
+	 * Send a command to the connection.
+	 *
+	 * @param command the command
+	 * @return the syncronous response
+	 * @throws NoConnectionAvailableException the no connection available exception
+	 * @throws InvalidResponseException the invalid response exception
+	 */
+	public BowlerDatagram send(BowlerAbstractCommand command, int retry) throws NoConnectionAvailableException, InvalidResponseException {	
+		for(int i=0;i<retry;i++){
+			try{
+				BowlerDatagram ret = send( command);
+				if(ret != null)
+					if(!ret.getRPC().contains("_err"))
+						return ret;
+			}catch(Exception ex){
+				ex.printStackTrace();
+			}
+			System.err.println("Sending Synchronus packet and there was a failure, will retry "+(retry-i-1)+" more times");
+			ThreadUtil.wait(150*i);
+		}
+		return null;
+	}
 	/**
 	 * THis is the scripting interface to Bowler devices. THis allows a user to describe a namespace, rpc, and array or 
 	 * arguments to be paced into the packet based on the data types of the argument. The response in likewise unpacked 
@@ -223,7 +247,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	 * @return The return arguments parsed and packet into an array of arguments
 	 * @throws DeviceConnectionException If the desired RPC's are not available then this will be thrown
 	 */
-	public Object [] send(String namespace,BowlerMethod method, String rpcString, Object[] arguments) throws DeviceConnectionException{
+	public Object [] send(String namespace,BowlerMethod method, String rpcString, Object[] arguments, int retry) throws DeviceConnectionException{
 		if(namespaceList == null){
 			getNamespaces();
 		}
@@ -234,17 +258,19 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 					if(		rpc.getRpc().toLowerCase().contains(rpcString.toLowerCase()) &&
 							rpc.getDownstreamMethod() == method){
 						//Found the command in the namespace
-						BowlerDatagram dg =  send(rpc.getCommand(arguments));
-						return rpc.parseResponse(dg);//parse and return
+
+							BowlerDatagram dg =  send(rpc.getCommand(arguments),retry);
+
+							return rpc.parseResponse(dg);//parse and return
 					}
 				}
 			}
 		}
-		System.err.println("No method found");
+		System.err.println("No method found, attempted "+namespace+" RPC: "+rpcString);
 		for (NamespaceEncapsulation ns:namespaceList){
-			System.err.println("Namespace "+ns);
+			System.err.println("Namespace \n"+ns);
 		}
-		throw new DeviceConnectionException("Device does not contain command '"+namespace+" "+method+" "+rpcString+"'");
+		throw new DeviceConnectionException("Device does not contain command NS="+namespace+" Method="+method+" RPC="+rpcString+"'");
 	}
 		
 	/**
@@ -255,7 +281,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	 */
 	public BowlerDatagram ping() {
 		try {
-			BowlerDatagram bd = send(new PingCommand());
+			BowlerDatagram bd = send(new PingCommand(),5);
 			//System.out.println("Ping success " + bd.getAddress());
 			setAddress(bd.getAddress());
 			return bd;
@@ -278,7 +304,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	public ArrayList<ByteList> getRevisions(){
 		ArrayList<ByteList> list = new ArrayList<ByteList>();
 		try {
-			BowlerDatagram b = send(new InfoFirmwareRevisionCommand());
+			BowlerDatagram b = send(new InfoFirmwareRevisionCommand(),5);
 			Log.debug("FW info:\n"+b);
 			for(int i=0;i<(b.getData().size()/3);i++){
 				list.add(new ByteList(b.getData().getBytes((i*3),3)));
@@ -301,18 +327,19 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 		ArrayList<String> ret = new ArrayList<String>();
 		if(namespaceList == null)
 			namespaceList = new ArrayList<NamespaceEncapsulation>();
+		Log.enableDebugPrint(true);
 		synchronized (namespaceList){
 			int numTry=0;
 			boolean done=false;
 			while(!done){
 				numTry++;
 				try {
-					BowlerDatagram b = send(new NamespaceCommand(0));
+					BowlerDatagram b = send(new NamespaceCommand(0),5);
 					int num;
 					String tmpNs =b.getData().asString();
 					if(tmpNs.length() ==  b.getData().size()){
 						//System.out.println("Ns = "+tmpNs+" len = "+tmpNs.length()+" data = "+b.getData().size());
-						b = send(new NamespaceCommand());
+						b = send(new NamespaceCommand(),5);
 						num= b.getData().getByte(0);		
 						Log.warning("This is an older implementation of core, depricated");
 					}else{
@@ -327,7 +354,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 					}
 					Log.debug("There are "+num+" namespaces on this device");
 					for (int i=0;i<num;i++){
-						b = send(new NamespaceCommand(i));
+						b = send(new NamespaceCommand(i),5);
 						String space = b.getData().asString();
 						Log.debug("Adding Namespace: "+space);
 						
@@ -354,6 +381,8 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 				}
 			}
 		}
+		
+		
 		
 		for(NamespaceEncapsulation ns:namespaceList){
 			ret.add(ns.getNamespace());
@@ -455,7 +484,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 		
 		try{
 			//populate RPC set
-			BowlerDatagram b = send(new  RpcCommand(namespaceIndex));
+			BowlerDatagram b = send(new  RpcCommand(namespaceIndex),5);
 			//int ns = b.getData().getByte(0);// gets the index of the namespace
 			//int rpcIndex = b.getData().getByte(1);// gets the index of the selected RPC
 			int numRpcs = b.getData().getByte(2);// gets the number of RPC's
@@ -467,10 +496,10 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 			Log.debug("There are "+numRpcs+" RPC's in "+namespace);
 			namespaceList.get(namespaceIndex).setRpcList(new ArrayList<RpcEncapsulation>());
 			for (int i=0;i<numRpcs;i++){
-				b = send(new RpcCommand(namespaceIndex,i));
+				b = send(new RpcCommand(namespaceIndex,i),5);
 				String rpcStr = new String(b.getData().getBytes(3, 4));
 				
-				b = send(new RpcArgumentsCommand(namespaceIndex,i));
+				b = send(new RpcArgumentsCommand(namespaceIndex,i),5);
 				
 				byte []data = b.getData().getBytes(2);
 				BowlerMethod downstreamMethod = BowlerMethod.get(data[0]);
