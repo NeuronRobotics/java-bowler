@@ -80,6 +80,8 @@ public abstract class BowlerAbstractConnection {
 	
 	private Updater updater = null;
 	
+	private ThreadedTimeout timeout=new ThreadedTimeout(getSleepTime());
+	
 	
 	/**
 	 * Attempt to establish a connection. Return if the attempt was successful.
@@ -145,15 +147,16 @@ public abstract class BowlerAbstractConnection {
 			//Log.debug("Buffers cleared in : "+diff+"ms");
 		}
 		try {
-			long send = System.currentTimeMillis();
+			//long send = System.currentTimeMillis();
 			write(sendable.getBytes());
 			//Log.info("Transmit took: "+(System.currentTimeMillis()-send)+" ms");
 		} catch (IOException e1) {
 			throw new RuntimeException(e1);
 		}
-		long rcv = System.currentTimeMillis();
-		ThreadedTimeout timeout = new ThreadedTimeout(getSleepTime());
-		timeout.start();
+		//long rcv = System.currentTimeMillis();
+		//ThreadedTimeout timeout = new ThreadedTimeout(getSleepTime());
+		timeout.initialize(getSleepTime());
+		//timeout.start();
 		while ((!timeout.isTimedOut())  && (getLastSyncronousResponse() == null)){
 			ThreadUtil.wait(getPollTimeoutTime());
 		}
@@ -265,18 +268,19 @@ public abstract class BowlerAbstractConnection {
 	 * @param data the data
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
+	//private ByteList outgoing = new ByteList();
 	public void write(byte[] data) throws IOException {
 		waitForConnectioToBeReady();
 		lastWrite = System.currentTimeMillis();
 		if(dataOuts != null){
 			try{
 				//Log.info("Writing: "+data.length+" bytes");
-				ByteList outgoing = new ByteList(data);
-				while(outgoing.size()>0){
-					byte[] b =outgoing.popList(getChunkSize());
-					getDataOuts().write(b);
+				
+				//while(outgoing.size()>0){
+					//byte[] b =outgoing.popList(getChunkSize());
+					getDataOuts().write(data);
 					getDataOuts().flush();
-				}
+				//}
 			}catch (IOException e){
 				Log.error("Write failed. "+e.getMessage());
 				reconnect();

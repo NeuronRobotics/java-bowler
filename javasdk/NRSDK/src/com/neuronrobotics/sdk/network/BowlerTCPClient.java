@@ -69,7 +69,7 @@ public class BowlerTCPClient extends BowlerAbstractConnection{
 	 * @param port
 	 * @throws IOException 
 	 */
-	public BowlerTCPClient(String addr,int port) throws IOException{
+	public BowlerTCPClient(String addr,int port) throws Exception{
 		this.port = port;
 		if(isConnected())
 			return;
@@ -78,11 +78,13 @@ public class BowlerTCPClient extends BowlerAbstractConnection{
 		try {
 			InetAddress address = InetAddress.getByName(addr);
 			setTCPAddress(address);
-			setTCPSocket(new Socket(address,port));
+			Socket clientSocket =new Socket(address,port);
+			
+			setTCPSocket(clientSocket);
 		} catch (UnknownHostException e) {
 			Log.error("No such host");
 			throw e;
-		} catch (IOException e) {
+		} catch (Exception e) {
 			Log.error("Port un-availible");
 			throw e;
 		}
@@ -95,7 +97,7 @@ public class BowlerTCPClient extends BowlerAbstractConnection{
 	 * @param port
 	 * @throws IOException 
 	 */
-	public BowlerTCPClient(InetAddress addr,int port) throws IOException {
+	public BowlerTCPClient(InetAddress addr,int port) throws Exception {
 		this(addr.getHostName(),port);
 	}
 	

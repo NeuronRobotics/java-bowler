@@ -13,7 +13,6 @@
  * limitations under the License.
  ******************************************************************************/
 package com.neuronrobotics.sdk.common;
-
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 
@@ -21,13 +20,14 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
 /**
  * The Class ThreadedTimeout.
  */
-public class ThreadedTimeout extends Thread {
+public class ThreadedTimeout {
 	
 	/** The time. */
 	private int time;
+	private Thread timerThread;
 	
 	/** The timed out. */
-	private boolean timedOut = false;
+	private boolean timedOut = true;
 	
 	/**
 	 * Instantiates a new threaded timeout.
@@ -36,6 +36,25 @@ public class ThreadedTimeout extends Thread {
 	 */
 	public ThreadedTimeout(int time) {
 		this.time = time;
+		timerThread = new Thread(){
+			/* (non-Javadoc)
+			 * @see java.lang.Thread#run()
+			 */
+			public void run(){
+				while(true){
+					while(timedOut){
+						ThreadUtil.wait(10);
+					}
+					for(int i=0;i<10;i++){
+						ThreadUtil.wait(getTime()/10);
+						if(i==9)
+							timedOut = true;
+					}
+					
+				}
+			}
+		};
+		timerThread.start();
 	}
 	
 	/**
@@ -47,12 +66,15 @@ public class ThreadedTimeout extends Thread {
 		return timedOut;
 	}
 	
-	/* (non-Javadoc)
-	 * @see java.lang.Thread#run()
-	 */
-	public void run(){
+
+	
+	public void initialize(int sleepTime) {
+		// TODO Auto-generated method stub
+		this.time = (sleepTime);
 		timedOut = false;
-		ThreadUtil.wait(time);
-		timedOut = true;
+	}
+
+	public int getTime() {
+		return time;
 	}
 }

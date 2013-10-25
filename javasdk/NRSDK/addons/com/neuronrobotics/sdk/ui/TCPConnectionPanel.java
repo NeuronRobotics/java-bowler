@@ -111,7 +111,7 @@ public class TCPConnectionPanel extends AbstractConnectionPanel {
 			} catch(RuntimeException e) {
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(null, "Invalid address given.", "Invalid address", JOptionPane.ERROR_MESSAGE);
-			} catch (IOException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(null, "Invalid address given.", "Invalid address", JOptionPane.ERROR_MESSAGE);
 			} finally {

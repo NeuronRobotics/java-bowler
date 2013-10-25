@@ -1,5 +1,8 @@
 package com.neuronrobotics.sdk.common.device.server;
 
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
 
 import com.neuronrobotics.sdk.commands.bcs.core.NamespaceCommand;
@@ -16,6 +19,7 @@ import com.neuronrobotics.sdk.common.RpcEncapsulation;
 import com.neuronrobotics.sdk.common.device.server.bcs.core.BcsCoreNamespaceImp;
 import com.neuronrobotics.sdk.common.device.server.bcs.rpc.BcsRpcNamespaceImp;
 import com.neuronrobotics.sdk.network.BowlerTCPServer;
+import com.neuronrobotics.sdk.network.BowlerUDPServer;
 
 public  abstract class BowlerAbstractServer  implements ISynchronousDatagramListener  {
 
@@ -87,6 +91,30 @@ public  abstract class BowlerAbstractServer  implements ISynchronousDatagramList
 	
 	public ArrayList<BowlerAbstractConnection> getServers() {
 		return servers;
+	}
+	
+	ServerSocket serverSocket; 
+	
+	public void startNetworkServer() throws IOException{
+		addServer(new BowlerUDPServer(1865));
+		serverSocket = new ServerSocket(1866);
+		new Thread(){
+			public void run(){
+				while(true){
+					Socket s;
+					try {
+						Log.warning("\n\nWaiting for connection...");
+						s = serverSocket.accept();
+						addServer(new BowlerTCPServer(s));
+						Log.warning("Got a connection!");
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		}.start();
+
 	}
 
 	public void addServer(BowlerAbstractConnection srv) {
