@@ -230,9 +230,10 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 					if(!ret.getRPC().contains("_err"))
 						return ret;
 			}catch(Exception ex){
-				ex.printStackTrace();
+				//ex.printStackTrace();
+				Log.warning(ex.getMessage());
 			}
-			System.err.println("Sending Synchronus packet and there was a failure, will retry "+(retry-i-1)+" more times");
+			Log.warning("Sending Synchronus packet and there was a failure, will retry "+(retry-i-1)+" more times");
 			ThreadUtil.wait(150*i);
 		}
 		return null;
