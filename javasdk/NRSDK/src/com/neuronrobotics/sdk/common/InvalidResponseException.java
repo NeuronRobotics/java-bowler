@@ -32,7 +32,7 @@ public class InvalidResponseException extends RuntimeException {
 	 */
 	public InvalidResponseException() {
 		message = "Invalid Response";
-		Log.warning(getMessage());
+		//Log.warning(getMessage());
 	}
 	
 	/**
@@ -42,7 +42,7 @@ public class InvalidResponseException extends RuntimeException {
 	 */
 	public InvalidResponseException(String msg) {
 		message = msg;
-		Log.warning(getMessage());
+		//Log.warning(getMessage());
 	}
 	
 	/* (non-Javadoc)

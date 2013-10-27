@@ -91,7 +91,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 		}
 	}
 	public void setConnection(BowlerAbstractConnection connection) {
-		setThreadedUpstreamPackets(true);
+		setThreadedUpstreamPackets(false);
 		if(connection == null) {
 			throw new NullPointerException("Can not use a NULL connection.");
 		}

@@ -12,6 +12,7 @@ import com.neuronrobotics.sdk.common.BowlerDataType;
 import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.common.BowlerDatagramFactory;
 import com.neuronrobotics.sdk.common.BowlerMethod;
+import com.neuronrobotics.sdk.common.IConnectionEventListener;
 import com.neuronrobotics.sdk.common.ISynchronousDatagramListener;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.MACAddress;
@@ -119,9 +120,19 @@ public  abstract class BowlerAbstractServer  implements ISynchronousDatagramList
 
 	public void addServer(BowlerAbstractConnection srv) {
 		if(!servers.contains(srv)){
+			srv.addConnectionEventListener(new IConnectionEventListener() {
+				@Override
+				public void onDisconnect(BowlerAbstractConnection source) {
+					removeServer(source);
+				}
+				@Override
+				public void onConnect(BowlerAbstractConnection source) {
+					
+				}
+			});
+			servers.add(srv);
 			srv.connect();
 			srv.setSynchronousDatagramListener(this);
-			servers.add(srv);
 		}
 	}
 	
@@ -150,6 +161,12 @@ public  abstract class BowlerAbstractServer  implements ISynchronousDatagramList
 		}
 		return null;
 	}
+	
+	private void removeServer(BowlerAbstractConnection b){
+		Log.error("Removing server");
+		new RuntimeException().printStackTrace();
+		getServers().remove(b);
+	}
 
 	public synchronized void pushAsyncPacket(BowlerDatagram data) {
 		for(int i=0;i<servers.size();i++){
@@ -162,18 +179,27 @@ public  abstract class BowlerAbstractServer  implements ISynchronousDatagramList
 						Log.info("TCP Bowler client ...OK!");
 					}else{
 						Log.warning("TCP Bowler client not detected, dropping\n"+data);
-						getServers().remove(b);
+						removeServer(b);
 					}
 				}else{
 					run=true;
 				}
-				if(run && getServers().get(i).isConnected())
-					getServers().get(i).sendAsync(data);
+				if(getServers().get(i).getClass() != BowlerUDPServer.class){
+					//System.out.println("Sending packet to "+getServers().get(i).getClass());
+					if(run && getServers().get(i).isConnected()){
+						Log.warning("ASYNC<<\r\n"+data );
+						getServers().get(i).sendAsync(data);
+						System.out.println("Sent packet to "+getServers().get(i).getClass());
+					}else{
+						BowlerAbstractConnection abs = getServers().get(i);
+						removeServer(abs);
+					}
+				}
 			}catch(Exception e){
 				Log.error("No client connected to this connection "+getServers().get(i).getClass());
 				BowlerAbstractConnection abs = getServers().get(i);
 				abs.disconnect();
-				getServers().remove(abs);
+				removeServer(abs);
 			}
 		}
 	}

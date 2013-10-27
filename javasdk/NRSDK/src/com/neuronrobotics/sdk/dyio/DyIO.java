@@ -393,7 +393,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 			DyIOChannelMode cm = DyIOChannelMode.get(response.getData().getByte(i));
 			boolean editable = true;
 			if(cm == null) {
-				cm = DyIOChannelMode.DIGITAL_IN;
+				cm = DyIOChannelMode.DIGITAL_OUT;
 				editable = false;
 				try {
 					Log.error("Mode get failed, setting to default");

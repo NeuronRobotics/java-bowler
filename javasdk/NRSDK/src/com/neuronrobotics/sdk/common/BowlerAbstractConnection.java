@@ -165,6 +165,7 @@ public abstract class BowlerAbstractConnection {
 		BowlerDatagram b =getLastSyncronousResponse();
 		if (b== null){
 			try {
+				new RuntimeException().printStackTrace();
 				Log.error("No response from device...");
 				reconnect();
 			} catch (IOException e) {
