@@ -18,10 +18,10 @@ public class DyIORegestry {
 				get().connect();
 			}
 			c.addConnectionEventListener(new IConnectionEventListener() {
-				public void onDisconnect() {
+				public void onDisconnect(BowlerAbstractConnection source) {
 					DyIORegestry.disconnect();
 				}
-				public void onConnect() {}
+				public void onConnect(BowlerAbstractConnection source) {}
 			});
 			return get().isAvailable();
 		}catch(RuntimeException ex){

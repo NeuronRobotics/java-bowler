@@ -1002,14 +1002,14 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 	}
 
 	@Override
-	public void onDisconnect() {
+	public void onDisconnect(BowlerAbstractConnection source) {
 		firmware[0]=0;
 		firmware[1]=0;
 		firmware[2]=0;
 	}
 
 	@Override
-	public void onConnect() {
+	public void onConnect(BowlerAbstractConnection source) {
 
 	}
 	/**

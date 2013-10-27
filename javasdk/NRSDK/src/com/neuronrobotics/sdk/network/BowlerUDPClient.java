@@ -24,7 +24,6 @@ import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.BowlerDatagramFactory;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.MACAddress;
-import com.sun.org.apache.bcel.internal.generic.NEWARRAY;
 
 /**
  * 

@@ -127,6 +127,11 @@ public  abstract class BowlerAbstractServer  implements ISynchronousDatagramList
 	
 	@Override
 	public BowlerDatagram onSyncReceive(BowlerDatagram data) {
+		if(data.isUpstream()){
+			// a server ignores upstream packets received
+			
+			return null;
+		}
 		if(!data.getRPC().contains("_png"))
 			Log.debug("Got >> "+data);
 		else{
@@ -151,11 +156,13 @@ public  abstract class BowlerAbstractServer  implements ISynchronousDatagramList
 			try{
 				boolean run = false;
 				if(getServers().get(i).getClass() == BowlerTCPServer.class){
-					if(((BowlerTCPServer)getServers().get(i)).isClientConnected()){
+					BowlerTCPServer b =(BowlerTCPServer)getServers().get(i);
+					if(b.isClientConnected()){
 						run=true;
 						Log.info("TCP Bowler client ...OK!");
 					}else{
 						Log.warning("TCP Bowler client not detected, dropping\n"+data);
+						getServers().remove(b);
 					}
 				}else{
 					run=true;
@@ -164,6 +171,9 @@ public  abstract class BowlerAbstractServer  implements ISynchronousDatagramList
 					getServers().get(i).sendAsync(data);
 			}catch(Exception e){
 				Log.error("No client connected to this connection "+getServers().get(i).getClass());
+				BowlerAbstractConnection abs = getServers().get(i);
+				abs.disconnect();
+				getServers().remove(abs);
 			}
 		}
 	}

@@ -64,6 +64,7 @@ public abstract class BowlerAbstractConnection {
 	
 	/** The listeners. */
 	private ArrayList<IBowlerDatagramListener> listeners = new ArrayList<IBowlerDatagramListener>();
+	ArrayList<IConnectionEventListener> disconnectListeners = new ArrayList<IConnectionEventListener> ();
 	private ISynchronousDatagramListener syncListen = null;
 	/** The queue. */
 	private QueueManager syncQueue = null;
@@ -711,7 +712,7 @@ public abstract class BowlerAbstractConnection {
 
 	}
 	
-	ArrayList<IConnectionEventListener> disconnectListeners = new ArrayList<IConnectionEventListener> ();
+	
 	
 	public void addConnectionEventListener(IConnectionEventListener l ) {
 		if(!disconnectListeners.contains(l)) {
@@ -725,12 +726,12 @@ public abstract class BowlerAbstractConnection {
 	} 
 	private void fireDisconnectEvent() {
 		for(IConnectionEventListener l:disconnectListeners) {
-			l.onDisconnect();
+			l.onDisconnect(this);
 		}
 	}
 	private void fireConnectEvent() {
 		for(IConnectionEventListener l:disconnectListeners) {
-			l.onConnect();
+			l.onConnect(this);
 		}
 	}
 	
