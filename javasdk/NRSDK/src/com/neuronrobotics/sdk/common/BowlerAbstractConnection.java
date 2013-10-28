@@ -49,7 +49,7 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
  */
 public abstract class BowlerAbstractConnection {
 	
-	private boolean threadedUpstreamPackets=false;
+	//private boolean threadedUpstreamPackets=false;
 	
 	/** The sleep time. */
 	private int sleepTime = 10;
@@ -111,12 +111,12 @@ public abstract class BowlerAbstractConnection {
 	 * @param up
 	 */
 	public void setThreadedUpstreamPackets(boolean up){
-		threadedUpstreamPackets=up;
+		//threadedUpstreamPackets=up;
 	}
 	public boolean isThreadedUpstreamPackets() {
-		if (SDKBuildInfo.isLinux() && SDKBuildInfo.isARM())
+		//if (SDKBuildInfo.isLinux() && SDKBuildInfo.isARM())
 			return false;
-		return threadedUpstreamPackets;
+		//return threadedUpstreamPackets;
 	}
 	
 	/**
