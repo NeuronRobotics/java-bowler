@@ -154,14 +154,12 @@ public abstract class BowlerAbstractConnection {
 		} catch (IOException e1) {
 			throw new RuntimeException(e1);
 		}
-		//long rcv = System.currentTimeMillis();
-		//ThreadedTimeout timeout = new ThreadedTimeout(getSleepTime());
+		long rcv = System.currentTimeMillis();
 		timeout.initialize(getSleepTime());
-		//timeout.start();
 		while ((!timeout.isTimedOut())  && (getLastSyncronousResponse() == null)){
 			ThreadUtil.wait(getPollTimeoutTime());
 		}
-		//Log.info("Receive took: "+(System.currentTimeMillis()-rcv)+" ms");
+		Log.info("Receive took: "+(System.currentTimeMillis()-rcv)+" ms");
 		BowlerDatagram b =getLastSyncronousResponse();
 		if (b== null){
 			try {

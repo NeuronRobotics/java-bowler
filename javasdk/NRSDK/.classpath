@@ -18,6 +18,6 @@
 	<classpathentry kind="lib" path="lib_addons/nr-jinput.jar"/>
 	<classpathentry kind="lib" path="lib_addons/smack.jar"/>
 	<classpathentry kind="lib" path="lib_addons/smackx.jar"/>
-	<classpathentry kind="lib" path="lib/nrjavaserial-3.8.8.jar"/>
+	<classpathentry kind="lib" path="lib/nrjavaserial-3.8.8.jar" sourcepath="/nrjavaserial"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
