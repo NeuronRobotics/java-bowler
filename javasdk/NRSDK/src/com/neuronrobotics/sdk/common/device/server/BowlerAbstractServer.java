@@ -187,7 +187,7 @@ public  abstract class BowlerAbstractServer  implements ISynchronousDatagramList
 				if(getServers().get(i).getClass() != BowlerUDPServer.class){
 					//System.out.println("Sending packet to "+getServers().get(i).getClass());
 					if(run && getServers().get(i).isConnected()){
-						Log.warning("ASYNC<<\r\n"+data );
+						//Log.warning("ASYNC<<\r\n"+data );
 						getServers().get(i).sendAsync(data);
 						System.out.println("Sent packet to "+getServers().get(i).getClass());
 					}else{
