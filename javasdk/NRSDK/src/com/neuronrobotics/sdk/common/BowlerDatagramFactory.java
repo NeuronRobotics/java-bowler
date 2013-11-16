@@ -24,6 +24,62 @@ package com.neuronrobotics.sdk.common;
 
 public class BowlerDatagramFactory {
 	
+	private static BowlerDatagramFactory instance;
+	
+	private static BowlerDatagram pool [];
+	private static int poolSize = 10;
+	private static int failed=0;
+	
+	static{
+		if(instance ==  null){
+			instance = new BowlerDatagramFactory();
+			pool =  new BowlerDatagram[poolSize];
+			for (int i=0;i<poolSize;i++){
+				pool [i] = new BowlerDatagram(instance);
+			}
+		}
+	}
+	
+	public static boolean validateFactory(BowlerDatagramFactory test){
+		if(test == instance){
+			return true;
+		}
+		throw new RuntimeException("Invalid factory generation of packet. Use BowlerDatagramFactory.getNextPacket()");
+	}
+	
+	public static BowlerDatagram getNextPacket(){
+		BowlerDatagram ref = null;
+		//Find the most recent free packet from the pool
+		for(int i=0;i<pool.length;i++){
+			if(pool[i].isFree()){
+				ref=pool[i];
+				ref.setFree(false, instance) ;
+				return ref;
+			}
+		}
+		
+		//The whole list was search and no free packets were found
+		BowlerDatagram newPool [ ] = new BowlerDatagram[poolSize+10];
+		Log.warning("No free packets found, increasing pool size to "+newPool.length);
+		for(int i=0;i<pool.length;i++){
+			newPool[i] = pool[i];
+		}
+		//Adding the new packets
+		for(int i=pool.length;i<newPool.length;i++){
+			newPool[i] = new BowlerDatagram(instance);
+			if(ref==null)
+				ref=newPool[i];
+		}
+		pool = newPool;
+		//old pool data given to the GC
+		
+		return ref;
+	}
+	
+	public static void freePacket(BowlerDatagram bd){
+		bd.setFree(true, instance);
+	}
+
 	/** The Constant REVISION. */
 	//public static final byte REVISION = BowlerDatagram.REVISION;
 	
@@ -34,22 +90,20 @@ public class BowlerDatagramFactory {
 	 * @param cmd 	The RPC
 	 * @return 		A valid Bowler Datagram.
 	 */
-	private static int failed=0;
+	
 	public static BowlerDatagram build(MACAddress addr, BowlerAbstractCommand cmd) {
-		ByteList data = new ByteList();
-		data.add(BowlerDatagram.REVISION); // revision
-		data.add(addr.getBytes()); // mac address
-		data.add(cmd.getMethod().getValue()); // method id
-		data.add(cmd.getNamespaceIndex()); // Rpc Index id
-		data.add(cmd.getLength()); // data length
-		byte crc = data.genCRC();
-		data.add(crc); // crc
-		data.add(cmd.getBytes()); // packet
-		return new BowlerDatagram(data);
+		BowlerDatagram bd = getNextPacket();
+		bd.setAddress(addr);
+		bd.setMethod(cmd.getMethod()); // method id
+		bd.setNamespaceResolutionID((byte) cmd.getNamespaceIndex());// Rpc Index id
+		bd.setData(cmd.getBytes());
+		return bd;
 	}
+	
 	public static BowlerDatagram build(ByteList buffer ){
-		return build(buffer, new BowlerDatagram() );
+		return build(buffer, getNextPacket() );
 	}
+	
 	public static BowlerDatagram build(ByteList buffer, BowlerDatagram staticMemory){
 		if((buffer.size()==0))
 			return null;

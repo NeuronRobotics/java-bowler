@@ -30,10 +30,13 @@
  * 
  */
 package com.neuronrobotics.sdk.common;
+
+import javax.management.RuntimeErrorException;
+
 /**
  * Formats data into a Bowler packet. 
  * 
- * @author rbreznak
+ * @author rbreznak, Kevin Harrington
  *
  */
 public class BowlerDatagram implements ISendable {
@@ -71,12 +74,15 @@ public class BowlerDatagram implements ISendable {
 	
 	private long timestamp;
 	
+	private boolean isFree = true;
+	
+	
+	
 	/**
 	 * Default constructor.
 	 */
-	public BowlerDatagram() {
-		// left empty to allow default construction
-		timestamp = System.currentTimeMillis();
+	public BowlerDatagram(BowlerDatagramFactory factory) {
+		validate(factory);
 	}
 	
 
@@ -86,8 +92,16 @@ public class BowlerDatagram implements ISendable {
 	 *
 	 * @param data the data
 	 */
-	public BowlerDatagram(ByteList data) {
+	public BowlerDatagram(ByteList data,BowlerDatagramFactory factory) {
+		validate(factory);
 		parse(data);
+	}
+	
+	private void validate(BowlerDatagramFactory factory){
+		if(!isFree){
+			throw new RuntimeException("Packet is in use, be sure to use the factory");
+		}
+		setFree(false,factory);
 		timestamp = System.currentTimeMillis();
 	}
 	
@@ -107,16 +121,16 @@ public class BowlerDatagram implements ISendable {
 			throw new MalformattedDatagram("Datagram is revision " + raw.getByte(0) + ". Must be of revision " + REVISION);
 		}
 
-		address = new MACAddress(raw.getBytes(1,6));
-		method = BowlerMethod.get(raw.getByte(7));
-		if(method == null){
-			method=BowlerMethod.STATUS;
+		setAddress(new MACAddress(raw.getBytes(1,6)));
+		setMethod(BowlerMethod.get(raw.getByte(7)));
+		if(getMethod() == null){
+			setMethod(BowlerMethod.STATUS);
 			System.err.println("Method was invalid!! Value="+raw.getByte(7));
 			Log.error("Method was invalid!! Value="+raw.getByte(7));
 		}
 			
-		namespaceResolutionID = (byte) (raw.getByte(8)&0x7f);
-		upstream=(raw.getByte(8)<0);
+		setNamespaceResolutionID((byte) (raw.getByte(8)&0x7f));
+		setUpstream((raw.getByte(8)<0));
 		// Make sure that the size of the data payload is the stated length
 		if(raw.getByte(9) != raw.getBytes(11).length) {
 			//throw new MalformattedDatagram("Datagram payload length is mismatched");
@@ -127,12 +141,16 @@ public class BowlerDatagram implements ISendable {
 			System.err.println("CRC failed check");
 			throw new MalformattedDatagram("CRC does not match");
 		}else{
-			crc = raw.getCRC();
+			setCrc(raw.getCRC());
 		}
 		
 		// Put the remaining data into the data payload 
+		setData(raw.getBytes(HEADER_SIZE));
+	}
+	
+	public void setData(byte[] bs){
 		data.clear();
-		data.add(raw.getBytes(HEADER_SIZE));
+		data.add(bs);
 	}
 	
 	/**
@@ -189,7 +207,7 @@ public class BowlerDatagram implements ISendable {
 //		if(namespaceResolutionID != 0 && method == BowlerMethod.ASYNCHRONOUS){
 //			Log.error("Device firmware out of date, should be using BowlerMethod.ASYNCHRONOUS rather than transactionID != 0" + this);
 //		}
-		return method != BowlerMethod.ASYNCHRONOUS;
+		return getMethod() != BowlerMethod.ASYNCHRONOUS;
 	}
 	
 	/**
@@ -217,7 +235,7 @@ public class BowlerDatagram implements ISendable {
 	 * @return The datagram's CRC
 	 */
 	public byte getCRC() {
-		return crc;
+		return getCrc();
 	}
 	/**
 	 * Gets the String representation of the datagram's RPC.
@@ -233,7 +251,7 @@ public class BowlerDatagram implements ISendable {
 	 * @return The Session ID
 	 */
 	private int getSessionID() {
-		return namespaceResolutionID >= 0 ? (int) namespaceResolutionID:(int) namespaceResolutionID+256;
+		return getNamespaceResolutionID() >= 0 ? (int) getNamespaceResolutionID():(int) getNamespaceResolutionID()+256;
 	}
 	
 	/**
@@ -259,8 +277,8 @@ public class BowlerDatagram implements ISendable {
 	public byte[] getBytes() {
 		ByteList bl = new ByteList();
 		bl.add(REVISION);
-		bl.add(address);
-		bl.add(method.getValue());
+		bl.add(getAddress());
+		bl.add(getMethod().getValue());
 		bl.add(getTransactionUpstream());
 		bl.add(data.size());
 		bl.add(getCRC());
@@ -283,8 +301,8 @@ public class BowlerDatagram implements ISendable {
 		}		
 		str += "\n";
 		str += "\tRevision: \t" + (int) REVISION + '\n';
-		str += "\tMAC address: \t" + address + '\n';
-		str += "\tMethod: \t" + method + '\n';
+		str += "\tMAC address: \t" + getAddress() + '\n';
+		str += "\tMethod: \t" + getMethod() + '\n';
 		str += "\tDirection: \t";
 		str += isUpstream() ? "Upstream\n" : "Downstream\n";
 		str += "\tRPC Namespace Index: \t" + getSessionID();
@@ -328,7 +346,56 @@ public class BowlerDatagram implements ISendable {
 	}
 
 	public void setAsAsync(int id) {
-		namespaceResolutionID=(byte) id;
-		method = BowlerMethod.ASYNCHRONOUS;
+		setNamespaceResolutionID((byte) id);
+		setMethod(BowlerMethod.ASYNCHRONOUS);
+	}
+
+
+	public void clear() {
+		data.clear();
+	}
+
+
+	public void setAddress(MACAddress address) {
+		this.address = address;
+	}
+
+
+	public void setMethod(BowlerMethod method) {
+		this.method = method;
+	}
+
+
+	public void setNamespaceResolutionID(byte namespaceResolutionID) {
+		this.namespaceResolutionID = namespaceResolutionID;
+	}
+
+
+	public void setUpstream(boolean upstream) {
+		this.upstream = upstream;
+	}
+
+
+	public byte getCrc() {
+		return crc;
+	}
+
+
+	public void setCrc(byte crc) {
+		this.crc = crc;
+	}
+
+
+	public boolean isFree() {
+		return isFree;
+	}
+
+
+	public void setFree(boolean isFree, BowlerDatagramFactory factory) {
+		if(isFree== true){
+			clear();
+		}
+		BowlerDatagramFactory.validateFactory(factory);
+		this.isFree = isFree;
 	}
 }

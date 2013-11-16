@@ -57,9 +57,11 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	private HeartBeat beater;
 	/** The connection. */
 	private BowlerAbstractConnection connection=null;
-	
 	/** The address. */
 	private MACAddress address = new MACAddress(MACAddress.BROADCAST);
+	private static ArrayList<IConnectionEventListener> disconnectListeners = new ArrayList<IConnectionEventListener> ();
+	private ArrayList<NamespaceEncapsulation> namespaceList;
+	private ArrayList<String> nameSpaceStrings = new ArrayList<String>();
 	
 	/**
 	 * Determines if the device is available.
@@ -77,8 +79,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	 *
 	 * @param connection the new connection
 	 */
-	private static ArrayList<IConnectionEventListener> disconnectListeners = new ArrayList<IConnectionEventListener> ();
-	private ArrayList<NamespaceEncapsulation> namespaceList;
+
 	
 	public void addConnectionEventListener(IConnectionEventListener l ) {
 		if(!disconnectListeners.contains(l)) {
@@ -175,10 +176,8 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	 * @return the syncronous response
 	 */
 	public BowlerDatagram send(ISendable sendable) {
-		if((new BowlerDatagram(new ByteList(sendable.getBytes())).getRPC().toLowerCase().contains("_png"))){
-			//Log.debug("sending ping");
-		}else
-			Log.debug("TX>>\n"+sendable.toString());
+
+		Log.debug("TX>>\n"+sendable.toString());
 		
 		BowlerDatagram b =connection.send(sendable);
 		if(b != null) {
@@ -192,7 +191,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 			//switch protocol version, try again
 			Log.debug("RX<<: No response");
 		}
-		lastPacketTime = System.currentTimeMillis();
+		setLastPacketTime(System.currentTimeMillis());
 		return b;
 	}
 	
@@ -325,7 +324,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	 * @return the namespaces
 	 */
 	public ArrayList<String>  getNamespaces(){
-		ArrayList<String> ret = new ArrayList<String>();
+		
 		if(namespaceList == null)
 			namespaceList = new ArrayList<NamespaceEncapsulation>();
 		Log.enableDebugPrint(true);
@@ -384,12 +383,13 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 		}
 		
 		
-		
-		for(NamespaceEncapsulation ns:namespaceList){
-			ret.add(ns.getNamespace());
+		if(nameSpaceStrings.size() != namespaceList.size()){
+			for(NamespaceEncapsulation ns:namespaceList){
+				nameSpaceStrings.add(ns.getNamespace());
+			}
 		}
 		
-		return ret;
+		return nameSpaceStrings;
 		
 	}
 	/**
@@ -408,7 +408,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	}
 	
 	public void startHeartBeat(){
-		lastPacketTime=System.currentTimeMillis();
+		setLastPacketTime(System.currentTimeMillis());
 		beater = new HeartBeat();
 		beater.start();
 	}
@@ -542,6 +542,16 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	}
 	public void setKeepAlive(boolean keepAlive) {
 		this.keepAlive = keepAlive;
+	}
+
+
+	public long getLastPacketTime() {
+		return lastPacketTime;
+	}
+
+
+	public void setLastPacketTime(long lastPacketTime) {
+		this.lastPacketTime = lastPacketTime;
 	}
 	
 }

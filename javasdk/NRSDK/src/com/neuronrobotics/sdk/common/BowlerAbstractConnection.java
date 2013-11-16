@@ -559,12 +559,10 @@ public abstract class BowlerAbstractConnection {
 	
 	private class Updater extends Thread{
 		private ByteList buffer = new ByteList();
-		private BowlerDatagram pool [] = new   BowlerDatagram [100];
-		private int readPointer = 0;
+		
+		
 		public void run() {
-			for(int i=0;i<pool.length;i++){
-				pool[i]=new BowlerDatagram();
-			}
+
 			//wait for the data stream to stabilize
 			while(dataIns == null){
 				ThreadUtil.wait(100);
@@ -575,15 +573,8 @@ public abstract class BowlerAbstractConnection {
 						if(getDataIns().available()>0){
 							//updateBuffer();
 							buffer.add(getDataIns().read());
-							BowlerDatagram bd = BowlerDatagramFactory.build(buffer,pool[readPointer]);
+							BowlerDatagram bd = BowlerDatagramFactory.build(buffer);
 							if (bd!=null) {
-								readPointer++;
-								if(readPointer == pool.length){
-									readPointer=0;
-									for(int i=0;i<pool.length;i++){
-										pool[i]=new BowlerDatagram();
-									}
-								}
 								//Log.info("Got :\n"+bd);
 								onDataReceived(bd);
 								buffer.clear();
