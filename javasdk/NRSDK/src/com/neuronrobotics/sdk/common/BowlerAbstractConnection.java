@@ -343,9 +343,9 @@ public abstract class BowlerAbstractConnection {
 	}
 	
 	/**
-	 * Return the syncronous response buffer.
+	 * Return the synchronous response buffer.
 	 *
-	 * @return the last syncronous response
+	 * @return the last synchronous response
 	 */
 	public BowlerDatagram getLastSyncronousResponse() {
 		return response;
@@ -562,9 +562,8 @@ public abstract class BowlerAbstractConnection {
 		
 		
 		public void run() {
-
 			//wait for the data stream to stabilize
-			while(dataIns == null){
+			while(dataIns== null){
 				ThreadUtil.wait(100);
 			}
 			while(isConnected()) {
@@ -575,11 +574,11 @@ public abstract class BowlerAbstractConnection {
 							buffer.add(getDataIns().read());
 							BowlerDatagram bd = BowlerDatagramFactory.build(buffer);
 							if (bd!=null) {
-								//Log.info("Got :\n"+bd);
+								Log.info("Got :\n"+bd);
 								onDataReceived(bd);
 								buffer.clear();
 							}
-							//Log.info("buffer: "+buffer);
+							Log.info("buffer: "+buffer);
 						}else{
 							// prevents the thread from locking
 							ThreadUtil.wait(1);
@@ -587,6 +586,7 @@ public abstract class BowlerAbstractConnection {
 					}else{
 						// prevents the thread from locking
 						ThreadUtil.wait(10);
+						Log.info("Data In is null");
 					}
 				} catch (Exception e) {
 					Log.error("Data read failed "+e.getMessage());
@@ -598,6 +598,7 @@ public abstract class BowlerAbstractConnection {
 					}
 				}
 			}
+			throw new RuntimeException("Connection exited");
 		}
 	}
 	

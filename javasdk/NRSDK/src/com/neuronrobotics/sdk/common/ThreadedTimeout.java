@@ -28,6 +28,9 @@ public class ThreadedTimeout {
 	
 	/** The timed out. */
 	private boolean timedOut = true;
+	private IthreadedTimoutListener listener;
+	
+	
 	
 	/**
 	 * Instantiates a new threaded timeout.
@@ -43,12 +46,15 @@ public class ThreadedTimeout {
 			public void run(){
 				while(true){
 					while(timedOut){
-						ThreadUtil.wait(10);
+						ThreadUtil.wait(100);
 					}
 					for(int i=0;i<10;i++){
 						ThreadUtil.wait(getTime()/10);
-						if(i==9)
+						if(i==9){
 							timedOut = true;
+							if(listener!=null)
+								listener.onTimeout();
+						}
 					}
 					
 				}
@@ -76,5 +82,9 @@ public class ThreadedTimeout {
 
 	public int getTime() {
 		return time;
+	}
+
+	public void setTimeoutListener(IthreadedTimoutListener listener) {
+		this.listener = listener;
 	}
 }

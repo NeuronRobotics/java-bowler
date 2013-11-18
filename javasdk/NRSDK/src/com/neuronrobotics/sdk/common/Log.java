@@ -212,6 +212,18 @@ public class Log {
 		Log.enableSystemPrint(debugprint);
 		Log.setMinimumPrintLevel(debugprint?WARNING:INFO);
 	}
+	
+	/**
+	 * Enable printing of debug output.
+	 *
+	 * @param debugprint the debugprint
+	 */
+	
+	public static void enableInfoPrint(boolean debugprint) {
+		Log.enableSystemPrint(debugprint);
+		
+		Log.setMinimumPrintLevel(INFO);
+	}
 	/**
 	 * Set the minimum level of importance to dsplay.
 	 * Messages below this wont be displayed.

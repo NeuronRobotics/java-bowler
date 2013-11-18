@@ -426,6 +426,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	}
 	private class HeartBeat extends Thread{
 		public void run(){
+			ThreadUtil.wait(1000);
 			while (connection.isConnected()){
 				if((connection.msSinceLastSend())>heartBeatTime){
 					try{

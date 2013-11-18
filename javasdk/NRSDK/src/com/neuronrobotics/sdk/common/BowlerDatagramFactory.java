@@ -27,8 +27,8 @@ public class BowlerDatagramFactory {
 	private static BowlerDatagramFactory instance;
 	
 	private static BowlerDatagram pool [];
-	private static int poolSize = 10;
 	private static int failed=0;
+	private static int poolSize = 5;
 	
 	static{
 		if(instance ==  null){
@@ -36,6 +36,7 @@ public class BowlerDatagramFactory {
 			pool =  new BowlerDatagram[poolSize];
 			for (int i=0;i<poolSize;i++){
 				pool [i] = new BowlerDatagram(instance);
+				freePacket(pool [i]);
 			}
 		}
 	}
@@ -49,17 +50,26 @@ public class BowlerDatagramFactory {
 	
 	public static BowlerDatagram getNextPacket(){
 		BowlerDatagram ref = null;
+		
 		//Find the most recent free packet from the pool
 		for(int i=0;i<pool.length;i++){
+			//Log.warning("Checking pool packet "+i);
 			if(pool[i].isFree()){
 				ref=pool[i];
-				ref.setFree(false, instance) ;
+				ref.setFree(false, instance);
+				//Log.info("Getting packet from buffer at index "+i);
 				return ref;
 			}
 		}
+		try{
+			throw new RuntimeException();
+		}catch (Exception e){
+			System.err.println("Requesting packets, none availible");
+			e.printStackTrace();
+		}
 		
 		//The whole list was search and no free packets were found
-		BowlerDatagram newPool [ ] = new BowlerDatagram[poolSize+10];
+		BowlerDatagram newPool [ ] = new BowlerDatagram[pool.length+poolSize];
 		Log.warning("No free packets found, increasing pool size to "+newPool.length);
 		for(int i=0;i<pool.length;i++){
 			newPool[i] = pool[i];
@@ -101,10 +111,14 @@ public class BowlerDatagramFactory {
 	}
 	
 	public static BowlerDatagram build(ByteList buffer ){
-		return build(buffer, getNextPacket() );
+		BowlerDatagram buff= getNextPacket();
+		BowlerDatagram ret = build(buffer, getNextPacket() );
+		if(ret == null)
+			freePacket(buff);
+		return ret;
 	}
 	
-	public static BowlerDatagram build(ByteList buffer, BowlerDatagram staticMemory){
+	private static BowlerDatagram build(ByteList buffer, BowlerDatagram staticMemory){
 		if((buffer.size()==0))
 			return null;
 		byte fb;
@@ -175,7 +189,7 @@ public class BowlerDatagramFactory {
 			
 		}
 		int totalLen = len+BowlerDatagram.HEADER_SIZE;
-		// See if all the data has arived for this packet
+		// See if all the data has arrived for this packet
 		if (buffer.size()>=(totalLen) ){
 			failed=0;
 			ByteList rawContent = new ByteList(buffer.popList(totalLen));

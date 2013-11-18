@@ -31,15 +31,13 @@
  */
 package com.neuronrobotics.sdk.common;
 
-import javax.management.RuntimeErrorException;
-
 /**
  * Formats data into a Bowler packet. 
  * 
  * @author rbreznak, Kevin Harrington
  *
  */
-public class BowlerDatagram implements ISendable {
+public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	
 	/** The Constant REVISION. */
 	public static final byte REVISION = 3;
@@ -76,6 +74,7 @@ public class BowlerDatagram implements ISendable {
 	
 	private boolean isFree = true;
 	
+	private ThreadedTimeout timeout=new ThreadedTimeout(1000);
 	
 	
 	/**
@@ -103,6 +102,7 @@ public class BowlerDatagram implements ISendable {
 		}
 		setFree(false,factory);
 		timestamp = System.currentTimeMillis();
+		timeout.setTimeoutListener(this);
 	}
 	
 	/**
@@ -110,7 +110,8 @@ public class BowlerDatagram implements ISendable {
 	 * 
 	 * @param raw the chunk of data
 	 */
-	public void parse(ByteList raw) {		
+	public void parse(ByteList raw) {	
+		checkValidPacket();
 		// Every valid Bowler packet has 11 characters from the header.
 		if(raw.size() < HEADER_SIZE) {
 			throw new MalformattedDatagram("Datagram does not have a valid Bowler header size.");
@@ -149,6 +150,7 @@ public class BowlerDatagram implements ISendable {
 	}
 	
 	public void setData(byte[] bs){
+		checkValidPacket();
 		data.clear();
 		data.add(bs);
 	}
@@ -159,6 +161,7 @@ public class BowlerDatagram implements ISendable {
 	 * @return byte list of the paload
 	 */
 	public ByteList getPayload(){
+		checkValidPacket();
 		return new ByteList(data.getBytes());
 	}
 	
@@ -168,6 +171,7 @@ public class BowlerDatagram implements ISendable {
 	 * @return the current address
 	 */
 	public MACAddress getAddress() {
+		checkValidPacket();
 		return new MACAddress(address.getBytes());
 	}
 
@@ -177,6 +181,7 @@ public class BowlerDatagram implements ISendable {
 	 * @return the current revision
 	 */
 	public byte getRevision() {
+		checkValidPacket();
 		return REVISION;
 	}
 
@@ -186,6 +191,7 @@ public class BowlerDatagram implements ISendable {
 	 * @return the current method
 	 */
 	public BowlerMethod getMethod() {
+		checkValidPacket();
 		return method;
 	}
 	
@@ -195,15 +201,17 @@ public class BowlerDatagram implements ISendable {
 	 * @return the current transaction id
 	 */
 	public byte getNamespaceResolutionID() {
-		return (byte) getSessionID();
+		checkValidPacket();
+		return (byte) namespaceResolutionID;
 	}
 
 	/**
-	 * Determines if the datagram is being sent syncronously or not.
+	 * Determines if the datagram is being sent synchronously or not.
 	 *
-	 * @return true if Syncronous
+	 * @return true if Synchronous
 	 */
 	public boolean isSyncronous() {
+		checkValidPacket();
 //		if(namespaceResolutionID != 0 && method == BowlerMethod.ASYNCHRONOUS){
 //			Log.error("Device firmware out of date, should be using BowlerMethod.ASYNCHRONOUS rather than transactionID != 0" + this);
 //		}
@@ -216,6 +224,7 @@ public class BowlerDatagram implements ISendable {
 	 * @return true, if is upstream
 	 */
 	public boolean isUpstream(){
+		checkValidPacket();
 		return upstream;
 	}
 	
@@ -225,6 +234,7 @@ public class BowlerDatagram implements ISendable {
 	 * @return the transaction upstream
 	 */
 	public byte getTransactionUpstream(){
+		checkValidPacket();
 		byte back=(byte) (getNamespaceResolutionID()|(isUpstream()?0x80:0));
 		return back;
 	}
@@ -235,6 +245,7 @@ public class BowlerDatagram implements ISendable {
 	 * @return The datagram's CRC
 	 */
 	public byte getCRC() {
+		checkValidPacket();
 		return getCrc();
 	}
 	/**
@@ -242,6 +253,7 @@ public class BowlerDatagram implements ISendable {
 	 * @return A string representation of the datagram's RPC
 	 */
 	public String getRPC() {
+		checkValidPacket();
 		return new String(data.getBytes(0, 4));
 	}
 	
@@ -251,6 +263,7 @@ public class BowlerDatagram implements ISendable {
 	 * @return The Session ID
 	 */
 	private int getSessionID() {
+		checkValidPacket();
 		return getNamespaceResolutionID() >= 0 ? (int) getNamespaceResolutionID():(int) getNamespaceResolutionID()+256;
 	}
 	
@@ -261,6 +274,7 @@ public class BowlerDatagram implements ISendable {
 	 */
 	@Deprecated
 	public ByteList getRPCData() {
+		checkValidPacket();
 		return getData();
 	}
 	/**
@@ -269,12 +283,14 @@ public class BowlerDatagram implements ISendable {
 	 * @return the current data payload
 	 */
 	public ByteList getData() {
+		checkValidPacket();
 		return new ByteList(data.getBytes(4));
 	}
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.common.ISendable#getBytes()
 	 */
 	public byte[] getBytes() {
+		checkValidPacket();
 		ByteList bl = new ByteList();
 		bl.add(REVISION);
 		bl.add(getAddress());
@@ -342,12 +358,14 @@ public class BowlerDatagram implements ISendable {
 	}
 
 	public long getTimestamp() {
+		checkValidPacket();
 		return timestamp;
 	}
 
 	public void setAsAsync(int id) {
 		setNamespaceResolutionID((byte) id);
 		setMethod(BowlerMethod.ASYNCHRONOUS);
+		checkValidPacket();
 	}
 
 
@@ -357,32 +375,44 @@ public class BowlerDatagram implements ISendable {
 
 
 	public void setAddress(MACAddress address) {
+		checkValidPacket();
 		this.address = address;
 	}
 
 
 	public void setMethod(BowlerMethod method) {
+		checkValidPacket();
 		this.method = method;
 	}
 
 
 	public void setNamespaceResolutionID(byte namespaceResolutionID) {
+		checkValidPacket();
 		this.namespaceResolutionID = namespaceResolutionID;
 	}
 
 
 	public void setUpstream(boolean upstream) {
+		checkValidPacket();
 		this.upstream = upstream;
 	}
 
 
 	public byte getCrc() {
+		checkValidPacket();
 		return crc;
 	}
 
 
 	public void setCrc(byte crc) {
+		checkValidPacket();
 		this.crc = crc;
+	}
+	
+	private void checkValidPacket(){
+		if(isFree()){
+			throw new RuntimeException("This packet has timed out and the data has been cleared");
+		}
 	}
 
 
@@ -394,8 +424,17 @@ public class BowlerDatagram implements ISendable {
 	public void setFree(boolean isFree, BowlerDatagramFactory factory) {
 		if(isFree== true){
 			clear();
+			timeout.initialize(1000);
 		}
 		BowlerDatagramFactory.validateFactory(factory);
 		this.isFree = isFree;
+		
+	}
+
+
+	@Override
+	public void onTimeout() {
+		clear();
+		this.isFree = true;
 	}
 }
