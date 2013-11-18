@@ -297,6 +297,9 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 		bl.add(getMethod().getValue());
 		bl.add(getTransactionUpstream());
 		bl.add(data.size());
+		//calculate the CRC
+		setCrc(bl.genCRC());
+		
 		bl.add(getCRC());
 		bl.add(data);
 		return bl.getBytes();
@@ -424,11 +427,11 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	public void setFree(boolean isFree, BowlerDatagramFactory factory) {
 		if(isFree== true){
 			clear();
+		}else{
 			timeout.initialize(1000);
 		}
 		BowlerDatagramFactory.validateFactory(factory);
 		this.isFree = isFree;
-		
 	}
 
 
@@ -436,5 +439,11 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	public void onTimeout() {
 		clear();
 		this.isFree = true;
+	}
+
+
+	public void calcCRC() {
+		checkValidPacket();
+		getBytes();
 	}
 }

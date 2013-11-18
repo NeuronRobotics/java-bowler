@@ -77,6 +77,7 @@ public class BowlerDatagramFactory {
 		//Adding the new packets
 		for(int i=pool.length;i<newPool.length;i++){
 			newPool[i] = new BowlerDatagram(instance);
+			freePacket(newPool[i]);
 			if(ref==null)
 				ref=newPool[i];
 		}
@@ -107,6 +108,7 @@ public class BowlerDatagramFactory {
 		bd.setMethod(cmd.getMethod()); // method id
 		bd.setNamespaceResolutionID((byte) cmd.getNamespaceIndex());// Rpc Index id
 		bd.setData(cmd.getBytes());
+		bd.calcCRC();
 		return bd;
 	}
 	

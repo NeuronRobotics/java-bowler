@@ -21,6 +21,7 @@ public class SpeedTest {
 		DyIO.disableFWCheck();
 		ByteList.setUseStaticBuffer(true);
 		
+		
 //		BowlerAbstractConnection c =  new SerialConnection("/dev/DyIO0")
 //		BowlerAbstractConnection c =  new SerialConnection("COM65")
 		BowlerAbstractConnection c = ConnectionDialog.promptConnection();

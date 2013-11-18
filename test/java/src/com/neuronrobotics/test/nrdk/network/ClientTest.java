@@ -15,7 +15,7 @@ public class ClientTest extends BowlerAbstractDevice implements IBowlerDatagramL
 	public ClientTest(){
 		try {
 			clnt=new BowlerTCPClient("localhost",1965);
-		} catch (IOException e) {
+		} catch (Exception e) {
 		}
 		setConnection(clnt);
 		connect();

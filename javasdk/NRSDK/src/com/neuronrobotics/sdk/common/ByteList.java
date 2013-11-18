@@ -30,7 +30,7 @@ import com.neuronrobotics.sdk.config.SDKBuildInfo;
  */
 public class ByteList implements ISendable, List<Byte> {
 	
-	private static boolean useStaticBuffer = false;
+	private static boolean useStaticBuffer = true;
 	private int staticBufferSize = BowlerDatagram.MAX_PACKET_SIZE;
 	private byte [] staticBuffer = new byte[staticBufferSize];
 	private int staticBufferReadPointer = 0;
@@ -974,7 +974,7 @@ public class ByteList implements ISendable, List<Byte> {
 	}
 
 	public static void setUseStaticBuffer(boolean useStaticBuffer) {
-		ByteList.useStaticBuffer = useStaticBuffer;
+		ByteList.useStaticBuffer =true;
 	}
 
 	public int getStaticBufferSize() {

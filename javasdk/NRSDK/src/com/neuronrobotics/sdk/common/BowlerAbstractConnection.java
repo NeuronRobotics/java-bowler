@@ -576,9 +576,10 @@ public abstract class BowlerAbstractConnection {
 							if (bd!=null) {
 								Log.info("Got :\n"+bd);
 								onDataReceived(bd);
+								BowlerDatagramFactory.freePacket(bd);
 								buffer.clear();
 							}
-							Log.info("buffer: "+buffer);
+							//Log.info("buffer: "+buffer);
 						}else{
 							// prevents the thread from locking
 							ThreadUtil.wait(1);

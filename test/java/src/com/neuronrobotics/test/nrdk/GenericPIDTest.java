@@ -19,14 +19,19 @@ public class GenericPIDTest {
 		//	System.exit(1);
 		//}
 		try {
-			pid.setConnection(new BowlerTCPClient("cortex.wpi.edu", 1965));
+			try {
+				pid.setConnection(new BowlerTCPClient("cortex.wpi.edu", 1965));
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			//pid.setConnection(new BowlerTCPClient("192.168.0.134", 1965));
 			pid.GetAllPIDPosition();
 			pid.GetPIDPosition(2);
 			pid.disconnect();
 			System.out.println("All OK!");
 			System.exit(0);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			pid.disconnect();
