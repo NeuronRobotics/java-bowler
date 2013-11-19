@@ -27,16 +27,19 @@ public class BowlerDatagramFactoryTests {
 		for(int i=0;i<testBifferSize;i++){
 			myList.add(BowlerDatagramFactory.build(new MACAddress(), new PingCommand()));
 		}
-		//verify that the pool has been increased
-		if(BowlerDatagramFactory.getCurrentPoolSize() != testBifferSize){
-			fail();
-		}
 		
 		for(BowlerDatagram b:myList){
 			if(b.isFree())
 				fail();//if any packets not marked as allocated
+			//System.out.println(b);
 		}
-		ThreadUtil.wait((int) ((double)BowlerDatagramFactory.getPacketTimeout()*1.1));//wait for packets to timeout
+		ThreadUtil.wait((int) ((double)BowlerDatagramFactory.getPacketTimeout())/2);//wait for packets to timeout
+		for(BowlerDatagram b:myList){
+			if(b.isFree())
+				fail();//if any packets not marked as free too soon
+			//System.out.println(b);
+		}
+		ThreadUtil.wait((int) ((double)BowlerDatagramFactory.getPacketTimeout()));//wait for packets to timeout
 		for(BowlerDatagram b:myList){
 			if(!b.isFree())
 				fail();//any packets that failed to timeout

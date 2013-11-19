@@ -5,7 +5,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ ByteListTest.class })
+@SuiteClasses({ ByteListTest.class,AbstractConnectionTest.class,BowlerDatagramFactoryTests.class })
 public class AllTests {
 
 }
