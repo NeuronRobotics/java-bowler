@@ -562,6 +562,7 @@ public abstract class BowlerAbstractConnection {
 		
 		
 		public void run() {
+			
 			//wait for the data stream to stabilize
 			while(dataIns== null){
 				ThreadUtil.wait(100);
