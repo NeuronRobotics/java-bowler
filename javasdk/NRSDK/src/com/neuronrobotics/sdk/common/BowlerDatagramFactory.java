@@ -28,7 +28,7 @@ public class BowlerDatagramFactory {
 	
 	private static BowlerDatagram pool [];
 	private static int failed=0;
-	private static int poolSize = 5;
+	private static int poolSize = 10;
 	
 	static{
 		if(instance ==  null){
@@ -57,17 +57,17 @@ public class BowlerDatagramFactory {
 			if(pool[i].isFree()){
 				ref=pool[i];
 				ref.setFree(false, instance);
-				//Log.info("Getting packet from buffer at index "+i);
+				Log.info("Getting packet from buffer at index "+i);
 				return ref;
 			}
 		}
 		try{
 			throw new RuntimeException();
 		}catch (Exception e){
-			System.err.println("Requesting packets, none availible");
-			e.printStackTrace();
+			System.err.println("Requesting packets, none availible ");
+			
+			//e.printStackTrace();
 		}
-		
 		//The whole list was search and no free packets were found
 		BowlerDatagram newPool [ ] = new BowlerDatagram[pool.length+poolSize];
 		Log.warning("No free packets found, increasing pool size to "+newPool.length);
@@ -83,7 +83,7 @@ public class BowlerDatagramFactory {
 		}
 		pool = newPool;
 		//old pool data given to the GC
-		
+		ref.setFree(false, instance);
 		return ref;
 	}
 	
@@ -104,6 +104,8 @@ public class BowlerDatagramFactory {
 	
 	public static BowlerDatagram build(MACAddress addr, BowlerAbstractCommand cmd) {
 		BowlerDatagram bd = getNextPacket();
+		if (addr== null)
+			addr = new MACAddress();
 		bd.setAddress(addr);
 		bd.setMethod(cmd.getMethod()); // method id
 		bd.setNamespaceResolutionID((byte) cmd.getNamespaceIndex());// Rpc Index id

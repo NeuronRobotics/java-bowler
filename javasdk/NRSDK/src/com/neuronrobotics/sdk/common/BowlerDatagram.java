@@ -72,7 +72,7 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	
 	private long timestamp;
 	
-	private boolean isFree = true;
+	private boolean isPackedAvailibleForLoading = true;
 	
 	private ThreadedTimeout timeout=new ThreadedTimeout(1000);
 	
@@ -82,6 +82,7 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	 */
 	public BowlerDatagram(BowlerDatagramFactory factory) {
 		validate(factory);
+		setFree(true,factory);
 	}
 	
 
@@ -97,10 +98,9 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	}
 	
 	private void validate(BowlerDatagramFactory factory){
-		if(!isFree){
+		if(!isFree()){
 			throw new RuntimeException("Packet is in use, be sure to use the factory");
 		}
-		setFree(false,factory);
 		timestamp = System.currentTimeMillis();
 		timeout.setTimeoutListener(this);
 	}
@@ -147,6 +147,7 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 		
 		// Put the remaining data into the data payload 
 		setData(raw.getBytes(HEADER_SIZE));
+		setFree(false);
 	}
 	
 	public void setData(byte[] bs){
@@ -172,7 +173,7 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	 */
 	public MACAddress getAddress() {
 		checkValidPacket();
-		return new MACAddress(address.getBytes());
+		return address;
 	}
 
 	/**
@@ -310,7 +311,8 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	 */
 	@Override
 	public String toString(){
-		
+		if(isFree())
+			return "Empty Packet";
 		String str="";
 		
 		str += "\tRaw Packet:\t";
@@ -420,25 +422,28 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 
 
 	public boolean isFree() {
-		return isFree;
+		return isPackedAvailibleForLoading;
 	}
 
 
 	public void setFree(boolean isFree, BowlerDatagramFactory factory) {
+		BowlerDatagramFactory.validateFactory(factory);
+		setFree(isFree);
+	}
+
+	private void setFree(boolean isFree) {
 		if(isFree== true){
 			clear();
 		}else{
 			timeout.initialize(1000);
 		}
-		BowlerDatagramFactory.validateFactory(factory);
-		this.isFree = isFree;
+		this.isPackedAvailibleForLoading = isFree;
 	}
-
 
 	@Override
 	public void onTimeout() {
-		clear();
-		this.isFree = true;
+		Log.info("Packet freeing itself ");
+		setFree(true);
 	}
 
 
