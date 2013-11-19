@@ -28,8 +28,8 @@ public class BowlerDatagramFactory {
 	
 	private static BowlerDatagram pool [];
 	private static int failed=0;
-	private static int poolDefaultSize = 10;
-	private static int packetTimeout = 1000;
+	private static int poolDefaultSize = 40;
+	private static int packetTimeout = 100;
 	
 	static{
 		if(instance ==  null){
@@ -53,7 +53,10 @@ public class BowlerDatagramFactory {
 		throw new RuntimeException("Invalid factory generation of packet. Use BowlerDatagramFactory.getNextPacket()");
 	}
 	
-	private static BowlerDatagram getNextPacket(){
+	private static synchronized BowlerDatagram getNextPacket(){
+//		BowlerDatagram ref = new BowlerDatagram(instance);
+//		ref.setFree(false, instance);
+//		return ref;
 		BowlerDatagram ref = null;
 		
 		//Find the most recent free packet from the pool
@@ -103,18 +106,28 @@ public class BowlerDatagramFactory {
 	
 	public static BowlerDatagram build(MACAddress addr, BowlerAbstractCommand cmd) {
 		BowlerDatagram bd = getNextPacket();
+		long start = System.currentTimeMillis();
+		
+		bd.setFree(false,instance);
 		if (addr== null)
 			addr = new MACAddress();
-		bd.setAddress(addr);
-		bd.setMethod(cmd.getMethod()); // method id
-		bd.setNamespaceResolutionID((byte) cmd.getNamespaceIndex());// Rpc Index id
-		bd.setData(cmd.getBytes());
-		bd.calcCRC();
+		try{
+			bd.setAddress(addr);
+			bd.setMethod(cmd.getMethod()); // method id
+			bd.setNamespaceResolutionID((byte) cmd.getNamespaceIndex());// Rpc Index id
+			bd.setData(cmd.getBytes());
+			bd.calcCRC();
+		}catch(Exception e){
+			e.printStackTrace();
+			//if(System.currentTimeMillis()>(start+BowlerDatagramFactory.getPacketTimeout()))
+			Log.error("Timeout detected, duration = "+(System.currentTimeMillis()-start)+", expected = "+BowlerDatagramFactory.getPacketTimeout());
+		}
 		return bd;
 	}
 	
 	public static BowlerDatagram build(ByteList buffer ){
 		BowlerDatagram buff= getNextPacket();
+		buff.setFree(false,instance);
 		BowlerDatagram ret = build(buffer, buff );
 		if(ret == null)
 			freePacket(buff);

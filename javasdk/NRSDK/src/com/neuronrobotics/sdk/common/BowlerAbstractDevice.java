@@ -209,8 +209,10 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 			if(!connect())
 				throw new NoConnectionAvailableException();
 		}
-		
-		return command.validate(send(BowlerDatagramFactory.build(getAddress(), command)));
+		BowlerDatagram cmd= BowlerDatagramFactory.build(getAddress(), command);
+		BowlerDatagram back = send(cmd);
+		//BowlerDatagramFactory.freePacket(cmd);
+		return command.validate(back);
 	}
 	
 	/**
@@ -223,16 +225,17 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	 */
 	public BowlerDatagram send(BowlerAbstractCommand command, int retry) throws NoConnectionAvailableException, InvalidResponseException {	
 		for(int i=0;i<retry;i++){
+			BowlerDatagram ret;
 			try{
-				BowlerDatagram ret = send( command);
+				ret = send( command);
 				if(ret != null)
-					if(!ret.getRPC().contains("_err"))
+					//if(!ret.getRPC().contains("_err"))
 						return ret;
 			}catch(Exception ex){
 				//ex.printStackTrace();
-				Log.warning(ex.getMessage());
+				Log.error(ex.getMessage());
 			}
-			Log.warning("Sending Synchronus packet and there was a failure, will retry "+(retry-i-1)+" more times");
+			Log.error("Sending Synchronus packet and there was a failure, will retry "+(retry-i-1)+" more times");
 			ThreadUtil.wait(150*i);
 		}
 		return null;

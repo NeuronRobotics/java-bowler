@@ -348,7 +348,8 @@ public class ByteList implements ISendable, List<Byte> {
 	 * @return 	The desired Bytes.
 	 */
 	public  synchronized  byte[] getBytes(int start, int len) {
-		
+		int sizeLocal =size();
+		int requestedLen=len;
 		// starting offset that is less than 0
 		if(start < 0) {
 			start = 0;
@@ -360,16 +361,16 @@ public class ByteList implements ISendable, List<Byte> {
 		}
 
 		// starting offset is further then the last element
-		if(start > size()) {
+		if(start > sizeLocal) {
 			return new byte [0];
 		}
 				
 		// the ending position is 
-		if(start+len > size()) {
-			len = size() - start - 1;
+		if(start+len > sizeLocal) {
+			len = sizeLocal- start - 1;
 		}
 		if(len < 0) {
-			throw new RuntimeException("Requesting more bytes then in the list");
+			throw new RuntimeException("Requesting more bytes then in the list, size="+sizeLocal+" start="+start+" len="+len+" requested="+ requestedLen);
 		}
 
 		byte out[] = new byte[len];

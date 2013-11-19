@@ -81,7 +81,7 @@ public abstract class BowlerAbstractConnection {
 	
 	private Updater updater = null;
 	
-	private ThreadedTimeout timeout=new ThreadedTimeout(getSleepTime());
+	private ThreadedTimeout timeout=new ThreadedTimeout();
 	
 	
 	/**
@@ -163,7 +163,7 @@ public abstract class BowlerAbstractConnection {
 		BowlerDatagram b =getLastSyncronousResponse();
 		if (b== null){
 			try {
-				new RuntimeException().printStackTrace();
+				//new RuntimeException().printStackTrace();
 				Log.error("No response from device...");
 				reconnect();
 			} catch (IOException e) {

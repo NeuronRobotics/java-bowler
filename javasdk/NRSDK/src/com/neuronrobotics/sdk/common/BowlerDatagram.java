@@ -74,7 +74,7 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	
 	private boolean isPackedAvailibleForLoading = true;
 	
-	private ThreadedTimeout timeout=new ThreadedTimeout(BowlerDatagramFactory.getPacketTimeout());
+	private ThreadedTimeout timeout=new ThreadedTimeout();
 	
 	private RuntimeException ex; 
 	
@@ -105,6 +105,7 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 		}
 		timestamp = System.currentTimeMillis();
 		timeout.setTimeoutListener(this);
+		timeout.initialize(BowlerDatagramFactory.getPacketTimeout());
 	}
 	
 	/**
@@ -257,7 +258,11 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	 */
 	public String getRPC() {
 		checkValidPacket();
-		return new String(data.getBytes(0, 4));
+		try{
+			return new String(data.getBytes(0, 4));
+		}catch(Exception e){
+			return "****";
+		}
 	}
 	
 	/**
@@ -417,8 +422,10 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	}
 	
 	private void checkValidPacket(){
-		if(isFree()){
-			throw new RuntimeException("This packet has timed out and the data has been cleared");
+		if(isFree() && timeout.isTimedOut()){
+			throw new RuntimeException("This packet has timed out and the data has been cleared marked="+isFree());
+		}else{
+			setFree(false);
 		}
 	}
 
@@ -434,22 +441,23 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	}
 
 	private void setFree(boolean isFree) {
+		timeout.setTimeoutListener(null);
 		if(isFree== true){
 			clear();
-			timeout.setTimeoutListener(null);
 		}else{
 			ex = new RuntimeException("Packet freeing itself ");
 			timeout.initialize(BowlerDatagramFactory.getPacketTimeout());
+			timeout.setTimeoutListener(this);
 		}
 		this.isPackedAvailibleForLoading = isFree;
 	}
 
 	@Override
-	public void onTimeout() {
+	public void onTimeout(String message) {
 		if(!isPackedAvailibleForLoading ){
-			Log.info("Packet freeing itself ");
+			//Log.info("Packet freeing itself ");
 			setFree(true);
-			throw ex;
+			//throw ex;
 		}
 	}
 
@@ -457,5 +465,11 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	public void calcCRC() {
 		checkValidPacket();
 		getBytes();
+	}
+
+
+	public void setRpc(String opCode) {
+		// TODO Auto-generated method stub
+		
 	}
 }

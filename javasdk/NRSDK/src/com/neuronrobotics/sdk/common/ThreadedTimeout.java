@@ -24,12 +24,12 @@ public class ThreadedTimeout {
 	
 	/** The time. */
 	private int time;
-	private Thread timerThread;
+	private timerThreadClass timerThread;
 	
 	/** The timed out. */
 	private boolean timedOut = true;
 	private IthreadedTimoutListener listener;
-	
+	private long startTime=0;
 	
 	
 	/**
@@ -37,29 +37,8 @@ public class ThreadedTimeout {
 	 *
 	 * @param time the time
 	 */
-	public ThreadedTimeout(int time) {
-		this.time = time;
-		timerThread = new Thread(){
-			/* (non-Javadoc)
-			 * @see java.lang.Thread#run()
-			 */
-			public void run(){
-				while(true){
-					while(timedOut){
-						ThreadUtil.wait(100);
-					}
-					for(int i=0;i<10;i++){
-						ThreadUtil.wait(getTime()/10);
-						if(i==9){
-							timedOut = true;
-							if(listener!=null)
-								listener.onTimeout();
-						}
-					}
-					
-				}
-			}
-		};
+	public ThreadedTimeout() {
+		timerThread = new timerThreadClass();
 		timerThread.start();
 	}
 	
@@ -69,15 +48,32 @@ public class ThreadedTimeout {
 	 * @return true, if is timed out
 	 */
 	public boolean isTimedOut() {
+		return System.currentTimeMillis()>(startTime+getTime());
+	}
+	/**
+	 * Checks if is timed out.
+	 *
+	 * @return true, if is timed out
+	 */
+	private boolean isTimedOutLocal() {
 		return timedOut;
 	}
-	
 
 	
 	public void initialize(int sleepTime) {
 		// TODO Auto-generated method stub
+		IthreadedTimoutListener tmp =listener;
+		listener=null;
+		setTimedOutLocal(true);
+		if(!timerThread.isReset())
+			while(!timerThread.isReset()){
+				ThreadUtil.wait(0,5);
+			}
+		//ThreadUtil.wait(10);
 		this.time = (sleepTime);
-		timedOut = false;
+		startTime=System.currentTimeMillis();
+		setTimedOutLocal(false);
+		listener=tmp;
 	}
 
 	public int getTime() {
@@ -86,5 +82,42 @@ public class ThreadedTimeout {
 
 	public void setTimeoutListener(IthreadedTimoutListener listener) {
 		this.listener = listener;
+	}
+	private void setTimedOutLocal(boolean timedOut) {
+		this.timedOut = timedOut;
+	}
+	private class timerThreadClass extends Thread{
+		private boolean reset;
+
+		/* (non-Javadoc)
+		 * @see java.lang.Thread#run()
+		 */
+		public void run(){
+			while(true){
+				setReset(true);
+				while(isTimedOutLocal()){
+					ThreadUtil.wait(0,1);
+				}
+				setReset(false);
+				while(!isTimedOutLocal()){
+					ThreadUtil.wait(0,1);
+					if(System.currentTimeMillis()>(startTime+getTime()) && !isTimedOutLocal() )
+					if(System.currentTimeMillis()>(startTime+getTime()) && !isTimedOutLocal() ){
+						setTimedOutLocal(true);
+						if(listener!=null)
+							listener.onTimeout("");
+					}
+				}
+				
+			}
+		}
+
+		public boolean isReset() {
+			return reset;
+		}
+
+		public void setReset(boolean reset) {
+			this.reset = reset;
+		}
 	}
 }
