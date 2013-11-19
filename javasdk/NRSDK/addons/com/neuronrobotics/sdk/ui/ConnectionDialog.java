@@ -187,7 +187,7 @@ public class ConnectionDialog extends JDialog {
 				return false;
 			}
 			Log.info("Attempting to ping");
-			if(dev.ping() != null){
+			if(dev.ping() ){
 				Log.info("Ping OK!");
 				break;
 			}else{

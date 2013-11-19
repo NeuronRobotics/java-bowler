@@ -25,7 +25,11 @@ public class BcsCoreTest {
 		if(!device.connect()){
 			fail();
 		}
-		if(device.ping() == null ){
+		if(!device.ping()  ){
+			fail();
+		}
+		ArrayList<String> namespaces = device.getNamespaces();
+		if(namespaces.size()==0){
 			fail();
 		}
 		

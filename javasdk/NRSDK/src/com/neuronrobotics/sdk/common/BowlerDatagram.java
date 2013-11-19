@@ -51,7 +51,7 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	public static final int MAX_PACKET_SIZE = HEADER_SIZE+255;
 	
 	/** The address. */
-	private MACAddress address;
+	private MACAddress address = new MACAddress();
 	
 	/** The method. */
 	private BowlerMethod method;
@@ -74,7 +74,7 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	
 	private boolean isPackedAvailibleForLoading = true;
 	
-	private ThreadedTimeout timeout=new ThreadedTimeout(1000);
+	private ThreadedTimeout timeout=new ThreadedTimeout(BowlerDatagramFactory.getPacketTimeout());
 	
 	
 	/**
@@ -435,7 +435,7 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 		if(isFree== true){
 			clear();
 		}else{
-			timeout.initialize(1000);
+			timeout.initialize(BowlerDatagramFactory.getPacketTimeout());
 		}
 		this.isPackedAvailibleForLoading = isFree;
 	}
@@ -444,6 +444,7 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	public void onTimeout() {
 		Log.info("Packet freeing itself ");
 		setFree(true);
+		throw new RuntimeException("Packet freeing itself ");
 	}
 
 

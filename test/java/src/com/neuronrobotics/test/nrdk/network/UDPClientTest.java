@@ -24,7 +24,7 @@ public class UDPClientTest extends BowlerAbstractDevice implements IBowlerDatagr
 		
 		System.out.println("Pinging");
 		for(int i=0;i<10;i++)
-			if (ping()==null)
+			if (!ping())
 				throw new RuntimeException("Ping failed!");
 		clnt.disconnect();
 		System.out.println("done");

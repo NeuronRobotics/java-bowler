@@ -119,7 +119,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 			if(!connection.connect()) {
 				return false;
 			}else {
-				startHeartBeat();
+				//startHeartBeat();
 			}
 		}
 		return this.isAvailable();
@@ -260,8 +260,9 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 						//Found the command in the namespace
 
 							BowlerDatagram dg =  send(rpc.getCommand(arguments),retry);
-
-							return rpc.parseResponse(dg);//parse and return
+							Object [] en =rpc.parseResponse(dg);//parse and return
+							BowlerDatagramFactory.freePacket(dg);
+							return en;
 					}
 				}
 			}
@@ -279,21 +280,22 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	 *
 	 * @return the device's address
 	 */
-	public BowlerDatagram ping() {
+	public boolean ping() {
 		try {
 			BowlerDatagram bd = send(new PingCommand(),5);
-			//System.out.println("Ping success " + bd.getAddress());
-			setAddress(bd.getAddress());
-			return bd;
+			if(bd !=null){
+				//System.out.println("Ping success " + bd.getAddress());
+				setAddress(bd.getAddress());
+				return true;
+			}
 		} catch (InvalidResponseException e) {
 			Log.error("Invalid response from Ping ");
 			e.printStackTrace();
-			return null;
-		} catch (NoConnectionAvailableException e) {
+		} catch (Exception e) {
 			Log.error("No connection is available.");
 			e.printStackTrace();
-			return null;
 		}
+		return false;
 	}
 	
 	/**
@@ -338,9 +340,12 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 					int num;
 					String tmpNs =b.getData().asString();
 					if(tmpNs.length() ==  b.getData().size()){
+						//Done with the packet
+						BowlerDatagramFactory.freePacket(b);
 						//System.out.println("Ns = "+tmpNs+" len = "+tmpNs.length()+" data = "+b.getData().size());
 						b = send(new NamespaceCommand(),5);
-						num= b.getData().getByte(0);		
+						num= b.getData().getByte(0);
+						
 						Log.warning("This is an older implementation of core, depricated");
 					}else{
 						num= b.getData().getByte(b.getData().size()-1);
@@ -352,10 +357,15 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 					}else{
 						Log.info("Number of Namespaces="+num);
 					}
+
 					Log.debug("There are "+num+" namespaces on this device");
 					for (int i=0;i<num;i++){
+						//Done with the packet
+						BowlerDatagramFactory.freePacket(b);
 						b = send(new NamespaceCommand(i),5);
 						String space = b.getData().asString();
+						//Done with the packet
+						BowlerDatagramFactory.freePacket(b);
 						Log.debug("Adding Namespace: "+space);
 						
 						namespaceList.add(new NamespaceEncapsulation(space));
@@ -430,7 +440,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 			while (connection.isConnected()){
 				if((connection.msSinceLastSend())>heartBeatTime){
 					try{
-						if(ping()==null){
+						if(!ping()){
 							Log.debug("Ping failed, disconnecting");
 							if(!isKeepAlive())
 								connection.disconnect();
@@ -502,7 +512,8 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 				String rpcStr = new String(b.getData().getBytes(3, 4));
 				
 				b = send(new RpcArgumentsCommand(namespaceIndex,i),5);
-				
+				//Done with the packet
+				BowlerDatagramFactory.freePacket(b);
 				byte []data = b.getData().getBytes(2);
 				BowlerMethod downstreamMethod = BowlerMethod.get(data[0]);
 				int numDownArgs = data[1];

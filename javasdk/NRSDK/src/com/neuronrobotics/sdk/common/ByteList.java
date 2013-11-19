@@ -128,7 +128,7 @@ public class ByteList implements ISendable, List<Byte> {
 			}
 			if(getStaticBufferByteCount()>=(staticBuffer.length-1)){
 				int newSize = staticBufferSize*2;
-				Log.error("Bytelist static buffer overflow, resizing to "+newSize);
+				Log.info("Bytelist static buffer overflow, resizing to "+newSize);
 				byte tmpBuff[] = getBytes();
 				// Double the buffer size
 				setStaticBufferSize(newSize);

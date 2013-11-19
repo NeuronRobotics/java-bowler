@@ -57,7 +57,7 @@ public class DyIONamespaceTest {
 	
 		assertTrue(setName.contains(newName));
 		assertTrue(name.contains(dyio.getInfo()));
-		assertTrue(dyio.ping() != null);
+		assertTrue(dyio.ping() );
 		
 		
 	}

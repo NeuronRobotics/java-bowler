@@ -348,5 +348,10 @@ public class Log {
 			return "[" + dateFormat.format(datetime) + "] " + " " + getImportance(importance) +" "+callingClass+ " \t\t\t:\n"+ message;
 		}
 	}
+
+	public static void error(InvalidResponseException e) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

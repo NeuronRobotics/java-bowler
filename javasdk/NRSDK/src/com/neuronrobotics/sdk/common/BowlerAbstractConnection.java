@@ -391,18 +391,12 @@ public abstract class BowlerAbstractConnection {
 	protected void fireAsyncOnResponse(BowlerDatagram datagram) {
 		if(!datagram.isSyncronous()){
 			//Log.debug("\nASYNC<<"+datagram);
-			if(isThreadedUpstreamPackets()){
-				//synchronized(listeners){
-					for(IBowlerDatagramListener l : listeners) {
-						new AsyncSender(l,datagram).start();
-					}
-				//}
-			}else{
-				for(IBowlerDatagramListener l : listeners) {
-					l.onAsyncResponse(datagram);
-				}
-			
+
+			for(IBowlerDatagramListener l : listeners) {
+				l.onAsyncResponse(datagram);
 			}
+			
+			
 		}
 		
 	}
@@ -417,17 +411,17 @@ public abstract class BowlerAbstractConnection {
 //			l.onAllResponse(datagram);
 //		}
 //	}
-	private class AsyncSender extends Thread{
-		IBowlerDatagramListener l;
-		BowlerDatagram datagram;
-		public AsyncSender(IBowlerDatagramListener l,BowlerDatagram datagram){
-			 this.l=l;
-			 this.datagram=datagram;
-		}
-		public void run(){
-			l.onAsyncResponse(datagram);
-		}
-	}
+//	private class AsyncSender extends Thread{
+//		IBowlerDatagramListener l;
+//		BowlerDatagram datagram;
+//		public AsyncSender(IBowlerDatagramListener l,BowlerDatagram datagram){
+//			 this.l=l;
+//			 this.datagram=datagram;
+//		}
+//		public void run(){
+//			l.onAsyncResponse(datagram);
+//		}
+//	}
 
 	/**
 	 * Add a listener that will be notified whenever an asyncronous packet arrives.
@@ -577,7 +571,7 @@ public abstract class BowlerAbstractConnection {
 							if (bd!=null) {
 								Log.info("Got :\n"+bd);
 								onDataReceived(bd);
-								BowlerDatagramFactory.freePacket(bd);
+								//BowlerDatagramFactory.freePacket(bd);
 								buffer.clear();
 							}
 							//Log.info("buffer: "+buffer);

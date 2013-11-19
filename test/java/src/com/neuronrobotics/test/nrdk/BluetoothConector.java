@@ -21,7 +21,7 @@ public class BluetoothConector {
 			System.out.println("Connecting to : "+devices[0]);
 			dyio = new DyIO(new BluetoothSerialConnection(manager, devices[0]));
 			dyio.connect();
-			if(dyio.ping() != null)
+			if(dyio.ping() )
 				System.out.println("All OK!");
 			
 		}

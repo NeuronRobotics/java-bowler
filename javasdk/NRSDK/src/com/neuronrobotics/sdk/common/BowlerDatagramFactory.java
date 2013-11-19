@@ -28,17 +28,22 @@ public class BowlerDatagramFactory {
 	
 	private static BowlerDatagram pool [];
 	private static int failed=0;
-	private static int poolSize = 10;
+	private static int poolDefaultSize = 10;
+	private static int packetTimeout = 1000;
 	
 	static{
 		if(instance ==  null){
 			instance = new BowlerDatagramFactory();
-			pool =  new BowlerDatagram[poolSize];
-			for (int i=0;i<poolSize;i++){
+			pool =  new BowlerDatagram[getDefaultPoolSize()];
+			for (int i=0;i<getDefaultPoolSize();i++){
 				pool [i] = new BowlerDatagram(instance);
 				freePacket(pool [i]);
 			}
 		}
+	}
+	
+	public static int getCurrentPoolSize(){
+		return pool.length;
 	}
 	
 	public static boolean validateFactory(BowlerDatagramFactory test){
@@ -48,7 +53,7 @@ public class BowlerDatagramFactory {
 		throw new RuntimeException("Invalid factory generation of packet. Use BowlerDatagramFactory.getNextPacket()");
 	}
 	
-	public static BowlerDatagram getNextPacket(){
+	private static BowlerDatagram getNextPacket(){
 		BowlerDatagram ref = null;
 		
 		//Find the most recent free packet from the pool
@@ -61,16 +66,10 @@ public class BowlerDatagramFactory {
 				return ref;
 			}
 		}
-		try{
-			throw new RuntimeException();
-		}catch (Exception e){
-			System.err.println("Requesting packets, none availible ");
-			
-			//e.printStackTrace();
-		}
+
 		//The whole list was search and no free packets were found
-		BowlerDatagram newPool [ ] = new BowlerDatagram[pool.length+poolSize];
-		Log.warning("No free packets found, increasing pool size to "+newPool.length);
+		BowlerDatagram newPool [ ] = new BowlerDatagram[pool.length+getDefaultPoolSize()];
+		Log.warning("Increasing BowlerDatagram pool size to "+newPool.length);
 		for(int i=0;i<pool.length;i++){
 			newPool[i] = pool[i];
 		}
@@ -83,7 +82,7 @@ public class BowlerDatagramFactory {
 		}
 		pool = newPool;
 		//old pool data given to the GC
-		ref.setFree(false, instance);
+		ref.setFree(false,instance);
 		return ref;
 	}
 	
@@ -116,7 +115,7 @@ public class BowlerDatagramFactory {
 	
 	public static BowlerDatagram build(ByteList buffer ){
 		BowlerDatagram buff= getNextPacket();
-		BowlerDatagram ret = build(buffer, getNextPacket() );
+		BowlerDatagram ret = build(buffer, buff );
 		if(ret == null)
 			freePacket(buff);
 		return ret;
@@ -204,4 +203,21 @@ public class BowlerDatagramFactory {
 //			Log.error("Failed out "+failed+" bytes");
 		return null;
 	}
+
+	public static int getDefaultPoolSize() {
+		return poolDefaultSize;
+	}
+
+	public static void setPoolSize(int poolSize) {
+		BowlerDatagramFactory.poolDefaultSize = poolSize;
+	}
+
+	public static int getPacketTimeout() {
+		return packetTimeout;
+	}
+
+	public static void setPacketTimeout(int packetTimeout) {
+		BowlerDatagramFactory.packetTimeout = packetTimeout;
+	}
+
 }
