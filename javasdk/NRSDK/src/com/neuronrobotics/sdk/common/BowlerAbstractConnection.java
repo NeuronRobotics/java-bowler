@@ -594,7 +594,7 @@ public abstract class BowlerAbstractConnection {
 					}
 				}
 			}
-			throw new RuntimeException("Connection exited");
+			//throw new RuntimeException("Connection exited");
 		}
 	}
 	

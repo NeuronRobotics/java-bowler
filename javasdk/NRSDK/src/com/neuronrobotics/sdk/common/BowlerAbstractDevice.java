@@ -286,6 +286,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 			if(bd !=null){
 				//System.out.println("Ping success " + bd.getAddress());
 				setAddress(bd.getAddress());
+				BowlerDatagramFactory.freePacket(bd);
 				return true;
 			}
 		} catch (InvalidResponseException e) {
@@ -336,36 +337,39 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 			while(!done){
 				numTry++;
 				try {
-					BowlerDatagram b = send(new NamespaceCommand(0),5);
+					BowlerDatagram namespacePacket = send(new NamespaceCommand(0),5);
 					int num;
-					String tmpNs =b.getData().asString();
-					if(tmpNs.length() ==  b.getData().size()){
+					String tmpNs =namespacePacket.getData().asString();
+					if(tmpNs.length() ==  namespacePacket.getData().size()){
 						//Done with the packet
-						BowlerDatagramFactory.freePacket(b);
+						BowlerDatagramFactory.freePacket(namespacePacket);
 						//System.out.println("Ns = "+tmpNs+" len = "+tmpNs.length()+" data = "+b.getData().size());
-						b = send(new NamespaceCommand(),5);
-						num= b.getData().getByte(0);
-						
+						namespacePacket = send(new NamespaceCommand(),5);
+						num= namespacePacket.getData().getByte(0);
+						//Done with the packet
+						BowlerDatagramFactory.freePacket(namespacePacket);
 						Log.warning("This is an older implementation of core, depricated");
 					}else{
-						num= b.getData().getByte(b.getData().size()-1);
+						num= namespacePacket.getData().getByte(namespacePacket.getData().size()-1);
+						//Done with the packet
+						BowlerDatagramFactory.freePacket(namespacePacket);
 						Log.info("This is the new core");
 					}
 					
-					if(num<1){
-						Log.error("Namespace request failed:\n"+b);
-					}else{
-						Log.info("Number of Namespaces="+num);
-					}
-
+//					if(num<1){
+//						Log.error("Namespace request failed:\n"+namespacePacket);
+//					}else{
+//						Log.info("Number of Namespaces="+num);
+//					}
+					
+					
 					Log.debug("There are "+num+" namespaces on this device");
 					for (int i=0;i<num;i++){
+
+						BowlerDatagram nsStringPacket= send(new NamespaceCommand(i),5);
+						String space = nsStringPacket.getData().asString();
 						//Done with the packet
-						BowlerDatagramFactory.freePacket(b);
-						b = send(new NamespaceCommand(i),5);
-						String space = b.getData().asString();
-						//Done with the packet
-						BowlerDatagramFactory.freePacket(b);
+						BowlerDatagramFactory.freePacket(nsStringPacket);
 						Log.debug("Adding Namespace: "+space);
 						
 						namespaceList.add(new NamespaceEncapsulation(space));

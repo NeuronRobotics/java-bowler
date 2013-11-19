@@ -76,6 +76,8 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	
 	private ThreadedTimeout timeout=new ThreadedTimeout(BowlerDatagramFactory.getPacketTimeout());
 	
+	private RuntimeException ex; 
+	
 	
 	/**
 	 * Default constructor.
@@ -434,7 +436,9 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	private void setFree(boolean isFree) {
 		if(isFree== true){
 			clear();
+			timeout.setTimeoutListener(null);
 		}else{
+			ex = new RuntimeException("Packet freeing itself ");
 			timeout.initialize(BowlerDatagramFactory.getPacketTimeout());
 		}
 		this.isPackedAvailibleForLoading = isFree;
@@ -442,9 +446,11 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 
 	@Override
 	public void onTimeout() {
-		Log.info("Packet freeing itself ");
-		setFree(true);
-		throw new RuntimeException("Packet freeing itself ");
+		if(!isPackedAvailibleForLoading ){
+			Log.info("Packet freeing itself ");
+			setFree(true);
+			throw ex;
+		}
 	}
 
 

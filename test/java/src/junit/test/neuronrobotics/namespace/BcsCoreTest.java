@@ -12,6 +12,7 @@ import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.genericdevice.GenericDevice;
 import com.neuronrobotics.sdk.serial.SerialConnection;
+import com.neuronrobotics.sdk.util.ThreadUtil;
 
 public class BcsCoreTest {
 
@@ -32,6 +33,9 @@ public class BcsCoreTest {
 		if(namespaces.size()==0){
 			fail();
 		}
+		
+		ThreadUtil.wait(2000);
+		device.disconnect();
 		
 	}
 
