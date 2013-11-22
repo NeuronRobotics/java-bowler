@@ -65,7 +65,7 @@ public class BowlerDatagramFactory {
 			if(pool[i].isFree()){
 				ref=pool[i];
 				ref.setFree(false, instance);
-				Log.info("Getting packet from buffer at index "+i);
+				//Log.info("Getting packet from buffer at index "+i);
 				return ref;
 			}
 		}
