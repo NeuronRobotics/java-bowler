@@ -969,7 +969,7 @@ public abstract class BowlerAbstractConnection {
 		for(int i=0;i<retry;i++){
 			BowlerDatagram ret;
 			try{
-				ret = send( command);
+				ret = send( command,addr);
 				if(ret != null)
 					//if(!ret.getRPC().contains("_err"))
 						return ret;
@@ -1005,30 +1005,30 @@ public abstract class BowlerAbstractConnection {
 		return command.validate(back);
 	}
 	
-	/**
-	 * Send a sendable to the connection.
-	 *
-	 * @param sendable the sendable
-	 * @return the syncronous response
-	 */
-	public BowlerDatagram send(ISendable sendable,MACAddress addr) {
-
-		Log.debug("TX>>\n"+sendable.toString());
-		
-		BowlerDatagram b =send(sendable);
-		if(b != null) {
-			if(b.getRPC().toLowerCase().contains("_png")){
-				//Log.debug("ping ok!");
-			}else
-				Log.debug("RX<<\n"+
-						(b.toString())
-						);
-		}else {
-			//switch protocol version, try again
-			Log.debug("RX<<: No response");
-		}
-		
-		return b;
-	}
+//	/**
+//	 * Send a sendable to the connection.
+//	 *
+//	 * @param sendable the sendable
+//	 * @return the syncronous response
+//	 */
+//	public BowlerDatagram send(ISendable sendable,MACAddress addr) {
+//
+//		Log.debug("TX>>\n"+sendable.toString());
+//		
+//		BowlerDatagram b =send(sendable);
+//		if(b != null) {
+//			if(b.getRPC().toLowerCase().contains("_png")){
+//				//Log.debug("ping ok!");
+//			}else
+//				Log.debug("RX<<\n"+
+//						(b.toString())
+//						);
+//		}else {
+//			//switch protocol version, try again
+//			Log.debug("RX<<: No response");
+//		}
+//		
+//		return b;
+//	}
 
 }

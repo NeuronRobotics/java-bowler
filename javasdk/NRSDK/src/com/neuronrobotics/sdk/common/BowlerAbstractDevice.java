@@ -164,16 +164,16 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 		return address;
 	}
 	
-	/**
-	 * Send a sendable to the connection.
-	 *
-	 * @param sendable the sendable
-	 * @return the syncronous response
-	 */
-	public BowlerDatagram send(ISendable sendable) {
-		setLastPacketTime(System.currentTimeMillis());
-		return connection.send(sendable, getAddress());
-	}
+//	/**
+//	 * Send a sendable to the connection.
+//	 *
+//	 * @param sendable the sendable
+//	 * @return the syncronous response
+//	 */
+//	public BowlerDatagram send(ISendable sendable) {
+//		setLastPacketTime(System.currentTimeMillis());
+//		return connection.send(sendable, getAddress());
+//	}
 	
 
 	/**
