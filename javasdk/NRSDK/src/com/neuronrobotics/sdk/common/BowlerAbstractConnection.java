@@ -850,6 +850,11 @@ public abstract class BowlerAbstractConnection {
 					Log.error("No connection is available.");
 					if(numTry>3)
 						throw e;
+				}catch (Exception e) {
+					Log.error("Other exception");
+					e.printStackTrace();
+					if(numTry>3)
+						throw new RuntimeException(e);
 				}
 				if(!done){
 					//failed coms, reset list
@@ -913,6 +918,10 @@ public abstract class BowlerAbstractConnection {
 		try{
 			//populate RPC set
 			BowlerDatagram b = send(new  RpcCommand(namespaceIndex),addr,5);
+			if(!b.getRPC().contains("_rpc")){
+				System.err.println(b);
+				throw new RuntimeException("This RPC section failed");
+			}
 			//int ns = b.getData().getByte(0);// gets the index of the namespace
 			//int rpcIndex = b.getData().getByte(1);// gets the index of the selected RPC
 			int numRpcs = b.getData().getByte(2);// gets the number of RPC's
@@ -925,10 +934,18 @@ public abstract class BowlerAbstractConnection {
 			namespaceList.get(namespaceIndex).setRpcList(new ArrayList<RpcEncapsulation>());
 			for (int i=0;i<numRpcs;i++){
 				b = send(new RpcCommand(namespaceIndex,i),addr,5);
+				if(!b.getRPC().contains("_rpc")){
+					System.err.println(b);
+					throw new RuntimeException("This RPC section failed");
+				}
 				String rpcStr = new String(b.getData().getBytes(3, 4));
 				//Done with the packet
 				BowlerDatagramFactory.freePacket(b);
 				b = send(new RpcArgumentsCommand(namespaceIndex,i),addr,5);
+				if(!b.getRPC().contains("args")){
+					System.err.println(b);
+					throw new RuntimeException("This RPC section failed");
+				}
 				byte []data = b.getData().getBytes(2);
 				//Done with the packet
 				BowlerDatagramFactory.freePacket(b);
@@ -947,7 +964,7 @@ public abstract class BowlerAbstractConnection {
 					upArgs[k] = BowlerDataType.get(data[k+numDownArgs+4]);
 				}
 				RpcEncapsulation tmpRpc = new RpcEncapsulation(namespaceIndex,namespace, rpcStr, downstreamMethod,downArgs,upstreamMethod,upArgs);
-				System.out.println(tmpRpc);
+				//System.out.println(tmpRpc);
 				namespaceList.get(namespaceIndex).getRpcList().add(tmpRpc);
 			}
 			

@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.Log;
+import com.neuronrobotics.sdk.common.RpcEncapsulation;
 import com.neuronrobotics.sdk.genericdevice.GenericDevice;
 import com.neuronrobotics.sdk.serial.SerialConnection;
 import com.neuronrobotics.sdk.util.ThreadUtil;
@@ -30,8 +31,18 @@ public class BcsCoreTest {
 			fail();
 		}
 		ArrayList<String> namespaces = device.getNamespaces();
+		
 		if(namespaces.size()==0){
 			fail();
+		}
+		for(String s:namespaces){
+			 ArrayList<RpcEncapsulation> rpcs = device.getRpcList(s);
+			 if(rpcs == null)
+				 fail();
+			 for(RpcEncapsulation enc : rpcs){
+				 System.out.println(enc);
+			 }
+			 
 		}
 		
 		ThreadUtil.wait(2000);
