@@ -385,12 +385,13 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 		if(getDyIOChannelCount() != null){
 			count = getDyIOChannelCount();
 		}
-		if (response.getData().size()!=count) {
+		ByteList bl = response.getData();
+		if (bl.size()!=count) {
 			setMuteResyncOnModeChange(false);
-			throw new DyIOCommunicationException("Not enough channels, not a valid DyIO expecting = "+count+" GOT = "+response.getData().size()+"\n"+response.toString());
+			throw new DyIOCommunicationException("Not enough channels, not a valid DyIO expecting = "+count+" GOT = "+bl.size()+"\n"+response.toString());
 		}
-		for (int i = 0; i < response.getData().size(); i++){
-			DyIOChannelMode cm = DyIOChannelMode.get(response.getData().getByte(i));
+		for (int i = 0; i < bl.size(); i++){
+			DyIOChannelMode cm = DyIOChannelMode.get(bl.getByte(i));
 			boolean editable = true;
 			if(cm == null) {
 				cm = DyIOChannelMode.DIGITAL_OUT;

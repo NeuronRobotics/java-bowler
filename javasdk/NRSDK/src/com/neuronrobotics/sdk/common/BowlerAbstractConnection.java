@@ -807,6 +807,7 @@ public abstract class BowlerAbstractConnection {
 						BowlerDatagramFactory.freePacket(namespacePacket);
 						//System.out.println("Ns = "+tmpNs+" len = "+tmpNs.length()+" data = "+b.getData().size());
 						namespacePacket = send(new NamespaceCommand(),addr,5);
+						
 						num= namespacePacket.getData().getByte(0);
 						//Done with the packet
 						BowlerDatagramFactory.freePacket(namespacePacket);
