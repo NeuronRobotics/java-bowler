@@ -12,7 +12,7 @@ import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.MACAddress;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 
-public class AbstractConnectionTest {
+public class PacketValidationTest {
 
 	@Test
 	public void packetTest() {

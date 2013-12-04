@@ -37,6 +37,7 @@ public class BcsCoreTest {
 		}
 		for(String s:namespaces){
 			 ArrayList<RpcEncapsulation> rpcs = device.getRpcList(s);
+			 System.out.println(s);
 			 if(rpcs == null)
 				 fail();
 			 for(RpcEncapsulation enc : rpcs){
