@@ -17,7 +17,6 @@ public class BowlerDatagramFactoryTests {
 	@Test
 	public void test() {
 		int testBifferSize = 10*BowlerDatagramFactory.getDefaultPoolSize();//Must be a factor of default pool size
-		
 		ArrayList<BowlerDatagram> myList = new ArrayList<BowlerDatagram>();
 		//verify initial state
 		if(BowlerDatagramFactory.getCurrentPoolSize() != BowlerDatagramFactory.getDefaultPoolSize()){
@@ -29,8 +28,9 @@ public class BowlerDatagramFactoryTests {
 		}
 		
 		for(BowlerDatagram b:myList){
-			if(b.isFree())
+			if(b.isFree()){
 				fail();//if any packets not marked as allocated
+			}
 			//System.out.println(b);
 		}
 		ThreadUtil.wait((int) ((double)BowlerDatagramFactory.getPacketTimeout())/2);//wait for packets to timeout

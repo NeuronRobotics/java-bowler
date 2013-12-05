@@ -70,13 +70,11 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	
 	/** time of instantiation **/
 	
-	private long timestamp;
+	//private long timestamp;
 	
 	private boolean isPackedAvailibleForLoading = true;
 	
 	private ThreadedTimeout timeout=new ThreadedTimeout();
-	
-	private RuntimeException ex; 
 	
 	
 	/**
@@ -103,9 +101,7 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 		if(!isFree()){
 			throw new RuntimeException("Packet is in use, be sure to use the factory");
 		}
-		timestamp = System.currentTimeMillis();
-		timeout.setTimeoutListener(this);
-		timeout.initialize(BowlerDatagramFactory.getPacketTimeout());
+		timeout.initialize(BowlerDatagramFactory.getPacketTimeout(), this);
 	}
 	
 	/**
@@ -371,7 +367,7 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 
 	public long getTimestamp() {
 		checkValidPacket();
-		return timestamp;
+		return timeout.getStartTime();
 	}
 
 	public void setAsAsync(int id) {
@@ -410,7 +406,7 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	}
 
 
-	public byte getCrc() {
+	private byte getCrc() {
 		checkValidPacket();
 		return crc;
 	}
@@ -441,23 +437,25 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	}
 
 	private void setFree(boolean isFree) {
-		timeout.setTimeoutListener(null);
 		if(isFree== true){
 			clear();
+			timeout.stop();
 		}else{
-			ex = new RuntimeException("Packet freeing itself ");
-			timeout.initialize(BowlerDatagramFactory.getPacketTimeout());
-			timeout.setTimeoutListener(this);
+			timeout.initialize(BowlerDatagramFactory.getPacketTimeout(), this);
 		}
 		this.isPackedAvailibleForLoading = isFree;
 	}
 
 	@Override
 	public void onTimeout(String message) {
-		if(!isPackedAvailibleForLoading ){
-			//Log.info("Packet freeing itself ");
-			setFree(true);
-			//throw ex;
+		if(!isFree() ){
+			if((BowlerDatagramFactory.getPacketTimeout()+timeout.getStartTime())<System.currentTimeMillis()){
+				setFree(true);
+			}else{
+				Log.error("Packet fucked up "+ ((BowlerDatagramFactory.getPacketTimeout()+timeout.getStartTime())-System.currentTimeMillis()));
+				timeout.initialize(BowlerDatagramFactory.getPacketTimeout(), this);
+				throw new RuntimeException();
+			}
 		}
 	}
 

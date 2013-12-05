@@ -161,7 +161,7 @@ public abstract class BowlerAbstractConnection {
 			throw new RuntimeException(e1);
 		}
 		long rcv = System.currentTimeMillis();
-		timeout.initialize(getSleepTime());
+		timeout.initialize(getSleepTime(), null);
 		while ((!timeout.isTimedOut())  && (getLastSyncronousResponse() == null)){
 			ThreadUtil.wait(getPollTimeoutTime());
 		}
@@ -921,7 +921,7 @@ public abstract class BowlerAbstractConnection {
 			BowlerDatagram b = send(new  RpcCommand(namespaceIndex),addr,5);
 			if(!b.getRPC().contains("_rpc")){
 				System.err.println(b);
-				throw new RuntimeException("This RPC section failed");
+				throw new RuntimeException("This RPC index request has failed");
 			}
 			//int ns = b.getData().getByte(0);// gets the index of the namespace
 			//int rpcIndex = b.getData().getByte(1);// gets the index of the selected RPC

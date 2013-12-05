@@ -18,35 +18,39 @@ public class TestTimer {
 	public void test() {
 		ArrayList<ThreadedTimeout> timers= new ArrayList<ThreadedTimeout>();
 		
-		for(int i=0;i<10;i++){
-			timers.add(new ThreadedTimeout());
-		}
-		int i=0;
-		timerTimedOut = 0;
-		for(ThreadedTimeout t : timers){
-			t.initialize(500+(i++), new IthreadedTimoutListener() {
-				@Override
-				public void onTimeout(String message) {
-					System.out.println(message);
-					timerTimedOut++;
-				}
-			});
+		for(int j=0;j<5;j++){
+			for(int i=0;i<10;i++){
+				timers.add(new ThreadedTimeout());
+			}
+			int i=0;
+			timerTimedOut = 0;
+			for(ThreadedTimeout t : timers){
+				t.initialize(500+(i++), new IthreadedTimoutListener() {
+					@Override
+					public void onTimeout(String message) {
+						System.out.println(message);
+						timerTimedOut++;
+					}
+				});
+			}
+			
+			for(ThreadedTimeout t : timers){
+				if(t.isTimedOut())
+					fail();
+			}
+			
+			ThreadUtil.wait(1000);
+			
+			if(timerTimedOut != timers.size())
+				fail("One or more timers failed to time out, expected="+timers.size()+" got="+timerTimedOut);
+			
+			for(ThreadedTimeout t : timers){
+				if(!t.isTimedOut())
+					fail("Timer failed to time out");
+			}
+			timers.clear();
 		}
 		
-		for(ThreadedTimeout t : timers){
-			if(t.isTimedOut())
-				fail();
-		}
-		
-		ThreadUtil.wait(1000);
-		
-		if(timerTimedOut != timers.size())
-			fail("One or more timers failed to time out, expected="+timers.size()+" got="+timerTimedOut);
-		
-		for(ThreadedTimeout t : timers){
-			if(!t.isTimedOut())
-				fail("Timer failed to time out");
-		}
 		
 	}
 

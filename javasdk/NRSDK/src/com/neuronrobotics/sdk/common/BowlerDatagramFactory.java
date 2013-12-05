@@ -29,7 +29,7 @@ public class BowlerDatagramFactory {
 	private static BowlerDatagram pool [];
 	private static int failed=0;
 	private static int poolDefaultSize = 40;
-	private static int packetTimeout = 100;
+	private static int packetTimeout = 2000;
 	
 	static{
 		if(instance ==  null){
@@ -54,36 +54,31 @@ public class BowlerDatagramFactory {
 	}
 	
 	private static synchronized BowlerDatagram getNextPacket(){
-//		BowlerDatagram ref = new BowlerDatagram(instance);
-//		ref.setFree(false, instance);
-//		return ref;
 		BowlerDatagram ref = null;
 		
 		//Find the most recent free packet from the pool
-		for(int i=0;i<pool.length;i++){
+		for(int i=0;(i<pool.length && ref==null);i++){
 			//Log.warning("Checking pool packet "+i);
 			if(pool[i].isFree()){
 				ref=pool[i];
-				ref.setFree(false, instance);
-				//Log.info("Getting packet from buffer at index "+i);
-				return ref;
 			}
 		}
-
-		//The whole list was search and no free packets were found
-		BowlerDatagram newPool [ ] = new BowlerDatagram[pool.length+getDefaultPoolSize()];
-		Log.warning("Increasing BowlerDatagram pool size to "+newPool.length);
-		for(int i=0;i<pool.length;i++){
-			newPool[i] = pool[i];
+		if(ref == null){
+			//The whole list was search and no free packets were found
+			BowlerDatagram newPool [ ] = new BowlerDatagram[pool.length+getDefaultPoolSize()];
+			Log.warning("Increasing BowlerDatagram pool size to "+newPool.length);
+			for(int i=0;i<pool.length;i++){
+				newPool[i] = pool[i];
+			}
+			//Adding the new packets
+			for(int i=pool.length;i<newPool.length;i++){
+				newPool[i] = new BowlerDatagram(instance);
+				freePacket(newPool[i]);
+				if(ref==null)
+					ref=newPool[i];
+			}
+			pool = newPool;
 		}
-		//Adding the new packets
-		for(int i=pool.length;i<newPool.length;i++){
-			newPool[i] = new BowlerDatagram(instance);
-			freePacket(newPool[i]);
-			if(ref==null)
-				ref=newPool[i];
-		}
-		pool = newPool;
 		//old pool data given to the GC
 		ref.setFree(false,instance);
 		return ref;
@@ -107,8 +102,7 @@ public class BowlerDatagramFactory {
 	public static BowlerDatagram build(MACAddress addr, BowlerAbstractCommand cmd) {
 		BowlerDatagram bd = getNextPacket();
 		long start = System.currentTimeMillis();
-		
-		bd.setFree(false,instance);
+
 		if (addr== null)
 			addr = new MACAddress();
 		try{
@@ -122,6 +116,7 @@ public class BowlerDatagramFactory {
 			//if(System.currentTimeMillis()>(start+BowlerDatagramFactory.getPacketTimeout()))
 			Log.error("Timeout detected, duration = "+(System.currentTimeMillis()-start)+", expected = "+BowlerDatagramFactory.getPacketTimeout());
 		}
+		bd.setFree(false,instance);
 		return bd;
 	}
 	
@@ -210,6 +205,7 @@ public class BowlerDatagramFactory {
 			failed=0;
 			ByteList rawContent = new ByteList(buffer.popList(totalLen));
 			staticMemory.parse(rawContent);
+			staticMemory.setFree(false,instance);
 			return  staticMemory;
 		}
 //		if(failed>0)

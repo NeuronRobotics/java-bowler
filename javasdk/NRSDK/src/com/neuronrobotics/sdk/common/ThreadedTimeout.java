@@ -13,6 +13,8 @@
  * limitations under the License.
  ******************************************************************************/
 package com.neuronrobotics.sdk.common;
+import java.util.ArrayList;
+
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 
@@ -21,13 +23,17 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
  * The Class ThreadedTimeout.
  */
 public class ThreadedTimeout {
+	private static timerThreadClass timerThread;
+	static{
+		timerThread = new timerThreadClass();
+		timerThread.start();
+	}
 	
 	/** The time. */
-	private int time;
-	private timerThreadClass timerThread;
+	private long time;
+	
 	
 	/** The timed out. */
-	private boolean timedOut = true;
 	private IthreadedTimoutListener listener;
 	private long startTime=0;
 	
@@ -38,8 +44,7 @@ public class ThreadedTimeout {
 	 * @param time the time
 	 */
 	public ThreadedTimeout() {
-		timerThread = new timerThreadClass();
-		timerThread.start();
+		
 	}
 	
 	/**
@@ -48,76 +53,79 @@ public class ThreadedTimeout {
 	 * @return true, if is timed out
 	 */
 	public boolean isTimedOut() {
-		return System.currentTimeMillis()>(startTime+getTime());
+		return System.currentTimeMillis()>(getStartTime()+getTime());
 	}
-	/**
-	 * Checks if is timed out.
-	 *
-	 * @return true, if is timed out
-	 */
-	private boolean isTimedOutLocal() {
-		return timedOut;
-	}
-
 	
-	public void initialize(int sleepTime) {
-		// TODO Auto-generated method stub
-		IthreadedTimoutListener tmp =listener;
-		listener=null;
-		setTimedOutLocal(true);
-		if(!timerThread.isReset())
-			while(!timerThread.isReset()){
-				ThreadUtil.wait(0,5);
-			}
-		//ThreadUtil.wait(10);
+	public void initialize(int sleepTime,IthreadedTimoutListener listener) {
+		stop();
 		this.time = (sleepTime);
-		startTime=System.currentTimeMillis();
-		setTimedOutLocal(false);
-		listener=tmp;
+		setStartTime(System.currentTimeMillis());
+		setTimeoutListener(listener);
+		timerThread.addTimer(this);
 	}
 
-	public int getTime() {
+	public long getTime() {
 		return time;
 	}
 
-	public void setTimeoutListener(IthreadedTimoutListener listener) {
+	private void setTimeoutListener(IthreadedTimoutListener listener) {
 		this.listener = listener;
 	}
-	private void setTimedOutLocal(boolean timedOut) {
-		this.timedOut = timedOut;
-	}
-	private class timerThreadClass extends Thread{
-		private boolean reset;
 
+	
+	private static class timerThreadClass extends Thread{
+		private ArrayList<ThreadedTimeout> timers = new ArrayList<ThreadedTimeout>();
 		/* (non-Javadoc)
 		 * @see java.lang.Thread#run()
 		 */
 		public void run(){
 			while(true){
-				setReset(true);
-				while(isTimedOutLocal()){
-					ThreadUtil.wait(0,1);
-				}
-				setReset(false);
-				while(!isTimedOutLocal()){
-					ThreadUtil.wait(0,1);
-					if(System.currentTimeMillis()>(startTime+getTime()) && !isTimedOutLocal() )
-					if(System.currentTimeMillis()>(startTime+getTime()) && !isTimedOutLocal() ){
-						setTimedOutLocal(true);
-						if(listener!=null)
-							listener.onTimeout("");
+				if(getTimers().size()>0){
+					for(int i=0;i<getTimers().size();i++){
+						try{
+							ThreadedTimeout t = getTimers().get(i);
+							if(t!=null){
+								if(t.isTimedOut()){
+									if(t.listener!=null){
+										t.listener.onTimeout("Timer timed out after "+t.time);
+									}
+									removeTimer(t);
+								}
+							}
+						}catch (IndexOutOfBoundsException e){
+							//ignore edge case, try again later
+						}catch (Exception ex){
+							ex.printStackTrace();
+						}
 					}
 				}
-				
+				ThreadUtil.wait(1);
 			}
 		}
-
-		public boolean isReset() {
-			return reset;
+		public void addTimer(ThreadedTimeout time){
+			if(!getTimers().contains(time))
+				getTimers().add(time);
 		}
-
-		public void setReset(boolean reset) {
-			this.reset = reset;
+		public void removeTimer(ThreadedTimeout time){
+			if(getTimers().contains(time))
+				getTimers().remove(time);
 		}
+		public ArrayList<ThreadedTimeout> getTimers() {
+			return timers;
+		}
+	}
+
+
+	public void stop() {
+		
+		timerThread.removeTimer(this);
+	}
+
+	public long getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(long startTime) {
+		this.startTime = startTime;
 	}
 }
