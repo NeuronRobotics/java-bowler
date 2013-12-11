@@ -67,12 +67,16 @@ public class PidNamespaceImp extends GenericPidNamespaceImp {
 		return new PDVelocityConfiguration(args);
 	}
 
+	private Integer channelCount =null;
 	@Override
 	public int getPIDChannelCount() {
-		Object [] args = send(BowlerMethod.GET,
-				"gpdc",
-				new Object[]{});
-		return (Integer)args[0];
+		if(channelCount == null){
+			Object [] args = send(BowlerMethod.GET,
+					"gpdc",
+					new Object[]{});
+			channelCount = (Integer)args[0];
+		}
+		return channelCount.intValue();
 	}
 
 	@Override

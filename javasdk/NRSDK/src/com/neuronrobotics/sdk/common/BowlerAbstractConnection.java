@@ -399,7 +399,11 @@ public abstract class BowlerAbstractConnection {
 			//Log.debug("\nASYNC<<"+datagram);
 
 			for(IBowlerDatagramListener l : listeners) {
-				l.onAsyncResponse(datagram);
+				try{
+					l.onAsyncResponse(datagram);
+				}catch (Exception ex){
+					ex.printStackTrace();
+				}
 			}
 			
 			
@@ -747,7 +751,7 @@ public abstract class BowlerAbstractConnection {
 	} 
 
 	/**
-	 * THis is the scripting interface to Bowler devices. THis allows a user to describe a namespace, rpc, and array or 
+	 * This is the scripting interface to Bowler devices. THis allows a user to describe a namespace, rpc, and array or 
 	 * arguments to be paced into the packet based on the data types of the argument. The response in likewise unpacked 
 	 * into an array of objects.
 	 * @param namespace The string of the desired namespace
@@ -898,6 +902,7 @@ public abstract class BowlerAbstractConnection {
 	public ArrayList<RpcEncapsulation> getRpcList(String namespace,MACAddress addr) {
 		int namespaceIndex = 0;
 		boolean hasCoreRpcNS = false;
+		
 		for (int i=0;i<namespaceList.size();i++){
 			if(namespaceList.get(i).getNamespace().contains(namespace)){
 				namespaceIndex=i;
