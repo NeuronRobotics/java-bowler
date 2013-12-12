@@ -96,54 +96,8 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		try{
-			throw new RuntimeException();
-		}catch(Exception e){
-			e.printStackTrace();
-		}
 	}
 	
-	
-//	private class TCPListener extends Thread {
-//		private Socket connectionSocket=null;
-//		public void run(){
-//			//Log.info("Starting the TCP listener...");
-//			setConnected(true);
-//			try{
-//				while(isConnected()){
-//					Log.warning("Waiting for old connection to close...");
-////					while(true){
-////						try{
-////							getDataIns();
-////							getDataOuts();
-////							ThreadUtil.wait(100);
-////						}catch(Exception ex){
-////							break;
-////						}
-////					}
-//					Log.warning("\n\nWaiting for next connection...");
-//					connectionSocket = getTcpSock().accept();
-//					Log.warning("\n\nGot connection..");
-//					setDataIns(new DataInputStream(connectionSocket.getInputStream()));
-//					setDataOuts(new DataOutputStream(connectionSocket.getOutputStream()));
-//					out = new PrintWriter(connectionSocket.getOutputStream(), true);
-//					setConnected(true);
-//				}
-//			}catch(Exception ex){
-//				// catch the loop break
-//			}
-//			try {
-//				if(connectionSocket!=null)
-//					connectionSocket.close();
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//			Log.error("TCP server loop exit");
-//		}
-//	}
-
 
 
 	/* (non-Javadoc)
@@ -152,15 +106,7 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 	@Override
 	public boolean reconnect() {
 		Log.warning("TCP Reconnect");
-		try {			
-			disconnect();
-			if(!isConnected()){
-				connect();
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		disconnect();
 		return false;
 	}
 	
@@ -178,29 +124,6 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 		return !out.checkError();
 	}
 
-//	public ServerSocket getTcpSock() {
-//		return tcpSock;
-//	}
-//
-//	public void setTcpSock(ServerSocket tcpSock) {
-//		if(this.tcpSock!= null){
-//			try {
-//				this.tcpSock.close();
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		}
-//		this.tcpSock = tcpSock;
-//	}
-//
-//	public TCPListener getTcpServerThread() {
-//		return tcpServerThread;
-//	}
-//
-//	public void setTcpServerThread(TCPListener tcpServerThread) {
-//		this.tcpServerThread = tcpServerThread;
-//	}
 
 
 }

@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import com.neuronrobotics.sdk.commands.bcs.core.NamespaceCommand;
+import com.neuronrobotics.sdk.commands.bcs.core.PingCommand;
 import com.neuronrobotics.sdk.commands.bcs.core.RpcArgumentsCommand;
 import com.neuronrobotics.sdk.commands.bcs.core.RpcCommand;
 import com.neuronrobotics.sdk.config.SDKBuildInfo;
@@ -56,6 +57,8 @@ public abstract class BowlerAbstractConnection {
 	
 	/** The sleep time. */
 	private int sleepTime = 10;
+	
+	private long heartBeatTime=1000;
 	
 	private int chunkSize = 64;
 	
@@ -83,11 +86,11 @@ public abstract class BowlerAbstractConnection {
 	private DataOutputStream dataOuts;
 	
 	private Updater updater = null;
-	
-	private ThreadedTimeout timeout=new ThreadedTimeout();
+
 	
 	private ArrayList<NamespaceEncapsulation> namespaceList;
 	private ArrayList<String> nameSpaceStrings = new ArrayList<String>();
+	private HeartBeat beater;
 	
 	
 	/**
@@ -121,7 +124,7 @@ public abstract class BowlerAbstractConnection {
 	}
 	public boolean isThreadedUpstreamPackets() {
 		//if (SDKBuildInfo.isLinux() && SDKBuildInfo.isARM())
-			return true;
+			return false;
 		//return threadedUpstreamPackets;
 	}
 	
@@ -161,8 +164,8 @@ public abstract class BowlerAbstractConnection {
 			throw new RuntimeException(e1);
 		}
 		long rcv = System.currentTimeMillis();
-		timeout.initialize(getSleepTime(), null);
-		while ((!timeout.isTimedOut())  && (getLastSyncronousResponse() == null)){
+		
+		while (((System.currentTimeMillis()-rcv)<getSleepTime())  && (getLastSyncronousResponse() == null)){
 			ThreadUtil.wait(getPollTimeoutTime());
 		}
 		Log.info("Receive took: "+(System.currentTimeMillis()-rcv)+" ms");
@@ -243,18 +246,10 @@ public abstract class BowlerAbstractConnection {
 	 */
 	public void setSynchronusPacketTimeoutTime(int sleepTime) {
 		this.sleepTime = sleepTime;
+		if(sleepTime*2>BowlerDatagramFactory.getPacketTimeout())
+			BowlerDatagramFactory.setPacketTimeout(sleepTime*2);
 	}
 	
-	
-	/**
-	 * Sets the sleep time.
-	 *
-	 * @param sleepTime the new sleep time
-	 */
-	@Deprecated 
-	public void setSleepTime(int sleepTime) {
-		setSynchronusPacketTimeoutTime(sleepTime);
-	}
 	
 	/**
 	 * Gets the sleep time.
@@ -264,6 +259,7 @@ public abstract class BowlerAbstractConnection {
 	public int getSleepTime() {
 		return sleepTime;
 	}
+	
 	private long lastWrite = 0;
 	public long msSinceLastSend() {
 		return System.currentTimeMillis() - lastWrite ;
@@ -574,6 +570,7 @@ public abstract class BowlerAbstractConnection {
 			while(isConnected()) {
 				try {
 					if(dataIns!=null){
+						
 						if(getDataIns().available()>0){
 							//updateBuffer();
 							buffer.add(getDataIns().read());
@@ -1028,30 +1025,70 @@ public abstract class BowlerAbstractConnection {
 		return command.validate(back);
 	}
 	
-//	/**
-//	 * Send a sendable to the connection.
-//	 *
-//	 * @param sendable the sendable
-//	 * @return the syncronous response
-//	 */
-//	public BowlerDatagram send(ISendable sendable,MACAddress addr) {
-//
-//		Log.debug("TX>>\n"+sendable.toString());
-//		
-//		BowlerDatagram b =send(sendable);
-//		if(b != null) {
-//			if(b.getRPC().toLowerCase().contains("_png")){
-//				//Log.debug("ping ok!");
-//			}else
-//				Log.debug("RX<<\n"+
-//						(b.toString())
-//						);
-//		}else {
-//			//switch protocol version, try again
-//			Log.debug("RX<<: No response");
-//		}
-//		
-//		return b;
-//	}
+	/**
+	 * Implementation of the Bowler ping ("_png") command
+	 * Sends a ping to the device returns the device's MAC address.
+	 *
+	 * @return the device's address
+	 */
+	private boolean ping() {
+		try {
+			BowlerDatagram bd = send(new PingCommand(),new MACAddress(), 5);
+			if(bd !=null){
+				BowlerDatagramFactory.freePacket(bd);
+				return true;
+			}
+		} catch (InvalidResponseException e) {
+			Log.error("Invalid response from Ping ");
+			e.printStackTrace();
+		} catch (Exception e) {
+			Log.error("No connection is available.");
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	public void startHeartBeat(){
+		if(beater==null){
+			beater = new HeartBeat();
+			beater.start();
+		}
+	}
+	
+	public void startHeartBeat(long msHeartBeatTime){
+		if (msHeartBeatTime<10)
+			msHeartBeatTime = 10;
+		heartBeatTime= msHeartBeatTime;
+		startHeartBeat();
+	}
+	public void stopHeartBeat(){
+		beater=null;
+	}
+	
+	private class HeartBeat extends Thread{
+		public HeartBeat(){
+			//new RuntimeException("Starting a heartbeat").printStackTrace();
+		}
+		public void run(){
+			ThreadUtil.wait(1000);
+			
+			while (isConnected()){
+				if((msSinceLastSend())>heartBeatTime){
+					try{
+						if(!ping()){
+							Log.debug("Ping failed, disconnecting");
+							if(!isAlive())
+								disconnect();
+						}
+					}catch(Exception e){
+						Log.debug("Ping failed, disconnecting");
+						if(!isAlive())
+							disconnect();
+					}
+				}
+				ThreadUtil.wait(10);
+			}
+		}
+	}
 
 }

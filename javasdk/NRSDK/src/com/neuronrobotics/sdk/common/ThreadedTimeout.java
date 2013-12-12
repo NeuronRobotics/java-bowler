@@ -103,12 +103,21 @@ public class ThreadedTimeout {
 			}
 		}
 		public void addTimer(ThreadedTimeout time){
-			if(!getTimers().contains(time))
-				getTimers().add(time);
+			try{
+				if(!getTimers().contains(time))
+					getTimers().add(time);
+			}catch (Exception e){
+					
+			}
 		}
 		public void removeTimer(ThreadedTimeout time){
-			if(getTimers().contains(time))
-				getTimers().remove(time);
+			try{
+				if(getTimers().contains(time))
+					getTimers().remove(time);
+			}catch (Exception e){
+				
+			}
+			
 		}
 		public ArrayList<ThreadedTimeout> getTimers() {
 			return timers;

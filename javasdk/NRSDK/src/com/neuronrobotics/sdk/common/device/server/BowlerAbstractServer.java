@@ -164,7 +164,7 @@ public  abstract class BowlerAbstractServer  implements ISynchronousDatagramList
 	
 	private void removeServer(BowlerAbstractConnection b){
 		Log.error("Removing server");
-		new RuntimeException().printStackTrace();
+		//new RuntimeException().printStackTrace();
 		getServers().remove(b);
 	}
 
@@ -196,10 +196,14 @@ public  abstract class BowlerAbstractServer  implements ISynchronousDatagramList
 					}
 				}
 			}catch(Exception e){
-				Log.error("No client connected to this connection "+getServers().get(i).getClass());
-				BowlerAbstractConnection abs = getServers().get(i);
-				abs.disconnect();
-				removeServer(abs);
+				try{
+					BowlerAbstractConnection abs = getServers().get(i);
+					Log.error("No client connected to this connection "+abs.getClass());
+					abs.disconnect();
+					removeServer(abs);
+				}catch(Exception ex){
+					
+				}
 			}
 		}
 	}

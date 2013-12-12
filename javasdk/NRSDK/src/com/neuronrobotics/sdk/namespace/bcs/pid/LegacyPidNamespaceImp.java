@@ -189,7 +189,7 @@ public class LegacyPidNamespaceImp extends GenericPidNamespaceImp {
 	 */
 	@Override
 	public boolean killAllPidGroups() {
-		getDevice().getConnection().setSleepTime(10000);
+		getDevice().getConnection().setSynchronusPacketTimeoutTime(10000);
 		return getDevice().send(new KillAllPIDCommand())==null;
 	}
 

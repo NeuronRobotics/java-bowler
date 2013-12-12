@@ -48,9 +48,9 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
 public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	private boolean keepAlive = true;
 	
-	private long heartBeatTime=1000;
+	
 	private long lastPacketTime=0;
-	private HeartBeat beater;
+	
 	/** The connection. */
 	private BowlerAbstractConnection connection=null;
 	/** The address. */
@@ -279,47 +279,18 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	}
 	
 	public void startHeartBeat(){
-		setLastPacketTime(System.currentTimeMillis());
-		beater = new HeartBeat();
-		beater.start();
+		getConnection().startHeartBeat();
 	}
 	public void startHeartBeat(long msHeartBeatTime){
-		if (msHeartBeatTime<10)
-			msHeartBeatTime = 10;
-		heartBeatTime= msHeartBeatTime;
-		startHeartBeat();
+		getConnection().startHeartBeat(msHeartBeatTime);
 	}
 	public void stopHeartBeat(){
-		beater=null;
+		getConnection().stopHeartBeat();
 	}
 	private BowlerAbstractDevice getInstance(){
 		return this;
 	}
-	private class HeartBeat extends Thread{
-		public void run(){
-			ThreadUtil.wait(1000);
-			while (connection.isConnected()){
-				if((connection.msSinceLastSend())>heartBeatTime){
-					try{
-						if(!ping()){
-							Log.debug("Ping failed, disconnecting");
-							if(!isKeepAlive())
-								connection.disconnect();
-						}
-					}catch(Exception e){
-						Log.debug("Ping failed, disconnecting");
-						if(!isKeepAlive())
-							connection.disconnect();
-					}
-				}
-				ThreadUtil.wait(10);
-				if(getInstance() == null){
-					Log.debug("Instance null, disconnecting");
-					connection.disconnect();
-				}
-			}
-		}
-	}
+	
 	/**
 	 * Tells the connection to use asynchronous packets as threads or not. 
 	 * @param up
