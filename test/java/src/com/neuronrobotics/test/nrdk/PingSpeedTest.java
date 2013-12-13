@@ -1,6 +1,7 @@
 package com.neuronrobotics.test.nrdk;
 
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
+import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.genericdevice.GenericDevice;
 import com.neuronrobotics.sdk.serial.SerialConnection;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
@@ -12,12 +13,13 @@ public class PingSpeedTest {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-//		BowlerAbstractConnection c =  new SerialConnection("/dev/ttyACM0");
+		BowlerAbstractConnection c =  new SerialConnection("/dev/DyIO0");
 //		BowlerAbstractConnection c =  new SerialConnection("COM65");
-		BowlerAbstractConnection c = ConnectionDialog.promptConnection();
+//		BowlerAbstractConnection c = ConnectionDialog.promptConnection();
 		if(c==null)
 			System.exit(1);
 		System.out.println("Starting test");
+		Log.enableInfoPrint(true);
 		GenericDevice dev = new GenericDevice(c);
 		dev.connect();
 		long start = System.currentTimeMillis();

@@ -72,6 +72,7 @@ public abstract class BowlerAbstractConnection {
 	private ArrayList<IBowlerDatagramListener> listeners = new ArrayList<IBowlerDatagramListener>();
 	ArrayList<IConnectionEventListener> disconnectListeners = new ArrayList<IConnectionEventListener> ();
 	private ISynchronousDatagramListener syncListen = null;
+	
 	/** The queue. */
 	private QueueManager syncQueue = null;
 	//private QueueManager asyncQueue = null;
@@ -85,12 +86,13 @@ public abstract class BowlerAbstractConnection {
 	/** The data outs. */
 	private DataOutputStream dataOuts;
 	
-	private Updater updater = null;
+	//private Updater updater = null;
 
 	
 	private ArrayList<NamespaceEncapsulation> namespaceList;
 	private ArrayList<String> nameSpaceStrings = new ArrayList<String>();
 	private HeartBeat beater;
+	
 	
 	
 	/**
@@ -124,7 +126,7 @@ public abstract class BowlerAbstractConnection {
 	}
 	public boolean isThreadedUpstreamPackets() {
 		//if (SDKBuildInfo.isLinux() && SDKBuildInfo.isARM())
-			return false;
+			return true;
 		//return threadedUpstreamPackets;
 	}
 	
@@ -142,38 +144,23 @@ public abstract class BowlerAbstractConnection {
 			return null;
 		}
 		clearLastSyncronousResponse();
-		long start = System.currentTimeMillis();
-		if((!getSyncQueue().isEmpty() ||!getAsyncQueue().isEmpty())){
-			//Log.debug("Waiting for byte and packet buffers to clear...");
-			//Log.info("Synchronus queue size: " + getSyncQueue().size());
-			//Log.info("Asynchronus queue size: " + getAsyncQueue().size());
-			//Log.info("Byte Buffer: " + builder.size());
-		}
-		while ((!getSyncQueue().isEmpty() ||!getAsyncQueue().isEmpty())) {
-			ThreadUtil.wait(1);
-		}
-		long diff = System.currentTimeMillis()-start;
-		if(diff>2){
-			//Log.debug("Buffers cleared in : "+diff+"ms");
-		}
 		try {
-			//long send = System.currentTimeMillis();
+			long send = System.currentTimeMillis();
 			write(sendable.getBytes());
-			//Log.info("Transmit took: "+(System.currentTimeMillis()-send)+" ms");
+			Log.info("Transmit took: "+(System.currentTimeMillis()-send)+" ms");
 		} catch (IOException e1) {
 			throw new RuntimeException(e1);
 		}
 		long rcv = System.currentTimeMillis();
-		
 		while (((System.currentTimeMillis()-rcv)<getSleepTime())  && (getLastSyncronousResponse() == null)){
-			ThreadUtil.wait(getPollTimeoutTime());
+			ThreadUtil.wait(0,1);
 		}
 		Log.info("Receive took: "+(System.currentTimeMillis()-rcv)+" ms");
 		BowlerDatagram b =getLastSyncronousResponse();
 		if (b== null){
 			try {
 				//new RuntimeException().printStackTrace();
-				Log.error("No response from device...");
+				Log.error("No response from device, no response in "+getSleepTime()+" ms");
 				reconnect();
 			} catch (IOException e) {
 				clearLastSyncronousResponse();
@@ -303,8 +290,6 @@ public abstract class BowlerAbstractConnection {
 			return;
 		connected = c;
 		if(connected){
-			updater = new Updater();
-			updater.start();
 			setSyncQueue(new QueueManager());
 			getSyncQueue().start();
 			fireConnectEvent();
@@ -362,6 +347,7 @@ public abstract class BowlerAbstractConnection {
 	 */
 	protected void onDataReceived(BowlerDatagram data) {
 		if(data.isSyncronous()) {
+			
 			response = data;
 		}
 		if(isThreadedUpstreamPackets()){
@@ -406,28 +392,7 @@ public abstract class BowlerAbstractConnection {
 		}
 		
 	}
-//	private class SyncSender extends Thread{
-//		IBowlerDatagramListener l;
-//		BowlerDatagram datagram;
-//		public SyncSender(IBowlerDatagramListener l,BowlerDatagram datagram){
-//			 this.l=l;
-//			 this.datagram=datagram;
-//		}
-//		public void run(){
-//			l.onAllResponse(datagram);
-//		}
-//	}
-//	private class AsyncSender extends Thread{
-//		IBowlerDatagramListener l;
-//		BowlerDatagram datagram;
-//		public AsyncSender(IBowlerDatagramListener l,BowlerDatagram datagram){
-//			 this.l=l;
-//			 this.datagram=datagram;
-//		}
-//		public void run(){
-//			l.onAsyncResponse(datagram);
-//		}
-//	}
+
 
 	/**
 	 * Add a listener that will be notified whenever an asyncronous packet arrives.
@@ -557,53 +522,9 @@ public abstract class BowlerAbstractConnection {
 		return syncQueue;
 	}
 	
-	private class Updater extends Thread{
-		private ByteList buffer = new ByteList();
-		
-		
-		public void run() {
-			
-			//wait for the data stream to stabilize
-			while(dataIns== null){
-				ThreadUtil.wait(100);
-			}
-			while(isConnected()) {
-				try {
-					if(dataIns!=null){
-						
-						if(getDataIns().available()>0){
-							//updateBuffer();
-							buffer.add(getDataIns().read());
-							BowlerDatagram bd = BowlerDatagramFactory.build(buffer);
-							if (bd!=null) {
-								Log.info("Got :\n"+bd);
-								onDataReceived(bd);
-								//BowlerDatagramFactory.freePacket(bd);
-								buffer.clear();
-							}
-							//Log.info("buffer: "+buffer);
-						}else{
-							// prevents the thread from locking
-							ThreadUtil.wait(1);
-						}
-					}else{
-						// prevents the thread from locking
-						ThreadUtil.wait(10);
-						Log.info("Data In is null");
-					}
-				} catch (Exception e) {
-					Log.error("Data read failed "+e.getMessage());
-					try {
-						reconnect();
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-				}
-			}
-			//throw new RuntimeException("Connection exited");
-		}
-	}
+
+
+	
 	
 	/**
 	 * Thread safe queue manager.
@@ -614,64 +535,89 @@ public abstract class BowlerAbstractConnection {
 		// stack extends vector and gives thread safety
 		/** The queue buffer. */
 		private ArrayList<BowlerDatagram> queueBuffer = new ArrayList<BowlerDatagram>();
+		private ByteList bytesToPacketBuffer = new ByteList();
 		
 		/* (non-Javadoc)
 		 * @see java.lang.Thread#run()
 		 */
 		public void run() {
 			while(isConnected()) {
-				ThreadUtil.wait(0,1);
-				
+				//wait for the data stream to stabilize
+				while(dataIns== null){
+					ThreadUtil.wait(100);
+				}
+				runPacketUpdate();
+				if(queueBuffer.isEmpty()){
+					// prevents thread lock
+					ThreadUtil.wait(1);
+				}
 				while(!queueBuffer.isEmpty()) {
 					//Log.info("Poping latest packet and sending to listeners");
 					// pop is thread safe.
-					
-					synchronized(queueBuffer){
-						int len = queueBuffer.size();
-						for(int i=0;i<len;i++){
-							try{
-								if(queueBuffer.get(i).isSyncronous()){
-									pushUp(queueBuffer.remove(i));
-								}
-							}catch(Exception e){}
-							
-						}
-						if(!queueBuffer.isEmpty()){
-							try{
-								//send(queueBuffer.remove(queueBuffer.size()-1)	);
-								pushUp(queueBuffer.remove(0)	);
-							}catch(Exception e){
-								e.printStackTrace();
+					int len = queueBuffer.size();
+					for(int i=0;i<len;i++){
+						try{
+							if(queueBuffer.get(i).isSyncronous()){
+								pushUp(queueBuffer.remove(i));
 							}
+						}catch(Exception e){}
+						
+					}
+					if(!queueBuffer.isEmpty()){
+						try{
+							//send(queueBuffer.remove(queueBuffer.size()-1)	);
+							pushUp(queueBuffer.remove(0));
+						}catch(Exception e){
+							e.printStackTrace();
+						}
+					}else{
+						ThreadUtil.wait(1);
+					}
+					int index = 0;
+					int max = 500;
+					while(queueBuffer.size()>max){
+						if(!queueBuffer.get(index).isSyncronous() && queueBuffer.get(index).getMethod() != BowlerMethod.CRITICAL){
+							Log.enableDebugPrint(true);
+							Log.error("Removing packet from overflow: "+queueBuffer.remove(index));
 						}else{
-							ThreadUtil.wait(1);
+							index++;
 						}
-						int index = 0;
-						int max = 500;
-						while(queueBuffer.size()>max){
-							if(!queueBuffer.get(index).isSyncronous() && queueBuffer.get(index).getMethod() != BowlerMethod.CRITICAL){
-								Log.enableDebugPrint(true);
-								Log.error("Removing packet from overflow: "+queueBuffer.remove(index));
-							}else{
-								index++;
-							}
-							if(index >= max){
-								break;
-							}
+						if(index >= max){
+							break;
 						}
 					}
 				}
+				
 			}
 		}
 		
 
-		
-		
-		/**
-		 * check the buffer state
-		 */
-		public boolean isEmpty(){
-			return queueBuffer.isEmpty();	
+		private void runPacketUpdate() {
+			try {
+				if(dataIns!=null){	
+					if(getDataIns().available()>0){
+						//updateBuffer();
+						bytesToPacketBuffer.add(getDataIns().read());
+						BowlerDatagram bd = BowlerDatagramFactory.build(bytesToPacketBuffer);
+						if (bd!=null) {
+							Log.info("Got :\n"+bd);
+							onDataReceived(bd);
+							bytesToPacketBuffer.clear();
+						}
+						//Log.info("buffer: "+buffer);
+					}
+				}else{
+					Log.info("Data In is null");
+				}
+			} catch (Exception e) {
+				Log.error("Data read failed "+e.getMessage());
+				try {
+					reconnect();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
 		}
 		
 		/**
@@ -680,9 +626,7 @@ public abstract class BowlerAbstractConnection {
 		 * @param dg the dg
 		 */
 		private void addDatagram(BowlerDatagram dg) {
-			synchronized(queueBuffer){
-				queueBuffer.add(dg);
-			}
+			queueBuffer.add(dg);
 		}
 		
 		/**
@@ -794,76 +738,76 @@ public abstract class BowlerAbstractConnection {
 		if(namespaceList == null)
 			namespaceList = new ArrayList<NamespaceEncapsulation>();
 		Log.enableDebugPrint(true);
-		synchronized (namespaceList){
-			int numTry=0;
-			boolean done=false;
-			while(!done){
-				numTry++;
-				try {
-					BowlerDatagram namespacePacket = send(new NamespaceCommand(0),addr,5);
-					int num;
-					String tmpNs =namespacePacket.getData().asString();
-					if(tmpNs.length() ==  namespacePacket.getData().size()){
-						//Done with the packet
-						BowlerDatagramFactory.freePacket(namespacePacket);
-						//System.out.println("Ns = "+tmpNs+" len = "+tmpNs.length()+" data = "+b.getData().size());
-						namespacePacket = send(new NamespaceCommand(),addr,5);
-						
-						num= namespacePacket.getData().getByte(0);
-						//Done with the packet
-						BowlerDatagramFactory.freePacket(namespacePacket);
-						Log.warning("This is an older implementation of core, depricated");
-					}else{
-						num= namespacePacket.getData().getByte(namespacePacket.getData().size()-1);
-						//Done with the packet
-						BowlerDatagramFactory.freePacket(namespacePacket);
-						Log.info("This is the new core");
-					}
+		
+		int numTry=0;
+		boolean done=false;
+		while(!done){
+			numTry++;
+			try {
+				BowlerDatagram namespacePacket = send(new NamespaceCommand(0),addr,5);
+				int num;
+				String tmpNs =namespacePacket.getData().asString();
+				if(tmpNs.length() ==  namespacePacket.getData().size()){
+					//Done with the packet
+					BowlerDatagramFactory.freePacket(namespacePacket);
+					//System.out.println("Ns = "+tmpNs+" len = "+tmpNs.length()+" data = "+b.getData().size());
+					namespacePacket = send(new NamespaceCommand(),addr,5);
 					
+					num= namespacePacket.getData().getByte(0);
+					//Done with the packet
+					BowlerDatagramFactory.freePacket(namespacePacket);
+					Log.warning("This is an older implementation of core, depricated");
+				}else{
+					num= namespacePacket.getData().getByte(namespacePacket.getData().size()-1);
+					//Done with the packet
+					BowlerDatagramFactory.freePacket(namespacePacket);
+					Log.info("This is the new core");
+				}
+				
 //					if(num<1){
 //						Log.error("Namespace request failed:\n"+namespacePacket);
 //					}else{
 //						Log.info("Number of Namespaces="+num);
 //					}
-					
-					
-					Log.debug("There are "+num+" namespaces on this device");
-					for (int i=0;i<num;i++){
+				
+				
+				Log.debug("There are "+num+" namespaces on this device");
+				for (int i=0;i<num;i++){
 
-						BowlerDatagram nsStringPacket= send(new NamespaceCommand(i),addr,5);
-						String space = nsStringPacket.getData().asString();
-						//Done with the packet
-						BowlerDatagramFactory.freePacket(nsStringPacket);
-						Log.debug("Adding Namespace: "+space);
-						
-						namespaceList.add(new NamespaceEncapsulation(space));
-					}
-					Log.debug("Attempting to populate RPC lists for all "+namespaceList.size());
-					for(NamespaceEncapsulation ns:namespaceList){
-						getRpcList(ns.getNamespace(),addr);
-					}
-					done = true;
-				} catch (InvalidResponseException e) {
-					Log.error("Invalid response from Namespace");
-					if(numTry>3)
-						throw e;
+					BowlerDatagram nsStringPacket= send(new NamespaceCommand(i),addr,5);
+					String space = nsStringPacket.getData().asString();
+					//Done with the packet
+					BowlerDatagramFactory.freePacket(nsStringPacket);
+					Log.debug("Adding Namespace: "+space);
 					
-				} catch (NoConnectionAvailableException e) {
-					Log.error("No connection is available.");
-					if(numTry>3)
-						throw e;
-				}catch (Exception e) {
-					Log.error("Other exception");
-					e.printStackTrace();
-					if(numTry>3)
-						throw new RuntimeException(e);
+					namespaceList.add(new NamespaceEncapsulation(space));
 				}
-				if(!done){
-					//failed coms, reset list
-					namespaceList = new ArrayList<NamespaceEncapsulation>();
+				Log.debug("Attempting to populate RPC lists for all "+namespaceList.size());
+				for(NamespaceEncapsulation ns:namespaceList){
+					getRpcList(ns.getNamespace(),addr);
 				}
+				done = true;
+			} catch (InvalidResponseException e) {
+				Log.error("Invalid response from Namespace");
+				if(numTry>3)
+					throw e;
+				
+			} catch (NoConnectionAvailableException e) {
+				Log.error("No connection is available.");
+				if(numTry>3)
+					throw e;
+			}catch (Exception e) {
+				Log.error("Other exception");
+				e.printStackTrace();
+				if(numTry>3)
+					throw new RuntimeException(e);
+			}
+			if(!done){
+				//failed coms, reset list
+				namespaceList = new ArrayList<NamespaceEncapsulation>();
 			}
 		}
+		
 		
 		
 		if(nameSpaceStrings.size() != namespaceList.size()){
