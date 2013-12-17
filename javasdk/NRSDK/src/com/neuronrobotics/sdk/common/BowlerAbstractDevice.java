@@ -287,9 +287,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	public void stopHeartBeat(){
 		getConnection().stopHeartBeat();
 	}
-	private BowlerAbstractDevice getInstance(){
-		return this;
-	}
+
 	
 	/**
 	 * Tells the connection to use asynchronous packets as threads or not. 

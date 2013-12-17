@@ -50,7 +50,7 @@ public class BowlerDeviceReServerNamespace extends BowlerAbstractDeviceServerNam
 	
 	@Override
 	public BowlerDatagram process(BowlerDatagram data){
-		BowlerDatagram bd = device.send(data);
+		BowlerDatagram bd = device.sendSynchronusly(data);
 		return bd;
 	}
 

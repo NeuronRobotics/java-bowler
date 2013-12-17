@@ -204,12 +204,12 @@ public class BowlerDatagramFactory {
 		if (buffer.size()>=(totalLen) ){
 			failed=0;
 			ByteList rawContent = new ByteList(buffer.popList(totalLen));
-			staticMemory.parse(rawContent);
 			staticMemory.setFree(false,instance);
+			staticMemory.parse(rawContent);
 			return  staticMemory;
 		}
-//		if(failed>0)
-//			Log.error("Failed out "+failed+" bytes");
+		if(failed>0)
+			Log.error("Failed out "+failed+" bytes");
 		return null;
 	}
 

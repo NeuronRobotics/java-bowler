@@ -134,7 +134,7 @@ public abstract class BowlerAbstractConnection {
 	 * @param sendable the sendable
 	 * @return the bowler datagram
 	 */
-	public synchronized BowlerDatagram send(ISendable sendable){
+	public synchronized BowlerDatagram sendSynchronusly(BowlerDatagram sendable){
 		if(!isConnected()) {
 			Log.error("Can not send message because the engine is not connected.");
 			return null;
@@ -142,17 +142,21 @@ public abstract class BowlerAbstractConnection {
 		clearLastSyncronousResponse();
 		try {
 			long send = System.currentTimeMillis();
+			Log.info("\nT>>"+sendable);
 			write(sendable.getBytes());
 			Log.info("Transmit took: "+(System.currentTimeMillis()-send)+" ms");
 		} catch (IOException e1) {
 			throw new RuntimeException(e1);
 		}
 		long rcv = System.currentTimeMillis();
-		while (((System.currentTimeMillis()-rcv)<getSleepTime())  && (getLastSyncronousResponse() == null)){
-			ThreadUtil.wait(0,1);
-		}
+		
+		BowlerDatagram b;
+		do{
+			ThreadUtil.wait(1);
+			b =getLastSyncronousResponse();
+		}while (((System.currentTimeMillis()-rcv)<getSleepTime())  && (b == null));
+		
 		Log.info("Receive took: "+(System.currentTimeMillis()-rcv)+" ms");
-		BowlerDatagram b =getLastSyncronousResponse();
 		if (b== null){
 			try {
 				//new RuntimeException().printStackTrace();
@@ -164,6 +168,7 @@ public abstract class BowlerAbstractConnection {
 			}
 		}
 		clearLastSyncronousResponse();
+		
 		return b;
 	}
 	
@@ -225,8 +230,11 @@ public abstract class BowlerAbstractConnection {
 		return sleepTime;
 	}
 	
-	private long lastWrite = 0;
+	private long lastWrite = -1;
 	public long msSinceLastSend() {
+		if(lastWrite<0){
+			return 0;
+		}
 		return System.currentTimeMillis() - lastWrite ;
 	}
 	/**
@@ -324,11 +332,7 @@ public abstract class BowlerAbstractConnection {
 	 */
 	protected void onDataReceived(BowlerDatagram data) {
 		if(data.isSyncronous()) {
-			
 			response = data;
-		}
-		
-		if(data.isSyncronous()) {
 			getSyncQueue().addDatagram(data);
 		}else {
 			getAsyncQueue().addDatagram(data);
@@ -354,8 +358,7 @@ public abstract class BowlerAbstractConnection {
 	
 	protected void fireAsyncOnResponse(BowlerDatagram datagram) {
 		if(!datagram.isSyncronous()){
-			//Log.debug("\nASYNC<<"+datagram);
-
+			Log.debug("\nASYNC<<"+datagram);
 			for(IBowlerDatagramListener l : listeners) {
 				try{
 					l.onAsyncResponse(datagram);
@@ -535,8 +538,10 @@ public abstract class BowlerAbstractConnection {
 				}else{
 					if(isSystemQueue)
 						runPacketUpdate();
-					else if(beater)
-						runHeartBeat();
+					else{ 
+						if(beater)
+							runHeartBeat();
+					}
 					if(queueBuffer.isEmpty()){
 						// prevents thread lock
 						ThreadUtil.wait(1);
@@ -551,7 +556,9 @@ public abstract class BowlerAbstractConnection {
 									BowlerDatagram b = queueBuffer.remove(i);
 									pushUp(b);
 								}
-							}catch(Exception e){}
+							}catch(Exception e){
+								e.printStackTrace();
+							}
 							
 						}
 						if(!queueBuffer.isEmpty()){
@@ -592,14 +599,14 @@ public abstract class BowlerAbstractConnection {
 						bytesToPacketBuffer.add(getDataIns().read());
 						BowlerDatagram bd = BowlerDatagramFactory.build(bytesToPacketBuffer);
 						if (bd!=null) {
-							Log.info("Got :\n"+bd);
+							Log.info("\nR<<"+bd);
 							onDataReceived(bd);
 							bytesToPacketBuffer.clear();
 						}
 						//Log.info("buffer: "+buffer);
 					}
 				}else{
-					Log.info("Data In is null");
+					Log.error("Data In is null");
 				}
 			} catch (Exception e) {
 				Log.error("Data read failed "+e.getMessage());
@@ -726,11 +733,9 @@ public abstract class BowlerAbstractConnection {
 	 *
 	 * @return the namespaces
 	 */
-	public ArrayList<String>  getNamespaces(MACAddress addr){
-		
+	public ArrayList<String>  getNamespaces(MACAddress addr){	
 		if(namespaceList == null)
 			namespaceList = new ArrayList<NamespaceEncapsulation>();
-		Log.enableDebugPrint(true);
 		
 		int numTry=0;
 		boolean done=false;
@@ -957,7 +962,7 @@ public abstract class BowlerAbstractConnection {
 				throw new NoConnectionAvailableException();
 		}
 		BowlerDatagram cmd= BowlerDatagramFactory.build(addr, command);
-		BowlerDatagram back = send(cmd);
+		BowlerDatagram back = sendSynchronusly(cmd);
 		//BowlerDatagramFactory.freePacket(cmd);
 		return command.validate(back);
 	}

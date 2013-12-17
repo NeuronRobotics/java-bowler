@@ -90,8 +90,7 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 		super.disconnect();
 		try {
 			socket.close();			
-			Log.warning("\n\nWaiting for sockets to shut down...\n\n");
-			ThreadUtil.wait(1000);
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
