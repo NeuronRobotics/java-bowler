@@ -257,6 +257,7 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 		try{
 			return new String(data.getBytes(0, 4));
 		}catch(Exception e){
+			e.printStackTrace();
 			return "****";
 		}
 	}
@@ -436,7 +437,7 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 		setFree(isFree);
 	}
 
-	private void setFree(boolean isFree) {
+	void setFree(boolean isFree) {
 		if(isFree== true){
 			clear();
 			timeout.stop();

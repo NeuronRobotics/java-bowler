@@ -47,7 +47,7 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
 public class BowlerTCPClient extends BowlerAbstractConnection{
 	private int sleepTime = 5000;
 	
-	private int reconnectRetry = 10;
+	private int reconnectRetry = 5;
 	private Socket tcpSock = null;
 	private InetAddress tcpAddr=null;
 
@@ -145,14 +145,15 @@ public class BowlerTCPClient extends BowlerAbstractConnection{
 	public boolean connect() {
 		if (tcpSock == null)
 			throw new RuntimeException("Can't connect before setting up the socket information");
-		// TODO Auto-generated method stub
-		try {
-			setDataIns(new DataInputStream(tcpSock.getInputStream()));
-			setDataOuts(new DataOutputStream(tcpSock.getOutputStream()));
-			setConnected(true);
-		} catch (IOException e) {
-			e.printStackTrace();
-			setConnected(false);
+		if(!isConnected()){
+			try {
+				setDataIns(new DataInputStream(tcpSock.getInputStream()));
+				setDataOuts(new DataOutputStream(tcpSock.getOutputStream()));
+				setConnected(true);
+			} catch (IOException e) {
+				e.printStackTrace();
+				setConnected(false);
+			}
 		}
 		return isConnected();	
 	}
@@ -208,18 +209,20 @@ public class BowlerTCPClient extends BowlerAbstractConnection{
 	 */
 	@Override
 	public boolean reconnect() {
-		Log.warning("Reconnecting..");
+		Log.warning("Reconnecting TCP Socket..");
 		disconnect();
 		for(int i=0;i<getReconnectRetry();i++){
 			try {
 				setTCPSocket(new Socket(tcpAddr,port));
+				connect();
 				if(isConnected())
 					return true;
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			ThreadUtil.wait(i*1000);
+			ThreadUtil.wait(i*500);
+			Log.error("Reconnect failed, retry: "+i);
 		}
 		return false;
 	}

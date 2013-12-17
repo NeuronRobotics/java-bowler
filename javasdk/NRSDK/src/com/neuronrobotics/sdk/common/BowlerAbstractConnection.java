@@ -75,7 +75,7 @@ public abstract class BowlerAbstractConnection {
 	
 	/** The queue. */
 	private QueueManager syncQueue = null;
-	//private QueueManager asyncQueue = null;
+	private QueueManager asyncQueue=null;
 	
 	/** The connected. */
 	private boolean connected = false;
@@ -91,7 +91,7 @@ public abstract class BowlerAbstractConnection {
 	
 	private ArrayList<NamespaceEncapsulation> namespaceList;
 	private ArrayList<String> nameSpaceStrings = new ArrayList<String>();
-	private HeartBeat beater;
+	private boolean beater = false;
 	
 	
 	
@@ -124,11 +124,7 @@ public abstract class BowlerAbstractConnection {
 	public void setThreadedUpstreamPackets(boolean up){
 		//threadedUpstreamPackets=up;
 	}
-	public boolean isThreadedUpstreamPackets() {
-		//if (SDKBuildInfo.isLinux() && SDKBuildInfo.isARM())
-			return true;
-		//return threadedUpstreamPackets;
-	}
+
 	
 	/**
 	 * Sends any "universal" data to the connection and returns either the syncronous response or null in the
@@ -209,24 +205,6 @@ public abstract class BowlerAbstractConnection {
 	}
 
 	/**
-	 * Sets the poll timeout time.
-	 *
-	 * @param pollTimeoutTime the new poll timeout time
-	 */
-	private void setPollTimeoutTime(int pollTimeoutTime) {
-		this.pollTimeoutTime = pollTimeoutTime;
-	}
-
-	/**
-	 * Gets the poll timeout time.
-	 *
-	 * @return the poll timeout time
-	 */
-	private int getPollTimeoutTime() {
-		return pollTimeoutTime;
-	}
-
-	/**
 	 * Sets the sleep time.
 	 *
 	 * @param sleepTime the new sleep time
@@ -290,11 +268,10 @@ public abstract class BowlerAbstractConnection {
 			return;
 		connected = c;
 		if(connected){
-			setSyncQueue(new QueueManager());
-			getSyncQueue().start();
+			setSyncQueue(new QueueManager(true));
+			setAsyncQueue(new QueueManager(false));
+			
 			fireConnectEvent();
-			if (SDKBuildInfo.isLinux() && SDKBuildInfo.isARM())
-				Log.info("Is arm, no packet threads");
 		}else{
 			try {
 				getDataIns().close();
@@ -350,15 +327,13 @@ public abstract class BowlerAbstractConnection {
 			
 			response = data;
 		}
-		if(isThreadedUpstreamPackets()){
-			if(data.isSyncronous()) {
-				getSyncQueue().addDatagram(data);
-			}else {
-				getAsyncQueue().addDatagram(data);
-			}
-		}else{
-			pushUp(data);
+		
+		if(data.isSyncronous()) {
+			getSyncQueue().addDatagram(data);
+		}else {
+			getAsyncQueue().addDatagram(data);
 		}
+		
 	}
 	
 	/**
@@ -375,6 +350,7 @@ public abstract class BowlerAbstractConnection {
 		}
 		return null;
 	}
+
 	
 	protected void fireAsyncOnResponse(BowlerDatagram datagram) {
 		if(!datagram.isSyncronous()){
@@ -431,6 +407,7 @@ public abstract class BowlerAbstractConnection {
 		}
 		if(getAsyncQueue() != null) {
 			getAsyncQueue().kill();
+			setAsyncQueue(null);
 		}
 	}
 	
@@ -511,19 +488,22 @@ public abstract class BowlerAbstractConnection {
 	public int getChunkSize() {
 		return chunkSize;
 	}
-	
+	public void setAsyncQueue(QueueManager asyncQueue) {
+		this.asyncQueue = asyncQueue;
+		if(this.asyncQueue != null)
+			this.asyncQueue.start();
+	}
 	public void setSyncQueue(QueueManager syncQueue) {
 		this.syncQueue = syncQueue;
+		if(this.syncQueue != null)
+			this.syncQueue.start();
 	}
-	public QueueManager getAsyncQueue() {
-		return syncQueue;
+	public  QueueManager getAsyncQueue() {
+		return asyncQueue;
 	}
 	public QueueManager getSyncQueue() {
 		return syncQueue;
 	}
-	
-
-
 	
 	
 	/**
@@ -536,58 +516,70 @@ public abstract class BowlerAbstractConnection {
 		/** The queue buffer. */
 		private ArrayList<BowlerDatagram> queueBuffer = new ArrayList<BowlerDatagram>();
 		private ByteList bytesToPacketBuffer = new ByteList();
+		private boolean isSystemQueue=false;
 		
+		
+		public QueueManager(boolean b) {
+			isSystemQueue = b;
+		}
+
+
 		/* (non-Javadoc)
 		 * @see java.lang.Thread#run()
 		 */
 		public void run() {
 			while(isConnected()) {
 				//wait for the data stream to stabilize
-				while(dataIns== null){
+				if(dataIns == null || dataOuts == null){
 					ThreadUtil.wait(100);
-				}
-				runPacketUpdate();
-				if(queueBuffer.isEmpty()){
-					// prevents thread lock
-					ThreadUtil.wait(1);
-				}
-				while(!queueBuffer.isEmpty()) {
-					//Log.info("Poping latest packet and sending to listeners");
-					// pop is thread safe.
-					int len = queueBuffer.size();
-					for(int i=0;i<len;i++){
-						try{
-							if(queueBuffer.get(i).isSyncronous()){
-								pushUp(queueBuffer.remove(i));
-							}
-						}catch(Exception e){}
-						
-					}
-					if(!queueBuffer.isEmpty()){
-						try{
-							//send(queueBuffer.remove(queueBuffer.size()-1)	);
-							pushUp(queueBuffer.remove(0));
-						}catch(Exception e){
-							e.printStackTrace();
-						}
-					}else{
+				}else{
+					if(isSystemQueue)
+						runPacketUpdate();
+					else if(beater)
+						runHeartBeat();
+					if(queueBuffer.isEmpty()){
+						// prevents thread lock
 						ThreadUtil.wait(1);
 					}
-					int index = 0;
-					int max = 500;
-					while(queueBuffer.size()>max){
-						if(!queueBuffer.get(index).isSyncronous() && queueBuffer.get(index).getMethod() != BowlerMethod.CRITICAL){
-							Log.enableDebugPrint(true);
-							Log.error("Removing packet from overflow: "+queueBuffer.remove(index));
-						}else{
-							index++;
+					while(!queueBuffer.isEmpty()) {
+						//Log.info("Poping latest packet and sending to listeners");
+						// pop is thread safe.
+						int len = queueBuffer.size();
+						for(int i=0;i<len;i++){
+							try{
+								if(queueBuffer.get(i).isSyncronous()){
+									BowlerDatagram b = queueBuffer.remove(i);
+									pushUp(b);
+								}
+							}catch(Exception e){}
+							
 						}
-						if(index >= max){
-							break;
+						if(!queueBuffer.isEmpty()){
+							try{
+								//send(queueBuffer.remove(queueBuffer.size()-1)	);
+								BowlerDatagram b = queueBuffer.remove(0);
+								pushUp(b);
+							}catch(Exception e){
+								e.printStackTrace();
+							}
+						}else{
+							ThreadUtil.wait(1);
+						}
+						int index = 0;
+						int max = 500;
+						while(queueBuffer.size()>max){
+							if(!queueBuffer.get(index).isSyncronous() && queueBuffer.get(index).getMethod() != BowlerMethod.CRITICAL){
+								Log.enableDebugPrint(true);
+								Log.error("Removing packet from overflow: "+queueBuffer.remove(index));
+							}else{
+								index++;
+							}
+							if(index >= max){
+								break;
+							}
 						}
 					}
 				}
-				
 			}
 		}
 		
@@ -639,6 +631,7 @@ public abstract class BowlerAbstractConnection {
 	}
 	
 	private void pushUp(BowlerDatagram b){
+		b.setFree(false);
 		if(b.isSyncronous()){
 			BowlerDatagram ret = fireSyncOnReceive(b);
 			if(ret !=null){
@@ -993,10 +986,7 @@ public abstract class BowlerAbstractConnection {
 	}
 	
 	public void startHeartBeat(){
-		if(beater==null){
-			beater = new HeartBeat();
-			beater.start();
-		}
+		beater=true;
 	}
 	
 	public void startHeartBeat(long msHeartBeatTime){
@@ -1006,33 +996,23 @@ public abstract class BowlerAbstractConnection {
 		startHeartBeat();
 	}
 	public void stopHeartBeat(){
-		beater=null;
+		beater=false;
 	}
 	
-	private class HeartBeat extends Thread{
-		public HeartBeat(){
-			//new RuntimeException("Starting a heartbeat").printStackTrace();
-		}
-		public void run(){
-			ThreadUtil.wait(1000);
-			
-			while (isConnected()){
-				if((msSinceLastSend())>heartBeatTime){
-					try{
-						if(!ping()){
-							Log.debug("Ping failed, disconnecting");
-							if(!isAlive())
-								disconnect();
-						}
-					}catch(Exception e){
-						Log.debug("Ping failed, disconnecting");
-						if(!isAlive())
-							disconnect();
-					}
+	private void runHeartBeat(){
+		if((msSinceLastSend())>heartBeatTime){
+			try{
+				if(!ping()){
+					Log.debug("Ping failed, disconnecting");
+					disconnect();
 				}
-				ThreadUtil.wait(10);
+			}catch(Exception e){
+				Log.debug("Ping failed, disconnecting");
+
 			}
 		}
 	}
+		
+	
 
 }
