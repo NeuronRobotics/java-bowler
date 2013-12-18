@@ -123,6 +123,7 @@ public  abstract class BowlerAbstractServer  implements ISynchronousDatagramList
 			srv.addConnectionEventListener(new IConnectionEventListener() {
 				@Override
 				public void onDisconnect(BowlerAbstractConnection source) {
+					Log.warning("Removing server from listener");
 					removeServer(source);
 				}
 				@Override
@@ -188,7 +189,7 @@ public  abstract class BowlerAbstractServer  implements ISynchronousDatagramList
 				}else{
 					run=true;
 				}
-				if(getServers().get(i).getClass() != BowlerUDPServer.class){
+				if(getServers().get(i).getClass() != BowlerUDPServer.class ){
 					//System.out.println("Sending packet to "+getServers().get(i).getClass());
 					if(run && getServers().get(i).isConnected()){
 						//Log.warning("ASYNC<<\r\n"+data );
