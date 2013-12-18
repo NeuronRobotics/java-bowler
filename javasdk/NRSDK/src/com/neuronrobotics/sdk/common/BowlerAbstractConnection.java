@@ -160,7 +160,7 @@ public abstract class BowlerAbstractConnection {
 		if (b== null){
 			try {
 				//new RuntimeException().printStackTrace();
-				Log.error("No response from device, no response in "+getSleepTime()+" ms");
+				Log.error("No response from device, no response in "+(System.currentTimeMillis()-rcv)+" ms");
 				reconnect();
 			} catch (IOException e) {
 				clearLastSyncronousResponse();
@@ -256,7 +256,8 @@ public abstract class BowlerAbstractConnection {
 					getDataOuts().write(data);
 					getDataOuts().flush();
 				//}
-			}catch (IOException e){
+			}catch (Exception e){
+				//e.printStackTrace();
 				Log.error("Write failed. "+e.getMessage());
 				reconnect();
 			}
@@ -332,8 +333,13 @@ public abstract class BowlerAbstractConnection {
 	 */
 	protected void onDataReceived(BowlerDatagram data) {
 		if(data.isSyncronous()) {
-			response = data;
-			getSyncQueue().addDatagram(data);
+			
+			if(syncListen!=null){
+				// this is a server and the packet needs to processed
+				getSyncQueue().addDatagram(data);
+			}else{
+				response = data;
+			}
 		}else {
 			getAsyncQueue().addDatagram(data);
 		}
@@ -545,48 +551,33 @@ public abstract class BowlerAbstractConnection {
 					if(queueBuffer.isEmpty()){
 						// prevents thread lock
 						ThreadUtil.wait(1);
+					}else{
+						try{
+							//send(queueBuffer.remove(queueBuffer.size()-1)	);
+							BowlerDatagram b = queueBuffer.remove(0);
+							pushUp(b);
+						}catch(Exception e){
+							e.printStackTrace();
+						}
 					}
-					while(!queueBuffer.isEmpty()) {
-						//Log.info("Poping latest packet and sending to listeners");
-						// pop is thread safe.
-						int len = queueBuffer.size();
-						for(int i=0;i<len;i++){
-							try{
-								if(queueBuffer.get(i).isSyncronous()){
-									BowlerDatagram b = queueBuffer.remove(i);
-									pushUp(b);
-								}
-							}catch(Exception e){
-								e.printStackTrace();
-							}
-							
-						}
-						if(!queueBuffer.isEmpty()){
-							try{
-								//send(queueBuffer.remove(queueBuffer.size()-1)	);
-								BowlerDatagram b = queueBuffer.remove(0);
-								pushUp(b);
-							}catch(Exception e){
-								e.printStackTrace();
-							}
+					
+					int index = 0;
+					int max = 500;
+					while(queueBuffer.size()>max){
+						if(!queueBuffer.get(index).isSyncronous() && queueBuffer.get(index).getMethod() != BowlerMethod.CRITICAL){
+							int state = Log.getMinimumPrintLevel();
+							Log.enableInfoPrint(true);
+							Log.error("Removing packet from overflow: "+queueBuffer.remove(index));
+							Log.setMinimumPrintLevel(state);
 						}else{
-							ThreadUtil.wait(1);
+							index++;
 						}
-						int index = 0;
-						int max = 500;
-						while(queueBuffer.size()>max){
-							if(!queueBuffer.get(index).isSyncronous() && queueBuffer.get(index).getMethod() != BowlerMethod.CRITICAL){
-								Log.enableDebugPrint(true);
-								Log.error("Removing packet from overflow: "+queueBuffer.remove(index));
-							}else{
-								index++;
-							}
-							if(index >= max){
-								break;
-							}
+						if(index >= max){
+							break;
 						}
 					}
 				}
+				
 			}
 		}
 		
@@ -596,12 +587,18 @@ public abstract class BowlerAbstractConnection {
 				if(dataIns!=null){	
 					if(getDataIns().available()>0){
 						//updateBuffer();
-						bytesToPacketBuffer.add(getDataIns().read());
-						BowlerDatagram bd = BowlerDatagramFactory.build(bytesToPacketBuffer);
-						if (bd!=null) {
-							Log.info("\nR<<"+bd);
-							onDataReceived(bd);
-							bytesToPacketBuffer.clear();
+						int b = getDataIns().read();
+						if(b<0){
+							Log.error("Stream is broken");
+							disconnect();
+						}else{
+							bytesToPacketBuffer.add(b);
+							BowlerDatagram bd = BowlerDatagramFactory.build(bytesToPacketBuffer);
+							if (bd!=null) {
+								Log.info("\nR<<"+bd);
+								onDataReceived(bd);
+								bytesToPacketBuffer.clear();
+							}
 						}
 						//Log.info("buffer: "+buffer);
 					}

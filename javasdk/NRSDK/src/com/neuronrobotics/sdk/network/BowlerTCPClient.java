@@ -170,7 +170,15 @@ public class BowlerTCPClient extends BowlerAbstractConnection{
 	@Override
 	public void disconnect() {
 		super.disconnect();
-		try {tcpSock.close();} catch (Exception e) {}
+		try {
+			if(!tcpSock.isClosed()){
+				tcpSock.shutdownOutput(); // Sends the 'FIN' on the network
+			    while (getDataIns().read() >= 0) ; // "read()" returns '-1' when the 'FIN' is reached
+			    tcpSock.close(); // Now we can close the Socket
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		tcpSock = null;
 		setDataIns(null);
 		setDataOuts(null);

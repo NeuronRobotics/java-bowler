@@ -49,6 +49,7 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 		this.socket = socket;
 		try {
 			socket.setSoTimeout(1000);
+			
 		} catch (SocketException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -96,12 +97,17 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 		Log.warning("Disconnecting..");
 		super.disconnect();
 		try {
-			socket.close();			
+			if(!socket.isClosed()){
+				socket.shutdownOutput(); // Sends the 'FIN' on the network
+			    while (getDataIns().read() >= 0) ; // "read()" returns '-1' when the 'FIN' is reached
+			    socket.close(); // Now we can close the Socket	
+			}
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 	}
 	
 
@@ -111,7 +117,7 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 	 */
 	@Override
 	public boolean reconnect() {
-		Log.warning("TCP Reconnect");
+		Log.warning("TCP Server Reconnect, just disconnecting");
 		disconnect();
 		return false;
 	}

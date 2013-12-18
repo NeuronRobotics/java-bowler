@@ -26,6 +26,7 @@ public  abstract class BowlerAbstractServer  implements ISynchronousDatagramList
 
 	
 	private ArrayList<BowlerAbstractConnection> servers = new ArrayList<BowlerAbstractConnection>();
+	private ArrayList<BowlerAbstractConnection> localServers = new ArrayList<BowlerAbstractConnection>();
 	
 	private ArrayList<BowlerAbstractDeviceServerNamespace> namespaces = new ArrayList<BowlerAbstractDeviceServerNamespace>();
 	
@@ -164,66 +165,53 @@ public  abstract class BowlerAbstractServer  implements ISynchronousDatagramList
 	}
 	
 	private void removeServer(BowlerAbstractConnection b){
-		Log.error("Removing server");
+		Log.error("Server Removed "+b);
 		//new RuntimeException().printStackTrace();
 		getServers().remove(b);
 	}
 
 	public synchronized void pushAsyncPacket(BowlerDatagram data) {
-		ArrayList<BowlerAbstractConnection> toBeRemoved = null;
+		localServers.clear();
+		for(int i=0;i<servers.size();i++){
+			localServers.add(getServers().get(i));
+		}
+		
 		for(int i=0;i<servers.size();i++){
 			try{
 				boolean run = false;
-				if(getServers().get(i).getClass() == BowlerTCPServer.class){
-					BowlerTCPServer b =(BowlerTCPServer)getServers().get(i);
+				if(localServers.get(i).getClass() == BowlerTCPServer.class){
+					BowlerTCPServer b =(BowlerTCPServer)localServers.get(i);
 					if(b.isClientConnected()){
 						run=true;
 						Log.info("TCP Bowler client ...OK!");
-					}else{
-						Log.warning("TCP Bowler client not detected, dropping\n"+data);
-						if(toBeRemoved == null){
-							toBeRemoved = new ArrayList<BowlerAbstractConnection>();
-						}
-						toBeRemoved.add(b);
 					}
 				}else{
 					run=true;
 				}
-				if(getServers().get(i).getClass() != BowlerUDPServer.class ){
+				if(localServers.get(i).getClass() != BowlerUDPServer.class ){
 					//System.out.println("Sending packet to "+getServers().get(i).getClass());
-					if(run && getServers().get(i).isConnected()){
+					if(run && localServers.get(i).isConnected()){
 						//Log.warning("ASYNC<<\r\n"+data );
-						getServers().get(i).sendAsync(data);
-						System.out.println("Sent packet to "+getServers().get(i).getClass());
-					}else{
-						BowlerAbstractConnection abs = getServers().get(i);
-						if(toBeRemoved == null){
-							toBeRemoved = new ArrayList<BowlerAbstractConnection>();
-						}
-						toBeRemoved.add(abs);
+						String classString = localServers.get(i).getClass().toString();
+						localServers.get(i).sendAsync(data);
+						System.out.println("Sent packet to "+classString);
 					}
 				}
+			}catch (IndexOutOfBoundsException ie){
+				ie.printStackTrace();
 			}catch(Exception e){
 				try{
 					e.printStackTrace();
-					BowlerAbstractConnection abs = getServers().get(i);
+					BowlerAbstractConnection abs = localServers.get(i);
 					Log.error("No client connected to this connection "+abs.getClass());
 					abs.disconnect();
-					if(toBeRemoved == null){
-						toBeRemoved = new ArrayList<BowlerAbstractConnection>();
-					}
-					toBeRemoved.add(abs);
+
 				}catch(Exception ex){
-					
+					ex.printStackTrace();
 				}
 			}
 		}
-		if(toBeRemoved != null){
-			for(int i=0;i<toBeRemoved.size();i++){
-				removeServer(toBeRemoved.get(i));
-			}
-			toBeRemoved.clear();
-		}
+		localServers.clear();
 	}
 
 	public ArrayList<BowlerAbstractDeviceServerNamespace> getNamespaces() {

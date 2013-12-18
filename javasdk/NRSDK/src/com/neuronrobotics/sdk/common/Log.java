@@ -234,6 +234,15 @@ public class Log {
 	}
 	
 	/**
+	 * Set the minimum level of importance to dsplay.
+	 * Messages below this wont be displayed.
+	 * @param level	The minimu importance level
+	 */
+	public static int getMinimumPrintLevel() {
+		return Log.instance().minprintlevel;
+	}
+	
+	/**
 	 * Get the current log (singleton) instance.
 	 *
 	 * @return The log instance.
