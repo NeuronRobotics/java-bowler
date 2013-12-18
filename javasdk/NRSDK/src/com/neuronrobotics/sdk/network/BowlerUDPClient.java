@@ -30,7 +30,6 @@ import com.neuronrobotics.sdk.common.MACAddress;
  */
 public class BowlerUDPClient extends BowlerAbstractConnection{
 	private int sleepTime = 5000;
-	private int pollTimeoutTime = 5;
 	
 	
 	private UDPStream udp = null;

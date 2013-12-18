@@ -45,7 +45,7 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
  * 
  */
 public class BowlerTCPClient extends BowlerAbstractConnection{
-	private int sleepTime = 5000;
+	private int sleepTime = 1000;
 	
 	private int reconnectRetry = 5;
 	private Socket tcpSock = null;
@@ -135,6 +135,12 @@ public class BowlerTCPClient extends BowlerAbstractConnection{
 		Log.info("Setting TCP socket");
 		while(!sock.isBound());
 		tcpSock = sock;
+		try {
+			tcpSock.setSoTimeout(1000);
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		connect();
 	}
 	

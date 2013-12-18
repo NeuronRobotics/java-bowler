@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
@@ -46,6 +47,12 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 	 */
 	public BowlerTCPServer(Socket socket) throws IOException{
 		this.socket = socket;
+		try {
+			socket.setSoTimeout(1000);
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		setSynchronusPacketTimeoutTime(sleepTime);
 		setChunkSize(5210);
 		setDataIns(new DataInputStream(socket.getInputStream()));
