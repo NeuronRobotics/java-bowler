@@ -565,13 +565,17 @@ public abstract class BowlerAbstractConnection {
 					int index = 0;
 					int max = 500;
 					while(queueBuffer.size()>max){
-						if(!queueBuffer.get(index).isSyncronous() && queueBuffer.get(index).getMethod() != BowlerMethod.CRITICAL){
-							int state = Log.getMinimumPrintLevel();
-							Log.enableInfoPrint(true);
-							Log.error("Removing packet from overflow: "+queueBuffer.remove(index));
-							Log.setMinimumPrintLevel(state);
+						if(queueBuffer.get(index).isFree()){
+							queueBuffer.remove(index);
 						}else{
-							index++;
+							if(!queueBuffer.get(index).isSyncronous() && queueBuffer.get(index).getMethod() != BowlerMethod.CRITICAL){
+								int state = Log.getMinimumPrintLevel();
+								Log.enableInfoPrint(true);
+								Log.error("Removing packet from overflow: "+queueBuffer.remove(index));
+								Log.setMinimumPrintLevel(state);
+							}else{
+								index++;
+							}
 						}
 						if(index >= max){
 							break;
