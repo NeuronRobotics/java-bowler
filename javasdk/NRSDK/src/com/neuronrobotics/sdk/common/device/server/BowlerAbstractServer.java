@@ -146,16 +146,16 @@ public  abstract class BowlerAbstractServer  implements ISynchronousDatagramList
 			return null;
 		}
 		if(!data.getRPC().contains("_png"))
-			Log.warning("Server Got >> "+data);
+			Log.debug("Server Got >> "+data);
 		else{
-			Log.debug("Got >> ping");
+			Log.info("Got >> ping");
 		}
 		BowlerDatagram bd = processLocal(data);
 		if(bd != null){
 			if(!data.getRPC().contains("_png"))
-				Log.warning("Server Response << "+bd);
+				Log.debug("Server Response << "+bd);
 			else{
-				Log.debug("Response << ping");
+				Log.info("Response << ping");
 			}
 			return bd;
 		}else{
@@ -194,7 +194,7 @@ public  abstract class BowlerAbstractServer  implements ISynchronousDatagramList
 						//Log.warning("ASYNC<<\r\n"+data );
 						String classString = localServers.get(i).getClass().toString();
 						localServers.get(i).sendAsync(data);
-						System.out.println("Sent packet to "+classString);
+						Log.debug("Sent packet to "+classString);
 					}
 				}
 			}catch (IndexOutOfBoundsException ie){
