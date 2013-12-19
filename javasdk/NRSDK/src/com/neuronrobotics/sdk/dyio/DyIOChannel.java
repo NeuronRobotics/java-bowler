@@ -81,7 +81,7 @@ public class DyIOChannel implements IDyIOChannel {
 		}
 		fireModeChangeEvent(mode);
 		if(getCurrentMode() == DyIOChannelMode.NO_CHANGE) {
-			System.err.println("Failed to update channel: "+ channel);
+			Log.error("Failed to update channel: "+ channel);
 			throw new RuntimeException("Failed to update channel: "+ channel);
 		}
 	}
@@ -441,7 +441,7 @@ public class DyIOChannel implements IDyIOChannel {
 						getDevice().setMuteResyncOnModeChange(true);
 					}
 				}else{
-					Log.debug("Not resyncing from channel: "+getChannelNumber());
+					Log.info("Not resyncing from channel: "+getChannelNumber());
 					fireModeChangeEvent(mode); 
 				}
 				settingMode=false;

@@ -311,7 +311,7 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 				}
 			}
 		}else{
-			Log.debug("Not checking firmware version for DyIO");
+			Log.info("Not checking firmware version for DyIO");
 		}
 	}
 
