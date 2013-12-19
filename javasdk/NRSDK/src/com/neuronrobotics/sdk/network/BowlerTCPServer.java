@@ -94,9 +94,10 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 	public void disconnect() {
 		if(!isConnected())
 			return;
-		Log.warning("Disconnecting..");
+		Log.warning("Disconnecting Tcp Server..");
 		super.disconnect();
 		try {
+			
 			if(!socket.isClosed()){
 				socket.shutdownOutput(); // Sends the 'FIN' on the network
 			    while (getDataIns().read() >= 0) ; // "read()" returns '-1' when the 'FIN' is reached

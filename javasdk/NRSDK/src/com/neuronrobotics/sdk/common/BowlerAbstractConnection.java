@@ -178,8 +178,9 @@ public abstract class BowlerAbstractConnection {
 	 * and use getLastSyncronousResponse() to get the last response since clearing.
 	 *
 	 * @param sendable the sendable
+	 * @throws IOException 
 	 */
-	public void sendAsync(BowlerDatagram sendable){
+	public void sendAsync(BowlerDatagram sendable) throws IOException{
 		if(!isConnected()) {
 			//Log.error("Can not send message because the engine is not connected.");
 			return;
@@ -188,12 +189,8 @@ public abstract class BowlerAbstractConnection {
 			write(sendable.getBytes());
 		} catch (IOException e1) {
 			Log.error("No response from device...");
-			try {
-				reconnect();
-				write(sendable.getBytes());
-			} catch (IOException e) {
-				throw new RuntimeException(e1);
-			}
+			reconnect();
+			throw  e1;		
 		}
 	}
 	
@@ -253,8 +250,9 @@ public abstract class BowlerAbstractConnection {
 				
 				//while(outgoing.size()>0){
 					//byte[] b =outgoing.popList(getChunkSize());
-					getDataOuts().write(data);
-					getDataOuts().flush();
+				System.out.println("Writing "+new ByteList(data));
+				getDataOuts().write(data);
+				getDataOuts().flush();
 				//}
 			}catch (Exception e){
 				//e.printStackTrace();
@@ -262,7 +260,7 @@ public abstract class BowlerAbstractConnection {
 				reconnect();
 			}
 		}else{
-			Log.warning("No data sent, stream closed");
+			Log.error("No data sent, stream closed");
 		}
 		
 	}
@@ -276,6 +274,7 @@ public abstract class BowlerAbstractConnection {
 		if(connected == c)
 			return;
 		connected = c;
+		Log.info("Setting connection to "+c);
 		if(connected){
 			setSyncQueue(new QueueManager(true));
 			setAsyncQueue(new QueueManager(false));
@@ -634,7 +633,7 @@ public abstract class BowlerAbstractConnection {
 		}
 	}
 	
-	private void pushUp(BowlerDatagram b){
+	private void pushUp(BowlerDatagram b) throws IOException{
 		b.setFree(false);
 		if(b.isSyncronous()){
 			BowlerDatagram ret = fireSyncOnReceive(b);

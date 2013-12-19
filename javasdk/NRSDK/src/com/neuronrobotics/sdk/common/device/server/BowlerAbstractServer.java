@@ -142,20 +142,20 @@ public  abstract class BowlerAbstractServer  implements ISynchronousDatagramList
 	public BowlerDatagram onSyncReceive(BowlerDatagram data) {
 		if(data.isUpstream()){
 			// a server ignores upstream packets received
-			
+			Log.error("Upstream packet detected"+data);
 			return null;
 		}
 		if(!data.getRPC().contains("_png"))
-			Log.debug("Got >> "+data);
+			Log.warning("Server Got >> "+data);
 		else{
-			//Log.debug("Got >> ping");
+			Log.debug("Got >> ping");
 		}
 		BowlerDatagram bd = processLocal(data);
 		if(bd != null){
 			if(!data.getRPC().contains("_png"))
-				Log.debug("Response << "+bd);
+				Log.warning("Server Response << "+bd);
 			else{
-				//Log.debug("Response << ping");
+				Log.debug("Response << ping");
 			}
 			return bd;
 		}else{

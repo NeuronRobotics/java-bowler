@@ -275,6 +275,27 @@ public class Log {
 			return "Log";
 		}
 	}
+	/**
+	 * Get a string describing the given importance level.
+	 *
+	 * @param importance The given importance level.
+	 * @return the importance
+	 */
+	public String getImportanceColor(int importance) {
+		switch(importance) {
+		case INFO:
+			return "\033[92m";// green
+		case WARNING:
+			return "\033[93m";// orange
+		case ERROR:
+			return "\033[31m";// red
+		case DEBUG:
+			return "\033[94m";// blue
+		case LOG:
+		default:
+			return "\033[92m";// green
+		}
+	}
 	
 	/**
 	 * get the current error PrintStream.
@@ -354,13 +375,13 @@ public class Log {
 		 * @see java.lang.Object#toString()
 		 */
 		public String toString() {
-			return "[" + dateFormat.format(datetime) + "] " + " " + getImportance(importance) +" "+callingClass+ " \t\t\t:\n"+ message;
+			return "\t\t\t\t[" + dateFormat.format(datetime) + "] " + " " + getImportance(importance) +" "+callingClass+ " :\n"+ message;
+			//return getImportanceColor(importance)+"\t\t\t\t[" + dateFormat.format(datetime) + "] " + " " + getImportance(importance) +" "+callingClass+ " :\n"+ message+getColorNormalizationCode();
 		}
 	}
-
-	public static void error(InvalidResponseException e) {
-		// TODO Auto-generated method stub
-		
+	
+	private String getColorNormalizationCode(){
+		return "\033[39m";
 	}
 	
 }

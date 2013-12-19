@@ -169,6 +169,9 @@ public class BowlerTCPClient extends BowlerAbstractConnection{
 	 */
 	@Override
 	public void disconnect() {
+		if(!isConnected())
+			return;
+		Log.warning("Disconnecting Tcp Client..");
 		super.disconnect();
 		try {
 			if(!tcpSock.isClosed()){
