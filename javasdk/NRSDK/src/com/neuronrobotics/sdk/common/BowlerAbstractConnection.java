@@ -142,6 +142,7 @@ public abstract class BowlerAbstractConnection {
 		clearLastSyncronousResponse();
 		try {
 			long send = System.currentTimeMillis();
+			sendable.setUpstream(false);
 			Log.info("\nT>>"+sendable);
 			write(sendable.getBytes());
 			Log.info("Transmit took: "+(System.currentTimeMillis()-send)+" ms");
@@ -185,6 +186,7 @@ public abstract class BowlerAbstractConnection {
 			//Log.error("Can not send message because the engine is not connected.");
 			return;
 		}
+		sendable.setUpstream(true);
 		try {
 			write(sendable.getBytes());
 		} catch (IOException e1) {
@@ -250,7 +252,7 @@ public abstract class BowlerAbstractConnection {
 				
 				//while(outgoing.size()>0){
 					//byte[] b =outgoing.popList(getChunkSize());
-				System.out.println("Writing "+new ByteList(data));
+				//System.out.println("Writing "+new ByteList(data));
 				getDataOuts().write(data);
 				getDataOuts().flush();
 				//}
