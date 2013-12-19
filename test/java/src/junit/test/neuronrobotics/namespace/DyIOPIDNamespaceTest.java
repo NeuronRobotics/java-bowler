@@ -15,7 +15,7 @@ public class DyIOPIDNamespaceTest extends PIDNamespaceTest {
 	public void setUp() throws Exception {
 		if(!DyIORegestry.get().isAvailable()){
 			System.out.println("DyIO test setting up DyIO");
-			Log.enableDebugPrint(true);
+			Log.enableDebugPrint();
 			if(!ConnectionDialog.getBowlerDevice(DyIORegestry.get())){
 				fail("No device availible");
 			}

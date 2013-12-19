@@ -14,7 +14,7 @@ public class DyIONamespaceTester {
 		if (!ConnectionDialog.getBowlerDevice(dyio)){
 			System.exit(1);
 		}
-		dyio.enableDebug();
+
 		
 		dyio.getRevisions();
 		
@@ -24,9 +24,9 @@ public class DyIONamespaceTester {
 		
 		String newName = dyio.getInfo();
 		
-		dyio.disableDebug();
+
 		dyio.setInfo(name);
-		dyio.enableDebug();
+
 		
 		double volts = dyio.getBatteryVoltage(true);
 		

@@ -12,7 +12,7 @@ public class ByteListTest {
 	@Test
 	public void test() {
 		
-		Log.enableDebugPrint(true);
+		Log.enableDebugPrint();
 		
 		ByteList.setUseStaticBuffer(true);
 		

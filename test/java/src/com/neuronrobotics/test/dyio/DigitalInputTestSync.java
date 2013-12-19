@@ -16,8 +16,7 @@ public class DigitalInputTestSync {
 		if (!ConnectionDialog.getBowlerDevice(dyio)){
 			System.exit(1);
 		}
-		Log.enableDebugPrint(true);
-		Log.enableSystemPrint(true);
+		Log.enableDebugPrint();
 		DigitalInputChannel dig = new DigitalInputChannel(dyio.getChannel(0));
 		//Loop forever printing out the state of the button
 		while(true){

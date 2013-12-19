@@ -1029,31 +1029,6 @@ public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectio
 	}
 
 	
-	/**
-	 * This method enables the DyIO log printing. 
-	 * 
-	 * @param printing enable the system printing
-	 * @param debug    enable the debug log level
-	 */
-	public void SetPrintModes(boolean printing,boolean debug){
-		Log.enableSystemPrint(printing);
-		Log.enableDebugPrint(debug);
-	}
-	
-	/**
-	 * This method enables the DyIO log printing. 
-	 */
-	public void enableDebug() {
-		SetPrintModes(true,true);
-	}
-	
-	/**
-	 * This method disables the DyIO log printing. 
-	 */
-	public void disableDebug() {
-		SetPrintModes(false,false);
-	}
-	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */

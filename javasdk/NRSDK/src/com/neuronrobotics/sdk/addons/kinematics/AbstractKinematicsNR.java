@@ -86,8 +86,6 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();
 		}
-		Log.enableSystemPrint(true);
-		Log.enableDebugPrint(true);
 		
 		Document doc =XmlFactory.getAllNodesDocument(config);
 		NodeList nList = doc.getElementsByTagName("link");

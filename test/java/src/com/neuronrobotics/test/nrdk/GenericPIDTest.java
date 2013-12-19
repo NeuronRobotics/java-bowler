@@ -13,7 +13,7 @@ public class GenericPIDTest {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		Log.enableDebugPrint(true);
+		Log.enableDebugPrint();
 		GenericPIDDevice pid = new GenericPIDDevice();
 		//if (!ConnectionDialog.getBowlerDevice(pid)){
 		//	System.exit(1);

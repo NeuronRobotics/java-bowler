@@ -10,7 +10,6 @@ public class SafeModeWatchDog {
 	 */
 	public static void main(String[] args) {
 		DyIO dyio=new DyIO();
-		dyio.enableDebug();
 		if (!ConnectionDialog.getBowlerDevice(dyio)){
 			System.exit(1);
 		}

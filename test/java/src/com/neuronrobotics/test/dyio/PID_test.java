@@ -17,7 +17,6 @@ public class PID_test implements IPIDEventListener{
 	
 	public PID_test(){
 		DyIO dyio=new DyIO();
-		dyio.SetPrintModes(true, true);
 		if (!ConnectionDialog.getBowlerDevice(dyio)){
 			System.exit(0);
 		}

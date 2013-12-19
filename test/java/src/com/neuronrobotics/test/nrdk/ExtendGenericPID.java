@@ -12,7 +12,7 @@ import com.neuronrobotics.sdk.ui.ConnectionDialog;
 
 public class ExtendGenericPID {
 	private ExtendGenericPID(){
-		Log.enableDebugPrint(true);
+		Log.enableDebugPrint();
 		ExtendedPID pid = new ExtendedPID();
 		if (!ConnectionDialog.getBowlerDevice(pid)){
 			System.exit(1);

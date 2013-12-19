@@ -17,7 +17,6 @@ public class ConcurrencyTest implements IAnalogInputListener{
 		if (!ConnectionDialog.getBowlerDevice(dyio)){
 			System.exit(1);
 		}
-		dyio.enableDebug();
 		doc = new DigitalOutputChannel(dyio.getChannel(1));
 		ana = new AnalogInputChannel(dyio.getChannel(11),true);	
 		//Add this instance of the Tester class to the analog channel 

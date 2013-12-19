@@ -15,7 +15,6 @@ public class DigitalInputTestAsync implements IDigitalInputListener{
 		if (!ConnectionDialog.getBowlerDevice(dyio)){
 			System.exit(1);
 		}
-		dyio.enableDebug();
 		//Instantiate a new digital channel
 		//The second parameter tells the digital channel that is it an asynchronous channel
 		for(int i=0;i<24;i++) {

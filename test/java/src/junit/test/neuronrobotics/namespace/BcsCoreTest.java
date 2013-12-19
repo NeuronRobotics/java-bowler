@@ -19,7 +19,7 @@ public class BcsCoreTest {
 
 	@Test
 	public void testBcsCore() {
-		Log.enableInfoPrint(true);
+		Log.enableInfoPrint();
 		List<String> connections = SerialConnection.getAvailableSerialPorts();
 		if(connections.size() ==0)
 			fail();

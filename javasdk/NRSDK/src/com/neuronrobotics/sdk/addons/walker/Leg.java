@@ -142,7 +142,6 @@ public class Leg {
 		try {
 			setCartesian(pos[0],pos[1]+val,pos[2]);
 		}catch(RuntimeException e) {
-			Log.enableDebugPrint(true);
 			Log.error("Error in increment y");
 			e.printStackTrace();
 			stepToSetpoint();

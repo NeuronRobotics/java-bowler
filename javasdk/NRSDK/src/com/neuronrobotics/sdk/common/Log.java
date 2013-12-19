@@ -71,6 +71,8 @@ public class Log {
 	/** The err stream. */
 	private static PrintStream errStream = System.err;
 	
+	private boolean useColoredPrints=false;
+	
 
 	/**
 	 * Instantiates a new log.
@@ -208,9 +210,9 @@ public class Log {
 	 * @param debugprint the debugprint
 	 */
 	
-	public static void enableDebugPrint(boolean debugprint) {
-		Log.enableSystemPrint(debugprint);
-		Log.setMinimumPrintLevel(debugprint?WARNING:INFO);
+	public static void enableDebugPrint() {
+		Log.enableSystemPrint(true);
+		Log.setMinimumPrintLevel(DEBUG);
 	}
 	
 	/**
@@ -219,11 +221,34 @@ public class Log {
 	 * @param debugprint the debugprint
 	 */
 	
-	public static void enableInfoPrint(boolean debugprint) {
-		Log.enableSystemPrint(debugprint);
-		
+	public static void enableInfoPrint() {
+		Log.enableSystemPrint(true);
 		Log.setMinimumPrintLevel(INFO);
 	}
+	
+	/**
+	 * Enable printing of debug output.
+	 *
+	 * @param debugprint the debugprint
+	 */
+	
+	public static void enableWarningPrint() {
+		Log.enableSystemPrint(true);
+		Log.setMinimumPrintLevel(WARNING);
+	}
+	
+	/**
+	 * Enable printing of debug output.
+	 *
+	 * @param debugprint the debugprint
+	 */
+	
+	public static void enableErrorPrint() {
+		Log.enableSystemPrint(true);
+		Log.setMinimumPrintLevel(ERROR);
+	}
+	
+	
 	/**
 	 * Set the minimum level of importance to dsplay.
 	 * Messages below this wont be displayed.
@@ -282,19 +307,22 @@ public class Log {
 	 * @return the importance
 	 */
 	public String getImportanceColor(int importance) {
-		switch(importance) {
-		case INFO:
-			return "\033[92m";// green
-		case WARNING:
-			return "\033[93m";// orange
-		case ERROR:
-			return "\033[31m";// red
-		case DEBUG:
-			return "\033[94m";// blue
-		case LOG:
-		default:
-			return "\033[92m";// green
+		if(isUseColoredPrints()){
+			switch(importance) {
+			case INFO:
+				return "\033[92m";// green
+			case WARNING:
+				return "\033[93m";// orange
+			case ERROR:
+				return "\033[31m";// red
+			case DEBUG:
+				return "\033[94m";// blue
+			case LOG:
+			default:
+				return "\033[92m";// green
+			}
 		}
+		return "";
 	}
 	
 	/**
@@ -375,13 +403,22 @@ public class Log {
 		 * @see java.lang.Object#toString()
 		 */
 		public String toString() {
-			return "\t\t\t\t[" + dateFormat.format(datetime) + "] " + " " + getImportance(importance) +" "+callingClass+ " :\n"+ message;
-			//return getImportanceColor(importance)+"\t\t\t\t[" + dateFormat.format(datetime) + "] " + " " + getImportance(importance) +" "+callingClass+ " :\n"+ message+getColorNormalizationCode();
+			//return "\t\t\t\t[" + dateFormat.format(datetime) + "] " + " " + getImportance(importance) +" "+callingClass+ " :\n"+ message;
+			return getImportanceColor(importance)+"\t\t\t\t[" + dateFormat.format(datetime) + "] " + " " + getImportance(importance) +" "+callingClass+ " :\n"+ message+getColorNormalizationCode();
 		}
 	}
 	
 	private String getColorNormalizationCode(){
-		return "\033[39m";
+		if(isUseColoredPrints())
+			return "\033[39m";
+		return "";
+	}
+	public static  boolean isUseColoredPrints() {
+		return instance().useColoredPrints;
+	}
+	
+	public static void setUseColoredPrints(boolean useColoredPrints) {
+		instance().useColoredPrints = useColoredPrints;
 	}
 	
 }

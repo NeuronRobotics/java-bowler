@@ -12,7 +12,7 @@ public class ConnectionDialogTest {
 			System.err.println("Dialog failed");
 			System.exit(1);
 		}
-		Log.enableDebugPrint(true);
+		Log.enableDebugPrint();
 		dyio.ping();
         dyio.disconnect();
 		System.out.println("Connection OK!");

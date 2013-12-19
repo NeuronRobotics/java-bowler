@@ -46,7 +46,7 @@ public class SimpleDHTest {
 		frame.pack();
 		frame.setVisible(true);
 		
-		Log.enableDebugPrint(false);
+		Log.enableSystemPrint(false);
 		
 		try {
 			for(int i=0;i<startVect.length;i++){

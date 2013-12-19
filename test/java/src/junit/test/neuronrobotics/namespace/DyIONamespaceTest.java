@@ -36,7 +36,6 @@ public class DyIONamespaceTest {
 			fail();
 		assertTrue(DyIORegestry.get().hasNamespace("neuronrobotics.dyio.*"));
 		
-		dyio.enableDebug();
 		
 		dyio.getRevisions();
 		
@@ -47,9 +46,9 @@ public class DyIONamespaceTest {
 		
 		String newName = dyio.getInfo();
 		
-		dyio.disableDebug();
+
 		dyio.setInfo(name);
-		dyio.enableDebug();
+		
 		
 		double volts = dyio.getBatteryVoltage(true);
 		

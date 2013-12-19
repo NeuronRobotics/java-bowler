@@ -570,7 +570,7 @@ public abstract class BowlerAbstractConnection {
 						}else{
 							if(!queueBuffer.get(index).isSyncronous() && queueBuffer.get(index).getMethod() != BowlerMethod.CRITICAL){
 								int state = Log.getMinimumPrintLevel();
-								Log.enableInfoPrint(true);
+								Log.enableErrorPrint();
 								Log.error("Removing packet from overflow: "+queueBuffer.remove(index));
 								Log.setMinimumPrintLevel(state);
 							}else{

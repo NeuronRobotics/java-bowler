@@ -20,7 +20,7 @@ public class AdvancedAsyncTest implements IAnalogInputListener{
 		if (!ConnectionDialog.getBowlerDevice(dyio)){
 			System.exit(1);
 		}
-		Log.enableDebugPrint(true);
+		Log.enableDebugPrint();
 		//Instantiate a new analog channel
 		//The second parameter tells the analog channel that is it an asynchronous channel
 		ana0 = new AnalogInputChannel(dyio.getChannel(8),true);	
