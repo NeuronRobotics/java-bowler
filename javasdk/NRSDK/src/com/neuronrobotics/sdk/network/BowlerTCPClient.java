@@ -234,11 +234,13 @@ public class BowlerTCPClient extends BowlerAbstractConnection{
 				connect();
 				if(isConnected())
 					return true;
+				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			ThreadUtil.wait(i*500);
+			disconnect();
+			ThreadUtil.wait(i*2*sleepTime);
 			Log.error("Reconnect failed, retry: "+i);
 		}
 		return false;
