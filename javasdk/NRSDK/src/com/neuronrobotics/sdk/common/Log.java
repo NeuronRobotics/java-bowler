@@ -96,6 +96,10 @@ public class Log {
 			rtn.add(m);
 		}
 		
+		for(Message m :rtn){
+			messages.remove(m);
+		}
+		
 		return rtn;
 	}
 	/**
@@ -111,6 +115,10 @@ public class Log {
 			}
 			
 			rtn.add(m);
+		}
+		
+		for(Message m :rtn){
+			messages.remove(m);
 		}
 		
 		return rtn;
