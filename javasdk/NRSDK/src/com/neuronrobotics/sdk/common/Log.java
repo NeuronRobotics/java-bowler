@@ -51,6 +51,7 @@ public class Log {
 	private static Log instance;
 	
 	/** The messages. */
+	private Message m;
 	//private ArrayList<Message> messages = new ArrayList<Message>();
 	
 	/** The date format. */
@@ -81,49 +82,7 @@ public class Log {
 		// private for singleton pattern
 		add(SDKBuildInfo.getSDKVersionString(), INFO);
 	}
-//	/**
-//	 * Filter out all messages except for one importance level.
-//	 * @param level	importance level
-//	 * @return	ArrayList of filtered messages.
-//	 */
-//	public List<Message> filterOnly(int level) {
-//		ArrayList<Message> rtn = new ArrayList<Message>();
-//		for(Message m : messages) {
-//			if(m.importance != level) {
-//				continue;
-//			}
-//			
-//			rtn.add(m);
-//		}
-//		
-//		for(Message m :rtn){
-//			messages.remove(m);
-//		}
-//		
-//		return rtn;
-//	}
-//	/**
-//	 * Filter out messages below a minimum importance level.
-//	 * @param level	minimum level of importance
-//	 * @return	An ArrayList of messages
-//	 */
-//	public List<Message> filterMin(int level) {
-//		ArrayList<Message> rtn = new ArrayList<Message>();
-//		for(Message m : messages) {
-//			if(m.importance < level) {
-//				continue;
-//			}
-//			
-//			rtn.add(m);
-//		}
-//		
-//		for(Message m :rtn){
-//			messages.remove(m);
-//		}
-//		
-//		return rtn;
-//	}
-	
+
 	/**
 	 * Log an error message.
 	 *
@@ -189,8 +148,11 @@ public class Log {
 		if( importance < minprintlevel) {
 			return;
 		}
-		
-		Message m = new Message(message, importance);
+		if(m==null)
+			m = new Message(message, importance);
+		else{
+			m.init(message, importance);
+		}
 		//messages.add(m);
 		
 		if(systemprint && importance >= minprintlevel) {
@@ -399,6 +361,10 @@ public class Log {
 		 * @param importance the importance
 		 */
 		public Message(String message, int importance) {
+			init(message, importance);
+		}
+		
+		public void init(String message, int importance){
 			this.message = message;
 			this.importance = importance;
 			datetime = new Date();
