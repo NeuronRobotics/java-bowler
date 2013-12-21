@@ -51,7 +51,7 @@ public class Log {
 	private static Log instance;
 	
 	/** The messages. */
-	private ArrayList<Message> messages = new ArrayList<Message>();
+	//private ArrayList<Message> messages = new ArrayList<Message>();
 	
 	/** The date format. */
 	private DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss:SS");
@@ -81,48 +81,48 @@ public class Log {
 		// private for singleton pattern
 		add(SDKBuildInfo.getSDKVersionString(), INFO);
 	}
-	/**
-	 * Filter out all messages except for one importance level.
-	 * @param level	importance level
-	 * @return	ArrayList of filtered messages.
-	 */
-	public List<Message> filterOnly(int level) {
-		ArrayList<Message> rtn = new ArrayList<Message>();
-		for(Message m : messages) {
-			if(m.importance != level) {
-				continue;
-			}
-			
-			rtn.add(m);
-		}
-		
-		for(Message m :rtn){
-			messages.remove(m);
-		}
-		
-		return rtn;
-	}
-	/**
-	 * Filter out messages below a minimum importance level.
-	 * @param level	minimum level of importance
-	 * @return	An ArrayList of messages
-	 */
-	public List<Message> filterMin(int level) {
-		ArrayList<Message> rtn = new ArrayList<Message>();
-		for(Message m : messages) {
-			if(m.importance < level) {
-				continue;
-			}
-			
-			rtn.add(m);
-		}
-		
-		for(Message m :rtn){
-			messages.remove(m);
-		}
-		
-		return rtn;
-	}
+//	/**
+//	 * Filter out all messages except for one importance level.
+//	 * @param level	importance level
+//	 * @return	ArrayList of filtered messages.
+//	 */
+//	public List<Message> filterOnly(int level) {
+//		ArrayList<Message> rtn = new ArrayList<Message>();
+//		for(Message m : messages) {
+//			if(m.importance != level) {
+//				continue;
+//			}
+//			
+//			rtn.add(m);
+//		}
+//		
+//		for(Message m :rtn){
+//			messages.remove(m);
+//		}
+//		
+//		return rtn;
+//	}
+//	/**
+//	 * Filter out messages below a minimum importance level.
+//	 * @param level	minimum level of importance
+//	 * @return	An ArrayList of messages
+//	 */
+//	public List<Message> filterMin(int level) {
+//		ArrayList<Message> rtn = new ArrayList<Message>();
+//		for(Message m : messages) {
+//			if(m.importance < level) {
+//				continue;
+//			}
+//			
+//			rtn.add(m);
+//		}
+//		
+//		for(Message m :rtn){
+//			messages.remove(m);
+//		}
+//		
+//		return rtn;
+//	}
 	
 	/**
 	 * Log an error message.
@@ -185,8 +185,13 @@ public class Log {
 	 * @param importance the importance to log it as.
 	 */
 	private void add(String message, int importance) {
+		
+		if( importance < minprintlevel) {
+			return;
+		}
+		
 		Message m = new Message(message, importance);
-		messages.add(m);
+		//messages.add(m);
 		
 		if(systemprint && importance >= minprintlevel) {
 			errStream.println(m);
