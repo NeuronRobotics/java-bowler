@@ -62,8 +62,6 @@ public abstract class BowlerAbstractConnection {
 	
 	private int chunkSize = 64;
 	
-	/** The poll timeout time. */
-	private int pollTimeoutTime = 1;
 	
 	/** The response. */
 	private BowlerDatagram response = null;
@@ -516,128 +514,7 @@ public abstract class BowlerAbstractConnection {
 	}
 	
 	
-	/**
-	 * Thread safe queue manager.
-	 * @author rbreznak
-	 *
-	 */
-	private class QueueManager extends Thread {
-		// stack extends vector and gives thread safety
-		/** The queue buffer. */
-		private ArrayList<BowlerDatagram> queueBuffer = new ArrayList<BowlerDatagram>();
-		private ByteList bytesToPacketBuffer = new ByteList();
-		private boolean isSystemQueue=false;
-		
-		
-		public QueueManager(boolean b) {
-			isSystemQueue = b;
-		}
 
-
-		/* (non-Javadoc)
-		 * @see java.lang.Thread#run()
-		 */
-		public void run() {
-			while(isConnected()) {
-				//wait for the data stream to stabilize
-				if(dataIns == null || dataOuts == null){
-					ThreadUtil.wait(100);
-				}else{
-					if(isSystemQueue)
-						runPacketUpdate();
-					else{ 
-						if(beater)
-							runHeartBeat();
-					}
-					if(queueBuffer.isEmpty()){
-						// prevents thread lock
-						ThreadUtil.wait(1);
-					}else{
-						try{
-							//send(queueBuffer.remove(queueBuffer.size()-1)	);
-							BowlerDatagram b = queueBuffer.remove(0);
-							pushUp(b);
-						}catch(Exception e){
-							e.printStackTrace();
-						}
-					}
-					
-					int index = 0;
-					int max = 500;
-					while(queueBuffer.size()>max){
-						if(queueBuffer.get(index).isFree()){
-							queueBuffer.remove(index);
-						}else{
-							if(!queueBuffer.get(index).isSyncronous() && queueBuffer.get(index).getMethod() != BowlerMethod.CRITICAL){
-								int state = Log.getMinimumPrintLevel();
-								Log.enableErrorPrint();
-								Log.error("Removing packet from overflow: "+queueBuffer.remove(index));
-								Log.setMinimumPrintLevel(state);
-							}else{
-								index++;
-							}
-						}
-						if(index >= max){
-							break;
-						}
-					}
-				}
-				
-			}
-		}
-		
-
-		private void runPacketUpdate() {
-			try {
-				if(dataIns!=null){	
-					if(getDataIns().available()>0){
-						//updateBuffer();
-						int b = getDataIns().read();
-						if(b<0){
-							Log.error("Stream is broken");
-							disconnect();
-						}else{
-							bytesToPacketBuffer.add(b);
-							BowlerDatagram bd = BowlerDatagramFactory.build(bytesToPacketBuffer);
-							if (bd!=null) {
-								Log.info("\nR<<"+bd);
-								onDataReceived(bd);
-								bytesToPacketBuffer.clear();
-							}
-						}
-						//Log.info("buffer: "+buffer);
-					}
-				}else{
-					Log.error("Data In is null");
-				}
-			} catch (Exception e) {
-				Log.error("Data read failed "+e.getMessage());
-				try {
-					reconnect();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-		}
-		
-		/**
-		 * Adds the datagram.
-		 *
-		 * @param dg the dg
-		 */
-		private void addDatagram(BowlerDatagram dg) {
-			queueBuffer.add(dg);
-		}
-		
-		/**
-		 * Kill.
-		 */
-		public void kill() {
-			if(isConnected())
-				disconnect();
-		}
-	}
 	
 	private void pushUp(BowlerDatagram b) throws IOException{
 		b.setFree(false);
@@ -1017,6 +894,133 @@ public abstract class BowlerAbstractConnection {
 				Log.debug("Ping failed, disconnecting");
 
 			}
+		}
+	}
+	
+	/**
+	 * Thread safe queue manager.
+	 * @author rbreznak
+	 *
+	 */
+	private class QueueManager extends Thread {
+		// stack extends vector and gives thread safety
+		/** The queue buffer. */
+		private ArrayList<BowlerDatagram> queueBuffer = new ArrayList<BowlerDatagram>();
+		private ByteList bytesToPacketBuffer = new ByteList();
+		private boolean isSystemQueue=false;
+		
+		
+		public QueueManager(boolean b) {
+			isSystemQueue = b;
+		}
+
+
+		/* (non-Javadoc)
+		 * @see java.lang.Thread#run()
+		 */
+		public void run() {
+			while(isConnected()) {
+				//wait for the data stream to stabilize
+				if(dataIns == null || dataOuts == null){
+					ThreadUtil.wait(100);
+				}else{
+					if(isSystemQueue)
+						runPacketUpdate();
+					else{ 
+						if(beater)
+							runHeartBeat();
+					}
+					if(queueBuffer.isEmpty()){
+						// prevents thread lock
+						ThreadUtil.wait(1);
+					}else{
+						try{
+							//send(queueBuffer.remove(queueBuffer.size()-1)	);
+							BowlerDatagram b = queueBuffer.remove(0);
+							pushUp(b);
+						}catch(Exception e){
+							e.printStackTrace();
+						}
+					}
+					
+					int index = 0;
+					int max = 500;
+					while(queueBuffer.size()>max){
+						if(queueBuffer.get(index).isFree()){
+							queueBuffer.remove(index);
+						}else{
+							if(!queueBuffer.get(index).isSyncronous() && queueBuffer.get(index).getMethod() != BowlerMethod.CRITICAL){
+								int state = Log.getMinimumPrintLevel();
+								Log.enableErrorPrint();
+								Log.error("Removing packet from overflow: "+queueBuffer.remove(index));
+								Log.setMinimumPrintLevel(state);
+							}else{
+								index++;
+							}
+						}
+						if(index >= max){
+							break;
+						}
+					}
+				}
+				
+			}
+		}
+		
+
+		private void runPacketUpdate() {
+			try {
+				if(dataIns!=null){	
+					while(getDataIns().available()>0){
+						//we want to run this until the buffer is clear or a packet is found
+						int b = getDataIns().read();
+						if(b<0){
+							Log.error("Stream is broken - unexpected");
+							disconnect();
+							//something went wrong
+							break;
+						}else{
+							bytesToPacketBuffer.add(b);
+							BowlerDatagram bd = BowlerDatagramFactory.build(bytesToPacketBuffer);
+							if (bd!=null) {
+								Log.info("\nR<<"+bd);
+								onDataReceived(bd);
+								bytesToPacketBuffer.clear();
+								//Packet found, break the loop and deal with it
+								break;
+							}
+						}
+						//Log.info("buffer: "+buffer);
+					}
+				}else{
+					Log.error("Data In is null");
+				}
+			} catch (Exception e) {
+				Log.error("Data read failed "+e.getMessage());
+				try {
+					reconnect();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		}
+		
+		/**
+		 * Adds the datagram.
+		 *
+		 * @param dg the dg
+		 */
+		private void addDatagram(BowlerDatagram dg) {
+			queueBuffer.add(dg);
+		}
+		
+		/**
+		 * Kill.
+		 */
+		public void kill() {
+			if(isConnected())
+				disconnect();
 		}
 	}
 		
