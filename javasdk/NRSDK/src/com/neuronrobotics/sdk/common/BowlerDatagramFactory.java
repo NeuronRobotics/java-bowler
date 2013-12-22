@@ -28,7 +28,7 @@ public class BowlerDatagramFactory {
 	
 	private static BowlerDatagram pool [];
 	private static int failed=0;
-	private static int poolDefaultSize = 500;
+	private static int poolDefaultSize = 2000;
 	private static int packetTimeout = 2000;
 	
 	static{
@@ -65,13 +65,11 @@ public class BowlerDatagramFactory {
 		}
 		if(ref == null){
 			//The whole list was search and no free packets were found
-			BowlerDatagram newPool [ ] = new BowlerDatagram[pool.length+getDefaultPoolSize()];
-			Log.warning("Increasing BowlerDatagram pool size to "+newPool.length);
-			for(int i=0;i<pool.length;i++){
-				newPool[i] = pool[i];
-			}
+			BowlerDatagram newPool [ ] = new BowlerDatagram[pool.length];
+			Log.warning("Resetting pool "+newPool.length);
+
 			//Adding the new packets
-			for(int i=pool.length;i<newPool.length;i++){
+			for(int i=0;i<newPool.length;i++){
 				newPool[i] = new BowlerDatagram(instance);
 				freePacket(newPool[i]);
 				if(ref==null)
