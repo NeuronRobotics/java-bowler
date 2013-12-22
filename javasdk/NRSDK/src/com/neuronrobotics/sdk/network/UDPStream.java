@@ -36,7 +36,7 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
 public class UDPStream {
 	private int port = 1865;
 	private DatagramSocket udpSock = null;
-	byte[] receiveData=new byte[1024];
+	byte[] receiveData=new byte[4096];
     byte[] sendData;
     ArrayList<InetAddress>  addrs = new ArrayList<InetAddress>();
     InetAddress IPAddress=null;
@@ -198,6 +198,7 @@ public class UDPStream {
 						add(tmp);
 					}
 				} catch (IOException e) {
+					e.printStackTrace();
 					disconnect();
 				}
 
