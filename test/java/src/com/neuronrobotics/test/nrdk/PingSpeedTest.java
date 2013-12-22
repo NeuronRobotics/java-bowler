@@ -19,19 +19,19 @@ public class PingSpeedTest {
 		if(c==null)
 			System.exit(1);
 		System.out.println("Starting test");
-		Log.enableInfoPrint();
+		//Log.enableInfoPrint();
 		GenericDevice dev = new GenericDevice(c);
 		dev.connect();
-		long start = System.currentTimeMillis();
+		long start;
 		double avg=0;
 		int i;
 		avg=0;
-		start = System.currentTimeMillis();
-		for(i=0;i<500;i++) {
+		dev.ping();
+		for(i=1;i<500;i++) {
+			start = System.currentTimeMillis();
 			dev.ping();
 			double ms=System.currentTimeMillis()-start;
-			avg +=ms;
-			start = System.currentTimeMillis();
+			avg +=ms;			
 			System.out.println("Average cycle time: "+(int)(avg/i)+"ms\t\t\t this loop was: "+ms);
 		}
 		System.out.println("Average cycle time for ping: "+(avg/i)+" ms");	
