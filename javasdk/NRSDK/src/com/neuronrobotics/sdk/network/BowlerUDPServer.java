@@ -70,7 +70,6 @@ public class BowlerUDPServer extends BowlerAbstractConnection {
 	public boolean connect() {
 		if(isConnected())
 			return true;
-		setConnected(false);
 		try {
 			udp = new UDPStream(port,true);
 			udp.start();
