@@ -32,6 +32,7 @@ public  abstract class BowlerAbstractServer  implements ISynchronousDatagramList
 	
 	private BcsCoreNamespaceImp bcsCore;
 	private BcsRpcNamespaceImp  bcsRpc;
+	private BowlerUDPServer udpServer;
 
 	private MACAddress macAddress;
 	
@@ -98,7 +99,8 @@ public  abstract class BowlerAbstractServer  implements ISynchronousDatagramList
 	ServerSocket serverSocket; 
 	
 	public void startNetworkServer() throws IOException{
-		addServer(new BowlerUDPServer(1865));
+		udpServer=new BowlerUDPServer(1865);
+		addServer(udpServer);
 		serverSocket = new ServerSocket(1866);
 		new Thread(){
 			public void run(){
@@ -165,8 +167,18 @@ public  abstract class BowlerAbstractServer  implements ISynchronousDatagramList
 	}
 	
 	private void removeServer(BowlerAbstractConnection b){
+		if(b == udpServer){
+			try {
+				udpServer.reconnect();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return;
+		}
 		Log.error("Server Removed "+b);
 		//new RuntimeException().printStackTrace();
+		
 		getServers().remove(b);
 	}
 
