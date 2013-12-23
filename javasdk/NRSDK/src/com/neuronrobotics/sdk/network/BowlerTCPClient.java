@@ -240,7 +240,7 @@ public class BowlerTCPClient extends BowlerAbstractConnection{
 				e.printStackTrace();
 			}
 			disconnect();
-			ThreadUtil.wait(i*2*sleepTime);
+			ThreadUtil.wait(i*10*sleepTime);
 			Log.error("Reconnect failed, retry: "+i);
 		}
 		return false;
