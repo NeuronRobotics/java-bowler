@@ -172,7 +172,7 @@ public class UDPStream {
 				try {Thread.sleep(10);} catch (InterruptedException e) {}
 				receivePacket = new DatagramPacket(receiveData, receiveData.length);
                 try {
-                	while(udpSock==null && isAlive) {
+                	while(udpSock==null) {
                 		ThreadUtil.wait(100);
                 	}
 					udpSock.receive(receivePacket);
@@ -200,6 +200,12 @@ public class UDPStream {
 				} catch (IOException e) {
 					e.printStackTrace();
 					disconnect();
+					try {
+						setUDPSocket(port);
+					} catch (SocketException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
 
 			}
