@@ -153,6 +153,7 @@ public abstract class DyIOAbstractPeripheral implements IDyIOChannel {
 	 */
 	 
 	public int getValue()throws InvalidResponseException {
+		//new RuntimeException().printStackTrace();
 		return channel.getValue();
 	}
 	
