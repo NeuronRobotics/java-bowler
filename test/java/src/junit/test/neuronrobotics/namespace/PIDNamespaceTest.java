@@ -16,7 +16,7 @@ public class PIDNamespaceTest {
 	private static GenericPIDDevice pid = null;
 	@Before
 	public void setup(){
-		Log.enableInfoPrint();
+		//Log.enableInfoPrint();
 		getPid();
 	}
 	@Test
@@ -63,10 +63,14 @@ public class PIDNamespaceTest {
 	@Test public void setPidNsTest(){
 		try{
 			int position = getPid().GetPIDPosition(0);
-			getPid().SetPIDSetPoint(0, 2000+position, 1.0);
-			ThreadUtil.wait(1200);
+			int newPos  = position- 0x0fff;
+			getPid().SetPIDSetPoint(0, newPos, 1.0);
+			ThreadUtil.wait(3000);
+			int currentPos = getPid().GetPIDPosition(0);
+			System.out.println("Set to "+newPos+" got "+currentPos);
 			getPid().SetPIDSetPoint(0, position, 0);
 			ThreadUtil.wait(1200);
+			assertTrue((newPos < currentPos+100) &&(newPos > currentPos-100) );
 		}catch (Exception e){
 			e.printStackTrace();
 			fail();
