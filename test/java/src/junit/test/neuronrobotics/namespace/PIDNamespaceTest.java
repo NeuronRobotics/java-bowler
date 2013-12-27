@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIORegestry;
 import com.neuronrobotics.sdk.pid.GenericPIDDevice;
 import com.neuronrobotics.sdk.pid.PIDConfiguration;
@@ -14,6 +15,7 @@ public class PIDNamespaceTest {
 	private static GenericPIDDevice pid = null;
 	@Before
 	public void setup(){
+		Log.enableInfoPrint();
 		getPid();
 	}
 	@Test
@@ -22,7 +24,7 @@ public class PIDNamespaceTest {
 			assertTrue(getPid().hasNamespace("bcs.pid.*"));	
 		}catch (Exception e){
 			e.printStackTrace();
-			assert false;
+			fail();
 		}
 	}
 
@@ -31,22 +33,22 @@ public class PIDNamespaceTest {
 			assertTrue(getPid().SetPIDSetPoint(0, 100, 1000));	
 		}catch (Exception e){
 			e.printStackTrace();
-			assert false;
+			fail();
 		}
 	}
-	@Test public void getSetAllPidNsTest(){
+	@Test public void getAllPidNsTest(){
 		try{
 			int [] values = getPid().GetAllPIDPosition();
 			assertTrue(getPid().SetAllPIDSetPoint(values, 1000));	
 		}catch (Exception e){
 			e.printStackTrace();
-			assert false;
+			fail();
 		}
 	}
 	@Test public void configurePidNsTest(){
 		try{
 			PIDConfiguration conf = getPid().getPIDConfiguration(0);	
-			conf.setKP(1.5);
+			conf.setKP(.15);
 			conf.setKI(.01);
 			conf.setKD(1);
 			
@@ -60,14 +62,14 @@ public class PIDNamespaceTest {
 			
 		}catch (Exception e){
 			e.printStackTrace();
-			assert false;
+			fail();
 		}
 	}
 	
 	
 	
 	public static GenericPIDDevice getPid() {
-		if( DyIORegestry.get().isAvailable() == false||
+		if( DyIORegestry.get().isAvailable() == false&& 
 				PIDNamespaceTest.pid == null ){
 			setPid(new GenericPIDDevice());
 			System.out.println("Creating PID device");
