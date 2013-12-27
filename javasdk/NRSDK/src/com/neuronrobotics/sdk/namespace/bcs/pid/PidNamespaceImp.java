@@ -93,9 +93,9 @@ public class PidNamespaceImp extends GenericPidNamespaceImp {
 	public boolean SetAllPIDSetPoint(int[] setpoints, double seconds) {
 		send(BowlerMethod.POST,
 				"apid",
-				new Object[]{	(int)(seconds*1000),
+				new Object[]{	new Integer((int) (seconds*1000)),
 								setpoints});
-		return false;
+		return true;
 	}
 
 	@Override
@@ -103,7 +103,10 @@ public class PidNamespaceImp extends GenericPidNamespaceImp {
 		Object [] args = send(BowlerMethod.GET,
 				"_pid",
 				new Object[]{group});
-		return (Integer)args[0];
+		if((Integer)args[0] != group){
+			throw new RuntimeException("Channel ID did not match");
+		}
+		return (Integer)args[1];
 	}
 
 	@Override
@@ -139,7 +142,7 @@ public class PidNamespaceImp extends GenericPidNamespaceImp {
 
 	@Override
 	public void onAsyncResponse(BowlerDatagram data) {
-		Log.debug("\nPID ASYNC<<"+data);
+		//Log.debug("\nPID ASYNC<<"+data);
 		if(data.getRPC().contains("_pid")){
 			
 			PIDEvent e =new PIDEvent(data);

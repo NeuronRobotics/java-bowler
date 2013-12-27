@@ -363,15 +363,18 @@ public abstract class BowlerAbstractConnection {
 	
 	protected void fireAsyncOnResponse(BowlerDatagram datagram) {
 		if(!datagram.isSyncronous()){
-			Log.debug("\nASYNC<<"+datagram);
-			for(IBowlerDatagramListener l : listeners) {
-				try{
-					l.onAsyncResponse(datagram);
-				}catch (Exception ex){
-					ex.printStackTrace();
+			if(isInitializedNamespaces()){
+				Log.debug("\nASYNC<<"+datagram);
+				for(IBowlerDatagramListener l : listeners) {
+					try{
+						l.onAsyncResponse(datagram);
+					}catch (Exception ex){
+						ex.printStackTrace();
+					}
 				}
+			}else{
+				Log.warning("\nASYNC Not ready<<");
 			}
-			
 			
 		}
 		
@@ -606,6 +609,12 @@ public abstract class BowlerAbstractConnection {
 		}
 		throw new DeviceConnectionException("Device does not contain command NS="+namespace+" Method="+method+" RPC="+rpcString+"'");
 	}
+	
+	private boolean namespacesFinishedInitializing = false;
+	
+	public boolean isInitializedNamespaces(){
+		return namespaceList!=null && namespacesFinishedInitializing ;
+	}
 
 	/**
 	 * Get all the namespaces.
@@ -692,7 +701,7 @@ public abstract class BowlerAbstractConnection {
 				nameSpaceStrings.add(ns.getNamespace());
 			}
 		}
-		
+		namespacesFinishedInitializing = true;
 		return nameSpaceStrings;
 		
 	}
