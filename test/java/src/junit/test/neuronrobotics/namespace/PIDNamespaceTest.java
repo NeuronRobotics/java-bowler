@@ -10,6 +10,7 @@ import com.neuronrobotics.sdk.dyio.DyIORegestry;
 import com.neuronrobotics.sdk.pid.GenericPIDDevice;
 import com.neuronrobotics.sdk.pid.PIDConfiguration;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
+import com.neuronrobotics.sdk.util.ThreadUtil;
 
 public class PIDNamespaceTest {
 	private static GenericPIDDevice pid = null;
@@ -28,18 +29,11 @@ public class PIDNamespaceTest {
 		}
 	}
 
-	@Test public void setPidNsTest(){
-		try{
-			assertTrue(getPid().SetPIDSetPoint(0, 100, 1000));	
-		}catch (Exception e){
-			e.printStackTrace();
-			fail();
-		}
-	}
+
 	@Test public void getAllPidNsTest(){
 		try{
 			int [] values = getPid().GetAllPIDPosition();
-			assertTrue(getPid().SetAllPIDSetPoint(values, 1000));	
+			assertTrue(getPid().SetAllPIDSetPoint(values, 1));	
 		}catch (Exception e){
 			e.printStackTrace();
 			fail();
@@ -60,6 +54,19 @@ public class PIDNamespaceTest {
 			assertTrue(conf.getKI() == tmp.getKI());
 			assertTrue(conf.getKD() == tmp.getKD());
 			
+		}catch (Exception e){
+			e.printStackTrace();
+			fail();
+		}
+	}
+	
+	@Test public void setPidNsTest(){
+		try{
+			int position = getPid().GetPIDPosition(0);
+			getPid().SetPIDSetPoint(0, 2000+position, 1.0);
+			ThreadUtil.wait(1200);
+			getPid().SetPIDSetPoint(0, position, 0);
+			ThreadUtil.wait(1200);
 		}catch (Exception e){
 			e.printStackTrace();
 			fail();
