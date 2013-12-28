@@ -13,7 +13,7 @@ import com.neuronrobotics.sdk.pid.PIDConfiguration;
 import com.neuronrobotics.sdk.pid.PIDEvent;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 
-public class PidNamespaceImp extends GenericPidNamespaceImp {
+public class PidNamespaceImp extends GenericPidNamespaceImp implements IExtendedPIDControl  {
 	private final String ns = "bcs.pid.*";
 	
 	
@@ -160,6 +160,14 @@ public class PidNamespaceImp extends GenericPidNamespaceImp {
 		if(data.getRPC().contains("pidl")){
 			firePIDLimitEvent(new PIDLimitEvent(data));
 		}
+	}
+
+	@Override
+	public boolean runOutputHysteresisCalibration(int group) {
+		send(BowlerMethod.POST,
+				"hist",
+				new Object[]{group});
+		return true;
 	}
 	
 }

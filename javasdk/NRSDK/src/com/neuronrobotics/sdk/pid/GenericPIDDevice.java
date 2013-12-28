@@ -19,6 +19,7 @@ import com.neuronrobotics.sdk.common.IConnectionEventListener;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.MACAddress;
 import com.neuronrobotics.sdk.namespace.bcs.pid.GenericPidNamespaceImp;
+import com.neuronrobotics.sdk.namespace.bcs.pid.IExtendedPIDControl;
 import com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace;
 import com.neuronrobotics.sdk.namespace.bcs.pid.LegacyPidNamespaceImp;
 import com.neuronrobotics.sdk.namespace.bcs.pid.PidNamespaceImp;
@@ -29,7 +30,7 @@ import com.neuronrobotics.sdk.namespace.bcs.pid.PidNamespaceImp;
  * @author hephaestus
  *
  */
-public class GenericPIDDevice extends BowlerAbstractDevice implements IPidControlNamespace {
+public class GenericPIDDevice extends BowlerAbstractDevice implements IExtendedPIDControl {
 	private boolean isInit=false;
 	private GenericPidNamespaceImp implementation;
 	
@@ -186,6 +187,16 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IPidContro
 	}
 	public void setImplementation(GenericPidNamespaceImp implementation) {
 		this.implementation = implementation;
+	}
+	@Override
+	public boolean runOutputHysteresisCalibration(int group) {
+		try{
+			return getImplementation().runOutputHysteresisCalibration(group);
+		}catch(RuntimeException e){
+			Log.error(e.getMessage());
+			return false;
+		}
+		
 	}
 	
 }

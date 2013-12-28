@@ -193,6 +193,11 @@ public class LegacyPidNamespaceImp extends GenericPidNamespaceImp {
 		return getDevice().send(new KillAllPIDCommand())==null;
 	}
 
+	@Override
+	public boolean runOutputHysteresisCalibration(int group) {
+		throw new RuntimeException("This method is not implemented in this version of the namespace");
+	}
+
 
 	
 }

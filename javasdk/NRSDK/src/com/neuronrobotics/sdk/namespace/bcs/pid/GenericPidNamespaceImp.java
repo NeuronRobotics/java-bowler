@@ -12,7 +12,7 @@ import com.neuronrobotics.sdk.pid.PIDCommandException;
 import com.neuronrobotics.sdk.pid.PIDEvent;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 
-public abstract class GenericPidNamespaceImp implements IPidControlNamespace{
+public abstract class GenericPidNamespaceImp implements IExtendedPIDControl {
 
 	private ArrayList<IPIDEventListener> PIDEventListeners = new ArrayList<IPIDEventListener>();
 	private ArrayList<PIDChannel> channels = null;
