@@ -24,28 +24,28 @@ import java.util.Map;
  */
 public enum BowlerDataType implements ISendable {
 	
-	/** 8 bit int */
+	/** 8 bit unsigned int */
 	I08(8),
 	
-	/** 16 bit int */
+	/** 16 bit signed int */
 	I16(16),
 	
-	/** 32 bit int */
+	/** 32 bit signed int */
 	I32(32),
 	
-	/** stream of 8 bit ints*/
+	/** stream of 8 bit  unsigned ints, first byte is unsigned char to indicate number of data values in the stream*/
 	STR(37),
 	
-	/** stream of 32 bit ints*/
+	/** stream of 32 bit  signed ints, first byte is unsigned char to indicate number of data values in the stream*/
 	I32STR(38),
 	
-	/** String*/
+	/** ASCII String null terminated*/
 	ASCII(39),
 	
-	/** Fixed point times 100*/
+	/** Signed Fixed point times 100*/
 	FIXED100(41),
 	
-	/** Fixed point times 1000*/
+	/** Signed Fixed point times 1000*/
 	FIXED1k(42),
 	
 	/** Unknown**/
