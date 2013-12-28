@@ -69,6 +69,9 @@ public class RpcEncapsulation {
 			case I08:
 				command.getCallingDataStorage().add(Integer.parseInt(doswnstreamData[i].toString()));
 				break;
+			case BOOL:
+				command.getCallingDataStorage().add(Boolean.parseBoolean((doswnstreamData[i].toString()))?1:0);
+				break;
 			case I16:
 				command.getCallingDataStorage().addAs16(Integer.parseInt(doswnstreamData[i].toString()));
 				break;
@@ -126,6 +129,10 @@ public class RpcEncapsulation {
 				break;
 			case I08:
 				response [i] = new Integer(data.getUnsigned(0));
+				data.pop();
+				break;
+			case BOOL:
+				response [i] = new Boolean(data.getUnsigned(0)!=0);
 				data.pop();
 				break;
 			case I16:
