@@ -157,7 +157,7 @@ public abstract class BowlerAbstractConnection {
 		long rcvTime = (System.currentTimeMillis()-rcv);
 		int percentagePrint = 10;
 		if(rcvTime>(getSleepTime()*percentagePrint/100) ){
-			Log.warning("Receive took: "+(System.currentTimeMillis()-rcv)+" ms. This is greater then "+percentagePrint+"% of teh sleep timeout");
+			Log.warning("Receive took: "+(System.currentTimeMillis()-rcv)+" ms. This is greater then "+percentagePrint+"% of the sleep timeout");
 		}else{
 			Log.info("Receive took: "+(System.currentTimeMillis()-rcv)+" ms");
 		}
@@ -939,20 +939,32 @@ public abstract class BowlerAbstractConnection {
 				if(dataIns == null || dataOuts == null){
 					ThreadUtil.wait(100);
 				}else{
+					long start = System.currentTimeMillis();
 					if(isSystemQueue)
 						runPacketUpdate();
 					else{ 
 						if(beater)
 							runHeartBeat();
+						
 					}
+					long packetUpdate = System.currentTimeMillis();
 					if(queueBuffer.isEmpty()){
 						// prevents thread lock
 						ThreadUtil.wait(1);
 					}else{
 						try{
 							//send(queueBuffer.remove(queueBuffer.size()-1)	);
+							
 							BowlerDatagram b = queueBuffer.remove(0);
+							long pulledPacket = System.currentTimeMillis();
 							pushUp(b);
+							long pushedPacket = System.currentTimeMillis();
+							if((System.currentTimeMillis()-lastWrite)>(getSleepTime()*.1)){
+								Log.warning("Packet recive took more then 10%. " +
+												"\nPacket Update\t"+(packetUpdate- start)+"" +
+												"\nPulled Packet\t"+(pulledPacket-packetUpdate)+"" +
+												"\nPushed Packet\t"+(pushedPacket-pulledPacket));
+							}
 						}catch(Exception e){
 							e.printStackTrace();
 						}

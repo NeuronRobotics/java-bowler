@@ -45,7 +45,7 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
  * 
  */
 public class BowlerTCPClient extends BowlerAbstractConnection{
-	private int sleepTime = 1000;
+	private int sleepTime = 5000;
 	
 	private int reconnectRetry = 5;
 	private Socket tcpSock = null;
@@ -169,8 +169,7 @@ public class BowlerTCPClient extends BowlerAbstractConnection{
 	 */
 	@Override
 	public void disconnect() {
-		if(!isConnected())
-			return;
+
 		Log.warning("Disconnecting Tcp Client..");
 		super.disconnect();
 		try {
@@ -228,6 +227,7 @@ public class BowlerTCPClient extends BowlerAbstractConnection{
 	public boolean reconnect() {
 		Log.warning("Reconnecting TCP Socket..");
 		disconnect();
+		ThreadUtil.wait(getSleepTime());
 		for(int i=0;i<getReconnectRetry();i++){
 			try {
 				setTCPSocket(new Socket(tcpAddr,port));
@@ -240,7 +240,7 @@ public class BowlerTCPClient extends BowlerAbstractConnection{
 				e.printStackTrace();
 			}
 			disconnect();
-			ThreadUtil.wait(i*10*sleepTime);
+			ThreadUtil.wait(i*10*getSleepTime());
 			Log.error("Reconnect failed, retry: "+i);
 		}
 		return false;
