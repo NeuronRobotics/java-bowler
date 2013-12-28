@@ -154,8 +154,14 @@ public abstract class BowlerAbstractConnection {
 			ThreadUtil.wait(1);
 			b =getLastSyncronousResponse();
 		}while (((System.currentTimeMillis()-rcv)<getSleepTime())  && (b == null));
+		long rcvTime = (System.currentTimeMillis()-rcv);
+		int percentagePrint = 10;
+		if(rcvTime>(getSleepTime()*percentagePrint/100) ){
+			Log.warning("Receive took: "+(System.currentTimeMillis()-rcv)+" ms. This is greater then "+percentagePrint+"% of teh sleep timeout");
+		}else{
+			Log.info("Receive took: "+(System.currentTimeMillis()-rcv)+" ms");
+		}
 		
-		Log.info("Receive took: "+(System.currentTimeMillis()-rcv)+" ms");
 		if (b== null){
 			try {
 				//new RuntimeException().printStackTrace();
