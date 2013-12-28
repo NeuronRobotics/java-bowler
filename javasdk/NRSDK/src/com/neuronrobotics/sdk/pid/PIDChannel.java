@@ -3,16 +3,17 @@ package com.neuronrobotics.sdk.pid;
 import java.util.ArrayList;
 
 import com.neuronrobotics.sdk.common.Log;
+import com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace;
 
 public class PIDChannel {
-	private IPIDControl pid;
+	private IPidControlNamespace pid;
 	private int index;
 	private int targetValue;
 	private int currentCachedPosition;
 	
 	private ArrayList<IPIDEventListener> PIDEventListeners = new ArrayList<IPIDEventListener>();
 	
-	public PIDChannel(IPIDControl p, int i) {
+	public PIDChannel(IPidControlNamespace p, int i) {
 		setPid(p);
 		index=i;
 	}
@@ -50,7 +51,7 @@ public class PIDChannel {
 		return getPid().ResetPIDChannel(index,valueToSetCurrentTo);
 	}
 
-	public void setPid(IPIDControl p) {
+	public void setPid(IPidControlNamespace p) {
 		pid = p;
 		pid.addPIDEventListener(new IPIDEventListener() {
 			@Override
@@ -77,7 +78,7 @@ public class PIDChannel {
 	}
 
 
-	public IPIDControl getPid() {
+	public IPidControlNamespace getPid() {
 		return pid;
 	}
 	

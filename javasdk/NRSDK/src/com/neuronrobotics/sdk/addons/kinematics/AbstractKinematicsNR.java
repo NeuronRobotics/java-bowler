@@ -31,7 +31,7 @@ import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
 //import com.neuronrobotics.sdk.addons.kinematics.PidRotoryLink;
 import com.neuronrobotics.sdk.common.Log;
-import com.neuronrobotics.sdk.pid.IPIDControl;
+import com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace;
 import com.neuronrobotics.sdk.pid.IPIDEventListener;
 import com.neuronrobotics.sdk.pid.PIDChannel;
 //import com.neuronrobotics.sdk.pid.PIDCommandException;
@@ -172,7 +172,7 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 			getFactory().getLink(c);
 			Log.info("\nAxis #"+i+" Configuration:\n"+c);
 			if(c.getType().contains("pid")){
-				IPIDControl device = getFactory().getPid();
+				IPidControlNamespace device = getFactory().getPid();
 				try{
 					PIDConfiguration tmpConf = device.getPIDConfiguration(c.getHardwareIndex());
 					tmpConf.setGroup(c.getHardwareIndex());

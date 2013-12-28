@@ -19,6 +19,7 @@ import com.neuronrobotics.sdk.common.IConnectionEventListener;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.MACAddress;
 import com.neuronrobotics.sdk.namespace.bcs.pid.GenericPidNamespaceImp;
+import com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace;
 import com.neuronrobotics.sdk.namespace.bcs.pid.LegacyPidNamespaceImp;
 import com.neuronrobotics.sdk.namespace.bcs.pid.PidNamespaceImp;
 
@@ -28,7 +29,7 @@ import com.neuronrobotics.sdk.namespace.bcs.pid.PidNamespaceImp;
  * @author hephaestus
  *
  */
-public class GenericPIDDevice extends BowlerAbstractDevice implements IPIDControl {
+public class GenericPIDDevice extends BowlerAbstractDevice implements IPidControlNamespace {
 	private boolean isInit=false;
 	private GenericPidNamespaceImp implementation;
 	

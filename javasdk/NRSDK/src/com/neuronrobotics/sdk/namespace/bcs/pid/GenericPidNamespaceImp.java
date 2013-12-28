@@ -6,14 +6,13 @@ import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
 import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.Log;
-import com.neuronrobotics.sdk.pid.IPIDControl;
 import com.neuronrobotics.sdk.pid.IPIDEventListener;
 import com.neuronrobotics.sdk.pid.PIDChannel;
 import com.neuronrobotics.sdk.pid.PIDCommandException;
 import com.neuronrobotics.sdk.pid.PIDEvent;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 
-public abstract class GenericPidNamespaceImp implements IPIDControl{
+public abstract class GenericPidNamespaceImp implements IPidControlNamespace{
 
 	private ArrayList<IPIDEventListener> PIDEventListeners = new ArrayList<IPIDEventListener>();
 	private ArrayList<PIDChannel> channels = null;

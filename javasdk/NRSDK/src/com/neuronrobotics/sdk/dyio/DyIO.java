@@ -43,8 +43,8 @@ import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.MACAddress;
 import com.neuronrobotics.sdk.config.SDKBuildInfo;
 import com.neuronrobotics.sdk.dyio.dypid.DyPIDConfiguration;
+import com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace;
 import com.neuronrobotics.sdk.pid.GenericPIDDevice;
-import com.neuronrobotics.sdk.pid.IPIDControl;
 import com.neuronrobotics.sdk.pid.IPIDEventListener;
 import com.neuronrobotics.sdk.pid.PDVelocityConfiguration;
 import com.neuronrobotics.sdk.pid.PIDChannel;
@@ -57,7 +57,7 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
  * object has one connection to one DyIO module and wraps all of the commands in an accessible API. 
  * @author Kevin Harrington, Robert Breznak
  */
-public class DyIO extends BowlerAbstractDevice implements IPIDControl,IConnectionEventListener {
+public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,IConnectionEventListener {
 
 	private ArrayList<IDyIOEventListener> listeners = new ArrayList<IDyIOEventListener>();
 	private ArrayList<DyIOChannel> channels = new ArrayList<DyIOChannel>();

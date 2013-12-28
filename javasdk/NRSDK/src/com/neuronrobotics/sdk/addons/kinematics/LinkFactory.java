@@ -5,12 +5,12 @@ import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.peripherals.AnalogInputChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
+import com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace;
 import com.neuronrobotics.sdk.pid.GenericPIDDevice;
-import com.neuronrobotics.sdk.pid.IPIDControl;
 import com.neuronrobotics.sdk.pid.VirtualGenericPIDDevice;
 
 public class LinkFactory {
-	private IPIDControl pid=null;
+	private IPidControlNamespace pid=null;
 	private DyIO dyio=null;
 	private VirtualGenericPIDDevice virtual = new VirtualGenericPIDDevice(1000000);
 	private boolean hasPid=false;
@@ -147,7 +147,7 @@ public class LinkFactory {
 		}.start();
 		//System.out.println("Flush Took "+(System.currentTimeMillis()-time)+"ms");
 	}
-	public IPIDControl getPid() {
+	public IPidControlNamespace getPid() {
 		return pid;
 	}
 	public DyIO getDyio(){

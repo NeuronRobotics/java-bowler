@@ -10,7 +10,6 @@ import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.pid.GenericPIDDevice;
-import com.neuronrobotics.sdk.pid.IPIDControl;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 
 
