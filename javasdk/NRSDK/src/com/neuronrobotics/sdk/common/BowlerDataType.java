@@ -48,6 +48,9 @@ public enum BowlerDataType implements ISendable {
 	/** Signed Fixed point times 1000*/
 	FIXED1k(42),
 	
+	/** Boolean value, 0 is false, not 0 is true*/
+	BOOL(43),
+	
 	/** Unknown**/
 	INVALID(0);
 	
@@ -130,6 +133,8 @@ public enum BowlerDataType implements ISendable {
 			return "(Fixed 100)";
 		case 42:
 			return "(Fixed 1k)";
+		case 43:
+			return "(Boolean)";
 		}
 		return s;
 	}
