@@ -959,7 +959,7 @@ public abstract class BowlerAbstractConnection {
 							long pulledPacket = System.currentTimeMillis();
 							pushUp(b);
 							long pushedPacket = System.currentTimeMillis();
-							if((System.currentTimeMillis()-lastWrite)>(getSleepTime()*.1)){
+							if((System.currentTimeMillis()-lastWrite)>(getSleepTime()*.1) && b.isSyncronous()){
 								Log.warning("Packet recive took more then 10%. " +
 												"\nPacket Update\t"+(packetUpdate- start)+"" +
 												"\nPulled Packet\t"+(pulledPacket-packetUpdate)+"" +
