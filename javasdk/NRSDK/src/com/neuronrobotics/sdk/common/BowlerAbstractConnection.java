@@ -609,9 +609,9 @@ public abstract class BowlerAbstractConnection {
 				}
 			}
 		}
-		System.err.println("No method found, attempted "+namespace+" RPC: "+rpcString);
+		Log.error("No method found, attempted "+namespace+" RPC: "+rpcString);
 		for (NamespaceEncapsulation ns:namespaceList){
-			System.err.println("Namespace \n"+ns);
+			Log.error("Namespace \n"+ns);
 		}
 		throw new DeviceConnectionException("Device does not contain command NS="+namespace+" Method="+method+" RPC="+rpcString+"'");
 	}
