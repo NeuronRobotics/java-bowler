@@ -206,10 +206,9 @@ public class SerialConnection extends BowlerAbstractConnection {
 	 */
 	@Override
 	public boolean reconnect() {
-		if(!isConnected())
-			return false;
-		else
-			return true;
+		Log.warning("Reconnecting in serial");
+		disconnect();
+		return connect();
 	}
 
 	/* (non-Javadoc)

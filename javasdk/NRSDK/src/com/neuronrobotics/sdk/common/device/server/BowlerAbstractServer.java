@@ -206,7 +206,7 @@ public  abstract class BowlerAbstractServer  implements ISynchronousDatagramList
 						//Log.warning("ASYNC<<\r\n"+data );
 						String classString = localServers.get(i).getClass().toString();
 						localServers.get(i).sendAsync(data);
-						Log.debug("Sent packet to "+classString);
+						Log.info("Sent packet to "+classString);
 					}
 				}
 			}catch (IndexOutOfBoundsException ie){
