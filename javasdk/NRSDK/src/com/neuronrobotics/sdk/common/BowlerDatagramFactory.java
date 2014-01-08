@@ -28,7 +28,7 @@ public class BowlerDatagramFactory {
 	
 	private static BowlerDatagram pool [];
 	private static int failed=0;
-	private static int poolDefaultSize = 2000;
+	private static int poolDefaultSize = 1500;
 	private static int packetTimeout = 2000;
 	
 	static{
