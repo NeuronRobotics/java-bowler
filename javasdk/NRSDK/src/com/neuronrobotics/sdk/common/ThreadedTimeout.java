@@ -56,7 +56,7 @@ public class ThreadedTimeout {
 		return System.currentTimeMillis()>(getStartTime()+getTime());
 	}
 	
-	public void initialize(int sleepTime,IthreadedTimoutListener listener) {
+	public void initialize(long sleepTime,IthreadedTimoutListener listener) {
 		stop();
 		this.time = (sleepTime);
 		setStartTime(System.currentTimeMillis());

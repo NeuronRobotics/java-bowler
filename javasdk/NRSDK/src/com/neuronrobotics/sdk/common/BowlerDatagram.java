@@ -455,7 +455,6 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 			}else{
 				Log.error("Packet fucked up "+ ((BowlerDatagramFactory.getPacketTimeout()+timeout.getStartTime())-System.currentTimeMillis()));
 				timeout.initialize(BowlerDatagramFactory.getPacketTimeout(), this);
-				throw new RuntimeException();
 			}
 		}
 	}
