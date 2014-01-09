@@ -450,10 +450,11 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	@Override
 	public void onTimeout(String message) {
 		if(!isFree() ){
-			if((BowlerDatagramFactory.getPacketTimeout()+timeout.getStartTime())<System.currentTimeMillis()){
+			long timeoutTime= System.currentTimeMillis()-timeout.getStartTime();
+			if(timeout.getAmountOfTimeForTimerToRun() < timeoutTime){
 				setFree(true);
 			}else{
-				Log.error("Packet fucked up "+ ((BowlerDatagramFactory.getPacketTimeout()+timeout.getStartTime())-System.currentTimeMillis()));
+				Log.error("Packet fucked up. Expected "+timeout.getAmountOfTimeForTimerToRun()+" ms, took "+timeoutTime+" ms");
 				timeout.initialize(BowlerDatagramFactory.getPacketTimeout(), this);
 			}
 		}

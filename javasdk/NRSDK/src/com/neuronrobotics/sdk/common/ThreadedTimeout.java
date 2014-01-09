@@ -53,7 +53,7 @@ public class ThreadedTimeout {
 	 * @return true, if is timed out
 	 */
 	public boolean isTimedOut() {
-		return System.currentTimeMillis()>(getStartTime()+getTime());
+		return System.currentTimeMillis()>(getStartTime()+getAmountOfTimeForTimerToRun());
 	}
 	
 	public void initialize(long sleepTime,IthreadedTimoutListener listener) {
@@ -64,7 +64,7 @@ public class ThreadedTimeout {
 		timerThread.addTimer(this);
 	}
 
-	public long getTime() {
+	public long getAmountOfTimeForTimerToRun() {
 		return time;
 	}
 
@@ -75,12 +75,14 @@ public class ThreadedTimeout {
 	
 	private static class timerThreadClass extends Thread{
 		private ArrayList<ThreadedTimeout> timers = new ArrayList<ThreadedTimeout>();
+		private ArrayList<ThreadedTimeout> toRemove = new ArrayList<ThreadedTimeout>();
 		/* (non-Javadoc)
 		 * @see java.lang.Thread#run()
 		 */
 		public void run(){
 			while(true){
 				if(getTimers().size()>0){
+					toRemove.clear();
 					for(int i=0;i<getTimers().size();i++){
 						try{
 							ThreadedTimeout t = getTimers().get(i);
@@ -89,7 +91,7 @@ public class ThreadedTimeout {
 									if(t.listener!=null){
 										t.listener.onTimeout("Timer timed out after "+t.time);
 									}
-									removeTimer(t);
+									toRemove.add(t);
 								}
 							}
 						}catch (IndexOutOfBoundsException e){
@@ -97,6 +99,9 @@ public class ThreadedTimeout {
 						}catch (Exception ex){
 							ex.printStackTrace();
 						}
+					}
+					for(int i=0;i<toRemove.size();i++){
+						removeTimer(toRemove.get(i));
 					}
 				}
 				ThreadUtil.wait(1);
