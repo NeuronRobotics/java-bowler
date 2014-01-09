@@ -1023,12 +1023,14 @@ public abstract class BowlerAbstractConnection {
 					Log.error("Data In is null");
 				}
 			} catch (Exception e) {
-				Log.error("Data read failed "+e.getMessage());
-				try {
-					reconnect();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+				if(isConnected()){
+					Log.error("Data read failed "+e.getMessage());
+					try {
+						reconnect();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
 			}
 		}
