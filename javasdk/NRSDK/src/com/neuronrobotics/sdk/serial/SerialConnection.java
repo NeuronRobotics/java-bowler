@@ -23,6 +23,7 @@ import java.util.List;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.MissingNativeLibraryException;
+import com.neuronrobotics.sdk.util.ThreadUtil;
 
 /**
  * SerialConnection manages a connection to a serial port on the host system. This class is responsible for
@@ -40,7 +41,7 @@ import com.neuronrobotics.sdk.common.MissingNativeLibraryException;
  *  
  */
 public class SerialConnection extends BowlerAbstractConnection {
-	private int sleepTime = 5000;
+	private int sleepTime = 500;
 	private int pollTimeoutTime = 5;
 	
 	
@@ -169,9 +170,8 @@ public class SerialConnection extends BowlerAbstractConnection {
 	@Override
 	public void disconnect() {
 		if(isConnected())
-			Log.info("Disconnecting Serial Connection");
+			Log.warning("Disconnecting Serial Connection");
 		try{
-			super.disconnect();
 			try{
 				serial.disconnect();
 			}catch(Exception e){
@@ -208,6 +208,7 @@ public class SerialConnection extends BowlerAbstractConnection {
 	public boolean reconnect() {
 		Log.warning("Reconnecting in serial");
 		disconnect();
+		ThreadUtil.wait(sleepTime);
 		return connect();
 	}
 

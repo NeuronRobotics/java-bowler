@@ -289,16 +289,16 @@ public abstract class BowlerAbstractConnection {
 		}else{
 			try {
 				getDataIns().close();
-				setDataIns(null);
 			} catch (Exception e) {
 				//return;
 			}
 			try {
 				getDataOuts().close();
-				setDataOuts(null);
 			} catch (Exception e) {
 				//return;
 			}
+			setDataIns(null);
+			setDataOuts(null);
 			stopQueue();
 			fireDisconnectEvent();
 		}
