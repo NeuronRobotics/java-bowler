@@ -56,7 +56,7 @@ public abstract class BowlerAbstractConnection {
 	//private boolean threadedUpstreamPackets=false;
 	
 	/** The sleep time. */
-	private int sleepTime = 10;
+	private int sleepTime = 1000;
 	
 	private long heartBeatTime=1000;
 	
