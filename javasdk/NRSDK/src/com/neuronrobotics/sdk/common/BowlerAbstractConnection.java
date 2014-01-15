@@ -87,8 +87,8 @@ public abstract class BowlerAbstractConnection {
 	//private Updater updater = null;
 
 	
-	private ArrayList<NamespaceEncapsulation> namespaceList;
-	private ArrayList<String> nameSpaceStrings = new ArrayList<String>();
+	private ArrayList<NamespaceEncapsulation> namespaceList=null;
+	private ArrayList<String> nameSpaceStrings = null;
 	private boolean beater = false;
 	
 	
@@ -628,83 +628,84 @@ public abstract class BowlerAbstractConnection {
 	 * @return the namespaces
 	 */
 	public ArrayList<String>  getNamespaces(MACAddress addr){	
-		if(namespaceList == null)
+		if(namespaceList == null){
 			namespaceList = new ArrayList<NamespaceEncapsulation>();
+			nameSpaceStrings = new ArrayList<String>();
+			int numTry=0;
+			boolean done=false;
+			while(!done){
+				numTry++;
+				try {
+					BowlerDatagram namespacePacket = send(new NamespaceCommand(0),addr,5);
+					int num;
+					String tmpNs =namespacePacket.getData().asString();
+					if(tmpNs.length() ==  namespacePacket.getData().size()){
+						//Done with the packet
+						BowlerDatagramFactory.freePacket(namespacePacket);
+						//System.out.println("Ns = "+tmpNs+" len = "+tmpNs.length()+" data = "+b.getData().size());
+						namespacePacket = send(new NamespaceCommand(),addr,5);
+						
+						num= namespacePacket.getData().getByte(0);
+						//Done with the packet
+						BowlerDatagramFactory.freePacket(namespacePacket);
+						Log.warning("This is an older implementation of core, depricated");
+					}else{
+						num= namespacePacket.getData().getByte(namespacePacket.getData().size()-1);
+						//Done with the packet
+						BowlerDatagramFactory.freePacket(namespacePacket);
+						Log.info("This is the new core");
+					}
+					
+	//					if(num<1){
+	//						Log.error("Namespace request failed:\n"+namespacePacket);
+	//					}else{
+	//						Log.info("Number of Namespaces="+num);
+	//					}
+					
+					
+					for (int i=0;i<num;i++){
+	
+						BowlerDatagram nsStringPacket= send(new NamespaceCommand(i),addr,5);
+						String space = nsStringPacket.getData().asString();
+						//Done with the packet
+						BowlerDatagramFactory.freePacket(nsStringPacket);
+						Log.debug("Adding Namespace: "+space);
+						
+						namespaceList.add(new NamespaceEncapsulation(space));
+					}
+					Log.debug("There are "+num+" namespaces on this device");
+					Log.debug("Attempting to populate RPC lists for all "+namespaceList.size());
+					for(NamespaceEncapsulation ns:namespaceList){
+						getRpcList(ns.getNamespace(),addr);
+					}
+					done = true;
+				} catch (InvalidResponseException e) {
+					Log.error("Invalid response from Namespace");
+					if(numTry>3)
+						throw e;
+					
+				} catch (NoConnectionAvailableException e) {
+					Log.error("No connection is available.");
+					if(numTry>3)
+						throw e;
+				}catch (Exception e) {
+					Log.error("Other exception");
+					e.printStackTrace();
+					if(numTry>3)
+						throw new RuntimeException(e);
+				}
+				if(!done){
+					//failed coms, reset list
+					namespaceList = new ArrayList<NamespaceEncapsulation>();
+				}
+			}
 		
-		int numTry=0;
-		boolean done=false;
-		while(!done){
-			numTry++;
-			try {
-				BowlerDatagram namespacePacket = send(new NamespaceCommand(0),addr,5);
-				int num;
-				String tmpNs =namespacePacket.getData().asString();
-				if(tmpNs.length() ==  namespacePacket.getData().size()){
-					//Done with the packet
-					BowlerDatagramFactory.freePacket(namespacePacket);
-					//System.out.println("Ns = "+tmpNs+" len = "+tmpNs.length()+" data = "+b.getData().size());
-					namespacePacket = send(new NamespaceCommand(),addr,5);
-					
-					num= namespacePacket.getData().getByte(0);
-					//Done with the packet
-					BowlerDatagramFactory.freePacket(namespacePacket);
-					Log.warning("This is an older implementation of core, depricated");
-				}else{
-					num= namespacePacket.getData().getByte(namespacePacket.getData().size()-1);
-					//Done with the packet
-					BowlerDatagramFactory.freePacket(namespacePacket);
-					Log.info("This is the new core");
-				}
-				
-//					if(num<1){
-//						Log.error("Namespace request failed:\n"+namespacePacket);
-//					}else{
-//						Log.info("Number of Namespaces="+num);
-//					}
-				
-				
-				Log.debug("There are "+num+" namespaces on this device");
-				for (int i=0;i<num;i++){
-
-					BowlerDatagram nsStringPacket= send(new NamespaceCommand(i),addr,5);
-					String space = nsStringPacket.getData().asString();
-					//Done with the packet
-					BowlerDatagramFactory.freePacket(nsStringPacket);
-					Log.debug("Adding Namespace: "+space);
-					
-					namespaceList.add(new NamespaceEncapsulation(space));
-				}
-				Log.debug("Attempting to populate RPC lists for all "+namespaceList.size());
-				for(NamespaceEncapsulation ns:namespaceList){
-					getRpcList(ns.getNamespace(),addr);
-				}
-				done = true;
-			} catch (InvalidResponseException e) {
-				Log.error("Invalid response from Namespace");
-				if(numTry>3)
-					throw e;
-				
-			} catch (NoConnectionAvailableException e) {
-				Log.error("No connection is available.");
-				if(numTry>3)
-					throw e;
-			}catch (Exception e) {
-				Log.error("Other exception");
-				e.printStackTrace();
-				if(numTry>3)
-					throw new RuntimeException(e);
-			}
-			if(!done){
-				//failed coms, reset list
-				namespaceList = new ArrayList<NamespaceEncapsulation>();
-			}
 		}
-		
-		
 		
 		if(nameSpaceStrings.size() != namespaceList.size()){
 			for(NamespaceEncapsulation ns:namespaceList){
 				nameSpaceStrings.add(ns.getNamespace());
+				getRpcList(ns.getNamespace(), addr);
 			}
 		}
 		namespacesFinishedInitializing = true;
