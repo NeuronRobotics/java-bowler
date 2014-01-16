@@ -370,8 +370,9 @@ public abstract class BowlerAbstractConnection {
 	protected void fireAsyncOnResponse(BowlerDatagram datagram) {
 		if(!datagram.isSyncronous()){
 			if(isInitializedNamespaces()){
-				Log.debug("\nASYNC<<"+datagram);
+				Log.debug("\nASYNC to"+listeners.size()+" listeners<<\n"+datagram);
 				for(IBowlerDatagramListener l : listeners) {
+					Log.debug("\nASYNC listener: "+l);
 					try{
 						l.onAsyncResponse(datagram);
 					}catch (Exception ex){
@@ -975,7 +976,7 @@ public abstract class BowlerAbstractConnection {
 					int max = 500;
 					while(queueBuffer.size()>max){
 						if(queueBuffer.get(index).isFree()){
-							queueBuffer.remove(index);
+							Log.error("Removing packet because freed "+queueBuffer.remove(index));
 						}else{
 							if(!queueBuffer.get(index).isSyncronous() && queueBuffer.get(index).getMethod() != BowlerMethod.CRITICAL){
 								int state = Log.getMinimumPrintLevel();
@@ -1004,7 +1005,7 @@ public abstract class BowlerAbstractConnection {
 						int b = getDataIns().read();
 						if(b<0){
 							Log.error("Stream is broken - unexpected");
-							disconnect();
+							reconnect();
 							//something went wrong
 							break;
 						}else{
@@ -1013,7 +1014,8 @@ public abstract class BowlerAbstractConnection {
 							if (bd!=null) {
 								Log.info("\nR<<"+bd);
 								onDataReceived(bd);
-								bytesToPacketBuffer.clear();
+								//bytesToPacketBuffer.clear();
+								bytesToPacketBuffer= new ByteList();
 								//Packet found, break the loop and deal with it
 								break;
 							}
