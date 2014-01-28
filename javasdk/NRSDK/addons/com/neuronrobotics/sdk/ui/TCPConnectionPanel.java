@@ -15,13 +15,8 @@
 package com.neuronrobotics.sdk.ui;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
 import java.net.Socket;
-import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.Enumeration;
-
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -45,7 +40,7 @@ public class TCPConnectionPanel extends AbstractConnectionPanel {
 	private static final long serialVersionUID = 1L;
 	private static int defaultPortNum = 1866;
 	private static String defaultServer = "localhost";
-	private JComboBox<String> connectionCbo = null;
+	private JComboBox connectionCbo = null;
 	private JTextField port = new JTextField(8);
 	BowlerTCPClient clnt=null;
 	
@@ -65,7 +60,7 @@ public class TCPConnectionPanel extends AbstractConnectionPanel {
 				               ));
 
 		add(new JLabel("Server:"), "cell 0 0");
-		connectionCbo = new JComboBox<String>();
+		connectionCbo = new JComboBox();
 		connectionCbo.setEditable(true);
 		
 		Socket s;
