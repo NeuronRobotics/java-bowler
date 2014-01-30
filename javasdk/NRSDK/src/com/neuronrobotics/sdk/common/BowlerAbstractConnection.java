@@ -58,6 +58,8 @@ public abstract class BowlerAbstractConnection {
 	/** The sleep time. */
 	private int sleepTime = 1000;
 	
+	private long lastWrite = -1;
+	
 	private long heartBeatTime=1000;
 	
 	private int chunkSize = 64;
@@ -147,31 +149,31 @@ public abstract class BowlerAbstractConnection {
 		} catch (IOException e1) {
 			throw new RuntimeException(e1);
 		}
-		long rcv = System.currentTimeMillis();
+		long startOfReciveTime = System.currentTimeMillis();
 		
-		BowlerDatagram b;
+
 		do{
 			ThreadUtil.wait(1);
-			b =getLastSyncronousResponse();
-		}while (((System.currentTimeMillis()-rcv)<getSleepTime())  && (b == null));
-		long rcvTime = (System.currentTimeMillis()-rcv);
-		int percentagePrint = 10;
-		if(rcvTime>(getSleepTime()*percentagePrint/100) ){
-			Log.warning("Receive took: "+(System.currentTimeMillis()-rcv)+" ms. This is greater then "+percentagePrint+"% of the sleep timeout");
+		}while (((System.currentTimeMillis()-startOfReciveTime)<getSleepTime())  && (getLastSyncronousResponse() == null));
+		long rcvTime = (System.currentTimeMillis()-startOfReciveTime);
+
+		if(rcvTime>(getSleepTime()*getPercentagePrint() /100) ){
+			Log.warning("Receive took: "+rcvTime +" ms. This is greater then "+getPercentagePrint() +"% of the sleep timeout");
 		}else{
-			Log.info("Receive took: "+(System.currentTimeMillis()-rcv)+" ms");
+			Log.info("Receive took: "+rcvTime +" ms");
 		}
 		
-		if (b== null){
+		if (getLastSyncronousResponse() == null){
 			try {
 				//new RuntimeException().printStackTrace();
-				Log.error("No response from device, no response in "+(System.currentTimeMillis()-rcv)+" ms");
+				Log.error("No response from device, no response in "+(System.currentTimeMillis()-startOfReciveTime)+" ms");
 				reconnect();
 			} catch (IOException e) {
 				clearLastSyncronousResponse();
 				throw new RuntimeException(e);
 			}
 		}
+		BowlerDatagram b = getLastSyncronousResponse();
 		clearLastSyncronousResponse();
 		
 		return b;
@@ -221,6 +223,7 @@ public abstract class BowlerAbstractConnection {
 		this.sleepTime = sleepTime;
 		if(sleepTime*2>BowlerDatagramFactory.getPacketTimeout())
 			BowlerDatagramFactory.setPacketTimeout(sleepTime*2);
+		Log.warning("Setting the synchronus packet timeout to "+sleepTime);
 	}
 	
 	
@@ -233,12 +236,12 @@ public abstract class BowlerAbstractConnection {
 		return sleepTime;
 	}
 	
-	private long lastWrite = -1;
+
 	public long msSinceLastSend() {
-		if(lastWrite<0){
+		if(getLastWrite()<0){
 			return 0;
 		}
-		return System.currentTimeMillis() - lastWrite ;
+		return System.currentTimeMillis() - getLastWrite() ;
 	}
 	/**
 	 * Write.
@@ -249,7 +252,7 @@ public abstract class BowlerAbstractConnection {
 	//private ByteList outgoing = new ByteList();
 	public void write(byte[] data) throws IOException {
 		waitForConnectioToBeReady();
-		lastWrite = System.currentTimeMillis();
+		setLastWrite(System.currentTimeMillis());
 		if(dataOuts != null){
 			try{
 				//Log.info("Writing: "+data.length+" bytes");
@@ -342,6 +345,7 @@ public abstract class BowlerAbstractConnection {
 			if(syncListen!=null){
 				// this is a server and the packet needs to processed
 				getSyncQueue().addDatagram(data);
+				Log.debug("Added packet to the response queue");
 			}else{
 				response = data;
 			}
@@ -370,9 +374,9 @@ public abstract class BowlerAbstractConnection {
 	protected void fireAsyncOnResponse(BowlerDatagram datagram) {
 		if(!datagram.isSyncronous()){
 			if(isInitializedNamespaces()){
-				Log.debug("\nASYNC to"+listeners.size()+" listeners<<\n"+datagram);
+				Log.debug("\nASYNC to "+listeners.size()+" listeners<<\n"+datagram);
 				for(IBowlerDatagramListener l : listeners) {
-					Log.debug("\nASYNC listener: "+l);
+					Log.debug("\nASYNC listener: "+l.getClass());
 					try{
 						l.onAsyncResponse(datagram);
 					}catch (Exception ex){
@@ -618,6 +622,8 @@ public abstract class BowlerAbstractConnection {
 	}
 	
 	private boolean namespacesFinishedInitializing = false;
+
+	private double percentagePrint =10.0;
 	
 	public boolean isInitializedNamespaces(){
 		return namespaceList!=null && namespacesFinishedInitializing ;
@@ -914,6 +920,22 @@ public abstract class BowlerAbstractConnection {
 		}
 	}
 	
+	public double getPercentagePrint() {
+		return percentagePrint;
+	}
+
+	public void setPercentagePrint(double percentagePrint) {
+		this.percentagePrint = percentagePrint;
+	}
+
+	public long getLastWrite() {
+		return lastWrite;
+	}
+
+	public void setLastWrite(long lastWrite) {
+		this.lastWrite = lastWrite;
+	}
+
 	/**
 	 * Thread safe queue manager.
 	 * @author rbreznak
@@ -961,8 +983,9 @@ public abstract class BowlerAbstractConnection {
 							long pulledPacket = System.currentTimeMillis();
 							pushUp(b);
 							long pushedPacket = System.currentTimeMillis();
-							if((System.currentTimeMillis()-lastWrite)>(getSleepTime()*.1) && b.isSyncronous()){
-								Log.warning("Packet recive took more then 10%. " +
+							
+							if((System.currentTimeMillis()-getLastWrite())>(getSleepTime()*(getPercentagePrint() /100.0))&& b.isSyncronous()){
+								Log.error("Packet recive took more then "+getPercentagePrint()+"%. " +
 												"\nPacket Update\t"+(packetUpdate- start)+"" +
 												"\nPulled Packet\t"+(pulledPacket-packetUpdate)+"" +
 												"\nPushed Packet\t"+(pushedPacket-pulledPacket));
@@ -997,27 +1020,47 @@ public abstract class BowlerAbstractConnection {
 		}
 		
 
-		private void runPacketUpdate() {
+		private boolean runPacketUpdate() {
+			long start = System.currentTimeMillis();
 			try {
 				if(dataIns!=null){	
 					while(getDataIns().available()>0){
+						long dataRead=System.currentTimeMillis();
 						//we want to run this until the buffer is clear or a packet is found
 						int b = getDataIns().read();
+						long dataReadEnd=System.currentTimeMillis();
 						if(b<0){
 							Log.error("Stream is broken - unexpected");
 							reconnect();
 							//something went wrong
-							break;
+							return false;
 						}else{
+							
 							bytesToPacketBuffer.add(b);
+							long dataAdd=System.currentTimeMillis();
 							BowlerDatagram bd = BowlerDatagramFactory.build(bytesToPacketBuffer);
+							long dataBuild=System.currentTimeMillis();
 							if (bd!=null) {
 								Log.info("\nR<<"+bd);
 								onDataReceived(bd);
+								long dataSet=System.currentTimeMillis();
 								//bytesToPacketBuffer.clear();
 								bytesToPacketBuffer= new ByteList();
+								long bufferClear=System.currentTimeMillis();
+								
+								if((System.currentTimeMillis()-getLastWrite())>(getSleepTime()*(getPercentagePrint() /100.0))&& bd.isSyncronous()){
+									Log.error("Packet recive took more then "+getPercentagePrint()+"%. " +
+											"\nRaw receive\t"+(start-getLastWrite() )+"" +
+											"\nStart Section\t"+(dataRead- start)+"" +
+											"\nData Read\t"+(dataReadEnd-dataRead)+"" +
+											"\nAdd data\t"+(dataAdd-dataReadEnd)+
+											"\nBuild Packet\t"+(dataBuild-dataAdd)+
+											"\nSet Packet\t"+(dataSet-dataBuild)+
+											"\nClear Packet buffer\t"+(bufferClear-dataSet)											
+											);
+								}
 								//Packet found, break the loop and deal with it
-								break;
+								return true;
 							}
 						}
 						//Log.info("buffer: "+buffer);
@@ -1036,6 +1079,7 @@ public abstract class BowlerAbstractConnection {
 					}
 				}
 			}
+			return false;
 		}
 		
 		/**

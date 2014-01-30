@@ -35,7 +35,7 @@ public class ConnectionDialog extends JDialog {
 	private JButton refresh;
 	private JButton cancelBtn;
 	private JTabbedPane connectionPanels;
-	private static Packer fudge;
+
 	private  LookAndFeel laf;
 	public ConnectionDialog() {
 		setIconImage( ConnectionImageIconFactory.getIcon("images/hat.png").getImage());
@@ -104,8 +104,7 @@ public class ConnectionDialog extends JDialog {
 		        connectBtn.requestFocusInWindow();
 		    }
 		});
-		fudge = new Packer();
-		fudge.start();
+		pack();
 	}
 	
 	private void loadDefaultConnections() {
@@ -183,7 +182,6 @@ public class ConnectionDialog extends JDialog {
 			} catch(Exception e) {
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(null, e.getMessage(), "DyIO Connection problem ", JOptionPane.ERROR_MESSAGE);
-				fudge=null;
 				return false;
 			}
 			Log.info("Attempting to ping");
@@ -195,7 +193,6 @@ public class ConnectionDialog extends JDialog {
 				JOptionPane.showMessageDialog(null, "No device on that port", "", JOptionPane.ERROR_MESSAGE);
 			}
 		}
-		fudge=null;
 		return true;
 	}
 
@@ -243,16 +240,4 @@ public class ConnectionDialog extends JDialog {
 		return getHeadlessConnection(System.getProperty("nrdk.config.file"));
 	}
 	
-	private class Packer extends Thread{
-		public void run() {
-			while(true) {
-				try {Thread.sleep(500);} catch (InterruptedException e) {}
-				try {
-					pack();
-				}catch(Exception e) {
-					return;
-				}
-			}
-		}
-	}
 }
