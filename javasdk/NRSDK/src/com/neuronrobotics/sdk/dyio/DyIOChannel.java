@@ -413,7 +413,7 @@ public class DyIOChannel implements IDyIOChannel {
 			return true;
 		}
 		if(getMode()  == null) {
-			Log.debug(this.getClass()+" First time setting mode.");
+			Log.info(this.getClass()+" First time setting mode.");
 			setCurrentMode(mode);
 			isAsync = isDefaultAsync(mode);
 			return true;
