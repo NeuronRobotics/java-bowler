@@ -345,7 +345,7 @@ public abstract class BowlerAbstractConnection {
 			if(syncListen!=null){
 				// this is a server and the packet needs to processed
 				getSyncQueue().addDatagram(data);
-				Log.debug("Added packet to the response queue");
+				Log.info("Added packet to the response queue");
 			}else{
 				response = data;
 			}
@@ -1051,7 +1051,7 @@ public abstract class BowlerAbstractConnection {
 								bytesToPacketBuffer= new ByteList();
 								long bufferClear=System.currentTimeMillis();
 								
-								if((System.currentTimeMillis()-getLastWrite())>(getSleepTime()*(getPercentagePrint() /100.0))&& bd.isSyncronous()){
+								if((System.currentTimeMillis()-getLastWrite())>(getSleepTime()*(getPercentagePrint() /100.0))&& bd.isSyncronous() && syncListen==null){
 									Log.error("Packet recive took more then "+getPercentagePrint()+"%. " +
 											"\nRaw receive\t"+(start-getLastWrite() )+"" +
 											"\nStart Section\t"+(dataRead- start)+"" +
