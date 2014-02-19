@@ -12,7 +12,7 @@ import com.neuronrobotics.sdk.pid.VirtualGenericPIDDevice;
 public class LinkFactory {
 	private IPidControlNamespace pid=null;
 	private DyIO dyio=null;
-	private VirtualGenericPIDDevice virtual = new VirtualGenericPIDDevice(1000000);
+	//private VirtualGenericPIDDevice virtual = new VirtualGenericPIDDevice(1000000);
 	private boolean hasPid=false;
 	private boolean hasServo=false;
 	private boolean hasStepper=false;
@@ -40,7 +40,7 @@ public class LinkFactory {
 	public LinkFactory (GenericPIDDevice d){
 		if(d==null){
 			forceVirtual=true;
-			pid=virtual;
+			//pid=virtual;
 			hasPid=true;
 			return;
 		}
@@ -78,11 +78,11 @@ public class LinkFactory {
 											(int)c.getUpperLimit(),
 											c.getScale());
 			} else if (c.getType().equals("dummy")){
-				tmp=new PidRotoryLink(	virtual.getPIDChannel(c.getHardwareIndex()),
-						(int)0,
-						(int)c.getLowerLimit(),
-						(int)c.getUpperLimit(),
-						c.getScale());
+//				tmp=new PidRotoryLink(	virtual.getPIDChannel(c.getHardwareIndex()),
+//						(int)0,
+//						(int)c.getLowerLimit(),
+//						(int)c.getUpperLimit(),
+//						c.getScale());
 				tmp.setUseLimits(false);
 			}else{
 				tmp=new PidRotoryLink(	pid.getPIDChannel(c.getHardwareIndex()),
@@ -96,11 +96,11 @@ public class LinkFactory {
 			int home=0;
 //			if(c.getType().equals("servo-rotory"))
 //				home = c.getIndexLatch();
-			tmp=new PidRotoryLink(	virtual.getPIDChannel(c.getHardwareIndex()),
-					(int)home,
-					(int)c.getLowerLimit(),
-					(int)c.getUpperLimit(),
-					c.getScale());
+//			tmp=new PidRotoryLink(	virtual.getPIDChannel(c.getHardwareIndex()),
+//					(int)home,
+//					(int)c.getLowerLimit(),
+//					(int)c.getUpperLimit(),
+//					c.getScale());
 			//tmp.setUseLimits(false);
 		}
 		tmp.setLinkConfiguration(c);
@@ -141,7 +141,7 @@ public class LinkFactory {
 		}
 		new Thread(){
 			public void run(){
-				virtual.flushPIDChannels(seconds);
+				//virtual.flushPIDChannels(seconds);
 				Log.info("Flushing Virtual");
 			}
 		}.start();

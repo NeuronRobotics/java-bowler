@@ -35,7 +35,7 @@ public class DeltaForgeDevice extends GenericPIDDevice {
 		numSpacesRemaining = ByteList.convertToInt(dg.getData().getBytes(	0,//Starting index
 																				4),//number of bytes
 																				false);//True for signed data
-		System.out.println("Running line x="+taskSpaceTransform.getX()+" y="+taskSpaceTransform.getY()+" z="+taskSpaceTransform.getZ()+" num spaces="+numSpacesRemaining);
+		//System.out.println("Running line x="+taskSpaceTransform.getX()+" y="+taskSpaceTransform.getY()+" z="+taskSpaceTransform.getZ()+" num spaces="+numSpacesRemaining);
 
 		return numSpacesRemaining;
 	}
