@@ -7,9 +7,22 @@ import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.pid.GenericPIDDevice;
+import com.neuronrobotics.sdk.pid.PIDConfiguration;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 public class DeltaForgeDevice extends GenericPIDDevice {
+	
+	@Override
+	public boolean connect(){
+		super.connect();
+		int count = getPIDChannelCount();
+		for(int i=0;i<count ;i++){
+			PIDConfiguration conf = getPIDConfiguration(i);
+			conf.setAsync(false);
+			ConfigurePIDController(conf);
+		}
+		return true;
+	}
 	
 	private int numSpacesRemaining = 1;
 	
