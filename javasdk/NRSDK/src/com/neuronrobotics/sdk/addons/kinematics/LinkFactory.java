@@ -139,12 +139,7 @@ public class LinkFactory {
 			pid.flushPIDChannels(seconds);
 			Log.info("Flushing PID");
 		}
-		new Thread(){
-			public void run(){
-				//virtual.flushPIDChannels(seconds);
-				Log.info("Flushing Virtual");
-			}
-		}.start();
+
 		//System.out.println("Flush Took "+(System.currentTimeMillis()-time)+"ms");
 	}
 	public IPidControlNamespace getPid() {
