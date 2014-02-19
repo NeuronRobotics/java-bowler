@@ -210,8 +210,22 @@ public abstract class BowlerAbstractConnection {
 			return;
 		}
 		Log.info("Disconnecting Bowler Connection");
+		ThreadedTimeout t = new ThreadedTimeout();
+		t.setStartTime(100);
+		while(!t.isTimedOut()){
+			 try {
+				getDataIns().read();
+			} catch (NullPointerException e) {
+				// TODO Auto-generated catch block
+				//e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				//e.printStackTrace();
+			}
+		}
+		Log.info("Shutting down streams");
 		setConnected(false);
-
+		
 	}
 
 	/**
@@ -279,7 +293,7 @@ public abstract class BowlerAbstractConnection {
 	 *
 	 * @param connected the new connected
 	 */
-	public void setConnected(boolean c) {
+	public synchronized void  setConnected(boolean c) {
 		if(connected == c)
 			return;
 		connected = c;
@@ -302,7 +316,15 @@ public abstract class BowlerAbstractConnection {
 			}
 			setDataIns(null);
 			setDataOuts(null);
-			stopQueue();
+			if(getSyncQueue() != null) {
+				getSyncQueue().kill();
+				setSyncQueue(null);
+			}
+			if(getAsyncQueue() != null) {
+				getAsyncQueue().kill();
+				
+				setAsyncQueue(null);
+			}
 			fireDisconnectEvent();
 		}
 	}
@@ -420,20 +442,7 @@ public abstract class BowlerAbstractConnection {
 		
 		listeners.remove(listener);
 	}
-	
-	/**
-	 * Kills the Queue.
-	 */
-	protected void stopQueue() {
-		if(getSyncQueue() != null) {
-			getSyncQueue().kill();
-			setSyncQueue(null);
-		}
-		if(getAsyncQueue() != null) {
-			getAsyncQueue().kill();
-			setAsyncQueue(null);
-		}
-	}
+
 	
 	/**
 	 * Start builder.
@@ -949,7 +958,7 @@ public abstract class BowlerAbstractConnection {
 		private ArrayList<BowlerDatagram> queueBuffer = new ArrayList<BowlerDatagram>();
 		private ByteList bytesToPacketBuffer = new ByteList();
 		private boolean isSystemQueue=false;
-		
+		private boolean killSwitch=false;
 		
 		public QueueManager(boolean b) {
 			isSystemQueue = b;
@@ -960,7 +969,7 @@ public abstract class BowlerAbstractConnection {
 		 * @see java.lang.Thread#run()
 		 */
 		public void run() {
-			while(isConnected()) {
+			while(isConnected() && !killSwitch) {
 				//wait for the data stream to stabilize
 				if(dataIns == null || dataOuts == null){
 					ThreadUtil.wait(100);
@@ -1099,8 +1108,7 @@ public abstract class BowlerAbstractConnection {
 		 * Kill.
 		 */
 		public void kill() {
-			if(isConnected())
-				disconnect();
+			killSwitch=true;
 		}
 	}
 		
