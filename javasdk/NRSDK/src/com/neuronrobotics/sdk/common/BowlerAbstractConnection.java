@@ -345,7 +345,7 @@ public abstract class BowlerAbstractConnection {
 			if(syncListen!=null){
 				// this is a server and the packet needs to processed
 				getSyncQueue().addDatagram(data);
-				Log.debug("Added packet to the response queue");
+				Log.info("Added packet to the response queue");
 			}else{
 				response = data;
 			}
@@ -376,7 +376,9 @@ public abstract class BowlerAbstractConnection {
 			if(isInitializedNamespaces()){
 				Log.debug("\nASYNC to "+listeners.size()+" listeners<<\n"+datagram);
 				for(IBowlerDatagramListener l : listeners) {
+
 					Log.debug("\nASYNC listener: "+l.getClass());
+
 					try{
 						l.onAsyncResponse(datagram);
 					}catch (Exception ex){
@@ -1043,12 +1045,13 @@ public abstract class BowlerAbstractConnection {
 							if (bd!=null) {
 								Log.info("\nR<<"+bd);
 								onDataReceived(bd);
+
 								long dataSet=System.currentTimeMillis();
 								//bytesToPacketBuffer.clear();
 								bytesToPacketBuffer= new ByteList();
 								long bufferClear=System.currentTimeMillis();
 								
-								if((System.currentTimeMillis()-getLastWrite())>(getSleepTime()*(getPercentagePrint() /100.0))&& bd.isSyncronous()){
+								if((System.currentTimeMillis()-getLastWrite())>(getSleepTime()*(getPercentagePrint() /100.0))&& bd.isSyncronous() && syncListen==null){
 									Log.error("Packet recive took more then "+getPercentagePrint()+"%. " +
 											"\nRaw receive\t"+(start-getLastWrite() )+"" +
 											"\nStart Section\t"+(dataRead- start)+"" +
@@ -1059,6 +1062,7 @@ public abstract class BowlerAbstractConnection {
 											"\nClear Packet buffer\t"+(bufferClear-dataSet)											
 											);
 								}
+
 								//Packet found, break the loop and deal with it
 								return true;
 							}

@@ -390,7 +390,7 @@ public class DyIOChannel implements IDyIOChannel {
 		
 		Byte b = bl.pop();
 		if(b==null || b.intValue()!=number){
-			Log.error("Failed to get value");
+			Log.error("Failed to get value "+response);
 			return 0;
 		}
 		
