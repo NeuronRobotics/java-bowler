@@ -103,6 +103,7 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 		
 		try{
 			Node zframeToRASConfig = zf.item(0);
+			if(zframeToRASConfig!=null)
 		    if (zframeToRASConfig.getNodeType() == Node.ELEMENT_NODE) {
 		    	Element eElement = (Element)zframeToRASConfig;	    		    
 		    	setZframeToGlobalTransform(new TransformNR(	Double.parseDouble(XmlFactory.getTagValue("x",eElement)),
@@ -378,12 +379,14 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 	
 	private void firePoseUpdate(){
 		//Log.info("Pose update");
-		for(ITaskSpaceUpdateListenerNR p:taskSpaceUpdateListeners){
+		for(int i=0;i<taskSpaceUpdateListeners.size();i++){
+			ITaskSpaceUpdateListenerNR p=taskSpaceUpdateListeners.get(i);
 			p.onTaskSpaceUpdate(this, getCurrentTaskSpaceTransform());
 		}
 		double[] vect = getCurrentJointSpaceVector();
 		
-		for(IJointSpaceUpdateListenerNR p:jointSpaceUpdateListeners){
+		for(int i=0;i<jointSpaceUpdateListeners.size();i++){
+			IJointSpaceUpdateListenerNR p=jointSpaceUpdateListeners.get(i);
 			p.onJointSpaceUpdate(this, vect);
 		}
 	}

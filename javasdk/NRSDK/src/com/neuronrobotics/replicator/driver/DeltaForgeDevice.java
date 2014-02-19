@@ -22,12 +22,24 @@ public class DeltaForgeDevice extends GenericPIDDevice {
 	 * @return number of spaces in the buffer
 	 */
 	public int sendLinearSection(TransformNR taskSpaceTransform, double mmOfFiliment, int ms) {
+		return sendLinearSection(taskSpaceTransform, mmOfFiliment, ms, false);
+	}
+	/**
+	 * This function will set up a multi-dimentional send for position and interpolation
+	 * @param x new x position
+	 * @param y new y position
+	 * @param z new z position
+	 * @param mmOfFiliment new target for mm of filiment
+	 * @param ms time in MS
+	 * @return number of spaces in the buffer
+	 */
+	public int sendLinearSection(TransformNR taskSpaceTransform, double mmOfFiliment, int ms, boolean forceNoBuffer) {
 		RuntimeException e= new RuntimeException("There is no more room left");;
 		if(numSpacesRemaining == 0 ) {
 			throw e;
 		}
 		
-		BowlerDatagram dg = send(new LinearInterpolationCommand(taskSpaceTransform, mmOfFiliment, ms));
+		BowlerDatagram dg = send(new LinearInterpolationCommand(taskSpaceTransform, mmOfFiliment, ms,forceNoBuffer));
 		if(dg.getRPC().equalsIgnoreCase("_err")) {
 			throw e;
 		}
