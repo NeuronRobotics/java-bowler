@@ -6,9 +6,10 @@ import com.neuronrobotics.sdk.common.BowlerMethod;
 
 public class LinearInterpolationCommand extends BowlerAbstractCommand {
 
-	public LinearInterpolationCommand(TransformNR taskSpaceTransform, double mmOfFiliment, int ms) {
+	public LinearInterpolationCommand(TransformNR taskSpaceTransform, double mmOfFiliment, int ms, boolean forceNoBuffer) {
 		setOpCode("_sli");
 		setMethod(BowlerMethod.POST);
+		getCallingDataStorage().add(forceNoBuffer?1:0);
 		getCallingDataStorage().addAs32(ms);
 		
 		getCallingDataStorage().addAs32((int) (taskSpaceTransform.getX()*1000));
