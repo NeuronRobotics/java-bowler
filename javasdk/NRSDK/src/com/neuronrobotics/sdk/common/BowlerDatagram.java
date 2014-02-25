@@ -437,12 +437,19 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 		setFree(isFree);
 	}
 
+	private void setNotFree(){
+		clear();
+		timeout.stop();
+	}
+	
+	private void setToFree(){
+		timeout.initialize(BowlerDatagramFactory.getPacketTimeout(), this);
+	}
 	void setFree(boolean isFree) {
 		if(isFree== true){
-			clear();
-			timeout.stop();
+			setNotFree();
 		}else{
-			timeout.initialize(BowlerDatagramFactory.getPacketTimeout(), this);
+			setToFree();
 		}
 		this.isPackedAvailibleForLoading = isFree;
 	}
