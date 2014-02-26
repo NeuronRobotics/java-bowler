@@ -28,6 +28,7 @@ public class BowlerDatagramFactory {
 	
 	private static BowlerDatagram pool [];
 	private static int failed=0;
+	private static int lastIndex = 0;
 	private static int poolDefaultSize = 1500;
 	private static long packetTimeout = 2000;
 	
@@ -57,10 +58,19 @@ public class BowlerDatagramFactory {
 		BowlerDatagram ref = null;
 		
 		//Find the most recent free packet from the pool
-		for(int i=0;(i<pool.length && ref==null);i++){
+		for(int i=lastIndex;(i<pool.length && ref==null);i++){
 			//Log.warning("Checking pool packet "+i);
 			if(pool[i].isFree()){
+				lastIndex=i;
 				ref=pool[i];
+			}
+			if(i==pool.length-1){
+				//loop around since we started at the last index
+				i=0;
+			}
+			if(i==lastIndex-1){
+				//looped around, bail
+				i=pool.length;
 			}
 		}
 		if(ref == null){

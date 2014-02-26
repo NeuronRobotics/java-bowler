@@ -57,11 +57,11 @@ public class ThreadedTimeout {
 	}
 	
 	public void initialize(long sleepTime,IthreadedTimoutListener listener) {
-		stop();
-		this.time = (sleepTime);
+		//stop();
 		setStartTime(System.currentTimeMillis());
+		this.time = (sleepTime);
 		setTimeoutListener(listener);
-		timerThread.addTimer(this);
+		//timerThread.addTimer(this);
 	}
 
 	public long getAmountOfTimeForTimerToRun() {
@@ -83,6 +83,7 @@ public class ThreadedTimeout {
 			while(true){
 				if(getTimers().size()>0){
 					toRemove.clear();
+					
 					for(int i=0;i<getTimers().size();i++){
 						try{
 							ThreadedTimeout t = getTimers().get(i);
@@ -112,7 +113,7 @@ public class ThreadedTimeout {
 				if(!getTimers().contains(time))
 					getTimers().add(time);
 			}catch (Exception e){
-					
+				e.printStackTrace();
 			}
 		}
 		public void removeTimer(ThreadedTimeout time){
@@ -120,7 +121,7 @@ public class ThreadedTimeout {
 				if(getTimers().contains(time))
 					getTimers().remove(time);
 			}catch (Exception e){
-				
+				e.printStackTrace();
 			}
 			
 		}
