@@ -1063,10 +1063,14 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 				ByteList val = new ByteList(bl.popList(4));
 				DyIOChannelEvent ev =new DyIOChannelEvent(c,val);
 				back[i++]=ev.getValue();
+				if(!c.isStreamChannel()){
+					c.fireChannelEvent(ev);
+				}
 			}else{
 				back[i++] = 0;
 			}
 		}
+		
 		return back;
 	}
 
