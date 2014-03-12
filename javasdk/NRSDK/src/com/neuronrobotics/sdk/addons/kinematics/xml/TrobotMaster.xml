@@ -1,21 +1,21 @@
 <root>
 	
 	<link>
-		<name>basePan</name>
-		<type>analog-rotory</type>
-		<index>14</index>
-		<scale>-0.2200489</scale>
-		<upperLimit>1024</upperLimit>
-		<lowerLimit>0</lowerLimit>
-		<isLatch>true</isLatch>
-		<indexLatch>614</indexLatch>
-		<isStopOnLatch>false</isStopOnLatch>	
-		<homingTPS>500</homingTPS>
+		<name>basePan</name><!-- Name, used to regester the link with a specific location in the robot  -->
+		<type>analog-rotory</type><!-- This is the actual type of the link as used by the kinematics to  -->
+		<index>14</index><!-- This is the hrdware index used to map the hardware iundex to this link -->
+		<scale>-0.2200489</scale><!-- This is multiplied times the link units to gent engineering units -->
+		<upperLimit>1024</upperLimit><!-- limit in link units -->
+		<lowerLimit>0</lowerLimit><!-- limit in link units -->
+		<isLatch>true</isLatch><!-- Tells the controller to latch index pulses -->
+		<indexLatch>614</indexLatch><!-- Tells the controller what value to latch at index. This is also the offset value uses by the controller to calculate offsets -->
+		<isStopOnLatch>false</isStopOnLatch><!-- Tells the controller to stop on the latch value -->	
+		<homingTPS>500</homingTPS><!-- Tells the controller how fast to home -->
 		<DHParameters>
-		    <Delta>13</Delta>
-		    <Theta>180</Theta>
-		    <Radius>32</Radius>
-		    <Alpha>-90</Alpha>
+		    <Delta>13</Delta><!-- DH paremeter values -->
+		    <Theta>180</Theta><!-- DH paremeter values -->
+		    <Radius>32</Radius><!--DH paremeter values  -->
+		    <Alpha>-90</Alpha><!-- DH paremeter values -->
 		</DHParameters>			
 	</link>
 	<link>
