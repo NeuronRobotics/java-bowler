@@ -65,18 +65,6 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 	private int retryNumberBeforeFail = 5;
 
 	public AbstractKinematicsNR(InputStream configFile,LinkFactory f){
-		loadConfig(configFile);
-		setDevice(f);
-	}
-	private String getDate(){
-		Timestamp t = new Timestamp(System.currentTimeMillis());
-		return t.toString().split("\\ ")[0];
-	}
-	/**
-	 * Load XML configuration file, 
-	 * then store in LinkConfiguration (ArrayList type)
-	 */
-	protected void loadConfig(InputStream config){
 		File l = new File("RobotLog_"+getDate()+"_"+System.currentTimeMillis()+".txt");
 		//File e = new File("RobotError_"+getDate()+"_"+System.currentTimeMillis()+".txt");
 		try {
@@ -87,6 +75,22 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 			e1.printStackTrace();
 		}
 		
+		if(configFile!=null && f!=null){
+			loadConfig(configFile);
+			setDevice(f);
+		}
+		
+	}
+	private String getDate(){
+		Timestamp t = new Timestamp(System.currentTimeMillis());
+		return t.toString().split("\\ ")[0];
+	}
+	/**
+	 * Load XML configuration file, 
+	 * then store in LinkConfiguration (ArrayList type)
+	 */
+	protected void loadConfig(InputStream config){
+
 		Document doc =XmlFactory.getAllNodesDocument(config);
 		NodeList nList = doc.getElementsByTagName("link");
 		NodeList zf = 	 doc.getElementsByTagName("ZframeToRAS");
