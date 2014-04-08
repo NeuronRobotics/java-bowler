@@ -153,7 +153,7 @@ public abstract class BowlerAbstractConnection {
 		
 
 		do{
-			ThreadUtil.wait(1);
+			ThreadUtil.wait(0,10);
 		}while (((System.currentTimeMillis()-startOfReciveTime)<getSleepTime())  && (getLastSyncronousResponse() == null));
 		long rcvTime = (System.currentTimeMillis()-startOfReciveTime);
 
