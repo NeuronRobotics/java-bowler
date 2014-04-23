@@ -1,6 +1,7 @@
 package com.neuronrobotics.sdk.addons.kinematics;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import Jama.Matrix;
 
@@ -73,6 +74,10 @@ public class DHParameterKinematics extends AbstractKinematicsNR {
 		Matrix m = getDhChain().getJacobian(getCurrentJointSpaceVector());
 		System.out.println("Jacobian calc took: "+(System.currentTimeMillis()-time));
 		return m;
+	}
+	
+	public ArrayList<TransformNR> getChainTransformations(){
+		return chain.getChain(getCurrentJointSpaceVector());
 	}
 
 	public void setDhChain(DHChain chain) {
