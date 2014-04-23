@@ -25,7 +25,7 @@ public class NRPrinter extends CartesianNamespacePidKinematics{
 
 	
 	public NRPrinter(DeltaForgeDevice d) {
-		super(d.getConnection());
+		super(d,d);
 		this.setDeltaDevice(d);
 		
 		extruder = getFactory().getLink("extruder");

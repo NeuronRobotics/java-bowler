@@ -1,16 +1,19 @@
 package com.neuronrobotics.replicator.driver;
 
+import com.neuronrobotics.sdk.addons.kinematics.LinkConfiguration;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.commands.cartesian.CancelPrintCommand;
 import com.neuronrobotics.sdk.commands.cartesian.LinearInterpolationCommand;
 import com.neuronrobotics.sdk.common.BowlerDatagram;
+import com.neuronrobotics.sdk.common.BowlerMethod;
 import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.pid.GenericPIDDevice;
+import com.neuronrobotics.sdk.pid.ILinkFactoryProvider;
 import com.neuronrobotics.sdk.pid.PIDConfiguration;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
-public class DeltaForgeDevice extends GenericPIDDevice {
+public class DeltaForgeDevice extends GenericPIDDevice implements ILinkFactoryProvider {
 	
 	@Override
 	public boolean connect(){
@@ -85,6 +88,15 @@ public class DeltaForgeDevice extends GenericPIDDevice {
 
 	public int getNumberOfSpacesInBuffer() {
 		return numSpacesRemaining;
+	}
+	@Override
+	public LinkConfiguration requestLinkConfiguration(int index) {
+		Object [] args = send("bcs.cartesian.*",
+								BowlerMethod.GET,
+				"gcfg",
+				new Object[]{index}, 5);
+		
+		return new LinkConfiguration(args);
 	}
 	
 }

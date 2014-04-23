@@ -1,16 +1,17 @@
 package com.neuronrobotics.sdk.addons.kinematics;
 
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
-import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.Log;
+import com.neuronrobotics.sdk.pid.GenericPIDDevice;
+import com.neuronrobotics.sdk.pid.ILinkFactoryProvider;
 
 public class CartesianNamespacePidKinematics extends AbstractKinematicsNR{
-	LinkFactory factory = new LinkFactory();
+	LinkFactory factory;
 	
-	public CartesianNamespacePidKinematics(BowlerAbstractConnection connection){
+	public CartesianNamespacePidKinematics(GenericPIDDevice device,ILinkFactoryProvider connection){
 		super();
-		
-		
+		factory = new LinkFactory(connection,device);
+		setDevice(factory);
 		
 	}
 	

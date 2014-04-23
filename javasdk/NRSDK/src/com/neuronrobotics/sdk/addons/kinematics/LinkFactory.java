@@ -7,6 +7,7 @@ import com.neuronrobotics.sdk.dyio.peripherals.AnalogInputChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 import com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace;
 import com.neuronrobotics.sdk.pid.GenericPIDDevice;
+import com.neuronrobotics.sdk.pid.ILinkFactoryProvider;
 import com.neuronrobotics.sdk.pid.VirtualGenericPIDDevice;
 
 public class LinkFactory {
@@ -48,6 +49,19 @@ public class LinkFactory {
 		hasPid=true;
 	}
 	
+	public LinkFactory(ILinkFactoryProvider connection,GenericPIDDevice d) {
+		pid=d;
+		hasPid=true;
+		
+		//TODO fill in the auto link configuration
+		LinkConfiguration first = connection.requestLinkConfiguration(0);
+		getLink(first);
+		for (int i=1;i<first.getTotlaNumberOfLinks();i++){
+			getLink(connection.requestLinkConfiguration(i));
+		}
+		
+	}
+
 	public AbstractLink getLink(String name) {
 		for(AbstractLink l:links){
 			if(l.getLinkConfiguration().getName().equalsIgnoreCase(name))

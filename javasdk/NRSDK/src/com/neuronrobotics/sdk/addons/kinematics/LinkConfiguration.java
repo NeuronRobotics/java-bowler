@@ -12,6 +12,7 @@ public class LinkConfiguration {
 	private String name;// = getTagValue("name",eElement);
 	private String type;
 	private int index;// = Double.parseDouble(getTagValue("index",eElement));
+	private int totlaNumberOfLinks=0;
 	private int linkIndex = 0;
 	//private double length;// = Double.parseDouble(getTagValue("length",eElement));
 	private double scale;// = Double.parseDouble(getTagValue("scale",eElement));
@@ -58,6 +59,15 @@ public class LinkConfiguration {
     	if(indexLatch>getUpperLimit() || indexLatch<getLowerLimit() )
     	    throw new RuntimeException("PID group "+getHardwareIndex()+" Index latch is "+indexLatch+" but needs to be between "+getUpperLimit()+" and "+getLowerLimit());
     	//System.out.println("Interted"+ inverted);
+	}
+	public LinkConfiguration(Object[] args) {
+		setName((String)args[6]);
+    	setIndex((Integer)args[0]);
+    	setScale((Double)args[5]);
+    	setUpperLimit((Integer)args[4]);
+    	setLowerLimit((Integer)args[3]);
+    	setType("pid");
+    	setTotlaNumberOfLinks((Integer)args[1]);
 	}
 	public String toString(){
 		String s="LinkConfiguration: \n\tName: "+getName();
@@ -168,6 +178,12 @@ public class LinkConfiguration {
 	}
 	public void setLinkIndex(int linkIndex) {
 		this.linkIndex = linkIndex;
+	}
+	public int getTotlaNumberOfLinks() {
+		return totlaNumberOfLinks;
+	}
+	public void setTotlaNumberOfLinks(int totlaNumberOfLinks) {
+		this.totlaNumberOfLinks = totlaNumberOfLinks;
 	}
 	
 }
