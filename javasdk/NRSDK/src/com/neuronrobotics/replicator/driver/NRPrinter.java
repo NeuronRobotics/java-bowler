@@ -3,23 +3,60 @@ package com.neuronrobotics.replicator.driver;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import com.neuronrobotics.sdk.addons.kinematics.AbstractLink;
+import com.neuronrobotics.sdk.addons.kinematics.CartesianNamespacePidKinematics;
+import com.neuronrobotics.sdk.addons.kinematics.ILinkListener;
+import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.common.Log;
+import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
-public class NRPrinter {
-	private DeltaRobotPrinterPrototype device;
+public class NRPrinter extends CartesianNamespacePidKinematics{
 	private GCodeParser parser;
 	private StlSlicer slicer;
-	
+	private DeltaForgeDevice deltaDevice;
+	//Configuration hard coded
+	private  double extrusionCachedValue = 0;
+	private double currentTemp =0;
+	//static InputStream s = XmlFactory.getDefaultConfigurationStream("DeltaPrototype.xml");
+	private AbstractLink extruder;
+	private AbstractLink hotEnd;
+	private double temp = 0;
+
 	
 	public NRPrinter(DeltaForgeDevice d) {
-		Log.enableDebugPrint();
+		super(d.getConnection());
+		this.setDeltaDevice(d);
 		
-		setDevice(new DeltaRobotPrinterPrototype(d));
-		setParser(new GCodeParser(getDevice()));
+		extruder = getFactory().getLink("extruder");
+		hotEnd = getFactory().getLink("hotEnd");
+		setTempreture(getTempreture());
+		getFactory().addLinkListener(new ILinkListener() {
+			@Override
+			public void onLinkPositionUpdate(AbstractLink source,double engineeringUnitsValue) {
+				if(source == hotEnd) {
+					setTempreture(engineeringUnitsValue);
+				}
+			}
+			
+			@Override
+			public void onLinkLimit(AbstractLink source, PIDLimitEvent event) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
+		//parse out the extruder configs
+		//parse delta robot configs
+		
+		setExtrusionTempreture(new double [] {getTempreture()});
+
+		setParser(new GCodeParser(this));
 //		setSlicer(new StlSlicer(getDevice().getMaterialData()));
-		setSlicer(new MiracleGrue(getDevice().getMaterialData()));
+		setSlicer(new MiracleGrue(getMaterialData()));
+		
 	}
+
 	/**
 	 * 
 	 * @param stl the input stream
@@ -47,7 +84,7 @@ public class NRPrinter {
 	}
 	
 	public boolean cancelPrint() {
-		getDevice().cancelRunningPrint();
+		cancelRunningPrint();
 		return getParser().cancel();
 	}
 	public boolean isReady() {
@@ -75,11 +112,81 @@ public class NRPrinter {
 	public GCodeParser getParser() {
 		return parser;
 	}
-	public DeltaRobotPrinterPrototype getDevice() {
-		return device;
+
+	public DeltaForgeDevice getDeltaDevice() {
+		return deltaDevice;
 	}
-	public void setDevice(DeltaRobotPrinterPrototype device) {
-		this.device = device;
+
+	public void setDeltaDevice(DeltaForgeDevice d) {
+		this.deltaDevice = d;
+	}
+	
+	private double getTempreture() {
+		return temp;
+	}
+	public void setTempreture(double temp) {
+		this.temp = temp;
+	}
+	
+	public MaterialData getMaterialData() {
+		return new MiracleGrueMaterialData();
+	}
+	
+	public void setExtrusionTempreture(double [] extTemp) {
+		if(extTemp[0] == currentTemp) {
+			System.out.println("Printer at tempreture "+currentTemp+" C");
+			return;
+		}else
+			currentTemp=extTemp[0];
+		setTempreture(hotEnd.getCurrentEngineeringUnits());
+		hotEnd.setTargetEngineeringUnits(extTemp[0]);
+		hotEnd.flush(0);
+		getTempreture();
+		System.out.print("\r\nWaiting for Printer to come up to tempreture "+currentTemp+" C \n");
+		Log.enableSystemPrint(false);
+		int iter=0;
+		while(temp>(extTemp[0]+10) || temp< (extTemp[0]-10)) {
+			getTempreture();
+			System.out.print(".");
+			ThreadUtil.wait(100);
+			iter++;
+			if(iter==50) {
+				System.out.print("\r\n "+temp+" C");
+				iter=0;
+			}
+		}
+		Log.enableSystemPrint(true);
+	}
+	public void setBedTempreture(double bedTemp) {
+		
+	}
+	public int setDesiredPrintLocetion(TransformNR taskSpaceTransform,double extrusionLegnth, double seconds) throws Exception{
+		System.out.println("Telling printer to go to extrusion len "+extrusionLegnth);
+		return getDeltaDevice().sendLinearSection(taskSpaceTransform, extrusionLegnth, (int) (seconds*1000));
+	}
+	
+	public double getExtrusionCachedValue() {
+		return extrusionCachedValue;
+	}
+
+	public void setExtrusionCachedValue(double extrusionCachedValue) {
+		this.extrusionCachedValue = extrusionCachedValue;
+	}
+	
+	public void setExtrusionPoint(int materialNumber, double setPoint) {
+		//TODO another method to set material
+		extruder.setTargetEngineeringUnits(setPoint);
+		setExtrusionCachedValue(setPoint);
+	}
+	
+	public int getNumberOfSpacesInBuffer() {
+		return getDeltaDevice().getNumberOfSpacesInBuffer();
+	}
+	
+	public void cancelRunningPrint() {
+		
+		getDeltaDevice().cancelRunningPrint();
+		
 	}
 	
 }

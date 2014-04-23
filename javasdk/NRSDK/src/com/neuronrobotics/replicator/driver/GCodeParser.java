@@ -12,11 +12,11 @@ import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 public class GCodeParser {
 	private ArrayList<PrinterStatusListener> listeners = new ArrayList<PrinterStatusListener>();
 	private GenericKinematicsGCodeInterpreter interp;
-	DeltaRobotPrinterPrototype device;
+	NRPrinter device;
 
-	public GCodeParser(DeltaRobotPrinterPrototype device) {
+	public GCodeParser(NRPrinter nrPrinter) {
 		// TODO Auto-generated constructor stub
-		this.device=device;
+		this.device=nrPrinter;
 	}
 
 	public boolean print(InputStream gcode) {
