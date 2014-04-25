@@ -9,7 +9,7 @@ public class SpedTest implements IThreadedNsTimerListener{
 	long nstime;
 	long nsDiff;
 	int diffindex=0;
-	long diffs[] = new long[1000];
+	long diffs[] = new long[10000];
 	ThreadedNsTimer timer;
 	long tmerTarget = 1000000;
 	public SpedTest(){
