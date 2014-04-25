@@ -8,6 +8,7 @@ import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 import com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace;
 import com.neuronrobotics.sdk.pid.GenericPIDDevice;
 import com.neuronrobotics.sdk.pid.ILinkFactoryProvider;
+import com.neuronrobotics.sdk.pid.PIDConfiguration;
 import com.neuronrobotics.sdk.pid.VirtualGenericPIDDevice;
 
 public class LinkFactory {
@@ -55,19 +56,28 @@ public class LinkFactory {
 		
 		//TODO fill in the auto link configuration
 		LinkConfiguration first = connection.requestLinkConfiguration(0);
+		first.setPidConfiguration( pid);
 		getLink(first);
 		for (int i=1;i<first.getTotlaNumberOfLinks();i++){
-			getLink(connection.requestLinkConfiguration(i));
+			LinkConfiguration tmp = connection.requestLinkConfiguration(i);
+			tmp.setPidConfiguration(pid);
+			getLink(tmp);
 		}
 		
 	}
+	
+	
 
 	public AbstractLink getLink(String name) {
 		for(AbstractLink l:links){
 			if(l.getLinkConfiguration().getName().equalsIgnoreCase(name))
 				return l;
 		}
-		throw new RuntimeException("No linke of name '"+name+"' exists");
+		String data = "No linke of name '"+name+"' exists";
+		for(AbstractLink l:links){
+			data +="\n"+l.getLinkConfiguration().getName();
+		}
+		throw new RuntimeException(data);
 	}
 	
 	public AbstractLink getLink(LinkConfiguration c){

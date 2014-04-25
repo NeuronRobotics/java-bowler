@@ -98,5 +98,26 @@ public class DeltaForgeDevice extends GenericPIDDevice implements ILinkFactoryPr
 		
 		return new LinkConfiguration(args);
 	}
+	@Override
+	public double[] setDesiredTaskSpaceTransform(TransformNR taskSpaceTransform, double seconds) {
+		
+		return new double []{0,0,0,0,0};
+	}
+	@Override
+	public TransformNR getCurrentTaskSpaceTransform() {
+		// TODO Auto-generated method stub
+		return new TransformNR();
+	}
+	@Override
+	public TransformNR setDesiredJointSpaceVector(double[] jointSpaceVect, double seconds) {
+		// TODO Auto-generated method stub
+		return new TransformNR();
+	}
+	@Override
+	public void setDesiredJointAxisValue(int axis, double value, double seconds) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	
 }

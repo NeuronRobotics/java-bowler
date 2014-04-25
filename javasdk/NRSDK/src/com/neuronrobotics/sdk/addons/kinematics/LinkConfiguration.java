@@ -3,8 +3,11 @@ package com.neuronrobotics.sdk.addons.kinematics;
 import org.w3c.dom.Element;
 
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
+import com.neuronrobotics.sdk.common.Log;
 //import org.w3c.dom.Node;
 //import org.w3c.dom.NodeList;
+import com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace;
+import com.neuronrobotics.sdk.pid.PIDConfiguration;
 
 
 
@@ -82,6 +85,7 @@ public class LinkConfiguration {
 	
 
 	public void setName(String name) {
+		Log.info("Setting controller name: "+name);
 		this.name = name;
 	}
 	public String getName() {
@@ -184,6 +188,23 @@ public class LinkConfiguration {
 	}
 	public void setTotlaNumberOfLinks(int totlaNumberOfLinks) {
 		this.totlaNumberOfLinks = totlaNumberOfLinks;
+	}
+	public void setPidConfiguration(IPidControlNamespace pid) {
+		PIDConfiguration conf = pid.getPIDConfiguration(getHardwareIndex());
+    	if(getType().contains("pid")){
+	    	k[0]=conf.getKP();
+	    	k[1]=conf.getKI();
+	    	k[2]=conf.getKD();
+	    	inverted=conf.isInverted();
+	    	setHomingTicksPerSecond(10000);
+    	}
+    	
+    	isLatch=conf.isUseLatch();
+    	indexLatch=(int) conf.getIndexLatch();
+    	isStopOnLatch=conf.isStopOnIndex();
+    	if(indexLatch>getUpperLimit() || indexLatch<getLowerLimit() )
+    	    throw new RuntimeException("PID group "+getHardwareIndex()+" Index latch is "+indexLatch+" but needs to be between "+getUpperLimit()+" and "+getLowerLimit());
+    	
 	}
 	
 }

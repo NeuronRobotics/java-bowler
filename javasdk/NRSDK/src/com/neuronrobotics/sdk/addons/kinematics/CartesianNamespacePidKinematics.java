@@ -6,10 +6,12 @@ import com.neuronrobotics.sdk.pid.GenericPIDDevice;
 import com.neuronrobotics.sdk.pid.ILinkFactoryProvider;
 
 public class CartesianNamespacePidKinematics extends AbstractKinematicsNR{
-	LinkFactory factory;
+	private LinkFactory factory;
+	private ILinkFactoryProvider connection;
 	
 	public CartesianNamespacePidKinematics(GenericPIDDevice device,ILinkFactoryProvider connection){
 		super();
+		this.connection = connection;
 		factory = new LinkFactory(connection,device);
 		setDevice(factory);
 		
@@ -27,8 +29,13 @@ public class CartesianNamespacePidKinematics extends AbstractKinematicsNR{
 		Log.info("Setting target pose: "+taskSpaceTransform);
 		setCurrentPoseTarget(taskSpaceTransform);
 		taskSpaceTransform = inverseOffset(taskSpaceTransform);
-		double [] jointSpaceVect = inverseKinematics(taskSpaceTransform);
-		setDesiredJointSpaceVector(jointSpaceVect,  seconds);
+		
+		double [] jointSpaceVect = connection.setDesiredTaskSpaceTransform(taskSpaceTransform, seconds);
+		factory.setCachedTargets(jointSpaceVect);
+		currentJointSpaceTarget = jointSpaceVect;
+		fireTargetJointsUpdate(currentJointSpaceTarget,taskSpaceTransform );
+		//setDesiredJointSpaceVector(jointSpaceVect,  seconds);
+		
 		return jointSpaceVect;
 	}
 	
@@ -39,7 +46,10 @@ public class CartesianNamespacePidKinematics extends AbstractKinematicsNR{
 	 */
 	@Override
 	public TransformNR getCurrentTaskSpaceTransform() {
-		TransformNR fwd  = forwardKinematics(getCurrentJointSpaceVector());
+		//TransformNR fwd  = forwardKinematics(getCurrentJointSpaceVector());
+		TransformNR fwd  = connection.getCurrentTaskSpaceTransform();
+		getCurrentJointSpaceVector();// update the joint space
+		
 		//Log.info("Getting robot task space "+fwd);
 		TransformNR taskSpaceTransform=forwardOffset(fwd);
 		//Log.info("Getting global task space "+taskSpaceTransform);
@@ -59,34 +69,11 @@ public class CartesianNamespacePidKinematics extends AbstractKinematicsNR{
 		if(jointSpaceVect.length != getNumberOfLinks()){
 			throw new IndexOutOfBoundsException("Vector must be "+getNumberOfLinks()+" links, actual number of links = "+jointSpaceVect.length); 
 		}
-		String joints = "[";
-		for(int i=0;i<jointSpaceVect.length;i++){
-			joints+=jointSpaceVect[i]+" ";
-		}
-		joints+="]";
-		Log.info("Setting target joints: "+joints);
-		int except=0;
-		Exception e = null;
-		do{
-			try{
-				factory.setCachedTargets(jointSpaceVect);
-				if(!isNoFlush()){
-					//
-					factory.flush(seconds);
-					//
-				}
-				except=0;
-				e = null;
-			}catch(Exception ex){
-				except++;
-				e=ex;
-			}
-		}while(except>0 && except <getRetryNumberBeforeFail());
-		if(e!=null)
-			throw e;
+		factory.setCachedTargets(jointSpaceVect);
 		
 		currentJointSpaceTarget = jointSpaceVect;
-		TransformNR fwd  = forwardKinematics(currentJointSpaceTarget);
+		
+		TransformNR fwd  = connection.setDesiredJointSpaceVector(jointSpaceVect, seconds);
 		fireTargetJointsUpdate(currentJointSpaceTarget,fwd );
 		return jointSpaceVect;
 	}
@@ -126,39 +113,9 @@ public class CartesianNamespacePidKinematics extends AbstractKinematicsNR{
 			if(e!=null)
 				throw e;	
 		}
-		TransformNR fwd  = forwardKinematics(currentJointSpaceTarget);
+		TransformNR fwd  = connection.getCurrentTaskSpaceTransform();
 		fireTargetJointsUpdate(currentJointSpaceTarget,fwd );
 		return;
-	}
-	
-	/**
-	 * This takes a reading of the robots position and converts it to a joint pace vector
-	 * This vector is converted to Joint space and returned 
-	 * @return JointSpaceVector in mm,radians 
-	 */
-	@Override
-	public double[] getCurrentJointSpaceVector() {
-		if(currentJointSpacePositions==null){
-			//Happens once and only once on the first initialization
-			currentJointSpacePositions= new double [getNumberOfLinks()];
-			currentJointSpaceTarget  = new double [getNumberOfLinks()];
-			for(int i=0;i<getNumberOfLinks();i++){
-				//double pos = currentLinkSpacePositions[getLinkConfigurations().get(i).getHardwareIndex()];
-				//Here the RAW values are converted to engineering units
-				try{
-					currentJointSpacePositions[i] = getFactory().getLink(getLinkConfiguration(i)).getCurrentEngineeringUnits();
-				}catch (Exception ex){
-					currentJointSpacePositions[i] =0;
-				}
-			}
-			firePoseUpdate();
-		}
-		double [] jointSpaceVect = new double[getNumberOfLinks()];
-		for(int i=0;i<getNumberOfLinks();i++){
-			jointSpaceVect[i] = currentJointSpacePositions[i];
-		}
-		
-		return jointSpaceVect;
 	}
 	
 	

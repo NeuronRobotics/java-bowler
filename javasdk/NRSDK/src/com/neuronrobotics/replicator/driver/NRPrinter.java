@@ -28,8 +28,8 @@ public class NRPrinter extends CartesianNamespacePidKinematics{
 		super(d,d);
 		this.setDeltaDevice(d);
 		
-		extruder = getFactory().getLink("extruder");
-		hotEnd = getFactory().getLink("hotEnd");
+		extruder = getFactory().getLink("Extruder");
+		hotEnd = getFactory().getLink("Heater");
 		setTempreture(getTempreture());
 		getFactory().addLinkListener(new ILinkListener() {
 			@Override

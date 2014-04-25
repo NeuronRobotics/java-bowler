@@ -64,15 +64,15 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 	
 	private int retryNumberBeforeFail = 5;
 	public AbstractKinematicsNR(){
-		File l = new File("RobotLog_"+getDate()+"_"+System.currentTimeMillis()+".txt");
-		//File e = new File("RobotError_"+getDate()+"_"+System.currentTimeMillis()+".txt");
-		try {
-			PrintStream p =new PrintStream(l);
-			Log.setOutStream(new PrintStream(p));
-			Log.setErrStream(new PrintStream(p));						
-		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
-		}
+//		File l = new File("RobotLog_"+getDate()+"_"+System.currentTimeMillis()+".txt");
+//		//File e = new File("RobotError_"+getDate()+"_"+System.currentTimeMillis()+".txt");
+//		try {
+//			PrintStream p =new PrintStream(l);
+//			Log.setOutStream(new PrintStream(p));
+//			Log.setErrStream(new PrintStream(p));						
+//		} catch (FileNotFoundException e1) {
+//			e1.printStackTrace();
+//		}
 	}
 	public AbstractKinematicsNR(InputStream configFile,LinkFactory f){
 		this();
