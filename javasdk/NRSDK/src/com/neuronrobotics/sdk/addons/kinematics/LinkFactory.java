@@ -20,7 +20,7 @@ public class LinkFactory {
 	private boolean hasStepper=false;
 	private boolean forceVirtual = false;
 	private ArrayList<AbstractLink> links = new ArrayList<AbstractLink>();
-	
+	private ArrayList<LinkConfiguration> linkConfigurations=null ;
 	public LinkFactory (){
 		hasPid=false;
 		hasServo=false;
@@ -194,5 +194,15 @@ public class LinkFactory {
 			return dyio.isAvailable();
 		}
 		return true;
+	}
+
+	public ArrayList<LinkConfiguration> getLinkConfigurations() {
+		if(linkConfigurations== null){
+			linkConfigurations=new ArrayList<LinkConfiguration>();
+			for(AbstractLink l:links){
+				linkConfigurations.add(l.getLinkConfiguration());
+			}
+		}
+		return linkConfigurations;
 	}
 }

@@ -43,7 +43,6 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
 public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkListener {
 	
 	/** The configurations. */
-	private ArrayList<LinkConfiguration> linkConfigurations= new ArrayList<LinkConfiguration>();
 	private ArrayList<PIDConfiguration> pidConfigurations= new ArrayList<PIDConfiguration>();
 
 	private ArrayList<ITaskSpaceUpdateListenerNR> taskSpaceUpdateListeners = new ArrayList<ITaskSpaceUpdateListenerNR>();
@@ -153,7 +152,8 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 	}
 	
 	public ArrayList<LinkConfiguration> getLinkConfigurations() {
-		return linkConfigurations;
+
+		return getFactory().getLinkConfigurations();
 	}
 
 	
@@ -187,7 +187,7 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 					tmpConf.setKD(c.getKD());
 					tmpConf.setEnabled(true);
 					tmpConf.setInverted(c.isInverted());
-					tmpConf.setAsync(true);
+					tmpConf.setAsync(false);
 				
 					tmpConf.setUseLatch(false);
 					tmpConf.setIndexLatch(c.getIndexLatch());
