@@ -35,6 +35,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.locks.ReentrantLock;
 
 import com.neuronrobotics.sdk.commands.bcs.core.NamespaceCommand;
 import com.neuronrobotics.sdk.commands.bcs.core.PingCommand;
@@ -92,7 +93,7 @@ public abstract class BowlerAbstractConnection {
 	private ArrayList<NamespaceEncapsulation> namespaceList=null;
 	private ArrayList<String> nameSpaceStrings = null;
 	private boolean beater = false;
-	
+	private ReentrantLock executingLock = new ReentrantLock();
 	
 	
 	/**
@@ -124,6 +125,8 @@ public abstract class BowlerAbstractConnection {
 	public void setThreadedUpstreamPackets(boolean up){
 		//threadedUpstreamPackets=up;
 	}
+	
+	
 
 	
 	/**
@@ -135,10 +138,12 @@ public abstract class BowlerAbstractConnection {
 	 * @return the bowler datagram
 	 */
 	public synchronized BowlerDatagram sendSynchronusly(BowlerDatagram sendable){
+		
 		if(!isConnected()) {
 			Log.error("Can not send message because the engine is not connected.");
 			return null;
 		}
+		executingLock.lock();
 		clearLastSyncronousResponse();
 		try {
 			long send = System.currentTimeMillis();
@@ -147,6 +152,7 @@ public abstract class BowlerAbstractConnection {
 			write(sendable.getBytes());
 			Log.info("Transmit took: "+(System.currentTimeMillis()-send)+" ms");
 		} catch (IOException e1) {
+			executingLock.unlock();
 			throw new RuntimeException(e1);
 		}
 		long startOfReciveTime = System.currentTimeMillis();
@@ -170,12 +176,13 @@ public abstract class BowlerAbstractConnection {
 				reconnect();
 			} catch (IOException e) {
 				clearLastSyncronousResponse();
+				executingLock.unlock();
 				throw new RuntimeException(e);
 			}
 		}
 		BowlerDatagram b = getLastSyncronousResponse();
 		clearLastSyncronousResponse();
-		
+		executingLock.unlock();
 		return b;
 	}
 	
