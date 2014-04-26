@@ -7,11 +7,12 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import javax.vecmath.Point3f;
 
+import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 
 public class GCodeParser {
 	private ArrayList<PrinterStatusListener> listeners = new ArrayList<PrinterStatusListener>();
-	private GenericKinematicsGCodeInterpreter interp;
+	private GCodeInterpreter interp;
 	NRPrinter device;
 
 	public GCodeParser(NRPrinter nrPrinter) {
@@ -22,7 +23,7 @@ public class GCodeParser {
 	public boolean print(InputStream gcode) {
 		//this should be a thread that takes the gcode and sends it to the printer
 
-		interp=new GenericKinematicsGCodeInterpreter(device); // Could reuse.
+		interp=new GCodeInterpreter(); // Could reuse.
 		addHandlers(interp);
 		System.out.println("Reached print.");
 		try {
@@ -61,18 +62,19 @@ public class GCodeParser {
 		});
 		interp.setGHandler(0, new CodeHandler() {
 			public void execute(GCodeLineData prev, GCodeLineData next) throws Exception {
-				TransformNR t=new TransformNR(next.getWord('X'),next.getWord('Y'),next.getWord('Z'),1,0,0,0);
-				TransformNR prevT=new TransformNR(prev.getWord('X'),prev.getWord('Y'),prev.getWord('Z'),1,0,0,0);
-				double seconds=(t.getOffsetVectorMagnitude(prevT));
-				device.setDesiredPrintLocetion(t, next.getWord('A'), seconds);
+				TransformNR t=new TransformNR(next.getWord('X'),next.getWord('Y'),next.getWord('Z'),new RotationNR());
+				TransformNR prevT=new TransformNR(prev.getWord('X'),prev.getWord('Y'),prev.getWord('Z'),new RotationNR());
+
+				device.setDesiredPrintLocetion(t, next.getWord('A'), 0);// zero seconds is a rapid
 			}
 		});
 		interp.setGHandler(1, new CodeHandler() {
 			public void execute(GCodeLineData prev, GCodeLineData next) throws Exception {
-				TransformNR t=new TransformNR(next.getWord('X'),next.getWord('Y'),next.getWord('Z'),1,0,0,0);
-				TransformNR prevT=new TransformNR(prev.getWord('X'),prev.getWord('Y'),prev.getWord('Z'),1,0,0,0);
+				TransformNR t=new TransformNR(next.getWord('X'),next.getWord('Y'),next.getWord('Z'),new RotationNR());
+				TransformNR prevT=new TransformNR(prev.getWord('X'),prev.getWord('Y'),prev.getWord('Z'),new RotationNR());
 				double seconds=(t.getOffsetVectorMagnitude(prevT)/next.getWord('F'))*60.0;
-				while(device!=null && device.getNumberOfSpacesInBuffer()<2) Thread.sleep(100);//Wait for at least 2 spaces in the buffer
+				while(device!=null && device.getNumberOfSpacesInBuffer()<2) 
+					Thread.sleep(100);//Wait for at least 2 spaces in the buffer
 				int iter=0;
 				while(iter++<1000) {
 					try {
@@ -86,40 +88,6 @@ public class GCodeParser {
 			}
 		});
 		
-		// Add the 
-		/*interp.addGHandler(1, new CodeHandler() {
-			public void execute(GCodeLineData prev, GCodeLineData next) throws Exception {
-				// uh... set the new setpoint.
-				device.setExtrusionPoint((int)next.getWord('T'), next.getWord('A'));
-			}
-		});*/
-		// Linearize.
-		/*interp.setGHandler(1, new CodeHandler() {
-			public void execute(GCodeLineData prev, GCodeLineData next) throws Exception {
-				//Bah. This will be better in the firmware.
-				//This is the /WRONG/ but straightforward way to do this.
-				double a=next.getWord('A')-prev.getWord('A');
-				double x=next.getWord('X')-prev.getWord('X');
-				double y=next.getWord('Y')-prev.getWord('Y');
-				double z=next.getWord('Z')-prev.getWord('Z');
-				double overallLength=Math.sqrt(x*x+y*y+z*z);
-				double ua=a/overallLength;
-				double ux=x/overallLength;
-				double uy=y/overallLength;
-				double uz=z/overallLength;
-				GCodeLineData psub=prev;
-				for(double n=0;n<(overallLength-0.1);n+=0.1) {
-					GCodeLineData sub=new GCodeLineData(next);
-					sub.storeWord('A',prev.getWord('A')+ua*n);
-					sub.storeWord('X',prev.getWord('X')+ux*n);
-					sub.storeWord('Y',prev.getWord('Y')+uy*n);
-					sub.storeWord('Z',prev.getWord('Z')+uz*n);
-					callSubMethods(psub, sub);
-					psub=sub;
-				}
-				callSubMethods(psub, next);
-			}
-		});*/
 	}
 
 	public boolean cancel() {

@@ -18,17 +18,18 @@ public class DeltaForgeDevice extends GenericPIDDevice implements ILinkFactoryPr
 	@Override
 	public boolean connect(){
 		super.connect();
-		int count = getPIDChannelCount();
-		for(int i=0;i<count ;i++){
-			PIDConfiguration conf = getPIDConfiguration(i);
-			conf.setAsync(false);
-			ConfigurePIDController(conf);
-		}
+//		int count = getPIDChannelCount();
+//		for(int i=0;i<count ;i++){
+//			SetPIDSetPoint(i, GetPIDPosition(i), 0);
+//			PIDConfiguration conf = getPIDConfiguration(i);
+//			conf.setAsync(false);
+//			ConfigurePIDController(conf);
+//		}
 		return true;
 	}
 	
 	private int numSpacesRemaining = 1;
-	
+	private int sizeOfBuffer = 1;
 	/**
 	 * This function will set up a multi-dimentional send for position and interpolation
 	 * @param x new x position
@@ -65,25 +66,35 @@ public class DeltaForgeDevice extends GenericPIDDevice implements ILinkFactoryPr
 		numSpacesRemaining = ByteList.convertToInt(dg.getData().getBytes(	0,//Starting index
 																				4),//number of bytes
 																				false);//True for signed data
+		sizeOfBuffer = ByteList.convertToInt(dg.getData().getBytes(	4,//Starting index
+																	4),//number of bytes
+																	false);//True for signed data
 		//System.out.println("Running line x="+taskSpaceTransform.getX()+" y="+taskSpaceTransform.getY()+" z="+taskSpaceTransform.getZ()+" num spaces="+numSpacesRemaining);
 		//Log.enableSystemPrint(false);
 		return numSpacesRemaining;
 	}
 	
 	public void cancelRunningPrint() {
-		send(new CancelPrintCommand());
-		
+		send(	"bcs.cartesian.*",
+				BowlerMethod.POST,
+				"pclr",
+				new Object[]{}, 5);
+
 	}
 	
 	@Override
 	public void onAsyncResponse(BowlerDatagram data) {
 		super.onAsyncResponse(data);
 		if(data.getRPC().equalsIgnoreCase("_sli")) {
-			//System.out.println(data);
+			System.out.println(data);
 			numSpacesRemaining = ByteList.convertToInt(data.getData().getBytes(	0,//Starting index
 																				4),//number of bytes
 																				false);//True for signed data
 		}
+	}
+	
+	public int getNumberOfPacketsWaiting() {
+		return sizeOfBuffer-numSpacesRemaining-1;
 	}
 
 	public int getNumberOfSpacesInBuffer() {

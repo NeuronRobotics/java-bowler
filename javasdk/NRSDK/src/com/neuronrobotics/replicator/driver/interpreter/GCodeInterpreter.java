@@ -231,9 +231,9 @@ public class GCodeInterpreter {
 	 * @throws Exception
 	 */
 	void executeLine() throws Exception {
-		System.out.println(nextLine);
-		System.out.println(gcodes);
-		System.out.println(mcodes);
+		System.out.println("Next Gcode Line "+nextLine);
+		System.out.println("Active Gcodes: "+gcodes);
+		System.out.println("Active Mcodes: "+mcodes);
 		for (int m : mcodes)
 			if (mHandlers[m] != null) {
 				for (CodeHandler handler : mHandlers[m]) {

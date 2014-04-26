@@ -75,10 +75,16 @@ public class NRPrinter extends CartesianNamespacePidKinematics{
 	public boolean print(InputStream gcode) {
 		System.out.println("Printing now.");
 		cancelPrint();
-		ThreadUtil.wait(5000);
+		//ThreadUtil.wait(5000);
 		long start = System.currentTimeMillis();
 		boolean b = getParser().print(gcode);
+		System.out.println("Gcode loaded, waiting for printer to finish");
+		while(deltaDevice.getNumberOfPacketsWaiting()>0){
+			ThreadUtil.wait(5000);
+			System.out.println(deltaDevice.getNumberOfPacketsWaiting()+" remaining");
+		}
 		System.out.println("Print Done, took "+((((double)(System.currentTimeMillis()-start))/1000.0)/60.0)+" minutes");
+		
 		cancelPrint();
 		return b;
 	}
