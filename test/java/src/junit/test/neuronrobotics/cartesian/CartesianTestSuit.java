@@ -15,7 +15,7 @@ public class CartesianTestSuit {
 
 	@Test
 	public void test() {
-		Log.enableDebugPrint();
+		//Log.enableDebugPrint();
 		DeltaForgeDevice dev = new DeltaForgeDevice();
 		dev.setConnection(new SerialConnection("/dev/BowlerDevice.74F726000000"));
 		dev.getConnection().setSynchronusPacketTimeoutTime(2000);
