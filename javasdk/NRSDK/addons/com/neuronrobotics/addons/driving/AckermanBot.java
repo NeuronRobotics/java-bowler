@@ -15,6 +15,12 @@ public class AckermanBot extends AbstractRobotDrive {
 	protected double steeringAngle=0;
 	ServoRotoryLink steering;
 	PIDChannel drive;
+	PIDChannel lSteer;
+	PIDChannel rSteer;
+	PIDChannel bSteer;
+	
+	boolean complexSteering=false;
+	
 	private IAckermanBotKinematics ak = new AckermanDefaultKinematics();
 	
 	protected AckermanBot(){
@@ -26,14 +32,30 @@ public class AckermanBot extends AbstractRobotDrive {
 		steering=s;
 	}
 	
+	public AckermanBot(	PIDChannel drive,
+						PIDChannel lSteer,
+						PIDChannel rSteer,
+						PIDChannel bSteer) {
+		setPIDChanel(drive);
+		steering=null;
+		this.lSteer=lSteer;
+		this.rSteer=rSteer;
+		this.bSteer=bSteer;
+		complexSteering=true;
+	}
+	
 	protected void setPIDChanel(PIDChannel d){
 		drive=d;
 		drive.addPIDEventListener(this);
 	}
 	
 	public void setSteeringHardwareAngle(double s) {
-		steering.setTargetAngle(s);
-		steering.flush(0);
+		if(complexSteering==false){
+			steering.setTargetAngle(s);
+			steering.flush(0);
+		}else{
+			throw new RuntimeException("Steering angles need to be calculated here");
+		}
 	}
 	
 	public void setSteeringAngle(double s) {
