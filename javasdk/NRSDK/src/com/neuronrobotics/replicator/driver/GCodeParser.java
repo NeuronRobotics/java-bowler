@@ -63,7 +63,6 @@ public class GCodeParser {
 		interp.setGHandler(0, new CodeHandler() {
 			public void execute(GCodeLineData prev, GCodeLineData next) throws Exception {
 				TransformNR t=new TransformNR(next.getWord('X'),next.getWord('Y'),next.getWord('Z'),new RotationNR());
-				TransformNR prevT=new TransformNR(prev.getWord('X'),prev.getWord('Y'),prev.getWord('Z'),new RotationNR());
 
 				device.setDesiredPrintLocetion(t, next.getWord('A'), 0);// zero seconds is a rapid
 			}

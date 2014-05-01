@@ -48,7 +48,7 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 	private ArrayList<ITaskSpaceUpdateListenerNR> taskSpaceUpdateListeners = new ArrayList<ITaskSpaceUpdateListenerNR>();
 	private ArrayList<IJointSpaceUpdateListenerNR> jointSpaceUpdateListeners = new ArrayList<IJointSpaceUpdateListenerNR>();
 	private ArrayList<IRegistrationListenerNR> regListeners= new ArrayList<IRegistrationListenerNR>();	
-	
+	private ArrayList<LinkConfiguration> localConfigsFromXml=new ArrayList<LinkConfiguration>();
 	/*This is in RAW joint level ticks*/
 	protected double[] currentJointSpacePositions=null;
 	protected double [] currentJointSpaceTarget;
@@ -57,6 +57,8 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 	private TransformNR fiducial2RAS=new TransformNR();
 	
 	private boolean noFlush = false;
+	private boolean noXmlConfig=true;
+	
 	/* The device */
 	//private IPIDControl device =null;
 	private LinkFactory factory=null;
@@ -75,6 +77,7 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 	}
 	public AbstractKinematicsNR(InputStream configFile,LinkFactory f){
 		this();
+		noXmlConfig=false;
 		if(configFile!=null && f!=null){
 			loadConfig(configFile);
 			setDevice(f);
@@ -152,8 +155,10 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 	}
 	
 	public ArrayList<LinkConfiguration> getLinkConfigurations() {
-
-		return getFactory().getLinkConfigurations();
+		if(noXmlConfig){
+			return getFactory().getLinkConfigurations();
+		}
+		return localConfigsFromXml;
 	}
 
 	
