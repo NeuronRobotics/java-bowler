@@ -6,6 +6,8 @@ import org.junit.Test;
 
 import com.neuronrobotics.replicator.driver.DeltaForgeDevice;
 import com.neuronrobotics.replicator.driver.NRPrinter;
+import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
+import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.serial.SerialConnection;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
@@ -22,15 +24,28 @@ public class CartesianTestSuit {
 		assertTrue(dev.connect());
 		System.out.println("Connection ok");
 		
-		NRPrinter printer = new NRPrinter(dev);
-		printer.cancelPrint();
+		dev.sendLinearSection(new TransformNR(180, 0, 0, new RotationNR()), 0.0, 0);
+		
 		ThreadUtil.wait(5000);
-		try{
-			printer.print(CartesianTestSuit.class.getResourceAsStream("test.gcode"));
-		}catch(Exception ex){
-			ex.printStackTrace();
-			fail();
-		}
+		
+		dev.sendLinearSection(new TransformNR(300, 300, 10, new RotationNR()), 0.0, 0);
+		
+		ThreadUtil.wait(5000);
+		
+		dev.sendLinearSection(new TransformNR(180, -300, 10, new RotationNR()), 0.0, 0);
+		
+		ThreadUtil.wait(5000);
+		dev.sendLinearSection(new TransformNR(180, 0, 0, new RotationNR()), 0.0, 0);
+
+//		NRPrinter printer = new NRPrinter(dev);
+//		printer.cancelPrint();
+//		ThreadUtil.wait(5000);
+//		try{
+//			printer.print(CartesianTestSuit.class.getResourceAsStream("test.gcode"));
+//		}catch(Exception ex){
+//			ex.printStackTrace();
+//			fail();
+//		}
 		
 		
 	}

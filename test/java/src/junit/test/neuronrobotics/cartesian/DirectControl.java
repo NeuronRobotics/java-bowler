@@ -19,7 +19,7 @@ import com.neuronrobotics.sdk.addons.kinematics.gui.SampleGuiNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
-import com.neuronrobotics.sdk.common.Log;
+//import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIOChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.DigitalInputChannel;
@@ -33,7 +33,7 @@ public class DirectControl implements ITaskSpaceUpdateListenerNR, IDigitalInputL
 	DHParameterKinematics model;
 	//DeltaForgeDevice deltaRobot;
 	TransformNR current = new TransformNR();
-	double scale=.5;
+	double scale=1;
 	double [] startVect = new double [] { 0,0,0,0,0,0};
 	private boolean button=false;
 	private boolean lastButton=false;
@@ -121,12 +121,11 @@ public class DirectControl implements ITaskSpaceUpdateListenerNR, IDigitalInputL
 		
 		
 		DeltaForgeDevice delt = new DeltaForgeDevice();
-		if(!ConnectionDialog.getBowlerDevice(delt)){
-			System.exit(0);
-		}
-//		delt.setConnection(deltaConnection);		
-		//delt.setConnection(new SerialConnection("/dev/ttyACM0"));
-		//delt.connect();
+//		if(!ConnectionDialog.getBowlerDevice(delt)){
+//			System.exit(0);
+//		}
+		delt.setConnection(new SerialConnection("/dev/BowlerDevice.74F726000000"));		
+		delt.connect();
 		
 		//deltaRobot = new DeltaForgeDevice(delt);
 		//deltaRobot.setCurrentPoseTarget(new TransformNR());
@@ -175,12 +174,12 @@ public class DirectControl implements ITaskSpaceUpdateListenerNR, IDigitalInputL
 			System.exit(1);
 		}
 		model.addPoseUpdateListener(this);
-		Log.enableWarningPrint();
+		//Log.enableWarningPrint();
 		int loopTime=50;
 		master.getConnection().setSynchronusPacketTimeoutTime(2000);
 		delt.getConnection().setSynchronusPacketTimeoutTime(2000);
 		int x=0,y=0,z=0;
-		Log.enableInfoPrint();
+		//Log.enableInfoPrint();
 		for (DyIOChannel c: master.getChannels()){
 			c.setAsync(false);
 		}
@@ -193,7 +192,7 @@ public class DirectControl implements ITaskSpaceUpdateListenerNR, IDigitalInputL
 //					x=(int)current.getX();
 //					y=(int)current.getY();
 //					z=(int)current.getZ();
-					if(current.getZ()<400&&current.getZ()>-10){
+					if(current.getZ()<400&&current.getZ()>-1000){
 						delt.sendLinearSection(current, 0, 0,true);
 						//System.out.println("Setting x="+current.getX()+" y="+current.getY()+" z="+current.getZ());
 					}
@@ -223,11 +222,11 @@ public class DirectControl implements ITaskSpaceUpdateListenerNR, IDigitalInputL
 	public void onTaskSpaceUpdate(AbstractKinematicsNR source, TransformNR pose) {
 		//System.err.println("Got:"+pose);
 		double ws=50;
-		current = new TransformNR(	((pose.getX())*scale/2),
-									((pose.getY())*scale/2),
-									((pose.getZ() +165)*scale),
+		current = new TransformNR(	((pose.getX())*-scale+180),
+									((pose.getY())*scale),
+									((pose.getZ())*scale),
 				new RotationNR());
-		//System.out.println("Current = "+current);
+		System.out.println("Current = "+current);
 	}
 	public void onTargetTaskSpaceUpdate(AbstractKinematicsNR source,TransformNR pose) {}
 
