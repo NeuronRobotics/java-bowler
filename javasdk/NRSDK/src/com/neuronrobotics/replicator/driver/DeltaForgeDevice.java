@@ -40,7 +40,7 @@ public class DeltaForgeDevice extends GenericPIDDevice implements ILinkFactoryPr
 	 * @return number of spaces in the buffer
 	 */
 	public int sendLinearSection(TransformNR taskSpaceTransform, double mmOfFiliment, int ms) {
-		return sendLinearSection(taskSpaceTransform, mmOfFiliment, ms, false);
+		return sendLinearSection(taskSpaceTransform, mmOfFiliment, ms, ms==0);
 	}
 	/**
 	 * This function will set up a multi-dimentional send for position and interpolation

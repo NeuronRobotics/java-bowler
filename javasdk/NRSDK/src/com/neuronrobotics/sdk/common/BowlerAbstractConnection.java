@@ -403,10 +403,10 @@ public abstract class BowlerAbstractConnection {
 	protected void fireAsyncOnResponse(BowlerDatagram datagram) {
 		if(!datagram.isSyncronous()){
 			if(isInitializedNamespaces()){
-				Log.debug("\nASYNC to "+listeners.size()+" listeners<<\n"+datagram);
+				Log.info("\nASYNC to "+listeners.size()+" listeners<<\n"+datagram);
 				for(IBowlerDatagramListener l : listeners) {
 
-					Log.debug("\nASYNC listener: "+l.getClass());
+					Log.info("\nASYNC listener: "+l.getClass());
 
 					try{
 						l.onAsyncResponse(datagram);
