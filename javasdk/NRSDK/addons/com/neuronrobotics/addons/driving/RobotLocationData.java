@@ -1,4 +1,7 @@
 package com.neuronrobotics.addons.driving;
+
+import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
+
 /**
  * This class represents the Delta position of the robot in the robots co-ordinate system. 
  * Only the delta y, delta x and delta orentation relative to the robots current position
@@ -9,11 +12,21 @@ package com.neuronrobotics.addons.driving;
 
 public class RobotLocationData {
 	private double x,y,o;
+	private TransformNR arm = new TransformNR();
 	public RobotLocationData(double deltaX, double deltaY, double deltaOrentation){
 		 setX(deltaX);
 		 setY(deltaY);
 		 setO(deltaOrentation);
 	}
+	
+	public void setArmLocation(TransformNR arm){
+		this.arm = arm;
+		
+	}
+	public TransformNR getArmTransform(){
+		return arm;
+	}
+	
 	public String toString() {
 		String s="delta: x="+x+" y="+y+" orentation="+o; 
 		return s;
