@@ -2,6 +2,8 @@ package com.neuronrobotics.addons.driving;
 
 import java.util.ArrayList;
 
+import com.neuronrobotics.addons.driving.virtual.ObsticleType;
+
 import gnu.io.NRSerialPort;
 
 public class HokuyoTest implements ISensorListener {
@@ -29,7 +31,7 @@ public class HokuyoTest implements ISensorListener {
 	@Override
 	public void onRangeSensorEvent(AbstractSensor source,ArrayList<DataPoint> data, long timeStamp) {
 		System.out.println("Range Sensor Event "+(System.currentTimeMillis()-start));
-		display.setData(data);
+		display.setUserDefinedData(data,ObsticleType.USERDEFINED);
 		start=System.currentTimeMillis();
 		source.StartSweep(-90, 90, .5);
 		
