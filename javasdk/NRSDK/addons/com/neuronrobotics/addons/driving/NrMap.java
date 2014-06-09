@@ -18,14 +18,14 @@ public class NrMap extends JPanel{
 	 */
 	private static final long serialVersionUID = -1487461776000494761L;
 	
-	private double pixelToCm=10;
+	private double pixelToCm=100;
 	JLabel lab=new JLabel();
 	private BufferedImage display;
 	
 	private ArrayList<userDefinedObsticles> obs = new ArrayList<userDefinedObsticles>();
 	
-	protected static final double width = 600;
-	protected static final double height = 480;
+	protected static final double width = 1024;
+	protected static final double height = 1024;
 	
 	/**
 	 * Instantiate a robot map using a default blank map. 
@@ -65,7 +65,7 @@ public class NrMap extends JPanel{
 	
 	public BufferedImage getMap() {
 		if(display==null){
-			return new BufferedImage(600, 480,BufferedImage.TYPE_INT_RGB);
+			return new BufferedImage((int)width,(int) height,BufferedImage.TYPE_INT_RGB);
 		}
 		BufferedImage d = new BufferedImage(display.getWidth(), display.getHeight(),BufferedImage.TYPE_INT_RGB);
 		Graphics2D g =d.createGraphics();
@@ -81,7 +81,7 @@ public class NrMap extends JPanel{
 	}
 	public void addUserDefinedObsticle(int x, int y, int size){
 		if(display==null){
-			display =  new BufferedImage(600, 480,BufferedImage.TYPE_INT_RGB);
+			display =  new BufferedImage((int)width,(int) height,BufferedImage.TYPE_INT_RGB);
 		}
 		obs.add(new userDefinedObsticles(x,y,size));
 		
@@ -137,6 +137,23 @@ public class NrMap extends JPanel{
 		private int x;
 		private int y;
 		private int size;
+	}
+	
+	public void setData(ArrayList<DataPoint> data) {
+		 //removeAllUserDefinedObsticles();
+		 for(DataPoint d:data){
+			 double pix =  getCmToPixel(d.getRange()/100);
+			 double centerX=(width/2);
+			 double centerY=(height/2);
+			 if(!(pix>centerX || pix>centerY )){
+				 double deltX = pix*Math.cos(Math.toRadians(d.getAngle()));
+				 double deltY = pix*Math.sin(Math.toRadians(d.getAngle()));
+				 addUserDefinedObsticle((int)(centerX+deltX), (int)(centerY+deltY), 2);
+			 }else{
+				 //System.out.println("Range too long: "+pix+" cm="+d.getRange()/100);
+			 }
+		 }
+		 updateMap();
 	}
 	
 }

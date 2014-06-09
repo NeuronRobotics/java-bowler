@@ -55,6 +55,10 @@ public abstract class AbstractRobotDrive implements IPIDEventListener{
 		DriveStraight(0,0);
 	}
 	
+	public RobotLocationData getRobotLocation(){
+		return new RobotLocationData(getCurrentX(), getCurrentY(), getCurrentOrentation());
+	}
+	
 	public void setCurrentX(double currentX) {
 		//System.out.println("Current X is: "+currentX);
 		this.currentX = currentX;

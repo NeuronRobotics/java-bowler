@@ -13,6 +13,11 @@ public enum ObsticleType {
 	
 	FIRE(Color.orange),
 	
+	PINKBALL(Color.orange),
+	HOCKYPUCK(Color.orange),
+	HOOKSAMPLE(Color.orange),
+	ORANGEROD(Color.orange),
+	
 	USERDEFINED(Color.pink),
 	
 	NONE(Color.white);
