@@ -19,8 +19,8 @@ public class NRPrinter extends CartesianNamespacePidKinematics{
 	private  double extrusionCachedValue = 0;
 	private double currentTemp =0;
 	//static InputStream s = XmlFactory.getDefaultConfigurationStream("DeltaPrototype.xml");
-	private AbstractLink extruder;
-	private AbstractLink hotEnd;
+//	private AbstractLink extruder;
+//	private AbstractLink hotEnd;
 	private double temp = 0;
 
 	
@@ -28,15 +28,15 @@ public class NRPrinter extends CartesianNamespacePidKinematics{
 		super(d,d);
 		this.setDeltaDevice(d);
 		
-		extruder = getFactory().getLink("Extruder");
-		hotEnd = getFactory().getLink("Heater");
+//		extruder = getFactory().getLink("Extruder");
+//		hotEnd = getFactory().getLink("Heater");
 		setTempreture(getTempreture());
 		getFactory().addLinkListener(new ILinkListener() {
 			@Override
 			public void onLinkPositionUpdate(AbstractLink source,double engineeringUnitsValue) {
-				if(source == hotEnd) {
-					setTempreture(engineeringUnitsValue);
-				}
+//				if(source == hotEnd) {
+//					setTempreture(engineeringUnitsValue);
+//				}
 			}
 			
 			@Override
@@ -144,9 +144,9 @@ public class NRPrinter extends CartesianNamespacePidKinematics{
 			return;
 		}else
 			currentTemp=extTemp[0];
-		setTempreture(hotEnd.getCurrentEngineeringUnits());
-		hotEnd.setTargetEngineeringUnits(extTemp[0]);
-		hotEnd.flush(0);
+//		setTempreture(hotEnd.getCurrentEngineeringUnits());
+//		hotEnd.setTargetEngineeringUnits(extTemp[0]);
+//		hotEnd.flush(0);
 		getTempreture();
 		System.out.print("\r\nWaiting for Printer to come up to tempreture "+currentTemp+" C \n");
 		Log.enableSystemPrint(false);
@@ -181,7 +181,7 @@ public class NRPrinter extends CartesianNamespacePidKinematics{
 	
 	public void setExtrusionPoint(int materialNumber, double setPoint) {
 		//TODO another method to set material
-		extruder.setTargetEngineeringUnits(setPoint);
+//		extruder.setTargetEngineeringUnits(setPoint);
 		setExtrusionCachedValue(setPoint);
 	}
 	
