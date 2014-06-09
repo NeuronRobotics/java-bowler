@@ -11,16 +11,17 @@ public enum ObsticleType {
 
 	WALL(Color.blue),
 	
-	FIRE(Color.orange),
+	FIRE(Color.magenta),
 	
-	PINKBALL(Color.orange),
-	HOCKYPUCK(Color.orange),
-	HOOKSAMPLE(Color.orange),
+	PINKBALL(Color.pink),
+	HOCKYPUCK(Color.red),
+	HOOKSAMPLE(Color.white),
 	ORANGEROD(Color.orange),
+	BASESTATION(Color.yellow),
 	
-	USERDEFINED(Color.pink),
+	USERDEFINED(Color.green),
 	
-	NONE(Color.white);
+	NONE(Color.lightGray);
 	
 	/** The Constant lookup. */
 	private static final Map<Color,ObsticleType > lookup = new HashMap<Color,ObsticleType >();

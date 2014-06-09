@@ -79,11 +79,11 @@ public class NrMap extends JPanel{
 	public void removeAllUserDefinedObsticles(){
 		obs.clear();
 	}
-	public void addUserDefinedObsticle(int x, int y, int size){
+	public void addUserDefinedObsticle(int x, int y, int size,ObsticleType type){
 		if(display==null){
 			display =  new BufferedImage((int)width,(int) height,BufferedImage.TYPE_INT_RGB);
 		}
-		obs.add(new userDefinedObsticles(x,y,size));
+		obs.add(new userDefinedObsticles(x,y,size,type));
 		
 	}
 	
@@ -99,14 +99,16 @@ public class NrMap extends JPanel{
 	}
 	
 	private class userDefinedObsticles{
-		public userDefinedObsticles(int x2, int y2, int size2) {
+		ObsticleType type;
+		public userDefinedObsticles(int x2, int y2, int size2,ObsticleType type) {
+			this.type = type;
 			setX(x2);
 			setY(y2);
 			setSize(size2);
 		}
 
 		public void drawUserObsticles(Graphics2D g) {
-			g.setColor(Color.pink);
+			g.setColor(type.getValue());
 			g.fillRect(getX()-(getSize()/2),getY()-(getSize()/2), getSize(),getSize());
 		}
 
@@ -138,8 +140,7 @@ public class NrMap extends JPanel{
 		private int y;
 		private int size;
 	}
-	
-	public void setData(ArrayList<DataPoint> data) {
+	public void setUserDefinedData(ArrayList<DataPoint> data,ObsticleType type) {
 		 //removeAllUserDefinedObsticles();
 		 for(DataPoint d:data){
 			 double pix =  getCmToPixel(d.getRange()/100);
@@ -148,7 +149,7 @@ public class NrMap extends JPanel{
 			 if(!(pix>centerX || pix>centerY )){
 				 double deltX = pix*Math.cos(Math.toRadians(d.getAngle()));
 				 double deltY = pix*Math.sin(Math.toRadians(d.getAngle()));
-				 addUserDefinedObsticle((int)(centerX+deltX), (int)(centerY+deltY), 2);
+				 addUserDefinedObsticle((int)(centerX+deltX), (int)(centerY+deltY), 2,type);
 			 }else{
 				 //System.out.println("Range too long: "+pix+" cm="+d.getRange()/100);
 			 }

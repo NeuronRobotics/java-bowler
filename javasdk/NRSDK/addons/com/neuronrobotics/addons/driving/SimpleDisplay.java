@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import javax.swing.JFrame;
 
+import com.neuronrobotics.addons.driving.virtual.ObsticleType;
 import com.neuronrobotics.sdk.ui.ConnectionImageIconFactory;
 
 public class SimpleDisplay extends NrMap {
@@ -40,7 +41,7 @@ public class SimpleDisplay extends NrMap {
 			 if(!(pix>centerX || pix>centerY )){
 				 double deltX = pix*Math.cos(Math.toRadians(d.getAngle()));
 				 double deltY = pix*Math.sin(Math.toRadians(d.getAngle()));
-				 addUserDefinedObsticle((int)(centerX+deltX), (int)(centerY+deltY), 2);
+				 addUserDefinedObsticle((int)(centerX+deltX), (int)(centerY+deltY), 2,ObsticleType.USERDEFINED);
 			 }else{
 				 //System.out.println("Range too long: "+pix+" cm="+d.getRange()/100);
 			 }
