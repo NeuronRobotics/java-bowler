@@ -1,6 +1,8 @@
 package com.neuronrobotics.addons.driving;
 
 import com.neuronrobotics.sdk.addons.kinematics.ServoRotoryLink;
+import com.neuronrobotics.sdk.common.Log;
+import com.neuronrobotics.sdk.dyio.peripherals.DigitalOutputChannel;
 import com.neuronrobotics.sdk.pid.PIDChannel;
 import com.neuronrobotics.sdk.pid.PIDCommandException;
 import com.neuronrobotics.sdk.pid.PIDEvent;
@@ -22,6 +24,10 @@ public class AckermanBot extends AbstractRobotDrive {
 	boolean complexSteering=false;
 	
 	private IAckermanBotKinematics ak = new AckermanDefaultKinematics();
+	private DigitalOutputChannel driveEnable;
+	private DigitalOutputChannel driveDirection;
+	private double scale = 360.0/4096.0;
+	private int currentEncoderReading;
 	
 	protected AckermanBot(){
 		
@@ -35,13 +41,18 @@ public class AckermanBot extends AbstractRobotDrive {
 	public AckermanBot(	PIDChannel drive,
 						PIDChannel lSteer,
 						PIDChannel rSteer,
-						PIDChannel bSteer) {
+						PIDChannel bSteer, 
+						DigitalOutputChannel driveEnable, 
+						DigitalOutputChannel driveDirection) {
+		this.driveEnable = driveEnable;
+		this.driveDirection = driveDirection;
 		setPIDChanel(drive);
-		steering=null;
+
 		this.lSteer=lSteer;
 		this.rSteer=rSteer;
 		this.bSteer=bSteer;
 		complexSteering=true;
+		SetDriveVelocity(0);
 	}
 	
 	protected void setPIDChanel(PIDChannel d){
@@ -53,8 +64,11 @@ public class AckermanBot extends AbstractRobotDrive {
 		if(complexSteering==false){
 			steering.setTargetAngle(s);
 			steering.flush(0);
+			
 		}else{
-			throw new RuntimeException("Steering angles need to be calculated here");
+			this.lSteer.SetPIDSetPoint((int) (s/scale), 0);
+			this.rSteer.SetPIDSetPoint((int) (s/scale), 0);
+			this.bSteer.SetPIDSetPoint(0, 0);
 		}
 	}
 	
@@ -80,16 +94,23 @@ public class AckermanBot extends AbstractRobotDrive {
 		return steeringAngle;
 	}
 	protected void SetDriveDistance(int ticks, double seconds){
-		System.out.println("Seting PID set point of="+ticks);
-		drive.SetPIDSetPoint(ticks, seconds);
+		Log.debug("Seting PID set point of= "+ticks+" currently at "+currentEncoderReading);
+		//drive.SetPIDSetPoint(ticks, seconds);
+		driveDirection.setHigh(ticks< currentEncoderReading);
+		driveEnable.setHigh(false);
+		ThreadUtil.wait((int) (seconds*1000));
+		driveEnable.setHigh(true);
+		Log.debug("Arrived at= "+currentEncoderReading);
 	}
 	protected void SetDriveVelocity(int ticksPerSecond){
-		System.out.println("Seting PID Velocity set point of="+ticksPerSecond);
-		try {
-			drive.SetPDVelocity(ticksPerSecond, 0);
-		} catch (PIDCommandException e) {
-			e.printStackTrace();
+		Log.debug("Seting PID Velocity set point of="+ticksPerSecond);
+		if(ticksPerSecond>0){
+			driveDirection.setHigh(ticksPerSecond> 0);
+			driveEnable.setHigh(false);
+		}else{
+			driveEnable.setHigh(true);
 		}
+
 	}
 	protected void ResetDrivePosition(){
 		//Log.enableDebugPrint(true);
@@ -123,6 +144,7 @@ public class AckermanBot extends AbstractRobotDrive {
 
 	@Override
 	public void onPIDEvent(PIDEvent e) {
+		currentEncoderReading = e.getValue();
 		setRobotLocationUpdate(ak.onPIDEvent(e,getSteeringAngle()));
 	}
 

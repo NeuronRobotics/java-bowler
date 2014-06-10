@@ -202,8 +202,8 @@ public class LinkConfiguration {
     	isLatch=conf.isUseLatch();
     	indexLatch=(int) conf.getIndexLatch();
     	isStopOnLatch=conf.isStopOnIndex();
-    	if(indexLatch>getUpperLimit() || indexLatch<getLowerLimit() )
-    	    throw new RuntimeException("PID group "+getHardwareIndex()+" Index latch is "+indexLatch+" but needs to be between "+getUpperLimit()+" and "+getLowerLimit());
+//    	if(indexLatch>getUpperLimit() || indexLatch<getLowerLimit() )
+//    	    throw new RuntimeException("PID group "+getHardwareIndex()+" Index latch is "+indexLatch+" but needs to be between "+getUpperLimit()+" and "+getLowerLimit());
     	
 	}
 	

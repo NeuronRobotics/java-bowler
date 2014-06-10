@@ -161,7 +161,7 @@ public class Log {
 				 System.err.println(m);
 		}
 		
-		if(debugprint && importance == DEBUG) {
+		if(debugprint) {
 			outStream.println("# " + message);
 			if(outStream != System.out)
 				 System.out.println(m);
