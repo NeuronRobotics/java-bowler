@@ -33,7 +33,7 @@ public class DirectControl implements ITaskSpaceUpdateListenerNR, IDigitalInputL
 	DHParameterKinematics model;
 	//DeltaForgeDevice deltaRobot;
 	TransformNR current = new TransformNR();
-	double scale=1;
+	double scale=.5;
 	double [] startVect = new double [] { 0,0,0,0,0,0};
 	private boolean button=false;
 	private boolean lastButton=false;
@@ -192,7 +192,7 @@ public class DirectControl implements ITaskSpaceUpdateListenerNR, IDigitalInputL
 //					x=(int)current.getX();
 //					y=(int)current.getY();
 //					z=(int)current.getZ();
-					if(current.getZ()<400&&current.getZ()>-1000){
+					if(current.getZ()<400&&current.getZ()>0){
 						delt.sendLinearSection(current, 0, 0,true);
 						//System.out.println("Setting x="+current.getX()+" y="+current.getY()+" z="+current.getZ());
 					}
@@ -222,9 +222,9 @@ public class DirectControl implements ITaskSpaceUpdateListenerNR, IDigitalInputL
 	public void onTaskSpaceUpdate(AbstractKinematicsNR source, TransformNR pose) {
 		//System.err.println("Got:"+pose);
 		double ws=50;
-		current = new TransformNR(	((pose.getX())*-scale+180),
-									((pose.getY())*scale),
-									((pose.getZ())*scale),
+		current = new TransformNR(	((pose.getX()+180)*scale),
+									((pose.getY())*scale/2),
+									((pose.getZ())*scale+100),
 				new RotationNR());
 		System.out.println("Current = "+current);
 	}

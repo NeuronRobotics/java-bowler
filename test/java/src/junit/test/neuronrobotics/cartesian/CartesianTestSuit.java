@@ -24,18 +24,18 @@ public class CartesianTestSuit {
 		assertTrue(dev.connect());
 		System.out.println("Connection ok");
 		
-		dev.sendLinearSection(new TransformNR(180, 0, 0, new RotationNR()), 0.0, 0);
+		dev.sendLinearSection(new TransformNR(40, 40, 300, new RotationNR()), 0.0, 3000);
 		
 		ThreadUtil.wait(5000);
 		
-		dev.sendLinearSection(new TransformNR(300, 300, 10, new RotationNR()), 0.0, 0);
+		dev.sendLinearSection(new TransformNR(-40, 40,300, new RotationNR()), 0.0, 3000);
 		
 		ThreadUtil.wait(5000);
 		
-		dev.sendLinearSection(new TransformNR(180, -300, 10, new RotationNR()), 0.0, 0);
+		dev.sendLinearSection(new TransformNR(40, -40, 300, new RotationNR()), 0.0, 3000);
 		
 		ThreadUtil.wait(5000);
-		dev.sendLinearSection(new TransformNR(180, 0, 0, new RotationNR()), 0.0, 0);
+		dev.sendLinearSection(new TransformNR(-40, -40, 300, new RotationNR()), 0.0, 3000);
 
 //		NRPrinter printer = new NRPrinter(dev);
 //		printer.cancelPrint();
