@@ -222,9 +222,9 @@ public class DirectControl implements ITaskSpaceUpdateListenerNR, IDigitalInputL
 	public void onTaskSpaceUpdate(AbstractKinematicsNR source, TransformNR pose) {
 		//System.err.println("Got:"+pose);
 		double ws=50;
-		current = new TransformNR(	((pose.getX()+180)*scale),
-									((pose.getY())*scale/2),
-									((pose.getZ())*scale+100),
+		current = new TransformNR(	((pose.getY())*scale+25),
+									((pose.getX()+180)*scale),
+									((pose.getZ())+100),
 				new RotationNR());
 		System.out.println("Current = "+current);
 	}

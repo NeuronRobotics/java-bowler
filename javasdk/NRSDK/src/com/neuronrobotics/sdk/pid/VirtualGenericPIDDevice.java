@@ -18,6 +18,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 	
 	private ArrayList<DriveThread>  driveThreads = new  ArrayList<DriveThread>();
 	private ArrayList<PIDConfiguration>  configs = new  ArrayList<PIDConfiguration>();
+	private ArrayList<PDVelocityConfiguration>  PDconfigs = new  ArrayList<PDVelocityConfiguration>();
 	SyncThread sync = new SyncThread ();
 	private double maxTicksPerSecond;
 	
@@ -25,16 +26,37 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 	
 	public  VirtualGenericPIDDevice( double maxTicksPerSecond) {
 		this.setMaxTicksPerSecond(maxTicksPerSecond);
+		getImplementation().setChannelCount(new Integer(numChannels));
 		GetAllPIDPosition();
-		for(PIDConfiguration c:configs)
-			c.setEnabled(true);
+		for(int i=0; i<numChannels;i++){
+			configs.add(new PIDConfiguration());
+			PDconfigs.add(new PDVelocityConfiguration());
+		}
+			
 		sync.start();
 		
 	}
+	
+	@Override
+	public boolean ConfigurePDVelovityController(PDVelocityConfiguration config) {
+		PDconfigs.set(config.getGroup(), config);
+		
+		return true;
+	}
+
+	@Override
+	public PDVelocityConfiguration getPDVelocityConfiguration(int group) {
+		return PDconfigs.get(group);
+	}
+	
+	
 	public boolean ConfigurePIDController(PIDConfiguration config) { 
 		configs.set(config.getGroup(), config);
 		
 		return true;
+	}
+	public PIDConfiguration getPIDConfiguration(int group) {
+		return configs.get(group);
 	}
 	
 	@Override 
@@ -51,9 +73,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 		return true;
 	}
 	
-	public PIDConfiguration getPIDConfiguration(int group) {
-		return configs.get(group);
-	}
+
 	/**
 	 * since there is no connection, this is an easy to nip off com functionality
 	 *

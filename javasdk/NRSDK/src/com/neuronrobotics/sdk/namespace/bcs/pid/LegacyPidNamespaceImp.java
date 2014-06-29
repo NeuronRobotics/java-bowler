@@ -23,7 +23,7 @@ import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 
 public class LegacyPidNamespaceImp extends GenericPidNamespaceImp {
 
-
+	
 	public LegacyPidNamespaceImp(BowlerAbstractDevice device) {
 		super(device);
 	}
@@ -96,8 +96,11 @@ public class LegacyPidNamespaceImp extends GenericPidNamespaceImp {
 
 	@Override
 	public int getPIDChannelCount() {
-		BowlerDatagram dg = getDevice().send (new GetPIDChannelCountCommand());
-		return ByteList.convertToInt(dg.getData().getBytes(0, 4));
+		if(getChannelCount()==null){
+			BowlerDatagram dg = getDevice().send (new GetPIDChannelCountCommand());
+			setChannelCount(ByteList.convertToInt(dg.getData().getBytes(0, 4)));
+		}
+		return getChannelCount();
 	}
 
 	@Override

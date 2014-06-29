@@ -173,18 +173,21 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IExtendedP
 		getImplementation().setChannels(channels);
 	}
 	public GenericPidNamespaceImp getImplementation() {
-		if(this.getClass() == VirtualGenericPIDDevice.class){
-			setImplementation(new LegacyPidNamespaceImp(this));
-			return implementation;
-		}
+		
+
 		if(implementation==null){
-			if(hasNamespace("bcs.pid.*;0.3;;")){
-				//Log.info("Using legacy PID namespace");
+			if(this.getClass() == VirtualGenericPIDDevice.class){
 				setImplementation(new LegacyPidNamespaceImp(this));
-			}
-			else{
-				//Log.info("Using new PID namespace");
-				setImplementation(new PidNamespaceImp(this));
+				return implementation;
+			}else{
+				if(hasNamespace("bcs.pid.*;0.3;;")){
+					//Log.info("Using legacy PID namespace");
+					setImplementation(new LegacyPidNamespaceImp(this));
+				}
+				else{
+					//Log.info("Using new PID namespace");
+					setImplementation(new PidNamespaceImp(this));
+				}
 			}
 		}
 		return implementation;
