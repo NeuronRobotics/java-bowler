@@ -121,7 +121,8 @@ public class DeltaForgeDevice extends GenericPIDDevice implements ILinkFactoryPr
 												taskSpaceTransform.getRotation().getRotationMatrix2QuaturnionX(),
 												taskSpaceTransform.getRotation().getRotationMatrix2QuaturnionY(),
 												taskSpaceTransform.getRotation().getRotationMatrix2QuaturnionZ(),
-												taskSpaceTransform.getRotation().getRotationMatrix2QuaturnionW()
+												taskSpaceTransform.getRotation().getRotationMatrix2QuaturnionW(),
+												seconds
 												}, 
 										5);
 
