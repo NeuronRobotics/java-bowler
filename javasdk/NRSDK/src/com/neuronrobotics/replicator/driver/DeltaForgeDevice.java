@@ -112,22 +112,67 @@ public class DeltaForgeDevice extends GenericPIDDevice implements ILinkFactoryPr
 	@Override
 	public double[] setDesiredTaskSpaceTransform(TransformNR taskSpaceTransform, double seconds) {
 		
-		return new double []{0,0,0,0,0};
+		Object [] args = send(	"bcs.cartesian.*",
+								BowlerMethod.POST,
+								"sdtt",
+								new Object[]{	taskSpaceTransform.getX(),
+												taskSpaceTransform.getY(),
+												taskSpaceTransform.getZ(),
+												taskSpaceTransform.getRotation().getRotationMatrix2QuaturnionX(),
+												taskSpaceTransform.getRotation().getRotationMatrix2QuaturnionY(),
+												taskSpaceTransform.getRotation().getRotationMatrix2QuaturnionZ(),
+												taskSpaceTransform.getRotation().getRotationMatrix2QuaturnionW()
+												}, 
+										5);
+
+		double [] jointAngles = (double[]) args[0];
+		return jointAngles;
 	}
 	@Override
 	public TransformNR getCurrentTaskSpaceTransform() {
-		// TODO Auto-generated method stub
-		return new TransformNR();
+		Object [] args = send(	"bcs.cartesian.*",
+				BowlerMethod.GET,
+				"gctt",
+				new Object[]{}, 
+						5);
+		
+		
+		return new TransformNR(	(Double)args[0],
+								(Double)args[1],
+								(Double)args[2],
+								(Double)args[3],
+								(Double)args[4],
+								(Double)args[5],
+								(Double)args[6]
+								);
 	}
 	@Override
 	public TransformNR setDesiredJointSpaceVector(double[] jointSpaceVect, double seconds) {
-		// TODO Auto-generated method stub
-		return new TransformNR();
+		
+		Object [] args = send(	"bcs.cartesian.*",
+				BowlerMethod.POST,
+				"sdjv",
+				new Object[]{jointSpaceVect}, 
+						5);
+		
+		
+		return new TransformNR(	(Double)args[0],
+								(Double)args[1],
+								(Double)args[2],
+								(Double)args[3],
+								(Double)args[4],
+								(Double)args[5],
+								(Double)args[6]
+								);
 	}
 	@Override
 	public void setDesiredJointAxisValue(int axis, double value, double seconds) {
 		// TODO Auto-generated method stub
-		
+		 send(	"bcs.cartesian.*",
+				BowlerMethod.POST,
+				"sdsj",
+				new Object[]{axis,value,seconds}, 
+						5);
 	}
 
 	

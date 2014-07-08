@@ -51,6 +51,9 @@ public enum BowlerDataType implements ISendable {
 	/** Boolean value, 0 is false, not 0 is true*/
 	BOOL(43),
 	
+	/** stream of floats, first byte is unsigned char to indicate number of data values in the stream*/
+	FIXED1k_STR(44),
+	
 	/** Unknown**/
 	INVALID(0);
 	
