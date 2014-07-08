@@ -17,25 +17,17 @@ public class CartesianTestSuit {
 
 	@Test
 	public void test() {
-		//Log.enableDebugPrint();
+		Log.enableDebugPrint();
 		BowlerBoardDevice dev = new BowlerBoardDevice();
 		dev.setConnection(new SerialConnection("/dev/BowlerDevice.74F726000000"));
 		dev.getConnection().setSynchronusPacketTimeoutTime(2000);
 		assertTrue(dev.connect());
 		System.out.println("Connection ok");
 		
-		dev.sendLinearSection(new TransformNR(40, 40, 300, new RotationNR()), 0.0, 3000);
-		
-		ThreadUtil.wait(5000);
-		
-		dev.sendLinearSection(new TransformNR(-40, 40,300, new RotationNR()), 0.0, 3000);
-		
-		ThreadUtil.wait(5000);
-		
-		dev.sendLinearSection(new TransformNR(40, -40, 300, new RotationNR()), 0.0, 3000);
-		
-		ThreadUtil.wait(5000);
-		dev.sendLinearSection(new TransformNR(-40, -40, 300, new RotationNR()), 0.0, 3000);
+		dev.setDesiredTaskSpaceTransform(new TransformNR(), 1);
+		dev.getCurrentTaskSpaceTransform();
+		dev.setDesiredJointSpaceVector(new double [] {0,0,0,0,0},1);
+		dev.setDesiredJointAxisValue(0,100,1);
 
 //		NRPrinter printer = new NRPrinter(dev);
 //		printer.cancelPrint();
