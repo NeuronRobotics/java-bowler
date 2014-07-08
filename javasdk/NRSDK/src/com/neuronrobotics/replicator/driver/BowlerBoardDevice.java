@@ -13,7 +13,7 @@ import com.neuronrobotics.sdk.pid.ILinkFactoryProvider;
 import com.neuronrobotics.sdk.pid.PIDConfiguration;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
-public class DeltaForgeDevice extends GenericPIDDevice implements ILinkFactoryProvider {
+public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryProvider {
 	
 	@Override
 	public boolean connect(){
@@ -145,6 +145,7 @@ public class DeltaForgeDevice extends GenericPIDDevice implements ILinkFactoryPr
 								(Double)args[4],
 								(Double)args[5],
 								(Double)args[6]
+										
 								);
 	}
 	@Override

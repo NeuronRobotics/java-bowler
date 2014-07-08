@@ -14,7 +14,7 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
 public class NRPrinter extends CartesianNamespacePidKinematics{
 	private GCodeParser parser;
 	private StlSlicer slicer;
-	private DeltaForgeDevice deltaDevice;
+	private BowlerBoardDevice deltaDevice;
 	//Configuration hard coded
 	private  double extrusionCachedValue = 0;
 	private double currentTemp =0;
@@ -24,7 +24,7 @@ public class NRPrinter extends CartesianNamespacePidKinematics{
 	private double temp = 0;
 
 	
-	public NRPrinter(DeltaForgeDevice d) {
+	public NRPrinter(BowlerBoardDevice d) {
 		super(d,d);
 		this.setDeltaDevice(d);
 		
@@ -119,11 +119,11 @@ public class NRPrinter extends CartesianNamespacePidKinematics{
 		return parser;
 	}
 
-	public DeltaForgeDevice getDeltaDevice() {
+	public BowlerBoardDevice getDeltaDevice() {
 		return deltaDevice;
 	}
 
-	public void setDeltaDevice(DeltaForgeDevice d) {
+	public void setDeltaDevice(BowlerBoardDevice d) {
 		this.deltaDevice = d;
 	}
 	

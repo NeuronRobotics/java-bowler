@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.neuronrobotics.replicator.driver.DeltaForgeDevice;
+import com.neuronrobotics.replicator.driver.BowlerBoardDevice;
 import com.neuronrobotics.replicator.driver.NRPrinter;
 import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
@@ -18,7 +18,7 @@ public class CartesianTestSuit {
 	@Test
 	public void test() {
 		//Log.enableDebugPrint();
-		DeltaForgeDevice dev = new DeltaForgeDevice();
+		BowlerBoardDevice dev = new BowlerBoardDevice();
 		dev.setConnection(new SerialConnection("/dev/BowlerDevice.74F726000000"));
 		dev.getConnection().setSynchronusPacketTimeoutTime(2000);
 		assertTrue(dev.connect());
