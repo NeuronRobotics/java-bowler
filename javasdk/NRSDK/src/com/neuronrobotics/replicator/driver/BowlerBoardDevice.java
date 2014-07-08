@@ -109,6 +109,16 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 		
 		return new LinkConfiguration(args);
 	}
+	
+	public void runKinematicsEngine(boolean index) {
+		 send("bcs.cartesian.*",
+				BowlerMethod.POST,
+				"runk",
+				new Object[]{index}, 5);
+		
+		return;
+	}
+	
 	@Override
 	public double[] setDesiredTaskSpaceTransform(TransformNR taskSpaceTransform, double seconds) {
 		
@@ -122,7 +132,7 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 												taskSpaceTransform.getRotation().getRotationMatrix2QuaturnionY(),
 												taskSpaceTransform.getRotation().getRotationMatrix2QuaturnionZ(),
 												taskSpaceTransform.getRotation().getRotationMatrix2QuaturnionW(),
-												seconds
+												(int)(seconds*1000)
 												}, 
 										5);
 
@@ -173,7 +183,7 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 		 send(	"bcs.cartesian.*",
 				BowlerMethod.POST,
 				"sdsj",
-				new Object[]{axis,value,seconds}, 
+				new Object[]{axis,value,(int)(seconds*1000)}, 
 						5);
 	}
 
