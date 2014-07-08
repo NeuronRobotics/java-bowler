@@ -164,7 +164,7 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 		Object [] args = send(	"bcs.cartesian.*",
 				BowlerMethod.POST,
 				"sdjv",
-				new Object[]{jointSpaceVect}, 
+				new Object[]{jointSpaceVect,(int)seconds}, 
 						5);
 		
 		

@@ -174,7 +174,7 @@ public class LinkFactory {
 	}
 	public void setCachedTargets(double[] jointSpaceVect) {
 		if(jointSpaceVect.length!=links.size())
-			throw new IndexOutOfBoundsException();
+			throw new IndexOutOfBoundsException("Expected "+links.size()+" links, got "+jointSpaceVect.length);
 		int i=0;
 		for(AbstractLink lin:links){
 			try{
