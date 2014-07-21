@@ -148,6 +148,7 @@ public class BowlerUDPClient extends BowlerAbstractConnection{
 	 */
 	public ArrayList<InetAddress>  getAllAddresses(){
 		if (udp!= null){
+			udp.updateAvailibleAddresses();
 			return udp.getAllAddresses();
 		}
 			

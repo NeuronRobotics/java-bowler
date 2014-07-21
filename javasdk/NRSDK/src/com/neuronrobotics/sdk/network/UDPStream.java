@@ -26,8 +26,13 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
+import com.neuronrobotics.sdk.commands.bcs.core.PingCommand;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
+import com.neuronrobotics.sdk.common.BowlerDatagram;
+import com.neuronrobotics.sdk.common.BowlerDatagramFactory;
 import com.neuronrobotics.sdk.common.ByteList;
+import com.neuronrobotics.sdk.common.Log;
+import com.neuronrobotics.sdk.common.MACAddress;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 /**
@@ -121,55 +126,16 @@ public class UDPStream {
 	public void start(){
 		//Log.info("Starting the UDP Stream Manager...");
 		isAlive = true;
-		INS.start();
-		OUTS.start();
-		
+		//INS.start();
+		//OUTS.start();
 	}
-	private class UDPins extends Thread {
+	
+	private class UDPins {
 		private ByteList inputData = new ByteList();
 		DatagramPacket receivePacket;
 		private InputStream ins = new InputStream() {
-			public int available(){
-				if(inputData.size()>0) {
-					return inputData.size();
-				}
-				return 0;
-			}
-			public final int read(byte[] b, int off,int len)throws IOException{
-				////Log.info("Reading "+len+" bytes from UDP: "+inputData.size());
-				int i=0;
-				byte[] get;
-				synchronized(inputData){
-					get = inputData.popList(off,len);
-				}
-				for(i=0;i<len;i++) {
-					if(i==b.length) {
-						throw new IOException("Buffer too small to hold data");
-					}
-					b[i]=get[i];
-				}
-				////Log.info("Read: "+i+" Bytes, "+inputData.size()+" left");
-				return i;
-			}
-			@Override
-			public final int read( byte[] rawBuffer) throws IOException {
-				synchronized(inputData){
-					return read(rawBuffer,0,inputData.size());
-				}
-			}
-
-			@Override
-			public int read() throws IOException {
-				synchronized(inputData){
-					if(inputData.size()>0)
-						return inputData.pop();
-				}
-				throw new IOException("Reading from empty buffer!");
-			}
-		};
-		public void run(){
-			while(isAlive){
-				try {Thread.sleep(10);} catch (InterruptedException e) {}
+			
+			private void update(){
 				receivePacket = new DatagramPacket(receiveData, receiveData.length);
                 try {
                 	while(udpSock==null) {
@@ -209,52 +175,95 @@ public class UDPStream {
 				}
 
 			}
-		}
+			
+			public int available(){
+				if(inputData.size()>0) {
+					return inputData.size();
+				}
+				return 0;
+			}
+			public final int read(byte[] b, int off,int len)throws IOException{
+				update();
+				////Log.info("Reading "+len+" bytes from UDP: "+inputData.size());
+				int i=0;
+				byte[] get;
+
+				get = inputData.popList(off,len);
+				
+				for(i=0;i<len;i++) {
+					if(i==b.length) {
+						throw new IOException("Buffer too small to hold data");
+					}
+					b[i]=get[i];
+				}
+				////Log.info("Read: "+i+" Bytes, "+inputData.size()+" left");
+				return i;
+			}
+			@Override
+			public final int read( byte[] rawBuffer) throws IOException {
+				update();
+
+				return read(rawBuffer,0,inputData.size());
+				
+			}
+
+			@Override
+			public int read() throws IOException {
+				update();
+
+				if(inputData.size()>0)
+					return inputData.pop();
+				
+				throw new IOException("Reading from empty buffer!");
+			}
+		};
+		
 		private void add(byte[] b){
 			//Use most recent address as output
 			IPAddress = receivePacket.getAddress();
 			incomingPort = receivePacket.getPort();
 			if(!addrs.contains(IPAddress))
 				addrs.add(IPAddress);
-			synchronized(inputData){
-				inputData.add(b);
-			}
+			inputData.add(b);
 		}
+		DataInputStream dataInputStream=null;
+		
 		public DataInputStream getStream(){
-			return new DataInputStream(ins);
+			if(dataInputStream == null)
+				dataInputStream = new DataInputStream(ins);
+			return dataInputStream;
 		}
 	}
-	private class UDPouts extends Thread{
+	private class UDPouts{
 		private ByteList outputData = new ByteList();
 		private InetAddress myAddr=null;
 		private int myPort;
 		private OutputStream outs = new OutputStream() {
 			public void write(byte [] raw){
-				synchronized(outputData){
-					outputData.add(raw);
-				}
+				outputData.add(raw);
+				update();
+				
 			}
 			public void flush(){
+				
 				while( outputData.size()>0);
 			}
 			@Override
-			public void write(int arg) throws IOException {
-				synchronized(outputData){
-					outputData.add((byte)arg);
-				}
+			public void write(int arg) throws IOException {	
+				outputData.add((byte)arg);
+				update();
 			}
 		};
-		public void run(){
-			while(isAlive ){
-				ThreadUtil.wait(1);
+		public void update(){
+	
 				while(udpSock==null && isAlive){
             		ThreadUtil.wait(100);
             	}
 				try {				
 					if( outputData.size()>0){
-						synchronized(outputData){
-							sendData=outputData.popList(outputData.size());
-						}
+						
+						sendData=outputData.popList(outputData.size());
+						
 						if(sendData.length == 0 )
 							return;
 						
@@ -282,6 +291,7 @@ public class UDPStream {
 						}
 						try {
 							DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, myAddr, myPort);
+							Log.info("Sending UDP packet: "+sendPacket);
 							udpSock.send(sendPacket);
 						} catch (IOException e) {
 							return;
@@ -289,9 +299,14 @@ public class UDPStream {
 					}
 				} catch (Exception e) {}
 			}
-		}
+		
+		
+		DataOutputStream dataOutputStream=null;
+				
 		public DataOutputStream getStream(){
-			return new DataOutputStream(outs);
+			if(dataOutputStream == null)
+				dataOutputStream=new DataOutputStream(outs);
+			return dataOutputStream;
 		}
 	}
 	
@@ -323,12 +338,38 @@ public class UDPStream {
 		udpSock=null;
 	}
 	
+	public void updateAvailibleAddresses(){
+		if(!isAlive)
+			start();
+        ArrayList<InetAddress> available = new  ArrayList<InetAddress> ();
+        try {
+			try {
+				//Generate a ping command
+				BowlerDatagram ping = BowlerDatagramFactory.build(new MACAddress(), new PingCommand());
+				//send it to the UDP socket
+				getDataOutptStream().write(ping.getBytes());
+				//wait for all devices to report back
+				try {Thread.sleep(3000);} catch (InterruptedException e) {}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+        addrs = available;
+	}
+	
 	/**
 	 * 
 	 * 
 	 * @return
 	 */
 	public ArrayList<InetAddress>  getAllAddresses(){
+
 		return addrs;
 	}
 }

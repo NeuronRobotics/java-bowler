@@ -1051,6 +1051,7 @@ public abstract class BowlerAbstractConnection {
 							Log.error("Stream is broken - unexpected");
 							reconnect();
 							//something went wrong
+							new RuntimeException().printStackTrace();
 							return false;
 						}else{
 							
