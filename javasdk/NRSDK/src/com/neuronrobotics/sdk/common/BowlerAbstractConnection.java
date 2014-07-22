@@ -1048,7 +1048,7 @@ public abstract class BowlerAbstractConnection {
 						int b = getDataIns().read();
 						long dataReadEnd=System.currentTimeMillis();
 						if(b<0){
-							Log.error("Stream is broken - unexpected");
+							Log.error("Stream is broken - unexpected: claimed to have "+getDataIns().available()+" bytes, read in "+b);
 							reconnect();
 							//something went wrong
 							new RuntimeException().printStackTrace();

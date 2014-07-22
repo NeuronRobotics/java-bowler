@@ -177,6 +177,7 @@ public class UDPStream {
 			}
 			
 			public int available(){
+				update();
 				if(inputData.size()>0) {
 					return inputData.size();
 				}
@@ -210,9 +211,14 @@ public class UDPStream {
 			@Override
 			public int read() throws IOException {
 				update();
-
-				if(inputData.size()>0)
-					return inputData.pop();
+				int retData=0;
+				if(inputData.size()>0){
+					retData = inputData.pop();
+					if (retData<0){
+						retData+=256;
+					}
+					return retData;
+				}
 				
 				throw new IOException("Reading from empty buffer!");
 			}
@@ -226,12 +232,10 @@ public class UDPStream {
 				addrs.add(IPAddress);
 			inputData.add(b);
 		}
-		DataInputStream dataInputStream=null;
-		
+
 		public DataInputStream getStream(){
-			if(dataInputStream == null)
-				dataInputStream = new DataInputStream(ins);
-			return dataInputStream;
+
+			return new DataInputStream(ins);
 		}
 	}
 	private class UDPouts{
@@ -300,13 +304,10 @@ public class UDPStream {
 				} catch (Exception e) {}
 			}
 		
-		
-		DataOutputStream dataOutputStream=null;
 				
 		public DataOutputStream getStream(){
-			if(dataOutputStream == null)
-				dataOutputStream=new DataOutputStream(outs);
-			return dataOutputStream;
+
+			return new DataOutputStream(outs);
 		}
 	}
 	
