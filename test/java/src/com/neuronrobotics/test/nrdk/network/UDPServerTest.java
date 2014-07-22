@@ -1,19 +1,24 @@
 package com.neuronrobotics.test.nrdk.network;
 
-import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
-import com.neuronrobotics.sdk.common.BowlerDatagram;
-//import com.neuronrobotics.sdk.common.IBowlerDatagramListener;
-import com.neuronrobotics.sdk.common.InvalidConnectionException;
+import java.io.IOException;
+
+import com.neuronrobotics.sdk.common.Log;
+import com.neuronrobotics.sdk.common.MACAddress;
+import com.neuronrobotics.sdk.common.device.server.BowlerAbstractServer;
 
 import com.neuronrobotics.sdk.network.BowlerUDPServer;
+import com.neuronrobotics.sdk.util.ThreadUtil;
 
-public class UDPServerTest extends BowlerAbstractDevice {
+public class UDPServerTest extends BowlerAbstractServer {
 	BowlerUDPServer srv;
-	public UDPServerTest(){
-		System.out.println("Starting udp server..");
-		srv = new BowlerUDPServer();
-		setConnection(srv);
-		connect();
+	public UDPServerTest() throws IOException{
+		super(new MACAddress());
+		Log.enableInfoPrint();
+		Log.info("Starting Bowler Server");
+		startNetworkServer();
+		while(true){
+			ThreadUtil.wait(100);
+		}
 	}
 	
 	
@@ -28,25 +33,5 @@ public class UDPServerTest extends BowlerAbstractDevice {
 	}
 
 
-	@Override
-	public boolean isAvailable() throws InvalidConnectionException {
-		if(srv== null)
-			return false;
-		return srv.isConnected();
-	}
-
-
-	@Override
-	public void onAllResponse(BowlerDatagram data) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	public void onAsyncResponse(BowlerDatagram data) {
-		// TODO Auto-generated method stub
-		
-	}
-
+	
 }

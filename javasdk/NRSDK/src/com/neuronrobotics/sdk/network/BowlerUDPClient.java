@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 import com.neuronrobotics.sdk.commands.bcs.core.PingCommand;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
+import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.common.BowlerDatagramFactory;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.MACAddress;
@@ -78,12 +79,21 @@ public class BowlerUDPClient extends BowlerAbstractConnection{
 		setChunkSize(5210);
 		if(connect()){
 			try {
-				sendAsync(BowlerDatagramFactory.build(new MACAddress(), new PingCommand()));
-			} catch (IOException e1) {
+				
+				//Generate a ping command
+				BowlerDatagram ping = BowlerDatagramFactory.build(new MACAddress(), new PingCommand());
+				ping.setUpstream(false);
+				Log.info("Sending synchronization ping: \n"+ping);
+				//send it to the UDP socket
+				udp.getDataOutptStream().write(ping.getBytes());
+				//wait for all devices to report back
+				try {Thread.sleep(3000);} catch (InterruptedException e) {}
+			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				e.printStackTrace();
 			}
-			try {Thread.sleep(500);} catch (InterruptedException e) {}
+		}else{
+			Log.error("Connection failed");
 		}
 	}
 	
@@ -148,7 +158,7 @@ public class BowlerUDPClient extends BowlerAbstractConnection{
 	 */
 	public ArrayList<InetAddress>  getAllAddresses(){
 		if (udp!= null){
-			udp.updateAvailibleAddresses();
+			//udp.updateAvailibleAddresses();
 			return udp.getAllAddresses();
 		}
 			

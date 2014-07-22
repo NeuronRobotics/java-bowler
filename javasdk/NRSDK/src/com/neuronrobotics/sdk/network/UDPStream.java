@@ -343,10 +343,12 @@ public class UDPStream {
 		if(!isAlive)
 			start();
         ArrayList<InetAddress> available = new  ArrayList<InetAddress> ();
+        Log.info("Updating the list of availible UDP sockets");
         try {
 			try {
 				//Generate a ping command
 				BowlerDatagram ping = BowlerDatagramFactory.build(new MACAddress(), new PingCommand());
+				ping.setUpstream(false);
 				//send it to the UDP socket
 				getDataOutptStream().write(ping.getBytes());
 				//wait for all devices to report back

@@ -404,6 +404,7 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	public void setUpstream(boolean upstream) {
 		checkValidPacket();
 		this.upstream = upstream;
+		calcCRC();
 	}
 
 
