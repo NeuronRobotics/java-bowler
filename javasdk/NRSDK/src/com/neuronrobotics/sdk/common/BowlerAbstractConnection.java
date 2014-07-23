@@ -221,7 +221,8 @@ public abstract class BowlerAbstractConnection {
 		t.setStartTime(100);
 		while(!t.isTimedOut()){
 			 try {
-				getDataIns().read();
+				 if(dataIns!=null)
+					 getDataIns().read();
 			} catch (NullPointerException e) {
 				// TODO Auto-generated catch block
 				//e.printStackTrace();
@@ -312,12 +313,14 @@ public abstract class BowlerAbstractConnection {
 			fireConnectEvent();
 		}else{
 			try {
-				getDataIns().close();
+				if(dataIns !=null)
+					getDataIns().close();
 			} catch (Exception e) {
 				//return;
 			}
 			try {
-				getDataOuts().close();
+				if(dataOuts !=null)
+					getDataOuts().close();
 			} catch (Exception e) {
 				//return;
 			}
@@ -500,7 +503,7 @@ public abstract class BowlerAbstractConnection {
 	/**
 	 * Wait for connectio to be ready.
 	 */
-	private void waitForConnectioToBeReady(){
+	protected void waitForConnectioToBeReady(){
 		if(!waitingForConnection()) {
 			return;
 		}
@@ -1041,54 +1044,8 @@ public abstract class BowlerAbstractConnection {
 		private boolean runPacketUpdate() {
 			long start = System.currentTimeMillis();
 			try {
-				if(dataIns!=null){	
-					while(getDataIns().available()>0){
-						long dataRead=System.currentTimeMillis();
-						//we want to run this until the buffer is clear or a packet is found
-						int b = getDataIns().read();
-						long dataReadEnd=System.currentTimeMillis();
-						if(b<0){
-							Log.error("Stream is broken - unexpected: claimed to have "+getDataIns().available()+" bytes, read in "+b);
-							reconnect();
-							//something went wrong
-							new RuntimeException().printStackTrace();
-							return false;
-						}else{
-							
-							bytesToPacketBuffer.add(b);
-							long dataAdd=System.currentTimeMillis();
-							BowlerDatagram bd = BowlerDatagramFactory.build(bytesToPacketBuffer);
-							long dataBuild=System.currentTimeMillis();
-							if (bd!=null) {
-								Log.info("\nR<<"+bd);
-								onDataReceived(bd);
-
-								long dataSet=System.currentTimeMillis();
-								//bytesToPacketBuffer.clear();
-								bytesToPacketBuffer= new ByteList();
-								long bufferClear=System.currentTimeMillis();
-								
-								if((System.currentTimeMillis()-getLastWrite())>(getSleepTime()*(getPercentagePrint() /100.0))&& bd.isSyncronous() && syncListen==null){
-									Log.error("Packet recive took more then "+getPercentagePrint()+"%. " +
-											"\nRaw receive\t"+(start-getLastWrite() )+"" +
-											"\nStart Section\t"+(dataRead- start)+"" +
-											"\nData Read\t"+(dataReadEnd-dataRead)+"" +
-											"\nAdd data\t"+(dataAdd-dataReadEnd)+
-											"\nBuild Packet\t"+(dataBuild-dataAdd)+
-											"\nSet Packet\t"+(dataSet-dataBuild)+
-											"\nClear Packet buffer\t"+(bufferClear-dataSet)											
-											);
-								}
-
-								//Packet found, break the loop and deal with it
-								return true;
-							}
-						}
-						//Log.info("buffer: "+buffer);
-					}
-				}else{
-					Log.error("Data In is null");
-				}
+				if(loadPacketFromPhy(bytesToPacketBuffer))
+					bytesToPacketBuffer= new ByteList();
 			} catch (Exception e) {
 				if(isConnected()){
 					Log.error("Data read failed "+e.getMessage());
@@ -1119,7 +1076,59 @@ public abstract class BowlerAbstractConnection {
 			killSwitch=true;
 		}
 	}
-		
+	
+	
+	public boolean loadPacketFromPhy(ByteList bytesToPacketBuffer) throws NullPointerException, IOException{
+		if(dataIns!=null){	
+			while(getDataIns().available()>0){
+				long dataRead=System.currentTimeMillis();
+				//we want to run this until the buffer is clear or a packet is found
+				int b = getDataIns().read();
+				long dataReadEnd=System.currentTimeMillis();
+				if(b<0){
+					Log.error("Stream is broken - unexpected: claimed to have "+getDataIns().available()+" bytes, read in "+b);
+					reconnect();
+					//something went wrong
+					new RuntimeException().printStackTrace();
+					return false;
+				}else{
+					
+					bytesToPacketBuffer.add(b);
+					long dataAdd=System.currentTimeMillis();
+					BowlerDatagram bd = BowlerDatagramFactory.build(bytesToPacketBuffer);
+					long dataBuild=System.currentTimeMillis();
+					if (bd!=null) {
+						Log.info("\nR<<"+bd);
+						onDataReceived(bd);
+
+						long dataSet=System.currentTimeMillis();
+						//bytesToPacketBuffer.clear();
+						
+						long bufferClear=System.currentTimeMillis();
+						
+						if((System.currentTimeMillis()-getLastWrite())>(getSleepTime()*(getPercentagePrint() /100.0))&& bd.isSyncronous() && syncListen==null){
+							Log.error("Packet recive took more then "+getPercentagePrint()+"%. " +
+									//"\nRaw receive\t"+(start-getLastWrite() )+"" +
+									//"\nStart Section\t"+(dataRead- start)+"" +
+									"\nData Read\t"+(dataReadEnd-dataRead)+"" +
+									"\nAdd data\t"+(dataAdd-dataReadEnd)+
+									"\nBuild Packet\t"+(dataBuild-dataAdd)+
+									"\nSet Packet\t"+(dataSet-dataBuild)+
+									"\nClear Packet buffer\t"+(bufferClear-dataSet)											
+									);
+						}
+
+						//Packet found, break the loop and deal with it
+						return true;
+					}
+				}
+				//Log.info("buffer: "+buffer);
+			}
+		}else{
+			Log.error("Data In is null");
+		}
+		return false;
+	}
 	
 
 }

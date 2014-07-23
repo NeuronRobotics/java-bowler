@@ -24,10 +24,10 @@ public class CartesianTestSuit {
 		assertTrue(dev.connect());
 		System.out.println("Connection ok");
 		
-		dev.setDesiredTaskSpaceTransform(new TransformNR(), 1);
+		dev.setDesiredTaskSpaceTransform(new TransformNR(), 44);
 		dev.getCurrentTaskSpaceTransform();
-		dev.setDesiredJointSpaceVector(new double [] {0,0,0,0,0},1);
-		dev.setDesiredJointAxisValue(0,100,1);
+		dev.setDesiredJointSpaceVector(new double [] {150,150,150,0,0},55);
+		dev.setDesiredJointAxisValue(0,100,20);
 
 //		NRPrinter printer = new NRPrinter(dev);
 //		printer.cancelPrint();
