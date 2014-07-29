@@ -37,11 +37,9 @@ import com.neuronrobotics.sdk.common.MACAddress;
  */
 public class BowlerUDPClient extends BowlerAbstractConnection{
 	private int sleepTime = 5000;
-	
-	
-	//private UDPStream udp = null;
 
 	private int port = 1865;
+
 	
 	private InetAddress IPAddressSet=null;
 	private ArrayList<InetAddress>  addrs = new ArrayList<InetAddress>();
@@ -122,11 +120,23 @@ public class BowlerUDPClient extends BowlerAbstractConnection{
 		
 	}
 	
+	@Override
 	public boolean loadPacketFromPhy(ByteList bytesToPacketBuffer) throws NullPointerException, IOException{
 		byte[] receiveData=new byte[4096];
 		
 		DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
-		udpSock.receive(receivePacket);
+		Log.info("Waiting for UDP packet");
+		
+		try{
+			udpSock.receive(receivePacket);
+		}catch(SocketException ex){
+			// disconnect called
+			Log. warning("Receive bailed out because of close");
+			return false;
+		}
+		
+		Log.info("Got UDP packet");
+		addrs.add(receivePacket.getAddress());
 		
 		byte [] data = receivePacket.getData();
 		
@@ -155,7 +165,8 @@ public class BowlerUDPClient extends BowlerAbstractConnection{
 		setSynchronusPacketTimeoutTime(sleepTime);
 		setChunkSize(5210);
 		try {
-			IPAddressSet=InetAddress.getByAddress(new byte[]{(byte) 255,(byte) 255,(byte) 255,(byte) 255});
+			if(IPAddressSet == null)
+				IPAddressSet=InetAddress.getByAddress(new byte[]{(byte) 255,(byte) 255,(byte) 255,(byte) 255});
 		} catch (UnknownHostException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -177,6 +188,7 @@ public class BowlerUDPClient extends BowlerAbstractConnection{
 			}
 		}else{
 			Log.error("Connection failed");
+			throw new RuntimeException("UDP Connection failed");
 		}
 	}
 	
@@ -184,9 +196,10 @@ public class BowlerUDPClient extends BowlerAbstractConnection{
 	 * @see com.neuronrobotics.sdk.common.BowlerAbstractConnection#disconnect()
 	 */
 	public void disconnect(){
-//		if (udp!=null)
-//			udp.disconnect();
-//		udp=null;
+		if(udpSock!=null){
+			udpSock.close();
+			udpSock=null;
+		}
 		setConnected(false);
 	}
 	

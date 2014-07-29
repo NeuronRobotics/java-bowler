@@ -979,70 +979,71 @@ public abstract class BowlerAbstractConnection {
 		 * @see java.lang.Thread#run()
 		 */
 		public void run() {
+			Log.info("Starting the Queue Manager as "+isSystemQueue);
+			ThreadUtil.wait(100);
 			while(isConnected() && !killSwitch) {
-				//wait for the data stream to stabilize
-				if(dataIns == null || dataOuts == null){
-					ThreadUtil.wait(100);
-				}else{
-					long start = System.currentTimeMillis();
-					if(isSystemQueue)
-						runPacketUpdate();
-					else{ 
-						if(beater)
-							runHeartBeat();
-						
-					}
-					long packetUpdate = System.currentTimeMillis();
-					if(queueBuffer.isEmpty()){
-						// prevents thread lock
-						ThreadUtil.wait(1);
-					}else{
-						try{
-							//send(queueBuffer.remove(queueBuffer.size()-1)	);
-							
-							BowlerDatagram b = queueBuffer.remove(0);
-							long pulledPacket = System.currentTimeMillis();
-							pushUp(b);
-							long pushedPacket = System.currentTimeMillis();
-							
-							if((System.currentTimeMillis()-getLastWrite())>(getSleepTime()*(getPercentagePrint() /100.0))&& b.isSyncronous()){
-								Log.error("Packet recive took more then "+getPercentagePrint()+"%. " +
-												"\nPacket Update\t"+(packetUpdate- start)+"" +
-												"\nPulled Packet\t"+(pulledPacket-packetUpdate)+"" +
-												"\nPushed Packet\t"+(pushedPacket-pulledPacket));
-							}
-						}catch(Exception e){
-							e.printStackTrace();
-						}
-					}
+
+				long start = System.currentTimeMillis();
+				if(isSystemQueue)
+					runPacketUpdate();
+				else{ 
+					if(beater)
+						runHeartBeat();
 					
-					int index = 0;
-					int max = 500;
-					while(queueBuffer.size()>max){
-						if(queueBuffer.get(index).isFree()){
-							Log.error("Removing packet because freed "+queueBuffer.remove(index));
-						}else{
-							if(!queueBuffer.get(index).isSyncronous() && queueBuffer.get(index).getMethod() != BowlerMethod.CRITICAL){
-								int state = Log.getMinimumPrintLevel();
-								Log.enableErrorPrint();
-								Log.error("Removing packet from overflow: "+queueBuffer.remove(index));
-								Log.setMinimumPrintLevel(state);
-							}else{
-								index++;
-							}
+				}
+				long packetUpdate = System.currentTimeMillis();
+				if(queueBuffer.isEmpty()){
+					// prevents thread lock
+					ThreadUtil.wait(1);
+				}else{
+					try{
+						//send(queueBuffer.remove(queueBuffer.size()-1)	);
+						
+						BowlerDatagram b = queueBuffer.remove(0);
+						long pulledPacket = System.currentTimeMillis();
+						pushUp(b);
+						long pushedPacket = System.currentTimeMillis();
+						
+						if((System.currentTimeMillis()-getLastWrite())>(getSleepTime()*(getPercentagePrint() /100.0))&& b.isSyncronous()){
+							Log.error("Packet recive took more then "+getPercentagePrint()+"%. " +
+											"\nPacket Update\t"+(packetUpdate- start)+"" +
+											"\nPulled Packet\t"+(pulledPacket-packetUpdate)+"" +
+											"\nPushed Packet\t"+(pushedPacket-pulledPacket));
 						}
-						if(index >= max){
-							break;
-						}
+					}catch(Exception e){
+						e.printStackTrace();
 					}
 				}
 				
+				int index = 0;
+				int max = 500;
+				while(queueBuffer.size()>max){
+					if(queueBuffer.get(index).isFree()){
+						Log.error("Removing packet because freed "+queueBuffer.remove(index));
+					}else{
+						if(!queueBuffer.get(index).isSyncronous() && queueBuffer.get(index).getMethod() != BowlerMethod.CRITICAL){
+							int state = Log.getMinimumPrintLevel();
+							Log.enableErrorPrint();
+							Log.error("Removing packet from overflow: "+queueBuffer.remove(index));
+							Log.setMinimumPrintLevel(state);
+						}else{
+							index++;
+						}
+					}
+					if(index >= max){
+						break;
+					}
+				}
+				
+				
 			}
+			
+			Log.error("Queue Manager thread exited!");
+			//throw new RuntimeException();
 		}
 		
 
 		private boolean runPacketUpdate() {
-			long start = System.currentTimeMillis();
 			try {
 				if(loadPacketFromPhy(bytesToPacketBuffer))
 					bytesToPacketBuffer= new ByteList();
