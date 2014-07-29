@@ -14,7 +14,7 @@ import com.neuronrobotics.sdk.network.BowlerUDPClient;
 public class UDPClientTest extends BowlerAbstractDevice implements IBowlerDatagramListener{
 	BowlerUDPClient clnt;
 	public UDPClientTest(){
-		Log.enableDebugPrint();
+		Log.enableInfoPrint();
 		clnt=new BowlerUDPClient();
 		
 		ArrayList<InetAddress>  addrs = clnt.getAllAddresses();

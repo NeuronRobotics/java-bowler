@@ -17,8 +17,11 @@ package com.neuronrobotics.sdk.network;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import com.neuronrobotics.sdk.commands.bcs.core.PingCommand;
@@ -41,7 +44,10 @@ public class BowlerUDPClient extends BowlerAbstractConnection{
 	private int port = 1865;
 	
 	private InetAddress IPAddressSet=null;
-	private  ArrayList<InetAddress>  addrs = new ArrayList<InetAddress>();
+	private ArrayList<InetAddress>  addrs = new ArrayList<InetAddress>();
+	private ByteList internalReceiveBuffer= new ByteList();
+	private DatagramSocket udpSock = null;
+	
 	/**
 	 * 
 	 */
@@ -57,6 +63,14 @@ public class BowlerUDPClient extends BowlerAbstractConnection{
 		init();
 		setAddress(set);
 	}
+	/**
+	 * 
+	 * 
+	 * @param set
+	 */
+	public void setAddress(InetAddress set){
+		IPAddressSet=set;
+    }
 	
 	/**
 	 * 
@@ -101,58 +115,51 @@ public class BowlerUDPClient extends BowlerAbstractConnection{
 	public void write(byte[] data) throws IOException {
 		waitForConnectioToBeReady();
 		setLastWrite(System.currentTimeMillis());
-//		if(dataOuts != null){
-//			try{
-//				//Log.info("Writing: "+data.length+" bytes");
-//				
-//				//while(outgoing.size()>0){
-//					//byte[] b =outgoing.popList(getChunkSize());
-//				//System.out.println("Writing "+new ByteList(data));
-//				getDataOuts().write(data);
-//				getDataOuts().flush();
-//				//}
-//			}catch (Exception e){
-//				//e.printStackTrace();
-//				Log.error("Write failed. "+e.getMessage());
-//				reconnect();
-//			}
-//		}else{
-//			Log.error("No data sent, stream closed");
-//		}
+		
+		DatagramPacket sendPacket = new DatagramPacket(data, data.length, IPAddressSet, port);
+		Log.info("Sending UDP packet: "+sendPacket);
+		udpSock.send(sendPacket);
 		
 	}
 	
 	public boolean loadPacketFromPhy(ByteList bytesToPacketBuffer) throws NullPointerException, IOException{
-			while(getDataIns().available()>0){
-				//we want to run this until the buffer is clear or a packet is found
-				int b = getDataIns().read();
-				bytesToPacketBuffer.add(b);
-				BowlerDatagram bd = BowlerDatagramFactory.build(bytesToPacketBuffer);
-				if (bd!=null) {
-					Log.info("\nR<<"+bd);
-					onDataReceived(bd);
+		byte[] receiveData=new byte[4096];
+		
+		DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+		udpSock.receive(receivePacket);
+		
+		byte [] data = receivePacket.getData();
+		
+		for (int i=0;i<receivePacket.getLength();i++){
+			internalReceiveBuffer.add(data[i]);
+		}
+		
+		while(internalReceiveBuffer.size()>0){
+			bytesToPacketBuffer.add(internalReceiveBuffer.pop());
+			BowlerDatagram bd = BowlerDatagramFactory.build(bytesToPacketBuffer);
+			if (bd!=null) {
+				Log.info("\nR<<"+bd);
+				onDataReceived(bd);
 
-					return true;
-				}
-				//Log.info("buffer: "+buffer);
+				return true;
 			}
+		}
 	
 		return false;
 	}
 	
 	
-	/**
-	 * 
-	 * 
-	 * @param set
-	 */
-	public void setAddress(InetAddress set){
-		IPAddressSet=set;
-    }
+
 	
 	private void init(){
 		setSynchronusPacketTimeoutTime(sleepTime);
 		setChunkSize(5210);
+		try {
+			IPAddressSet=InetAddress.getByAddress(new byte[]{(byte) 255,(byte) 255,(byte) 255,(byte) 255});
+		} catch (UnknownHostException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		if(connect()){
 			try {
 				
@@ -194,10 +201,8 @@ public class BowlerUDPClient extends BowlerAbstractConnection{
 		}
 		setConnected(false);
 		try {
-//			udp = new UDPStream(port,false);
-//			udp.start();
-//			setDataIns(udp.getDataInputStream());
-//			setDataOuts(udp.getDataOutptStream());
+			udpSock =  new DatagramSocket();
+			
 			setConnected(true);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
