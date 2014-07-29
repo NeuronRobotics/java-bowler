@@ -9,9 +9,9 @@ import com.neuronrobotics.sdk.common.device.server.BowlerAbstractServer;
 import com.neuronrobotics.sdk.network.BowlerUDPServer;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
-public class UDPServerTest extends BowlerAbstractServer {
+public class NetworkServerTest extends BowlerAbstractServer {
 	BowlerUDPServer srv;
-	public UDPServerTest() throws IOException{
+	public NetworkServerTest() throws IOException{
 		super(new MACAddress());
 		Log.enableInfoPrint();
 		Log.info("Starting Bowler Server");
@@ -24,7 +24,7 @@ public class UDPServerTest extends BowlerAbstractServer {
 	
 	public static void main(String [] args){
 		try{
-			new UDPServerTest();
+			new NetworkServerTest();
 		}catch (Exception e){
 			e.printStackTrace();
 			System.err.println("###SERVER Failed out!");
