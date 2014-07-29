@@ -15,12 +15,21 @@
 package com.neuronrobotics.sdk.network;
 
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.SocketException;
+import java.util.ArrayList;
 
 import com.neuronrobotics.sdk.commands.bcs.core.PingCommand;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
+import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.common.BowlerDatagramFactory;
+import com.neuronrobotics.sdk.common.ByteList;
+import com.neuronrobotics.sdk.common.Log;
 
 
 /**
@@ -29,10 +38,14 @@ import com.neuronrobotics.sdk.common.BowlerDatagramFactory;
 public class BowlerUDPServer extends BowlerAbstractConnection {
 	private int sleepTime = 1000;
 	
+	private InetAddress IPAddressSet=null;
+	private ByteList internalReceiveBuffer= new ByteList();
+	private DatagramSocket udpSock = null;
 	
-	private UDPStream udp = null;
+	//private UDPStream udp = null;
 
 	private int port = 1865;
+	private int destinationPort=port;
 	
 	/**
 	 * 
@@ -57,9 +70,9 @@ public class BowlerUDPServer extends BowlerAbstractConnection {
 	 * @see com.neuronrobotics.sdk.common.BowlerAbstractConnection#disconnect()
 	 */
 	public void disconnect(){
-		if(udp != null)
-			udp.disconnect();
-		udp=null;
+		if(udpSock != null)
+			udpSock.close();
+		udpSock=null;
 		setConnected(false);
 	}
 	
@@ -71,10 +84,7 @@ public class BowlerUDPServer extends BowlerAbstractConnection {
 		if(isConnected())
 			return true;
 		try {
-			udp = new UDPStream(port,true);
-			udp.start();
-			setDataIns(udp.getDataInputStream());
-			setDataOuts(udp.getDataOutptStream());
+			udpSock = new DatagramSocket(port);
 			setConnected(true);
 			
 		} catch (SocketException e) {
@@ -101,5 +111,87 @@ public class BowlerUDPServer extends BowlerAbstractConnection {
 	public boolean waitingForConnection() {
 		return false;
 	}
+	
+	
+	
+	/**
+	 * Gets the data ins.
+	 *
+	 * @return the data ins
+	 */
+	@Override
+	public DataInputStream getDataIns() throws NullPointerException{
+		new RuntimeException("This method should not be called").printStackTrace();
+		while(true);
+	}
+
+	/**
+	 * Gets the data outs.
+	 *
+	 * @return the data outs
+	 */
+	@Override
+	public DataOutputStream getDataOuts() throws NullPointerException{
+		new RuntimeException("This method should not be called").printStackTrace();
+		while(true);
+	}
+	
+	/**
+	 * Write.
+	 *
+	 * @param data the data
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	//private ByteList outgoing = new ByteList();
+	public void write(byte[] data) throws IOException {
+		waitForConnectioToBeReady();
+		setLastWrite(System.currentTimeMillis());
+		
+		DatagramPacket sendPacket = new DatagramPacket(data, data.length, IPAddressSet, destinationPort);
+		Log.info("Sending UDP packet: "+sendPacket);
+		udpSock.send(sendPacket);
+		
+	}
+	
+	@Override
+	public boolean loadPacketFromPhy(ByteList bytesToPacketBuffer) throws NullPointerException, IOException{
+		byte[] receiveData=new byte[4096];
+		
+		DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+		Log.info("Waiting for UDP packet");
+		
+		try{
+			udpSock.receive(receivePacket);
+		}catch(SocketException ex){
+			// disconnect called
+			Log. warning("Receive bailed out because of close");
+			return false;
+		}
+		
+		IPAddressSet=(receivePacket.getAddress());
+		destinationPort = receivePacket.getPort();
+		
+		Log.info("Got UDP packet from "+IPAddressSet+" : "+destinationPort);
+		
+		byte [] data = receivePacket.getData();
+		
+		for (int i=0;i<receivePacket.getLength();i++){
+			internalReceiveBuffer.add(data[i]);
+		}
+		
+		while(internalReceiveBuffer.size()>0){
+			bytesToPacketBuffer.add(internalReceiveBuffer.pop());
+			BowlerDatagram bd = BowlerDatagramFactory.build(bytesToPacketBuffer);
+			if (bd!=null) {
+				Log.info("\nR<<"+bd);
+				onDataReceived(bd);
+
+				return true;
+			}
+		}
+	
+		return false;
+	}
+	
 
 }

@@ -1038,7 +1038,7 @@ public abstract class BowlerAbstractConnection {
 				
 			}
 			
-			Log.error("Queue Manager thread exited!");
+			Log.error("Queue Manager thread exited! Connected="+isConnected()+" kill switch="+killSwitch);
 			//throw new RuntimeException();
 		}
 		
@@ -1075,6 +1075,7 @@ public abstract class BowlerAbstractConnection {
 		 */
 		public void kill() {
 			killSwitch=true;
+			//new RuntimeException("Killing the Queue").printStackTrace();
 		}
 	}
 	

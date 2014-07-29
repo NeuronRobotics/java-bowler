@@ -26,9 +26,12 @@ public class UDPClientTest extends BowlerAbstractDevice implements IBowlerDatagr
 		connect();
 		
 		System.out.println("Pinging");
-		for(int i=0;i<10;i++)
+		long start = System.currentTimeMillis();
+		int numPings=10;
+		for(int i=0;i<numPings;i++)
 			if (!ping())
 				throw new RuntimeException("Ping failed!");
+		System.out.println("Ping average = "+(System.currentTimeMillis()-start)/numPings+"ms");
 		clnt.disconnect();
 		System.out.println("done");
 		System.exit(0);
