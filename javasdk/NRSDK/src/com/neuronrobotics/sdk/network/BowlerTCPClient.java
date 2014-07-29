@@ -195,9 +195,9 @@ public class BowlerTCPClient extends BowlerAbstractConnection{
 	 */
 	public static ArrayList<InetAddress> getAvailableSockets() {
         ArrayList<InetAddress> available = new  ArrayList<InetAddress> ();
-        BowlerUDPClient udp;
+        UDPBowlerConnection udp;
         try {
-			udp = new BowlerUDPClient();
+			udp = new UDPBowlerConnection();
 			available= udp.getAllAddresses();
 	        udp.disconnect();
 		} catch (Exception e) {

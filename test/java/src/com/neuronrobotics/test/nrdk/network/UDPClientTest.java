@@ -9,13 +9,13 @@ import com.neuronrobotics.sdk.common.IBowlerDatagramListener;
 import com.neuronrobotics.sdk.common.InvalidConnectionException;
 import com.neuronrobotics.sdk.common.Log;
 //import com.neuronrobotics.sdk.network.BowlerTCPServer;
-import com.neuronrobotics.sdk.network.BowlerUDPClient;
+import com.neuronrobotics.sdk.network.UDPBowlerConnection;
 
 public class UDPClientTest extends BowlerAbstractDevice implements IBowlerDatagramListener{
-	BowlerUDPClient clnt;
+	UDPBowlerConnection clnt;
 	public UDPClientTest(){
 		Log.enableInfoPrint();
-		clnt=new BowlerUDPClient();
+		clnt=new UDPBowlerConnection();
 		
 		ArrayList<InetAddress>  addrs = clnt.getAllAddresses();
 		System.out.println("Availiable servers: "+addrs);

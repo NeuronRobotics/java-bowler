@@ -35,7 +35,7 @@ import com.neuronrobotics.sdk.common.MACAddress;
 /**
  * 
  */
-public class BowlerUDPClient extends BowlerAbstractConnection{
+public class UDPBowlerConnection extends BowlerAbstractConnection{
 	private int sleepTime = 5000;
 
 	private int port = 1865;
@@ -49,14 +49,14 @@ public class BowlerUDPClient extends BowlerAbstractConnection{
 	/**
 	 * 
 	 */
-	public BowlerUDPClient(){
+	public UDPBowlerConnection(){
 		init();
 	}
-	public BowlerUDPClient(InetAddress set){
+	public UDPBowlerConnection(InetAddress set){
 		init();
 		setAddress(set);
 	}
-	public BowlerUDPClient(InetAddress set,int port){
+	public UDPBowlerConnection(InetAddress set,int port){
 		this.port=port;
 		init();
 		setAddress(set);
@@ -75,7 +75,7 @@ public class BowlerUDPClient extends BowlerAbstractConnection{
 	 * 
 	 * @param port
 	 */
-	public BowlerUDPClient(int port){
+	public UDPBowlerConnection(int port){
 		this.port=port;
 		init();
 	}

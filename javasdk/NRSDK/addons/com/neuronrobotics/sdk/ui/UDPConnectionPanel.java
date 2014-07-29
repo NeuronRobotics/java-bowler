@@ -31,7 +31,7 @@ import net.miginfocom.swing.MigLayout;
 
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 
-import com.neuronrobotics.sdk.network.BowlerUDPClient;
+import com.neuronrobotics.sdk.network.UDPBowlerConnection;
 import com.neuronrobotics.sdk.util.IMonitorable;
 import com.neuronrobotics.sdk.util.IProgressMonitorListener;
 import com.neuronrobotics.sdk.util.ProcessMonitor;
@@ -46,7 +46,7 @@ public class UDPConnectionPanel extends AbstractConnectionPanel {
 	private JComboBox connectionCbo = null;
 	private JButton refresh;
 	private JTextField port = new JTextField(8);
-	BowlerUDPClient clnt=null;
+	UDPBowlerConnection clnt=null;
 	
 	
 	/**
@@ -149,7 +149,7 @@ public class UDPConnectionPanel extends AbstractConnectionPanel {
 				prt=defaultPortNum;
 				port.setText(new Integer(defaultPortNum).toString());
 			}
-			clnt=new BowlerUDPClient(prt);
+			clnt=new UDPBowlerConnection(prt);
 			ArrayList<InetAddress>  addrs = clnt.getAllAddresses();
 //			if (addrs.size()>0)
 //				System.out.println("Bowler servers: "+addrs);
