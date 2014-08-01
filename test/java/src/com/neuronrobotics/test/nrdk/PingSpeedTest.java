@@ -9,6 +9,7 @@ import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.genericdevice.GenericDevice;
 import com.neuronrobotics.sdk.network.BowlerTCPClient;
 import com.neuronrobotics.sdk.network.BowlerUDPClient;
+import com.neuronrobotics.sdk.network.UDPBowlerConnection;
 import com.neuronrobotics.sdk.serial.SerialConnection;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 
@@ -25,7 +26,7 @@ public class PingSpeedTest {
 		BowlerAbstractConnection c=null;
 		try {
 			//c = new BowlerTCPClient("192.168.1.10", 1866);
-			c = new BowlerUDPClient(InetAddress.getByName("130.215.49.37"), 1865);
+			c = new UDPBowlerConnection(InetAddress.getByName("130.215.49.37"), 1865);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
