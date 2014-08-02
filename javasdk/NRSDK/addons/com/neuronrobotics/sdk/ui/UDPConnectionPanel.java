@@ -30,7 +30,6 @@ import javax.swing.JTextField;
 import net.miginfocom.swing.MigLayout;
 
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
-
 import com.neuronrobotics.sdk.network.UDPBowlerConnection;
 import com.neuronrobotics.sdk.util.IMonitorable;
 import com.neuronrobotics.sdk.util.IProgressMonitorListener;

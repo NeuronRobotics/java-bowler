@@ -164,7 +164,7 @@ public class GCodeInterpreter {
 			c = (char) r.read();
 			if (c == ((char) -1))
 				throw new EOFException();
-			while (c == '(') {// Skip comments.
+			while (c == '(' || c == ';') {// Skip comments.
 				int depth = 1;
 				while (depth > 0) {
 					c = (char) r.read();
@@ -173,7 +173,8 @@ public class GCodeInterpreter {
 					if (c == ')')
 						depth--;
 					if (c == '\n')
-						System.out.println("Newline in comment?");
+						//System.out.println("Newline in comment?");
+						depth--;
 					if (c == ((char) -1))
 						throw new EOFException();
 				}
@@ -190,6 +191,12 @@ public class GCodeInterpreter {
 			} else {
 				numBuffer.flip();
 				pc = Character.toUpperCase(pc);
+				if (pc == ','){
+					System.out.println();
+				}
+				else{
+				System.out.println(pc);
+				}
 				switch (pc) {
 				case ' ': // Spaces will come in with no number to parse, so we
 							// don't parse it.
@@ -269,7 +276,7 @@ public class GCodeInterpreter {
 	 */
 	public void interpretStream(InputStream in) throws Exception {
 		executingLock.lock();
-
+		
 		interpretingThread = Thread.currentThread();
 		try {
 			while (true) {
@@ -468,7 +475,7 @@ public class GCodeInterpreter {
 	public void setGSorting(Comparator c) {
 		gCodeOrdering = c;
 	}
-
+	
 	/**
 	 * Add the default set of handlers to this interpreter.
 	 * 
@@ -476,7 +483,7 @@ public class GCodeInterpreter {
 	 */
 	public void addDefaultHandlers() {
 		final double curOffset[] = new double[26]; // Yes, we'll let them offset
-													// on any axis they feel
+												 	// on any axis they feel
 													// like.
 		// G0 - no handler.
 		addGHandler(0, new CodeHandler() {
