@@ -60,7 +60,7 @@ public class SDKBuildInfo {
 				}
 			}
 		} catch (NullPointerException e) {
-			return "";
+			return null;
 		}
 		return null;
 	}

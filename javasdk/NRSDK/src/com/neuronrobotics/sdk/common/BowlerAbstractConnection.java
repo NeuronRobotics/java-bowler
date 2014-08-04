@@ -55,6 +55,7 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
 public abstract class BowlerAbstractConnection {
 	
 	//private boolean threadedUpstreamPackets=false;
+	private static boolean useThreadedStack=true;
 	
 	/** The sleep time. */
 	private int sleepTime = 1000;
@@ -159,7 +160,11 @@ public abstract class BowlerAbstractConnection {
 		
 
 		do{
-			ThreadUtil.wait(0,10);
+			if(isUseThreadedStack())
+				ThreadUtil.wait(0,10);
+			else{
+				syncQueue.runPacketUpdate();
+			}
 		}while (((System.currentTimeMillis()-startOfReciveTime)<getSleepTime())  && (getLastSyncronousResponse() == null));
 		long rcvTime = (System.currentTimeMillis()-startOfReciveTime);
 
@@ -533,12 +538,12 @@ public abstract class BowlerAbstractConnection {
 	}
 	public void setAsyncQueue(QueueManager asyncQueue) {
 		this.asyncQueue = asyncQueue;
-		if(this.asyncQueue != null)
+		if(this.asyncQueue != null && isUseThreadedStack())
 			this.asyncQueue.start();
 	}
 	public void setSyncQueue(QueueManager syncQueue) {
 		this.syncQueue = syncQueue;
-		if(this.syncQueue != null)
+		if(this.syncQueue != null && isUseThreadedStack())
 			this.syncQueue.start();
 	}
 	public  QueueManager getAsyncQueue() {
@@ -1130,6 +1135,14 @@ public abstract class BowlerAbstractConnection {
 			Log.error("Data In is null");
 		}
 		return false;
+	}
+
+	public static boolean isUseThreadedStack() {
+		return useThreadedStack;
+	}
+
+	public static void setUseThreadedStack(boolean useThreadedStack) {
+		BowlerAbstractConnection.useThreadedStack = useThreadedStack;
 	}
 	
 
