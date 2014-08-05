@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.neuronrobotics.sdk.common.ByteList;
+import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIORegestry;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
@@ -31,7 +32,7 @@ public class DyIONamespaceTest {
 	@Test
 	public void dyioNamespaceTest() {
 		DyIO dyio= DyIORegestry.get();
-		
+		Log.enableInfoPrint();
 		if(!dyio.isAvailable())
 			fail();
 		assertTrue(DyIORegestry.get().hasNamespace("neuronrobotics.dyio.*"));

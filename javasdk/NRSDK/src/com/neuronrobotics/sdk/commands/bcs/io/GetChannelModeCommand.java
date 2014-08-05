@@ -17,6 +17,7 @@ package com.neuronrobotics.sdk.commands.bcs.io;
 import com.neuronrobotics.sdk.common.BowlerAbstractCommand;
 import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.common.BowlerMethod;
+import com.neuronrobotics.sdk.common.Log;
 
 import com.neuronrobotics.sdk.common.InvalidResponseException;
 
@@ -55,7 +56,8 @@ public class GetChannelModeCommand extends BowlerAbstractCommand {
 		}
 		
 		if(getOpCode().equals("gacm") && data.getData().size() != 24) {
-			throw new InvalidResponseException("Get All Channel Mode did not return with 24 values.");
+			Log.error("Failed gacm: \r\n"+data);
+			throw new InvalidResponseException("Get All Channel Mode did not return with 24 values."+data);
 		}
 		
 		if(getOpCode().equals("gchm") && data.getData().size() != 1) {
