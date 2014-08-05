@@ -55,7 +55,7 @@ public class GetChannelModeCommand extends BowlerAbstractCommand {
 			throw new InvalidResponseException("Get Channel Mode did not return with '" + getOpCode() + "'.");
 		}
 		
-		if(getOpCode().equals("gacm") && data.getData().size() != 24) {
+		if(!getOpCode().equals("gacm") ) {
 			Log.error("Failed gacm: \r\n"+data);
 			throw new InvalidResponseException("Get All Channel Mode did not return with 24 values."+data);
 		}

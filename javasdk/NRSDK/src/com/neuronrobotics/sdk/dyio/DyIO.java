@@ -381,12 +381,14 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 		//if(getAddress().equals(new MACAddress(MACAddress.BROADCAST))) {
 			setAddress(response.getAddress());
 		//}
-		int count =24;
+		int count=0;
 		if(getDyIOChannelCount() != null){
 			count = getDyIOChannelCount();
 		}
 		ByteList bl = response.getData();
-		if (bl.size()!=count) {
+		int tmpCount = bl.pop();
+		
+		if (bl.size()!=count || tmpCount!=count) {
 			setMuteResyncOnModeChange(false);
 			throw new DyIOCommunicationException("Not enough channels, not a valid DyIO expecting = "+count+" GOT = "+bl.size()+"\n"+response.toString());
 		}
@@ -1108,6 +1110,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	public ArrayList<DyIOChannelMode> getAvailibleChannelModes(int channel){
 		ArrayList<DyIOChannelMode> modes = new ArrayList<DyIOChannelMode>();
 		ByteList m = send(new GetChannelModeListCommand(channel)).getData();
+		int NumberOfModes=m.pop(0);
 		for(int i=0;i<m.size();i++){
 			modes.add(DyIOChannelMode.get(m.getByte(i)));
 		}

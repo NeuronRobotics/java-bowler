@@ -18,6 +18,8 @@ public class DyIONamespaceTest {
 		if(!DyIORegestry.get().isAvailable()){
 			System.out.println("DyIO test setting up DyIO");
 			DyIO.disableFWCheck();
+
+			Log.enableInfoPrint();
 			if(ConnectionDialog.getBowlerDevice(DyIORegestry.get())){
 				return;
 			}
@@ -32,7 +34,6 @@ public class DyIONamespaceTest {
 	@Test
 	public void dyioNamespaceTest() {
 		DyIO dyio= DyIORegestry.get();
-		Log.enableInfoPrint();
 		if(!dyio.isAvailable())
 			fail();
 		assertTrue(DyIORegestry.get().hasNamespace("neuronrobotics.dyio.*"));
