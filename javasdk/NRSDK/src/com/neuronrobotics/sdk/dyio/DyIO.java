@@ -1109,7 +1109,14 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	
 	public ArrayList<DyIOChannelMode> getAvailibleChannelModes(int channel){
 		ArrayList<DyIOChannelMode> modes = new ArrayList<DyIOChannelMode>();
-		ByteList m = send(new GetChannelModeListCommand(channel)).getData();
+		BowlerDatagram dg = send(new GetChannelModeListCommand(channel));
+		
+		ByteList m = dg.getData();
+		Log.error("Packet "+channel+"\r\n"+dg);
+		Log.error("Data: "+channel+"\r\n"+m);
+		if(m==null){
+			
+		}
 		int NumberOfModes=m.pop(0);
 		for(int i=0;i<m.size();i++){
 			modes.add(DyIOChannelMode.get(m.getByte(i)));
