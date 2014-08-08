@@ -60,7 +60,7 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 		
 		BowlerDatagram dg = send(new LinearInterpolationCommand(taskSpaceTransform, mmOfFiliment, ms,forceNoBuffer));
 		if(dg.getRPC().equalsIgnoreCase("_err")) {
-			throw e;
+			throw new RuntimeException("can not reach "+taskSpaceTransform);
 		}
 		
 		numSpacesRemaining = ByteList.convertToInt(dg.getData().getBytes(	0,//Starting index
@@ -69,8 +69,7 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 		sizeOfBuffer = ByteList.convertToInt(dg.getData().getBytes(	4,//Starting index
 																	4),//number of bytes
 																	false);//True for signed data
-		//System.out.println("Running line x="+taskSpaceTransform.getX()+" y="+taskSpaceTransform.getY()+" z="+taskSpaceTransform.getZ()+" num spaces="+numSpacesRemaining);
-		//Log.enableSystemPrint(false);
+
 		return numSpacesRemaining;
 	}
 	

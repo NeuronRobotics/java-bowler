@@ -33,7 +33,7 @@ public class DirectControl implements ITaskSpaceUpdateListenerNR, IDigitalInputL
 	DHParameterKinematics model;
 	//DeltaForgeDevice deltaRobot;
 	TransformNR current = new TransformNR();
-	double scale=.5;
+	double scale=.3;
 	double [] startVect = new double [] { 0,0,0,0,0,0};
 	private boolean button=false;
 	private boolean lastButton=false;
@@ -90,54 +90,19 @@ public class DirectControl implements ITaskSpaceUpdateListenerNR, IDigitalInputL
 		}
 		
 		
-//		DyIO tmp0 = new DyIO(new SerialConnection("/dev/DyIO0"));	
-//		if(!tmp0.connect()){
-//			throw new RuntimeException("Not a bowler Device on connection: ");
-//		}
-//		DyIO tmp1 = new DyIO(new SerialConnection("/dev/DyIO1"));	
-//		if(!tmp1.connect()){
-//			throw new RuntimeException("Not a bowler Device on connection: ");
-//		}
-//		
-//		String addr0 = tmp0.getAddress().toString().toLowerCase();
-//		String addr1 = tmp1.getAddress().toString().toLowerCase();
-//		
-//		System.out.println("Addresses are "+addr0+" "+addr1);
-//		
-//		if(	addr0.contains("74:f7:26:00:00:6f")&&
-//			addr1.contains("74:f7:26:80:00:99")	) {
-//			master = tmp0;
-//			delt = tmp1;
-//		}else if(	addr1.contains("74:f7:26:00:00:6f")&&
-//					addr0.contains("74:f7:26:80:00:99")	) {
-//			master = tmp1;
-//			delt = tmp0;
-//		}else {
-//			throw new RuntimeException("Not a bowler Device on connection: ");
-//		}
-		
-		//master.killAllPidGroups();
 		model = new DHParameterKinematics(master,"TrobotMaster.xml");
 		
 		
 		BowlerBoardDevice delt = new BowlerBoardDevice();
-//		if(!ConnectionDialog.getBowlerDevice(delt)){
-//			System.exit(0);
-//		}
+
 		delt.setConnection(new SerialConnection("/dev/BowlerDevice.74F726000000"));		
 		delt.connect();
 		
-		//deltaRobot = new DeltaForgeDevice(delt);
-		//deltaRobot.setCurrentPoseTarget(new TransformNR());
 		
 		DigitalInputChannel di = new DigitalInputChannel(master.getChannel(0));
 		di.addDigitalInputListener(this);
 		button=di.isHigh();
 		lastButton = button;
-		
-//		ServoChannel hand = new ServoChannel(slave.getChannel(15));
-//		hand.SetPosition(open);
-
 		try{
 			final SampleGuiNR gui = new SampleGuiNR();
 			final JFrame frame = new JFrame();
@@ -187,14 +152,11 @@ public class DirectControl implements ITaskSpaceUpdateListenerNR, IDigitalInputL
 			long time = System.currentTimeMillis();
 			try {				
 				master.getAllChannelValues();
-				//printer.setDesiredTaskSpaceTransform(current,.1);
-//				if((int)current.getX() != x && (int)current.getY() != y && (int)current.getZ() != z ){
-//					x=(int)current.getX();
-//					y=(int)current.getY();
-//					z=(int)current.getZ();
-					if(current.getZ()<400&&current.getZ()>0){
+
+					if(current.getZ()<400){
+						
+							
 						delt.sendLinearSection(current, 0, 0,true);
-						//System.out.println("Setting x="+current.getX()+" y="+current.getY()+" z="+current.getZ());
 					}
 				//}
 				ThreadUtil.wait(0,1);
@@ -220,11 +182,14 @@ public class DirectControl implements ITaskSpaceUpdateListenerNR, IDigitalInputL
 		new DirectControl();
 	}
 	public void onTaskSpaceUpdate(AbstractKinematicsNR source, TransformNR pose) {
-		//System.err.println("Got:"+pose);
-		double ws=50;
+
+		double z= ((pose.getZ()*.5)+100);
+		if(z<0)
+			z=0;
+		
 		current = new TransformNR(	((pose.getY())*scale+25),
 									((pose.getX()+180)*scale),
-									((pose.getZ())+100),
+									z,
 				new RotationNR());
 		System.out.println("Current = "+current);
 	}
