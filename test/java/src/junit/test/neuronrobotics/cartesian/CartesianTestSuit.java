@@ -24,20 +24,20 @@ public class CartesianTestSuit {
 		assertTrue(dev.connect());
 		System.out.println("Connection ok");
 		
-		dev.setDesiredTaskSpaceTransform(new TransformNR(), 44);
-		dev.getCurrentTaskSpaceTransform();
-		dev.setDesiredJointSpaceVector(new double [] {150,150,150,0,0},55);
-		dev.setDesiredJointAxisValue(0,100,20);
+//		dev.setDesiredTaskSpaceTransform(new TransformNR(), 44);
+//		dev.getCurrentTaskSpaceTransform();
+//		dev.setDesiredJointSpaceVector(new double [] {150,150,150,0,0},55);
+//		dev.setDesiredJointAxisValue(0,100,20);
 
-//		NRPrinter printer = new NRPrinter(dev);
-//		printer.cancelPrint();
-//		ThreadUtil.wait(5000);
-//		try{
-//			printer.print(CartesianTestSuit.class.getResourceAsStream("test.gcode"));
-//		}catch(Exception ex){
-//			ex.printStackTrace();
-//			fail();
-//		}
+		NRPrinter printer = new NRPrinter(dev);
+		printer.cancelPrint();
+		ThreadUtil.wait(5000);
+		try{
+			printer.print(CartesianTestSuit.class.getResourceAsStream("test.gcode"));
+		}catch(Exception ex){
+			ex.printStackTrace();
+			fail();
+		}
 		
 		
 	}
