@@ -1,5 +1,11 @@
 package com.neuronrobotics.replicator.driver;
 
+import java.util.ArrayList;
+
+import javax.vecmath.Point3f;
+
+import com.neuronrobotics.replicator.driver.PrinterStatus.PrinterState;
+import com.neuronrobotics.sdk.addons.kinematics.ITaskSpaceUpdateListenerNR;
 import com.neuronrobotics.sdk.addons.kinematics.LinkConfiguration;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.commands.cartesian.CancelPrintCommand;
@@ -14,6 +20,18 @@ import com.neuronrobotics.sdk.pid.PIDConfiguration;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryProvider {
+	
+	private ArrayList<PrinterStatusListener> statusListeners = new ArrayList<PrinterStatusListener>();
+	
+	public void addPrinterStatusListener(PrinterStatusListener l){
+		if(statusListeners.contains(l) || l==null)
+			return;
+		statusListeners.add(l);
+	}
+	public void removePrinterStatusListener(PrinterStatusListener l){
+		if(statusListeners.contains(l))
+			statusListeners.remove(l);
+	}
 	
 	@Override
 	public boolean connect(){
@@ -95,6 +113,19 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 			numSpacesRemaining = ByteList.convertToInt(data.getData().getBytes(	0,//Starting index
 																				4),//number of bytes
 																				false);//True for signed data
+		}else{
+			Log.warning("Unknown packet "+data);
+			float status[] = new float [6];
+			for (int i=0;i<5;i++){
+					status[i] = (float)(ByteList.convertToInt(data.getData().getBytes(	i*4,//Starting index
+																				4),//number of bytes
+																				true)/1000.0);//True for signed data
+			}
+			
+			for(int i=0;i<statusListeners.size();i++ ){
+				
+				statusListeners.get(i).printStatus(new PrinterStatus(new Point3f(status[0], status[1], status[2]),status[3],status[4], (int) status[5], PrinterState.PRINTING));
+			}
 		}
 	}
 	
@@ -169,7 +200,7 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 		Object [] args = send(	"bcs.cartesian.*",
 				BowlerMethod.POST,
 				"sdjv",
-				new Object[]{jointSpaceVect,(int)seconds}, 
+				new Object[]{jointSpaceVect,(int)(seconds*1000)}, 
 						5);
 		
 		
