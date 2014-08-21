@@ -83,8 +83,8 @@ public class NRPrinter extends CartesianNamespacePidKinematics{
 			ThreadUtil.wait(5000);
 			System.out.println(deltaDevice.getNumberOfPacketsWaiting()+" remaining");
 		}
+		ThreadUtil.wait(5000);
 		System.out.println("Print Done, took "+((((double)(System.currentTimeMillis()-start))/1000.0)/60.0)+" minutes");
-		
 		cancelPrint();
 		return b;
 	}
