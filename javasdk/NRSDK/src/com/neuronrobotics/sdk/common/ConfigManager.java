@@ -11,7 +11,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.neuronrobotics.sdk.network.BowlerTCPClient;
-import com.neuronrobotics.sdk.network.BowlerUDPClient;
 import com.neuronrobotics.sdk.network.UDPBowlerConnection;
 import com.neuronrobotics.sdk.serial.SerialConnection;
 

@@ -62,16 +62,21 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 		if(dg.getRPC().equalsIgnoreCase("_err")) {
 			throw e;
 		}
-		
-		numSpacesRemaining = ByteList.convertToInt(dg.getData().getBytes(	0,//Starting index
-																				4),//number of bytes
-																				false);//True for signed data
-		sizeOfBuffer = ByteList.convertToInt(dg.getData().getBytes(	4,//Starting index
-																	4),//number of bytes
-																	false);//True for signed data
-		//System.out.println("Running line x="+taskSpaceTransform.getX()+" y="+taskSpaceTransform.getY()+" z="+taskSpaceTransform.getZ()+" num spaces="+numSpacesRemaining);
-		//Log.enableSystemPrint(false);
-		return numSpacesRemaining;
+		try{
+			numSpacesRemaining = ByteList.convertToInt(dg.getData().getBytes(	0,//Starting index
+																					4),//number of bytes
+																					false);//True for signed data
+			sizeOfBuffer = ByteList.convertToInt(dg.getData().getBytes(	4,//Starting index
+																		4),//number of bytes
+																		false);//True for signed data
+			//System.out.println("Running line x="+taskSpaceTransform.getX()+" y="+taskSpaceTransform.getY()+" z="+taskSpaceTransform.getZ()+" num spaces="+numSpacesRemaining);
+			//Log.enableSystemPrint(false);
+			return numSpacesRemaining;
+		}catch (RuntimeException ex){
+			Log.error("Response failed: "+dg);
+			ex.printStackTrace();
+			throw ex;
+		}
 	}
 	
 	public void cancelRunningPrint() {

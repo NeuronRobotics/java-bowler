@@ -1,6 +1,7 @@
 package com.neuronrobotics.test.nrdk.network;
 
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
@@ -9,19 +10,26 @@ import com.neuronrobotics.sdk.common.IBowlerDatagramListener;
 import com.neuronrobotics.sdk.common.InvalidConnectionException;
 import com.neuronrobotics.sdk.common.Log;
 //import com.neuronrobotics.sdk.network.BowlerTCPServer;
-import com.neuronrobotics.sdk.network.BowlerUDPClient;
+import com.neuronrobotics.sdk.network.UDPBowlerConnection;
 
 public class UDPClientTest extends BowlerAbstractDevice implements IBowlerDatagramListener{
-	BowlerUDPClient clnt;
+	UDPBowlerConnection clnt;
 	public UDPClientTest(){
 		Log.enableInfoPrint();
-		clnt=new BowlerUDPClient();
+		clnt=new UDPBowlerConnection();
 		
-		ArrayList<InetAddress>  addrs = clnt.getAllAddresses();
-		System.out.println("Availiable servers: "+addrs);
-		if (addrs.size()==0)
-			throw new RuntimeException();
-		clnt.setAddress(addrs.get(0));
+//		ArrayList<InetAddress>  addrs = clnt.getAllAddresses();
+//		System.out.println("Availiable servers: "+addrs);
+//		if (addrs.size()==0)
+//			throw new RuntimeException();
+//		clnt.setAddress(addrs.get(0));
+		try {
+			clnt.setAddress(InetAddress.getByName("192.168.1.10"));
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.exit(0);
+		}
 		setConnection(clnt);
 		connect();
 		

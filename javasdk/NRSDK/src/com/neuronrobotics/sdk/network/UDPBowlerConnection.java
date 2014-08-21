@@ -42,7 +42,7 @@ public class UDPBowlerConnection extends BowlerAbstractConnection{
 
 	
 	private InetAddress IPAddressSet=null;
-	private ArrayList<InetAddress>  addrs = new ArrayList<InetAddress>();
+	private ArrayList<InetAddress>  addrs=null;
 	private ByteList internalReceiveBuffer= new ByteList();
 	private DatagramSocket udpSock = null;
 	
@@ -136,7 +136,9 @@ public class UDPBowlerConnection extends BowlerAbstractConnection{
 		}
 		
 		Log.info("Got UDP packet");
-		addrs.add(receivePacket.getAddress());
+		if(addrs== null)
+			addrs=new ArrayList<InetAddress>();
+		getAllAddresses().add(receivePacket.getAddress());
 		
 		byte [] data = receivePacket.getData();
 		
@@ -172,20 +174,7 @@ public class UDPBowlerConnection extends BowlerAbstractConnection{
 			e1.printStackTrace();
 		}
 		if(connect()){
-			try {
-				
-				//Generate a ping command
-				BowlerDatagram ping = BowlerDatagramFactory.build(new MACAddress(), new PingCommand());
-				ping.setUpstream(false);
-				Log.info("Sending synchronization ping: \n"+ping);
-				//send it to the UDP socket
-				write(ping.getBytes());
-				//wait for all devices to report back
-				try {Thread.sleep(3000);} catch (InterruptedException e) {}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			
 		}else{
 			Log.error("Connection failed");
 			throw new RuntimeException("UDP Connection failed");
@@ -252,7 +241,23 @@ public class UDPBowlerConnection extends BowlerAbstractConnection{
 	 * @return
 	 */
 	public ArrayList<InetAddress>  getAllAddresses(){
-
+		if(addrs== null){
+			addrs=new ArrayList<InetAddress>();
+			try {
+				
+				//Generate a ping command
+				BowlerDatagram ping = BowlerDatagramFactory.build(new MACAddress(), new PingCommand());
+				ping.setUpstream(false);
+				Log.info("Sending synchronization ping: \n"+ping);
+				//send it to the UDP socket
+				write(ping.getBytes());
+				//wait for all devices to report back
+				try {Thread.sleep(3000);} catch (InterruptedException e) {}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		return addrs;
 	}
 
