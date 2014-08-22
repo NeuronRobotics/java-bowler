@@ -51,7 +51,7 @@ public class GCodeParser {
 		interp.addMHandler(73, new CodeHandler() {
 			public void execute(GCodeLineData prev, GCodeLineData next) throws Exception {
 				for(PrinterStatusListener l : listeners) {
-					l.printStatus(new PrinterStatus(new Point3f(),0,0,(int)next.getWord('P'),PrinterState.PRINTING));
+					l.printStatus(new PrinterStatus(new Point3f(),(int)next.getWord('P'),PrinterState.PRINTING));
 				}
 			}
 		});

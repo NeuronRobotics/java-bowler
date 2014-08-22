@@ -11,7 +11,7 @@ import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
-public class NRPrinter extends CartesianNamespacePidKinematics implements PrinterStatusListener{
+public class NRPrinter extends CartesianNamespacePidKinematics{
 	private GCodeParser parser;
 	private StlSlicer slicer;
 	private BowlerBoardDevice deltaDevice;
@@ -101,12 +101,10 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 	public void addPrinterStatusListener(PrinterStatusListener l) {
 		getParser().addPrinterStatusListener(l);
 		getSlicer().addPrinterStatusListener(l);
-		deltaDevice.addPrinterStatusListener(l);
 	}
 	public void removePrinterStatusListener(PrinterStatusListener l) {
 		getParser().removePrinterStatusListener(l);
 		getSlicer().removePrinterStatusListener(l);
-		deltaDevice.removePrinterStatusListener(l);
 	}
 	private void setSlicer(StlSlicer slicer) {
 		this.slicer = slicer;
@@ -127,9 +125,8 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 
 	public void setDeltaDevice(BowlerBoardDevice d) {
 		this.deltaDevice = d;
-		addPrinterStatusListener(this);
 	}
-
+	
 	private double getTempreture() {
 		return temp;
 	}
@@ -197,19 +194,5 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 		getDeltaDevice().cancelRunningPrint();
 		
 	}
-
-	@Override
-	public void sliceStatus(SliceStatusData ssd) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void printStatus(PrinterStatus psl) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
 	
 }
