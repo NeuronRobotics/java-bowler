@@ -8,6 +8,7 @@ import javax.vecmath.Point3f;
 import com.neuronrobotics.replicator.driver.PrinterStatus.PrinterState;
 import com.neuronrobotics.sdk.addons.kinematics.ITaskSpaceUpdateListenerNR;
 import com.neuronrobotics.sdk.addons.kinematics.LinkConfiguration;
+import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.commands.cartesian.CancelPrintCommand;
 import com.neuronrobotics.sdk.commands.cartesian.LinearInterpolationCommand;
@@ -122,7 +123,7 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 																				4),//number of bytes
 																				true)/1000.0);//True for signed data
 			}
-			PrinterStatus stat = new PrinterStatus(new Point3f(status[0], status[1], status[2]),status[3],status[4], (int) status[5], PrinterState.PRINTING);
+			PrinterStatus stat = new PrinterStatus(new TransformNR(status[0], status[1], status[2],new RotationNR()),status[3],status[4], (int) status[5], PrinterState.PRINTING);
 			for(int i=0;i<statusListeners.size();i++ ){
 				
 				statusListeners.get(i).printStatus(stat);

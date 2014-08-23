@@ -210,7 +210,8 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 	@Override
 	public void printStatus(PrinterStatus psl) {
 		// TODO Auto-generated method stub
-		System.out.println(psl);
+		//System.out.println(psl);
+		
 	}
 
 
