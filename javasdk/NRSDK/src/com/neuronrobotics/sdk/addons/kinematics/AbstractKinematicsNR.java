@@ -369,12 +369,17 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 		return;
 	}
 	
-	protected void firePoseUpdate(){
-		//Log.info("Pose update");
+	protected void firePoseTransform(TransformNR transform){
 		for(int i=0;i<taskSpaceUpdateListeners.size();i++){
 			ITaskSpaceUpdateListenerNR p=taskSpaceUpdateListeners.get(i);
-			p.onTaskSpaceUpdate(this, getCurrentTaskSpaceTransform());
+			p.onTaskSpaceUpdate(this, transform);
 		}
+	}
+	
+	protected void firePoseUpdate(){
+		//Log.info("Pose update");
+		firePoseTransform(getCurrentTaskSpaceTransform());
+
 		double[] vect = getCurrentJointSpaceVector();
 		
 		for(int i=0;i<jointSpaceUpdateListeners.size();i++){
