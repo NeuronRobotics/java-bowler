@@ -2,6 +2,7 @@ package com.neuronrobotics.replicator.driver;
 
 import java.util.ArrayList;
 
+import javax.print.PrintService;
 import javax.vecmath.Point3f;
 
 import com.neuronrobotics.replicator.driver.PrinterStatus.PrinterState;
@@ -113,18 +114,18 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 			numSpacesRemaining = ByteList.convertToInt(data.getData().getBytes(	0,//Starting index
 																				4),//number of bytes
 																				false);//True for signed data
-		}else{
-			Log.warning("Unknown packet "+data);
+		}else if(data.getRPC().equalsIgnoreCase("cpos")) {
+			//
 			float status[] = new float [6];
 			for (int i=0;i<5;i++){
 					status[i] = (float)(ByteList.convertToInt(data.getData().getBytes(	i*4,//Starting index
 																				4),//number of bytes
 																				true)/1000.0);//True for signed data
 			}
-			
+			PrinterStatus stat = new PrinterStatus(new Point3f(status[0], status[1], status[2]),status[3],status[4], (int) status[5], PrinterState.PRINTING);
 			for(int i=0;i<statusListeners.size();i++ ){
 				
-				statusListeners.get(i).printStatus(new PrinterStatus(new Point3f(status[0], status[1], status[2]),status[3],status[4], (int) status[5], PrinterState.PRINTING));
+				statusListeners.get(i).printStatus(stat);
 			}
 		}
 	}

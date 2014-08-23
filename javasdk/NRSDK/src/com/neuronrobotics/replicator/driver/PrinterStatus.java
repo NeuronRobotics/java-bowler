@@ -84,4 +84,11 @@ public class PrinterStatus {
 		this.tempreture = tempreture;
 	}
 	
+	@Override
+	public String toString(){
+		String s="Print Status: Location="+headLocation+" extrusion="+extrusion+" tempreture="+tempreture+" "+message;
+		
+		return s;
+	}
+	
 }
