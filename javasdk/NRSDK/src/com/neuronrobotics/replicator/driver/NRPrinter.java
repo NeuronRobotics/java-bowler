@@ -26,6 +26,11 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 	
 	public NRPrinter(BowlerBoardDevice d) {
 		super(d,d);
+		
+		setParser(new GCodeParser(this));
+//		setSlicer(new StlSlicer(getDevice().getMaterialData()));
+		setSlicer(new MiracleGrue(getMaterialData()));
+		
 		this.setDeltaDevice(d);
 		
 //		extruder = getFactory().getLink("Extruder");
@@ -51,9 +56,7 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 		
 		setExtrusionTempreture(new double [] {getTempreture()});
 
-		setParser(new GCodeParser(this));
-//		setSlicer(new StlSlicer(getDevice().getMaterialData()));
-		setSlicer(new MiracleGrue(getMaterialData()));
+
 		
 	}
 
