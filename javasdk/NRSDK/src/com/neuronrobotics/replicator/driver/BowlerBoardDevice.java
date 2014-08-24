@@ -118,22 +118,23 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 		}else if(data.getRPC().equalsIgnoreCase("cpos")) {
 			//
 			float status[] = new float [6];
-			for (int i=0;i<5;i++){
+			for (int i=0;i<6;i++){
 					status[i] = (float)(ByteList.convertToInt(data.getData().getBytes(	i*4,//Starting index
 																				4),//number of bytes
 																				true)/1000.0);//True for signed data
 			}
 			PrinterStatus stat = new PrinterStatus(new TransformNR(status[0], status[1], status[2],new RotationNR()),status[3],status[4], (int) status[5], PrinterState.PRINTING);
-			numSpacesRemaining = sizeOfBuffer-stat.getPrintProgress();
+			//numSpacesRemaining = stat.getPrintProgress();
 			for(int i=0;i<statusListeners.size();i++ ){
 				
 				statusListeners.get(i).printStatus(stat);
 			}
 		}
+		//System.out.println("Remaining = "+numSpacesRemaining);
 	}
 	
 	public int getNumberOfPacketsWaiting() {
-		return sizeOfBuffer-numSpacesRemaining;
+		return sizeOfBuffer-numSpacesRemaining-1;
 	}
 
 	public int getNumberOfSpacesInBuffer() {
