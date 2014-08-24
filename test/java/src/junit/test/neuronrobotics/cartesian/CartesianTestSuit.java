@@ -37,10 +37,10 @@ public class CartesianTestSuit {
 		printer.cancelPrint();
 		ThreadUtil.wait(5000);
 		try{
-			//File gcode = new File("testSlice.gcode");
-			//File stl = new File("calibration_angle.stl");
+			File gcode = new File("testSlice.gcode");
+			File stl = new File("calibration_angle.stl");
 	
-			//printer.slice(stl, gcode);
+			printer.slice(stl, gcode);
 			
 			printer.print(CartesianTestSuit.class.getResourceAsStream("test.gcode"));
 		}catch(Exception ex){

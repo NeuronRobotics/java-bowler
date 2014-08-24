@@ -56,8 +56,17 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 		setExtrusionTempreture(new double [] {getTempreture()});
 
 		setParser(new ServoStockGCodeParser(this));
-//		setSlicer(new StlSlicer(getDevice().getMaterialData()));
-		setSlicer(new Slic3r(getMaterialData()));
+		setSlicer(new Slic3r(	.4, 
+								new double[]{0,0},
+								1.75,
+								1,
+								190,
+								0,
+								.3,
+								3,
+								true,
+								1.1
+							));
 		addPrinterStatusListener(this);
 
 		
@@ -143,9 +152,6 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 		this.temp = temp;
 	}
 	
-	public MaterialData getMaterialData() {
-		return new MiracleGrueMaterialData();
-	}
 	
 	public void setExtrusionTempreture(double [] extTemp) {
 		if(extTemp[0] == currentTemp) {
