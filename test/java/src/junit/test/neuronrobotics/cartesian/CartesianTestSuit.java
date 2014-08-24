@@ -34,15 +34,15 @@ public class CartesianTestSuit {
 //		dev.setDesiredJointAxisValue(0,100,20);
 
 		NRPrinter printer = new NRPrinter(dev);
-		//printer.cancelPrint();
+		printer.cancelPrint();
 		ThreadUtil.wait(5000);
 		try{
-			File gcode = new File("testSlice.gcode");
-			File stl = new File("calibration_angle.stl");
+			//File gcode = new File("testSlice.gcode");
+			//File stl = new File("calibration_angle.stl");
 	
-			printer.slice(stl, gcode);
+			//printer.slice(stl, gcode);
 			
-			printer.print(new FileInputStream(new File("testSlice.gcode")));
+			printer.print(CartesianTestSuit.class.getResourceAsStream("test.gcode"));
 		}catch(Exception ex){
 			ex.printStackTrace();
 			fail();

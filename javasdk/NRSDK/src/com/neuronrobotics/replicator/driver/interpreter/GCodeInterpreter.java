@@ -9,10 +9,8 @@ import java.util.Collections;
 import java.util.concurrent.locks.ReentrantLock;
 import java.io.BufferedReader;
 import java.io.EOFException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.nio.CharBuffer;
 
 import com.neuronrobotics.sdk.common.Log;
@@ -157,173 +155,97 @@ public class GCodeInterpreter {
 			nextLine.storeWord(c, Double.parseDouble(word.substring(1)));
 		}
 	}
+	
+	
+	public void processSingleGCODELine(String line) throws Exception{
+		String delims;
+		String[] tokens;
+		
+		delims = "[ ]+";
+		tokens = line.split(delims);
+		nextLine.storeWord('G', 0);
+		nextLine.storeWord('M', 0);
+		
+		System.out.println("\r\n"+line);
+		for(int i=0;i<tokens.length;i++){
+			tokens[i] = tokens[i].trim();
+			if(!tokens[i].isEmpty()){
+				double val = Double.parseDouble(tokens[i].substring(1));
+				char code = tokens[i].charAt(0);
+				if(code == 'M'){
+					mcodes.add((int) val);
+					break;
+				}
+				if(code == 'G'){
+					int theCode = (int) val;
+					if (gClearOnSet[theCode] != null)
+						gcodes.removeAll(gClearOnSet[theCode]);
+					gcodes.add(theCode);
+				}
+				nextLine.storeWord(code, val);
+			}
+		}
+		//System.out.println(nextLine);
+		executeLine();
+	}
 
 	void parseLine(InputStream r) throws Exception { 
-		
-		// Okay, whatever, I'll
-		// write this like in C.
 		BufferedReader br = new BufferedReader(new InputStreamReader(r));
 		String line;
 		boolean inCommentSection = false;
 		while ((line = br.readLine()) != null) {
-		   // process the line.
+			String delims;
+			String[] tokens;
+			if(line.indexOf(';')>-1){
+				//this line contains a comment
+				if(line.indexOf(';') ==0){
+					// this is just a comment
+					line = null;
+				}else{
+					delims = "[;]+";
+					tokens = line.split(delims);
+					//strip the comment and place the rest of the line 
+					// in the to-be-parsed variable
+					line = tokens[0];
+				}
+			}else{
+				// no comment on this line
+			}
+			//Check for the block comment case
+			if(line != null){
+				if(line.indexOf('(')>-1){
+					// block comment section
+					inCommentSection = true;
+					line = null;
+				}
+				
+			}
+			if(line != null){
+				if(line.indexOf(')')>-1){
+					// end block comment section
+					inCommentSection = false;
+					line = null;
+				}
+			}
+			if(inCommentSection)
+				line = null;
+			
+			// Check for the empty line case
+			if(line != null){
+				if (line.trim().isEmpty()){
+					//empty line detect
+					line = null;
+				}
+			}
+			// OK, now we have a valid line
+			if(line !=null){
+				processSingleGCODELine( line);
+			}
+			
 		}
 		br.close();
-		
-		
-		char c = ' ';
-		char pc = ' ';
-		CharBuffer numBuffer = CharBuffer.allocate(128);
-		numBuffer.put(0, '0');
-		while (c != '\n') {
-			c = (char) r.read();
-			if (c == ((char) -1))
-				throw new EOFException();
-			while (c == '(' || c == ';') {// Skip comments.
-				int depth = 1;
-				while (depth > 0) {
-					c = (char) r.read();
-					if (c == '(')
-						depth++;
-					if (c == ')')
-						depth--;
-					if (c == '\n')
-						// Log.debug("Newline in comment?");
-						depth--;
-					if (c == ((char) -1))
-						throw new EOFException();
-				}
-				c = (char) r.read();
-				if (c == ((char) -1))
-					throw new EOFException();
-			}
-			if (c == '\n')
-				c = ',';
-			if (Character.isWhitespace(c))
-				c = ' '; // Just normalize spaces, for the switch.
-			if (Character.isDigit(c) || c == '+' || c == '-' || c == '.') {
-				numBuffer.put(c);
-			} else {
-				numBuffer.flip();
-				pc = Character.toUpperCase(pc);
-				if (pc == ',') {
-					Log.debug("");
-				} else {
-					Log.debug("" + pc);
-				}
-				switch (pc) {
-				case ' ': // Spaces will come in with no number to parse, so we
-					// don't parse it.
-					break;
-				case 'M':
-					mcodes.add(Integer.parseInt(numBuffer.toString()));
-					Log.debug("" + numBuffer);
-					break;
-				case 'G':
-					int theCode = Integer.parseInt(numBuffer.toString());
-					if (gClearOnSet[theCode] != null)
-						gcodes.removeAll(gClearOnSet[theCode]);
-					gcodes.add(theCode);
-					Log.debug("" + numBuffer);
-					break;
-				case '\n':
-				case '\r':
-				case ',':
-					throw new RuntimeException(
-							"Shouldn't be here, executing a newline on pc");
-				default:
-					nextLine.storeWord(pc,
-							Double.parseDouble(numBuffer.toString()));
-					break;
-				}
-				pc = c;
-				numBuffer.clear();
-				numBuffer.put(0, '0');
-			}
-			if (c == '\n' || c == '\r' | c == ',') {
-				executeLine();
-				return;
-			}
-		}
 	}
 
-//	void parseLine(InputStream r) throws Exception { // Okay, whatever, I'll
-//														// write this like in C.
-//		char c = ' ';
-//		char pc = ' ';
-//		CharBuffer numBuffer = CharBuffer.allocate(128);
-//		numBuffer.put(0, '0');
-//		while (c != '\n') {
-//			c = (char) r.read();
-//			if (c == ((char) -1))
-//				throw new EOFException();
-//			while (c == '(' || c == ';') {// Skip comments.
-//				int depth = 1;
-//				while (depth > 0) {
-//					c = (char) r.read();
-//					if (c == '(')
-//						depth++;
-//					if (c == ')')
-//						depth--;
-//					if (c == '\n')
-//						// Log.debug("Newline in comment?");
-//						depth--;
-//					if (c == ((char) -1))
-//						throw new EOFException();
-//				}
-//				c = (char) r.read();
-//				if (c == ((char) -1))
-//					throw new EOFException();
-//			}
-//			if (c == '\n')
-//				c = ',';
-//			if (Character.isWhitespace(c))
-//				c = ' '; // Just normalize spaces, for the switch.
-//			if (Character.isDigit(c) || c == '+' || c == '-' || c == '.') {
-//				numBuffer.put(c);
-//			} else {
-//				numBuffer.flip();
-//				pc = Character.toUpperCase(pc);
-//				if (pc == ',') {
-//					Log.debug("");
-//				} else {
-//					Log.debug("" + pc);
-//				}
-//				switch (pc) {
-//				case ' ': // Spaces will come in with no number to parse, so we
-//							// don't parse it.
-//					break;
-//				case 'M':
-//					mcodes.add(Integer.parseInt(numBuffer.toString()));
-//					Log.debug("" + numBuffer);
-//					break;
-//				case 'G':
-//					int theCode = Integer.parseInt(numBuffer.toString());
-//					if (gClearOnSet[theCode] != null)
-//						gcodes.removeAll(gClearOnSet[theCode]);
-//					gcodes.add(theCode);
-//					Log.debug("" + numBuffer);
-//					break;
-//				case '\n':
-//				case '\r':
-//				case ',':
-//					throw new RuntimeException(
-//							"Shouldn't be here, executing a newline on pc");
-//				default:
-//					nextLine.storeWord(pc,
-//							Double.parseDouble(numBuffer.toString()));
-//					break;
-//				}
-//				pc = c;
-//				numBuffer.clear();
-//				numBuffer.put(0, '0');
-//			}
-//			if (c == '\n' || c == '\r' | c == ',') {
-//				executeLine();
-//				return;
-//			}
-//		}
-//	}
 
 	/**
 	 * Execute the action(s) specified by the already built-up line of G-code.
@@ -541,6 +463,7 @@ public class GCodeInterpreter {
 				return r1;
 			}
 
+			@SuppressWarnings("unused")
 			public boolean equals(Integer o1, Integer o2) {
 				return this.compare(o1, o2) == 0;
 			}
@@ -555,7 +478,8 @@ public class GCodeInterpreter {
 	 * @param c
 	 *            the new comparator.
 	 */
-	public void setGSorting(Comparator c) {
+	@SuppressWarnings("unchecked")
+	public void setGSorting(@SuppressWarnings("rawtypes") Comparator c) {
 		gCodeOrdering = c;
 	}
 
@@ -645,6 +569,7 @@ public class GCodeInterpreter {
 			}
 		});
 
+		@SuppressWarnings("unchecked")
 		List<Integer>[] exclGroups = (List<Integer>[]) new List<?>[] {
 				Arrays.asList(0, 1, 4, 28), // All of these might need to change
 											// to be mutable later.

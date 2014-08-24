@@ -13,7 +13,7 @@ import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 public class NRPrinter extends CartesianNamespacePidKinematics implements PrinterStatusListener{
-	private GCodeParser parser;
+	private ServoStockGCodeParser parser;
 	private StlSlicer slicer;
 	private BowlerBoardDevice deltaDevice;
 	//Configuration hard coded
@@ -55,7 +55,7 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 		
 		setExtrusionTempreture(new double [] {getTempreture()});
 
-		setParser(new GCodeParser(this));
+		setParser(new ServoStockGCodeParser(this));
 //		setSlicer(new StlSlicer(getDevice().getMaterialData()));
 		setSlicer(new Slic3r(getMaterialData()));
 		addPrinterStatusListener(this);
@@ -91,7 +91,7 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 		}
 		ThreadUtil.wait(5000);
 		Log.debug("Print Done, took "+((((double)(System.currentTimeMillis()-start))/1000.0)/60.0)+" minutes");
-		cancelPrint();
+		//cancelPrint();
 		return b;
 	}
 	
@@ -120,10 +120,10 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 	public StlSlicer getSlicer() {
 		return slicer;
 	}
-	private void setParser(GCodeParser parser) {
+	private void setParser(ServoStockGCodeParser parser) {
 		this.parser = parser;
 	}
-	public GCodeParser getParser() {
+	public ServoStockGCodeParser getParser() {
 		return parser;
 	}
 

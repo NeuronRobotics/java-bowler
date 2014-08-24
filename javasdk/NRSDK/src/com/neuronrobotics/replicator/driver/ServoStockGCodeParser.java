@@ -11,12 +11,12 @@ import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.common.Log;
 
-public class GCodeParser {
+public class ServoStockGCodeParser {
 	private ArrayList<PrinterStatusListener> listeners = new ArrayList<PrinterStatusListener>();
 	private GCodeInterpreter interp;
 	NRPrinter device;
 
-	public GCodeParser(NRPrinter nrPrinter) {
+	public ServoStockGCodeParser(NRPrinter nrPrinter) {
 		// TODO Auto-generated constructor stub
 		this.device=nrPrinter;
 	}
@@ -74,8 +74,11 @@ public class GCodeParser {
 				TransformNR t=new TransformNR(next.getWord('X'),next.getWord('Y'),next.getWord('Z'),new RotationNR());
 				TransformNR prevT=new TransformNR(prev.getWord('X'),prev.getWord('Y'),prev.getWord('Z'),new RotationNR());
 				double seconds=(t.getOffsetVectorMagnitude(prevT)/next.getWord('F'))*60.0;
-				while(device!=null && device.getNumberOfSpacesInBuffer()<2) 
-					Thread.sleep(100);//Wait for at least 2 spaces in the buffer
+				
+				while(device!=null && device.getNumberOfSpacesInBuffer()==0) {
+					Thread.sleep(500);//Wait for at least 2 spaces in the buffer
+					Log.debug("Waiting for space..." +device.getNumberOfSpacesInBuffer());
+				}
 				int iter=0;
 				while(iter++<1000) {
 					try {
