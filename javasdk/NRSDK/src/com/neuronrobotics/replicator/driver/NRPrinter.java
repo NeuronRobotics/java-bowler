@@ -86,7 +86,7 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 		boolean b = getParser().print(gcode);
 		Log.debug("Gcode loaded, waiting for printer to finish");
 		while(deltaDevice.getNumberOfPacketsWaiting()>0){
-			ThreadUtil.wait(5000);
+			ThreadUtil.wait(1000);
 			Log.debug(deltaDevice.getNumberOfPacketsWaiting()+" remaining");
 		}
 		ThreadUtil.wait(5000);
