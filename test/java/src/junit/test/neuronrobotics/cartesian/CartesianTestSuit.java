@@ -30,7 +30,7 @@ public class CartesianTestSuit {
 //		dev.setDesiredJointAxisValue(0,100,20);
 
 		NRPrinter printer = new NRPrinter(dev);
-		printer.cancelPrint();
+		//printer.cancelPrint();
 		ThreadUtil.wait(5000);
 		try{
 			printer.print(CartesianTestSuit.class.getResourceAsStream("test.gcode"));

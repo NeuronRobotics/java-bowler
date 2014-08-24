@@ -77,7 +77,7 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 	 */
 	public boolean print(InputStream gcode) {
 		System.out.println("Printing now.");
-		cancelPrint();
+		//cancelPrint();
 		//ThreadUtil.wait(5000);
 		long start = System.currentTimeMillis();
 		boolean b = getParser().print(gcode);
