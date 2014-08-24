@@ -56,7 +56,8 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 		setExtrusionTempreture(new double [] {getTempreture()});
 
 		setParser(new ServoStockGCodeParser(this));
-		setSlicer(new Slic3r(	.4, 
+		setSlicer(new Slic3r(	new File("/home/hephaestus/bin/Slic3r/bin/slic3r"),
+								.4, 
 								new double[]{0,0},
 								1.75,
 								1,
@@ -86,8 +87,9 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 	 * 
 	 * @param gcode the gcode to be sent to the printer
 	 * @return
+	 * @throws Exception 
 	 */
-	public boolean print(InputStream gcode) {
+	public boolean print(InputStream gcode) throws Exception {
 		Log.debug("Printing now.");
 		//cancelPrint();
 		//ThreadUtil.wait(5000);

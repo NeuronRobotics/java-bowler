@@ -24,7 +24,7 @@ public class ExternalSlicer extends StlSlicer {
 	}
 
 	public boolean slice(File input, File gcode) {
-		try {
+		
 			ProcessBuilder builder = new ProcessBuilder();
 
 			List<String> thisCommand = new ArrayList<String>(cmdline);
@@ -36,13 +36,14 @@ public class ExternalSlicer extends StlSlicer {
 			builder.redirectErrorStream(true);
 			builder.redirectOutput(Redirect.INHERIT);
 			builder.command(thisCommand);
+		try {
 			Process p = builder.start();
 			new Thread(new StreamDump(p.getInputStream(), System.out)).start();
 			p.waitFor();
-
 			return true;
 		} catch (IOException e) {
 			e.printStackTrace();
+			
 			return false;
 		} catch (InterruptedException e) {
 			e.printStackTrace();

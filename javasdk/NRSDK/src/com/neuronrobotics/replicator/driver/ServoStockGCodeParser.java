@@ -21,29 +21,31 @@ public class ServoStockGCodeParser {
 		this.device=nrPrinter;
 	}
 
-	public boolean print(InputStream gcode) {
+	public boolean print(InputStream gcode) throws Exception {
 		//this should be a thread that takes the gcode and sends it to the printer
 		if(interp == null){
 			interp=new GCodeInterpreter(); // Could reuse.
 			addHandlers(interp);
 		}
 		Log.debug("Reached print.");
-		try {
-			interp.tryInterpretStream(gcode);
-			Log.debug("End of print.");
-			return true;
-		} catch (Exception e) { 
-			// um... this is bad. Ideally, the kinematics methods probably shouldn't through Exception, but we'll just catch it here for now.
-			System.err.println(e);
-			e.printStackTrace();
-			Log.debug("Abnormal end of print");
-			return false;
-		}
+
+		interp.tryInterpretStream(gcode);
+		Log.debug("End of print.");
+		return true;
+
 	}
 
 	void addHandlers(GCodeInterpreter interp) {
 		// Temperature control
 		interp.addMHandler(104, new CodeHandler() {
+			public void execute(GCodeLineData prev, GCodeLineData next) throws Exception {
+				double d[]=new double[1];
+				d[0]=next.getWord('S');
+				device.setExtrusionTempreture(d);
+			}
+		});
+		// TODO this code should wait until up to tempreture
+		interp.addMHandler(109, new CodeHandler() {
 			public void execute(GCodeLineData prev, GCodeLineData next) throws Exception {
 				double d[]=new double[1];
 				d[0]=next.getWord('S');
@@ -57,6 +59,19 @@ public class ServoStockGCodeParser {
 				}
 			}
 		});
+		
+		// sets extruder to absolute mode
+		interp.addMHandler(82, new CodeHandler() {
+			public void execute(GCodeLineData prev, GCodeLineData next) throws Exception {
+				//TODo unimplemented, but the default
+			}
+		});
+		interp.addMHandler(107, new CodeHandler() {
+			public void execute(GCodeLineData prev, GCodeLineData next) throws Exception {
+				// no fans
+			}
+		});
+		
 		interp.addGHandler(6, new CodeHandler() {
 			public void execute(GCodeLineData prev, GCodeLineData next) throws Exception {
 				
@@ -66,6 +81,13 @@ public class ServoStockGCodeParser {
 			public void execute(GCodeLineData prev, GCodeLineData next) throws Exception {
 				TransformNR t=new TransformNR(next.getWord('X'),next.getWord('Y'),next.getWord('Z'),new RotationNR());
 
+				device.setDesiredPrintLocetion(t, next.getWord('A'), 0);// zero seconds is a rapid
+			}
+		});
+		interp.setGHandler(28, new CodeHandler() {
+			//Move to origin
+			public void execute(GCodeLineData prev, GCodeLineData next) throws Exception {
+				TransformNR t=new TransformNR(0,0,0,new RotationNR());
 				device.setDesiredPrintLocetion(t, next.getWord('A'), 0);// zero seconds is a rapid
 			}
 		});

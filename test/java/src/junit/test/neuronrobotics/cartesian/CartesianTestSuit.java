@@ -35,14 +35,16 @@ public class CartesianTestSuit {
 
 		NRPrinter printer = new NRPrinter(dev);
 		printer.cancelPrint();
-		ThreadUtil.wait(5000);
+		//ThreadUtil.wait(5000);
 		try{
-			File gcode = new File("testSlice.gcode");
 			File stl = new File("calibration_angle.stl");
-	
-			printer.slice(stl, gcode);
+			File gcode = new File(stl.getAbsoluteFile()+".gcode");
+			if(!gcode.exists())
+				printer.slice(stl, gcode);
 			
-			printer.print(CartesianTestSuit.class.getResourceAsStream("test.gcode"));
+			//printer.print(CartesianTestSuit.class.getResourceAsStream("test.gcode"));
+			if(gcode.exists())
+				printer.print(new FileInputStream(gcode));
 		}catch(Exception ex){
 			ex.printStackTrace();
 			fail();
