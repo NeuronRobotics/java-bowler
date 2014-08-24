@@ -71,7 +71,11 @@ public class ServoStockGCodeParser {
 				// no fans
 			}
 		});
-		
+		interp.addMHandler(106, new CodeHandler() {
+			public void execute(GCodeLineData prev, GCodeLineData next) throws Exception {
+				// no fans
+			}
+		});
 		interp.addGHandler(6, new CodeHandler() {
 			public void execute(GCodeLineData prev, GCodeLineData next) throws Exception {
 				
