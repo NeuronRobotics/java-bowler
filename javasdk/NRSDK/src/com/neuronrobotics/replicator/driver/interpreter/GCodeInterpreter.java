@@ -7,12 +7,15 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Collections;
 import java.util.concurrent.locks.ReentrantLock;
+import java.io.BufferedReader;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.CharBuffer;
+
+import com.neuronrobotics.sdk.common.Log;
 
 /**
  * An extensible G-code interpreter. Parses a stream containing G-code commands,
@@ -109,6 +112,7 @@ public class GCodeInterpreter {
 	 * of handlers and configuration to it. @see
 	 * GCodeInterpreter#addDefaultHandlers
 	 */
+	@SuppressWarnings("unchecked")
 	public GCodeInterpreter() {
 		gHandlers = (List<CodeHandler>[]) new ArrayList<?>[310];
 		mHandlers = (List<CodeHandler>[]) new ArrayList<?>[310];
@@ -133,7 +137,7 @@ public class GCodeInterpreter {
 		s.useDelimiter("[ \t]+(\\(.*\\))?[ \t]*|(?=\n)|(?<=\n)");
 		// s.useDelimiter("[ \t]+(\\(.*\\))?[ \t]*|(?=\n)|(?<=\n)|\\(.*\\)");
 		String word = s.next();
-		System.out.println("Token: " + word);
+		Log.debug("Token: " + word);
 		char c = word.charAt(0);
 		switch (Character.toUpperCase(c)) {
 		case 'M':
@@ -154,8 +158,19 @@ public class GCodeInterpreter {
 		}
 	}
 
-	void parseLine(InputStream r) throws Exception { // Okay, whatever, I'll
-														// write this like in C.
+	void parseLine(InputStream r) throws Exception { 
+		
+		// Okay, whatever, I'll
+		// write this like in C.
+		BufferedReader br = new BufferedReader(new InputStreamReader(r));
+		String line;
+		boolean inCommentSection = false;
+		while ((line = br.readLine()) != null) {
+		   // process the line.
+		}
+		br.close();
+		
+		
 		char c = ' ';
 		char pc = ' ';
 		CharBuffer numBuffer = CharBuffer.allocate(128);
@@ -173,7 +188,7 @@ public class GCodeInterpreter {
 					if (c == ')')
 						depth--;
 					if (c == '\n')
-						//System.out.println("Newline in comment?");
+						// Log.debug("Newline in comment?");
 						depth--;
 					if (c == ((char) -1))
 						throw new EOFException();
@@ -191,31 +206,31 @@ public class GCodeInterpreter {
 			} else {
 				numBuffer.flip();
 				pc = Character.toUpperCase(pc);
-				if (pc == ','){
-					System.out.println();
-				}
-				else{
-				System.out.println(pc);
+				if (pc == ',') {
+					Log.debug("");
+				} else {
+					Log.debug("" + pc);
 				}
 				switch (pc) {
 				case ' ': // Spaces will come in with no number to parse, so we
-							// don't parse it.
+					// don't parse it.
 					break;
 				case 'M':
 					mcodes.add(Integer.parseInt(numBuffer.toString()));
-					System.out.println(numBuffer);
+					Log.debug("" + numBuffer);
 					break;
 				case 'G':
-					int theCode=Integer.parseInt(numBuffer.toString());
+					int theCode = Integer.parseInt(numBuffer.toString());
 					if (gClearOnSet[theCode] != null)
 						gcodes.removeAll(gClearOnSet[theCode]);
 					gcodes.add(theCode);
-					System.out.println(numBuffer);
+					Log.debug("" + numBuffer);
 					break;
 				case '\n':
 				case '\r':
 				case ',':
-					throw new RuntimeException("Shouldn't be here, executing a newline on pc");
+					throw new RuntimeException(
+							"Shouldn't be here, executing a newline on pc");
 				default:
 					nextLine.storeWord(pc,
 							Double.parseDouble(numBuffer.toString()));
@@ -225,12 +240,90 @@ public class GCodeInterpreter {
 				numBuffer.clear();
 				numBuffer.put(0, '0');
 			}
-			if(c=='\n'||c=='\r'|c==',') {
+			if (c == '\n' || c == '\r' | c == ',') {
 				executeLine();
-			    return;
+				return;
 			}
 		}
 	}
+
+//	void parseLine(InputStream r) throws Exception { // Okay, whatever, I'll
+//														// write this like in C.
+//		char c = ' ';
+//		char pc = ' ';
+//		CharBuffer numBuffer = CharBuffer.allocate(128);
+//		numBuffer.put(0, '0');
+//		while (c != '\n') {
+//			c = (char) r.read();
+//			if (c == ((char) -1))
+//				throw new EOFException();
+//			while (c == '(' || c == ';') {// Skip comments.
+//				int depth = 1;
+//				while (depth > 0) {
+//					c = (char) r.read();
+//					if (c == '(')
+//						depth++;
+//					if (c == ')')
+//						depth--;
+//					if (c == '\n')
+//						// Log.debug("Newline in comment?");
+//						depth--;
+//					if (c == ((char) -1))
+//						throw new EOFException();
+//				}
+//				c = (char) r.read();
+//				if (c == ((char) -1))
+//					throw new EOFException();
+//			}
+//			if (c == '\n')
+//				c = ',';
+//			if (Character.isWhitespace(c))
+//				c = ' '; // Just normalize spaces, for the switch.
+//			if (Character.isDigit(c) || c == '+' || c == '-' || c == '.') {
+//				numBuffer.put(c);
+//			} else {
+//				numBuffer.flip();
+//				pc = Character.toUpperCase(pc);
+//				if (pc == ',') {
+//					Log.debug("");
+//				} else {
+//					Log.debug("" + pc);
+//				}
+//				switch (pc) {
+//				case ' ': // Spaces will come in with no number to parse, so we
+//							// don't parse it.
+//					break;
+//				case 'M':
+//					mcodes.add(Integer.parseInt(numBuffer.toString()));
+//					Log.debug("" + numBuffer);
+//					break;
+//				case 'G':
+//					int theCode = Integer.parseInt(numBuffer.toString());
+//					if (gClearOnSet[theCode] != null)
+//						gcodes.removeAll(gClearOnSet[theCode]);
+//					gcodes.add(theCode);
+//					Log.debug("" + numBuffer);
+//					break;
+//				case '\n':
+//				case '\r':
+//				case ',':
+//					throw new RuntimeException(
+//							"Shouldn't be here, executing a newline on pc");
+//				default:
+//					nextLine.storeWord(pc,
+//							Double.parseDouble(numBuffer.toString()));
+//					break;
+//				}
+//				pc = c;
+//				numBuffer.clear();
+//				numBuffer.put(0, '0');
+//			}
+//			if (c == '\n' || c == '\r' | c == ',') {
+//				executeLine();
+//				return;
+//			}
+//		}
+//	}
 
 	/**
 	 * Execute the action(s) specified by the already built-up line of G-code.
@@ -238,16 +331,16 @@ public class GCodeInterpreter {
 	 * @throws Exception
 	 */
 	void executeLine() throws Exception {
-		System.out.println("Next Gcode Line "+nextLine);
-		System.out.println("Active Gcodes: "+gcodes);
-		System.out.println("Active Mcodes: "+mcodes);
+		Log.debug("Next Gcode Line " + nextLine);
+		Log.debug("Active Gcodes: " + gcodes);
+		Log.debug("Active Mcodes: " + mcodes);
 		for (int m : mcodes)
 			if (mHandlers[m] != null) {
 				for (CodeHandler handler : mHandlers[m]) {
 					handler.execute(lastLine, nextLine);
 				}
 			} else {
-				// System.out.println("No implementation found for M"+m);
+				// Log.debug("No implementation found for M"+m);
 
 				throw new RuntimeException("No implementation found for M" + m);
 			}
@@ -257,7 +350,7 @@ public class GCodeInterpreter {
 					handler.execute(lastLine, nextLine);
 				}
 			} else {
-				// System.out.println("No implementation found for G"+g);
+				// Log.debug("No implementation found for G"+g);
 				throw new RuntimeException("No implementation found for G" + g);
 			}
 
@@ -276,24 +369,14 @@ public class GCodeInterpreter {
 	 */
 	public void interpretStream(InputStream in) throws Exception {
 		executingLock.lock();
-		
+
 		interpretingThread = Thread.currentThread();
-		try {
-			while (true) {
-				parseLine(in);
-			}
-			// Scanner s=new Scanner(inWithoutComments);
-			// while(s.hasNext()) {
-			// System.out.println("TOK"+s.next());
-			// parseWord(s);
-			// }
-			// } catch(InterruptedException e) {
-			// Expected cancel behavior; possibly feed out a status report?
-		} catch (EOFException e) {
-		} finally {
-			interpretingThread = null;
-			executingLock.unlock();
-		}
+		
+		parseLine(in);
+
+		interpretingThread = null;
+		executingLock.unlock();
+		
 	}
 
 	/**
@@ -475,7 +558,7 @@ public class GCodeInterpreter {
 	public void setGSorting(Comparator c) {
 		gCodeOrdering = c;
 	}
-	
+
 	/**
 	 * Add the default set of handlers to this interpreter.
 	 * 
@@ -483,12 +566,12 @@ public class GCodeInterpreter {
 	 */
 	public void addDefaultHandlers() {
 		final double curOffset[] = new double[26]; // Yes, we'll let them offset
-												 	// on any axis they feel
+													// on any axis they feel
 													// like.
 		// G0 - no handler.
 		addGHandler(0, new CodeHandler() {
 			public void execute(GCodeLineData prev, GCodeLineData next) {
-				System.out.println("Rapid move to " + next.getWord('X') + ", "
+				Log.debug("Rapid move to " + next.getWord('X') + ", "
 						+ next.getWord('Y') + ", " + next.getWord('Z'));
 			}
 		});
@@ -498,7 +581,7 @@ public class GCodeInterpreter {
 				if (next.getWord('F') == 0.0)
 					System.out
 							.println("Zero feedrate; action will never complete.");
-				System.out.println("Feed move to " + next.getWord('X') + ", "
+				Log.debug("Feed move to " + next.getWord('X') + ", "
 						+ next.getWord('Y') + ", " + next.getWord('Z')
 						+ " at feed " + next.getWord('F'));
 			}
@@ -530,7 +613,7 @@ public class GCodeInterpreter {
 		// the printer class.
 		addGHandler(92, new CodeHandler() {
 			public void execute(GCodeLineData prev, GCodeLineData next) {
-				System.out.println("G92 is not complete");
+				Log.debug("G92 is not complete");
 				char axes[] = { 'X', 'Y', 'Z' };
 				for (char c : axes) {
 					next.storeWord(c, next.getWord(c) + curOffset[c - 'A']);

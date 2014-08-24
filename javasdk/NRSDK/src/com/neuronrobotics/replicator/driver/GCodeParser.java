@@ -9,6 +9,7 @@ import javax.vecmath.Point3f;
 
 import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
+import com.neuronrobotics.sdk.common.Log;
 
 public class GCodeParser {
 	private ArrayList<PrinterStatusListener> listeners = new ArrayList<PrinterStatusListener>();
@@ -22,19 +23,20 @@ public class GCodeParser {
 
 	public boolean print(InputStream gcode) {
 		//this should be a thread that takes the gcode and sends it to the printer
-
-		interp=new GCodeInterpreter(); // Could reuse.
-		addHandlers(interp);
-		System.out.println("Reached print.");
+		if(interp == null){
+			interp=new GCodeInterpreter(); // Could reuse.
+			addHandlers(interp);
+		}
+		Log.debug("Reached print.");
 		try {
 			interp.tryInterpretStream(gcode);
-			System.out.println("End of print.");
+			Log.debug("End of print.");
 			return true;
 		} catch (Exception e) { 
 			// um... this is bad. Ideally, the kinematics methods probably shouldn't through Exception, but we'll just catch it here for now.
 			System.err.println(e);
 			e.printStackTrace();
-			System.out.println("Abnormal end of print");
+			Log.debug("Abnormal end of print");
 			return false;
 		}
 	}

@@ -6,6 +6,6 @@ public class MiracleGrueMaterialData extends MaterialData {
 		return configData;
 	}
 	public StlSlicer getSlicerForConfig() {
-		return new MiracleGrue(this);
+		return new Slic3r(this);
 	}
 }
