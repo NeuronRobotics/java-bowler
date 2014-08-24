@@ -2,6 +2,10 @@ package junit.test.neuronrobotics.cartesian;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+
 import org.junit.Test;
 
 import com.neuronrobotics.replicator.driver.BowlerBoardDevice;
@@ -33,7 +37,12 @@ public class CartesianTestSuit {
 		//printer.cancelPrint();
 		ThreadUtil.wait(5000);
 		try{
-			printer.print(CartesianTestSuit.class.getResourceAsStream("test.gcode"));
+			File gcode = new File("testSlice.gcode");
+			File stl = new File("calibration_angle.stl");
+	
+			printer.slice(stl, gcode);
+			
+			printer.print(new FileInputStream(new File("testSlice.gcode")));
 		}catch(Exception ex){
 			ex.printStackTrace();
 			fail();
