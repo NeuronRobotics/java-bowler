@@ -56,8 +56,8 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 		setExtrusionTempreture(new double [] {getTempreture()});
 
 		setParser(new ServoStockGCodeParser(this));
-		setSlicer(new Slic3r(	new File("/home/hephaestus/bin/Slic3r/bin/slic3r"),
-								.4, 
+		Slic3r.setExecutableLocation("/home/hephaestus/bin/Slic3r/bin/slic3r");
+		setSlicer(new Slic3r(	.4, 
 								new double[]{0,0},
 								1.75,
 								1,
