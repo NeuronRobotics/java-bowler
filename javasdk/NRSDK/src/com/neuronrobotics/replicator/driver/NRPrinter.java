@@ -66,7 +66,20 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 								.3,
 								3,
 								true,
-								1.1
+								1.1,
+								60,// travilSpeed,
+								20,// perimeterSpeed,
+								40,//bridgeSpeed,
+								20,//gapFillSpeed,
+								60,//infillSpeed,
+								60,//supportMaterialSpeed,
+								
+								100,//smallPerimeterSpeedPercent,
+								70,//externalPerimeterSpeedPercent,
+								100,//solidInfillSpeedPercent,
+								80,//topSolidInfillSpeedPercent,
+								100,//supportMaterialInterfaceSpeedPercent,
+								30//firstLayerSpeedPercent
 							));
 		addPrinterStatusListener(this);
 
