@@ -178,16 +178,16 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 //		hotEnd.setTargetEngineeringUnits(extTemp[0]);
 //		hotEnd.flush(0);
 		getTempreture();
-		System.out.print("\r\nWaiting for Printer to come up to tempreture "+currentTemp+" C \n");
+		//System.out.print("\r\nWaiting for Printer to come up to tempreture "+currentTemp+" C \n");
 		Log.enableSystemPrint(false);
 		int iter=0;
 		while(temp>(extTemp[0]+10) || temp< (extTemp[0]-10)) {
 			getTempreture();
-			System.out.print(".");
+			//System.out.print(".");
 			ThreadUtil.wait(100);
 			iter++;
 			if(iter==50) {
-				System.out.print("\r\n "+temp+" C");
+				//System.out.print("\r\n "+temp+" C");
 				iter=0;
 			}
 		}
