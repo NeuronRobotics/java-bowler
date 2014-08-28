@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import javax.vecmath.*;
 
+import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
+
 
 public class PrinterStatus {
 	
@@ -25,7 +27,7 @@ public class PrinterStatus {
 	
 	private PrinterState thePrinterState;
 	
-	private Point3f headLocation;
+	private TransformNR headLocation;
 	
 	private String message;
 	
@@ -34,7 +36,7 @@ public class PrinterStatus {
 	private double extrusion;
 	private double tempreture;
 		
-	public PrinterStatus(Point3f headLocation, double extrusion, double temp,int printProgress, PrinterState thePrinterState){
+	public PrinterStatus(TransformNR headLocation, double extrusion, double temp,int printProgress, PrinterState thePrinterState){
 		this.headLocation = headLocation;
 		this.printProgress = printProgress;
 		this.thePrinterState = thePrinterState;
@@ -43,7 +45,7 @@ public class PrinterStatus {
 		this.setTempreture(temp);
 	}
 	
-	public PrinterStatus(Point3f headLocation,double extrusion, double temp, int printProgress, PrinterState thePrinterState, String stateMessage){
+	public PrinterStatus(TransformNR headLocation,double extrusion, double temp, int printProgress, PrinterState thePrinterState, String stateMessage){
 		this.headLocation = headLocation;
 		this.printProgress = printProgress;
 		this.thePrinterState = thePrinterState;
@@ -56,7 +58,7 @@ public class PrinterStatus {
 		return thePrinterState;
 	}
 	
-	public Point3f getHeadLocation(){
+	public TransformNR getHeadLocation(){
 		return headLocation;
 	}
 	
@@ -82,6 +84,13 @@ public class PrinterStatus {
 
 	public void setTempreture(double tempreture) {
 		this.tempreture = tempreture;
+	}
+	
+	@Override
+	public String toString(){
+		String s="Print Status: Location="+headLocation+" extrusion="+extrusion+" tempreture="+tempreture+" "+message;
+		
+		return s;
 	}
 	
 }

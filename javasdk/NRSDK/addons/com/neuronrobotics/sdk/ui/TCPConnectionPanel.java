@@ -63,19 +63,19 @@ public class TCPConnectionPanel extends AbstractConnectionPanel {
 		connectionCbo = new JComboBox();
 		connectionCbo.setEditable(true);
 		
-		Socket s;
-		try {
-			s = new Socket("google.com", 80);
-			connectionCbo.addItem(s.getLocalAddress().getHostAddress());
-			//System.out.println(s.getLocalAddress().getHostAddress());
-			s.close();
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		Socket s;
+//		try {
+//			s = new Socket("google.com", 80);
+//			connectionCbo.addItem(s.getLocalAddress().getHostAddress());
+//			//System.out.println(s.getLocalAddress().getHostAddress());
+//			s.close();
+//		} catch (UnknownHostException e) {
+//			// TODO Auto-generated catch block
+//			//e.printStackTrace();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			//e.printStackTrace();
+//		}
 	
 		add(connectionCbo, "cell 1 0");
 		

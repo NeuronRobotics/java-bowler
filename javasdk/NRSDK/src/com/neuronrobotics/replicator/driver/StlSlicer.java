@@ -1,5 +1,6 @@
 package com.neuronrobotics.replicator.driver;
 
+import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ public class StlSlicer {
 		//This is the stub class for the stl slicing system. 
 	}
 
-	public boolean slice(InputStream stl,OutputStream gcode) {
+	public boolean slice(File stl,File gcode) {
 		
 		return true;
 	}

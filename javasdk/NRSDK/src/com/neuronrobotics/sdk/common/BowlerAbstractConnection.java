@@ -557,6 +557,8 @@ public abstract class BowlerAbstractConnection {
 
 	
 	private void pushUp(BowlerDatagram b) throws IOException{
+		if(b==null)
+			return;
 		b.setFree(false);
 		if(b.isSyncronous()){
 			BowlerDatagram ret = fireSyncOnReceive(b);

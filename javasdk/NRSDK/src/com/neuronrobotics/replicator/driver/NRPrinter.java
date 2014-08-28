@@ -1,5 +1,6 @@
 package com.neuronrobotics.replicator.driver;
 
+import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -12,7 +13,7 @@ import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 public class NRPrinter extends CartesianNamespacePidKinematics implements PrinterStatusListener{
-	private GCodeParser parser;
+	private ServoStockGCodeParser parser;
 	private StlSlicer slicer;
 	private BowlerBoardDevice deltaDevice;
 	//Configuration hard coded
@@ -26,6 +27,9 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 	
 	public NRPrinter(BowlerBoardDevice d) {
 		super(d,d);
+		
+
+		
 		this.setDeltaDevice(d);
 		
 //		extruder = getFactory().getLink("Extruder");
@@ -51,9 +55,34 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 		
 		setExtrusionTempreture(new double [] {getTempreture()});
 
-		setParser(new GCodeParser(this));
-//		setSlicer(new StlSlicer(getDevice().getMaterialData()));
-		setSlicer(new MiracleGrue(getMaterialData()));
+		setParser(new ServoStockGCodeParser(this));
+		Slic3r.setExecutableLocation("/home/hephaestus/bin/Slic3r/bin/slic3r");
+		setSlicer(new Slic3r(	.4, 
+								new double[]{0,0},
+								1.75,
+								1,
+								190,
+								0,
+								.3,
+								3,
+								true,
+								1.1,
+								60,// travilSpeed,
+								20,// perimeterSpeed,
+								40,//bridgeSpeed,
+								20,//gapFillSpeed,
+								60,//infillSpeed,
+								60,//supportMaterialSpeed,
+								
+								100,//smallPerimeterSpeedPercent,
+								70,//externalPerimeterSpeedPercent,
+								100,//solidInfillSpeedPercent,
+								80,//topSolidInfillSpeedPercent,
+								100,//supportMaterialInterfaceSpeedPercent,
+								30//firstLayerSpeedPercent
+							));
+		addPrinterStatusListener(this);
+
 		
 	}
 
@@ -63,7 +92,7 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 	 * @param gcode the gcode to be written to
 	 * @return
 	 */
-	public boolean slice(InputStream stl,OutputStream gcode) {
+	public boolean slice(File stl,File gcode) {
 		return getSlicer().slice(stl, gcode);
 	}
 	
@@ -71,21 +100,22 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 	 * 
 	 * @param gcode the gcode to be sent to the printer
 	 * @return
+	 * @throws Exception 
 	 */
-	public boolean print(InputStream gcode) {
-		System.out.println("Printing now.");
-		cancelPrint();
+	public boolean print(InputStream gcode) throws Exception {
+		Log.debug("Printing now.");
+		//cancelPrint();
 		//ThreadUtil.wait(5000);
 		long start = System.currentTimeMillis();
 		boolean b = getParser().print(gcode);
-		System.out.println("Gcode loaded, waiting for printer to finish");
+		Log.debug("Gcode loaded, waiting for printer to finish");
 		while(deltaDevice.getNumberOfPacketsWaiting()>0){
-			ThreadUtil.wait(5000);
-			System.out.println(deltaDevice.getNumberOfPacketsWaiting()+" remaining");
+			ThreadUtil.wait(1000);
+			Log.debug(deltaDevice.getNumberOfPacketsWaiting()+" remaining");
 		}
 		ThreadUtil.wait(5000);
-		System.out.println("Print Done, took "+((((double)(System.currentTimeMillis()-start))/1000.0)/60.0)+" minutes");
-		cancelPrint();
+		Log.debug("Print Done, took "+((((double)(System.currentTimeMillis()-start))/1000.0)/60.0)+" minutes");
+		//cancelPrint();
 		return b;
 	}
 	
@@ -114,10 +144,10 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 	public StlSlicer getSlicer() {
 		return slicer;
 	}
-	private void setParser(GCodeParser parser) {
+	private void setParser(ServoStockGCodeParser parser) {
 		this.parser = parser;
 	}
-	public GCodeParser getParser() {
+	public ServoStockGCodeParser getParser() {
 		return parser;
 	}
 
@@ -127,7 +157,7 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 
 	public void setDeltaDevice(BowlerBoardDevice d) {
 		this.deltaDevice = d;
-		addPrinterStatusListener(this);
+		
 	}
 
 	private double getTempreture() {
@@ -137,13 +167,10 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 		this.temp = temp;
 	}
 	
-	public MaterialData getMaterialData() {
-		return new MiracleGrueMaterialData();
-	}
 	
 	public void setExtrusionTempreture(double [] extTemp) {
 		if(extTemp[0] == currentTemp) {
-			System.out.println("Printer at tempreture "+currentTemp+" C");
+			Log.debug("Printer at tempreture "+currentTemp+" C");
 			return;
 		}else
 			currentTemp=extTemp[0];
@@ -151,16 +178,16 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 //		hotEnd.setTargetEngineeringUnits(extTemp[0]);
 //		hotEnd.flush(0);
 		getTempreture();
-		System.out.print("\r\nWaiting for Printer to come up to tempreture "+currentTemp+" C \n");
+		//System.out.print("\r\nWaiting for Printer to come up to tempreture "+currentTemp+" C \n");
 		Log.enableSystemPrint(false);
 		int iter=0;
 		while(temp>(extTemp[0]+10) || temp< (extTemp[0]-10)) {
 			getTempreture();
-			System.out.print(".");
+			//System.out.print(".");
 			ThreadUtil.wait(100);
 			iter++;
 			if(iter==50) {
-				System.out.print("\r\n "+temp+" C");
+				//System.out.print("\r\n "+temp+" C");
 				iter=0;
 			}
 		}
@@ -170,7 +197,7 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 		
 	}
 	public int setDesiredPrintLocetion(TransformNR taskSpaceTransform,double extrusionLegnth, double seconds) throws Exception{
-		System.out.println("Telling printer to go to extrusion len "+extrusionLegnth);
+		Log.debug("Telling printer to go to extrusion len "+extrusionLegnth);
 		return getDeltaDevice().sendLinearSection(taskSpaceTransform, extrusionLegnth, (int) (seconds*1000));
 	}
 	
@@ -207,6 +234,7 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 	@Override
 	public void printStatus(PrinterStatus psl) {
 		// TODO Auto-generated method stub
+		firePoseTransform(forwardOffset(psl.getHeadLocation()));	
 		
 	}
 

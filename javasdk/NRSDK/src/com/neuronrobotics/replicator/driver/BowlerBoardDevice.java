@@ -2,11 +2,13 @@ package com.neuronrobotics.replicator.driver;
 
 import java.util.ArrayList;
 
+import javax.print.PrintService;
 import javax.vecmath.Point3f;
 
 import com.neuronrobotics.replicator.driver.PrinterStatus.PrinterState;
 import com.neuronrobotics.sdk.addons.kinematics.ITaskSpaceUpdateListenerNR;
 import com.neuronrobotics.sdk.addons.kinematics.LinkConfiguration;
+import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.commands.cartesian.CancelPrintCommand;
 import com.neuronrobotics.sdk.commands.cartesian.LinearInterpolationCommand;
@@ -109,24 +111,26 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 	public void onAsyncResponse(BowlerDatagram data) {
 		super.onAsyncResponse(data);
 		if(data.getRPC().equalsIgnoreCase("_sli")) {
-			System.out.println(data);
+			//System.out.println(data);
 			numSpacesRemaining = ByteList.convertToInt(data.getData().getBytes(	0,//Starting index
 																				4),//number of bytes
 																				false);//True for signed data
-		}else{
-			Log.warning("Unknown packet "+data);
+		}else if(data.getRPC().equalsIgnoreCase("cpos")) {
+			//
 			float status[] = new float [6];
-			for (int i=0;i<5;i++){
+			for (int i=0;i<6;i++){
 					status[i] = (float)(ByteList.convertToInt(data.getData().getBytes(	i*4,//Starting index
 																				4),//number of bytes
 																				true)/1000.0);//True for signed data
 			}
-			
+			PrinterStatus stat = new PrinterStatus(new TransformNR(status[0], status[1], status[2],new RotationNR()),status[3],status[4], (int) status[5], PrinterState.PRINTING);
+			//numSpacesRemaining = stat.getPrintProgress();
 			for(int i=0;i<statusListeners.size();i++ ){
 				
-				statusListeners.get(i).printStatus(new PrinterStatus(new Point3f(status[0], status[1], status[2]),status[3],status[4], (int) status[5], PrinterState.PRINTING));
+				statusListeners.get(i).printStatus(stat);
 			}
 		}
+		//System.out.println("Remaining = "+numSpacesRemaining);
 	}
 	
 	public int getNumberOfPacketsWaiting() {
