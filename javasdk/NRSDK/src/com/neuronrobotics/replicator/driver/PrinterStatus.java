@@ -30,19 +30,26 @@ public class PrinterStatus {
 	private String message;
 	
 	private int printProgress;
+	
+	private double extrusion;
+	private double tempreture;
 		
-	public PrinterStatus(Point3f headLocation, int printProgress, PrinterState thePrinterState){
+	public PrinterStatus(Point3f headLocation, double extrusion, double temp,int printProgress, PrinterState thePrinterState){
 		this.headLocation = headLocation;
 		this.printProgress = printProgress;
 		this.thePrinterState = thePrinterState;
 		this.message = "";
+		this.setExtrusion(extrusion);
+		this.setTempreture(temp);
 	}
 	
-	public PrinterStatus(Point3f headLocation, int printProgress, PrinterState thePrinterState, String stateMessage){
+	public PrinterStatus(Point3f headLocation,double extrusion, double temp, int printProgress, PrinterState thePrinterState, String stateMessage){
 		this.headLocation = headLocation;
 		this.printProgress = printProgress;
 		this.thePrinterState = thePrinterState;
-		this.message = stateMessage;		
+		this.message = stateMessage;
+		this.setExtrusion(extrusion);
+		this.setTempreture(temp);
 	}
 	
 	public PrinterState getDriverState(){
@@ -59,6 +66,22 @@ public class PrinterStatus {
 	
 	public int getPrintProgress(){
 		return printProgress;
+	}
+
+	public double getExtrusion() {
+		return extrusion;
+	}
+
+	public void setExtrusion(double extrusion) {
+		this.extrusion = extrusion;
+	}
+
+	public double getTempreture() {
+		return tempreture;
+	}
+
+	public void setTempreture(double tempreture) {
+		this.tempreture = tempreture;
 	}
 	
 }
