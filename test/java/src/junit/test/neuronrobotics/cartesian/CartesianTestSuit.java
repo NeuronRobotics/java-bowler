@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import com.neuronrobotics.replicator.driver.BowlerBoardDevice;
 import com.neuronrobotics.replicator.driver.NRPrinter;
+import com.neuronrobotics.replicator.driver.Slic3r;
 import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.common.Log;
@@ -32,7 +33,7 @@ public class CartesianTestSuit {
 //		dev.getCurrentTaskSpaceTransform();
 //		dev.setDesiredJointSpaceVector(new double [] {150,150,150,0,0},55);
 //		dev.setDesiredJointAxisValue(0,100,20);
-
+		Slic3r.setExecutableLocation("/home/hephaestus/bin/Slic3r/bin/slic3r");
 		NRPrinter printer = new NRPrinter(dev);
 		printer.cancelPrint();
 		//ThreadUtil.wait(5000);
@@ -42,9 +43,9 @@ public class CartesianTestSuit {
 			if(!gcode.exists())
 				printer.slice(stl, gcode);
 			
-			//printer.print(CartesianTestSuit.class.getResourceAsStream("test.gcode"));
-			if(gcode.exists())
-				printer.print(new FileInputStream(gcode));
+			printer.print(CartesianTestSuit.class.getResourceAsStream("test.gcode"));
+//			if(gcode.exists())
+//				printer.print(new FileInputStream(gcode));
 		}catch(Exception ex){
 			ex.printStackTrace();
 			fail();
