@@ -107,6 +107,8 @@ public class PosePanelNR extends JPanel implements ITaskSpaceUpdateListenerNR, I
 	}
 	@Override
 	public void onTaskSpaceUpdate(AbstractKinematicsNR source, TransformNR pose) {
+		if (matrix == null)
+			return;
 		if(input && displayOnly ){
 			matrix.setTransform(pose);
 		}
