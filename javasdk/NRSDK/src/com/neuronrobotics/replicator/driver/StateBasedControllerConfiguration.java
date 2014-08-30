@@ -174,4 +174,22 @@ public class StateBasedControllerConfiguration {
 	public void setRodLength(double rodLength) {
 		this.rodLength = rodLength;
 	}
+	
+	@Override
+	public String toString(){
+		return "Configuration: "+
+				"\r\n\tKP "+ kP+"  "+
+			    "\r\n\tKI "+ kI+"  "+
+			    "\r\n\tKD "+ kD+"  "+
+			    "\r\n\tVkP "+ vKP+"  "+
+			    "\r\n\tVkD "+ vKD+"  "+
+			    "\r\n\tresolution "+ mmPositionResolution+" mm"+
+			    "\r\n\tmax feed rate "+ maximumMMperSec+" mm/sec "+	    
+				"\r\n\tBase Radius "+ baseRadius+" mm "+
+				"\r\n\tEnd Effector Radius "+ endEffectorRadius+" mm "+
+				"\r\n\tMax Z "+ maxZ+" mm "+
+				"\r\n\tMin Z "+ minZ+" mm "+
+				"\r\n\tRod Length "+ rodLength+" mm "
+				;
+	}
 }
