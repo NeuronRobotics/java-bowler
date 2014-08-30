@@ -248,6 +248,13 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 		 getDeltaDevice().setStateBasedControllerConfiguration(conf);
 	}
 
+	@Override
+	/**
+	 * This method uses the latch values to home all of the robot links
+	 */
+	public void homeAllLinks() {
+		 getDeltaDevice().homeRobot();
+	} 
 
 	
 }

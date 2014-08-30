@@ -149,7 +149,12 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 		
 		return new LinkConfiguration(args);
 	}
-	
+	public void homeRobot(){
+		send(	"bcs.cartesian.*",
+				BowlerMethod.POST,
+				"home",
+				new Object[]{}, 5);
+	}
 	public StateBasedControllerConfiguration getStateBasedControllerConfiguration(){
 		return new StateBasedControllerConfiguration(send(
 				"bcs.cartesian.*",
@@ -165,6 +170,8 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 				"sbcc",
 				conf.getDataToSend(), 5);
 	}
+	
+	
 	
 	public void runKinematicsEngine(boolean index) {
 		 send("bcs.cartesian.*",
