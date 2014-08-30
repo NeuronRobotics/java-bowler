@@ -25,7 +25,7 @@ public class CartesianTestSuit {
 	public void test() {
 		Log.enableDebugPrint();
 		BowlerBoardDevice dev = new BowlerBoardDevice();
-		dev.setConnection(new SerialConnection("/dev/ttyACM0"));
+		dev.setConnection(new SerialConnection("/dev/BowlerDevice0"));
 		dev.getConnection().setSynchronusPacketTimeoutTime(2000);
 		assertTrue(dev.connect());
 		System.out.println("Connection ok");
@@ -46,6 +46,9 @@ public class CartesianTestSuit {
 		System.out.println(printer.getStateBasedControllerConfiguration());
 		
 		printer.homeAllLinks();
+		printer.setPausePrintState(true);
+		printer.setPausePrintState(false);
+		
 //		try{
 //			File stl = new File("calibration_angle.stl");
 //			File gcode = new File(stl.getAbsoluteFile()+".gcode");

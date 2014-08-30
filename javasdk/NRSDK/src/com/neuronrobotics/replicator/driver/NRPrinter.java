@@ -256,5 +256,8 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 		 getDeltaDevice().homeRobot();
 	} 
 
+	public void setPausePrintState(boolean pause){
+		getDeltaDevice().setPausePrintState(pause);
+	}
 	
 }
