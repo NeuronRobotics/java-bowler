@@ -8,6 +8,7 @@ import com.neuronrobotics.sdk.addons.kinematics.AbstractLink;
 import com.neuronrobotics.sdk.addons.kinematics.CartesianNamespacePidKinematics;
 import com.neuronrobotics.sdk.addons.kinematics.ILinkListener;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
+import com.neuronrobotics.sdk.common.BowlerMethod;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 import com.neuronrobotics.sdk.util.ThreadUtil;
@@ -236,6 +237,15 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 		// TODO Auto-generated method stub
 		firePoseTransform(forwardOffset(psl.getHeadLocation()));	
 		
+	}
+	
+	
+	public StateBasedControllerConfiguration getStateBasedControllerConfiguration(){
+		return  getDeltaDevice().getStateBasedControllerConfiguration();
+	}
+	
+	public void setStateBasedControllerConfiguration(StateBasedControllerConfiguration conf){
+		 getDeltaDevice().setStateBasedControllerConfiguration(conf);
 	}
 
 

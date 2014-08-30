@@ -140,7 +140,7 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 	public int getNumberOfSpacesInBuffer() {
 		return numSpacesRemaining;
 	}
-	@Override
+
 	public LinkConfiguration requestLinkConfiguration(int index) {
 		Object [] args = send("bcs.cartesian.*",
 								BowlerMethod.GET,
@@ -148,6 +148,22 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 				new Object[]{index}, 5);
 		
 		return new LinkConfiguration(args);
+	}
+	
+	public StateBasedControllerConfiguration getStateBasedControllerConfiguration(){
+		return new StateBasedControllerConfiguration(send(
+				"bcs.cartesian.*",
+				BowlerMethod.GET,
+				"sbcc",
+				new Object[]{}, 5));
+	}
+	
+	public void setStateBasedControllerConfiguration(StateBasedControllerConfiguration conf){
+			send(
+				"bcs.cartesian.*",
+				BowlerMethod.POST,
+				"sbcc",
+				conf.getDataToSend(), 5);
 	}
 	
 	public void runKinematicsEngine(boolean index) {
