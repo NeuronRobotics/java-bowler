@@ -75,6 +75,8 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	private boolean resyncing = false;
 	private boolean haveBeenSynced =false;
 	
+	private boolean legacyParser = false;
+	
 	private GenericPIDDevice pid = new GenericPIDDevice();
 	/**
 	 * Default Constructor.
@@ -386,11 +388,14 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 			count = getDyIOChannelCount();
 		}
 		ByteList bl = response.getData();
-		int tmpCount = bl.pop();
-		
-		if (bl.size()!=count || tmpCount!=count) {
+
+		if (bl.size()!=count || bl.get(0)!=count) {
 			setMuteResyncOnModeChange(false);
-			throw new DyIOCommunicationException("Not enough channels, not a valid DyIO expecting = "+count+" GOT = "+bl.size()+"\n"+response.toString());
+			Log.error("Using old parsing model");
+			legacyParser=true;
+			//throw new DyIOCommunicationException("Not enough channels, not a valid DyIO expecting = "+count+" GOT = "+bl.size()+"\n"+response.toString());
+		}else{
+			bl.pop();
 		}
 		for (int i = 0; i < bl.size(); i++){
 			DyIOChannelMode cm = DyIOChannelMode.get(bl.getByte(i));
@@ -1117,7 +1122,8 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 		if(m==null){
 			
 		}
-		int NumberOfModes=m.pop(0);
+		if(!legacyParser)
+			m.pop(0);
 		for(int i=0;i<m.size();i++){
 			modes.add(DyIOChannelMode.get(m.getByte(i)));
 		}
