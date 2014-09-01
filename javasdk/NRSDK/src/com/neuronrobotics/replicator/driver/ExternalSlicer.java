@@ -28,14 +28,15 @@ public class ExternalSlicer extends StlSlicer {
 			ProcessBuilder builder = new ProcessBuilder();
 
 			List<String> thisCommand = new ArrayList<String>(cmdline);
-			thisCommand.add("-o");
-			thisCommand.add(gcode.getAbsolutePath());
-			thisCommand.add(input.getAbsolutePath());
+			thisCommand.add(1, input.getAbsolutePath());
+			thisCommand.add("--output="+ gcode.getAbsolutePath());
+			
 
 			System.err.println(thisCommand);
 			builder.redirectErrorStream(true);
 			builder.redirectOutput(Redirect.INHERIT);
 			builder.command(thisCommand);
+			
 		try {
 			Process p = builder.start();
 			new Thread(new StreamDump(p.getInputStream(), System.out)).start();

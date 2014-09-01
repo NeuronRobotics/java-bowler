@@ -53,7 +53,7 @@ public class Slic3r extends ExternalSlicer {
 				"--perimeter-speed="+perimeterSpeed,
 				"--bridge-speed="+bridgeSpeed,
 				"--gap-fill-speed="+gapFillSpeed,
-				"--infill-speed ="+infillSpeed,
+				"--infill-speed="+infillSpeed,
 				"--support-material-speed="+supportMaterialSpeed,
 				
 				"--small-perimeter-speed="+smallPerimeterSpeedPercent+"%",
