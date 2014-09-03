@@ -22,7 +22,7 @@ public class PrinterStatus {
 	 * just that there are no new warnings at the end of the print
 	 */
 	public enum PrinterState {
-		NOT_READY, READY, PRINTING, ERROR, WARNING_PRINTING,WARNING_DONE, SUCCESS;
+		NOT_READY, READY, PRINTING,MOVING, ERROR, WARNING_PRINTING,WARNING_DONE, SUCCESS;
 		@Override 
 		public String toString(){
 			switch(this){
@@ -39,7 +39,11 @@ public class PrinterStatus {
 			case WARNING_DONE:
 				return "WARNING_DONE";
 			case WARNING_PRINTING:
-				return "WARNING_PRINTING";		
+				return "WARNING_PRINTING";
+			case MOVING:
+				return "MOVING";
+			default:
+				break;		
 			}
 			return "";
 		}

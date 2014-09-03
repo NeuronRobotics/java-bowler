@@ -9,6 +9,7 @@ import com.neuronrobotics.sdk.addons.kinematics.AbstractLink;
 import com.neuronrobotics.sdk.addons.kinematics.CartesianNamespacePidKinematics;
 import com.neuronrobotics.sdk.addons.kinematics.IJointSpaceUpdateListenerNR;
 import com.neuronrobotics.sdk.addons.kinematics.ILinkListener;
+import com.neuronrobotics.sdk.addons.kinematics.ITaskSpaceUpdateListenerNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.common.BowlerMethod;
 import com.neuronrobotics.sdk.common.Log;
@@ -137,12 +138,12 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 	public void addPrinterStatusListener(PrinterStatusListener l) {
 		getParser().addPrinterStatusListener(l);
 		getSlicer().addPrinterStatusListener(l);
-		deltaDevice.addPrinterStatusListener(this);
+		deltaDevice.addPrinterStatusListener(l);
 	}
 	public void removePrinterStatusListener(PrinterStatusListener l) {
 		getParser().removePrinterStatusListener(l);
 		getSlicer().removePrinterStatusListener(l);
-		deltaDevice.removePrinterStatusListener(this);
+		deltaDevice.removePrinterStatusListener(l);
 	}
 	private void setSlicer(StlSlicer slicer) {
 		this.slicer = slicer;
@@ -240,7 +241,12 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 	@Override
 	public void printStatus(PrinterStatus psl) {
 		// TODO Auto-generated method stub
-		firePoseTransform(forwardOffset(psl.getHeadLocation()));	
+		if(psl.getDriverState() == PrinterState.MOVING)
+			firePoseTransform(forwardOffset(psl.getHeadLocation()));	
+		if(psl.getDriverState() == PrinterState.PRINTING){
+			TransformNR taskSpaceTransform=forwardOffset(psl.getHeadLocation());
+			fireTargetJointsUpdate(getCurrentJointSpaceVector(), taskSpaceTransform );
+		}
 		
 	}
 	

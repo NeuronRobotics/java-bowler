@@ -35,6 +35,13 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 			statusListeners.remove(l);
 	}
 	
+	private void firePrintStatus(PrinterStatus stat){
+		for(int i=0;i<statusListeners.size();i++ ){
+			
+			statusListeners.get(i).printStatus(stat);
+		}
+	}
+	
 	@Override
 	public boolean connect(){
 		super.connect();
@@ -123,12 +130,16 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 																				4),//number of bytes
 																				true)/1000.0);//True for signed data
 			}
-			PrinterStatus stat = new PrinterStatus(new TransformNR(status[0], status[1], status[2],new RotationNR()),status[3],status[4], (int) status[5], PrinterState.PRINTING);
+			PrinterStatus stat = new PrinterStatus(new TransformNR(	status[0], 
+																	status[1],
+																	status[2],
+																	new RotationNR()),
+													status[3],
+													status[4], 
+													(int) status[5], 
+													PrinterState.MOVING);
 			//numSpacesRemaining = stat.getPrintProgress();
-			for(int i=0;i<statusListeners.size();i++ ){
-				
-				statusListeners.get(i).printStatus(stat);
-			}
+			firePrintStatus(stat);
 		}
 		//System.out.println("Remaining = "+numSpacesRemaining);
 	}
