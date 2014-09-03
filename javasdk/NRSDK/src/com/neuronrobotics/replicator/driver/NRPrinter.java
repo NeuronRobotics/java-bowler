@@ -6,6 +6,7 @@ import java.io.OutputStream;
 
 import com.neuronrobotics.sdk.addons.kinematics.AbstractLink;
 import com.neuronrobotics.sdk.addons.kinematics.CartesianNamespacePidKinematics;
+import com.neuronrobotics.sdk.addons.kinematics.IJointSpaceUpdateListenerNR;
 import com.neuronrobotics.sdk.addons.kinematics.ILinkListener;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.common.BowlerMethod;
@@ -42,6 +43,7 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 //				if(source == hotEnd) {
 //					setTempreture(engineeringUnitsValue);
 //				}
+				Log.info("Link Position update "+source+" "+engineeringUnitsValue);
 			}
 			
 			@Override
@@ -237,6 +239,17 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 		// TODO Auto-generated method stub
 		firePoseTransform(forwardOffset(psl.getHeadLocation()));	
 		
+	}
+	
+	@Override
+	protected void firePoseUpdate(){
+		//Log.error("Pose update non execution. Use firePoseTransform(forwardOffset(psl.getHeadLocation()))");
+		double[] vect = getCurrentJointSpaceVector();
+		
+		for(int i=0;i<jointSpaceUpdateListeners.size();i++){
+			IJointSpaceUpdateListenerNR p=jointSpaceUpdateListeners.get(i);
+			p.onJointSpaceUpdate(this, vect);
+		}
 	}
 	
 	

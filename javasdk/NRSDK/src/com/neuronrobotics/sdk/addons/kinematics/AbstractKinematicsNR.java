@@ -46,7 +46,7 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 	private ArrayList<PIDConfiguration> pidConfigurations= new ArrayList<PIDConfiguration>();
 
 	private ArrayList<ITaskSpaceUpdateListenerNR> taskSpaceUpdateListeners = new ArrayList<ITaskSpaceUpdateListenerNR>();
-	private ArrayList<IJointSpaceUpdateListenerNR> jointSpaceUpdateListeners = new ArrayList<IJointSpaceUpdateListenerNR>();
+	protected ArrayList<IJointSpaceUpdateListenerNR> jointSpaceUpdateListeners = new ArrayList<IJointSpaceUpdateListenerNR>();
 	private ArrayList<IRegistrationListenerNR> regListeners= new ArrayList<IRegistrationListenerNR>();	
 	private ArrayList<LinkConfiguration> localConfigsFromXml=new ArrayList<LinkConfiguration>();
 	/*This is in RAW joint level ticks*/

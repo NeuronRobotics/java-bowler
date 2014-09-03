@@ -218,7 +218,7 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 				new Object[]{}, 
 						5);
 		
-		
+		//new RuntimeException("Getting task space transform").printStackTrace();
 		return new TransformNR(	(Double)args[0],
 								(Double)args[1],
 								(Double)args[2],
