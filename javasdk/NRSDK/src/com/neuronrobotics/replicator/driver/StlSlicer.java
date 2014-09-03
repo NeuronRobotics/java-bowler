@@ -16,7 +16,8 @@ public class StlSlicer {
 		return true;
 	}
 	
-	private void fireStatus(SliceStatusData p) {
+	protected void fireStatus(SliceStatusData p) {
+		
 		for(PrinterStatusListener l: listeners) {
 			l.sliceStatus(p);
 		}

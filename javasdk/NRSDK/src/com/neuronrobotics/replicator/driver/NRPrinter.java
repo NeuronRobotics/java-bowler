@@ -26,6 +26,7 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 //	private AbstractLink hotEnd;
 	private double temp = 0;
 
+	private boolean printRunning=false;
 	
 	public NRPrinter(BowlerBoardDevice d) {
 		super(d,d);
@@ -115,6 +116,7 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 		while(deltaDevice.getNumberOfPacketsWaiting()>0){
 			ThreadUtil.wait(1000);
 			Log.debug(deltaDevice.getNumberOfPacketsWaiting()+" remaining");
+			
 		}
 		ThreadUtil.wait(5000);
 		Log.debug("Print Done, took "+((((double)(System.currentTimeMillis()-start))/1000.0)/60.0)+" minutes");
@@ -134,12 +136,12 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 	public void addPrinterStatusListener(PrinterStatusListener l) {
 		getParser().addPrinterStatusListener(l);
 		getSlicer().addPrinterStatusListener(l);
-		deltaDevice.addPrinterStatusListener(l);
+		deltaDevice.addPrinterStatusListener(this);
 	}
 	public void removePrinterStatusListener(PrinterStatusListener l) {
 		getParser().removePrinterStatusListener(l);
 		getSlicer().removePrinterStatusListener(l);
-		deltaDevice.removePrinterStatusListener(l);
+		deltaDevice.removePrinterStatusListener(this);
 	}
 	private void setSlicer(StlSlicer slicer) {
 		this.slicer = slicer;
@@ -222,7 +224,7 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 		return getDeltaDevice().getNumberOfSpacesInBuffer();
 	}
 	
-	public void cancelRunningPrint() {
+	private void cancelRunningPrint() {
 		
 		getDeltaDevice().cancelRunningPrint();
 		

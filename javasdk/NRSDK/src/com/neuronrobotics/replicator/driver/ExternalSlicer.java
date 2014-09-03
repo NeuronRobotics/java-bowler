@@ -4,12 +4,17 @@ import java.io.File;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.lang.ProcessBuilder.Redirect;
+
+import com.neuronrobotics.replicator.driver.SliceStatusData.SlicerState;
 
 public class ExternalSlicer extends StlSlicer {
 	List<String> cmdline;
@@ -24,27 +29,30 @@ public class ExternalSlicer extends StlSlicer {
 	}
 
 	public boolean slice(File input, File gcode) {
-		
-			ProcessBuilder builder = new ProcessBuilder();
 
-			List<String> thisCommand = new ArrayList<String>(cmdline);
-			thisCommand.add(1, input.getAbsolutePath());
-			thisCommand.add("--output="+ gcode.getAbsolutePath());
-			
+		ProcessBuilder builder = new ProcessBuilder();
 
-			System.err.println(thisCommand);
-			builder.redirectErrorStream(true);
-			builder.redirectOutput(Redirect.INHERIT);
-			builder.command(thisCommand);
-			
+		List<String> thisCommand = new ArrayList<String>(cmdline);
+		thisCommand.add(1, input.getAbsolutePath());
+		thisCommand.add("--output=" + gcode.getAbsolutePath());
+
+		// builder.redirectErrorStream(true);
+		// builder.redirectOutput(Redirect.INHERIT);
+		builder.command(thisCommand);
+
 		try {
 			Process p = builder.start();
-			new Thread(new StreamDump(p.getInputStream(), System.out)).start();
+			BufferedReader br = new BufferedReader(new InputStreamReader(
+					p.getInputStream()));
+
+			new Thread(new StreamDump(this, br)).start();
 			p.waitFor();
+			fireStatus(new SliceStatusData(0, 0, SlicerState.SUCCESS,
+					"complete slice"));
 			return true;
 		} catch (IOException e) {
 			e.printStackTrace();
-			
+
 			return false;
 		} catch (InterruptedException e) {
 			e.printStackTrace();
@@ -61,20 +69,26 @@ public class ExternalSlicer extends StlSlicer {
 }
 
 class StreamDump implements Runnable {
-	InputStream in;
-	OutputStream out;
 
-	StreamDump(InputStream in, OutputStream out) {
-		this.in = in;
-		this.out = out;
+	private ExternalSlicer externalSlicer;
+
+	String line = "";
+
+	private BufferedReader br;
+
+	StreamDump(ExternalSlicer externalSlicer, BufferedReader br) {
+		this.externalSlicer = externalSlicer;
+		this.br = br;
+
 	}
 
 	public void run() {
 		try {
-			int len;
-			byte buffer[] = new byte[256];
-			while ((len = in.read(buffer)) != -1)
-				out.write(buffer, 0, len);
+			while ((line = br.readLine()) != null) {
+				externalSlicer.fireStatus(new SliceStatusData(0, 0,
+						SlicerState.SLICING, new String(line)));
+				line = "";
+			}
 		} catch (IOException e) {
 			return;
 		}

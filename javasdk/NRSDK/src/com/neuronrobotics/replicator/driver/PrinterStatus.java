@@ -23,6 +23,26 @@ public class PrinterStatus {
 	 */
 	public enum PrinterState {
 		NOT_READY, READY, PRINTING, ERROR, WARNING_PRINTING,WARNING_DONE, SUCCESS;
+		@Override 
+		public String toString(){
+			switch(this){
+			case ERROR:
+				return "ERROR";
+			case NOT_READY:
+				return "NOT_READY";
+			case PRINTING:
+				return "PRINTING";
+			case READY:
+				return "READY";
+			case SUCCESS:
+				return "SUCCESS";
+			case WARNING_DONE:
+				return "WARNING_DONE";
+			case WARNING_PRINTING:
+				return "WARNING_PRINTING";		
+			}
+			return "";
+		}
 	}
 	
 	private PrinterState thePrinterState;
@@ -88,7 +108,7 @@ public class PrinterStatus {
 	
 	@Override
 	public String toString(){
-		String s="Print Status: Location="+headLocation+" extrusion="+extrusion+" tempreture="+tempreture+" "+message;
+		String s="Print Status:"+thePrinterState+"\nLocation="+headLocation+"\nextrusion="+extrusion+"\ntempreture="+tempreture+"\n"+message;
 		
 		return s;
 	}

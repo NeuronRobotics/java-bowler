@@ -13,6 +13,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.CharBuffer;
 
+import com.neuronrobotics.replicator.driver.PrinterStatusListener;
 import com.neuronrobotics.sdk.common.Log;
 
 /**
@@ -31,6 +32,7 @@ import com.neuronrobotics.sdk.common.Log;
  * @version 1
  */
 public class GCodeInterpreter {
+
 
 	/**
 	 * The list of currently active M-codes. This defines what handlers will be
@@ -166,7 +168,8 @@ public class GCodeInterpreter {
 		nextLine.storeWord('G', 0);
 		nextLine.storeWord('M', 0);
 		
-		System.out.println("\r\n"+line);
+		//System.out.println("\r\n"+line);
+		
 		for(int i=0;i<tokens.length;i++){
 			tokens[i] = tokens[i].trim();
 			if(!tokens[i].isEmpty()){
@@ -239,6 +242,8 @@ public class GCodeInterpreter {
 			}
 			// OK, now we have a valid line
 			if(line !=null){
+				
+				
 				processSingleGCODELine( line);
 			}
 			
@@ -313,7 +318,7 @@ public class GCodeInterpreter {
 				executingLock.unlock();
 			}
 		} else {
-			// throw(new PrinterNotReadyException());
+			throw(new RuntimeException("Printer not ready"));
 		}
 	}
 
@@ -503,8 +508,7 @@ public class GCodeInterpreter {
 		addGHandler(1, new CodeHandler() {
 			public void execute(GCodeLineData prev, GCodeLineData next) {
 				if (next.getWord('F') == 0.0)
-					System.out
-							.println("Zero feedrate; action will never complete.");
+					Log.error("Zero feedrate; action will never complete.");
 				Log.debug("Feed move to " + next.getWord('X') + ", "
 						+ next.getWord('Y') + ", " + next.getWord('Z')
 						+ " at feed " + next.getWord('F'));

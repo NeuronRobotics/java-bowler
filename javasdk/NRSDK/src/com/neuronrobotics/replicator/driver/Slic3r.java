@@ -48,7 +48,7 @@ public class Slic3r extends ExternalSlicer {
 				useSupportMaterial?"--support-material":" ",
 				"--retract-length="+retractLength,
 				"--skirts=2",
-				"--repair",
+				//"--repair",
 				"--travel-speed="+travilSpeed,
 				"--perimeter-speed="+perimeterSpeed,
 				"--bridge-speed="+bridgeSpeed,
