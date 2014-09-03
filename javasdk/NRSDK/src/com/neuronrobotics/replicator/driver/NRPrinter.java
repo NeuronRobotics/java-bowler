@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import com.neuronrobotics.replicator.driver.PrinterStatus.PrinterState;
 import com.neuronrobotics.sdk.addons.kinematics.AbstractLink;
 import com.neuronrobotics.sdk.addons.kinematics.CartesianNamespacePidKinematics;
 import com.neuronrobotics.sdk.addons.kinematics.IJointSpaceUpdateListenerNR;
@@ -118,9 +119,9 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 			Log.debug(deltaDevice.getNumberOfPacketsWaiting()+" remaining");
 			
 		}
-		ThreadUtil.wait(5000);
+		ThreadUtil.wait(1000);
 		Log.debug("Print Done, took "+((((double)(System.currentTimeMillis()-start))/1000.0)/60.0)+" minutes");
-		//cancelPrint();
+		getParser().firePrinterStatusUpdate(PrinterState.SUCCESS);
 		return b;
 	}
 	

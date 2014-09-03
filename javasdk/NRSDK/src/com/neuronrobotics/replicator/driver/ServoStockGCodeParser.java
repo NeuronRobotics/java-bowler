@@ -38,17 +38,22 @@ public class ServoStockGCodeParser {
 		
 		interp.tryInterpretStream(gcode);
 		Log.debug("End of print.");
-		firePrinterStatusUpdate(new PrinterStatus(currentTransform,extrusion,currentTempreture,0,PrinterState.SUCCESS));
-
+		
 		return true;
 
 	}
 	
 	private void firePrinterStatusUpdate(PrinterStatus status){
-		currentLine+=1;
+		currentLine=status.getPrintProgress();
 		for(PrinterStatusListener l : listeners) {
 			l.printStatus(status);
 		}
+	}
+	
+	public void firePrinterStatusUpdate(PrinterState state) {
+		// TODO Auto-generated method stub
+		firePrinterStatusUpdate(new PrinterStatus(currentTransform,extrusion,currentTempreture,currentLine,state));
+
 	}
 
 	void addHandlers(GCodeInterpreter interp) {
@@ -183,5 +188,7 @@ public class ServoStockGCodeParser {
 //		return false;
 		return true;
 	}
+
+
 	
 }
