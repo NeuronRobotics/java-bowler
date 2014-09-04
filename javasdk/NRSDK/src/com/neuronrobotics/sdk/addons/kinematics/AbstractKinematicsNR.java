@@ -8,6 +8,7 @@ import java.io.PrintStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
+import javax.management.RuntimeErrorException;
 //import javax.swing.JFrame;
 //import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
@@ -393,6 +394,7 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 		setCurrentPoseTarget(forwardOffset(fwd));
 		for(ITaskSpaceUpdateListenerNR p:taskSpaceUpdateListeners){
 			p.onTargetTaskSpaceUpdate(this, getCurrentPoseTarget());
+			//new RuntimeException("Fireing "+p.getClass().getName()).printStackTrace();
 		}
 		for(IJointSpaceUpdateListenerNR p:jointSpaceUpdateListeners){
 			p.onJointSpaceTargetUpdate(this, currentJointSpaceTarget);
@@ -478,13 +480,18 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 	}
 	
 	public void addPoseUpdateListener(ITaskSpaceUpdateListenerNR l){
-		if(taskSpaceUpdateListeners.contains(l) || l==null)
+		if(taskSpaceUpdateListeners.contains(l) || l==null){
+			new RuntimeException("not adding "+l.getClass().getName()).printStackTrace();
 			return;
+		}
+		//new RuntimeException("adding "+l.getClass().getName()).printStackTrace();
 		taskSpaceUpdateListeners.add(l);
 	}
 	public void removePoseUpdateListener(ITaskSpaceUpdateListenerNR l){
-		if(taskSpaceUpdateListeners.contains(l))
+		if(taskSpaceUpdateListeners.contains(l)){
+			//new RuntimeException("Removing "+l.getClass().getName()).printStackTrace();
 			taskSpaceUpdateListeners.remove(l);
+		}
 	}
 	
 	@Override

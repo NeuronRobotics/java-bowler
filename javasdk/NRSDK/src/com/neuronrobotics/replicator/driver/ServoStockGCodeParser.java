@@ -46,7 +46,9 @@ public class ServoStockGCodeParser {
 	
 	private void firePrinterStatusUpdate(PrinterStatus status){
 		currentLine=status.getPrintProgress();
+		
 		for(PrinterStatusListener l : listeners) {
+			Log.warning("Firint print status event: "+status+" to "+l.getClass().getName());
 			l.printStatus(status);
 		}
 	}
@@ -86,15 +88,7 @@ public class ServoStockGCodeParser {
 				firePrinterStatusUpdate(PrinterState.PRINTING);
 			}
 		});
-		interp.addMHandler(73, new CodeHandler() {
-			public void execute(GCodeLineData prev, GCodeLineData next) throws Exception {
-				firePrinterStatusUpdate(new PrinterStatus(currentTransform,
-						extrusion,
-						currentTempreture,
-						(int)next.getWord('P'),PrinterState.WARNING_PRINTING,"M73 unhandled"));
-			}
-		});
-		
+
 		interp.setGHandler(0, new CodeHandler() {
 			public void execute(GCodeLineData prev, GCodeLineData next) throws Exception {
 				currentTransform=new TransformNR(next.getWord('X'),next.getWord('Y'),next.getWord('Z'),new RotationNR());

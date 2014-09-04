@@ -245,7 +245,8 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 		if(psl.getDriverState() == PrinterState.MOVING)
 			firePoseTransform(forwardOffset(psl.getHeadLocation()));	
 		if(psl.getDriverState() == PrinterState.PRINTING){
-			TransformNR taskSpaceTransform=forwardOffset(psl.getHeadLocation());
+			Log.warning("Received a Print status update");
+			TransformNR taskSpaceTransform=psl.getHeadLocation();
 			fireTargetJointsUpdate(getCurrentJointSpaceVector(), taskSpaceTransform );
 		}
 		
