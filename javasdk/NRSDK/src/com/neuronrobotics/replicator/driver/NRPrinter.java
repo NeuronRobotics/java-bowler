@@ -127,6 +127,7 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 	}
 	
 	public boolean cancelPrint() {
+		Log.warning("Canceling print");
 		cancelRunningPrint();
 		return getParser().cancel();
 	}

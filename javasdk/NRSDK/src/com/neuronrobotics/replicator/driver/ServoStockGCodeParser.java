@@ -1,6 +1,7 @@
 package com.neuronrobotics.replicator.driver;
 import com.neuronrobotics.replicator.driver.PrinterStatus.PrinterState;
 import com.neuronrobotics.replicator.driver.interpreter.*;
+
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.concurrent.locks.ReentrantLock;
@@ -57,13 +58,22 @@ public class ServoStockGCodeParser {
 	}
 
 	void addHandlers(GCodeInterpreter interp) {
+		
+		interp.setErrorHandler(new CodeHandler() {
+			public void execute(GCodeLineData prev, GCodeLineData next) throws Exception {
+				firePrinterStatusUpdate(new PrinterStatus(currentTransform,
+						extrusion,
+						currentTempreture,
+						(int)next.getWord('P'),PrinterState.WARNING_PRINTING,next+" unhandled"));
+			}
+		});
 		// Temperature control
 		interp.addMHandler(104, new CodeHandler() {
 			public void execute(GCodeLineData prev, GCodeLineData next) throws Exception {
 				currentTempreture=next.getWord('S');
 				device.setExtrusionTempreture(new  double[]{currentTempreture});
-				firePrinterStatusUpdate(new PrinterStatus(currentTransform,extrusion,currentTempreture,(int)next.getWord('P'),PrinterState.PRINTING));
-
+				currentLine = (int)next.getWord('P');
+				firePrinterStatusUpdate(PrinterState.PRINTING);
 			}
 		});
 		// TODO this code should wait until up to tempreture
@@ -72,8 +82,8 @@ public class ServoStockGCodeParser {
 				double d[]=new double[1];
 				d[0]=next.getWord('S');
 				device.setExtrusionTempreture(d);
-				firePrinterStatusUpdate(new PrinterStatus(currentTransform,extrusion,currentTempreture,(int)next.getWord('P'),PrinterState.PRINTING));
-
+				currentLine = (int)next.getWord('P');
+				firePrinterStatusUpdate(PrinterState.PRINTING);
 			}
 		});
 		interp.addMHandler(73, new CodeHandler() {
@@ -81,53 +91,17 @@ public class ServoStockGCodeParser {
 				firePrinterStatusUpdate(new PrinterStatus(currentTransform,
 						extrusion,
 						currentTempreture,
-						(int)next.getWord('P'),PrinterState.PRINTING));
+						(int)next.getWord('P'),PrinterState.WARNING_PRINTING,"M73 unhandled"));
 			}
 		});
 		
-		// sets extruder to absolute mode
-		interp.addMHandler(82, new CodeHandler() {
-			public void execute(GCodeLineData prev, GCodeLineData next) throws Exception {
-				//TODo unimplemented, but the default
-				firePrinterStatusUpdate(new PrinterStatus(currentTransform,
-						extrusion,
-						currentTempreture,
-						(int)next.getWord('P'),
-						PrinterState.WARNING_PRINTING,"M82 unhandled"));
-
-			}
-		});
-		interp.addMHandler(107, new CodeHandler() {
-			public void execute(GCodeLineData prev, GCodeLineData next) throws Exception {
-				// no fans
-				firePrinterStatusUpdate(new PrinterStatus(currentTransform,
-						extrusion,
-						currentTempreture,
-						(int)next.getWord('P'),
-						PrinterState.WARNING_PRINTING,"M107 unhandled"));
-			}
-		});
-		interp.addMHandler(106, new CodeHandler() {
-			public void execute(GCodeLineData prev, GCodeLineData next) throws Exception {
-				firePrinterStatusUpdate(new PrinterStatus(currentTransform,
-						extrusion,
-						currentTempreture,
-						(int)next.getWord('P'),
-						PrinterState.WARNING_PRINTING,"M106 unhandled"));			}
-		});
-		interp.addGHandler(6, new CodeHandler() {
-			public void execute(GCodeLineData prev, GCodeLineData next) throws Exception {
-				firePrinterStatusUpdate(new PrinterStatus(currentTransform,extrusion,currentTempreture,(int)next.getWord('P'),PrinterState.PRINTING));
-
-			}
-		});
 		interp.setGHandler(0, new CodeHandler() {
 			public void execute(GCodeLineData prev, GCodeLineData next) throws Exception {
-				TransformNR t=new TransformNR(next.getWord('X'),next.getWord('Y'),next.getWord('Z'),new RotationNR());
-
-				device.setDesiredPrintLocetion(t, next.getWord('A'), 0);// zero seconds is a rapid
-				firePrinterStatusUpdate(new PrinterStatus(currentTransform,extrusion,currentTempreture,(int)next.getWord('P'),PrinterState.PRINTING));
-
+				currentTransform=new TransformNR(next.getWord('X'),next.getWord('Y'),next.getWord('Z'),new RotationNR());
+				extrusion = next.getWord('A');
+				device.setDesiredPrintLocetion(currentTransform, extrusion, 0);// zero seconds is a rapid
+				currentLine = (int)next.getWord('P');
+				firePrinterStatusUpdate(PrinterState.PRINTING);
 			}
 		});
 		interp.setGHandler(28, new CodeHandler() {
@@ -135,8 +109,8 @@ public class ServoStockGCodeParser {
 			public void execute(GCodeLineData prev, GCodeLineData next) throws Exception {
 				currentTransform=new TransformNR(0,0,0,new RotationNR());
 				device.setDesiredPrintLocetion(currentTransform, extrusion, 0);// zero seconds is a rapid
-				firePrinterStatusUpdate(new PrinterStatus(currentTransform,extrusion,currentTempreture,(int)next.getWord('P'),PrinterState.PRINTING));
-
+				currentLine = (int)next.getWord('P');
+				firePrinterStatusUpdate(PrinterState.PRINTING);
 			}
 		});
 		interp.setGHandler(1, new CodeHandler() {
@@ -153,8 +127,8 @@ public class ServoStockGCodeParser {
 				while(iter++<1000) {
 					try {
 						device.setDesiredPrintLocetion(currentTransform, extrusion, seconds);
-						firePrinterStatusUpdate(new PrinterStatus(currentTransform,extrusion,currentTempreture,(int)next.getWord('P'),PrinterState.PRINTING));
-
+						currentLine = (int)next.getWord('P');
+						firePrinterStatusUpdate(PrinterState.PRINTING);
 						return;
 					}catch (RuntimeException ex) {
 						//keep trying

@@ -49,7 +49,8 @@ public class GCodeInterpreter {
 															// implementations
 															// are allowed to
 															// modify the line.
-
+	
+	private CodeHandler errorHandler=null;
 	/**
 	 * The list of handlers for G codes. gHandlers[0] is the list of handlers
 	 * for G0. The handlers must be called from last to first, to preserve
@@ -268,8 +269,11 @@ public class GCodeInterpreter {
 				}
 			} else {
 				// Log.debug("No implementation found for M"+m);
-
-				throw new RuntimeException("No implementation found for M" + m);
+				if(getErrorHandler() ==null)
+					throw new RuntimeException("No implementation found for M" + m);
+				else{
+					getErrorHandler().execute(lastLine, nextLine);
+				}
 			}
 		for (int g : gcodes)
 			if (gHandlers[g] != null) {
@@ -277,8 +281,11 @@ public class GCodeInterpreter {
 					handler.execute(lastLine, nextLine);
 				}
 			} else {
-				// Log.debug("No implementation found for G"+g);
-				throw new RuntimeException("No implementation found for G" + g);
+				if(getErrorHandler() ==null)
+					throw new RuntimeException("No implementation found for G" + g);
+				else{
+					getErrorHandler().execute(lastLine, nextLine);
+				}
 			}
 
 		lastLine = nextLine;
@@ -600,5 +607,13 @@ public class GCodeInterpreter {
 	public static void main(String args[]) throws Exception {
 		GCodeInterpreter interp = new GCodeInterpreter();
 		interp.interpretStream(System.in);
+	}
+
+	public CodeHandler getErrorHandler() {
+		return errorHandler;
+	}
+
+	public void setErrorHandler(CodeHandler errorHandler) {
+		this.errorHandler = errorHandler;
 	}
 }
