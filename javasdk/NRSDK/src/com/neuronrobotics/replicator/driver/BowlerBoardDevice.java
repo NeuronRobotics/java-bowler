@@ -232,22 +232,22 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 		return;
 	}
 	
-	public void setKinematicsModelIndex(int index) {
+	public void setKinematicsModel(BowlerBoardKinematicModel index) {
 		 send("bcs.cartesian.*",
 				BowlerMethod.POST,
 				"kmod",
-				new Object[]{index}, 5);
+				new Object[]{index.getValue()}, 5);
 		
 		return;
 	}
 	
-	public int getKinematicsModelIndex() {
+	public BowlerBoardKinematicModel getKinematicsModel() {
 		Object [] args = send("bcs.cartesian.*",
 				BowlerMethod.POST,
 				"kmod",
 				new Object[]{}, 5);
 		
-		return (Integer) args[0];
+		return BowlerBoardKinematicModel.get( (Integer) args[0]);
 	}
 	
 	

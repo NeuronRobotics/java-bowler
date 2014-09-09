@@ -42,9 +42,9 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 		getFactory().addLinkListener(new ILinkListener() {
 			@Override
 			public void onLinkPositionUpdate(AbstractLink source,double engineeringUnitsValue) {
-//				if(source == hotEnd) {
-//					setTempreture(engineeringUnitsValue);
-//				}
+				if(source == hotEnd) {
+					setTempreture(engineeringUnitsValue);
+				}
 				Log.info("Link Position update "+source+" "+engineeringUnitsValue);
 			}
 			
