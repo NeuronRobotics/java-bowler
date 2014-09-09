@@ -160,6 +160,37 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 		
 		return new LinkConfiguration(args);
 	}
+	
+	public void setLinkConfiguration(int index,LinkConfiguration conf) {
+		send("bcs.cartesian.*",
+								BowlerMethod.POST,
+				"scfg",
+				new Object[]{	index,
+								conf.getHardwareIndex(),
+								conf.getScale(),
+								conf.getIndexLatch(),
+								conf.getLowerLimit(),
+								conf.getUpperLimit()}, 5);
+		
+		return;
+	}
+	
+	public void setSlic3rConfiguration(Slic3r conf){
+		send("bcs.cartesian.*",
+				BowlerMethod.POST,
+		"slcr",
+		new Object[]{conf.getPacketArguments()}, 5);
+	}
+	public Slic3r getSlic3rConfiguration(){
+		Object [] args = send("bcs.cartesian.*",
+				BowlerMethod.GET,
+		"slcr",
+		new Object[]{}, 5);
+		
+		return new Slic3r((double[]) args[0]);
+		
+	}
+	
 	public void homeRobot(){
 		send(	"bcs.cartesian.*",
 				BowlerMethod.POST,
@@ -200,6 +231,26 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 		
 		return;
 	}
+	
+	public void setKinematicsModelIndex(int index) {
+		 send("bcs.cartesian.*",
+				BowlerMethod.POST,
+				"kmod",
+				new Object[]{index}, 5);
+		
+		return;
+	}
+	
+	public int getKinematicsModelIndex() {
+		Object [] args = send("bcs.cartesian.*",
+				BowlerMethod.POST,
+				"kmod",
+				new Object[]{}, 5);
+		
+		return (Integer) args[0];
+	}
+	
+	
 	
 	@Override
 	public double[] setDesiredTaskSpaceTransform(TransformNR taskSpaceTransform, double seconds) {
