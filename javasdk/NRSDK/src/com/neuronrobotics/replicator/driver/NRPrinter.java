@@ -18,7 +18,7 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
 
 public class NRPrinter extends CartesianNamespacePidKinematics implements PrinterStatusListener{
 	private ServoStockGCodeParser parser;
-	private StlSlicer slicer;
+	private Slic3r slicer;
 	private BowlerBoardDevice deltaDevice;
 	//Configuration hard coded
 	private  double extrusionCachedValue = 0;
@@ -63,30 +63,7 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 
 		setParser(new ServoStockGCodeParser(this));
 		
-		setSlicer(new Slic3r(	.4, 
-								new double[]{0,0},
-								1.75,
-								1,
-								190,
-								0,
-								.3,
-								3,
-								true,
-								1.1,
-								130,// travilSpeed,
-								20,// perimeterSpeed,
-								40,//bridgeSpeed,
-								20,//gapFillSpeed,
-								60,//infillSpeed,
-								60,//supportMaterialSpeed,
-								
-								100,//smallPerimeterSpeedPercent,
-								70,//externalPerimeterSpeedPercent,
-								100,//solidInfillSpeedPercent,
-								80,//topSolidInfillSpeedPercent,
-								100,//supportMaterialInterfaceSpeedPercent,
-								30//firstLayerSpeedPercent
-							));
+		setSlicer(d.getSlic3rConfiguration());
 		addPrinterStatusListener(this);
 
 		
@@ -146,10 +123,11 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 		getSlicer().removePrinterStatusListener(l);
 		deltaDevice.removePrinterStatusListener(l);
 	}
-	private void setSlicer(StlSlicer slicer) {
+	private void setSlicer(Slic3r slicer) {
 		this.slicer = slicer;
+		deltaDevice.setSlic3rConfiguration(slicer);
 	}
-	public StlSlicer getSlicer() {
+	public Slic3r getSlicer() {
 		return slicer;
 	}
 	private void setParser(ServoStockGCodeParser parser) {
