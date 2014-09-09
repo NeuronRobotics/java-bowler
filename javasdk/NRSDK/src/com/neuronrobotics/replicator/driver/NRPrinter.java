@@ -23,9 +23,8 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 	//Configuration hard coded
 	private  double extrusionCachedValue = 0;
 	private double currentTemp =0;
-	//static InputStream s = XmlFactory.getDefaultConfigurationStream("DeltaPrototype.xml");
-//	private AbstractLink extruder;
-//	private AbstractLink hotEnd;
+	private AbstractLink extruder;
+	private AbstractLink hotEnd;
 	private double temp = 0;
 
 	private boolean printRunning=false;
@@ -37,8 +36,8 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 		
 		this.setDeltaDevice(d);
 		
-//		extruder = getFactory().getLink("Extruder");
-//		hotEnd = getFactory().getLink("Heater");
+		extruder = getFactory().getLink("Extruder");
+		hotEnd = getFactory().getLink("Heater");
 		setTempreture(getTempreture());
 		getFactory().addLinkListener(new ILinkListener() {
 			@Override
@@ -160,20 +159,20 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 			return;
 		}else
 			currentTemp=extTemp[0];
-//		setTempreture(hotEnd.getCurrentEngineeringUnits());
-//		hotEnd.setTargetEngineeringUnits(extTemp[0]);
-//		hotEnd.flush(0);
+		setTempreture(hotEnd.getCurrentEngineeringUnits());
+		hotEnd.setTargetEngineeringUnits(extTemp[0]);
+		hotEnd.flush(0);
 		getTempreture();
-		//System.out.print("\r\nWaiting for Printer to come up to tempreture "+currentTemp+" C \n");
+		System.out.print("\r\nWaiting for Printer to come up to tempreture "+currentTemp+" C \n");
 		Log.enableSystemPrint(false);
 		int iter=0;
 		while(temp>(extTemp[0]+10) || temp< (extTemp[0]-10)) {
 			getTempreture();
-			//System.out.print(".");
+			System.out.print(".");
 			ThreadUtil.wait(100);
 			iter++;
 			if(iter==50) {
-				//System.out.print("\r\n "+temp+" C");
+				System.out.print("\r\n "+temp+" C");
 				iter=0;
 			}
 		}
@@ -197,7 +196,7 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 	
 	public void setExtrusionPoint(int materialNumber, double setPoint) {
 		//TODO another method to set material
-//		extruder.setTargetEngineeringUnits(setPoint);
+		extruder.setTargetEngineeringUnits(setPoint);
 		setExtrusionCachedValue(setPoint);
 	}
 	
