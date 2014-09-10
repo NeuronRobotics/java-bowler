@@ -207,6 +207,13 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 				new Object[]{pause}, 5);
 	}
 	
+	public boolean getPausePrintState(){
+		Object [] args = send(	"bcs.cartesian.*",
+				BowlerMethod.POST,
+				"paus",
+				new Object[]{}, 5);
+		return (Boolean)args[0];
+	}
 	public StateBasedControllerConfiguration getStateBasedControllerConfiguration(){
 		return new StateBasedControllerConfiguration(send(
 				"bcs.cartesian.*",
