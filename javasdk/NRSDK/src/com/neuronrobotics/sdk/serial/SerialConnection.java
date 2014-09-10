@@ -41,7 +41,7 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
  *  
  */
 public class SerialConnection extends BowlerAbstractConnection {
-	private int sleepTime = 500;
+	private int sleepTime = 1000;
 	private int pollTimeoutTime = 5;
 	
 	

@@ -7,7 +7,7 @@ public class Slic3r extends ExternalSlicer {
 	
 	private static String executableLocation=null;
 	private double nozzle_diameter;
-	private double[] printCenter;
+	private double[] printCenter = new double[2];
 	private double filimentDiameter;
 	private double extrusionMultiplier;
 	private int tempreture;
