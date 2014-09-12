@@ -14,7 +14,7 @@ public class StateBasedControllerConfiguration {
 	private double maxZ;
 	private double minZ;
 	private double rodLength;
-
+	private boolean useHardPositioning;
 	public StateBasedControllerConfiguration(
 		    double KP,
 		    double KI,
@@ -27,7 +27,8 @@ public class StateBasedControllerConfiguration {
 			double EndEffectorRadius,
 			double MaxZ,
 			double MinZ,
-			double RodLength
+			double RodLength,
+			boolean useHardPositioning
 		    ){
 				setkP(KP);
 				setkI(KI);
@@ -41,6 +42,7 @@ public class StateBasedControllerConfiguration {
 				setMaxZ(MaxZ);
 				setMinZ(MinZ);
 				setRodLength(RodLength);
+				setUseHardPositioning(useHardPositioning);
 		
 	}
 	
@@ -57,7 +59,7 @@ public class StateBasedControllerConfiguration {
 				setMaxZ((Double)data[9]);
 				setMinZ((Double)data[10]);
 				setRodLength((Double)data[11]);
-		
+				setUseHardPositioning((Boolean)data[12]);
 	}
 	
 	public Object [] getDataToSend(){
@@ -73,7 +75,8 @@ public class StateBasedControllerConfiguration {
 				  endEffectorRadius ,
 				  maxZ ,
 				  minZ ,
-				  rodLength
+				  rodLength,
+				  useHardPositioning
 		};
 		
 		return ret;
@@ -189,7 +192,16 @@ public class StateBasedControllerConfiguration {
 				"\r\n\tEnd Effector Radius "+ endEffectorRadius+" mm "+
 				"\r\n\tMax Z "+ maxZ+" mm "+
 				"\r\n\tMin Z "+ minZ+" mm "+
-				"\r\n\tRod Length "+ rodLength+" mm "
+				"\r\n\tRod Length "+ rodLength+" mm "+
+				"\r\n\tUse Hard Positioning="+ useHardPositioning
 				;
+	}
+
+	public boolean isUseHardPositioning() {
+		return useHardPositioning;
+	}
+
+	public void setUseHardPositioning(boolean useHardPositioning) {
+		this.useHardPositioning = useHardPositioning;
 	}
 }
