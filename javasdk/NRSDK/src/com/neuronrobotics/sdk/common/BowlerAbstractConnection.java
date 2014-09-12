@@ -412,8 +412,8 @@ public abstract class BowlerAbstractConnection {
 		if(!datagram.isSyncronous()){
 			if(isInitializedNamespaces()){
 				Log.info("\nASYNC to "+listeners.size()+" listeners<<\n"+datagram);
-				for(IBowlerDatagramListener l : listeners) {
-
+				for(int i=0;i<listeners.size();i++) {
+					IBowlerDatagramListener l = listeners.get(i);
 					Log.info("\nASYNC listener: "+l.getClass());
 
 					try{
