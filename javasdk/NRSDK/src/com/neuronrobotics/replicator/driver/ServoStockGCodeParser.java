@@ -73,7 +73,7 @@ public class ServoStockGCodeParser {
 		interp.addMHandler(104, new CodeHandler() {
 			public void execute(GCodeLineData prev, GCodeLineData next) throws Exception {
 				currentTempreture=next.getWord('S');
-				device.setExtrusionTempreture(new  double[]{currentTempreture});
+				device.setExtrusionTempreture(currentTempreture);
 				currentLine = (int)next.getWord('P');
 				firePrinterStatusUpdate(PrinterState.PRINTING);
 			}
@@ -81,9 +81,8 @@ public class ServoStockGCodeParser {
 		// TODO this code should wait until up to tempreture
 		interp.addMHandler(109, new CodeHandler() {
 			public void execute(GCodeLineData prev, GCodeLineData next) throws Exception {
-				double d[]=new double[1];
-				d[0]=next.getWord('S');
-				device.setExtrusionTempreture(d);
+	
+				device.setExtrusionTempreture(next.getWord('S'));
 				currentLine = (int)next.getWord('P');
 				firePrinterStatusUpdate(PrinterState.PRINTING);
 			}

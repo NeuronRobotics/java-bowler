@@ -58,7 +58,7 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 		//parse out the extruder configs
 		//parse delta robot configs
 		
-		setExtrusionTempreture(new double [] {getTempreture()});
+		setExtrusionTempreture(getTempreture());
 
 		setParser(new ServoStockGCodeParser(this));
 		
@@ -148,25 +148,25 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 	private double getTempreture() {
 		return temp;
 	}
-	public void setTempreture(double temp) {
+	private void setTempreture(double temp) {
 		this.temp = temp;
 	}
 	
 	
-	public void setExtrusionTempreture(double [] extTemp) {
-		if(extTemp[0] == currentTemp) {
+	public void setExtrusionTempreture(double  extTemp) {
+		if(extTemp == currentTemp) {
 			Log.debug("Printer at tempreture "+currentTemp+" C");
 			return;
 		}else
-			currentTemp=extTemp[0];
+			currentTemp=extTemp;
 		setTempreture(hotEnd.getCurrentEngineeringUnits());
-		hotEnd.setTargetEngineeringUnits(extTemp[0]);
+		hotEnd.setTargetEngineeringUnits(extTemp);
 		hotEnd.flush(0);
 		getTempreture();
 		System.out.print("\r\nWaiting for Printer to come up to tempreture "+currentTemp+" C \n");
 		Log.enableSystemPrint(false);
 		int iter=0;
-		while(temp>(extTemp[0]+10) || temp< (extTemp[0]-10)) {
+		while(temp>(extTemp+10) || temp< (extTemp-10)) {
 			getTempreture();
 			System.out.print(".");
 			ThreadUtil.wait(100);
