@@ -112,7 +112,10 @@ public class PrinterStatus {
 	
 	@Override
 	public String toString(){
-		String s="Print Status:"+thePrinterState+"\nLocation="+headLocation+"\nextrusion="+extrusion+"\ntempreture="+tempreture+"\n"+message;
+		String s="Print Status:"+thePrinterState+" X="+headLocation.getX()+
+				" Y="+headLocation.getY()+
+				" Z="+headLocation.getZ()				
+				+" extrusion="+extrusion+" tempreture="+tempreture+" "+message;
 		
 		return s;
 	}
