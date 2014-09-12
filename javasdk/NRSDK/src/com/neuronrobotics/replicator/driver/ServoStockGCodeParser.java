@@ -66,7 +66,7 @@ public class ServoStockGCodeParser {
 				firePrinterStatusUpdate(new PrinterStatus(currentTransform,
 						extrusion,
 						currentTempreture,
-						(int)next.getWord('P'),PrinterState.WARNING_PRINTING,next+" unhandled"));
+						(int)next.getWord('P'),PrinterState.ERROR,next+" unhandled"));
 			}
 		});
 		// Temperature control

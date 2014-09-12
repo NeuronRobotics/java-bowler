@@ -107,7 +107,7 @@ public class GCodeInterpreter {
 	Thread interpretingThread;
 
 	ReentrantLock executingLock;
-
+	private int lineNumber=0;
 	/**
 	 * Default Constructor. This builds an interpreter and adds the default set
 	 * of handlers and configuration to it. @see
@@ -168,7 +168,7 @@ public class GCodeInterpreter {
 		tokens = line.split(delims);
 		nextLine.storeWord('G', 0);
 		nextLine.storeWord('M', 0);
-		
+		nextLine.storeWord('P', lineNumber);
 		//System.out.println("\r\n"+line);
 		
 		for(int i=0;i<tokens.length;i++){
@@ -197,7 +197,9 @@ public class GCodeInterpreter {
 		BufferedReader br = new BufferedReader(new InputStreamReader(r));
 		String line;
 		boolean inCommentSection = false;
+		lineNumber=0;
 		while ((line = br.readLine()) != null) {
+			lineNumber++;// lines in the file
 			String delims;
 			String[] tokens;
 			if(line.indexOf(';')>-1){
