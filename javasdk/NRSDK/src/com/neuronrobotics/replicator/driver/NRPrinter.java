@@ -27,7 +27,7 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 	private AbstractLink hotEnd;
 	private double temp = 0;
 
-	private boolean printRunning=false;
+	//private boolean printRunning=false;
 	
 	public NRPrinter(BowlerBoardDevice d) {
 		super(d,d);
@@ -166,23 +166,23 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 		System.out.print("\r\nWaiting for Printer to come up to tempreture "+currentTemp+" C \n");
 		Log.enableSystemPrint(false);
 		int iter=0;
-		while(temp>(extTemp+10) || temp< (extTemp-10)) {
-			getTempreture();
-			System.out.print(".");
-			ThreadUtil.wait(100);
-			iter++;
-			if(iter==50) {
-				System.out.print("\r\n "+temp+" C");
-				iter=0;
-			}
-		}
+//		while(temp>(extTemp+10) || temp< (extTemp-10)) {
+//			getTempreture();
+//			System.out.print(".");
+//			ThreadUtil.wait(100);
+//			iter++;
+//			if(iter==50) {
+//				System.out.print("\r\n "+temp+" C");
+//				iter=0;
+//			}
+//		}
 		Log.enableSystemPrint(true);
 	}
 	public void setBedTempreture(double bedTemp) {
 		
 	}
 	public int setDesiredPrintLocetion(TransformNR taskSpaceTransform,double extrusionLegnth, double seconds) throws Exception{
-		Log.debug("Telling printer to go to extrusion len "+extrusionLegnth);
+		System.out.println("Telling printer to go to extrusion len "+extrusionLegnth);
 		return getDeltaDevice().sendLinearSection(taskSpaceTransform, extrusionLegnth, (int) (seconds*1000));
 	}
 	
@@ -222,7 +222,7 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 		if(psl.getDriverState() == PrinterState.MOVING)
 			firePoseTransform(forwardOffset(psl.getHeadLocation()));	
 		if(psl.getDriverState() == PrinterState.PRINTING){
-			Log.warning("Received a Print status update");
+			//Log.warning("Received a Print status update");
 			TransformNR taskSpaceTransform=psl.getHeadLocation();
 			fireTargetJointsUpdate(getCurrentJointSpaceVector(), taskSpaceTransform );
 		}
@@ -263,6 +263,13 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 	
 	boolean getPausePrintState(boolean pause){
 		return getDeltaDevice().getPausePrintState();
+	}
+	
+	public void zeroExtrusion(double extrusionPosition){
+		//extruder.
+		System.out.println("Extrusion was: "+extruder.getCurrentEngineeringUnits());
+		getDeltaDevice().ResetPIDChannel(extruder.getLinkConfiguration().getHardwareIndex(), (int) extrusionPosition);
+		System.out.println("Extrusion now: "+extruder.getCurrentEngineeringUnits());
 	}
 	
 }

@@ -126,38 +126,6 @@ public class GCodeInterpreter {
 		addDefaultHandlers();
 		executingLock = new ReentrantLock();
 	}
-
-	/**
-	 * Parse a single token from the scanner, and store it or execute the line
-	 * as appropriate.
-	 * 
-	 * @param s
-	 * @throws Exception
-	 */
-	void parseWord(Scanner s) throws Exception {
-		s.useDelimiter("[ \t]+(\\(.*\\))?[ \t]*|(?=\n)|(?<=\n)");
-		// s.useDelimiter("[ \t]+(\\(.*\\))?[ \t]*|(?=\n)|(?<=\n)|\\(.*\\)");
-		String word = s.next();
-		Log.debug("Token: " + word);
-		char c = word.charAt(0);
-		switch (Character.toUpperCase(c)) {
-		case 'M':
-			mcodes.add(Integer.parseInt(word.substring(1)));
-			break;
-		case 'G':
-			int code = Integer.parseInt(word.substring(1));
-			if (gClearOnSet[code] != null)
-				gcodes.removeAll(gClearOnSet[code]);
-			gcodes.add(code);
-			Collections.sort(gcodes, gCodeOrdering);
-			break;
-		case '\n':
-			executeLine();
-			break;
-		default:
-			nextLine.storeWord(c, Double.parseDouble(word.substring(1)));
-		}
-	}
 	
 	
 	public void processSingleGCODELine(String line) throws Exception{
@@ -169,7 +137,7 @@ public class GCodeInterpreter {
 		nextLine.storeWord('G', 0);
 		nextLine.storeWord('M', 0);
 		nextLine.storeWord('P', lineNumber);
-		//System.out.println("\r\n"+line);
+		System.out.println("GCODE: "+line);
 		
 		for(int i=0;i<tokens.length;i++){
 			tokens[i] = tokens[i].trim();
@@ -178,7 +146,6 @@ public class GCodeInterpreter {
 				char code = tokens[i].charAt(0);
 				if(code == 'M'){
 					mcodes.add((int) val);
-					break;
 				}
 				if(code == 'G'){
 					int theCode = (int) val;
@@ -186,14 +153,15 @@ public class GCodeInterpreter {
 						gcodes.removeAll(gClearOnSet[theCode]);
 					gcodes.add(theCode);
 				}
+				Log.debug("Code Token: "+tokens[i]+" "+code+" "+val);
 				nextLine.storeWord(code, val);
 			}
 		}
 		//System.out.println(nextLine);
-		executeLine();
+		executeLine(line);
 	}
 
-	void parseLine(InputStream r) throws Exception { 
+	private void parseLine(InputStream r) throws Exception { 
 		BufferedReader br = new BufferedReader(new InputStreamReader(r));
 		String line;
 		boolean inCommentSection = false;
@@ -260,7 +228,8 @@ public class GCodeInterpreter {
 	 * 
 	 * @throws Exception
 	 */
-	void executeLine() throws Exception {
+	private void executeLine(String rawLine) throws Exception {
+		
 		Log.debug("Next Gcode Line " + nextLine);
 		Log.debug("Active Gcodes: " + gcodes);
 		Log.debug("Active Mcodes: " + mcodes);

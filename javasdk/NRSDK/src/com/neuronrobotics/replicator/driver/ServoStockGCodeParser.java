@@ -48,7 +48,7 @@ public class ServoStockGCodeParser {
 		currentLine=status.getPrintProgress();
 		
 		for(PrinterStatusListener l : listeners) {
-			Log.warning("Firint print status event: "+status+" to "+l.getClass().getName());
+			Log.info("Firing print status event: "+status+" to "+l.getClass().getName());
 			l.printStatus(status);
 		}
 	}
@@ -66,12 +66,13 @@ public class ServoStockGCodeParser {
 				firePrinterStatusUpdate(new PrinterStatus(currentTransform,
 						extrusion,
 						currentTempreture,
-						(int)next.getWord('P'),PrinterState.ERROR,next+" unhandled"));
+						(int)next.getWord('P'),PrinterState.ERROR,next+" unhandled exception"));
 			}
 		});
 		// Temperature control
 		interp.addMHandler(104, new CodeHandler() {
 			public void execute(GCodeLineData prev, GCodeLineData next) throws Exception {
+				waitForClearToPrint();
 				currentTempreture=next.getWord('S');
 				device.setExtrusionTempreture(currentTempreture);
 				currentLine = (int)next.getWord('P');
@@ -81,8 +82,9 @@ public class ServoStockGCodeParser {
 		// TODO this code should wait until up to tempreture
 		interp.addMHandler(109, new CodeHandler() {
 			public void execute(GCodeLineData prev, GCodeLineData next) throws Exception {
-	
-				device.setExtrusionTempreture(next.getWord('S'));
+				waitForClearToPrint();
+				currentTempreture = next.getWord('S');
+				device.setExtrusionTempreture(currentTempreture);
 				currentLine = (int)next.getWord('P');
 				firePrinterStatusUpdate(PrinterState.PRINTING);
 			}
@@ -90,8 +92,9 @@ public class ServoStockGCodeParser {
 
 		interp.setGHandler(0, new CodeHandler() {
 			public void execute(GCodeLineData prev, GCodeLineData next) throws Exception {
+				waitForClearToPrint();
 				currentTransform=new TransformNR(next.getWord('X'),next.getWord('Y'),next.getWord('Z'),new RotationNR());
-				extrusion = next.getWord('A');
+				extrusion = next.getWord('E');
 				device.setDesiredPrintLocetion(currentTransform, extrusion, 0);// zero seconds is a rapid
 				currentLine = (int)next.getWord('P');
 				firePrinterStatusUpdate(PrinterState.PRINTING);
@@ -100,22 +103,50 @@ public class ServoStockGCodeParser {
 		interp.setGHandler(28, new CodeHandler() {
 			//Move to origin
 			public void execute(GCodeLineData prev, GCodeLineData next) throws Exception {
+				waitForClearToPrint();
 				currentTransform=new TransformNR(0,0,0,new RotationNR());
 				device.setDesiredPrintLocetion(currentTransform, extrusion, 0);// zero seconds is a rapid
 				currentLine = (int)next.getWord('P');
 				firePrinterStatusUpdate(PrinterState.PRINTING);
 			}
 		});
+		interp.setGHandler(92, new CodeHandler() {
+			//Move to origin
+			public void execute(GCodeLineData prev, GCodeLineData next) throws Exception {
+				waitForClearToPrint();
+				extrusion =next.getWord('E');
+				device.zeroExtrusion(extrusion);
+				currentLine = (int)next.getWord('P');
+				firePrinterStatusUpdate(PrinterState.PRINTING);
+			}
+		});
+		
+		// set units to millimeters
+		interp.setGHandler(21, new CodeHandler() {
+			//Move to origin
+			public void execute(GCodeLineData prev, GCodeLineData next) throws Exception {
+				waitForClearToPrint();
+				currentLine = (int)next.getWord('P');
+				firePrinterStatusUpdate(PrinterState.PRINTING);
+			}
+		});
+		
+		// use absolute coordinates
+		interp.setGHandler(90, new CodeHandler() {
+			//Move to origin
+			public void execute(GCodeLineData prev, GCodeLineData next) throws Exception {
+				waitForClearToPrint();
+				currentLine = (int)next.getWord('P');
+				firePrinterStatusUpdate(PrinterState.PRINTING);
+			}
+		});
 		interp.setGHandler(1, new CodeHandler() {
 			public void execute(GCodeLineData prev, GCodeLineData next) throws Exception {
+				waitForClearToPrint();
 				currentTransform=new TransformNR(next.getWord('X'),next.getWord('Y'),next.getWord('Z'),new RotationNR());
 				TransformNR prevT=new TransformNR(prev.getWord('X'),prev.getWord('Y'),prev.getWord('Z'),new RotationNR());
 				double seconds=(currentTransform.getOffsetVectorMagnitude(prevT)/next.getWord('F'))*60.0;
-				extrusion =next.getWord('A');
-				while(device!=null && device.getNumberOfSpacesInBuffer()==0) {
-					Thread.sleep(500);//Wait for at least 2 spaces in the buffer
-					Log.debug("Waiting for space..." +device.getNumberOfSpacesInBuffer());
-				}
+				extrusion =next.getWord('E');
 				int iter=0;
 				while(iter++<1000) {
 					try {
@@ -131,6 +162,18 @@ public class ServoStockGCodeParser {
 			}
 		});
 		
+	}
+	
+	private void waitForClearToPrint(){
+		while(device!=null && device.getNumberOfSpacesInBuffer()==0) {
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}//Wait for at least 2 spaces in the buffer
+			Log.info("Waiting for space..." +device.getNumberOfSpacesInBuffer());
+		}
 	}
 
 	public boolean cancel() {
