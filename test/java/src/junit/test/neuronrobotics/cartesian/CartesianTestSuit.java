@@ -38,30 +38,30 @@ public class CartesianTestSuit {
 		NRPrinter printer = new NRPrinter(dev);
 		printer.cancelPrint();
 		//ThreadUtil.wait(5000);
-		StateBasedControllerConfiguration conf = printer.getStateBasedControllerConfiguration();
-		System.out.println(conf);
-		conf.setkP(.2);
+//		StateBasedControllerConfiguration conf = printer.getStateBasedControllerConfiguration();
+//		System.out.println(conf);
+//		conf.setkP(.2);
+//		
+//		printer.setStateBasedControllerConfiguration(conf);
+//		System.out.println(printer.getStateBasedControllerConfiguration());
+//		
+//		printer.homeAllLinks();
+//		printer.setPausePrintState(true);
+//		printer.setPausePrintState(false);
 		
-		printer.setStateBasedControllerConfiguration(conf);
-		System.out.println(printer.getStateBasedControllerConfiguration());
-		
-		printer.homeAllLinks();
-		printer.setPausePrintState(true);
-		printer.setPausePrintState(false);
-		
-//		try{
-//			File stl = new File("calibration_angle.stl");
-//			File gcode = new File(stl.getAbsoluteFile()+".gcode");
-//			if(!gcode.exists())
-//				printer.slice(stl, gcode);
-//			
-//			printer.print(CartesianTestSuit.class.getResourceAsStream("test.gcode"));
-////			if(gcode.exists())
-////				printer.print(new FileInputStream(gcode));
-//		}catch(Exception ex){
-//			ex.printStackTrace();
-//			fail();
-//		}
+		try{
+			File stl = new File("calibration_angle.stl");
+			File gcode = new File(stl.getAbsoluteFile()+".gcode");
+			if(!gcode.exists())
+				printer.slice(stl, gcode);
+			
+			printer.print(CartesianTestSuit.class.getResourceAsStream("test.gcode"));
+//			if(gcode.exists())
+//				printer.print(new FileInputStream(gcode));
+		}catch(Exception ex){
+			ex.printStackTrace();
+			fail();
+		}
 		
 		
 	}
