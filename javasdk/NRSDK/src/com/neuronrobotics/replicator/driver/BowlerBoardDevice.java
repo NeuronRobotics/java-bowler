@@ -147,6 +147,7 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 	public int getNumberOfPacketsWaiting() {
 		return sizeOfBuffer-numSpacesRemaining-1;
 	}
+	
 
 	public int getNumberOfSpacesInBuffer() {
 		return numSpacesRemaining;

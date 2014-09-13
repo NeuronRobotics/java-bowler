@@ -166,16 +166,16 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 		System.out.print("\r\nWaiting for Printer to come up to tempreture "+currentTemp+" C \n");
 		Log.enableSystemPrint(false);
 		int iter=0;
-//		while(temp>(extTemp+10) || temp< (extTemp-10)) {
-//			getTempreture();
-//			System.out.print(".");
-//			ThreadUtil.wait(100);
-//			iter++;
-//			if(iter==50) {
-//				System.out.print("\r\n "+temp+" C");
-//				iter=0;
-//			}
-//		}
+		while(temp>(extTemp+10) || temp< (extTemp-10)) {
+			getTempreture();
+			System.out.print(".");
+			ThreadUtil.wait(100);
+			iter++;
+			if(iter==50) {
+				System.out.print("\r\n "+temp+" C");
+				iter=0;
+			}
+		}
 		Log.enableSystemPrint(true);
 	}
 	public void setBedTempreture(double bedTemp) {
@@ -199,6 +199,11 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 		extruder.setTargetEngineeringUnits(setPoint);
 		setExtrusionCachedValue(setPoint);
 	}
+	
+	public int getNumberOfPacketsWaiting() {
+		return getDeltaDevice().getNumberOfPacketsWaiting();
+	}
+	
 	
 	public int getNumberOfSpacesInBuffer() {
 		return getDeltaDevice().getNumberOfSpacesInBuffer();

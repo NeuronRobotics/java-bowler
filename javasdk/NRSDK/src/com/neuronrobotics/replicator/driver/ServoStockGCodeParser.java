@@ -113,7 +113,8 @@ public class ServoStockGCodeParser {
 		interp.setGHandler(92, new CodeHandler() {
 			//Move to origin
 			public void execute(GCodeLineData prev, GCodeLineData next) throws Exception {
-				waitForClearToPrint();
+				// clear the print queue before zeroing out extruder
+				waitForEmptyPrintQueue();
 				extrusion =next.getWord('E');
 				device.zeroExtrusion(extrusion);
 				currentLine = (int)next.getWord('P');
@@ -167,12 +168,24 @@ public class ServoStockGCodeParser {
 	private void waitForClearToPrint(){
 		while(device!=null && device.getNumberOfSpacesInBuffer()==0) {
 			try {
-				Thread.sleep(500);
+				Thread.sleep(10);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}//Wait for at least 2 spaces in the buffer
 			Log.info("Waiting for space..." +device.getNumberOfSpacesInBuffer());
+		}
+	}
+	
+	private void waitForEmptyPrintQueue(){
+		while(device!=null && device.getNumberOfPacketsWaiting() != 0) {
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}//Wait for at least 2 spaces in the buffer
+			Log.info("Waiting for clear packet buffer..." +device.getNumberOfPacketsWaiting() );
 		}
 	}
 
