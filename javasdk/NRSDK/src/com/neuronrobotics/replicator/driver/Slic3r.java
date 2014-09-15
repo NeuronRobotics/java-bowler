@@ -32,29 +32,29 @@ public class Slic3r extends ExternalSlicer {
 	
 	public Slic3r(double [] args) {
 		this.args = args;
-		this.nozzle_diameter =args[0];
-		this.printCenter[0] = args[1];
-		this.printCenter[1] =  args[2];
-		this.filimentDiameter =  args[3];
-		this.extrusionMultiplier = args[4];
-		this.tempreture = (int) args[5];
-		this.bedTempreture = (int) args[6];
-		this.layerHeight = args[7];
-		this.wallThickness = (int) args[8];
-		this.useSupportMaterial = args[9]!=0;
-		this.retractLength = args[10];
-		this.travilSpeed = (int) args[11];
-		this.perimeterSpeed = (int) args[12];
-		this.bridgeSpeed = (int) args[13];
-		this.gapFillSpeed = (int) args[14];
-		this.infillSpeed = (int) args[15];
-		this.supportMaterialSpeed = (int) args[16];
-		this.smallPerimeterSpeedPercent = (int) args[17];
-		this.externalPerimeterSpeedPercent = (int) args[18];
-		this.solidInfillSpeedPercent = (int) args[19];
-		this.topSolidInfillSpeedPercent = (int) args[20];
-		this.supportMaterialInterfaceSpeedPercent = (int) args[21];
-		this.firstLayerSpeedPercent = (int) args[22];
+		this.setNozzle_diameter(args[0]);
+		this.getPrintCenter()[0] = args[1];
+		this.getPrintCenter()[1] =  args[2];
+		this.setFilimentDiameter(args[3]);
+		this.setExtrusionMultiplier(args[4]);
+		this.setTempreture((int) args[5]);
+		this.setBedTempreture((int) args[6]);
+		this.setLayerHeight(args[7]);
+		this.setWallThickness((int) args[8]);
+		this.setUseSupportMaterial(args[9]!=0);
+		this.setRetractLength(args[10]);
+		this.setTravilSpeed((int) args[11]);
+		this.setPerimeterSpeed((int) args[12]);
+		this.setBridgeSpeed((int) args[13]);
+		this.setGapFillSpeed((int) args[14]);
+		this.setInfillSpeed((int) args[15]);
+		this.setSupportMaterialSpeed((int) args[16]);
+		this.setSmallPerimeterSpeedPercent((int) args[17]);
+		this.setExternalPerimeterSpeedPercent((int) args[18]);
+		this.setSolidInfillSpeedPercent((int) args[19]);
+		this.setTopSolidInfillSpeedPercent((int) args[20]);
+		this.setSupportMaterialInterfaceSpeedPercent((int) args[21]);
+		this.setFirstLayerSpeedPercent((int) args[22]);
 		makeCommandLine();
 	}
 	
@@ -63,29 +63,29 @@ public class Slic3r extends ExternalSlicer {
 			args = new double[23];
 		}
 		
-		args[0]  = this.nozzle_diameter ;
-		args[1] = this.printCenter[0]  ;
-		args[2]= this.printCenter[1] ;
-		args[3] = this.filimentDiameter;
-		args[4] = this.extrusionMultiplier  ;
-		args[5] = this.tempreture  ;
-		args[6] = this.bedTempreture ;
-		args[7] = this.layerHeight;
-		args[8]= this.wallThickness ;
-		args[9]= this.useSupportMaterial?1:0;
-		args[10]= this.retractLength ;
-		args[11]= this.travilSpeed ;;
-		args[12]= this.perimeterSpeed;
-		args[13]= this.bridgeSpeed;
-		args[14]= this.gapFillSpeed;
-		args[15]= this.infillSpeed;
-		args[16]= this.supportMaterialSpeed;
-		args[17]= this.smallPerimeterSpeedPercent;
-		args[18]= this.externalPerimeterSpeedPercent ;
-		args[19]= this.solidInfillSpeedPercent;
-		args[20]= this.topSolidInfillSpeedPercent;
-		args[21]= this.supportMaterialInterfaceSpeedPercent ;
-		args[22]= this.firstLayerSpeedPercent;
+		args[0]  = this.getNozzle_diameter() ;
+		args[1] = this.getPrintCenter()[0]  ;
+		args[2]= this.getPrintCenter()[1] ;
+		args[3] = this.getFilimentDiameter();
+		args[4] = this.getExtrusionMultiplier()  ;
+		args[5] = this.getTempreture()  ;
+		args[6] = this.getBedTempreture() ;
+		args[7] = this.getLayerHeight();
+		args[8]= this.getWallThickness() ;
+		args[9]= this.isUseSupportMaterial()?1:0;
+		args[10]= this.getRetractLength() ;
+		args[11]= this.getTravilSpeed() ;;
+		args[12]= this.getPerimeterSpeed();
+		args[13]= this.getBridgeSpeed();
+		args[14]= this.getGapFillSpeed();
+		args[15]= this.getInfillSpeed();
+		args[16]= this.getSupportMaterialSpeed();
+		args[17]= this.getSmallPerimeterSpeedPercent();
+		args[18]= this.getExternalPerimeterSpeedPercent() ;
+		args[19]= this.getSolidInfillSpeedPercent();
+		args[20]= this.getTopSolidInfillSpeedPercent();
+		args[21]= this.getSupportMaterialInterfaceSpeedPercent() ;
+		args[22]= this.getFirstLayerSpeedPercent();
 		
 		return args;
 	}
@@ -115,28 +115,28 @@ public class Slic3r extends ExternalSlicer {
 					int firstLayerSpeedPercent
 					) {
 		
-		this.nozzle_diameter = nozzle_diameter;
-		this.printCenter = printCenter;
-		this.filimentDiameter = filimentDiameter;
-		this.extrusionMultiplier = extrusionMultiplier;
-		this.tempreture = tempreture;
-		this.bedTempreture = bedTempreture;
-		this.layerHeight = layerHeight;
-		this.wallThickness = wallThickness;
-		this.useSupportMaterial = useSupportMaterial;
-		this.retractLength = retractLength;
-		this.travilSpeed = travilSpeed;
-		this.perimeterSpeed = perimeterSpeed;
-		this.bridgeSpeed = bridgeSpeed;
-		this.gapFillSpeed = gapFillSpeed;
-		this.infillSpeed = infillSpeed;
-		this.supportMaterialSpeed = supportMaterialSpeed;
-		this.smallPerimeterSpeedPercent = smallPerimeterSpeedPercent;
-		this.externalPerimeterSpeedPercent = externalPerimeterSpeedPercent;
-		this.solidInfillSpeedPercent = solidInfillSpeedPercent;
-		this.topSolidInfillSpeedPercent = topSolidInfillSpeedPercent;
-		this.supportMaterialInterfaceSpeedPercent = supportMaterialInterfaceSpeedPercent;
-		this.firstLayerSpeedPercent = firstLayerSpeedPercent;
+		this.setNozzle_diameter(nozzle_diameter);
+		this.setPrintCenter(printCenter);
+		this.setFilimentDiameter(filimentDiameter);
+		this.setExtrusionMultiplier(extrusionMultiplier);
+		this.setTempreture(tempreture);
+		this.setBedTempreture(bedTempreture);
+		this.setLayerHeight(layerHeight);
+		this.setWallThickness(wallThickness);
+		this.setUseSupportMaterial(useSupportMaterial);
+		this.setRetractLength(retractLength);
+		this.setTravilSpeed(travilSpeed);
+		this.setPerimeterSpeed(perimeterSpeed);
+		this.setBridgeSpeed(bridgeSpeed);
+		this.setGapFillSpeed(gapFillSpeed);
+		this.setInfillSpeed(infillSpeed);
+		this.setSupportMaterialSpeed(supportMaterialSpeed);
+		this.setSmallPerimeterSpeedPercent(smallPerimeterSpeedPercent);
+		this.setExternalPerimeterSpeedPercent(externalPerimeterSpeedPercent);
+		this.setSolidInfillSpeedPercent(solidInfillSpeedPercent);
+		this.setTopSolidInfillSpeedPercent(topSolidInfillSpeedPercent);
+		this.setSupportMaterialInterfaceSpeedPercent(supportMaterialInterfaceSpeedPercent);
+		this.setFirstLayerSpeedPercent(firstLayerSpeedPercent);
 		makeCommandLine();
 		
 	}
@@ -145,32 +145,32 @@ public class Slic3r extends ExternalSlicer {
 		if(!new File(getExecutableLocation()).canExecute())
 			throw new RuntimeException("Slicer binary must be executable. ");
 		this.cmdline=Arrays.asList(getExecutableLocation(),
-				"--nozzle-diameter="+nozzle_diameter,
-				"--print-center=("+printCenter[0]+","+printCenter[1]+")",
-				"--filament-diameter="+filimentDiameter,
-				"--extrusion-multiplier="+extrusionMultiplier,
-				"--temperature="+tempreture,
-				"--bed-temperature="+bedTempreture,
-				"--layer-height="+layerHeight,
-				"--perimeters="+wallThickness,
+				"--nozzle-diameter="+getNozzle_diameter(),
+				"--print-center=("+getPrintCenter()[0]+","+getPrintCenter()[1]+")",
+				"--filament-diameter="+getFilimentDiameter(),
+				"--extrusion-multiplier="+getExtrusionMultiplier(),
+				"--temperature="+getTempreture(),
+				"--bed-temperature="+getBedTempreture(),
+				"--layer-height="+getLayerHeight(),
+				"--perimeters="+getWallThickness(),
 				"--avoid-crossing-perimeters",
-				useSupportMaterial?"--support-material":" ",
-				"--retract-length="+retractLength,
+				isUseSupportMaterial()?"--support-material":" ",
+				"--retract-length="+getRetractLength(),
 				//"--skirts=2",
 				//"--repair",
-				"--travel-speed="+travilSpeed,
-				"--perimeter-speed="+perimeterSpeed,
-				"--bridge-speed="+bridgeSpeed,
-				"--gap-fill-speed="+gapFillSpeed,
-				"--infill-speed="+infillSpeed,
-				"--support-material-speed="+supportMaterialSpeed,
+				"--travel-speed="+getTravilSpeed(),
+				"--perimeter-speed="+getPerimeterSpeed(),
+				"--bridge-speed="+getBridgeSpeed(),
+				"--gap-fill-speed="+getGapFillSpeed(),
+				"--infill-speed="+getInfillSpeed(),
+				"--support-material-speed="+getSupportMaterialSpeed(),
 				
-				"--small-perimeter-speed="+smallPerimeterSpeedPercent+"%",
-				"--external-perimeter-speed="+externalPerimeterSpeedPercent+"%",
-				"--solid-infill-speed="+solidInfillSpeedPercent+"%",
-				"--top-solid-infill-speed="+topSolidInfillSpeedPercent+"%",
-				"--support-material-interface-speed="+supportMaterialInterfaceSpeedPercent+"%",
-				"--first-layer-speed="+firstLayerSpeedPercent+"%",
+				"--small-perimeter-speed="+getSmallPerimeterSpeedPercent()+"%",
+				"--external-perimeter-speed="+getExternalPerimeterSpeedPercent()+"%",
+				"--solid-infill-speed="+getSolidInfillSpeedPercent()+"%",
+				"--top-solid-infill-speed="+getTopSolidInfillSpeedPercent()+"%",
+				"--support-material-interface-speed="+getSupportMaterialInterfaceSpeedPercent()+"%",
+				"--first-layer-speed="+getFirstLayerSpeedPercent()+"%",
 				"--notes=\"Generated by com.neuronrobotics.replicator.driver.Slic3r.java\""
 			);
 	}
@@ -182,6 +182,184 @@ public class Slic3r extends ExternalSlicer {
 
 	public static void setExecutableLocation(String executableLocation) {
 		Slic3r.executableLocation = executableLocation;
+	}
+
+	public double getNozzle_diameter() {
+		return nozzle_diameter;
+	}
+
+	public void setNozzle_diameter(double nozzle_diameter) {
+		this.nozzle_diameter = nozzle_diameter;
+	}
+
+	public double[] getPrintCenter() {
+		return printCenter;
+	}
+
+	public void setPrintCenter(double[] printCenter) {
+		this.printCenter = printCenter;
+	}
+
+	public double getFilimentDiameter() {
+		return filimentDiameter;
+	}
+
+	public void setFilimentDiameter(double filimentDiameter) {
+		this.filimentDiameter = filimentDiameter;
+	}
+
+	public double getExtrusionMultiplier() {
+		return extrusionMultiplier;
+	}
+
+	public void setExtrusionMultiplier(double extrusionMultiplier) {
+		this.extrusionMultiplier = extrusionMultiplier;
+	}
+
+	public int getTempreture() {
+		return tempreture;
+	}
+
+	public void setTempreture(int tempreture) {
+		this.tempreture = tempreture;
+	}
+
+	public int getBedTempreture() {
+		return bedTempreture;
+	}
+
+	public void setBedTempreture(int bedTempreture) {
+		this.bedTempreture = bedTempreture;
+	}
+
+	public double getLayerHeight() {
+		return layerHeight;
+	}
+
+	public void setLayerHeight(double layerHeight) {
+		this.layerHeight = layerHeight;
+	}
+
+	public int getWallThickness() {
+		return wallThickness;
+	}
+
+	public void setWallThickness(int wallThickness) {
+		this.wallThickness = wallThickness;
+	}
+
+	public boolean isUseSupportMaterial() {
+		return useSupportMaterial;
+	}
+
+	public void setUseSupportMaterial(boolean useSupportMaterial) {
+		this.useSupportMaterial = useSupportMaterial;
+	}
+
+	public double getRetractLength() {
+		return retractLength;
+	}
+
+	public void setRetractLength(double retractLength) {
+		this.retractLength = retractLength;
+	}
+
+	public int getTravilSpeed() {
+		return travilSpeed;
+	}
+
+	public void setTravilSpeed(int travilSpeed) {
+		this.travilSpeed = travilSpeed;
+	}
+
+	public int getPerimeterSpeed() {
+		return perimeterSpeed;
+	}
+
+	public void setPerimeterSpeed(int perimeterSpeed) {
+		this.perimeterSpeed = perimeterSpeed;
+	}
+
+	public int getBridgeSpeed() {
+		return bridgeSpeed;
+	}
+
+	public void setBridgeSpeed(int bridgeSpeed) {
+		this.bridgeSpeed = bridgeSpeed;
+	}
+
+	public int getGapFillSpeed() {
+		return gapFillSpeed;
+	}
+
+	public void setGapFillSpeed(int gapFillSpeed) {
+		this.gapFillSpeed = gapFillSpeed;
+	}
+
+	public int getInfillSpeed() {
+		return infillSpeed;
+	}
+
+	public void setInfillSpeed(int infillSpeed) {
+		this.infillSpeed = infillSpeed;
+	}
+
+	public int getSupportMaterialSpeed() {
+		return supportMaterialSpeed;
+	}
+
+	public void setSupportMaterialSpeed(int supportMaterialSpeed) {
+		this.supportMaterialSpeed = supportMaterialSpeed;
+	}
+
+	public int getSmallPerimeterSpeedPercent() {
+		return smallPerimeterSpeedPercent;
+	}
+
+	public void setSmallPerimeterSpeedPercent(int smallPerimeterSpeedPercent) {
+		this.smallPerimeterSpeedPercent = smallPerimeterSpeedPercent;
+	}
+
+	public int getExternalPerimeterSpeedPercent() {
+		return externalPerimeterSpeedPercent;
+	}
+
+	public void setExternalPerimeterSpeedPercent(
+			int externalPerimeterSpeedPercent) {
+		this.externalPerimeterSpeedPercent = externalPerimeterSpeedPercent;
+	}
+
+	public int getSolidInfillSpeedPercent() {
+		return solidInfillSpeedPercent;
+	}
+
+	public void setSolidInfillSpeedPercent(int solidInfillSpeedPercent) {
+		this.solidInfillSpeedPercent = solidInfillSpeedPercent;
+	}
+
+	public int getTopSolidInfillSpeedPercent() {
+		return topSolidInfillSpeedPercent;
+	}
+
+	public void setTopSolidInfillSpeedPercent(int topSolidInfillSpeedPercent) {
+		this.topSolidInfillSpeedPercent = topSolidInfillSpeedPercent;
+	}
+
+	public int getSupportMaterialInterfaceSpeedPercent() {
+		return supportMaterialInterfaceSpeedPercent;
+	}
+
+	public void setSupportMaterialInterfaceSpeedPercent(
+			int supportMaterialInterfaceSpeedPercent) {
+		this.supportMaterialInterfaceSpeedPercent = supportMaterialInterfaceSpeedPercent;
+	}
+
+	public int getFirstLayerSpeedPercent() {
+		return firstLayerSpeedPercent;
+	}
+
+	public void setFirstLayerSpeedPercent(int firstLayerSpeedPercent) {
+		this.firstLayerSpeedPercent = firstLayerSpeedPercent;
 	}
 	
 //	public static void main(String args[]) throws Exception {
