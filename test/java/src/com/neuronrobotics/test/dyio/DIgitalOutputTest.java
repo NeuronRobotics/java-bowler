@@ -12,8 +12,9 @@ public class DIgitalOutputTest {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		//Log.enableInfoPrint(true);
+		Log.enableInfoPrint();
 		DyIO.disableFWCheck();
+		
 		DyIO dyio=new DyIO();
 		if (!ConnectionDialog.getBowlerDevice(dyio)){
 			System.exit(1);
