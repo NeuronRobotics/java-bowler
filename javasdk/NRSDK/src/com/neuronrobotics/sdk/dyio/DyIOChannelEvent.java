@@ -25,6 +25,7 @@ import com.neuronrobotics.sdk.common.Log;
 public class DyIOChannelEvent {
 	private ByteList data;
 	private DyIOChannel channel;
+	private Integer integer;
 	
 	/**
 	 * 
@@ -37,6 +38,13 @@ public class DyIOChannelEvent {
 		this.data = data;
 	}
 	
+	public DyIOChannelEvent(DyIOChannel c, Integer integer) {
+		// TODO Auto-generated constructor stub
+		this.channel =c;
+		this.integer = integer;
+		
+	}
+
 	/**
 	 * 
 	 * 
@@ -56,6 +64,8 @@ public class DyIOChannelEvent {
 	}
 
 	public int getValue() {
+		if(integer!=null)
+			return integer;
 		int value;
 		DyIOChannelMode mode = getChannel().getCurrentMode();
 		if(channel.isStreamChannel())
@@ -75,10 +85,14 @@ public class DyIOChannelEvent {
 	}
 	
 	public int getUnsignedValue() {
+		if(integer!=null)
+			return integer;
 		return ByteList.convertToInt(getData().getBytes(),false);
 	}
 	
 	public int getSignedValue() {
+		if(integer!=null)
+			return integer;
 		int value =ByteList.convertToInt(getData().getBytes(),true);
 		return value;
 	}
