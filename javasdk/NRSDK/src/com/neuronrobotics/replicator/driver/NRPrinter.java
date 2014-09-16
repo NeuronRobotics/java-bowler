@@ -62,7 +62,7 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 
 		setParser(new ServoStockGCodeParser(this));
 		
-		setSlicer(d.getSlic3rConfiguration());
+		reloadSlic3rSettings();
 		addPrinterStatusListener(this);
 
 		
@@ -275,6 +275,11 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 		System.out.println("Extrusion was: "+extruder.getCurrentEngineeringUnits());
 		getDeltaDevice().ResetPIDChannel(extruder.getLinkConfiguration().getHardwareIndex(), (int) extrusionPosition);
 		System.out.println("Extrusion now: "+extruder.getCurrentEngineeringUnits());
+	}
+
+	public void reloadSlic3rSettings() {
+		// TODO Auto-generated method stub
+		setSlicer(deltaDevice.getSlic3rConfiguration());
 	}
 	
 }
