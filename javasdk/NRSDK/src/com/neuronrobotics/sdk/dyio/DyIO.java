@@ -1180,22 +1180,27 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 		
 		if(isLegacyParser()){
 			BowlerDatagram dg = send(new GetChannelModeListCommand(channel));
-			
 			m = dg.getData();
 			Log.error("Packet "+channel+"\r\n"+dg);
 			Log.error("Data: "+channel+"\r\n"+m);
 
 		}else{
+			//int l = Log.getMinimumPrintLevel();
+			//Log.enableInfoPrint();
 			Object [] args = send("bcs.io.*;0.3;;",
 					BowlerMethod.GET,
 					"gcml",
-					new Object[]{});
+					new Object[]{channel});
 			m = (ByteList)args[0];
+			//Log.setMinimumPrintLevel(l);
 		}
-		
+		String modeString = " Availible modes on "+channel;
 		for(int i=0;i<m.size();i++){
-			modes.add(DyIOChannelMode.get(m.getByte(i)));
+			DyIOChannelMode tmpMode = DyIOChannelMode.get(m.getByte(i));
+			modeString +="\r\n\t"+tmpMode.toString()+"\r\n\t";
+			modes.add(tmpMode);
 		}
+		Log.info(modeString);
 		return modes;
 	}
 
