@@ -130,7 +130,35 @@ public class DyIONamespaceTest {
 				harness.setMode(testerIndex, DyIOChannelMode.DIGITAL_IN);
 			}
 		}
+	}
+	
+	@Test public void DyIOAnalogInputTest(){
+		if(!testDevice.isAvailable() || harness == null)
+			fail();
+		int numPins = testDevice.getDyIOChannelCount();
 		
+		//Test device as input
+		for(int i=0;i<numPins;i++){
+			if(testDevice.getChannel(i).canBeMode(DyIOChannelMode.ANALOG_IN) ){
+				int testerIndex = numPins-1-i;
+				harness.setMode(testerIndex, DyIOChannelMode.DIGITAL_OUT);
+				testDevice.setMode(i, DyIOChannelMode.ANALOG_IN);
+				
+				boolean state=false;
+				for(int j=0;j<5;j++){
+					int pinState = state?1:0;
+					harness.setValue(testerIndex, pinState);
+					ThreadUtil.wait(200);
+					int gotValue = testDevice.getValue(i);
+					System.out.println(" Pin:"+i+" Tester:"+testerIndex+" setting to: "+pinState+" got:"+gotValue);
+					assertTrue(gotValue==(state?1023:0));
+					state = !state;
+				}
+				harness.setMode(testerIndex, DyIOChannelMode.DIGITAL_IN);
+			}else{
+				System.out.println("Pin "+i+" can not be analog in");
+			}
+		}
 	}
 	
 	@Test public void DyIOOutputTest(){
@@ -161,6 +189,8 @@ public class DyIONamespaceTest {
 		}
 		
 	}
+	
+	
 
 	@Test
 	public void dyioNamespaceTest() {
