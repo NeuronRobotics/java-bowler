@@ -400,10 +400,10 @@ public class DyIOChannel implements IDyIOChannel {
 			val = new DyIOChannelEvent(this,bl).getValue();
 		}else{
 			Object [] args =getDevice().send("bcs.io.*;0.3;;",
-					BowlerMethod.POST,
+					BowlerMethod.GET,
 					"gchv",
 					new Object[]{number});
-			val=(Integer)args[0];
+			val=(Integer)args[1];
 		}
 		setCachedValue(val);
 		setPreviousValue(val);
@@ -806,8 +806,7 @@ public class DyIOChannel implements IDyIOChannel {
 	 */
 	 
 	public boolean setValue(ByteList data) {
-		if(!isStreamChannel())
-			throw new RuntimeException("Only stream channels should talk to this method");
+
 		if(getDevice().isLegacyParser()){
 			int attempts = MAXATTEMPTS;
 			if(getMode() == DyIOChannelMode.USART_RX ||getMode() == DyIOChannelMode.USART_TX )
@@ -825,6 +824,8 @@ public class DyIOChannel implements IDyIOChannel {
 				}
 			}
 		}else{
+			if(!isStreamChannel())
+				throw new RuntimeException("Only stream channels should talk to this method");
 			getDevice().send("bcs.io.*;0.3;;",
 					BowlerMethod.POST,
 					"strm",
