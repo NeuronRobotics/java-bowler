@@ -424,7 +424,11 @@ public class DyIOChannel implements IDyIOChannel {
 		}
 		
 		if(!canBeMode(mode)){
-			 new RuntimeException("\nChannel: "+getChannelNumber()+" can not be mode '"+mode+"' in current configuration. \nCheck the power switch settings and availible modes.").printStackTrace();
+			if(mode == DyIOChannelMode.SERVO_OUT)
+				new RuntimeException("\nChannel: "+getChannelNumber()+" can not be mode '"+mode+"' in current configuration. \nCheck the power switch settings and availible modes.").printStackTrace();
+			else
+				new RuntimeException("\nChannel: "+getChannelNumber()+" can not be mode '"+mode+"'.").printStackTrace();
+			mode=DyIOChannelMode.DIGITAL_IN;
 		}
 		settingMode=true;
 		for(int i = 0; i < MAXATTEMPTS; i++) {
