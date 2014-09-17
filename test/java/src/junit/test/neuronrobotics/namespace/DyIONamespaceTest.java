@@ -13,6 +13,7 @@ import com.neuronrobotics.sdk.common.MACAddress;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.serial.SerialConnection;
+import com.neuronrobotics.sdk.util.ThreadUtil;
 
 public class DyIONamespaceTest {
 	
@@ -101,6 +102,7 @@ public class DyIONamespaceTest {
 		for(int i=0;i<modes.size();i++){
 			assertTrue(modes.get(i)==modesAfter.get(i));
 			assertTrue(modes.get(i)==testDevice.getMode(i));
+			testDevice.setMode(i, DyIOChannelMode.DIGITAL_IN);
 		}
 	}
 	@Test public void DyIOInputTest(){
@@ -119,11 +121,13 @@ public class DyIONamespaceTest {
 				for(int j=0;j<5;j++){
 					int pinState = state?1:0;
 					harness.setValue(testerIndex, pinState);
+					ThreadUtil.wait(50);
 					int gotValue = testDevice.getValue(i);
 					System.out.println(" Pin:"+i+" Tester:"+testerIndex+" setting to: "+pinState+" got:"+gotValue);
 					assertTrue(gotValue==pinState);
 					state = !state;
 				}
+				harness.setMode(testerIndex, DyIOChannelMode.DIGITAL_IN);
 			}
 		}
 		
@@ -136,8 +140,9 @@ public class DyIONamespaceTest {
 
 		//test device as output
 		for(int i=0;i<numPins;i++){
-			if(!(i==16 || i==17)){
-				int testerIndex = numPins-1-i;
+			int testerIndex = numPins-1-i;
+			if(!(testerIndex==16 || testerIndex==17)){
+				
 				harness.setMode(testerIndex, DyIOChannelMode.DIGITAL_IN);
 				testDevice.setMode(i, DyIOChannelMode.DIGITAL_OUT);
 				
@@ -145,11 +150,13 @@ public class DyIONamespaceTest {
 				for(int j=0;j<5;j++){
 					int pinState = state?1:0;
 					testDevice.setValue(i, pinState);
+					ThreadUtil.wait(200);
 					int gotValue = harness.getValue(testerIndex);
 					System.out.println(" Pin:"+i+" Tester:"+testerIndex+" setting to: "+pinState+" got:"+gotValue);
 					assertTrue(gotValue==pinState);
 					state = !state;
 				}
+				testDevice.setMode(i, DyIOChannelMode.DIGITAL_IN);
 			}
 		}
 		
