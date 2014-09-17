@@ -24,6 +24,7 @@ import com.neuronrobotics.sdk.commands.bcs.io.SetChannelValueCommand;
 import com.neuronrobotics.sdk.commands.bcs.io.setmode.SetChannelModeCommand;
 import com.neuronrobotics.sdk.common.BowlerAbstractCommand;
 import com.neuronrobotics.sdk.common.BowlerDatagram;
+import com.neuronrobotics.sdk.common.BowlerMethod;
 import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.InvalidResponseException;
 import com.neuronrobotics.sdk.common.Log;
@@ -381,20 +382,29 @@ public class DyIOChannel implements IDyIOChannel {
 	public int getValue() {
 		BowlerDatagram response=null;
 		int val=0;
-		try {
-			response = getDevice().send(new GetValueCommand(number));
-		} catch (InvalidResponseException e) {
-			response = getDevice().send(new GetValueCommand(number));
+		if(getDevice().isLegacyParser()){
+			
+			try {
+				response = getDevice().send(new GetValueCommand(number));
+			} catch (InvalidResponseException e) {
+				response = getDevice().send(new GetValueCommand(number));
+			}
+			ByteList bl = response.getData();
+			
+			Byte b = bl.pop();
+			if(b==null || b.intValue()!=number){
+				Log.error("Failed to get value "+response);
+				return 0;
+			}
+			
+			val = new DyIOChannelEvent(this,bl).getValue();
+		}else{
+			Object [] args =getDevice().send("bcs.io.*;0.3;;",
+					BowlerMethod.POST,
+					"gchv",
+					new Object[]{number});
+			val=(Integer)args[0];
 		}
-		ByteList bl = response.getData();
-		
-		Byte b = bl.pop();
-		if(b==null || b.intValue()!=number){
-			Log.error("Failed to get value "+response);
-			return 0;
-		}
-		
-		val = new DyIOChannelEvent(this,bl).getValue();
 		setCachedValue(val);
 		setPreviousValue(val);
 		return val;
@@ -489,54 +499,39 @@ public class DyIOChannel implements IDyIOChannel {
 //			throw new RuntimeException("In chached mode and flushing from channel");
 		//Log.enableDebugPrint(true);
 		Log.debug("Flushing channel: "+number);
-		
-		ByteList b = new ByteList();
-		switch(getMode()){
-		case COUNT_IN_INT:
-		case COUNT_IN_DIR:
-		case COUNT_IN_HOME:
-		case COUNT_OUT_INT:
-		case COUNT_OUT_DIR:
-		case COUNT_OUT_HOME:
-			b.addAs32(getCachedValue());
-			b.addAs32((int)(getCachedTime()*1000));
-			break;
-		case SERVO_OUT:
-			b.add(getCachedValue());
-			b.addAs16((int)(getCachedTime()*1000));
-			break;
-		default:
-			b.add(getCachedValue());
+		if(getDevice().isLegacyParser()){
+			ByteList b = new ByteList();
+			switch(getMode()){
+			case COUNT_IN_INT:
+			case COUNT_IN_DIR:
+			case COUNT_IN_HOME:
+			case COUNT_OUT_INT:
+			case COUNT_OUT_DIR:
+			case COUNT_OUT_HOME:
+				b.addAs32(getCachedValue());
+				b.addAs32((int)(getCachedTime()*1000));
+				break;
+			case SERVO_OUT:
+				b.add(getCachedValue());
+				b.addAs16((int)(getCachedTime()*1000));
+				break;
+			default:
+				b.add(getCachedValue());
+			}
+			Log.info("Setting channel: "+getChannelNumber()+" to value: "+b);
+			boolean back = setValue(b);
+			//Log.enableDebugPrint(false);
+			return back;
+		}else{
+			getDevice().send(	"bcs.io.*;0.3;;",
+								BowlerMethod.POST,
+								"schv",
+								new Object[]{number,getCachedValue(),(int)(getCachedTime()*1000)});
+			return true;
 		}
-		Log.info("Setting channel: "+getChannelNumber()+" to value: "+b);
-		boolean back = setValue(b);
-		//Log.enableDebugPrint(false);
-		return back;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.dyio.IDyIOChannel#setValue(com.neuronrobotics.sdk.common.ISendable)
-	 */
-	 
-	public boolean setValue(ByteList data) {
-		int attempts = MAXATTEMPTS;
-		if(getMode() == DyIOChannelMode.USART_RX ||getMode() == DyIOChannelMode.USART_TX )
-			attempts=1;
-		for(int i = 0; i < attempts; i++) {
-			try {
-				getDevice().send(new SetChannelValueCommand(number, data));
-				return true;
-			} catch (InvalidResponseException e) {
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e1) {
-					return false;
-				}
-			}
-		}
-		
-		return false;
-	}
+
 	
 	
 	/**
@@ -745,6 +740,36 @@ public class DyIOChannel implements IDyIOChannel {
 			resync(false);
 		}
 	}
+	public boolean isStreamtMode( DyIOChannelMode m) {
+		switch(m) {
+		case USART_RX:
+		case PPM_IN:
+		case SPI_CLOCK:
+		case SPI_MISO:
+		case SPI_MOSI:
+		case USART_TX:
+			return true;
+		case SERVO_OUT:
+		case ANALOG_OUT:
+		case DC_MOTOR_DIR:
+		case DC_MOTOR_VEL:
+		case PWM_OUT:
+		case SPI_SELECT:
+		case DIGITAL_OUT:
+		case COUNT_OUT_DIR:
+		case COUNT_OUT_HOME:
+		case COUNT_OUT_INT:
+		case ANALOG_IN:
+		case COUNT_IN_DIR:
+		case COUNT_IN_HOME:
+		case COUNT_IN_INT:
+		case DIGITAL_IN:
+		case NO_CHANGE:
+		case OFF:
+			return false;
+		}
+		return false;
+	}
 	private boolean isOutputMode( DyIOChannelMode m) {
 		switch(m) {
 		case SERVO_OUT:
@@ -773,6 +798,39 @@ public class DyIOChannel implements IDyIOChannel {
 		case USART_RX:
 			return false;
 		}
+		return false;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.dyio.IDyIOChannel#setValue(com.neuronrobotics.sdk.common.ISendable)
+	 */
+	 
+	public boolean setValue(ByteList data) {
+		if(!isStreamChannel())
+			throw new RuntimeException("Only stream channels should talk to this method");
+		if(getDevice().isLegacyParser()){
+			int attempts = MAXATTEMPTS;
+			if(getMode() == DyIOChannelMode.USART_RX ||getMode() == DyIOChannelMode.USART_TX )
+				attempts=1;
+			for(int i = 0; i < attempts; i++) {
+				try {
+					getDevice().send(new SetChannelValueCommand(number, data));
+					return true;
+				} catch (InvalidResponseException e) {
+					try {
+						Thread.sleep(100);
+					} catch (InterruptedException e1) {
+						return false;
+					}
+				}
+			}
+		}else{
+			getDevice().send("bcs.io.*;0.3;;",
+					BowlerMethod.POST,
+					"strm",
+					new Object[]{number,data});
+		}
+		
 		return false;
 	}
 }

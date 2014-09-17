@@ -2,6 +2,7 @@ package com.neuronrobotics.sdk.dyio.peripherals;
 
 import com.neuronrobotics.sdk.commands.bcs.io.SetChannelValueCommand;
 import com.neuronrobotics.sdk.common.BowlerDatagram;
+import com.neuronrobotics.sdk.common.BowlerMethod;
 import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
@@ -33,11 +34,13 @@ public class SPIChannel {
 	 * @param stream the Bytes to be sent out
 	 * @return true if success
 	 */
-	public BowlerDatagram sendSPIStream(int ss, byte [] stream) {
+	private BowlerDatagram sendSPIStream(int ss, byte [] stream) {
+		
 		ByteList b = new ByteList();
 		b.add(ss);
 		b.add(stream);
 		return dyio.send(new  SetChannelValueCommand(0, b));
+
 	}
 	/**
 	 * This performs a dumb read. The data sent out by the host is junk data.
@@ -59,9 +62,21 @@ public class SPIChannel {
 	 * @return the data received
 	 */
 	public byte [] write(int ss, byte [] stream) {
-		BowlerDatagram  b= sendSPIStream(ss,stream);
-		if(b==null)
-			return new byte[0];
-		return b.getData().getBytes(2);
+		if(dyio.isLegacyParser()){
+			BowlerDatagram  b= sendSPIStream(ss,stream);
+			if(b==null)
+				return new byte[0];
+			return b.getData().getBytes(2);
+		}else{
+			dyio.send("bcs.io.*;0.3;;",
+					BowlerMethod.POST,
+					"strm",
+					new Object[]{0,new ByteList(stream)});
+			Object [] args = dyio.send("bcs.io.*;0.3;;",
+					BowlerMethod.GET,
+					"strm",
+					new Object[]{0});
+			return ((ByteList)args[0]).getBytes();
+		}
 	}
 }

@@ -132,7 +132,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 		return getInternalChannels().get(channel);
 	}
 	
-	private Object[] send(String NS,BowlerMethod method, String rpcString, Object[] arguments){
+	public Object[] send(String NS,BowlerMethod method, String rpcString, Object[] arguments){
 		return send(NS,method,rpcString,arguments,2);
 	}
 	
@@ -326,7 +326,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 		ArrayList<DyIOChannelMode> modes = new ArrayList<DyIOChannelMode>();
 		BowlerDatagram response;
 		ByteList bl;
-		if(legacyParser){
+		if(isLegacyParser()){
 			try {
 				response = send(new GetChannelModeCommand());
 			} catch (Exception e) {
@@ -400,10 +400,10 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 		}
 		
 		if(hasNamespace(NEURONROBOTICS_DYIO_1_0)){
-			legacyParser=false;
+			setLegacyParser(false);
 		}
 		if(hasNamespace("neuronrobotics.dyio.*;0.3;;")){
-			legacyParser=true;
+			setLegacyParser(true);
 		}
 		setResyncing(true);
 		setMuteResyncOnModeChange(true);
@@ -596,7 +596,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 			values[i++]=d.getCachedValue();
 			//d.flush();
 		}
-		if(legacyParser){
+		if(isLegacyParser()){
 			for(int j=0;j<5;j++) {
 				try {
 					send(new SetAllChannelValuesCommand(seconds,values));
@@ -1096,7 +1096,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	 */
 	public int[] getAllChannelValues() {
 		int [] back = new int[getInternalChannels().size()];
-		if(legacyParser){
+		if(isLegacyParser()){
 			BowlerDatagram gacv = send(new GetAllChannelValuesCommand());
 			Log.info("GACV RX<<\n"+gacv);
 			ByteList bl = gacv.getData();
@@ -1156,7 +1156,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	public Integer getDyIOChannelCount(){
 		
 		if(dyioChanCount == null){
-			if(legacyParser){
+			if(isLegacyParser()){
 				try{
 					BowlerDatagram dg = send (new GetDyIOChannelCountCommand());
 					dyioChanCount = ByteList.convertToInt(dg.getData().getBytes(0, 4));
@@ -1178,7 +1178,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 		ArrayList<DyIOChannelMode> modes = new ArrayList<DyIOChannelMode>();
 		ByteList m;
 		
-		if(legacyParser){
+		if(isLegacyParser()){
 			BowlerDatagram dg = send(new GetChannelModeListCommand(channel));
 			
 			m = dg.getData();
@@ -1201,6 +1201,14 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 
 	public GenericPIDDevice getPid() {
 		return pid;
+	}
+
+	public boolean isLegacyParser() {
+		return legacyParser;
+	}
+
+	public void setLegacyParser(boolean legacyParser) {
+		this.legacyParser = legacyParser;
 	}
 
 
