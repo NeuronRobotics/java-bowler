@@ -33,19 +33,19 @@ public class DyIONamespaceTest {
 		}
 		fail("No device availible");
 	}
-
-	@Test
-	public void dyioNamespaceTest() {
+	
+	@Test public void DyIONameTest(){
 		DyIO dyio= DyIORegestry.get();
 		if(!dyio.isAvailable())
 			fail();
-		assertTrue(DyIORegestry.get().hasNamespace("neuronrobotics.dyio.*"));
-		
-		
-		dyio.getRevisions();
 		
 		String name = dyio.getInfo();
-		String setName ="My DyIO";
+		
+		String setName;
+		if(name.contains("My DyIO"))
+			setName="My DyIO2";
+		else
+			setName="My DyIO";
 		
 		dyio.setInfo(setName);
 		
@@ -53,16 +53,31 @@ public class DyIONamespaceTest {
 		
 
 		dyio.setInfo(name);
-		
-		
-		double volts = dyio.getBatteryVoltage(true);
-		
-		dyio.setServoPowerSafeMode(true);
 	
 		assertTrue(setName.contains(newName));
 		assertTrue(name.contains(dyio.getInfo()));
 		assertTrue(dyio.ping() );
+
+	}
+	
+	@Test public void DyIOPowerTest(){
+		DyIO dyio= DyIORegestry.get();
+		if(!dyio.isAvailable())
+			fail();
+		assertTrue(DyIORegestry.get().hasNamespace("neuronrobotics.dyio.*"));
 		
+		double volts = dyio.getBatteryVoltage(true);
+		
+		dyio.setServoPowerSafeMode(true);
+
+
+	}
+	
+	@Test public void DyIOModesTest(){
+		DyIO dyio= DyIORegestry.get();
+		if(!dyio.isAvailable())
+			fail();
+
 		ArrayList<DyIOChannelMode> modes = dyio.getAllChannelModes();
 		for(int i=0;i<modes.size();i++){
 			
@@ -79,7 +94,19 @@ public class DyIONamespaceTest {
 			assertTrue(modes.get(i)==modesAfter.get(i));
 			assertTrue(modes.get(i)==dyio.getMode(i));
 		}
+	}
+
+	@Test
+	public void dyioNamespaceTest() {
+		DyIO dyio= DyIORegestry.get();
+		if(!dyio.isAvailable())
+			fail();
+		assertTrue(DyIORegestry.get().hasNamespace("neuronrobotics.dyio.*"));
 		
+		
+		dyio.getRevisions();
+		
+
 		
 	}
 
