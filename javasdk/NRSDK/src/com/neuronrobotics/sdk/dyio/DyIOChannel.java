@@ -399,11 +399,15 @@ public class DyIOChannel implements IDyIOChannel {
 			
 			val = new DyIOChannelEvent(this,bl).getValue();
 		}else{
+			int l = Log.getMinimumPrintLevel();
+			//Log.enableInfoPrint();
 			Object [] args =getDevice().send("bcs.io.*;0.3;;",
 					BowlerMethod.GET,
 					"gchv",
 					new Object[]{number});
 			val=(Integer)args[1];
+
+			Log.setMinimumPrintLevel(l);
 		}
 		setCachedValue(val);
 		setPreviousValue(val);
