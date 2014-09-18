@@ -33,7 +33,7 @@ public class DirectControl implements ITaskSpaceUpdateListenerNR, IDigitalInputL
 	DHParameterKinematics model;
 	//DeltaForgeDevice deltaRobot;
 	TransformNR current = new TransformNR();
-	double scale=.5;
+	double scale=.3;
 	double [] startVect = new double [] { 0,0,0,0,0,0};
 	private boolean button=false;
 	private boolean lastButton=false;
