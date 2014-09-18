@@ -2,13 +2,13 @@ package com.neuronrobotics.addons.driving;
 
 public class AckermanConfiguration {
 	
-	private double ticksPerRevolution = 128;//ticks
-	private double wheelDiameter = 2.54;//cm
+	private double ticksPerRevolution = 4096;//ticks
+	private double wheelDiameter = 8.0*2.54;//cm
 	private double cmPerRevolution = 2*Math.PI*wheelDiameter;
 	private double ticksToCm = ticksPerRevolution/cmPerRevolution;
 	
 	private double maxTicksPerSeconds = 200;
-	private double wheelbase = 14.2;//cm
+	private double wheelbase = 16.5*2.54;//cm
 	private double servoToSteerAngle=1;
 
 	public void setMaxTicksPerSeconds(double maxTicksPerSeconds) {

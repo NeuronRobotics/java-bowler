@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import javax.vecmath.*;
 
+import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
+
 
 public class PrinterStatus {
 	
@@ -20,36 +22,67 @@ public class PrinterStatus {
 	 * just that there are no new warnings at the end of the print
 	 */
 	public enum PrinterState {
-		NOT_READY, READY, PRINTING, ERROR, WARNING_PRINTING,WARNING_DONE, SUCCESS;
+		NOT_READY, READY, PRINTING,MOVING, ERROR, WARNING_PRINTING,WARNING_DONE, SUCCESS;
+		@Override 
+		public String toString(){
+			switch(this){
+			case ERROR:
+				return "ERROR";
+			case NOT_READY:
+				return "NOT_READY";
+			case PRINTING:
+				return "PRINTING";
+			case READY:
+				return "READY";
+			case SUCCESS:
+				return "SUCCESS";
+			case WARNING_DONE:
+				return "WARNING_DONE";
+			case WARNING_PRINTING:
+				return "WARNING_PRINTING";
+			case MOVING:
+				return "MOVING";
+			default:
+				break;		
+			}
+			return "";
+		}
 	}
 	
 	private PrinterState thePrinterState;
 	
-	private Point3f headLocation;
+	private TransformNR headLocation;
 	
 	private String message;
 	
 	private int printProgress;
+	
+	private double extrusion;
+	private double tempreture;
 		
-	public PrinterStatus(Point3f headLocation, int printProgress, PrinterState thePrinterState){
+	public PrinterStatus(TransformNR headLocation, double extrusion, double temp,int printProgress, PrinterState thePrinterState){
 		this.headLocation = headLocation;
 		this.printProgress = printProgress;
 		this.thePrinterState = thePrinterState;
 		this.message = "";
+		this.setExtrusion(extrusion);
+		this.setTempreture(temp);
 	}
 	
-	public PrinterStatus(Point3f headLocation, int printProgress, PrinterState thePrinterState, String stateMessage){
+	public PrinterStatus(TransformNR headLocation,double extrusion, double temp, int printProgress, PrinterState thePrinterState, String stateMessage){
 		this.headLocation = headLocation;
 		this.printProgress = printProgress;
 		this.thePrinterState = thePrinterState;
-		this.message = stateMessage;		
+		this.message = stateMessage;
+		this.setExtrusion(extrusion);
+		this.setTempreture(temp);
 	}
 	
 	public PrinterState getDriverState(){
 		return thePrinterState;
 	}
 	
-	public Point3f getHeadLocation(){
+	public TransformNR getHeadLocation(){
 		return headLocation;
 	}
 	
@@ -59,6 +92,32 @@ public class PrinterStatus {
 	
 	public int getPrintProgress(){
 		return printProgress;
+	}
+
+	public double getExtrusion() {
+		return extrusion;
+	}
+
+	public void setExtrusion(double extrusion) {
+		this.extrusion = extrusion;
+	}
+
+	public double getTempreture() {
+		return tempreture;
+	}
+
+	public void setTempreture(double tempreture) {
+		this.tempreture = tempreture;
+	}
+	
+	@Override
+	public String toString(){
+		String s="Print Status:"+thePrinterState+" X="+headLocation.getX()+
+				" Y="+headLocation.getY()+
+				" Z="+headLocation.getZ()				
+				+" extrusion="+extrusion+" tempreture="+tempreture+" "+message;
+		
+		return s;
 	}
 	
 }

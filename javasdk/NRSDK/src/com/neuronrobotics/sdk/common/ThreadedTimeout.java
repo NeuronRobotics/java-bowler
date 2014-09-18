@@ -105,7 +105,7 @@ public class ThreadedTimeout {
 						removeTimer(toRemove.get(i));
 					}
 				}
-				ThreadUtil.wait(1);
+				ThreadUtil.wait(0,10);
 			}
 		}
 		public void addTimer(ThreadedTimeout time){

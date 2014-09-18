@@ -195,23 +195,12 @@ public class BowlerTCPClient extends BowlerAbstractConnection{
 	 */
 	public static ArrayList<InetAddress> getAvailableSockets() {
         ArrayList<InetAddress> available = new  ArrayList<InetAddress> ();
-        UDPStream udp;
+        UDPBowlerConnection udp;
         try {
-			udp = new UDPStream(1865,false);
-			udp.start();
-			try {
-				//Generate a ping command
-				BowlerDatagram ping = BowlerDatagramFactory.build(new MACAddress(), new PingCommand());
-				//send it to the UDP socket
-				udp.getDataOutptStream().write(ping.getBytes());
-				//wait for all devices to report back
-				try {Thread.sleep(3000);} catch (InterruptedException e) {}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	        return  udp.getAllAddresses();
-		} catch (SocketException e) {
+			udp = new UDPBowlerConnection();
+			available= udp.getAllAddresses();
+	        udp.disconnect();
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

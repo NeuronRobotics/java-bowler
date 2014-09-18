@@ -35,11 +35,12 @@ public class MatrixDisplayNR extends JPanel {
 //		int vColIndex = 0;
 //		TableColumn col = getTable().getColumnModel().getColumn(vColIndex);
 //		int width = 40;
-//		col.setPreferredWidth(width);		
-		getTable().getColumnModel().getColumn(0).setPreferredWidth(56);
-		getTable().getColumnModel().getColumn(1).setPreferredWidth(56);
-		getTable().getColumnModel().getColumn(2).setPreferredWidth(56);
-		getTable().getColumnModel().getColumn(3).setPreferredWidth(56);
+//		col.setPreferredWidth(width);	
+		int colWidth = 66;
+		getTable().getColumnModel().getColumn(0).setPreferredWidth(colWidth);
+		getTable().getColumnModel().getColumn(1).setPreferredWidth(colWidth);
+		getTable().getColumnModel().getColumn(2).setPreferredWidth(colWidth);
+		getTable().getColumnModel().getColumn(3).setPreferredWidth(colWidth);
 
 		add(getTable(),"wrap");
 		setEditable(false);

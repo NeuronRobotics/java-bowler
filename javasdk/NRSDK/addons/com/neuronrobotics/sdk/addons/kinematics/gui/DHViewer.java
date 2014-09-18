@@ -36,6 +36,7 @@ public class DHViewer extends SimpleTransformViewer{
 	private static final long serialVersionUID = -7066991305201979906L;
 	
 	public DHViewer (DHChain tk,double[] jointSpaceVector){
+		
     	ArrayList<TransformNR> chain = tk.getChain(jointSpaceVector);
     	int i=0;
     	for(TransformNR t:chain){

@@ -22,7 +22,10 @@ import java.util.List;
 
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.Log;
+import com.neuronrobotics.sdk.common.MACAddress;
 import com.neuronrobotics.sdk.common.MissingNativeLibraryException;
+import com.neuronrobotics.sdk.dyio.DyIO;
+import com.neuronrobotics.sdk.genericdevice.GenericDevice;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 /**
@@ -41,7 +44,7 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
  *  
  */
 public class SerialConnection extends BowlerAbstractConnection {
-	private int sleepTime = 500;
+	private int sleepTime = 1000;
 	private int pollTimeoutTime = 5;
 	
 	
@@ -191,6 +194,34 @@ public class SerialConnection extends BowlerAbstractConnection {
 	@Override
 	public String toString() {
 		return port;
+	}
+	
+	public static SerialConnection getConnectionByMacAddress(MACAddress mac){
+		
+		List <String> ports = SerialConnection.getAvailableSerialPorts();
+		//Start by searching through all available serial connections for DyIOs connected to the system
+		for(String s: ports){
+				try{
+					SerialConnection connection = new SerialConnection(s);
+					GenericDevice d = new GenericDevice(connection);
+					d.connect();
+					if(d.ping()){
+						String addr = d.getAddress().toString();
+						if(addr.equalsIgnoreCase(mac.toString())){
+							connection.disconnect();
+							return connection;
+						}
+						Log.warning("Device not on port: "+connection+" "+addr);
+					}
+					connection.disconnect();
+				}catch(Exception EX){
+					EX.printStackTrace();
+					System.err.println("Serial port "+s+" is not a DyIO");
+				}
+
+		}
+		
+		return null;
 	}
 	
 	public static List<String> getAvailableSerialPorts() {

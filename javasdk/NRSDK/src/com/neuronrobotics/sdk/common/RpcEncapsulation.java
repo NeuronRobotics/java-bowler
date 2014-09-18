@@ -85,6 +85,13 @@ public class RpcEncapsulation {
 					command.getCallingDataStorage().addAs32(data32[i1]);
 				}
 				break;
+			case FIXED1k_STR:
+				double [] dataDouble = (double [])doswnstreamData[i];
+				command.getCallingDataStorage().add(dataDouble.length);
+				for(int i1=0;i1<dataDouble.length;i1++){
+					command.getCallingDataStorage().addAs32((int) (dataDouble[i1]*1000.0));
+				}
+				break;
 			case INVALID:
 				break;
 			case STR:
@@ -112,64 +119,81 @@ public class RpcEncapsulation {
 	
 	public Object [] parseResponse(BowlerDatagram datagram, BowlerDataType [] arguments){
 		Object [] response = new Object[arguments.length];
-		ByteList data = datagram.getData();
-		for(int i=0;(i<arguments.length);i++ ){
-			
-			switch(arguments[i]){
-			case ASCII:
-				String s = data.asString();
-				data.popList(s.length()+1);
-				response [i] = s;
-				break;
-			case FIXED100:
-				response [i] = new Double(ByteList.convertToInt(data.popList(4)))/100.0;
-				break;
-			case FIXED1k:
-				response [i] = new Double(ByteList.convertToInt(data.popList(4)))/1000.0;
-				break;
-			case I08:
-				response [i] = new Integer(data.getUnsigned(0));
-				data.pop();
-				break;
-			case BOOL:
-				response [i] = new Boolean(data.getUnsigned(0)!=0);
-				data.pop();
-				break;
-			case I16:
-				response [i] = new Integer(ByteList.convertToInt(data.popList(2)));
-				break;
-			case I32:
-				response [i] = new Integer(ByteList.convertToInt(data.popList(4),true));
-				break;
-			case I32STR:
-				int numVals32 = data.getUnsigned(0);
-				data.pop();
-				ByteList d32 = new ByteList(data.popList(numVals32*4));
-				Integer [] i32Data = new Integer[numVals32];
-				response [i] = i32Data;
-				for(int j=0;j<numVals32;j++){
-					i32Data[j]=new Integer(ByteList.convertToInt(d32.popList(4)));
-				}
-				break;
-			case INVALID:
-				break;
-			case STR:
-				int numVals = data.getUnsigned(0);
-				data.pop();
-				ByteList iData = new ByteList();
-				response [i] = iData;
-				if(numVals>0){
-					ByteList d = new ByteList(data.popList(numVals));
-					for(int j=0;j<numVals;j++){
-						iData.add(new Integer(d.getUnsigned(j)));
+		int i=0;
+		try{
+			int numVals32;
+			ByteList data = datagram.getData();
+			for(i=0;(i<arguments.length);i++ ){
+				
+				switch(arguments[i]){
+				case ASCII:
+					String s = data.asString();
+					data.popList(s.length()+1);
+					response [i] = s;
+					break;
+				case FIXED100:
+					response [i] = new Double(ByteList.convertToInt(data.popList(4)))/100.0;
+					break;
+				case FIXED1k:
+					response [i] = new Double(ByteList.convertToInt(data.popList(4)))/1000.0;
+					break;
+				case I08:
+					response [i] = new Integer(data.getUnsigned(0));
+					data.pop();
+					break;
+				case BOOL:
+					response [i] = new Boolean(data.getUnsigned(0)!=0);
+					data.pop();
+					break;
+				case I16:
+					response [i] = new Integer(ByteList.convertToInt(data.popList(2)));
+					break;
+				case I32:
+					response [i] = new Integer(ByteList.convertToInt(data.popList(4),true));
+					break;
+				case I32STR:
+					numVals32 = data.getUnsigned(0);
+					data.pop();
+					ByteList d32 = new ByteList(data.popList(numVals32*4));
+					Integer [] i32Data = new Integer[numVals32];
+					response [i] = i32Data;
+					for(int j=0;j<numVals32;j++){
+						i32Data[j]=new Integer(ByteList.convertToInt(d32.popList(4)));
+					}
+					break;
+				case FIXED1k_STR:
+					numVals32 = data.getUnsigned(0);
+					data.pop();
+					ByteList dStr = new ByteList(data.popList(numVals32*4));
+					double [] dData = new double[numVals32];
+					response [i] = dData;
+					for(int j=0;j<numVals32;j++){
+						dData[j]=new Double(ByteList.convertToInt(dStr.popList(4)))/1000.0;
+					}
+					break;
+				case INVALID:
+					break;
+				case STR:
+					int numVals = data.getUnsigned(0);
+					data.pop();
+					ByteList iData = new ByteList();
+					response [i] = iData;
+					if(numVals>0){
+						ByteList d = new ByteList(data.popList(numVals));
+						for(int j=0;j<numVals;j++){
+							iData.add(new Integer(d.getUnsigned(j)));
+						}
+						
 					}
 					
+					break;
+				default:
+					break;
 				}
-				
-				break;
-			default:
-				break;
 			}
+		}catch(RuntimeException ex){
+			Log.error("Failed to parse "+i+"\n"+datagram+"\nFrom "+this);
+			throw ex;
 		}
 		
 		return response;

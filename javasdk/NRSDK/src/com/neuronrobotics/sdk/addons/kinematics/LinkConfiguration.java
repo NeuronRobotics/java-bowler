@@ -3,8 +3,11 @@ package com.neuronrobotics.sdk.addons.kinematics;
 import org.w3c.dom.Element;
 
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
+import com.neuronrobotics.sdk.common.Log;
 //import org.w3c.dom.Node;
 //import org.w3c.dom.NodeList;
+import com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace;
+import com.neuronrobotics.sdk.pid.PIDConfiguration;
 
 
 
@@ -12,6 +15,7 @@ public class LinkConfiguration {
 	private String name;// = getTagValue("name",eElement);
 	private String type;
 	private int index;// = Double.parseDouble(getTagValue("index",eElement));
+	private int totlaNumberOfLinks=0;
 	private int linkIndex = 0;
 	//private double length;// = Double.parseDouble(getTagValue("length",eElement));
 	private double scale;// = Double.parseDouble(getTagValue("scale",eElement));
@@ -59,6 +63,15 @@ public class LinkConfiguration {
     	    throw new RuntimeException("PID group "+getHardwareIndex()+" Index latch is "+indexLatch+" but needs to be between "+getUpperLimit()+" and "+getLowerLimit());
     	//System.out.println("Interted"+ inverted);
 	}
+	public LinkConfiguration(Object[] args) {
+		setName((String)args[6]);
+    	setIndex((Integer)args[0]);
+    	setScale((Double)args[5]);
+    	setUpperLimit((Integer)args[4]);
+    	setLowerLimit((Integer)args[3]);
+    	setType("pid");
+    	setTotlaNumberOfLinks((Integer)args[1]);
+	}
 	public String toString(){
 		String s="LinkConfiguration: \n\tName: "+getName();
 		s+=	"\n\tType: "+getType();
@@ -72,6 +85,7 @@ public class LinkConfiguration {
 	
 
 	public void setName(String name) {
+		Log.info("Setting controller name: "+name);
 		this.name = name;
 	}
 	public String getName() {
@@ -168,6 +182,29 @@ public class LinkConfiguration {
 	}
 	public void setLinkIndex(int linkIndex) {
 		this.linkIndex = linkIndex;
+	}
+	public int getTotlaNumberOfLinks() {
+		return totlaNumberOfLinks;
+	}
+	public void setTotlaNumberOfLinks(int totlaNumberOfLinks) {
+		this.totlaNumberOfLinks = totlaNumberOfLinks;
+	}
+	public void setPidConfiguration(IPidControlNamespace pid) {
+		PIDConfiguration conf = pid.getPIDConfiguration(getHardwareIndex());
+    	if(getType().contains("pid")){
+	    	k[0]=conf.getKP();
+	    	k[1]=conf.getKI();
+	    	k[2]=conf.getKD();
+	    	inverted=conf.isInverted();
+	    	setHomingTicksPerSecond(10000);
+    	}
+    	
+    	isLatch=conf.isUseLatch();
+    	indexLatch=(int) conf.getIndexLatch();
+    	isStopOnLatch=conf.isStopOnIndex();
+//    	if(indexLatch>getUpperLimit() || indexLatch<getLowerLimit() )
+//    	    throw new RuntimeException("PID group "+getHardwareIndex()+" Index latch is "+indexLatch+" but needs to be between "+getUpperLimit()+" and "+getLowerLimit());
+    	
 	}
 	
 }

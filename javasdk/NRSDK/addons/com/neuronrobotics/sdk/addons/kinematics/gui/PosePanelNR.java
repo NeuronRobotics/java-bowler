@@ -90,7 +90,7 @@ public class PosePanelNR extends JPanel implements ITaskSpaceUpdateListenerNR, I
 		}
 	}
 	
-	public void setModel(AbstractKinematicsNR model, boolean usePoseListener) {
+	private void setModel(AbstractKinematicsNR model, boolean usePoseListener) {
 		this.model = model;
 		this.model.addPoseUpdateListener(this);	
 		this.model.addRegistrationListener(this);
@@ -107,6 +107,8 @@ public class PosePanelNR extends JPanel implements ITaskSpaceUpdateListenerNR, I
 	}
 	@Override
 	public void onTaskSpaceUpdate(AbstractKinematicsNR source, TransformNR pose) {
+		if (matrix == null)
+			return;
 		if(input && displayOnly ){
 			matrix.setTransform(pose);
 		}

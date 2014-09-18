@@ -8,6 +8,7 @@ import java.io.PrintStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
+import javax.management.RuntimeErrorException;
 //import javax.swing.JFrame;
 //import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
@@ -43,30 +44,46 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
 public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkListener {
 	
 	/** The configurations. */
-	private ArrayList<LinkConfiguration> linkConfigurations= new ArrayList<LinkConfiguration>();
 	private ArrayList<PIDConfiguration> pidConfigurations= new ArrayList<PIDConfiguration>();
 
 	private ArrayList<ITaskSpaceUpdateListenerNR> taskSpaceUpdateListeners = new ArrayList<ITaskSpaceUpdateListenerNR>();
-	private ArrayList<IJointSpaceUpdateListenerNR> jointSpaceUpdateListeners = new ArrayList<IJointSpaceUpdateListenerNR>();
+	protected ArrayList<IJointSpaceUpdateListenerNR> jointSpaceUpdateListeners = new ArrayList<IJointSpaceUpdateListenerNR>();
 	private ArrayList<IRegistrationListenerNR> regListeners= new ArrayList<IRegistrationListenerNR>();	
-	
+	private ArrayList<LinkConfiguration> localConfigsFromXml=new ArrayList<LinkConfiguration>();
 	/*This is in RAW joint level ticks*/
-	private double[] currentJointSpacePositions=null;
-	private double [] currentJointSpaceTarget;
+	protected double[] currentJointSpacePositions=null;
+	protected double [] currentJointSpaceTarget;
 	private TransformNR currentPoseTarget=new TransformNR();
 	private TransformNR base2Fiducial=new TransformNR();
 	private TransformNR fiducial2RAS=new TransformNR();
 	
 	private boolean noFlush = false;
+	private boolean noXmlConfig=true;
+	
 	/* The device */
 	//private IPIDControl device =null;
 	private LinkFactory factory=null;
 	
 	private int retryNumberBeforeFail = 5;
-
+	public AbstractKinematicsNR(){
+//		File l = new File("RobotLog_"+getDate()+"_"+System.currentTimeMillis()+".txt");
+//		//File e = new File("RobotError_"+getDate()+"_"+System.currentTimeMillis()+".txt");
+//		try {
+//			PrintStream p =new PrintStream(l);
+//			Log.setOutStream(new PrintStream(p));
+//			Log.setErrStream(new PrintStream(p));						
+//		} catch (FileNotFoundException e1) {
+//			e1.printStackTrace();
+//		}
+	}
 	public AbstractKinematicsNR(InputStream configFile,LinkFactory f){
-		loadConfig(configFile);
-		setDevice(f);
+		this();
+		noXmlConfig=false;
+		if(configFile!=null && f!=null){
+			loadConfig(configFile);
+			setDevice(f);
+		}
+		
 	}
 	private String getDate(){
 		Timestamp t = new Timestamp(System.currentTimeMillis());
@@ -77,16 +94,7 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 	 * then store in LinkConfiguration (ArrayList type)
 	 */
 	protected void loadConfig(InputStream config){
-		File l = new File("RobotLog_"+getDate()+"_"+System.currentTimeMillis()+".txt");
-		//File e = new File("RobotError_"+getDate()+"_"+System.currentTimeMillis()+".txt");
-		try {
-			PrintStream p =new PrintStream(l);
-			Log.setOutStream(new PrintStream(p));
-			Log.setErrStream(new PrintStream(p));						
-		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
-		}
-		
+
 		Document doc =XmlFactory.getAllNodesDocument(config);
 		NodeList nList = doc.getElementsByTagName("link");
 		NodeList zf = 	 doc.getElementsByTagName("ZframeToRAS");
@@ -148,7 +156,10 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 	}
 	
 	public ArrayList<LinkConfiguration> getLinkConfigurations() {
-		return linkConfigurations;
+		if(noXmlConfig){
+			return getFactory().getLinkConfigurations();
+		}
+		return localConfigsFromXml;
 	}
 
 	
@@ -182,7 +193,7 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 					tmpConf.setKD(c.getKD());
 					tmpConf.setEnabled(true);
 					tmpConf.setInverted(c.isInverted());
-					tmpConf.setAsync(true);
+					tmpConf.setAsync(false);
 				
 					tmpConf.setUseLatch(false);
 					tmpConf.setIndexLatch(c.getIndexLatch());
@@ -289,26 +300,6 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 		joints+="]";
 		Log.info("Setting target joints: "+joints);
 
-//		for(LinkConfiguration c:getLinkConfigurations()){
-//			int i= getLinkConfigurations().indexOf(c);
-//			//Converting engineering units to RAW 
-//			int scaled = (int) (jointSpaceVect[i]/c.getScale());
-//			if(scaled>c.getUpperLimit()){
-//				Log.error("Joint hit software bound, index "+i+" attempted: "+scaled+" bounded to :"+c.getUpperLimit());
-////				JOptionPane.showMessageDialog(new JFrame(),"Out of upper range", "Range warning",
-////						JOptionPane.WARNING_MESSAGE);
-//				throw new Exception("Joint hit Upper software bound, index "+i+" attempted: "+scaled+" bounded to :"+c.getUpperLimit());
-//				//scaled = (int) c.getUpperLimit();
-//			}
-//			if(scaled<c.getLowerLimit()){
-//				Log.error("Joint hit software bound, index "+i+" attempted: "+scaled+" bounded to :"+c.getLowerLimit());
-////				JOptionPane.showMessageDialog(new JFrame(),"Out of lower range", "Range warning",
-////						JOptionPane.WARNING_MESSAGE);
-//				//scaled = (int) c.getLowerLimit();
-//				throw new Exception("Joint hit Lower software bound, index "+i+" attempted: "+scaled+" bounded to :"+c.getUpperLimit());
-//			}
-//			targets[c.getHardwareIndex()]=scaled;
-//		}
 		int except=0;
 		Exception e = null;
 		do{
@@ -335,7 +326,8 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 		
 		
 		currentJointSpaceTarget = jointSpaceVect;
-		fireTargetJointsUpdate();
+		TransformNR fwd  = forwardKinematics(currentJointSpaceTarget);
+		fireTargetJointsUpdate(currentJointSpaceTarget,fwd );
 		return jointSpaceVect;
 	}
 	
@@ -373,16 +365,22 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 			if(e!=null)
 				throw e;	
 		}
-		fireTargetJointsUpdate();
+		TransformNR fwd  = forwardKinematics(currentJointSpaceTarget);
+		fireTargetJointsUpdate(currentJointSpaceTarget,fwd );
 		return;
 	}
 	
-	private void firePoseUpdate(){
-		//Log.info("Pose update");
+	protected void firePoseTransform(TransformNR transform){
 		for(int i=0;i<taskSpaceUpdateListeners.size();i++){
 			ITaskSpaceUpdateListenerNR p=taskSpaceUpdateListeners.get(i);
-			p.onTaskSpaceUpdate(this, getCurrentTaskSpaceTransform());
+			p.onTaskSpaceUpdate(this, transform);
 		}
+	}
+	
+	protected void firePoseUpdate(){
+		//Log.info("Pose update");
+		firePoseTransform(getCurrentTaskSpaceTransform());
+
 		double[] vect = getCurrentJointSpaceVector();
 		
 		for(int i=0;i<jointSpaceUpdateListeners.size();i++){
@@ -391,11 +389,12 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 		}
 	}
 
-	private void fireTargetJointsUpdate(){
-		TransformNR fwd  = forwardKinematics(currentJointSpaceTarget);
+	protected void fireTargetJointsUpdate(double[] jointSpaceVector, TransformNR fwd ){
+		
 		setCurrentPoseTarget(forwardOffset(fwd));
 		for(ITaskSpaceUpdateListenerNR p:taskSpaceUpdateListeners){
 			p.onTargetTaskSpaceUpdate(this, getCurrentPoseTarget());
+			//new RuntimeException("Fireing "+p.getClass().getName()).printStackTrace();
 		}
 		for(IJointSpaceUpdateListenerNR p:jointSpaceUpdateListeners){
 			p.onJointSpaceTargetUpdate(this, currentJointSpaceTarget);
@@ -439,7 +438,7 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 		}
 	}
 	
-	private TransformNR inverseOffset(TransformNR t){
+	protected TransformNR inverseOffset(TransformNR t){
 		//System.out.println("RobotToFiducialTransform "+getRobotToFiducialTransform());
 		//System.out.println("FiducialToRASTransform "+getFiducialToRASTransform());		
 		Matrix rtz = getFiducialToGlobalTransform().getMatrixTransform().inverse();
@@ -450,7 +449,7 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 		
 		return new TransformNR( mForward);
 	}
-	private TransformNR forwardOffset(TransformNR t){
+	protected TransformNR forwardOffset(TransformNR t){
 		Matrix btt = getRobotToFiducialTransform().getMatrixTransform();
 		Matrix ftb = getFiducialToGlobalTransform().getMatrixTransform();
 		Matrix current = t.getMatrixTransform();
@@ -481,13 +480,18 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 	}
 	
 	public void addPoseUpdateListener(ITaskSpaceUpdateListenerNR l){
-		if(taskSpaceUpdateListeners.contains(l) || l==null)
+		if(taskSpaceUpdateListeners.contains(l) || l==null){
+			new RuntimeException("not adding "+l.getClass().getName()).printStackTrace();
 			return;
+		}
+		//new RuntimeException("adding "+l.getClass().getName()).printStackTrace();
 		taskSpaceUpdateListeners.add(l);
 	}
 	public void removePoseUpdateListener(ITaskSpaceUpdateListenerNR l){
-		if(taskSpaceUpdateListeners.contains(l))
+		if(taskSpaceUpdateListeners.contains(l)){
+			//new RuntimeException("Removing "+l.getClass().getName()).printStackTrace();
 			taskSpaceUpdateListeners.remove(l);
+		}
 	}
 	
 	@Override

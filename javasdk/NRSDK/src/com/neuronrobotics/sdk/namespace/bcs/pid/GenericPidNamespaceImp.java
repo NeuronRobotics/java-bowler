@@ -18,7 +18,8 @@ public abstract class GenericPidNamespaceImp implements IExtendedPIDControl {
 	protected ArrayList<PIDChannel> channels = null;
 	protected long [] lastPacketTime = null;
 	private BowlerAbstractDevice device;
-
+	private Integer channelCount=null;
+	
 	public GenericPidNamespaceImp(BowlerAbstractDevice device){
 		this.setDevice(device);
 		addPIDEventListener(new IPIDEventListener() {
@@ -168,6 +169,18 @@ public abstract class GenericPidNamespaceImp implements IExtendedPIDControl {
 
 	public void setChannels(ArrayList<PIDChannel> channels) {
 		this.channels = channels;
+	}
+
+
+	public Integer getChannelCount() {
+		return channelCount;
+	}
+
+
+	public void setChannelCount(Integer channelCount) {
+		if(channelCount == null)
+			throw new RuntimeException("Must be set to a real value");
+		this.channelCount = channelCount;
 	}
 
 

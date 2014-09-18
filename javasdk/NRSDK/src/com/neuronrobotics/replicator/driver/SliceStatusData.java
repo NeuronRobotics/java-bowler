@@ -87,4 +87,8 @@ public class SliceStatusData {
 		return currentSlicerState;
 	}
 
+	@Override
+	public String toString(){
+		return currentSlicerState+":"+message;
+	}
 }

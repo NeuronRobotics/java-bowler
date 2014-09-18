@@ -7,6 +7,7 @@ import com.neuronrobotics.sdk.ui.ConnectionDialog;
 public class ServoTest implements IServoPositionUpdateListener{
 	
 	private ServoTest(){
+		DyIO.disableFWCheck();
 		DyIO dyio=new DyIO();
 		//dyio.enableDebug();
 		if (!ConnectionDialog.getBowlerDevice(dyio)){
@@ -18,7 +19,7 @@ public class ServoTest implements IServoPositionUpdateListener{
 		
 
 		
-		ServoChannel srv = new ServoChannel (dyio.getChannel(11));
+		ServoChannel srv = new ServoChannel (dyio.getChannel(0));
 		srv.addIServoPositionUpdateListener(this);
                 //Loop 10 times setting the position of the servo 
                 //the time the loop waits will be the time it takes for the servo to arrive

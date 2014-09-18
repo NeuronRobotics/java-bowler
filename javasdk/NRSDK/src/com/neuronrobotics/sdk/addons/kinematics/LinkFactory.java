@@ -7,6 +7,8 @@ import com.neuronrobotics.sdk.dyio.peripherals.AnalogInputChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 import com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace;
 import com.neuronrobotics.sdk.pid.GenericPIDDevice;
+import com.neuronrobotics.sdk.pid.ILinkFactoryProvider;
+import com.neuronrobotics.sdk.pid.PIDConfiguration;
 import com.neuronrobotics.sdk.pid.VirtualGenericPIDDevice;
 
 public class LinkFactory {
@@ -18,7 +20,7 @@ public class LinkFactory {
 	private boolean hasStepper=false;
 	private boolean forceVirtual = false;
 	private ArrayList<AbstractLink> links = new ArrayList<AbstractLink>();
-	
+	private ArrayList<LinkConfiguration> linkConfigurations=null ;
 	public LinkFactory (){
 		hasPid=false;
 		hasServo=false;
@@ -48,12 +50,34 @@ public class LinkFactory {
 		hasPid=true;
 	}
 	
+	public LinkFactory(ILinkFactoryProvider connection,GenericPIDDevice d) {
+		pid=d;
+		hasPid=true;
+		
+		//TODO fill in the auto link configuration
+		LinkConfiguration first = connection.requestLinkConfiguration(0);
+		first.setPidConfiguration( pid);
+		getLink(first);
+		for (int i=1;i<first.getTotlaNumberOfLinks();i++){
+			LinkConfiguration tmp = connection.requestLinkConfiguration(i);
+			tmp.setPidConfiguration(pid);
+			getLink(tmp);
+		}
+		
+	}
+	
+	
+
 	public AbstractLink getLink(String name) {
 		for(AbstractLink l:links){
 			if(l.getLinkConfiguration().getName().equalsIgnoreCase(name))
 				return l;
 		}
-		throw new RuntimeException("No linke of name '"+name+"' exists");
+		String data = "No linke of name '"+name+"' exists";
+		for(AbstractLink l:links){
+			data +="\n"+l.getLinkConfiguration().getName();
+		}
+		throw new RuntimeException(data);
 	}
 	
 	public AbstractLink getLink(LinkConfiguration c){
@@ -150,7 +174,7 @@ public class LinkFactory {
 	}
 	public void setCachedTargets(double[] jointSpaceVect) {
 		if(jointSpaceVect.length!=links.size())
-			throw new IndexOutOfBoundsException();
+			throw new IndexOutOfBoundsException("Expected "+links.size()+" links, got "+jointSpaceVect.length);
 		int i=0;
 		for(AbstractLink lin:links){
 			try{
@@ -170,5 +194,15 @@ public class LinkFactory {
 			return dyio.isAvailable();
 		}
 		return true;
+	}
+
+	public ArrayList<LinkConfiguration> getLinkConfigurations() {
+		if(linkConfigurations== null){
+			linkConfigurations=new ArrayList<LinkConfiguration>();
+			for(AbstractLink l:links){
+				linkConfigurations.add(l.getLinkConfiguration());
+			}
+		}
+		return linkConfigurations;
 	}
 }

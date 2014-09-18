@@ -35,6 +35,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.locks.ReentrantLock;
 
 import com.neuronrobotics.sdk.commands.bcs.core.NamespaceCommand;
 import com.neuronrobotics.sdk.commands.bcs.core.PingCommand;
@@ -54,6 +55,7 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
 public abstract class BowlerAbstractConnection {
 	
 	//private boolean threadedUpstreamPackets=false;
+	private static boolean useThreadedStack=true;
 	
 	/** The sleep time. */
 	private int sleepTime = 1000;
@@ -92,7 +94,7 @@ public abstract class BowlerAbstractConnection {
 	private ArrayList<NamespaceEncapsulation> namespaceList=null;
 	private ArrayList<String> nameSpaceStrings = null;
 	private boolean beater = false;
-	
+	private ReentrantLock executingLock = new ReentrantLock();
 	
 	
 	/**
@@ -124,6 +126,8 @@ public abstract class BowlerAbstractConnection {
 	public void setThreadedUpstreamPackets(boolean up){
 		//threadedUpstreamPackets=up;
 	}
+	
+	
 
 	
 	/**
@@ -135,10 +139,12 @@ public abstract class BowlerAbstractConnection {
 	 * @return the bowler datagram
 	 */
 	public synchronized BowlerDatagram sendSynchronusly(BowlerDatagram sendable){
+		
 		if(!isConnected()) {
 			Log.error("Can not send message because the engine is not connected.");
 			return null;
 		}
+		executingLock.lock();
 		clearLastSyncronousResponse();
 		try {
 			long send = System.currentTimeMillis();
@@ -147,13 +153,18 @@ public abstract class BowlerAbstractConnection {
 			write(sendable.getBytes());
 			Log.info("Transmit took: "+(System.currentTimeMillis()-send)+" ms");
 		} catch (IOException e1) {
+			executingLock.unlock();
 			throw new RuntimeException(e1);
 		}
 		long startOfReciveTime = System.currentTimeMillis();
 		
 
 		do{
-			ThreadUtil.wait(1);
+			if(isUseThreadedStack())
+				ThreadUtil.wait(0,10);
+			else{
+				syncQueue.runPacketUpdate();
+			}
 		}while (((System.currentTimeMillis()-startOfReciveTime)<getSleepTime())  && (getLastSyncronousResponse() == null));
 		long rcvTime = (System.currentTimeMillis()-startOfReciveTime);
 
@@ -170,12 +181,13 @@ public abstract class BowlerAbstractConnection {
 				reconnect();
 			} catch (IOException e) {
 				clearLastSyncronousResponse();
+				executingLock.unlock();
 				throw new RuntimeException(e);
 			}
 		}
 		BowlerDatagram b = getLastSyncronousResponse();
 		clearLastSyncronousResponse();
-		
+		executingLock.unlock();
 		return b;
 	}
 	
@@ -214,7 +226,8 @@ public abstract class BowlerAbstractConnection {
 		t.setStartTime(100);
 		while(!t.isTimedOut()){
 			 try {
-				getDataIns().read();
+				 if(dataIns!=null)
+					 getDataIns().read();
 			} catch (NullPointerException e) {
 				// TODO Auto-generated catch block
 				//e.printStackTrace();
@@ -305,12 +318,14 @@ public abstract class BowlerAbstractConnection {
 			fireConnectEvent();
 		}else{
 			try {
-				getDataIns().close();
+				if(dataIns !=null)
+					getDataIns().close();
 			} catch (Exception e) {
 				//return;
 			}
 			try {
-				getDataOuts().close();
+				if(dataOuts !=null)
+					getDataOuts().close();
 			} catch (Exception e) {
 				//return;
 			}
@@ -396,10 +411,10 @@ public abstract class BowlerAbstractConnection {
 	protected void fireAsyncOnResponse(BowlerDatagram datagram) {
 		if(!datagram.isSyncronous()){
 			if(isInitializedNamespaces()){
-				Log.debug("\nASYNC to "+listeners.size()+" listeners<<\n"+datagram);
-				for(IBowlerDatagramListener l : listeners) {
-
-					Log.debug("\nASYNC listener: "+l.getClass());
+				Log.info("\nASYNC to "+listeners.size()+" listeners<<\n"+datagram);
+				for(int i=0;i<listeners.size();i++) {
+					IBowlerDatagramListener l = listeners.get(i);
+					Log.info("\nASYNC listener: "+l.getClass());
 
 					try{
 						l.onAsyncResponse(datagram);
@@ -493,7 +508,7 @@ public abstract class BowlerAbstractConnection {
 	/**
 	 * Wait for connectio to be ready.
 	 */
-	private void waitForConnectioToBeReady(){
+	protected void waitForConnectioToBeReady(){
 		if(!waitingForConnection()) {
 			return;
 		}
@@ -523,12 +538,12 @@ public abstract class BowlerAbstractConnection {
 	}
 	public void setAsyncQueue(QueueManager asyncQueue) {
 		this.asyncQueue = asyncQueue;
-		if(this.asyncQueue != null)
+		if(this.asyncQueue != null && isUseThreadedStack())
 			this.asyncQueue.start();
 	}
 	public void setSyncQueue(QueueManager syncQueue) {
 		this.syncQueue = syncQueue;
-		if(this.syncQueue != null)
+		if(this.syncQueue != null && isUseThreadedStack())
 			this.syncQueue.start();
 	}
 	public  QueueManager getAsyncQueue() {
@@ -542,6 +557,8 @@ public abstract class BowlerAbstractConnection {
 
 	
 	private void pushUp(BowlerDatagram b) throws IOException{
+		if(b==null)
+			return;
 		b.setFree(false);
 		if(b.isSyncronous()){
 			BowlerDatagram ret = fireSyncOnReceive(b);
@@ -969,118 +986,74 @@ public abstract class BowlerAbstractConnection {
 		 * @see java.lang.Thread#run()
 		 */
 		public void run() {
+			Log.info("Starting the Queue Manager as "+isSystemQueue);
+			ThreadUtil.wait(100);
 			while(isConnected() && !killSwitch) {
-				//wait for the data stream to stabilize
-				if(dataIns == null || dataOuts == null){
-					ThreadUtil.wait(100);
-				}else{
-					long start = System.currentTimeMillis();
-					if(isSystemQueue)
-						runPacketUpdate();
-					else{ 
-						if(beater)
-							runHeartBeat();
-						
-					}
-					long packetUpdate = System.currentTimeMillis();
-					if(queueBuffer.isEmpty()){
-						// prevents thread lock
-						ThreadUtil.wait(1);
-					}else{
-						try{
-							//send(queueBuffer.remove(queueBuffer.size()-1)	);
-							
-							BowlerDatagram b = queueBuffer.remove(0);
-							long pulledPacket = System.currentTimeMillis();
-							pushUp(b);
-							long pushedPacket = System.currentTimeMillis();
-							
-							if((System.currentTimeMillis()-getLastWrite())>(getSleepTime()*(getPercentagePrint() /100.0))&& b.isSyncronous()){
-								Log.error("Packet recive took more then "+getPercentagePrint()+"%. " +
-												"\nPacket Update\t"+(packetUpdate- start)+"" +
-												"\nPulled Packet\t"+(pulledPacket-packetUpdate)+"" +
-												"\nPushed Packet\t"+(pushedPacket-pulledPacket));
-							}
-						}catch(Exception e){
-							e.printStackTrace();
-						}
-					}
+
+				long start = System.currentTimeMillis();
+				if(isSystemQueue)
+					runPacketUpdate();
+				else{ 
+					if(beater)
+						runHeartBeat();
 					
-					int index = 0;
-					int max = 500;
-					while(queueBuffer.size()>max){
-						if(queueBuffer.get(index).isFree()){
-							Log.error("Removing packet because freed "+queueBuffer.remove(index));
-						}else{
-							if(!queueBuffer.get(index).isSyncronous() && queueBuffer.get(index).getMethod() != BowlerMethod.CRITICAL){
-								int state = Log.getMinimumPrintLevel();
-								Log.enableErrorPrint();
-								Log.error("Removing packet from overflow: "+queueBuffer.remove(index));
-								Log.setMinimumPrintLevel(state);
-							}else{
-								index++;
-							}
+				}
+				long packetUpdate = System.currentTimeMillis();
+				if(queueBuffer.isEmpty()){
+					// prevents thread lock
+					ThreadUtil.wait(1);
+				}else{
+					try{
+						//send(queueBuffer.remove(queueBuffer.size()-1)	);
+						
+						BowlerDatagram b = queueBuffer.remove(0);
+						long pulledPacket = System.currentTimeMillis();
+						pushUp(b);
+						long pushedPacket = System.currentTimeMillis();
+						
+						if((System.currentTimeMillis()-getLastWrite())>(getSleepTime()*(getPercentagePrint() /100.0))&& b.isSyncronous()){
+							Log.error("Packet recive took more then "+getPercentagePrint()+"%. " +
+											"\nPacket Update\t"+(packetUpdate- start)+"" +
+											"\nPulled Packet\t"+(pulledPacket-packetUpdate)+"" +
+											"\nPushed Packet\t"+(pushedPacket-pulledPacket));
 						}
-						if(index >= max){
-							break;
-						}
+					}catch(Exception e){
+						e.printStackTrace();
 					}
 				}
 				
+				int index = 0;
+				int max = 500;
+				while(queueBuffer.size()>max){
+					if(queueBuffer.get(index).isFree()){
+						Log.error("Removing packet because freed "+queueBuffer.remove(index));
+					}else{
+						if(!queueBuffer.get(index).isSyncronous() && queueBuffer.get(index).getMethod() != BowlerMethod.CRITICAL){
+							int state = Log.getMinimumPrintLevel();
+							Log.enableErrorPrint();
+							Log.error("Removing packet from overflow: "+queueBuffer.remove(index));
+							Log.setMinimumPrintLevel(state);
+						}else{
+							index++;
+						}
+					}
+					if(index >= max){
+						break;
+					}
+				}
+				
+				
 			}
+			
+			Log.error("Queue Manager thread exited! Connected="+isConnected()+" kill switch="+killSwitch);
+			//throw new RuntimeException();
 		}
 		
 
 		private boolean runPacketUpdate() {
-			long start = System.currentTimeMillis();
 			try {
-				if(dataIns!=null){	
-					while(getDataIns().available()>0){
-						long dataRead=System.currentTimeMillis();
-						//we want to run this until the buffer is clear or a packet is found
-						int b = getDataIns().read();
-						long dataReadEnd=System.currentTimeMillis();
-						if(b<0){
-							Log.error("Stream is broken - unexpected");
-							reconnect();
-							//something went wrong
-							return false;
-						}else{
-							
-							bytesToPacketBuffer.add(b);
-							long dataAdd=System.currentTimeMillis();
-							BowlerDatagram bd = BowlerDatagramFactory.build(bytesToPacketBuffer);
-							long dataBuild=System.currentTimeMillis();
-							if (bd!=null) {
-								Log.info("\nR<<"+bd);
-								onDataReceived(bd);
-
-								long dataSet=System.currentTimeMillis();
-								//bytesToPacketBuffer.clear();
-								bytesToPacketBuffer= new ByteList();
-								long bufferClear=System.currentTimeMillis();
-								
-								if((System.currentTimeMillis()-getLastWrite())>(getSleepTime()*(getPercentagePrint() /100.0))&& bd.isSyncronous() && syncListen==null){
-									Log.error("Packet recive took more then "+getPercentagePrint()+"%. " +
-											"\nRaw receive\t"+(start-getLastWrite() )+"" +
-											"\nStart Section\t"+(dataRead- start)+"" +
-											"\nData Read\t"+(dataReadEnd-dataRead)+"" +
-											"\nAdd data\t"+(dataAdd-dataReadEnd)+
-											"\nBuild Packet\t"+(dataBuild-dataAdd)+
-											"\nSet Packet\t"+(dataSet-dataBuild)+
-											"\nClear Packet buffer\t"+(bufferClear-dataSet)											
-											);
-								}
-
-								//Packet found, break the loop and deal with it
-								return true;
-							}
-						}
-						//Log.info("buffer: "+buffer);
-					}
-				}else{
-					Log.error("Data In is null");
-				}
+				if(loadPacketFromPhy(bytesToPacketBuffer))
+					bytesToPacketBuffer= new ByteList();
 			} catch (Exception e) {
 				if(isConnected()){
 					Log.error("Data read failed "+e.getMessage());
@@ -1109,9 +1082,70 @@ public abstract class BowlerAbstractConnection {
 		 */
 		public void kill() {
 			killSwitch=true;
+			//new RuntimeException("Killing the Queue").printStackTrace();
 		}
 	}
-		
+	
+	
+	public boolean loadPacketFromPhy(ByteList bytesToPacketBuffer) throws NullPointerException, IOException{
+		if(dataIns!=null){	
+			while(getDataIns().available()>0){
+				long dataRead=System.currentTimeMillis();
+				//we want to run this until the buffer is clear or a packet is found
+				int b = getDataIns().read();
+				long dataReadEnd=System.currentTimeMillis();
+				if(b<0){
+					Log.error("Stream is broken - unexpected: claimed to have "+getDataIns().available()+" bytes, read in "+b);
+					reconnect();
+					//something went wrong
+					new RuntimeException().printStackTrace();
+					return false;
+				}else{
+					
+					bytesToPacketBuffer.add(b);
+					long dataAdd=System.currentTimeMillis();
+					BowlerDatagram bd = BowlerDatagramFactory.build(bytesToPacketBuffer);
+					long dataBuild=System.currentTimeMillis();
+					if (bd!=null) {
+						Log.info("\nR<<"+bd);
+						onDataReceived(bd);
+
+						long dataSet=System.currentTimeMillis();
+						//bytesToPacketBuffer.clear();
+						
+						long bufferClear=System.currentTimeMillis();
+						
+						if((System.currentTimeMillis()-getLastWrite())>(getSleepTime()*(getPercentagePrint() /100.0))&& bd.isSyncronous() && syncListen==null){
+							Log.error("Packet recive took more then "+getPercentagePrint()+"%. " +
+									//"\nRaw receive\t"+(start-getLastWrite() )+"" +
+									//"\nStart Section\t"+(dataRead- start)+"" +
+									"\nData Read\t"+(dataReadEnd-dataRead)+"" +
+									"\nAdd data\t"+(dataAdd-dataReadEnd)+
+									"\nBuild Packet\t"+(dataBuild-dataAdd)+
+									"\nSet Packet\t"+(dataSet-dataBuild)+
+									"\nClear Packet buffer\t"+(bufferClear-dataSet)											
+									);
+						}
+
+						//Packet found, break the loop and deal with it
+						return true;
+					}
+				}
+				//Log.info("buffer: "+buffer);
+			}
+		}else{
+			Log.error("Data In is null");
+		}
+		return false;
+	}
+
+	public static boolean isUseThreadedStack() {
+		return useThreadedStack;
+	}
+
+	public static void setUseThreadedStack(boolean useThreadedStack) {
+		BowlerAbstractConnection.useThreadedStack = useThreadedStack;
+	}
 	
 
 }

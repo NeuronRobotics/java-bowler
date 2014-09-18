@@ -14,8 +14,8 @@ public class ConfigurePIDCommand extends BowlerAbstractCommand {
 		getCallingDataStorage().add(group);
 	}
 	
-	public ConfigurePIDCommand(char group,boolean enabled,boolean inverted,boolean async,double KP,double KI,double KD, double latchValue, boolean use, boolean stop) {
-		this(new PIDConfiguration(group, enabled,inverted,async,KP,KI,KD, latchValue,use, stop));
+	public ConfigurePIDCommand(char group,boolean enabled,boolean inverted,boolean async,double KP,double KI,double KD, double latchValue, boolean use, boolean stop, double up, double low,double hStop) {
+		this(new PIDConfiguration(group, enabled,inverted,async,KP,KI,KD, latchValue,use, stop, up,low,hStop));
 	}
 	
 	public ConfigurePIDCommand(PIDConfiguration config) {

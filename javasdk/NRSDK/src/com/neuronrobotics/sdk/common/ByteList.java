@@ -446,8 +446,8 @@ public class ByteList implements ISendable, List<Byte> {
 	 * @return the byte
 	 */
 	public Byte pop(int index) {
-		if(index < 1) {
-			return null;
+		if(index < 0) {
+			throw new RuntimeException("Can not pop a list of length "+index);
 		}
 		
 		if(index > size()) {

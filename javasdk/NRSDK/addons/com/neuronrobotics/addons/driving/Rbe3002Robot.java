@@ -24,16 +24,7 @@ public class Rbe3002Robot extends PuckBot {
 															DyIOChannelMode.COUNT_IN_INT,//Input mode
 															10,//Output Channel
 															DyIOChannelMode.SERVO_OUT);//Output mode
-		PIDConfiguration lpid =new PIDConfiguration (	1,//PID group
-														true,//enabled
-														false,//inverted
-														true,//Async
-														KP,// Kp
-														KI,// Ki
-														KD,//Kd
-														0,//latch
-														false,//use latch
-														false);//stop on latch
+		PIDConfiguration lpid =new PIDConfiguration ();//stop on latch
 		
 		
 		DyPIDConfiguration rdypid = new DyPIDConfiguration(	2,//PID group 2
@@ -41,16 +32,7 @@ public class Rbe3002Robot extends PuckBot {
 															DyIOChannelMode.COUNT_IN_INT,//Input mode
 															11,//Output Channel
 															DyIOChannelMode.SERVO_OUT);//Output mode
-		PIDConfiguration rpid =new PIDConfiguration (	2,//PID group
-														true,//enabled
-														true,//inverted
-														true,//Async
-														KP,// Kp
-														KI,// Ki
-														KD,//Kd
-														0,//latch
-														false,//use latch
-														false);//stop on latch
+		PIDConfiguration rpid =new PIDConfiguration ();
 		dyio.ConfigureDynamicPIDChannels(ldypid);
 		dyio.ConfigurePIDController(lpid);
 		dyio.ConfigureDynamicPIDChannels(rdypid);

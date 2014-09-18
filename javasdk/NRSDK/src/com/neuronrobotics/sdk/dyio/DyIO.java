@@ -59,6 +59,7 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
  */
 public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,IConnectionEventListener {
 
+	private static final String NEURONROBOTICS_DYIO_1_0 = "neuronrobotics.dyio.*;1.0";
 	private ArrayList<IDyIOEventListener> listeners = new ArrayList<IDyIOEventListener>();
 	private ArrayList<DyIOChannel> channels = new ArrayList<DyIOChannel>();
 	
@@ -71,9 +72,11 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	
 	private boolean cachedMode=false;
 	private boolean muteResyncOnModeChange=false;
-	private static boolean checkFirmware=true;
+	private static boolean checkFirmware=false;
 	private boolean resyncing = false;
 	private boolean haveBeenSynced =false;
+	
+	private boolean legacyParser = false;
 	
 	private GenericPIDDevice pid = new GenericPIDDevice();
 	/**
@@ -127,6 +130,10 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	public DyIOChannel getChannel(int channel) {
 		validateChannel(channel);
 		return getInternalChannels().get(channel);
+	}
+	
+	public Object[] send(String NS,BowlerMethod method, String rpcString, Object[] arguments){
+		return send(NS,method,rpcString,arguments,2);
 	}
 	
 	/**
@@ -256,7 +263,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	 * 
 	 * @return a collection of DyIOChannel objects
 	 */
-	public Collection<DyIOChannel> getChannels() {
+	public ArrayList<DyIOChannel> getChannels() {
 		ArrayList<DyIOChannel> c = new ArrayList<DyIOChannel>();
 		for(DyIOChannel chan:getInternalChannels() ) {
 			//System.out.println(this.getClass()+" Adding channel: "+chan.getChannelNumber()+" as mode: "+chan.getMode());
@@ -314,6 +321,60 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 			Log.info("Not checking firmware version for DyIO");
 		}
 	}
+	
+	public ArrayList<DyIOChannelMode> getAllChannelModes(){
+		ArrayList<DyIOChannelMode> modes = new ArrayList<DyIOChannelMode>();
+		BowlerDatagram response;
+		ByteList bl;
+		if(isLegacyParser()){
+			try {
+				response = send(new GetChannelModeCommand());
+			} catch (Exception e) {
+				if (getInternalChannels().size()==0){
+					Log.error("Initilization failed once, retrying");
+					try{
+						response = send(new GetChannelModeCommand());
+					}catch(Exception e2){
+						e2.printStackTrace();
+						setMuteResyncOnModeChange(false);
+						throw new DyIOCommunicationException("DyIO failed to report during initialization. Could not determine DyIO configuration: "+e2.getMessage());
+					}
+				}
+				else {
+					setMuteResyncOnModeChange(false);
+					return null;
+				}
+			}
+			if(response == null)
+				checkFirmwareRev();
+			//if(getAddress().equals(new MACAddress(MACAddress.BROADCAST))) {
+				setAddress(response.getAddress());
+			//}
+			int count=0;
+			if(getDyIOChannelCount() != null){
+				count = getDyIOChannelCount();
+			}
+			bl = response.getData();
+		
+			Log.error("Using old parsing model");
+
+		}else{
+			
+			Object [] args = send("bcs.io.*;0.3;;",
+					BowlerMethod.GET,
+									"gacm",
+									new Object[]{});
+			bl = (ByteList) args[0];
+		}
+		
+		
+		for (int i = 0; i < bl.size(); i++){
+			DyIOChannelMode cm = DyIOChannelMode.get(bl.getByte(i));
+			modes.add(cm);
+		}
+		
+		return modes;
+	}
 
 	
 	/**
@@ -337,6 +398,13 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 			Log.info("Already resyncing");
 			return true;
 		}
+		
+		if(hasNamespace(NEURONROBOTICS_DYIO_1_0)){
+			setLegacyParser(false);
+		}
+		if(hasNamespace("neuronrobotics.dyio.*;0.3;;")){
+			setLegacyParser(true);
+		}
 		setResyncing(true);
 		setMuteResyncOnModeChange(true);
 		Log.info("Re-syncing...");
@@ -358,40 +426,10 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 			checkFirmwareRev();
 		}
 		
-		try {
-			response = send(new GetChannelModeCommand());
-		} catch (Exception e) {
-			if (getInternalChannels().size()==0){
-				Log.error("Initilization failed once, retrying");
-				try{
-					response = send(new GetChannelModeCommand());
-				}catch(Exception e2){
-					e2.printStackTrace();
-					setMuteResyncOnModeChange(false);
-					throw new DyIOCommunicationException("DyIO failed to report during initialization. Could not determine DyIO configuration: "+e2.getMessage());
-				}
-			}
-			else {
-				setMuteResyncOnModeChange(false);
-				return false;
-			}
-		}
-		if(response == null)
-			checkFirmwareRev();
-		//if(getAddress().equals(new MACAddress(MACAddress.BROADCAST))) {
-			setAddress(response.getAddress());
-		//}
-		int count =24;
-		if(getDyIOChannelCount() != null){
-			count = getDyIOChannelCount();
-		}
-		ByteList bl = response.getData();
-		if (bl.size()!=count) {
-			setMuteResyncOnModeChange(false);
-			throw new DyIOCommunicationException("Not enough channels, not a valid DyIO expecting = "+count+" GOT = "+bl.size()+"\n"+response.toString());
-		}
-		for (int i = 0; i < bl.size(); i++){
-			DyIOChannelMode cm = DyIOChannelMode.get(bl.getByte(i));
+		ArrayList<DyIOChannelMode> modes = getAllChannelModes();
+		
+		for (int i = 0; i < modes.size(); i++){
+			DyIOChannelMode cm = modes.get(i);
 			boolean editable = true;
 			if(cm == null) {
 				cm = DyIOChannelMode.DIGITAL_OUT;
@@ -414,10 +452,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 				dc.fireModeChangeEvent(dc.getCurrentMode());
 			}
 		}
-//		for (int i = 0; i < response.getData().size(); i++){
-//			DyIOChannel dc =getInternalChannels().get(i);
-//			dc.fireModeChangeEvent(dc.getCurrentMode());
-//		}
+
 		setMuteResyncOnModeChange(false);
 		if (getInternalChannels().size()==0)
 			throw new DyIOCommunicationException("DyIO failed to report during initialization");
@@ -555,19 +590,26 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	 */
 	public void flushCache(double seconds) {
 		//System.out.println("Updating all channels");
-		int [] values = new int[getInternalChannels().size()];
+		Integer [] values = new Integer[getInternalChannels().size()];
 		int i=0;
 		for(DyIOChannel d:getInternalChannels()) {
 			values[i++]=d.getCachedValue();
 			//d.flush();
 		}
-		for(int i1=0;i1<5;i1++) {
-			try {
-				send(new SetAllChannelValuesCommand(seconds,values));
-				return;
-			}catch (InvalidResponseException e1) {
-				System.err.println("Failed to update all, retrying");
+		if(isLegacyParser()){
+			for(int j=0;j<5;j++) {
+				try {
+					send(new SetAllChannelValuesCommand(seconds,values));
+					return;
+				}catch (InvalidResponseException e1) {
+					System.err.println("Failed to update all, retrying");
+				}
 			}
+		}else{
+			send("bcs.io.*;0.3;;",
+					BowlerMethod.POST,
+					"sacv",
+					new Object[]{values});
 		}
 		
 	}
@@ -1054,20 +1096,38 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	 */
 	public int[] getAllChannelValues() {
 		int [] back = new int[getInternalChannels().size()];
-		BowlerDatagram gacv = send(new GetAllChannelValuesCommand());
-		Log.info("GACV RX<<\n"+gacv);
-		ByteList bl = gacv.getData();
-		int i=0;
-		for(DyIOChannel c:getChannels()){
-			if(!c.isStreamChannel()){
-				ByteList val = new ByteList(bl.popList(4));
-				DyIOChannelEvent ev =new DyIOChannelEvent(c,val);
-				back[i++]=ev.getValue();
+		if(isLegacyParser()){
+			BowlerDatagram gacv = send(new GetAllChannelValuesCommand());
+			Log.info("GACV RX<<\n"+gacv);
+			ByteList bl = gacv.getData();
+			int i=0;
+			for(DyIOChannel c:getChannels()){
 				if(!c.isStreamChannel()){
-					c.fireChannelEvent(ev);
+					ByteList val = new ByteList(bl.popList(4));
+					DyIOChannelEvent ev =new DyIOChannelEvent(c,val);
+					back[i++]=ev.getValue();
+					if(!c.isStreamChannel()){
+						c.fireChannelEvent(ev);
+					}
+				}else{
+					back[i++] = 0;
 				}
-			}else{
-				back[i++] = 0;
+			}
+		}else{
+			Object [] args = send("bcs.io.*;0.3;;",
+					BowlerMethod.GET,
+					"gchv",
+					new Object[]{});
+			Integer [] values = (Integer [])args[0];
+			for(int i=0;i<getChannels().size();i++){
+				DyIOChannel c =getChannels().get(i); 
+				if(!c.isStreamChannel()){
+					DyIOChannelEvent ev =new DyIOChannelEvent(c,values[i]);
+					back[i]=values[i];
+					if(!c.isStreamChannel()){
+						c.fireChannelEvent(ev);
+					}
+				}
 			}
 		}
 		
@@ -1094,12 +1154,21 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	
 	private Integer dyioChanCount = null;
 	public Integer getDyIOChannelCount(){
+		
 		if(dyioChanCount == null){
-			try{
-				BowlerDatagram dg = send (new GetDyIOChannelCountCommand());
-				dyioChanCount = ByteList.convertToInt(dg.getData().getBytes(0, 4));
-			}catch(InvalidResponseException ex){
-				
+			if(isLegacyParser()){
+				try{
+					BowlerDatagram dg = send (new GetDyIOChannelCountCommand());
+					dyioChanCount = ByteList.convertToInt(dg.getData().getBytes(0, 4));
+				}catch(InvalidResponseException ex){
+					ex.printStackTrace();
+				}
+			}else{
+				Object [] args = send("bcs.io.*;0.3;;",
+						BowlerMethod.GET,
+						"gchc",
+						new Object[]{});
+				dyioChanCount = (Integer)args[0];
 			}
 		}
 		return dyioChanCount;
@@ -1107,15 +1176,44 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	
 	public ArrayList<DyIOChannelMode> getAvailibleChannelModes(int channel){
 		ArrayList<DyIOChannelMode> modes = new ArrayList<DyIOChannelMode>();
-		ByteList m = send(new GetChannelModeListCommand(channel)).getData();
-		for(int i=0;i<m.size();i++){
-			modes.add(DyIOChannelMode.get(m.getByte(i)));
+		ByteList m;
+		
+		if(isLegacyParser()){
+			BowlerDatagram dg = send(new GetChannelModeListCommand(channel));
+			m = dg.getData();
+			Log.error("Packet "+channel+"\r\n"+dg);
+			Log.error("Data: "+channel+"\r\n"+m);
+
+		}else{
+			//int l = Log.getMinimumPrintLevel();
+			//Log.enableInfoPrint();
+			Object [] args = send("bcs.io.*;0.3;;",
+					BowlerMethod.GET,
+					"gcml",
+					new Object[]{channel});
+			m = (ByteList)args[0];
+			//Log.setMinimumPrintLevel(l);
 		}
+		String modeString = " Availible modes on "+channel;
+		for(int i=0;i<m.size();i++){
+			DyIOChannelMode tmpMode = DyIOChannelMode.get(m.getByte(i));
+			modeString +="\r\n\t"+tmpMode.toString()+"\r\n\t";
+			modes.add(tmpMode);
+		}
+		Log.info(modeString);
 		return modes;
 	}
 
 	public GenericPIDDevice getPid() {
 		return pid;
+	}
+
+	public boolean isLegacyParser() {
+		return legacyParser;
+	}
+
+	public void setLegacyParser(boolean legacyParser) {
+		this.legacyParser = legacyParser;
 	}
 
 
