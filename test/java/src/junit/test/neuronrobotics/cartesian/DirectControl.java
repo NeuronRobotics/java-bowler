@@ -145,7 +145,7 @@ public class DirectControl implements ITaskSpaceUpdateListenerNR, IDigitalInputL
 			JPanel starter = new JPanel(new MigLayout());
 			gui.setKinematicsModel(model);
 			try{
-				//tabs.add("Display",new DHKinematicsViewer(model));
+				tabs.add("Display",new DHKinematicsViewer(model));
 			}catch(Error ex){
 				JPanel error = new JPanel(new MigLayout());
 				error.add(new JLabel("Error while loading Java3d library:"),"wrap");
