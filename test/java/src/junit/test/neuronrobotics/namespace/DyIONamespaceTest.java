@@ -114,7 +114,7 @@ public class DyIONamespaceTest {
 		
 		//Test device as input
 		for(int i=0;i<numPins;i++){
-			if(!(i==16 || i==17)){
+			if(!(i==16 || i==17 ||i==15)){
 				int testerIndex = numPins-1-i;
 				harness.setMode(testerIndex, DyIOChannelMode.DIGITAL_OUT);
 				testDevice.setMode(i, DyIOChannelMode.DIGITAL_IN);
@@ -141,7 +141,7 @@ public class DyIONamespaceTest {
 		
 		//Test device as input
 		for(int i=0;i<numPins;i++){
-			if(testDevice.getChannel(i).canBeMode(DyIOChannelMode.ANALOG_IN) ){
+			if(testDevice.getChannel(i).canBeMode(DyIOChannelMode.ANALOG_IN ) && i!=15 ){
 				int testerIndex = numPins-1-i;
 				harness.setMode(testerIndex, DyIOChannelMode.DIGITAL_OUT);
 				testDevice.setMode(i, DyIOChannelMode.ANALOG_IN);
@@ -171,7 +171,7 @@ public class DyIONamespaceTest {
 		//test device as output
 		for(int i=0;i<numPins;i++){
 			int testerIndex = numPins-1-i;
-			if(!(testerIndex==16 || testerIndex==17)){
+			if(!(testerIndex==16 || testerIndex==17||testerIndex==15 || i== 15)){
 				
 				harness.setMode(testerIndex, DyIOChannelMode.DIGITAL_IN);
 				testDevice.setMode(i, DyIOChannelMode.DIGITAL_OUT);
