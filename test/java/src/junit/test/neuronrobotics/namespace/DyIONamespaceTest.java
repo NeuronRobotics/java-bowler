@@ -172,7 +172,7 @@ public class DyIONamespaceTest {
 		for(int i=0;i<numPins;i++){
 			int testerIndex = numPins-1-i;
 			if(!(testerIndex==16 || testerIndex==17||testerIndex==15 || i== 15)){
-				
+
 				harness.setMode(testerIndex, DyIOChannelMode.DIGITAL_IN);
 				testDevice.setMode(i, DyIOChannelMode.DIGITAL_OUT);
 				
