@@ -23,21 +23,29 @@ public class DyIONamespaceTest {
 	@Before
 	public void setUp() throws Exception {
 		DyIO.disableFWCheck();
-		Log.enableDebugPrint();
+		//Log.enableDebugPrint();
 		
 		//Change this MAC address to match your tester/testee mapping
-		SerialConnection testerConection = SerialConnection.getConnectionByMacAddress(new MACAddress("74:F7:26:80:00:7C"));
+		SerialConnection testerConection = SerialConnection.getConnectionByMacAddress(new MACAddress("74:F7:26:80:00:75"));
 		assertTrue(testerConection!=null);
 		harness = new DyIO(testerConection);
 		harness.connect();
 		
 		//Change this MAC address to match your tester/testee mapping
-		SerialConnection targetConection = SerialConnection.getConnectionByMacAddress(new MACAddress("74:F7:26:00:00:00"));
+		//SerialConnection targetConection = SerialConnection.getConnectionByMacAddress(new MACAddress("74:F7:26:00:00:00"));
+		
+		SerialConnection targetConection =  new SerialConnection("/dev/DyIO1");
 		assertTrue(targetConection!=null);
 		targetConection.setSynchronusPacketTimeoutTime(10000);
 		testDevice = new DyIO(targetConection);
 		testDevice.connect();
+		int numPins = testDevice.getDyIOChannelCount();
 		
+		//Devices as input
+		for(int i=0;i<numPins;i++){
+			harness.setMode(i, DyIOChannelMode.DIGITAL_IN);
+			testDevice.setMode(i, DyIOChannelMode.DIGITAL_IN);
+		}
 		
 	}
 	
@@ -114,7 +122,7 @@ public class DyIONamespaceTest {
 		
 		//Test device as input
 		for(int i=0;i<numPins;i++){
-			if(!(i==16 || i==17 ||i==15)){
+			if(!(i==16 || i==17)){
 				int testerIndex = numPins-1-i;
 				harness.setMode(testerIndex, DyIOChannelMode.DIGITAL_OUT);
 				testDevice.setMode(i, DyIOChannelMode.DIGITAL_IN);
@@ -141,7 +149,7 @@ public class DyIONamespaceTest {
 		
 		//Test device as input
 		for(int i=0;i<numPins;i++){
-			if(testDevice.getChannel(i).canBeMode(DyIOChannelMode.ANALOG_IN ) && i!=15 ){
+			if(testDevice.getChannel(i).canBeMode(DyIOChannelMode.ANALOG_IN )){
 				int testerIndex = numPins-1-i;
 				harness.setMode(testerIndex, DyIOChannelMode.DIGITAL_OUT);
 				testDevice.setMode(i, DyIOChannelMode.ANALOG_IN);
@@ -171,7 +179,7 @@ public class DyIONamespaceTest {
 		//test device as output
 		for(int i=0;i<numPins;i++){
 			int testerIndex = numPins-1-i;
-			if(!(testerIndex==16 || testerIndex==17||testerIndex==15 || i== 15)){
+			if(!(testerIndex==16 || testerIndex==17)){
 
 				harness.setMode(testerIndex, DyIOChannelMode.DIGITAL_IN);
 				testDevice.setMode(i, DyIOChannelMode.DIGITAL_OUT);
