@@ -2,16 +2,13 @@ package com.neuronrobotics.replicator.driver;
 
 import java.io.File;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 import com.neuronrobotics.replicator.driver.PrinterStatus.PrinterState;
 import com.neuronrobotics.sdk.addons.kinematics.AbstractLink;
 import com.neuronrobotics.sdk.addons.kinematics.CartesianNamespacePidKinematics;
 import com.neuronrobotics.sdk.addons.kinematics.IJointSpaceUpdateListenerNR;
 import com.neuronrobotics.sdk.addons.kinematics.ILinkListener;
-import com.neuronrobotics.sdk.addons.kinematics.ITaskSpaceUpdateListenerNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
-import com.neuronrobotics.sdk.common.BowlerMethod;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 import com.neuronrobotics.sdk.util.ThreadUtil;

@@ -14,7 +14,6 @@
  ******************************************************************************/
 package com.neuronrobotics.sdk.common;
 
-import com.neuronrobotics.sdk.config.SDKBuildInfo;
 // TODO: Auto-generated Javadoc
 
 /**

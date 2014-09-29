@@ -1,6 +1,5 @@
 package com.neuronrobotics.sdk.dyio.peripherals;
 
-import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 
 public interface IServoPositionUpdateListener {
 	/**

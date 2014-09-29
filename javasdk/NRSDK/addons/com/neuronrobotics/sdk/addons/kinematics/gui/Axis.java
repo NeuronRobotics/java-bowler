@@ -43,8 +43,6 @@ package com.neuronrobotics.sdk.addons.kinematics.gui;
  */
 
 
-import java.awt.Color;
-
 import javax.media.j3d.Geometry;
 import javax.media.j3d.GeometryArray;
 import javax.media.j3d.IndexedLineArray;

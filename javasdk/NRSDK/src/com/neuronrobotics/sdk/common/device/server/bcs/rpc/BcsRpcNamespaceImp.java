@@ -1,8 +1,6 @@
 package com.neuronrobotics.sdk.common.device.server.bcs.rpc;
 
 import com.neuronrobotics.sdk.common.BowlerDataType;
-import com.neuronrobotics.sdk.common.BowlerDatagram;
-import com.neuronrobotics.sdk.common.BowlerDatagramFactory;
 import com.neuronrobotics.sdk.common.BowlerMethod;
 import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.MACAddress;

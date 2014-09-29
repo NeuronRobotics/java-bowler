@@ -1,18 +1,11 @@
 package com.neuronrobotics.replicator.driver;
 
-import java.io.File;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.File;
 import java.io.IOException;
-import java.io.PrintStream;
-import java.lang.ProcessBuilder.Redirect;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.neuronrobotics.replicator.driver.SliceStatusData.SlicerState;
 

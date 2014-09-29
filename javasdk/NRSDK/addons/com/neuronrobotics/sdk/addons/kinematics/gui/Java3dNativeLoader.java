@@ -2,13 +2,8 @@ package com.neuronrobotics.sdk.addons.kinematics.gui;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FilePermission;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.AccessController;
-import java.util.ArrayList;
-
-import com.neuronrobotics.sdk.common.Log;
 
 public class Java3dNativeLoader {
 	private static boolean loaded = false;

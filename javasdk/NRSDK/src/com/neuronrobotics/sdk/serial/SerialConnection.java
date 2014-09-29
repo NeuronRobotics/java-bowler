@@ -15,6 +15,7 @@
 package com.neuronrobotics.sdk.serial;
 
 import gnu.io.NRSerialPort;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.util.ArrayList;
@@ -24,7 +25,6 @@ import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.MACAddress;
 import com.neuronrobotics.sdk.common.MissingNativeLibraryException;
-import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.genericdevice.GenericDevice;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 

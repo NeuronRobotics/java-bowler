@@ -11,7 +11,6 @@ import com.neuronrobotics.sdk.dyio.DyIOChannelEvent;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.dyio.DyIORegestry;
 import com.neuronrobotics.sdk.dyio.IChannelEventListener;
-import com.neuronrobotics.sdk.dyio.IDyIOChannel;
 
 /**
  * This class is a wrapper for the DyIO PPM signal reader.

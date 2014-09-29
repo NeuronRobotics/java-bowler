@@ -17,26 +17,15 @@ package com.neuronrobotics.sdk.network;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.NetworkInterface;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Enumeration;
 
-import java.util.List;
-
-
-import com.neuronrobotics.sdk.commands.bcs.core.PingCommand;
-import com.neuronrobotics.sdk.commands.bcs.io.SetAllChannelValuesCommand;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
-import com.neuronrobotics.sdk.common.BowlerDatagram;
-import com.neuronrobotics.sdk.common.BowlerDatagramFactory;
 import com.neuronrobotics.sdk.common.Log;
-import com.neuronrobotics.sdk.common.MACAddress;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 

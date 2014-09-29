@@ -41,7 +41,6 @@ import com.neuronrobotics.sdk.commands.bcs.core.NamespaceCommand;
 import com.neuronrobotics.sdk.commands.bcs.core.PingCommand;
 import com.neuronrobotics.sdk.commands.bcs.core.RpcArgumentsCommand;
 import com.neuronrobotics.sdk.commands.bcs.core.RpcCommand;
-import com.neuronrobotics.sdk.config.SDKBuildInfo;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 
