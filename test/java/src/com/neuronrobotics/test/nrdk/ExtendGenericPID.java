@@ -1,7 +1,5 @@
 package com.neuronrobotics.test.nrdk;
 
-import java.io.IOException;
-
 import com.neuronrobotics.sdk.common.BowlerAbstractCommand;
 import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.common.BowlerMethod;

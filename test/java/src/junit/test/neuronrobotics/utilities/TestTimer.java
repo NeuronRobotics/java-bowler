@@ -1,6 +1,6 @@
 package junit.test.neuronrobotics.utilities;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 

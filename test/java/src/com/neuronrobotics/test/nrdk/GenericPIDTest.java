@@ -1,11 +1,8 @@
 package com.neuronrobotics.test.nrdk;
 
-import java.io.IOException;
-
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.network.BowlerTCPClient;
 import com.neuronrobotics.sdk.pid.GenericPIDDevice;
-import com.neuronrobotics.sdk.ui.ConnectionDialog;
 
 public class GenericPIDTest {
 
