@@ -1,10 +1,10 @@
 package com.neuronrobotics.addons.driving;
 
+import gnu.io.NRSerialPort;
+
 import java.util.ArrayList;
 
 import com.neuronrobotics.addons.driving.virtual.ObsticleType;
-
-import gnu.io.NRSerialPort;
 
 public class HokuyoTest implements ISensorListener {
 	

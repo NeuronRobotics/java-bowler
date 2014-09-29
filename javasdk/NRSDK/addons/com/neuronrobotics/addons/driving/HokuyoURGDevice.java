@@ -1,5 +1,7 @@
 package com.neuronrobotics.addons.driving;
 
+import gnu.io.NRSerialPort;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -7,8 +9,6 @@ import java.text.DecimalFormat;
 
 import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.util.ThreadUtil;
-
-import gnu.io.NRSerialPort;
 
 public class HokuyoURGDevice {
 	private NRSerialPort serial;

@@ -2,14 +2,9 @@ package com.neuronrobotics.test.dyio;
 
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.ByteList;
-import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
-import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.dyio.peripherals.DigitalInputChannel;
-import com.neuronrobotics.sdk.dyio.peripherals.DigitalOutputChannel;
-import com.neuronrobotics.sdk.dyio.peripherals.PPMReaderChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
-import com.neuronrobotics.sdk.serial.SerialConnection;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 
 public class SpeedTest {

@@ -1,14 +1,12 @@
 package junit.test.neuronrobotics.namespace;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
-import java.lang.reflect.GenericDeclaration;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
 
-import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.RpcEncapsulation;
 import com.neuronrobotics.sdk.genericdevice.GenericDevice;

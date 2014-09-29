@@ -6,10 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 import com.neuronrobotics.addons.driving.AbstractRobotDrive;
 import com.neuronrobotics.addons.driving.NrMap;

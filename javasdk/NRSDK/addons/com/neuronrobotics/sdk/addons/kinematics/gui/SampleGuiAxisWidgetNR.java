@@ -3,17 +3,18 @@ package com.neuronrobotics.sdk.addons.kinematics.gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
+
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import net.miginfocom.swing.MigLayout;
+
 import com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR;
 import com.neuronrobotics.sdk.addons.kinematics.IJointSpaceUpdateListenerNR;
 import com.neuronrobotics.sdk.addons.kinematics.JointLimit;
-
-import net.miginfocom.swing.MigLayout;
 
 public class SampleGuiAxisWidgetNR extends JPanel implements IJointSpaceUpdateListenerNR{
 

@@ -15,7 +15,6 @@
 package com.neuronrobotics.sdk.dyio;
 
 import com.neuronrobotics.sdk.common.ByteList;
-import com.neuronrobotics.sdk.common.ISendable;
 
 /**
  * 
