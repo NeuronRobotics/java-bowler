@@ -22,40 +22,34 @@ public class DyIONamespaceTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		DyIO.disableFWCheck();
-		//Log.enableDebugPrint();
-		
-		//Change this MAC address to match your tester/testee mapping
-		SerialConnection testerConection = SerialConnection.getConnectionByMacAddress(new MACAddress("74:F7:26:80:00:75"));
-		assertTrue(testerConection!=null);
-		harness = new DyIO(testerConection);
-		harness.connect();
-		
-		//Change this MAC address to match your tester/testee mapping
-		//SerialConnection targetConection = SerialConnection.getConnectionByMacAddress(new MACAddress("74:F7:26:00:00:00"));
-		
-		SerialConnection targetConection =  new SerialConnection("/dev/DyIO1");
-		assertTrue(targetConection!=null);
-		targetConection.setSynchronusPacketTimeoutTime(10000);
-		testDevice = new DyIO(targetConection);
-		testDevice.connect();
-		int numPins = testDevice.getDyIOChannelCount();
-		
-		//Devices as input
-		for(int i=0;i<numPins;i++){
-			harness.setMode(i, DyIOChannelMode.DIGITAL_IN);
-			testDevice.setMode(i, DyIOChannelMode.DIGITAL_IN);
+		if(harness == null && testDevice == null ){
+			DyIO.disableFWCheck();
+			//Log.enableDebugPrint();
+			
+			//Change this MAC address to match your tester/testee mapping
+			SerialConnection testerConection = SerialConnection.getConnectionByMacAddress(new MACAddress("74:F7:26:80:00:7C"));
+			assertTrue(testerConection!=null);
+			harness = new DyIO(testerConection);
+			harness.connect();
+			
+			//Change this MAC address to match your tester/testee mapping
+			//SerialConnection targetConection = SerialConnection.getConnectionByMacAddress(new MACAddress("74:F7:26:00:00:00"));
+			
+			SerialConnection targetConection =  new SerialConnection("/dev/DyIO1");
+			assertTrue(targetConection!=null);
+			targetConection.setSynchronusPacketTimeoutTime(10000);
+			testDevice = new DyIO(targetConection);
+			testDevice.connect();
+			int numPins = testDevice.getDyIOChannelCount();
+			
+			//Devices as input
+			for(int i=0;i<numPins;i++){
+				harness.setMode(i, DyIOChannelMode.DIGITAL_IN);
+				testDevice.setMode(i, DyIOChannelMode.DIGITAL_IN);
+			}
 		}
-		
 	}
 	
-	@After
-	public void shutdownDevices(){
-		
-		testDevice.disconnect();
-		if(harness!=null)
-			harness.disconnect();
-	}
 	
 	@Test public void DyIONameTest(){
 
