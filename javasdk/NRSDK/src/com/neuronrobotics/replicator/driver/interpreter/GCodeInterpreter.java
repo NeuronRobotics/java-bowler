@@ -1,19 +1,14 @@
 package com.neuronrobotics.replicator.driver.interpreter;
 
-import java.util.ArrayList;
-import java.util.Scanner;
-import java.util.List;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Collections;
-import java.util.concurrent.locks.ReentrantLock;
 import java.io.BufferedReader;
-import java.io.EOFException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.CharBuffer;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 
-import com.neuronrobotics.replicator.driver.PrinterStatusListener;
 import com.neuronrobotics.sdk.common.Log;
 
 /**

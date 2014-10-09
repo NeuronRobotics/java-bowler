@@ -5,7 +5,6 @@ import java.io.IOException;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.MACAddress;
 import com.neuronrobotics.sdk.common.device.server.BowlerAbstractServer;
-
 import com.neuronrobotics.sdk.network.BowlerUDPServer;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 

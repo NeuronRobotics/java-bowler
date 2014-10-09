@@ -6,12 +6,11 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 import net.miginfocom.swing.MigLayout;
-
 import Jama.Matrix;
 
 import com.neuronrobotics.sdk.addons.kinematics.DHParameterKinematics;
-import com.neuronrobotics.sdk.addons.kinematics.gui.SampleGuiNR;
 import com.neuronrobotics.sdk.addons.kinematics.gui.DHKinematicsViewer;
+import com.neuronrobotics.sdk.addons.kinematics.gui.SampleGuiNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.util.ThreadUtil;

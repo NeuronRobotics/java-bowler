@@ -3,18 +3,14 @@ package com.neuronrobotics.sdk.addons.kinematics;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-import javax.swing.JFrame;
-
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import Jama.Matrix;
+
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
-import com.neuronrobotics.sdk.common.Log;
-import com.neuronrobotics.sdk.util.ThreadUtil;
-
-import Jama.Matrix;
 public  class DHChain {
 	private ArrayList<DHLink> links = new ArrayList<DHLink>();
 	private ArrayList<TransformNR> chain = new ArrayList<TransformNR>();

@@ -11,13 +11,11 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
 import net.miginfocom.swing.MigLayout;
-
 import Jama.Matrix;
 
 import com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR;
 import com.neuronrobotics.sdk.addons.kinematics.IRegistrationListenerNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
-import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 //import com.neuronrobotics.sdk.pid.IPIDControl;
 //import com.neuronrobotics.sdk.ui.ConnectionImageIconFactory;
 

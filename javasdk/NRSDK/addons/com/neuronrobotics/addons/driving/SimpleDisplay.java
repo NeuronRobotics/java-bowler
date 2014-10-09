@@ -1,7 +1,6 @@
 package com.neuronrobotics.addons.driving;
 
 import java.awt.Color;
-import java.awt.color.CMMException;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;

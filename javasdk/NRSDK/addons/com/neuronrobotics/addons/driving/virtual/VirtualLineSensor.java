@@ -4,7 +4,6 @@ import java.awt.Color;
 
 import com.neuronrobotics.addons.driving.AbstractRobotDrive;
 import com.neuronrobotics.addons.driving.AbstractSensor;
-
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 public class VirtualLineSensor extends AbstractSensor {

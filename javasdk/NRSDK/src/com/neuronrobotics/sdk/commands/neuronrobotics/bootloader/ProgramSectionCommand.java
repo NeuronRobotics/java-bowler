@@ -7,9 +7,14 @@ import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.InvalidResponseException;
 
 public class ProgramSectionCommand extends BowlerAbstractCommand {
+	public static String hex(long n) {
+	    // call toUpperCase() if that's required
+	    return String.format("0x%8s", Long.toHexString(n)).replace(' ', '0');
+	}
 	
 	public ProgramSectionCommand(int channel, int address, ByteList byteData) {
 		setOpCode("prog");
+		System.out.println("Sending to address "+hex(address)+" size = "+byteData.size());
 		setMethod(BowlerMethod.CRITICAL);
 		getCallingDataStorage().add(channel);
 		getCallingDataStorage().addAs32(address);

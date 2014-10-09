@@ -17,8 +17,8 @@ package com.neuronrobotics.sdk.dyio.peripherals;
 import java.util.ArrayList;
 
 import com.neuronrobotics.sdk.dyio.DyIO;
-import com.neuronrobotics.sdk.dyio.DyIOChannelEvent;
 import com.neuronrobotics.sdk.dyio.DyIOChannel;
+import com.neuronrobotics.sdk.dyio.DyIOChannelEvent;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.dyio.DyIORegestry;
 import com.neuronrobotics.sdk.dyio.IChannelEventListener;

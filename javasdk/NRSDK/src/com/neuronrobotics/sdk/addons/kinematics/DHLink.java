@@ -2,9 +2,9 @@ package com.neuronrobotics.sdk.addons.kinematics;
 
 import org.w3c.dom.Element;
 
-import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
-
 import Jama.Matrix;
+
+import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
 
 public class DHLink {
 	

@@ -2,15 +2,9 @@ package com.neuronrobotics.test.nrdk;
 
 import java.net.InetAddress;
 
-import sun.rmi.transport.tcp.TCPEndpoint;
-
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
-import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.genericdevice.GenericDevice;
-import com.neuronrobotics.sdk.network.BowlerTCPClient;
 import com.neuronrobotics.sdk.network.UDPBowlerConnection;
-import com.neuronrobotics.sdk.serial.SerialConnection;
-import com.neuronrobotics.sdk.ui.ConnectionDialog;
 
 @SuppressWarnings("unused")
 public class PingSpeedTest {

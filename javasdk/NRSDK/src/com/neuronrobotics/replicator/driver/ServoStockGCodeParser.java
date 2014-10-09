@@ -1,13 +1,11 @@
 package com.neuronrobotics.replicator.driver;
-import com.neuronrobotics.replicator.driver.PrinterStatus.PrinterState;
-import com.neuronrobotics.replicator.driver.interpreter.*;
-
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.concurrent.locks.ReentrantLock;
 
-import javax.vecmath.Point3f;
-
+import com.neuronrobotics.replicator.driver.PrinterStatus.PrinterState;
+import com.neuronrobotics.replicator.driver.interpreter.CodeHandler;
+import com.neuronrobotics.replicator.driver.interpreter.GCodeInterpreter;
+import com.neuronrobotics.replicator.driver.interpreter.GCodeLineData;
 import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.common.Log;
