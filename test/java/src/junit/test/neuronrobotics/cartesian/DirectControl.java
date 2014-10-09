@@ -33,7 +33,7 @@ public class DirectControl implements ITaskSpaceUpdateListenerNR, IDigitalInputL
 	DHParameterKinematics model;
 	//DeltaForgeDevice deltaRobot;
 	TransformNR current = new TransformNR();
-	double scale=.3;
+	double scale=.2;
 	double [] startVect = new double [] { 0,0,0,0,0,0};
 	private boolean button=false;
 	private boolean lastButton=false;
@@ -120,12 +120,12 @@ public class DirectControl implements ITaskSpaceUpdateListenerNR, IDigitalInputL
 		model = new DHParameterKinematics(master,"TrobotMaster.xml");
 		
 		
-		BowlerBoardDevice delt = new BowlerBoardDevice();
+		//BowlerBoardDevice delt = new BowlerBoardDevice();
 //		if(!ConnectionDialog.getBowlerDevice(delt)){
 //			System.exit(0);
 //		}
-		delt.setConnection(new SerialConnection("/dev/BowlerDevice.74F726000000"));		
-		delt.connect();
+		//delt.setConnection(new SerialConnection("/dev/BowlerDevice.74F726000000"));		
+		//delt.connect();
 		
 		//deltaRobot = new DeltaForgeDevice(delt);
 		//deltaRobot.setCurrentPoseTarget(new TransformNR());
@@ -177,7 +177,7 @@ public class DirectControl implements ITaskSpaceUpdateListenerNR, IDigitalInputL
 		//Log.enableWarningPrint();
 		int loopTime=50;
 		master.getConnection().setSynchronusPacketTimeoutTime(2000);
-		delt.getConnection().setSynchronusPacketTimeoutTime(2000);
+		//delt.getConnection().setSynchronusPacketTimeoutTime(2000);
 		int x=0,y=0,z=0;
 		//Log.enableInfoPrint();
 		for (DyIOChannel c: master.getChannels()){
@@ -193,7 +193,7 @@ public class DirectControl implements ITaskSpaceUpdateListenerNR, IDigitalInputL
 //					y=(int)current.getY();
 //					z=(int)current.getZ();
 					if(current.getZ()<400&&current.getZ()>0){
-						delt.sendLinearSection(current, 0, 0,true);
+						//delt.sendLinearSection(current, 0, 0,true);
 						//System.out.println("Setting x="+current.getX()+" y="+current.getY()+" z="+current.getZ());
 					}
 				//}
