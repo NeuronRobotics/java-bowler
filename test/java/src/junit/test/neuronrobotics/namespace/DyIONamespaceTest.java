@@ -57,18 +57,18 @@ public class DyIONamespaceTest {
 			fail();
 		
 		String name = testDevice.getInfo();
-		
+		System.out.println("Name is:"+name);
 		String setName;
 		if(name.contains("My DyIO"))
 			setName="My DyIO2";
 		else
 			setName="My DyIO";
-		
+		System.out.println("Setting:"+setName);
 		testDevice.setInfo(setName);
 		
 		String newName = testDevice.getInfo();
 		
-
+		System.out.println("New name is:"+newName);
 		testDevice.setInfo(name);
 	
 		assertTrue(setName.contains(newName));
