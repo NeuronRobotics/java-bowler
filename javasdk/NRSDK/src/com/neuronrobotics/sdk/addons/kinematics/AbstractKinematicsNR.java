@@ -131,7 +131,7 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 		    	throw new RuntimeException("No base to Z frame transform defined");
 		    }
 		}catch (Exception ex){
-			ex.printStackTrace();
+			//ex.printStackTrace();
 			Log.warning("No base to Z frame transform defined");
 		}
 		

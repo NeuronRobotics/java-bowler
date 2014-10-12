@@ -72,6 +72,7 @@ public class LinkConfiguration {
     	setType("pid");
     	setTotlaNumberOfLinks((Integer)args[1]);
 	}
+	@Override
 	public String toString(){
 		String s="LinkConfiguration: \n\tName: "+getName();
 		s+=	"\n\tType: "+getType();

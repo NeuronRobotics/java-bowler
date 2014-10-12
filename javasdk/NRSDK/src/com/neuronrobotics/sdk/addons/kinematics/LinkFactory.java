@@ -8,11 +8,12 @@ import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 import com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace;
 import com.neuronrobotics.sdk.pid.GenericPIDDevice;
 import com.neuronrobotics.sdk.pid.ILinkFactoryProvider;
+import com.neuronrobotics.sdk.pid.VirtualGenericPIDDevice;
 
 public class LinkFactory {
 	private IPidControlNamespace pid=null;
 	private DyIO dyio=null;
-	//private VirtualGenericPIDDevice virtual = new VirtualGenericPIDDevice(1000000);
+	private VirtualGenericPIDDevice virtual = null; 
 	private boolean hasPid=false;
 	private boolean hasServo=false;
 	private boolean hasStepper=false;
@@ -79,10 +80,21 @@ public class LinkFactory {
 	}
 	
 	public AbstractLink getLink(LinkConfiguration c){
+		
+		if(c==null){
+			Log.error("Link configuration unknown, null configurations not allowed");
+			throw new NullPointerException("Link configuration unknown, null configurations not allowed");
+		}
+		if (virtual == null){
+			virtual = new VirtualGenericPIDDevice(1000000);
+		}
+		
 		for(AbstractLink l:links){
 			if(l.getLinkConfiguration() == c)
 				return l;
 		}
+		Log.info("Generating link for configuration "+c);
+		
 		AbstractLink tmp=null;
 		if(!forceVirtual){
 			if(c.getType().equals("servo-rotory")){
@@ -99,12 +111,13 @@ public class LinkFactory {
 											(int)c.getLowerLimit(),
 											(int)c.getUpperLimit(),
 											c.getScale());
-			} else if (c.getType().equals("dummy")){
-//				tmp=new PidRotoryLink(	virtual.getPIDChannel(c.getHardwareIndex()),
-//						(int)0,
-//						(int)c.getLowerLimit(),
-//						(int)c.getUpperLimit(),
-//						c.getScale());
+			} else if (c.getType().equals("virtual")){
+				
+				tmp=new PidRotoryLink(	virtual.getPIDChannel(c.getHardwareIndex()),
+						(int)0,
+						(int)c.getLowerLimit(),
+						(int)c.getUpperLimit(),
+						c.getScale());
 				tmp.setUseLimits(false);
 			}else{
 				tmp=new PidRotoryLink(	pid.getPIDChannel(c.getHardwareIndex()),
@@ -116,15 +129,20 @@ public class LinkFactory {
 		}else{
 			
 			int home=0;
-//			if(c.getType().equals("servo-rotory"))
-//				home = c.getIndexLatch();
-//			tmp=new PidRotoryLink(	virtual.getPIDChannel(c.getHardwareIndex()),
-//					(int)home,
-//					(int)c.getLowerLimit(),
-//					(int)c.getUpperLimit(),
-//					c.getScale());
-			//tmp.setUseLimits(false);
+			if(c.getType().equals("servo-rotory"))
+				home = c.getIndexLatch();
+			tmp=new PidRotoryLink(	virtual.getPIDChannel(c.getHardwareIndex()),
+					(int)home,
+					(int)c.getLowerLimit(),
+					(int)c.getUpperLimit(),
+					c.getScale());
+			tmp.setUseLimits(false);
 		}
+		if(tmp == null){
+			Log.error("Link not defined! "+c);
+			
+		}
+		
 		tmp.setLinkConfiguration(c);
 		links.add(tmp);
 		return tmp;

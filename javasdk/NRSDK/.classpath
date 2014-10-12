@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" path="addons"/>
-	<classpathentry kind="lib" path="lib/bluecove-2.1.1.jar"/>
-	<classpathentry kind="lib" path="lib/bluecove-gpl-2.1.1.jar"/>
-	<classpathentry kind="lib" path="lib_addons/j3dcore.jar">
+	<classpathentry kind="src" path="src">
 		<attributes>
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="NRSDK/native/linux/64"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="src" path="addons"/>
+	<classpathentry kind="lib" path="lib/bluecove-2.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/bluecove-gpl-2.1.1.jar"/>
+	<classpathentry kind="lib" path="lib_addons/j3dcore.jar"/>
 	<classpathentry kind="lib" path="lib_addons/j3dutils.jar"/>
 	<classpathentry kind="lib" path="lib_addons/miglayout-3.7.2-swing.jar"/>
 	<classpathentry kind="lib" path="lib_addons/motej.0.9.jar"/>

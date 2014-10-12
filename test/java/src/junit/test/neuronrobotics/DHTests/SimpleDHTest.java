@@ -16,40 +16,44 @@ import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 public class SimpleDHTest {
-	DHParameterKinematics model = new DHParameterKinematics(
-			SimpleDHTest.class.getResourceAsStream("SimpleDH.xml"),
-			SimpleDHTest.class.getResourceAsStream("SimpleDH.xml"));
-	double [] startVect = new double [] { 0,0,0,0};
-	public SimpleDHTest(){
+	
+	DHParameterKinematics model;
+	double[] startVect = new double[] { 0, 0, 0, 0 };
+
+	public SimpleDHTest() {
+		Log.enableInfoPrint();
+		model = new DHParameterKinematics(
+					SimpleDHTest.class.getResourceAsStream("SimpleDH.xml"),
+					SimpleDHTest.class.getResourceAsStream("SimpleDH.xml"));
 		final SampleGuiNR gui = new SampleGuiNR();
 		final JFrame frame = new JFrame();
 		final JTabbedPane tabs = new JTabbedPane();
 		gui.setKinematicsModel(model);
-		try{
-			tabs.add("Display",new DHKinematicsViewer(model));
-		}catch(Error ex){
+		try {
+			tabs.add("Display", new DHKinematicsViewer(model));
+		} catch (Error ex) {
 			JPanel error = new JPanel(new MigLayout());
-			error.add(new JLabel("Error while loading Java3d library:"),"wrap");
-			error.add(new JLabel(ex.getMessage()),"wrap");
-			tabs.add("Display [ERROR]",error);
+			error.add(new JLabel("Error while loading Java3d library:"), "wrap");
+			error.add(new JLabel(ex.getMessage()), "wrap");
+			tabs.add("Display [ERROR]", error);
 			ex.printStackTrace();
 		}
-		
+
 		frame.setLocationRelativeTo(null);
 		zero();
-		tabs.add("Control",gui);
-		//Add scroller here
+		tabs.add("Control", gui);
+		// Add scroller here
 		frame.getContentPane().add(tabs);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLocationRelativeTo(null);
 		frame.pack();
 		frame.setVisible(true);
-		
+
 		Log.enableSystemPrint(false);
-		
+
 		try {
-			for(int i=0;i<startVect.length;i++){
-				double val = 45*(i%2>0?-1:1);
+			for (int i = 0; i < startVect.length; i++) {
+				double val = 45 * (i % 2 > 0 ? -1 : 1);
 				model.setDesiredJointAxisValue(i, val, 1);
 			}
 		} catch (Exception e) {
@@ -57,15 +61,15 @@ public class SimpleDHTest {
 			e.printStackTrace();
 		}
 
-		while(true){
+		while (true) {
 			ThreadUtil.wait(1000);
 			Matrix m = model.getJacobian();
-			System.out.println("Jacobian = "+TransformNR.getMatrixString(m));
+			System.out.println("Jacobian = " + TransformNR.getMatrixString(m));
 		}
-		
+
 	}
-	
-	private void zero(){
+
+	private void zero() {
 		try {
 			model.setDesiredJointSpaceVector(startVect, 2);
 		} catch (Exception e) {
@@ -73,6 +77,7 @@ public class SimpleDHTest {
 			e.printStackTrace();
 		}
 	}
+
 	/**
 	 * @param args
 	 */
