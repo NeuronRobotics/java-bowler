@@ -1,4 +1,4 @@
-package com.neuronrobotics.test.kinematics;
+package junit.test.neuronrobotics.DHTests;
 
 import com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR;
 import com.neuronrobotics.sdk.addons.kinematics.GenericKinematicsModelNR;

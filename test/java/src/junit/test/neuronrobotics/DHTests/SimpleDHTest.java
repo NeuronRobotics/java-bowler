@@ -1,4 +1,4 @@
-package com.neuronrobotics.test.kinematics;
+package junit.test.neuronrobotics.DHTests;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;

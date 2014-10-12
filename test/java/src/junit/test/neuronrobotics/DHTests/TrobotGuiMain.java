@@ -1,4 +1,4 @@
-package com.neuronrobotics.test.kinematics;
+package junit.test.neuronrobotics.DHTests;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,21 +11,18 @@ import javax.swing.JTabbedPane;
 
 import net.miginfocom.swing.MigLayout;
 
-import com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR;
 import com.neuronrobotics.sdk.addons.kinematics.DHParameterKinematics;
-import com.neuronrobotics.sdk.addons.kinematics.ITaskSpaceUpdateListenerNR;
 import com.neuronrobotics.sdk.addons.kinematics.gui.DHKinematicsViewer;
 import com.neuronrobotics.sdk.addons.kinematics.gui.SampleGuiNR;
-import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 
-public class KinematicsDeveopmentMain implements ITaskSpaceUpdateListenerNR {
+public class TrobotGuiMain {
 	double [] startVect = new double [] { 0,0,0,0,0,0};
-	private DHParameterKinematics master;
-	DHParameterKinematics slave = new DHParameterKinematics(); 
-	private KinematicsDeveopmentMain(){
+	DHParameterKinematics model;
+	
+	private TrobotGuiMain(){
 		
 		try{
 			final SampleGuiNR gui = new SampleGuiNR();
@@ -33,6 +30,7 @@ public class KinematicsDeveopmentMain implements ITaskSpaceUpdateListenerNR {
 			final JTabbedPane tabs = new JTabbedPane();
 			JPanel starter = new JPanel(new MigLayout());
 			JButton connectReal = new JButton("Connect Robot");
+			JButton connectVirtual = new JButton("Connect Virtual");
 			connectReal.addActionListener(new ActionListener() {
 				
 				@Override
@@ -47,17 +45,9 @@ public class KinematicsDeveopmentMain implements ITaskSpaceUpdateListenerNR {
 						throw new RuntimeException("Not a bowler Device on connection: "+connection);
 					}
 					mcon.killAllPidGroups();
-					setMaster(new DHParameterKinematics(mcon,"TrobotMaster.xml"));
-					gui.setKinematicsModel(getMaster());
-					try {
-						slave.setDesiredJointSpaceVector(new double [] {0,0,0,0,0,0},0);
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					model = new DHParameterKinematics(mcon,"TrobotMaster.xml");
 					try{
-						tabs.add("Master",new DHKinematicsViewer(getMaster()));
-						tabs.add("Slave",new DHKinematicsViewer(slave));
+						gui.addExtraPanel(new DHKinematicsViewer(model));
 					}catch(Error ex){
 						JPanel error = new JPanel(new MigLayout());
 						error.add(new JLabel("Error while loading Java3d library:"),"wrap");
@@ -65,12 +55,39 @@ public class KinematicsDeveopmentMain implements ITaskSpaceUpdateListenerNR {
 						tabs.add("Display [ERROR]",error);
 						ex.printStackTrace();
 					}
-					frame.pack();
+					gui.setKinematicsModel(model);
+					//frame.pack();
+					frame.setLocationRelativeTo(null);
+					zero();
+				}
+			});
+			connectVirtual.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					/**
+					 * First create the Bowler device connection
+					 */
+
+					model = new DHParameterKinematics();
+					
+					try{
+						gui.addExtraPanel(new DHKinematicsViewer(model));
+					}catch(Error ex){
+						JPanel error = new JPanel(new MigLayout());
+						error.add(new JLabel("Error while loading Java3d library:"),"wrap");
+						error.add(new JLabel(ex.getMessage()),"wrap");
+						tabs.add("Display [ERROR]",error);
+						ex.printStackTrace();
+					}
+					gui.setKinematicsModel(model);
+					//frame.pack();
 					frame.setLocationRelativeTo(null);
 					zero();
 				}
 			});
 			starter.add(connectReal);
+			starter.add(connectVirtual);
 			
 			gui.add(starter);
 			tabs.add("Control",gui);
@@ -90,7 +107,7 @@ public class KinematicsDeveopmentMain implements ITaskSpaceUpdateListenerNR {
 	
 	private void zero(){
 		try {
-			getMaster().setDesiredJointSpaceVector(startVect, 2);
+			model.setDesiredJointSpaceVector(startVect, 2);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -101,31 +118,6 @@ public class KinematicsDeveopmentMain implements ITaskSpaceUpdateListenerNR {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		new KinematicsDeveopmentMain();
-	}
-
-	public DHParameterKinematics getMaster() {
-		return master;
-	}
-
-	public void setMaster(DHParameterKinematics master) {
-		this.master = master;
-		master.addPoseUpdateListener(this);
-	}
-
-	@Override
-	public void onTaskSpaceUpdate(AbstractKinematicsNR source, TransformNR pose) {
-		try {
-			slave.setDesiredTaskSpaceTransform(pose, 0);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public void onTargetTaskSpaceUpdate(AbstractKinematicsNR source,TransformNR pose) {
-		// TODO Auto-generated method stub
-		
+		new TrobotGuiMain();
 	}
 }
