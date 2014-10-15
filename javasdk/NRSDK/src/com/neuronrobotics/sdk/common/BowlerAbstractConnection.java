@@ -680,11 +680,17 @@ public abstract class BowlerAbstractConnection {
 						namespacePacket = send(new NamespaceCommand(),addr,5);
 						
 						num= namespacePacket.getData().getByte(0);
+						if(num <=0){
+							Log.error("Not enougn namespaces!"+namespacePacket);
+						}
 						//Done with the packet
 						BowlerDatagramFactory.freePacket(namespacePacket);
 						Log.warning("This is an older implementation of core, depricated");
 					}else{
 						num= namespacePacket.getData().getByte(namespacePacket.getData().size()-1);
+						if(num <=0){
+							Log.error("Not enougn namespaces!"+namespacePacket);
+						}
 						//Done with the packet
 						BowlerDatagramFactory.freePacket(namespacePacket);
 						Log.info("This is the new core");
