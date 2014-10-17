@@ -26,15 +26,16 @@ public class DyIONamespaceTest {
 		//Log.enableDebugPrint();
 		
 		//Change this MAC address to match your tester/testee mapping
-		SerialConnection testerConection = SerialConnection.getConnectionByMacAddress(new MACAddress("74:F7:26:80:00:75"));
+		//SerialConnection testerConection = SerialConnection.getConnectionByMacAddress(new MACAddress("74:F7:26:80:00:75"));
+		SerialConnection testerConection = SerialConnection.getConnectionByMacAddress(new MACAddress("74:F7:26:80:00:7C"));
 		assertTrue(testerConection!=null);
 		harness = new DyIO(testerConection);
 		harness.connect();
 		
 		//Change this MAC address to match your tester/testee mapping
-		//SerialConnection targetConection = SerialConnection.getConnectionByMacAddress(new MACAddress("74:F7:26:00:00:00"));
+		SerialConnection targetConection = SerialConnection.getConnectionByMacAddress(new MACAddress("74:F7:26:00:00:00"));
 		
-		SerialConnection targetConection =  new SerialConnection("/dev/DyIO1");
+		//SerialConnection targetConection =  new SerialConnection("/dev/DyIO1");
 		assertTrue(targetConection!=null);
 		targetConection.setSynchronusPacketTimeoutTime(10000);
 		testDevice = new DyIO(targetConection);
