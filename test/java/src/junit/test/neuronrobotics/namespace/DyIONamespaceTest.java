@@ -1,6 +1,7 @@
 package junit.test.neuronrobotics.namespace;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 
@@ -8,7 +9,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.MACAddress;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
@@ -22,41 +22,36 @@ public class DyIONamespaceTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		DyIO.disableFWCheck();
-		//Log.enableDebugPrint();
-		
-		//Change this MAC address to match your tester/testee mapping
-		//SerialConnection testerConection = SerialConnection.getConnectionByMacAddress(new MACAddress("74:F7:26:80:00:75"));
-		SerialConnection testerConection = SerialConnection.getConnectionByMacAddress(new MACAddress("74:F7:26:80:00:7C"));
-		assertTrue(testerConection!=null);
-		harness = new DyIO(testerConection);
-		harness.connect();
-		
-		//Change this MAC address to match your tester/testee mapping
-		SerialConnection targetConection = SerialConnection.getConnectionByMacAddress(new MACAddress("74:F7:26:00:00:00"));
-		
-		//SerialConnection targetConection =  new SerialConnection("/dev/DyIO1");
-		assertTrue(targetConection!=null);
-		targetConection.setSynchronusPacketTimeoutTime(10000);
-		testDevice = new DyIO(targetConection);
-		testDevice.connect();
-		int numPins = testDevice.getDyIOChannelCount();
-		
-		//Devices as input
-		for(int i=0;i<numPins;i++){
-			harness.setMode(i, DyIOChannelMode.DIGITAL_IN);
-			testDevice.setMode(i, DyIOChannelMode.DIGITAL_IN);
+
+		if(harness == null && testDevice == null ){
+			DyIO.disableFWCheck();
+			//Log.enableDebugPrint();
+			
+			//Change this MAC address to match your tester/testee mapping
+			SerialConnection testerConection = SerialConnection.getConnectionByMacAddress(new MACAddress("74:F7:26:80:00:7C"));
+			assertTrue(testerConection!=null);
+			harness = new DyIO(testerConection);
+			harness.connect();
+			
+			//Change this MAC address to match your tester/testee mapping
+			//SerialConnection targetConection = SerialConnection.getConnectionByMacAddress(new MACAddress("74:F7:26:00:00:00"));
+			
+			SerialConnection targetConection =  new SerialConnection("/dev/DyIO1");
+			assertTrue(targetConection!=null);
+			targetConection.setSynchronusPacketTimeoutTime(10000);
+			testDevice = new DyIO(targetConection);
+			testDevice.connect();
+			int numPins = testDevice.getDyIOChannelCount();
+			
+			//Devices as input
+			for(int i=0;i<numPins;i++){
+				harness.setMode(i, DyIOChannelMode.DIGITAL_IN);
+				testDevice.setMode(i, DyIOChannelMode.DIGITAL_IN);
+			}
+
 		}
-		
 	}
 	
-	@After
-	public void shutdownDevices(){
-		
-		testDevice.disconnect();
-		if(harness!=null)
-			harness.disconnect();
-	}
 	
 	@Test public void DyIONameTest(){
 
@@ -64,18 +59,18 @@ public class DyIONamespaceTest {
 			fail();
 		
 		String name = testDevice.getInfo();
-		
+		System.out.println("Name is:"+name);
 		String setName;
 		if(name.contains("My DyIO"))
 			setName="My DyIO2";
 		else
 			setName="My DyIO";
-		
+		System.out.println("Setting:"+setName);
 		testDevice.setInfo(setName);
 		
 		String newName = testDevice.getInfo();
 		
-
+		System.out.println("New name is:"+newName);
 		testDevice.setInfo(name);
 	
 		assertTrue(setName.contains(newName));

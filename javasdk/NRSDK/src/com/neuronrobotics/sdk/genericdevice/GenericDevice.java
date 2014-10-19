@@ -1,7 +1,5 @@
 package com.neuronrobotics.sdk.genericdevice;
 
-import java.util.ArrayList;
-
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
 import com.neuronrobotics.sdk.common.BowlerDatagram;

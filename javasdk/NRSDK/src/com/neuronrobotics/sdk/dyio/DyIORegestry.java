@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.IConnectionEventListener;
-import com.neuronrobotics.sdk.dyio.DyIO;
 
 
 public class DyIORegestry {

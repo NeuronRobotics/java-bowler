@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 import javax.media.j3d.AmbientLight;
-import javax.media.j3d.BoundingBox;
 import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Canvas3D;

@@ -3,13 +3,7 @@ package com.neuronrobotics.sdk.addons.kinematics.gui;
 import java.awt.Color;
 import java.awt.Font;
 
-import javax.media.j3d.AmbientLight;
 import javax.media.j3d.Appearance;
-import javax.media.j3d.BoundingBox;
-import javax.media.j3d.BoundingSphere;
-import javax.media.j3d.Bounds;
-import javax.media.j3d.ColoringAttributes;
-import javax.media.j3d.DirectionalLight;
 import javax.media.j3d.Font3D;
 import javax.media.j3d.FontExtrusion;
 import javax.media.j3d.Material;
@@ -18,14 +12,9 @@ import javax.media.j3d.Text3D;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 import javax.vecmath.Color3f;
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3f;
-
-import Jama.Matrix;
 
 import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
-import com.sun.j3d.utils.geometry.ColorCube;
 
 
 public class TransformFactory {

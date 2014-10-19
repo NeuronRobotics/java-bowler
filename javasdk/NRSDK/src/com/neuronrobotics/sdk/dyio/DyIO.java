@@ -15,15 +15,13 @@
 package com.neuronrobotics.sdk.dyio;
 
 import java.util.ArrayList;
-import java.util.Collection;
-
 
 import com.neuronrobotics.sdk.commands.bcs.io.AsyncMode;
 import com.neuronrobotics.sdk.commands.bcs.io.AsyncThreshholdEdgeType;
 import com.neuronrobotics.sdk.commands.bcs.io.ConfigAsyncCommand;
+import com.neuronrobotics.sdk.commands.bcs.io.GetChannelModeCommand;
 import com.neuronrobotics.sdk.commands.bcs.io.GetChannelModeListCommand;
 import com.neuronrobotics.sdk.commands.bcs.io.GetDyIOChannelCountCommand;
-import com.neuronrobotics.sdk.commands.bcs.io.GetChannelModeCommand;
 import com.neuronrobotics.sdk.commands.bcs.io.SetAllChannelValuesCommand;
 import com.neuronrobotics.sdk.commands.bcs.io.setmode.SetChannelModeCommand;
 import com.neuronrobotics.sdk.commands.bcs.pid.DyPID.ConfigureDynamicPIDCommand;

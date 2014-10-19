@@ -11,10 +11,10 @@ import javax.swing.JTable;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
-import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
-
-import Jama.Matrix;
 import net.miginfocom.swing.MigLayout;
+import Jama.Matrix;
+
+import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 
 public class MatrixDisplayNR extends JPanel {
 	/**
