@@ -51,11 +51,12 @@ public class LinkFactory {
 	public LinkFactory(ILinkFactoryProvider connection,GenericPIDDevice d) {
 		pid=d;
 		hasPid=true;
-		
+		//Log.enableInfoPrint();
 		//TODO fill in the auto link configuration
 		LinkConfiguration first = connection.requestLinkConfiguration(0);
 		first.setPidConfiguration( pid);
 		getLink(first);
+		
 		for (int i=1;i<first.getTotlaNumberOfLinks();i++){
 			LinkConfiguration tmp = connection.requestLinkConfiguration(i);
 			tmp.setPidConfiguration(pid);
