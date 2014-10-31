@@ -833,8 +833,7 @@ public abstract class BowlerAbstractConnection {
 					throw new RuntimeException("This RPC section failed");
 				}
 				byte []data = b.getData().getBytes(2);
-				//Done with the packet
-				BowlerDatagramFactory.freePacket(b);
+				
 				BowlerMethod downstreamMethod = BowlerMethod.get(data[0]);
 				int numDownArgs = data[1];
 				BowlerMethod upstreamMethod   = BowlerMethod.get(data[numDownArgs+2]);
@@ -849,7 +848,15 @@ public abstract class BowlerAbstractConnection {
 				for(int k=0;k<numUpArgs;k++){
 					upArgs[k] = BowlerDataType.get(data[k+numDownArgs+4]);
 				}
-				RpcEncapsulation tmpRpc = new RpcEncapsulation(namespaceIndex,namespace, rpcStr, downstreamMethod,downArgs,upstreamMethod,upArgs);
+				RpcEncapsulation tmpRpc;
+				try{
+					tmpRpc = new RpcEncapsulation(namespaceIndex,namespace, rpcStr, downstreamMethod,downArgs,upstreamMethod,upArgs);
+				}catch (RuntimeException e){
+					Log.error("Argumet parsing failure!\r\n"+b);
+					throw e;
+				}
+				//Done with the packet
+				BowlerDatagramFactory.freePacket(b);
 				Log.debug(tmpRpc.toString());
 				namespaceList.get(namespaceIndex).getRpcList().add(tmpRpc);
 			}

@@ -229,6 +229,11 @@ public class RpcEncapsulation {
 	
 
 	public void setDownstreamArguments(BowlerDataType[] downstreamArguments) {
+		for(int i=0;i<downstreamArguments.length;i++){
+			if(downstreamArguments[i] == null){
+				throw new RuntimeException("RPC argument can not be null");
+			}
+		}
 		this.downstreamArguments = downstreamArguments;
 	}
 
@@ -237,6 +242,11 @@ public class RpcEncapsulation {
 	}
 
 	public void setUpstreamArguments(BowlerDataType[] upstreamArguments) {
+		for(int i=0;i<upstreamArguments.length;i++){
+			if(upstreamArguments[i] == null){
+				throw new RuntimeException("RPC argument can not be null");
+			}
+		}
 		this.upstreamArguments = upstreamArguments;
 	}
 
@@ -254,6 +264,7 @@ public class RpcEncapsulation {
 		if(getDownstreamArguments()!=null){
 			s+=" (";
 			for(int i=0;i<getDownstreamArguments().length;i++){
+				
 				s+=getDownstreamArguments()[i]+ " ";
 			}
 			s+=") ";
