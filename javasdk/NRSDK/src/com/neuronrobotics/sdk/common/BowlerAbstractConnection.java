@@ -850,7 +850,7 @@ public abstract class BowlerAbstractConnection {
 					upArgs[k] = BowlerDataType.get(data[k+numDownArgs+4]);
 				}
 				RpcEncapsulation tmpRpc = new RpcEncapsulation(namespaceIndex,namespace, rpcStr, downstreamMethod,downArgs,upstreamMethod,upArgs);
-				//System.out.println(tmpRpc);
+				Log.debug(tmpRpc.toString());
 				namespaceList.get(namespaceIndex).getRpcList().add(tmpRpc);
 			}
 			
