@@ -22,6 +22,7 @@ public class DyIONamespaceTest {
 	
 	@Before
 	public void setUp() throws Exception {
+
 		if(harness == null && testDevice == null ){
 			DyIO.disableFWCheck();
 			//Log.enableDebugPrint();
@@ -47,6 +48,7 @@ public class DyIONamespaceTest {
 				harness.setMode(i, DyIOChannelMode.DIGITAL_IN);
 				testDevice.setMode(i, DyIOChannelMode.DIGITAL_IN);
 			}
+
 		}
 	}
 	
