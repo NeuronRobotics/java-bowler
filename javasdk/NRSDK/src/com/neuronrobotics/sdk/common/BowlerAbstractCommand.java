@@ -133,7 +133,7 @@ public abstract class BowlerAbstractCommand implements ISendable {
 			case 0:
 				switch(section) {
 				default:
-					throw new InvalidResponseException("Unknow error in the communications stack. (" + zone + " " + section + ")");
+					throw new InvalidResponseException("Unknow error in the communications stack. (" + zone + " " + section + ")"+data);
 				case 0x7f:
 					throw new InvalidResponseException("The method provided is invalid.");
 				case 0:

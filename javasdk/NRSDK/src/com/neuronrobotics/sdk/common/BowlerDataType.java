@@ -97,6 +97,9 @@ public enum BowlerDataType implements ISendable {
     public static BowlerDataType get(byte code) {
     	try{
     		BowlerDataType tmp =lookup.get(code);
+    		if(tmp == null){
+    			throw new RuntimeException("Unrecognized Bowler data type "+code);
+    		}
     		return tmp;
     	}catch(Exception ex){
     		ex.printStackTrace();

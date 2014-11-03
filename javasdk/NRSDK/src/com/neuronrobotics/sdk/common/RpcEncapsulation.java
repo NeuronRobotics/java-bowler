@@ -102,7 +102,7 @@ public class RpcEncapsulation {
 				}
 				break;
 			default:
-				break;
+				throw new RuntimeException("Unrecognized data type "+arguments[i]);
 			}
 		}
 		
@@ -188,7 +188,7 @@ public class RpcEncapsulation {
 					
 					break;
 				default:
-					break;
+					throw new RuntimeException("Unrecognized data type"+arguments[i]);
 				}
 			}
 		}catch(RuntimeException ex){
