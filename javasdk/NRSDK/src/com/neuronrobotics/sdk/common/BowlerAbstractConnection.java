@@ -798,6 +798,7 @@ public abstract class BowlerAbstractConnection {
 		try{
 			//populate RPC set
 			BowlerDatagram b = send(new  RpcCommand(namespaceIndex),addr,5);
+			
 			if(!b.getRPC().contains("_rpc")){
 				System.err.println(b);
 				throw new RuntimeException("This RPC index request has failed");
@@ -848,6 +849,7 @@ public abstract class BowlerAbstractConnection {
 				for(int k=0;k<numUpArgs;k++){
 					upArgs[k] = BowlerDataType.get(data[k+numDownArgs+4]);
 				}
+
 				RpcEncapsulation tmpRpc;
 				try{
 					tmpRpc = new RpcEncapsulation(namespaceIndex,namespace, rpcStr, downstreamMethod,downArgs,upstreamMethod,upArgs);
@@ -911,8 +913,15 @@ public abstract class BowlerAbstractConnection {
 		}
 		BowlerDatagram cmd= BowlerDatagramFactory.build(addr, command);
 		BowlerDatagram back = sendSynchronusly(cmd);
+		try{
+			return command.validate(back);
+		}catch (InvalidResponseException ex){
+
+			Log.error("Failed to send synchronusly: "+cmd+"\r\nGot>> "+back);
+			return null;
+		}
 		//BowlerDatagramFactory.freePacket(cmd);
-		return command.validate(back);
+		
 	}
 	
 	/**
