@@ -34,9 +34,9 @@ public class DyIONamespaceTest {
 			harness.connect();
 			
 			//Change this MAC address to match your tester/testee mapping
-			//SerialConnection targetConection = SerialConnection.getConnectionByMacAddress(new MACAddress("74:F7:26:00:00:00"));
+			SerialConnection targetConection = SerialConnection.getConnectionByMacAddress(new MACAddress("74:F7:26:00:00:00"));
 			
-			SerialConnection targetConection =  new SerialConnection("/dev/DyIO1");
+			//SerialConnection targetConection =  new SerialConnection("/dev/DyIO0");
 			assertTrue(targetConection!=null);
 			targetConection.setSynchronusPacketTimeoutTime(10000);
 			testDevice = new DyIO(targetConection);
@@ -152,12 +152,12 @@ public class DyIONamespaceTest {
 				
 				boolean state=false;
 				for(int j=0;j<5;j++){
-					int pinState = state?1:0;
+					int pinState = state?1023:0;
 					harness.setValue(testerIndex, pinState);
 					ThreadUtil.wait(200);
 					int gotValue = testDevice.getValue(i);
 					System.out.println(" Pin:"+i+" Tester:"+testerIndex+" setting to: "+pinState+" got:"+gotValue);
-					assertTrue(gotValue==(state?1023:0));
+					assertTrue(gotValue==pinState);
 					state = !state;
 				}
 				harness.setMode(testerIndex, DyIOChannelMode.DIGITAL_IN);
