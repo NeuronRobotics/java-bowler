@@ -700,13 +700,28 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 			c.fireChannelEvent(new DyIOChannelEvent(c, bl));
 			return;
 		}if(data.getRPC().equals("gacv")) {
-			//Log.info("All channel values\n"+data.toString());
-			ByteList bl = data.getData();
-			for(DyIOChannel c:getChannels()){
-				ByteList val = new ByteList(bl.popList(4));
-				//Log.info("DyIO event "+c+" value: "+val);
-				if(!c.isStreamChannel())
-					c.fireChannelEvent(new DyIOChannelEvent(c,val));
+			if(isLegacyParser()){
+				Log.error("All channel values\n"+data.toString());
+				ByteList bl = data.getData();
+				for(DyIOChannel c:getChannels()){
+					ByteList val = new ByteList(bl.popList(4));
+					Log.error("DyIO event "+c+" value: "+val);
+					if(!c.isStreamChannel())
+						c.fireChannelEvent(new DyIOChannelEvent(c,val));
+				}
+			}else{
+				Log.error("All channel values\n"+data.toString());
+				ByteList bl = data.getData();
+				int numChan = bl.pop();
+				if(numChan !=getChannels().size() ){
+					Log.error("Bad packet, wrong number of values");
+				}
+				for(DyIOChannel c:getChannels()){
+					ByteList val = new ByteList(bl.popList(4));
+					Log.error("DyIO event "+c+" value: "+val);
+					if(!c.isStreamChannel())
+						c.fireChannelEvent(new DyIOChannelEvent(c,val));
+				}
 			}
 			
 		}else{
@@ -984,23 +999,23 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	}
 	
 	private boolean enableBrownOut=true;
-	/**
-	 * This method allows you to disable the brown out detect for the servo subsystem. If true is passed 
-	 * @param enable true to enable the borwnout, false to disable
-	 * @return True is success
-	 */
-	@Deprecated
-	public boolean enableBrownOutDetect(boolean enable) {
-		return setServoPowerSafeMode(enable);
-	}
-	/**
-	 * Tells the application whether or not to use the brownout detect
-	 * @return
-	 */
-	@Deprecated
-	public boolean isBrownOutDetectEnabled() {
-		return isServoPowerSafeMode();
-	}
+//	/**
+//	 * This method allows you to disable the brown out detect for the servo subsystem. If true is passed 
+//	 * @param enable true to enable the borwnout, false to disable
+//	 * @return True is success
+//	 */
+//	@Deprecated
+//	public boolean enableBrownOutDetect(boolean enable) {
+//		return setServoPowerSafeMode(enable);
+//	}
+//	/**
+//	 * Tells the application whether or not to use the brownout detect
+//	 * @return
+//	 */
+//	@Deprecated
+//	public boolean isBrownOutDetectEnabled() {
+//		return isServoPowerSafeMode();
+//	}
 	
 	/**
 	 * This method allows you to disable the brown out detect for the servo subsystem. If true is passed 
@@ -1114,7 +1129,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 		}else{
 			Object [] args = send("bcs.io.*;0.3;;",
 					BowlerMethod.GET,
-					"gchv",
+					"gacv",
 					new Object[]{});
 			Integer [] values = (Integer [])args[0];
 			for(int i=0;i<getChannels().size();i++){
