@@ -710,7 +710,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 						c.fireChannelEvent(new DyIOChannelEvent(c,val));
 				}
 			}else{
-				Log.error("All channel values\n"+data.toString());
+				Log.info("All channel values\n"+data.toString());
 				ByteList bl = data.getData();
 				int numChan = bl.pop();
 				if(numChan !=getChannels().size() ){
@@ -718,7 +718,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 				}
 				for(DyIOChannel c:getChannels()){
 					ByteList val = new ByteList(bl.popList(4));
-					Log.error("DyIO event "+c+" value: "+val);
+					Log.info("DyIO event "+c+" value: "+val);
 					if(!c.isStreamChannel())
 						c.fireChannelEvent(new DyIOChannelEvent(c,val));
 				}
