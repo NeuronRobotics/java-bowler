@@ -634,6 +634,7 @@ public abstract class BowlerAbstractConnection {
 						//Found the command in the namespace
 
 							BowlerDatagram dg =  send(rpc.getCommand(arguments),addr,retry);
+							
 							Object [] en =rpc.parseResponse(dg);//parse and return
 							BowlerDatagramFactory.freePacket(dg);
 							return en;
