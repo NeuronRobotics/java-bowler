@@ -701,12 +701,29 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 			return;
 		}if(data.getRPC().equals("gacv")) {
 			//Log.info("All channel values\n"+data.toString());
-			ByteList bl = data.getData();
-			for(DyIOChannel c:getChannels()){
-				ByteList val = new ByteList(bl.popList(4));
-				//Log.info("DyIO event "+c+" value: "+val);
-				if(!c.isStreamChannel())
-					c.fireChannelEvent(new DyIOChannelEvent(c,val));
+			if(isLegacyParser()){
+				ByteList bl = data.getData();
+				for(DyIOChannel c:getChannels()){
+					ByteList val = new ByteList(bl.popList(4));
+					//Log.info("DyIO event "+c+" value: "+val);
+					if(!c.isStreamChannel())
+						c.fireChannelEvent(new DyIOChannelEvent(c,val));
+				}
+			}else{
+				ByteList bl = data.getData();
+				byte size = bl.pop(0);
+				if(size != getChannels().size()){
+					Log.error("Mal-formed asuync packet");
+					return;
+				}
+				Log.warning("Async: "+data);
+				for(DyIOChannel c:getChannels()){
+					
+					ByteList val = new ByteList(bl.popList(4));
+					//Log.info("DyIO event "+c+" value: "+val);
+					if(!c.isStreamChannel())
+						c.fireChannelEvent(new DyIOChannelEvent(c,val));
+				}
 			}
 			
 		}else{
