@@ -165,8 +165,10 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 								conf.getIndexLatch(),
 								conf.getLowerLimit(),
 								conf.getUpperLimit()}, 5);
+		ConfigurePIDController(conf.getPidConfiguration());
 		
 		return;
+		
 	}
 	
 	public void setSlic3rConfiguration(Slic3r conf){
