@@ -12,13 +12,17 @@ import org.junit.Test;
 import com.neuronrobotics.sdk.common.MACAddress;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
+import com.neuronrobotics.sdk.dyio.peripherals.DigitalInputChannel;
+import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 import com.neuronrobotics.sdk.serial.SerialConnection;
+import com.neuronrobotics.sdk.types.DigitalInput;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 public class DyIONamespaceTest {
 	
 	private static DyIO harness=null;
 	private static DyIO testDevice=null;
+	private boolean useHarness = true;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -27,12 +31,19 @@ public class DyIONamespaceTest {
 			DyIO.disableFWCheck();
 			//Log.enableDebugPrint();
 			
-			//Change this MAC address to match your tester/testee mapping
-			SerialConnection testerConection = SerialConnection.getConnectionByMacAddress(new MACAddress("74:F7:26:80:00:7C"));
-			assertTrue(testerConection!=null);
-			harness = new DyIO(testerConection);
-			harness.connect();
-			
+			if(useHarness ){
+				//Change this MAC address to match your tester/testee mapping
+				SerialConnection testerConection = SerialConnection.getConnectionByMacAddress(new MACAddress("74:F7:26:80:00:7C"));
+				if(testerConection!=null){
+					harness = new DyIO(testerConection);
+					harness.connect();
+					harness.setServoPowerSafeMode(false);
+					System.out.println("Using harness for this test");
+				}else{
+					System.out.println("No harness for this test");
+					useHarness=false;
+				}
+			}
 			//Change this MAC address to match your tester/testee mapping
 			SerialConnection targetConection = SerialConnection.getConnectionByMacAddress(new MACAddress("74:F7:26:00:00:00"));
 			
@@ -41,15 +52,40 @@ public class DyIONamespaceTest {
 			targetConection.setSynchronusPacketTimeoutTime(10000);
 			testDevice = new DyIO(targetConection);
 			testDevice.connect();
+			testDevice.setServoPowerSafeMode(false);
 			int numPins = testDevice.getDyIOChannelCount();
 			
 			//Devices as input
 			for(int i=0;i<numPins;i++){
-				harness.setMode(i, DyIOChannelMode.DIGITAL_IN);
+				if(useHarness){
+					harness.setMode(i, DyIOChannelMode.DIGITAL_IN);
+				}
 				testDevice.setMode(i, DyIOChannelMode.DIGITAL_IN);
 			}
 
 		}
+	}
+	
+	@Test public void DyIOConfigurationSave(){
+		if(!testDevice.isAvailable())
+			fail();
+		
+		testDevice.setServoPowerSafeMode(false);
+		for(int i=0;i<testDevice.getChannels().size();i++){
+			for(int j=0;j<129;j+=64){
+				System.out.println("Setting up servo: "+i);
+				ServoChannel srv = new ServoChannel(testDevice,i);
+				int testNumber = j;
+				System.out.println("Saving value to: "+testNumber);
+				srv.SavePosition(testNumber);
+				System.out.println("Setting up Digital in ");
+				DigitalInputChannel dip = new DigitalInputChannel(testDevice,i);
+			}
+			
+		}
+		
+
+		
 	}
 	
 	
