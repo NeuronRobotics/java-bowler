@@ -189,6 +189,18 @@ public class LinkConfiguration {
 	public void setTotlaNumberOfLinks(int totlaNumberOfLinks) {
 		this.totlaNumberOfLinks = totlaNumberOfLinks;
 	}
+	
+	public PIDConfiguration getPidConfiguration(){
+		PIDConfiguration pid = new PIDConfiguration();
+		pid.setKD(getKD());
+		pid.setGroup(getHardwareIndex());
+		pid.setStopOnIndex(isStopOnLatch());
+		pid.setKI(getKI());
+		pid.setKP(getKP());
+		pid.setIndexLatch(getIndexLatch());
+		pid.setInverted(isInverted());
+		return pid;
+	}
 	public void setPidConfiguration(IPidControlNamespace pid) {
 		PIDConfiguration conf = pid.getPIDConfiguration(getHardwareIndex());
     	if(getType().contains("pid")){
