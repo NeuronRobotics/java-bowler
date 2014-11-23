@@ -406,10 +406,11 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 		setResyncing(true);
 		setMuteResyncOnModeChange(true);
 		Log.info("Re-syncing...");
+		getBatteryVoltage(true);
 		BowlerDatagram response;
 		try{
 			if (!haveFirmware()){
-				getBatteryVoltage(true);
+				
 				firmware = getRevisions().get(0).getBytes();
 			}
 			checkFirmwareRev();
@@ -672,7 +673,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 		batteryVoltage = ((double)(ByteList.convertToInt(bl.getBytes(2, 2),false)))/1000.0;
 		bankAState = DyIOPowerState.valueOf(bl.get(0),batteryVoltage);
 		bankBState = DyIOPowerState.valueOf(bl.get(1),batteryVoltage);
-		
+		enableBrownOut=bl.get(4)!=0;
 		fireDyIOEvent(new DyIOPowerEvent(bankAState, bankBState, batteryVoltage));
 		return;
 	}
@@ -1025,7 +1026,8 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	 */
 	public boolean setServoPowerSafeMode(boolean enable) {
 		enableBrownOut=enable;
-		return send(new PowerCommand(!enableBrownOut))!=null;
+		powerEvent(send(new PowerCommand(!enableBrownOut)));
+		return  true;
 	}
 	/**
 	 * Tells the application whether or not to use the brownout detect
