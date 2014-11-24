@@ -196,6 +196,7 @@ public abstract class DyIOAbstractPeripheral implements IDyIOChannel {
 				if(getChannel().getDevice().isLegacyParser()){
 					getChannel().send(new SetChannelValueCommand(getChannel().getChannelNumber(), pos , getMode(), true));
 				}else{
+					
 					getChannel().getDevice().send("bcs.io.*;0.3;;",
 													BowlerMethod.CRITICAL,
 													"cchn",
@@ -203,6 +204,7 @@ public abstract class DyIOAbstractPeripheral implements IDyIOChannel {
 																	true,
 																	new int[]{pos}
 																});
+					getChannel().setValue(pos);
 					try {
 						Thread.sleep(30);
 					} catch (InterruptedException e) {
