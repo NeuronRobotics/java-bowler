@@ -17,7 +17,6 @@ package com.neuronrobotics.sdk.commands.bcs.core;
 import com.neuronrobotics.sdk.common.BowlerAbstractCommand;
 import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.common.BowlerMethod;
-
 import com.neuronrobotics.sdk.common.InvalidResponseException;
 
 /**

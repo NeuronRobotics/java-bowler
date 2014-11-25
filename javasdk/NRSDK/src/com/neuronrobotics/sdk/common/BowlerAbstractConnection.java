@@ -41,7 +41,6 @@ import com.neuronrobotics.sdk.commands.bcs.core.NamespaceCommand;
 import com.neuronrobotics.sdk.commands.bcs.core.PingCommand;
 import com.neuronrobotics.sdk.commands.bcs.core.RpcArgumentsCommand;
 import com.neuronrobotics.sdk.commands.bcs.core.RpcCommand;
-import com.neuronrobotics.sdk.config.SDKBuildInfo;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 
@@ -799,7 +798,13 @@ public abstract class BowlerAbstractConnection {
 			}
 			//int ns = b.getData().getByte(0);// gets the index of the namespace
 			//int rpcIndex = b.getData().getByte(1);// gets the index of the selected RPC
-			int numRpcs = b.getData().getByte(2);// gets the number of RPC's
+			int numRpcs;
+			try{
+				numRpcs = b.getData().getByte(2);// gets the number of RPC's
+			}catch(IndexOutOfBoundsException e){
+				e.printStackTrace();
+				throw new RuntimeException(e.getMessage()+"\r\n"+b);
+			}
 			if(numRpcs<1){
 				Log.error("RPC request failed:\n"+b);
 			}else{

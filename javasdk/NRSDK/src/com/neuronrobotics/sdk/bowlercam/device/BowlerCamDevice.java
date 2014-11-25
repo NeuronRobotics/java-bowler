@@ -4,13 +4,11 @@ package com.neuronrobotics.sdk.bowlercam.device;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-
 
 import javax.imageio.ImageIO;
 

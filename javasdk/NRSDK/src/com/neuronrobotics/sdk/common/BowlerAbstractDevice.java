@@ -35,7 +35,6 @@ import java.util.ArrayList;
 
 import com.neuronrobotics.sdk.commands.bcs.core.PingCommand;
 import com.neuronrobotics.sdk.commands.neuronrobotics.dyio.InfoFirmwareRevisionCommand;
-import com.neuronrobotics.sdk.util.ThreadUtil;
 
 // TODO: Auto-generated Javadoc
 /**

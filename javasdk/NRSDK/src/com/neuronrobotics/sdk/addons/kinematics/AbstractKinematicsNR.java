@@ -1,32 +1,16 @@
 package com.neuronrobotics.sdk.addons.kinematics;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-
-import javax.management.RuntimeErrorException;
-//import javax.swing.JFrame;
-//import javax.swing.JOptionPane;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 import Jama.Matrix;
 
-import com.neuronrobotics.sdk.addons.kinematics.AbstractLink;
-import com.neuronrobotics.sdk.addons.kinematics.ILinkListener;
-import com.neuronrobotics.sdk.addons.kinematics.LinkConfiguration;
-import com.neuronrobotics.sdk.addons.kinematics.LinkFactory;
 import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
@@ -40,6 +24,8 @@ import com.neuronrobotics.sdk.pid.PIDConfiguration;
 import com.neuronrobotics.sdk.pid.PIDEvent;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 import com.neuronrobotics.sdk.util.ThreadUtil;
+//import javax.swing.JFrame;
+//import javax.swing.JOptionPane;
 
 public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkListener {
 	
@@ -145,7 +131,7 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 		    	throw new RuntimeException("No base to Z frame transform defined");
 		    }
 		}catch (Exception ex){
-			ex.printStackTrace();
+			//ex.printStackTrace();
 			Log.warning("No base to Z frame transform defined");
 		}
 		

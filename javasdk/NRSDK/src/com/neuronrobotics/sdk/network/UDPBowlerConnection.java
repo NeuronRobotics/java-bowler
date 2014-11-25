@@ -126,10 +126,10 @@ public class UDPBowlerConnection extends BowlerAbstractConnection{
 		
 		DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
 		Log.info("Waiting for UDP packet");
-		
+		udpSock.setSoTimeout(1);// Timeout the socket after 1 ms
 		try{
 			udpSock.receive(receivePacket);
-		}catch(SocketException ex){
+		}catch(Exception ex){
 			// disconnect called
 			Log. warning("Receive bailed out because of close");
 			return false;

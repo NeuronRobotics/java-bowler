@@ -2,8 +2,6 @@ package com.neuronrobotics.sdk.addons.kinematics;
 
 import javax.swing.JFrame;
 
-import com.neuronrobotics.sdk.addons.kinematics.DHChain;
-import com.neuronrobotics.sdk.addons.kinematics.DhInverseSolver;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 
 public class ComputedGeometricModel  implements DhInverseSolver{
