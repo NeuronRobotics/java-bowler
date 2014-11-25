@@ -75,6 +75,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	private boolean haveBeenSynced =false;
 	
 	private boolean legacyParser = false;
+	private Boolean enableBrownOut=null;
 	
 	private GenericPIDDevice pid = new GenericPIDDevice();
 	/**
@@ -348,6 +349,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 			//if(getAddress().equals(new MACAddress(MACAddress.BROADCAST))) {
 				setAddress(response.getAddress());
 			//}
+			@SuppressWarnings("unused")
 			int count=0;
 			if(getDyIOChannelCount() != null){
 				count = getDyIOChannelCount();
@@ -623,14 +625,14 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 		return getConnection().isConnected();
 	
 	}
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.common.IBowlerDatagramListener#onAllResponse(com.neuronrobotics.sdk.common.BowlerDatagram)
-	 */
-	public void onAllResponse(BowlerDatagram data) {
-
-		getPid().onAllResponse(data);
-	}
-	
+//	/* (non-Javadoc)
+//	 * @see com.neuronrobotics.sdk.common.IBowlerDatagramListener#onAllResponse(com.neuronrobotics.sdk.common.BowlerDatagram)
+//	 */
+//	public void onAllResponse(BowlerDatagram data) {
+//
+//		getPid().onAllResponse(data);
+//	}
+//	
 	/**
 	 * This method returns the bank switch state of bank A (0-11)
 	 * This state is updated asynchronously by the DyIOEventListener
@@ -665,17 +667,18 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	 * @param data
 	 */
 	private void powerEvent(BowlerDatagram data) {
-		//System.out.println("Updating Power state");
-		ByteList bl = data.getData();
-		if(bl.size() != 4) {
+		
+		if(data.getRPC().contains("_pwr")){
+			ByteList bl = data.getData();
+			batteryVoltage = ((double)(ByteList.convertToInt(bl.getBytes(2, 2),false)))/1000.0;
+			bankAState = DyIOPowerState.valueOf(bl.get(0),batteryVoltage);
+			bankBState = DyIOPowerState.valueOf(bl.get(1),batteryVoltage);
+			enableBrownOut=bl.get(4)!=0;
+			fireDyIOEvent(new DyIOPowerEvent(bankAState, bankBState, batteryVoltage));
 			return;
+		}else{
+			Log.error("Wrong type for updating Power state "+data);
 		}
-		batteryVoltage = ((double)(ByteList.convertToInt(bl.getBytes(2, 2),false)))/1000.0;
-		bankAState = DyIOPowerState.valueOf(bl.get(0),batteryVoltage);
-		bankBState = DyIOPowerState.valueOf(bl.get(1),batteryVoltage);
-		enableBrownOut=bl.get(4)!=0;
-		fireDyIOEvent(new DyIOPowerEvent(bankAState, bankBState, batteryVoltage));
-		return;
 	}
 
 	/* (non-Javadoc)
@@ -1000,7 +1003,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 		}	
 	}
 	
-	private boolean enableBrownOut=true;
+
 //	/**
 //	 * This method allows you to disable the brown out detect for the servo subsystem. If true is passed 
 //	 * @param enable true to enable the borwnout, false to disable
@@ -1033,7 +1036,10 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	 * Tells the application whether or not to use the brownout detect
 	 * @return
 	 */
-	public boolean isServoPowerSafeMode() {
+	public Boolean isServoPowerSafeMode() {
+		if(enableBrownOut== null){
+			new RuntimeException().printStackTrace();
+		}
 		return enableBrownOut;
 	}
 	
