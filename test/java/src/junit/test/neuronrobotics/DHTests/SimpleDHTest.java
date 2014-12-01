@@ -38,7 +38,18 @@ public class SimpleDHTest {
 			tabs.add("Display [ERROR]", error);
 			ex.printStackTrace();
 		}
+		
+		
+		// Temporary to test Inverse Kinematic functions
+		TransformNR TransformNR = new TransformNR();
+		try {
+			model.inverseKinematics(TransformNR);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 
+		
 		frame.setLocationRelativeTo(null);
 		zero();
 		tabs.add("Control", gui);
