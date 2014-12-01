@@ -39,6 +39,7 @@ public class SimpleDHTest {
 			ex.printStackTrace();
 		}
 		
+		
 		// Temporary to test Inverse Kinematic functions
 		TransformNR TransformNR = new TransformNR();
 		try {
@@ -48,6 +49,7 @@ public class SimpleDHTest {
 			e1.printStackTrace();
 		}
 
+		
 		frame.setLocationRelativeTo(null);
 		zero();
 		tabs.add("Control", gui);
