@@ -29,7 +29,7 @@ public class ServoTest implements IServoPositionUpdateListener{
 		System.out.println("Moving with time");
 		for(int i = 0; i < 10; i++) {
 			// Set the value high every other time, exit if unsuccessful
-			int pos = ((i%2==0)?204:50);
+			int pos = ((i%2==0)?255:0);
                         //This will move the servo from the position it is currentlly in
 			srv.SetPosition(pos, time);
 			

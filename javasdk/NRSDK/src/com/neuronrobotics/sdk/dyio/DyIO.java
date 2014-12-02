@@ -610,7 +610,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 			send("bcs.io.*;0.3;;",
 					BowlerMethod.POST,
 					"sacv",
-					new Object[]{values});
+					new Object[]{new Integer((int) (seconds*1000)),values});
 		}
 		
 	}
