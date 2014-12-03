@@ -68,15 +68,14 @@ public class SPIChannel {
 				return new byte[0];
 			return b.getData().getBytes(2);
 		}else{
-			dyio.send("bcs.io.*;0.3;;",
+			ByteList data  = new ByteList(stream);
+			data.insert(0, (byte) ss);
+			Object [] args =dyio.send("bcs.io.*;0.3;;",
 					BowlerMethod.POST,
 					"strm",
-					new Object[]{0,new ByteList(stream)});
-			Object [] args = dyio.send("bcs.io.*;0.3;;",
-					BowlerMethod.GET,
-					"strm",
-					new Object[]{0});
-			return ((ByteList)args[0]).getBytes();
+					new Object[]{0,data});
+
+			return ((ByteList)args[1]).getBytes();
 		}
 	}
 }
