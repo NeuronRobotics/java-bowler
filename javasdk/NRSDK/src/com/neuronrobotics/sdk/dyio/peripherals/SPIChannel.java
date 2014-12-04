@@ -70,11 +70,14 @@ public class SPIChannel {
 		}else{
 			ByteList data  = new ByteList(stream);
 			data.insert(0, (byte) ss);
-			Object [] args =dyio.send("bcs.io.*;0.3;;",
+			dyio.send("bcs.io.*;0.3;;",
 					BowlerMethod.POST,
 					"strm",
 					new Object[]{0,data});
-
+			Object [] args =dyio.send("bcs.io.*;0.3;;",
+					BowlerMethod.GET,
+					"strm",
+					new Object[]{0,data});
 			return ((ByteList)args[1]).getBytes();
 		}
 	}
