@@ -651,7 +651,7 @@ public abstract class BowlerAbstractConnection {
 	
 	private boolean namespacesFinishedInitializing = false;
 
-	private double percentagePrint =10.0;
+	private double percentagePrint =75.0;
 	
 	public boolean isInitializedNamespaces(){
 		return namespaceList!=null && namespacesFinishedInitializing ;
@@ -1144,7 +1144,7 @@ public abstract class BowlerAbstractConnection {
 						long bufferClear=System.currentTimeMillis();
 						
 						if((System.currentTimeMillis()-getLastWrite())>(getSleepTime()*(getPercentagePrint() /100.0))&& bd.isSyncronous() && syncListen==null){
-							Log.error("Packet recive took more then "+getPercentagePrint()+"%. " +
+							Log.info("Packet recive took more then "+getPercentagePrint()+"%. " +
 									//"\nRaw receive\t"+(start-getLastWrite() )+"" +
 									//"\nStart Section\t"+(dataRead- start)+"" +
 									"\nData Read\t"+(dataReadEnd-dataRead)+"" +
