@@ -7,6 +7,7 @@ import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.dyio.DyIORegestry;
+import com.neuronrobotics.sdk.util.ThreadUtil;
 /**
  * This class wraps ports 0,1, and 2 as an SPI interface
  * @author Kevin Harrington
@@ -74,6 +75,7 @@ public class SPIChannel {
 					BowlerMethod.POST,
 					"strm",
 					new Object[]{0,data});
+			ThreadUtil.wait(30);
 			Object [] args =dyio.send("bcs.io.*;0.3;;",
 					BowlerMethod.GET,
 					"strm",
