@@ -667,7 +667,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	 * @param data
 	 */
 	private void powerEvent(BowlerDatagram data) {
-		
+		Log.warning("POWER event "+data);
 		if(data.getRPC().contains("_pwr")){
 			ByteList bl = data.getData();
 			batteryVoltage = ((double)(ByteList.convertToInt(bl.getBytes(2, 2),false)))/1000.0;
