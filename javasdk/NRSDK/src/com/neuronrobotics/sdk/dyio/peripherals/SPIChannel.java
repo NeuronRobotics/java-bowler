@@ -94,7 +94,7 @@ public class SPIChannel implements IChannelEventListener{
 	}
 	@Override
 	public void onChannelEvent(DyIOChannelEvent e) {
-		Log.error("SPI"+e);
+		//Log.error("SPI"+e);
 		rx = e.getData().getBytes();
 	}
 }
