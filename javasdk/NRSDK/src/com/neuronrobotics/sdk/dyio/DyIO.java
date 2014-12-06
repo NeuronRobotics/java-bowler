@@ -729,6 +729,17 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 				}
 			}
 			
+		}if(data.getRPC().equals("strm")) {
+			Log.warning("STREAM Packet\n"+data.toString());
+			ByteList bl = data.getData();
+			
+			Byte b = bl.pop();// channel value
+			if(b == null) {
+				return;
+			}
+			bl.pop();// size of array
+			DyIOChannel c = getChannel(b);
+			c.fireChannelEvent(new DyIOChannelEvent(c, bl));
 		}else{
 			IDyIOEvent e = new DyIOAsyncEvent(data);
 			fireDyIOEvent(e);
