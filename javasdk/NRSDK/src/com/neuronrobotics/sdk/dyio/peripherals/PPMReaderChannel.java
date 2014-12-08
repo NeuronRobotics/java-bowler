@@ -74,7 +74,15 @@ public class PPMReaderChannel  extends DyIOAbstractPeripheral implements IChanne
 			//System.out.print(" "+crossLinks[i]);
 		}
 		//System.out.print("]");
-		getChannel().getDevice().send(new SetChannelValueCommand(23,crossLinks,myMode));
+		if(getChannel().getDevice().isLegacyParser()){
+			getChannel().getDevice().send(new SetChannelValueCommand(23,crossLinks,myMode));
+		}else{
+			ByteList data  = new ByteList(crossLinks);
+			getChannel().getDevice().send("bcs.io.*;0.3;;",
+					BowlerMethod.POST,
+					"strm",
+					new Object[]{23,data});
+		}
 	}
 	/**
 	 * Request the cross link map
