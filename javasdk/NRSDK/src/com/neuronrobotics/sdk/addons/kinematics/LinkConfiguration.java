@@ -126,6 +126,15 @@ public class LinkConfiguration {
 	public double getKD() {
 		return k[2];
 	}
+	public void setKP(double kP) {
+		k[0] = kP;
+	}
+	public void setKI(double kI) {
+		k[1] = kI;
+	}
+	public void setKD(double kD) {
+		k[2] = kD;
+	}
 	public void setInverted(boolean inverted) {
 		this.inverted = inverted;
 	}
