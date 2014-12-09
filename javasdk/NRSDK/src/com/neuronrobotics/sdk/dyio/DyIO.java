@@ -667,13 +667,21 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	 * @param data
 	 */
 	private void powerEvent(BowlerDatagram data) {
+		
 		Log.warning("POWER event "+data);
 		if(data.getRPC().contains("_pwr")){
 			ByteList bl = data.getData();
-			batteryVoltage = ((double)(ByteList.convertToInt(bl.getBytes(2, 2),false)))/1000.0;
-			bankAState = DyIOPowerState.valueOf(bl.get(0),batteryVoltage);
-			bankBState = DyIOPowerState.valueOf(bl.get(1),batteryVoltage);
-			enableBrownOut=bl.get(4)!=0;
+			if(isLegacyParser() && bl.size() == 1){
+				enableBrownOut=bl.get(0)!=0;
+			}
+			if(bl.size()> 1){
+				batteryVoltage = ((double)(ByteList.convertToInt(bl.getBytes(2, 2),false)))/1000.0;
+				bankAState = DyIOPowerState.valueOf(bl.get(0),batteryVoltage);
+				bankBState = DyIOPowerState.valueOf(bl.get(1),batteryVoltage);
+				if(!isLegacyParser()){
+					enableBrownOut=bl.get(4)!=0;
+				}
+			}
 			fireDyIOEvent(new DyIOPowerEvent(bankAState, bankBState, batteryVoltage));
 			return;
 		}else{
@@ -1049,7 +1057,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	 */
 	public Boolean isServoPowerSafeMode() {
 		if(enableBrownOut== null){
-			new RuntimeException().printStackTrace();
+			setServoPowerSafeMode(true);
 		}
 		return enableBrownOut;
 	}

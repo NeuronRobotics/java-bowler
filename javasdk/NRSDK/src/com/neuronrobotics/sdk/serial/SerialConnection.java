@@ -173,6 +173,7 @@ public class SerialConnection extends BowlerAbstractConnection {
 	@Override
 	public void disconnect() {
 		if(isConnected())
+			new RuntimeException().printStackTrace();
 			Log.warning("Disconnecting Serial Connection");
 		try{
 			try{
