@@ -204,15 +204,13 @@ public class BowlerDatagramFactory {
 				return null;//Not enough bytes to even be a header, try back later
 			}
 		}
-		int len =(int) buffer.getByte(9);
-		if(len<0){
-			len+=256;
-		}
+		int len =buffer.getUnsigned(9);
+	
 		if(len<4){
 			Log.error("#*#*Warning, packet has no RPC, size: "+len);
 			
 		}
-		int totalLen = len+BowlerDatagram.HEADER_SIZE;
+		int totalLen = len+BowlerDatagram.HEADER_SIZE+1;
 		// See if all the data has arrived for this packet
 		if (buffer.size()>=(totalLen) ){
 			failed=0;
@@ -220,7 +218,7 @@ public class BowlerDatagramFactory {
 			staticMemory.setFree(false,instance);
 			try{
 				staticMemory.parse(rawContent);
-				if(BowlerDatagram.CheckCRC(buffer,true)){
+				if(BowlerDatagram.CheckCRC(rawContent,true)){
 					return  staticMemory;
 				}else{
 					Log.error("Data CRC check Fail  "+staticMemory);
