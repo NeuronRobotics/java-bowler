@@ -177,8 +177,8 @@ public abstract class BowlerAbstractConnection {
 			try {
 				//new RuntimeException().printStackTrace();
 				Log.error("No response from device, no response in "+(System.currentTimeMillis()-startOfReciveTime)+" ms");
-				reconnect();
-			} catch (IOException e) {
+				
+			} catch (Exception e) {
 				clearLastSyncronousResponse();
 				executingLock.unlock();
 				throw new RuntimeException(e);
@@ -887,11 +887,23 @@ public abstract class BowlerAbstractConnection {
 					//if(!ret.getRPC().contains("_err"))
 						return ret;
 			}catch(Exception ex){
-				//ex.printStackTrace();
+				ex.printStackTrace();
 				Log.error(ex.getMessage());
+			}
+			if(retry>1){
+				//only force a reconnect if the retry is above one. 
+				//a device failing to respond could just be the result of a wrong packet type level.
+				try {
+					Log.warning("Reconnecting in the send engine loop, retry "+retry+" times");
+					reconnect();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			Log.error("Sending Synchronus packet and there was a failure, will retry "+(retry-i-1)+" more times");
 			ThreadUtil.wait(150*i);
+			
 		}
 		return null;
 	}
@@ -924,19 +936,43 @@ public abstract class BowlerAbstractConnection {
 		//BowlerDatagramFactory.freePacket(cmd);
 		
 	}
-	
+	private class PingCommand extends BowlerAbstractCommand {
+		
+		/**
+		 * Instantiates a new ping command.
+		 */
+		public PingCommand() {
+			setMethod(BowlerMethod.GET);
+			setOpCode("_png");
+		}
+	}
+
 	/**
 	 * Implementation of the Bowler ping ("_png") command
 	 * Sends a ping to the device returns the device's MAC address.
 	 *
 	 * @return the device's address
 	 */
-	private boolean ping() {
+	public boolean ping() {
 		try {
-			BowlerDatagram bd = send(new PingCommand(),new MACAddress(), 5);
+			//Log.warning("Ping device:");
+			BowlerDatagram bd = send(new PingCommand(),new MACAddress(), 1);
 			if(bd !=null){
 				BowlerDatagramFactory.freePacket(bd);
 				return true;
+			}else{
+				if( BowlerDatagram.isUseBowlerV4()){
+					//If the ping fails to get a response, try the older bowler format
+					BowlerDatagram.setUseBowlerV4(false);
+				}else{
+					BowlerDatagram.setUseBowlerV4(true);
+				}
+				bd = send(new PingCommand(),new MACAddress(), 5);
+				if(bd !=null){
+					BowlerDatagramFactory.freePacket(bd);
+					return true;
+				}
+				
 			}
 		} catch (InvalidResponseException e) {
 			Log.error("Invalid response from Ping ");

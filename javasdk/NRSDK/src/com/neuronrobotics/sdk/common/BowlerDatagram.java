@@ -79,6 +79,8 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	
 	private ThreadedTimeout timeout=new ThreadedTimeout();
 	
+	private static boolean useBowlerV4 =true;
+	
 	
 	/**
 	 * Default constructor.
@@ -213,7 +215,12 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 		setUpstream((raw.getByte(8)<0));
 		// Make sure that the size of the data payload is the stated length
 		int dataLength = raw.getUnsigned(9);
-		int amountOfData = raw.getBytes(11).length-1;
+		int amountOfData;
+		if( isUseBowlerV4()){
+			amountOfData = raw.getBytes(11).length-1;
+		}else{
+			amountOfData = raw.getBytes(11).length;
+		}
 		if(dataLength != amountOfData) {
 			throw new MalformattedDatagram("Datagram payload length is mismatched");
 		}	
@@ -392,8 +399,11 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 		
 		bl.add(getCRC());
 		bl.add(data);
-		setDataCrc(genDataCrc(bl));
-		bl.add(getDataCrc());
+		if(isUseBowlerV4()){
+			
+			setDataCrc(genDataCrc(bl));
+			bl.add(getDataCrc());
+		}
 		return bl.getBytes();
 	}
 
@@ -420,9 +430,12 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 		str += "\tRPC Namespace Index: \t" + getSessionID();
 		str += "\n\tData Size: \t" + (int) data.size() + '\n';
 		str += "\tCRC: \t\t";
-		str += ( getCRC()>=0) ? (int) getCRC():(int) getCRC()+256 ;
-		str += "\n\tD-CRC: \t\t";
-		str += ( getDataCrc()>=0) ? (int) getDataCrc():(int) getDataCrc()+256 ;
+		str +=  String.format("%02x ", getCrc());
+		if(isUseBowlerV4()){
+			str += "\n\tD-CRC: \t\t";
+			str += String.format("%02x ", getDataCrc());
+		}
+		
 		str += "\n\tRPC: \t\t";
 		str += getRPC();// This extracts the opcode as ascii
 		str += "\n\tData: \t\t";
@@ -448,7 +461,8 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 			Log.error("CRC of packet is: "+generated+" Expected: "+inPacket);
 			return false;
 		}
-		if(checkData){
+		
+		if(checkData && isUseBowlerV4()){
 			generated = genDataCrc(buffer);
 			inPacket  = getDataCrc(buffer);
 			if(generated != inPacket){
@@ -562,5 +576,13 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	public void setRpc(String opCode) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public static boolean isUseBowlerV4() {
+		return useBowlerV4;
+	}
+
+	public static void setUseBowlerV4(boolean useBowlerV4) {
+		BowlerDatagram.useBowlerV4 = useBowlerV4;
 	}
 }

@@ -234,22 +234,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	 * @return the device's address
 	 */
 	public boolean ping() {
-		try {
-			BowlerDatagram bd = send(new PingCommand(),5);
-			if(bd !=null){
-				//System.out.println("Ping success " + bd.getAddress());
-				setAddress(bd.getAddress());
-				BowlerDatagramFactory.freePacket(bd);
-				return true;
-			}
-		} catch (InvalidResponseException e) {
-			Log.error("Invalid response from Ping ");
-			e.printStackTrace();
-		} catch (Exception e) {
-			Log.error("No connection is available.");
-			e.printStackTrace();
-		}
-		return false;
+		return connection.ping();
 	}
 	
 	/**

@@ -210,7 +210,12 @@ public class BowlerDatagramFactory {
 			Log.error("#*#*Warning, packet has no RPC, size: "+len);
 			
 		}
-		int totalLen = len+BowlerDatagram.HEADER_SIZE+1;
+		int totalLen;
+		if( BowlerDatagram.isUseBowlerV4()){
+			totalLen = len+BowlerDatagram.HEADER_SIZE+1;
+		}else{
+			totalLen = len+BowlerDatagram.HEADER_SIZE;	
+		}
 		// See if all the data has arrived for this packet
 		if (buffer.size()>=(totalLen) ){
 			failed=0;
