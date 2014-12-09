@@ -1085,6 +1085,7 @@ public abstract class BowlerAbstractConnection {
 			} catch (Exception e) {
 				if(isConnected()){
 					Log.error("Data read failed "+e.getMessage());
+					e.printStackTrace();
 					try {
 						reconnect();
 					} catch (IOException e1) {

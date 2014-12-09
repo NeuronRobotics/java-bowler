@@ -65,6 +65,9 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	/** The crc. */
 	private byte crc;
 	
+	/** The Data crc. */
+	private byte dataCrc;
+	
 	/** The data. */
 	private ByteList data = new ByteList();
 	
@@ -85,6 +88,83 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 		setFree(true,factory);
 	}
 	
+	/**
+	 * Generate a CRC of a section of bytes,.
+	 *
+	 * @param index Start o the section
+	 * @param len LEngth of the section
+	 * @return The Calculated CRC
+	 */
+	private  static byte genCRC(int index, int len, ByteList data) {
+		int check = 0;
+		try{
+			for(int i = index; i < len+index; i++) {
+				check += data.getByte(i);
+			}
+		}catch(IndexOutOfBoundsException e){
+			throw new IndexOutOfBoundsException("Attempting from: "+index+ " to: "+len+" in: "+data.size()+" data: "+data);
+		}
+		return (byte)(check&0x000000ff);
+	}
+	
+	/**
+	 * Assumes that the packet starts at byte 0.
+	 *
+	 * @return the byte
+	 */
+	private static byte genCrc(ByteList data){
+		return genCRC(0, (BowlerDatagram.HEADER_SIZE-1), data);
+	}
+	
+	/**
+	 * Assumes the packet starts at byte 0.
+	 *
+	 * @return the byte holding the header crc
+	 */
+	private  static byte getCRC(ByteList data){
+		return data.getByte(BowlerDatagram.CRC_INDEX);
+	}
+	
+	private byte getCrc() {
+		checkValidPacket();
+		return crc;
+	}
+
+
+	private void setCrc(byte crc) {
+		checkValidPacket();
+		this.crc = crc;
+	}
+	
+
+	/**
+	 * Assumes that the packet starts at byte 0.
+	 *
+	 * @return the byte
+	 */
+	public  static byte genDataCrc(ByteList data){
+		return genCRC(BowlerDatagram.HEADER_SIZE, data.getByte(9), data);
+	}
+	
+	/**
+	 * Assumes the packet starts at byte 0.
+	 *
+	 * @return the byte holding the header crc
+	 */
+	private  static byte getDataCrc(ByteList data){
+		return data.getByte((BowlerDatagram.HEADER_SIZE)+data.getByte(9)-1);
+	}
+	
+	private byte getDataCrc() {
+		checkValidPacket();
+		return dataCrc;
+	}
+
+
+	private void setDataCrc(byte crc) {
+		checkValidPacket();
+		this.dataCrc = crc;
+	}
 
 	/**
 	 * Constructs a BowlerDatagram that will parse the given data into a packet.
@@ -132,20 +212,21 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 		setNamespaceResolutionID((byte) (raw.getByte(8)&0x7f));
 		setUpstream((raw.getByte(8)<0));
 		// Make sure that the size of the data payload is the stated length
-		if(raw.getByte(9) != raw.getBytes(11).length) {
+		if(raw.getByte(9) != raw.getBytes(11).length+1) {
 			//throw new MalformattedDatagram("Datagram payload length is mismatched");
-		}		
+		}	
+		
+		setDataCrc(raw.remove(raw.size()-1));
+		// Put the remaining data into the data payload 
+		setData(raw.getBytes(HEADER_SIZE));
 
 		// Validate the CRC
-		if(!CheckCRC(raw)) {
+		if(!CheckCRC(raw,true) ) {
 			System.err.println("CRC failed check");
 			throw new MalformattedDatagram("CRC does not match");
 		}else{
-			setCrc(raw.getCRC());
+			setCrc(getCRC(raw));
 		}
-		
-		// Put the remaining data into the data payload 
-		setData(raw.getBytes(HEADER_SIZE));
 		setFree(false);
 	}
 	
@@ -303,10 +384,13 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 		bl.add(getTransactionUpstream());
 		bl.add(data.size());
 		//calculate the CRC
-		setCrc(bl.genCRC());
+		setCrc(genCrc(bl));
+		
 		
 		bl.add(getCRC());
 		bl.add(data);
+		setDataCrc(genDataCrc(bl));
+		bl.add(getDataCrc());
 		return bl.getBytes();
 	}
 
@@ -334,6 +418,8 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 		str += "\n\tData Size: \t" + (int) data.size() + '\n';
 		str += "\tCRC: \t\t";
 		str += ( getCRC()>=0) ? (int) getCRC():(int) getCRC()+256 ;
+		str += "\n\tD-CRC: \t\t";
+		str += ( getDataCrc()>=0) ? (int) getDataCrc():(int) getDataCrc()+256 ;
 		str += "\n\tRPC: \t\t";
 		str += getRPC();// This extracts the opcode as ascii
 		str += "\n\tData: \t\t";
@@ -351,17 +437,21 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	 * @param buffer the buffer
 	 * @return true, if successful
 	 */
-	public static boolean CheckCRC(ByteList buffer) {
-		byte generated;
-		try{
-			generated = buffer.genCRC();
-		}catch (IndexOutOfBoundsException e){
-			return false;
-		}
-		byte inPacket  = buffer.getCRC();
+	static boolean CheckCRC(ByteList buffer, boolean checkData) {
+		byte generated,inPacket;
+		generated = genCrc(buffer);
+		inPacket  = getCRC(buffer);
 		if(generated != inPacket){
 			Log.error("CRC of packet is: "+generated+" Expected: "+inPacket);
 			return false;
+		}
+		if(checkData){
+			generated = genDataCrc(buffer);
+			inPacket  = getDataCrc(buffer);
+			if(generated != inPacket){
+				Log.error("Data CRC of packet is: "+generated+" Expected: "+inPacket);
+				return false;
+			}
 		}
 		return true;
 	}
@@ -408,16 +498,7 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	}
 
 
-	private byte getCrc() {
-		checkValidPacket();
-		return crc;
-	}
 
-
-	public void setCrc(byte crc) {
-		checkValidPacket();
-		this.crc = crc;
-	}
 	
 	private void checkValidPacket(){
 		if(isFree() && timeout.isTimedOut()){

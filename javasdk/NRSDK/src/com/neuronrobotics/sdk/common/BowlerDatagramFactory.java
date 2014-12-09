@@ -180,7 +180,7 @@ public class BowlerDatagramFactory {
 		while(check==false) {
 			try{
 				if( (buffer.get(0) != BowlerDatagram.REVISION)
-						|| (!BowlerDatagram.CheckCRC(buffer))){
+						|| (!BowlerDatagram.CheckCRC(buffer,false))){
 					if(buffer.get(0) != BowlerDatagram.REVISION)
 						Log.error("First Byte Fail (second attempt) Junk byte: "+String.format("%02x ", buffer.pop()));
 					else
@@ -218,8 +218,18 @@ public class BowlerDatagramFactory {
 			failed=0;
 			ByteList rawContent = new ByteList(buffer.popList(totalLen));
 			staticMemory.setFree(false,instance);
-			staticMemory.parse(rawContent);
-			return  staticMemory;
+			try{
+				staticMemory.parse(rawContent);
+				if(BowlerDatagram.CheckCRC(buffer,true)){
+					return  staticMemory;
+				}else{
+					Log.error("Data CRC check Fail  "+staticMemory);
+					failed = rawContent.size();
+				}
+			}catch(Exception E){
+				E.printStackTrace();
+				Log.error("Data CRC check Fail  "+staticMemory);
+			}
 		}
 		if(failed>0)
 			Log.error("Failed out "+failed+" bytes");
