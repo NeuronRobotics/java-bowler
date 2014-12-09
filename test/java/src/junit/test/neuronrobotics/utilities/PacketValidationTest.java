@@ -8,12 +8,14 @@ import com.neuronrobotics.sdk.commands.bcs.core.PingCommand;
 import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.common.BowlerDatagramFactory;
 import com.neuronrobotics.sdk.common.ByteList;
+import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.MACAddress;
 
 public class PacketValidationTest {
 
 	@Test
 	public void packetTest() {
+		Log.enableInfoPrint();
 		BowlerDatagram bd = BowlerDatagramFactory.build(new MACAddress(), new PingCommand());
 		System.out.println(bd);
 		

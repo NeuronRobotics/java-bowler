@@ -152,7 +152,7 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	 * @return the byte holding the header crc
 	 */
 	private  static byte getDataCrc(ByteList data){
-		return data.getByte((BowlerDatagram.HEADER_SIZE)+data.getByte(9)-1);
+		return data.getByte((BowlerDatagram.HEADER_SIZE)+data.getByte(9));
 	}
 	
 	private byte getDataCrc() {
@@ -205,20 +205,22 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 		setMethod(BowlerMethod.get(raw.getByte(7)));
 		if(getMethod() == null){
 			setMethod(BowlerMethod.STATUS);
-			System.err.println("Method was invalid!! Value="+raw.getByte(7));
-			Log.error("Method was invalid!! Value="+raw.getByte(7));
+			System.err.println("Method was invalid!! Value="+raw.getUnsigned(7));
+			Log.error("Method was invalid!! Value="+raw.getUnsigned(7));
 		}
 			
-		setNamespaceResolutionID((byte) (raw.getByte(8)&0x7f));
+		setNamespaceResolutionID((byte) (raw.getUnsigned(8)&0x7f));
 		setUpstream((raw.getByte(8)<0));
 		// Make sure that the size of the data payload is the stated length
-		if(raw.getByte(9) != raw.getBytes(11).length+1) {
-			//throw new MalformattedDatagram("Datagram payload length is mismatched");
+		int dataLength = raw.getUnsigned(9);
+		int amountOfData = raw.getBytes(11).length-1;
+		if(dataLength != amountOfData) {
+			throw new MalformattedDatagram("Datagram payload length is mismatched");
 		}	
 		
-		setDataCrc(raw.remove(raw.size()-1));
+		
 		// Put the remaining data into the data payload 
-		setData(raw.getBytes(HEADER_SIZE));
+		setData(raw.getBytes(HEADER_SIZE,dataLength));
 
 		// Validate the CRC
 		if(!CheckCRC(raw,true) ) {
@@ -226,6 +228,7 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 			throw new MalformattedDatagram("CRC does not match");
 		}else{
 			setCrc(getCRC(raw));
+			setDataCrc(raw.getByte(raw.size()-1));
 		}
 		setFree(false);
 	}
