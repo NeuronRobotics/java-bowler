@@ -4,6 +4,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
@@ -17,6 +18,7 @@ import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 import com.neuronrobotics.sdk.serial.SerialConnection;
 import com.neuronrobotics.sdk.types.DigitalInput;
 import com.neuronrobotics.sdk.util.ThreadUtil;
+
 
 public class DyIONamespaceTest {
 	
@@ -33,7 +35,7 @@ public class DyIONamespaceTest {
 			
 			if(useHarness ){
 				//Change this MAC address to match your tester/testee mapping
-				SerialConnection testerConection = SerialConnection.getConnectionByMacAddress(new MACAddress("74:F7:26:80:00:7C"));
+				SerialConnection testerConection = SerialConnection.getConnectionByMacAddress(new MACAddress("25:2a:25:2a:25:2a"));
 				if(testerConection!=null){
 					harness = new DyIO(testerConection);
 					harness.connect();
@@ -62,6 +64,8 @@ public class DyIONamespaceTest {
 				}
 				testDevice.setMode(i, DyIOChannelMode.DIGITAL_IN);
 			}
+			
+
 
 		}
 	}
@@ -154,23 +158,26 @@ public class DyIONamespaceTest {
 		
 		//Test device as input
 		for(int i=0;i<numPins;i++){
-			if(!(i==16 || i==17)){
-				int testerIndex = numPins-1-i;
-				harness.setMode(testerIndex, DyIOChannelMode.DIGITAL_OUT);
-				testDevice.setMode(i, DyIOChannelMode.DIGITAL_IN);
-				
-				boolean state=true;
-				for(int j=0;j<5;j++){
-					int pinState = state?1:0;
-					harness.setValue(testerIndex, pinState);
-					ThreadUtil.wait(50);
-					int gotValue = testDevice.getValue(i);
-					System.out.println(" Pin:"+i+" Tester:"+testerIndex+" setting to: "+pinState+" got:"+gotValue);
-					assertTrue(gotValue==pinState);
-					state = !state;
-				}
-				harness.setMode(testerIndex, DyIOChannelMode.DIGITAL_IN);
+			int testerIndex = i;
+			if(i == 16)
+				testerIndex=17;
+			if(i == 17)
+				testerIndex=16;
+			harness.setMode(testerIndex, DyIOChannelMode.DIGITAL_OUT);
+			testDevice.setMode(i, DyIOChannelMode.DIGITAL_IN);
+			
+			boolean state=true;
+			for(int j=0;j<5;j++){
+				int pinState = state?1:0;
+				harness.setValue(testerIndex, pinState);
+				ThreadUtil.wait(50);
+				int gotValue = testDevice.getValue(i);
+				System.out.println(" Pin:"+i+" Tester:"+testerIndex+" setting to: "+pinState+" got:"+gotValue);
+				assertTrue(gotValue==pinState);
+				state = !state;
 			}
+			harness.setMode(testerIndex, DyIOChannelMode.DIGITAL_IN);
+			
 		}
 	}
 	
@@ -182,7 +189,7 @@ public class DyIONamespaceTest {
 		//Test device as input
 		for(int i=0;i<numPins;i++){
 			if(testDevice.getChannel(i).canBeMode(DyIOChannelMode.ANALOG_IN )){
-				int testerIndex = numPins-1-i;
+				int testerIndex = i;
 				harness.setMode(testerIndex, DyIOChannelMode.DIGITAL_OUT);
 				testDevice.setMode(i, DyIOChannelMode.ANALOG_IN);
 				
@@ -210,24 +217,25 @@ public class DyIONamespaceTest {
 
 		//test device as output
 		for(int i=0;i<numPins;i++){
-			int testerIndex = numPins-1-i;
-			if(!(testerIndex==16 || testerIndex==17)){
-
-				harness.setMode(testerIndex, DyIOChannelMode.DIGITAL_IN);
-				testDevice.setMode(i, DyIOChannelMode.DIGITAL_OUT);
+			int testerIndex = i;
+			if(i == 16)
+				testerIndex=17;
+			if(i == 17)
+				testerIndex=16;
+			harness.setMode(testerIndex, DyIOChannelMode.DIGITAL_IN);
+			testDevice.setMode(i, DyIOChannelMode.DIGITAL_OUT);
 				
-				boolean state=true;
-				for(int j=0;j<5;j++){
-					int pinState = state?1:0;
-					testDevice.setValue(i, pinState);
-					ThreadUtil.wait(200);
-					int gotValue = harness.getValue(testerIndex);
-					System.out.println(" Pin:"+i+" Tester:"+testerIndex+" setting to: "+pinState+" got:"+gotValue);
-					assertTrue(gotValue==pinState);
-					state = !state;
-				}
-				testDevice.setMode(i, DyIOChannelMode.DIGITAL_IN);
+			boolean state=true;
+			for(int j=0;j<5;j++){
+				int pinState = state?1:0;
+				testDevice.setValue(i, pinState);
+				ThreadUtil.wait(200);
+				int gotValue = harness.getValue(testerIndex);
+				System.out.println(" Pin:"+i+" Tester:"+testerIndex+" setting to: "+pinState+" got:"+gotValue);
+				assertTrue(gotValue==pinState);
+				state = !state;
 			}
+			testDevice.setMode(i, DyIOChannelMode.DIGITAL_IN);
 		}
 		
 	}
