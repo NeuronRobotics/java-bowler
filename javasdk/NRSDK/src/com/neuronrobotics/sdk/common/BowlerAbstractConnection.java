@@ -634,7 +634,9 @@ public abstract class BowlerAbstractConnection {
 						//Found the command in the namespace
 
 							BowlerDatagram dg =  send(rpc.getCommand(arguments),addr,retry);
-							
+							if(dg!=null){
+								addr.setValues(dg.getAddress());
+							}
 							Object [] en =rpc.parseResponse(dg);//parse and return
 							BowlerDatagramFactory.freePacket(dg);
 							return en;
@@ -880,13 +882,17 @@ public abstract class BowlerAbstractConnection {
 	 */
 	public BowlerDatagram send(BowlerAbstractCommand command,MACAddress addr, int retry) throws NoConnectionAvailableException, InvalidResponseException {	
 		for(int i=0;i<retry;i++){
+
 			BowlerDatagram ret;
 			try{
 				ret = send( command,addr);
-				if(ret != null)
+				if(ret != null){
+					addr.setValues(ret.getAddress());
 					//if(!ret.getRPC().contains("_err"))
 						return ret;
-			}catch(Exception ex){
+				}
+			}catch(Exception ex){			
+
 				ex.printStackTrace();
 				Log.error(ex.getMessage());
 			}
@@ -900,10 +906,16 @@ public abstract class BowlerAbstractConnection {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				
 			}
 			Log.error("Sending Synchronus packet and there was a failure, will retry "+(retry-i-1)+" more times");
 			ThreadUtil.wait(150*i);
-			
+			if( BowlerDatagram.isUseBowlerV4()){
+				//If the ping fails to get a response, try the older bowler format
+				BowlerDatagram.setUseBowlerV4(false);
+			}else{
+				BowlerDatagram.setUseBowlerV4(true);
+			}
 		}
 		return null;
 	}
@@ -961,12 +973,7 @@ public abstract class BowlerAbstractConnection {
 				BowlerDatagramFactory.freePacket(bd);
 				return true;
 			}else{
-				if( BowlerDatagram.isUseBowlerV4()){
-					//If the ping fails to get a response, try the older bowler format
-					BowlerDatagram.setUseBowlerV4(false);
-				}else{
-					BowlerDatagram.setUseBowlerV4(true);
-				}
+
 				bd = send(new PingCommand(),new MACAddress(), 5);
 				if(bd !=null){
 					BowlerDatagramFactory.freePacket(bd);

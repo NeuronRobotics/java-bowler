@@ -185,7 +185,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	 * @throws InvalidResponseException the invalid response exception
 	 */
 	public BowlerDatagram send(BowlerAbstractCommand command) throws NoConnectionAvailableException, InvalidResponseException {	
-		return connection.send(command, getAddress());
+		return send(command,1);
 	}
 	
 	/**
@@ -196,7 +196,8 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	 * @throws NoConnectionAvailableException the no connection available exception
 	 * @throws InvalidResponseException the invalid response exception
 	 */
-	public BowlerDatagram send(BowlerAbstractCommand command, int retry) throws NoConnectionAvailableException, InvalidResponseException {	
+	public BowlerDatagram send(BowlerAbstractCommand command, int retry) throws NoConnectionAvailableException, InvalidResponseException {
+		
 		return connection.send(command,getAddress(), retry);
 	}
 	/**
@@ -224,7 +225,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	 * @throws DeviceConnectionException If the desired RPC's are not available then this will be thrown
 	 */
 	public Object [] send(String namespace,BowlerMethod method, String rpcString, Object[] arguments) throws DeviceConnectionException{
-		return connection.send(getAddress(),namespace, method, rpcString, arguments, 5);
+		return send(namespace, method, rpcString, arguments, 5);
 	}
 		
 	/**

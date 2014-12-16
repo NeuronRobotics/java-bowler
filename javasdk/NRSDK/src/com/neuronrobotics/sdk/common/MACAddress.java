@@ -141,4 +141,10 @@ public class MACAddress implements ISendable {
 			}
 		}
 	}
+	public void setValues(MACAddress address2) {
+		// TODO Auto-generated method stub
+		for(int i=0; i<6; i++) {
+			address[i] = address2.address[i];	
+		}
+	}
 }
