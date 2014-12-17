@@ -886,10 +886,12 @@ public abstract class BowlerAbstractConnection {
 			BowlerDatagram ret;
 			try{
 				ret = send( command,addr);
+				//System.out.println(ret);
 				if(ret != null){
 					addr.setValues(ret.getAddress());
 					//if(!ret.getRPC().contains("_err"))
-						return ret;
+					
+					return ret;
 				}
 			}catch(Exception ex){			
 
@@ -938,6 +940,9 @@ public abstract class BowlerAbstractConnection {
 		}
 		BowlerDatagram cmd= BowlerDatagramFactory.build(addr, command);
 		BowlerDatagram back = sendSynchronusly(cmd);
+		if(back!=null){
+			addr.setValues(back.getAddress());
+		}
 		try{
 			return command.validate(back);
 		}catch (InvalidResponseException ex){
@@ -965,16 +970,16 @@ public abstract class BowlerAbstractConnection {
 	 *
 	 * @return the device's address
 	 */
-	public boolean ping() {
+	public boolean ping(MACAddress mac) {
 		try {
 			//Log.warning("Ping device:");
-			BowlerDatagram bd = send(new PingCommand(),new MACAddress(), 1);
+			BowlerDatagram bd = send(new PingCommand(),mac, 1);
 			if(bd !=null){
 				BowlerDatagramFactory.freePacket(bd);
 				return true;
 			}else{
 
-				bd = send(new PingCommand(),new MACAddress(), 5);
+				bd = send(new PingCommand(),mac, 5);
 				if(bd !=null){
 					BowlerDatagramFactory.freePacket(bd);
 					return true;
@@ -1008,7 +1013,7 @@ public abstract class BowlerAbstractConnection {
 	private void runHeartBeat(){
 		if((msSinceLastSend())>heartBeatTime){
 			try{
-				if(!ping()){
+				if(!ping(new MACAddress())){
 					Log.debug("Ping failed, disconnecting");
 					disconnect();
 				}

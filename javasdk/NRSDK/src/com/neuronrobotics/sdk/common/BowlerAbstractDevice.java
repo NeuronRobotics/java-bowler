@@ -235,7 +235,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	 * @return the device's address
 	 */
 	public boolean ping() {
-		return connection.ping();
+		return connection.ping(getAddress());
 	}
 	
 	/**
