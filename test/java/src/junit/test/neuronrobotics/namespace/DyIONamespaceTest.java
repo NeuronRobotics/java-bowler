@@ -197,7 +197,7 @@ public class DyIONamespaceTest {
 				for(int j=0;j<5;j++){
 					int pinState = state?1023:0;
 					harness.setValue(testerIndex, pinState);
-					ThreadUtil.wait(200);
+					ThreadUtil.wait(20);
 					int gotValue = testDevice.getValue(i);
 					System.out.println(" Pin:"+i+" Tester:"+testerIndex+" setting to: "+pinState+" got:"+gotValue);
 					assertTrue(gotValue==pinState);
@@ -229,7 +229,7 @@ public class DyIONamespaceTest {
 			for(int j=0;j<5;j++){
 				int pinState = state?1:0;
 				testDevice.setValue(i, pinState);
-				ThreadUtil.wait(200);
+				ThreadUtil.wait(20);
 				int gotValue = harness.getValue(testerIndex);
 				System.out.println(" Pin:"+i+" Tester:"+testerIndex+" setting to: "+pinState+" got:"+gotValue);
 				assertTrue(gotValue==pinState);
