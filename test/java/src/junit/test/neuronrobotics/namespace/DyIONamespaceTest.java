@@ -26,6 +26,8 @@ public class DyIONamespaceTest {
 	private static DyIO testDevice=null;
 	private boolean useHarness = true;
 	
+	private static int msTimeout = 2000;
+	
 	@Before
 	public void setUp() throws Exception {
 
@@ -165,15 +167,19 @@ public class DyIONamespaceTest {
 				testerIndex=16;
 			harness.setMode(testerIndex, DyIOChannelMode.DIGITAL_OUT);
 			testDevice.setMode(i, DyIOChannelMode.DIGITAL_IN);
-			
+			System.out.println("Pin Input test "+i);
 			boolean state=true;
 			for(int j=0;j<5;j++){
 				int pinState = state?1:0;
+				long startTime = System.currentTimeMillis();
 				harness.setValue(testerIndex, pinState);
-				ThreadUtil.wait(50);
-				int gotValue = testDevice.getValue(i);
-				System.out.println(" Pin:"+i+" Tester:"+testerIndex+" setting to: "+pinState+" got:"+gotValue);
-				assertTrue(gotValue==pinState);
+				do{		
+					//ThreadUtil.wait(1);
+					if((System.currentTimeMillis()-startTime)> msTimeout){
+						System.err.println("Pin test failed "+i);
+						fail(" Pin:"+i+" Tester:"+testerIndex+" setting to: "+pinState+" got:"+testDevice.getValue(i));
+					}
+				}while(testDevice.getValue(i)!=pinState);
 				state = !state;
 			}
 			harness.setMode(testerIndex, DyIOChannelMode.DIGITAL_IN);
@@ -195,12 +201,23 @@ public class DyIONamespaceTest {
 				
 				boolean state=false;
 				for(int j=0;j<5;j++){
+//					int pinState = state?1023:0;
+//					harness.setValue(testerIndex, pinState);
+//					ThreadUtil.wait(200);
+//					int gotValue = testDevice.getValue(i);
+//					System.out.println(" Pin:"+i+" Tester:"+testerIndex+" setting to: "+pinState+" got:"+gotValue);
+//					assertTrue(gotValue==pinState);
+//					state = !state;
 					int pinState = state?1023:0;
-					harness.setValue(testerIndex, pinState);
-					ThreadUtil.wait(200);
-					int gotValue = testDevice.getValue(i);
-					System.out.println(" Pin:"+i+" Tester:"+testerIndex+" setting to: "+pinState+" got:"+gotValue);
-					assertTrue(gotValue==pinState);
+					long startTime = System.currentTimeMillis();
+					harness.setValue(testerIndex, state?1:0);
+					do{		
+						//ThreadUtil.wait(1);
+						if((System.currentTimeMillis()-startTime)> msTimeout){
+							System.err.println("Pin test failed "+i);
+							fail(" Pin:"+i+" Tester:"+testerIndex+" setting to: "+pinState+" got:"+testDevice.getValue(i));
+						}
+					}while(testDevice.getValue(i)!=pinState);
 					state = !state;
 				}
 				harness.setMode(testerIndex, DyIOChannelMode.DIGITAL_IN);
@@ -227,12 +244,23 @@ public class DyIONamespaceTest {
 				
 			boolean state=true;
 			for(int j=0;j<5;j++){
+//				int pinState = state?1:0;
+//				testDevice.setValue(i, pinState);
+//				ThreadUtil.wait(200);
+//				int gotValue = harness.getValue(testerIndex);
+//				System.out.println(" Pin:"+i+" Tester:"+testerIndex+" setting to: "+pinState+" got:"+gotValue);
+//				assertTrue(gotValue==pinState);
+//				state = !state;
 				int pinState = state?1:0;
-				testDevice.setValue(i, pinState);
-				ThreadUtil.wait(200);
-				int gotValue = harness.getValue(testerIndex);
-				System.out.println(" Pin:"+i+" Tester:"+testerIndex+" setting to: "+pinState+" got:"+gotValue);
-				assertTrue(gotValue==pinState);
+				long startTime = System.currentTimeMillis();
+				testDevice.setValue(testerIndex, state?1:0);
+				do{		
+					//ThreadUtil.wait(1);
+					if((System.currentTimeMillis()-startTime)> msTimeout){
+						System.err.println("Pin test failed "+i);
+						fail(" Pin:"+i+" Tester:"+testerIndex+" setting to: "+pinState+" got:"+testDevice.getValue(i));
+					}
+				}while(harness.getValue(i)!=pinState);
 				state = !state;
 			}
 			testDevice.setMode(i, DyIOChannelMode.DIGITAL_IN);
