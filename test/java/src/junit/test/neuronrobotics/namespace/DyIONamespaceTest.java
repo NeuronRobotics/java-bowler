@@ -13,6 +13,7 @@ import org.junit.Test;
 import com.neuronrobotics.sdk.common.MACAddress;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
+import com.neuronrobotics.sdk.dyio.dypid.DyPIDConfiguration;
 import com.neuronrobotics.sdk.dyio.peripherals.DigitalInputChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 import com.neuronrobotics.sdk.serial.SerialConnection;
@@ -42,6 +43,9 @@ public class DyIONamespaceTest {
 					harness = new DyIO(testerConection);
 					harness.connect();
 					harness.setServoPowerSafeMode(false);
+					for(int i=0;i<harness.getPIDChannelCount();i++){
+						harness.ConfigureDynamicPIDChannels(new DyPIDConfiguration(i));
+					}
 					System.out.println("Using harness for this test");
 				}else{
 					System.out.println("No harness for this test");
@@ -57,6 +61,9 @@ public class DyIONamespaceTest {
 			testDevice = new DyIO(targetConection);
 			testDevice.connect();
 			testDevice.setServoPowerSafeMode(false);
+			for(int i=0;i<testDevice.getPIDChannelCount();i++){
+				testDevice.ConfigureDynamicPIDChannels(new DyPIDConfiguration(i));
+			}
 			int numPins = testDevice.getDyIOChannelCount();
 			
 			//Devices as input

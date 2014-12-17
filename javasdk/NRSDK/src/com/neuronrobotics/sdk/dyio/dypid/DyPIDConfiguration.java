@@ -6,9 +6,15 @@ import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 public class DyPIDConfiguration {
 	private int group;
 	private int inputChannel;
-	private DyIOChannelMode inputMode;
+	private DyIOChannelMode inputMode=DyIOChannelMode.DIGITAL_IN;
 	private int outputChannel;
-	private DyIOChannelMode outputMode;
+	private DyIOChannelMode outputMode=DyIOChannelMode.DIGITAL_OUT;
+	public DyPIDConfiguration(int group){
+		setGroup(group);
+		//disabled
+		setInputChannel(0xff);
+		setOutputChannel(0xff);
+	}
 	public DyPIDConfiguration(int group,int inputChannel,DyIOChannelMode inputMode,int outputChannel,DyIOChannelMode outputMode){
 		setGroup(group);
 		setInputChannel(inputChannel);
