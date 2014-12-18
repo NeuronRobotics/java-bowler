@@ -946,7 +946,7 @@ public abstract class BowlerAbstractConnection {
 		try{
 			return command.validate(back);
 		}catch (InvalidResponseException ex){
-
+			ex.printStackTrace();
 			Log.error("Failed to send synchronusly: "+cmd+"\r\nGot>> "+back);
 			return null;
 		}
