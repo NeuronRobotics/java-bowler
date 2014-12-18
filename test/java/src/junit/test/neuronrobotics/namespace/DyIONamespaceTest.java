@@ -247,16 +247,24 @@ public class DyIONamespaceTest {
 
 					long startTime = System.currentTimeMillis();
 					harness.setValue(testerIndex, state?1:0);
+					boolean ok=false;
 					do{		
 						//ThreadUtil.wait(1);
 						if((System.currentTimeMillis()-startTime)> msTimeout){
 							System.err.println("Pin test failed "+i);
 							fail("DyIOAnalogInputTest Pin:"+i+" Tester:"+testerIndex+" setting to: "+pinState+" got:"+testDevice.getValue(i));
 						}
-					}while(testDevice.getValue(i)!=pinState);
+						
+						if(state){
+							ok = testDevice.getValue(i)<900;
+						}else{
+							ok = testDevice.getValue(i)!=0;
+						}
+					}while(ok);
 					state = !state;
 				}
 				harness.setMode(testerIndex, DyIOChannelMode.DIGITAL_IN);
+				testDevice.setMode(testerIndex, DyIOChannelMode.DIGITAL_IN);
 			}else{
 				System.out.println("Pin "+i+" can not be analog in");
 			}
