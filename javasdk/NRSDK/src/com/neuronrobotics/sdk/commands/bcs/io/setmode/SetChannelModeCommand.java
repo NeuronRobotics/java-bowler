@@ -61,7 +61,7 @@ public class SetChannelModeCommand extends BowlerAbstractCommand {
 	@Override
 	public BowlerDatagram validate(BowlerDatagram data) throws InvalidResponseException {
 		super.validate(data);
-		if(!(data.getRPC().equals("_rdy") || data.getRPC().equals("schm"))) {
+		if(!(data.getRPC().equals("_rdy") || data.getRPC().equals("schm")||data.getRPC().equals("gacm"))) {
 			throw new InvalidResponseException("Set Channel Mode did not return '_rdy' or 'schm'.");
 		}
 		
