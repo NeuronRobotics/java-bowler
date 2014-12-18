@@ -20,6 +20,10 @@ public class PIDConfiguration {
 	public PIDConfiguration(){
 		
 	}
+	
+	public PIDConfiguration(int channel){
+		group=channel;
+	}
 
 	/**
 	 * 
