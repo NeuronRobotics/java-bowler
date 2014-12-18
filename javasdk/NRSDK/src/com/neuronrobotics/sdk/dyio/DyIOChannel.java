@@ -399,17 +399,21 @@ public class DyIOChannel implements IDyIOChannel {
 			}
 			
 			val = new DyIOChannelEvent(this,bl).getValue();
+			setCachedValue(val);
+			setPreviousValue(val);
 		}else{
 			
-			Object [] args =getDevice().send("bcs.io.*;0.3;;",
-					BowlerMethod.GET,
-					"gchv",
-					new Object[]{number});
-			val=(Integer)args[1];
-
+//			Object [] args =getDevice().send("bcs.io.*;0.3;;",
+//					BowlerMethod.GET,
+//					"gchv",
+//					new Object[]{number});
+//			val=(Integer)args[1];
+//			Log.debug("Got Value: "+val);
+			
+			// For the new API the channel values should come in through the asynchronous path. 
+			val = getPreviousValue();
 		}
-		setCachedValue(val);
-		setPreviousValue(val);
+		
 		return val;
 	}
 	
@@ -476,6 +480,9 @@ public class DyIOChannel implements IDyIOChannel {
 //					}
 //				}
 				settingMode=false;
+				// Defaultuing the advanced async to on
+				if(isAsync)
+					getDevice().configAdvancedAsyncNotEqual(number,10);
 				return true;
 			} catch (InvalidResponseException e) {
 				Log.error(e.getMessage());
