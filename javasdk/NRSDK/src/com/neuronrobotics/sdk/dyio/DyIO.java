@@ -146,7 +146,9 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	 * @return true for success
 	 */
 	public boolean setMode(int channel, DyIOChannelMode mode) {
-		return getChannel(channel).setMode(mode);
+		boolean back =getChannel(channel).setMode(mode);
+		//ThreadUtil.wait(200);
+		return back;
 	}
 
 	/**
@@ -668,7 +670,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	 */
 	private void powerEvent(BowlerDatagram data) {
 		
-		Log.warning("POWER event "+data);
+		//Log.warning("POWER event "+data);
 		if(data.getRPC().contains("_pwr")){
 			ByteList bl = data.getData();
 			if(isLegacyParser() && bl.size() == 1){
