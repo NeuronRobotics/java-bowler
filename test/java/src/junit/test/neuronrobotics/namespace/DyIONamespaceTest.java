@@ -10,12 +10,14 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.MACAddress;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.dyio.dypid.DyPIDConfiguration;
 import com.neuronrobotics.sdk.dyio.peripherals.DigitalInputChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
+import com.neuronrobotics.sdk.pid.PIDConfiguration;
 import com.neuronrobotics.sdk.serial.SerialConnection;
 import com.neuronrobotics.sdk.types.DigitalInput;
 import com.neuronrobotics.sdk.util.ThreadUtil;
@@ -27,7 +29,7 @@ public class DyIONamespaceTest {
 	private static DyIO testDevice=null;
 	private boolean useHarness = true;
 	
-	private static int msTimeout = 2000;
+	private static int msTimeout = 5000;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -45,6 +47,7 @@ public class DyIONamespaceTest {
 					harness.setServoPowerSafeMode(false);
 					for(int i=0;i<harness.getPIDChannelCount();i++){
 						harness.ConfigureDynamicPIDChannels(new DyPIDConfiguration(i));
+						harness.ConfigurePIDController(new PIDConfiguration(i));
 					}
 					System.out.println("Using harness for this test");
 				}else{
@@ -63,18 +66,25 @@ public class DyIONamespaceTest {
 			testDevice.setServoPowerSafeMode(false);
 			for(int i=0;i<testDevice.getPIDChannelCount();i++){
 				testDevice.ConfigureDynamicPIDChannels(new DyPIDConfiguration(i));
+				testDevice.ConfigurePIDController(new PIDConfiguration(i));
 			}
 			int numPins = testDevice.getDyIOChannelCount();
-			
+			if(numPins!=24){
+				fail("wrong size of channels");
+			}
 			//Devices as input
 			for(int i=0;i<numPins;i++){
-				if(useHarness){
-					harness.setMode(i, DyIOChannelMode.DIGITAL_IN);
+				if(useHarness ){
+					//harness.setMode(i, DyIOChannelMode.DIGITAL_OUT);
+					if(harness.getChannel(i).getMode() != DyIOChannelMode.DIGITAL_IN)
+						harness.setMode(i, DyIOChannelMode.DIGITAL_IN);
 				}
-				testDevice.setMode(i, DyIOChannelMode.DIGITAL_IN);
+				//testDevice.setMode(i, DyIOChannelMode.DIGITAL_OUT);
+				if(testDevice.getChannel(i).getMode() != DyIOChannelMode.DIGITAL_IN)
+					testDevice.setMode(i, DyIOChannelMode.DIGITAL_IN);
 			}
-			
-
+			Log.enableDebugPrint();
+			Log.debug("Devices Set Up");
 
 		}
 	}
@@ -83,19 +93,19 @@ public class DyIONamespaceTest {
 		if(!testDevice.isAvailable())
 			fail();
 		
-		testDevice.setServoPowerSafeMode(false);
-		for(int i=0;i<testDevice.getChannels().size();i++){
-			for(int j=0;j<129;j+=64){
-				System.out.println("Setting up servo: "+i);
-				ServoChannel srv = new ServoChannel(testDevice,i);
-				int testNumber = j;
-				System.out.println("Saving value to: "+testNumber);
-				srv.SavePosition(testNumber);
-				System.out.println("Setting up Digital in ");
-				DigitalInputChannel dip = new DigitalInputChannel(testDevice,i);
-			}
-			
-		}
+//		testDevice.setServoPowerSafeMode(false);
+//		for(int i=0;i<testDevice.getChannels().size();i++){
+//			for(int j=0;j<129;j+=64){
+//				//System.out.println("Setting up servo: "+i);
+//				ServoChannel srv = new ServoChannel(testDevice,i);
+//				int testNumber = j;
+//				//System.out.println("Saving value to: "+testNumber);
+//				srv.SavePosition(testNumber);
+//				//System.out.println("Setting up Digital in ");
+//				DigitalInputChannel dip = new DigitalInputChannel(testDevice,i);
+//			}
+//			
+//		}
 		
 
 		
@@ -141,8 +151,11 @@ public class DyIONamespaceTest {
 	@Test public void DyIOModesTest(){
 		if(!testDevice.isAvailable())
 			fail();
-
+		Log.debug("DyIOModesTest");
 		ArrayList<DyIOChannelMode> modes = testDevice.getAllChannelModes();
+		if(modes.size()!=24){
+			fail("Returned mode list of wrong size");
+		}
 		for(int i=0;i<modes.size();i++){
 			
 			if(modes.get(i)==DyIOChannelMode.DIGITAL_IN){
@@ -150,13 +163,28 @@ public class DyIONamespaceTest {
 			}else{
 				modes.set(i, DyIOChannelMode.DIGITAL_IN);
 			}
+			System.out.println("Setting "+i+"to mode "+modes.get(i));
 			testDevice.setMode(i, modes.get(i));
+			long startTime = System.currentTimeMillis();
+			do{		
+				ThreadUtil.wait(1);
+				if((System.currentTimeMillis()-startTime)> msTimeout){
+					System.err.println("Pin test failed "+i+" in "+(System.currentTimeMillis()-startTime));
+					fail("DyIOModesTest Pin:"+i+" Tester: "+testDevice.getMode(i)+" trying to set "+modes.get(i));
+				}
+			}while(testDevice.getMode(i)!= modes.get(i));
 		}
-		
+		ThreadUtil.wait(100);
+		Log.debug("Reading channel modes");
 		ArrayList<DyIOChannelMode> modesAfter = testDevice.getAllChannelModes();
+		Log.debug("Checking channel modes");
 		for(int i=0;i<modes.size();i++){
-			assertTrue(modes.get(i)==modesAfter.get(i));
-			assertTrue(modes.get(i)==testDevice.getMode(i));
+			if(modes.get(i)!=modesAfter.get(i)){
+				fail("Mode set on "+i+" failed. "+modes.get(i)+" got: "+modesAfter.get(i));
+			}
+			if(modes.get(i)!=testDevice.getMode(i)){
+				fail("Mode set on "+i+" failed. "+modes.get(i)+" got: "+testDevice.getMode(i));
+			}
 			testDevice.setMode(i, DyIOChannelMode.DIGITAL_IN);
 		}
 	}
@@ -184,7 +212,7 @@ public class DyIONamespaceTest {
 					//ThreadUtil.wait(1);
 					if((System.currentTimeMillis()-startTime)> msTimeout){
 						System.err.println("Pin test failed "+i);
-						fail(" Pin:"+i+" Tester:"+testerIndex+" setting to: "+pinState+" got:"+testDevice.getValue(i));
+						fail("DyIOInputTest Pin:"+i+" Tester:"+testerIndex+" setting to: "+pinState+" got:"+testDevice.getValue(i));
 					}
 				}while(testDevice.getValue(i)!=pinState);
 				state = !state;
@@ -223,7 +251,7 @@ public class DyIONamespaceTest {
 						//ThreadUtil.wait(1);
 						if((System.currentTimeMillis()-startTime)> msTimeout){
 							System.err.println("Pin test failed "+i);
-							fail(" Pin:"+i+" Tester:"+testerIndex+" setting to: "+pinState+" got:"+testDevice.getValue(i));
+							fail("DyIOAnalogInputTest Pin:"+i+" Tester:"+testerIndex+" setting to: "+pinState+" got:"+testDevice.getValue(i));
 						}
 					}while(testDevice.getValue(i)!=pinState);
 					state = !state;
@@ -267,7 +295,7 @@ public class DyIONamespaceTest {
 					//ThreadUtil.wait(1);
 					if((System.currentTimeMillis()-startTime)> msTimeout){
 						System.err.println("Pin test failed "+i);
-						fail(" Pin:"+i+" Tester:"+testerIndex+" setting to: "+pinState+" got:"+testDevice.getValue(i));
+						fail("DyIOOutputTest Pin:"+i+" Tester:"+testerIndex+" setting to: "+pinState+" got:"+testDevice.getValue(i));
 					}
 				}while(harness.getValue(i)!=pinState);
 				state = !state;
