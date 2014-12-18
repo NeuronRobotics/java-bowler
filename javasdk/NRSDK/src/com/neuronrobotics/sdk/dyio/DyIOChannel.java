@@ -29,6 +29,7 @@ import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.InvalidResponseException;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.peripherals.DyIOAbstractPeripheral;
+import com.neuronrobotics.sdk.util.ThreadUtil;
 /**
  * A DyIO channel. This represents a single DyIO pchannel.
  * @author Kevin Harrington, Robert Breznak
@@ -443,23 +444,37 @@ public class DyIOChannel implements IDyIOChannel {
 			mode=DyIOChannelMode.DIGITAL_IN;
 		}
 		settingMode=true;
+		
 		for(int i = 0; i < MAXATTEMPTS; i++) {
 			try {
 				isAsync = async;
 				setCurrentMode(mode);
-				getDevice().send(new SetChannelModeCommand(number, mode, async));
-				haveSetMode=true;
-				if(!getDevice().isMuteResyncOnModeChange()){
-					try {
-						getDevice().resync();
-					}catch(RuntimeException e) {
-						e.printStackTrace();
-						getDevice().setMuteResyncOnModeChange(true);
+//				if(getDevice().isLegacyParser()){
+					getDevice().send(new SetChannelModeCommand(number, mode, async));			
+					haveSetMode=true;
+					if(!getDevice().isMuteResyncOnModeChange()){
+						try {
+							getDevice().resync();
+						}catch(RuntimeException e) {
+							e.printStackTrace();
+							getDevice().setMuteResyncOnModeChange(true);
+						}
+					}else{
+						Log.info("Not resyncing from channel: "+getChannelNumber());
+						
 					}
-				}else{
-					Log.info("Not resyncing from channel: "+getChannelNumber());
 					fireModeChangeEvent(mode); 
-				}
+//				}else{
+//					Object [] args = getDevice().send("bcs.io.setmode*;0.3;;",
+//							BowlerMethod.GET,
+//											"schm",
+//											new Object[]{i,mode.getValue(),async?1:0});
+//					ByteList currentModes = (ByteList) args[0];
+//					for (byte b : currentModes){
+//						DyIOChannelMode cm = DyIOChannelMode.get(b);
+//						fireModeChangeEvent(cm); 
+//					}
+//				}
 				settingMode=false;
 				return true;
 			} catch (InvalidResponseException e) {
