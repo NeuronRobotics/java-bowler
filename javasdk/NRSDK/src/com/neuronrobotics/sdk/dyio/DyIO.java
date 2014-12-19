@@ -27,7 +27,6 @@ import com.neuronrobotics.sdk.commands.bcs.io.setmode.SetChannelModeCommand;
 import com.neuronrobotics.sdk.commands.bcs.pid.DyPID.ConfigureDynamicPIDCommand;
 import com.neuronrobotics.sdk.commands.bcs.safe.SafeModeCommand;
 import com.neuronrobotics.sdk.commands.neuronrobotics.dyio.GetAllChannelValuesCommand;
-import com.neuronrobotics.sdk.commands.neuronrobotics.dyio.InfoCommand;
 import com.neuronrobotics.sdk.commands.neuronrobotics.dyio.PowerCommand;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
@@ -62,7 +61,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	private ArrayList<DyIOChannel> channels = new ArrayList<DyIOChannel>();
 	
 	private byte [] firmware = {0, 0, 0};
-	private String info = "Unknown";
+	private String info = "DyIO";
 	
 	private DyIOPowerState bankAState;
 	private DyIOPowerState bankBState;
@@ -219,10 +218,10 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	 * @return The current string
 	 */
 	public String getInfo(){
-		BowlerDatagram response = send(new InfoCommand());
-		if (response != null) {
-			info = response.getData().asString();
-		}
+//		BowlerDatagram response = send(new InfoCommand());
+//		if (response != null) {
+//			info = response.getData().asString();
+//		}
 		return info;
 	}
 	
@@ -233,9 +232,9 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	 * @param info The String identifier to be stored by the DyIO.
 	 */
 	public void setInfo(String info){
-		if(send(new InfoCommand(info)) == null) {
-			return;
-		}
+//		if(send(new InfoCommand(info)) == null) {
+//			return;
+//		}
 		this.info = info;
 	}
 	
@@ -418,12 +417,12 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 				firmware = getRevisions().get(0).getBytes();
 			}
 			checkFirmwareRev();
-			if(info.contains("Unknown")){
-				response = send(new InfoCommand());
-				if (response != null) {
-					info = response.getData().asString();
-				}
-			}
+//			if(info.contains("Unknown")){
+//				response = send(new InfoCommand());
+//				if (response != null) {
+//					info = response.getData().asString();
+//				}
+//			}
 			
 		}catch (Exception e){
 			checkFirmwareRev();
