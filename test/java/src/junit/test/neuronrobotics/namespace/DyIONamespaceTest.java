@@ -40,7 +40,7 @@ public class DyIONamespaceTest {
 		if(harness == null && testDevice == null ){
 			//Log.enableDebugPrint();
 			DyIO.disableFWCheck();
-			//Log.enableDebugPrint();
+			Log.enableInfoPrint();
 			
 			if(useHarness ){
 				//Change this MAC address to match your tester/testee mapping
@@ -223,6 +223,7 @@ public class DyIONamespaceTest {
 					long startTime = System.currentTimeMillis();
 					harness.setValue(testerIndex, state?1:0);
 					boolean ok=false;
+					
 					do{		
 						ThreadUtil.wait(1);
 						if((System.currentTimeMillis()-startTime)> msTimeout){

@@ -395,10 +395,10 @@ public class DyIOChannel implements IDyIOChannel {
 	 */
 	 
 	public int getValue() {
-		BowlerDatagram response=null;
+		
 		int val=0;
 		if(getDevice().isLegacyParser()){
-			
+			BowlerDatagram response=null;
 			try {
 				response = getDevice().send(new GetValueCommand(number));
 			} catch (InvalidResponseException e) {
