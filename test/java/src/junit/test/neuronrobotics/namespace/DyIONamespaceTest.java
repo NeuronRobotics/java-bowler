@@ -35,6 +35,7 @@ public class DyIONamespaceTest {
 	public void setUp() throws Exception {
 
 		if(harness == null && testDevice == null ){
+			Log.enableDebugPrint();
 			DyIO.disableFWCheck();
 			//Log.enableDebugPrint();
 			
@@ -72,6 +73,7 @@ public class DyIONamespaceTest {
 			if(numPins!=24){
 				fail("wrong size of channels");
 			}
+			Log.debug("Setting all inputs");
 			//Devices as input
 			for(int i=0;i<numPins;i++){
 				if(useHarness ){
@@ -83,7 +85,7 @@ public class DyIONamespaceTest {
 				if(testDevice.getChannel(i).getMode() != DyIOChannelMode.DIGITAL_IN)
 					testDevice.setMode(i, DyIOChannelMode.DIGITAL_IN);
 			}
-			Log.enableDebugPrint();
+			
 			Log.debug("Devices Set Up");
 
 		}
