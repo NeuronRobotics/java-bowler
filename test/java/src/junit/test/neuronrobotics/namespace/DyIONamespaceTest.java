@@ -157,6 +157,9 @@ public class DyIONamespaceTest {
 			fail("Returned mode list of wrong size");
 		}
 		for(int i=0;i<modes.size();i++){
+			testDevice.setMode(i, DyIOChannelMode.DIGITAL_IN);
+		}
+		for(int i=0;i<modes.size();i++){
 			
 			if(modes.get(i)==DyIOChannelMode.DIGITAL_IN){
 				modes.set(i, DyIOChannelMode.DIGITAL_OUT);
