@@ -740,7 +740,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 			}
 			
 		}if(data.getRPC().equals("strm")) {
-			//Log.warning("STREAM Packet\n"+data.toString());
+			Log.warning("STREAM Packet\n"+data.toString());
 			ByteList bl = data.getData();
 			
 			Byte b = bl.pop();// channel value

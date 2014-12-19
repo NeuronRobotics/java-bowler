@@ -29,13 +29,15 @@ public class DyIONamespaceTest {
 	private static DyIO testDevice=null;
 	private boolean useHarness = true;
 	
-	private static int msTimeout = 5000;
+	private static int msTimeout = 3000;
+	private static int testLoop =5;
+	private static double integral= 0;
 	
 	@Before
 	public void setUp() throws Exception {
 
 		if(harness == null && testDevice == null ){
-			Log.enableDebugPrint();
+			//Log.enableDebugPrint();
 			DyIO.disableFWCheck();
 			//Log.enableDebugPrint();
 			
@@ -95,19 +97,23 @@ public class DyIONamespaceTest {
 		if(!testDevice.isAvailable())
 			fail();
 		
-//		testDevice.setServoPowerSafeMode(false);
-//		for(int i=0;i<testDevice.getChannels().size();i++){
-//			for(int j=0;j<129;j+=64){
-//				//System.out.println("Setting up servo: "+i);
-//				ServoChannel srv = new ServoChannel(testDevice,i);
-//				int testNumber = j;
-//				//System.out.println("Saving value to: "+testNumber);
-//				srv.SavePosition(testNumber);
-//				//System.out.println("Setting up Digital in ");
-//				DigitalInputChannel dip = new DigitalInputChannel(testDevice,i);
-//			}
-//			
-//		}
+		testDevice.setServoPowerSafeMode(false);
+		for(int i=0;i<testDevice.getChannels().size();i++){
+			for(int j=0;j<129;j+=64){
+				//System.out.println("Setting up servo: "+i);
+				ServoChannel srv = new ServoChannel(testDevice,i);
+				int testNumber = j;
+				//System.out.println("Saving value to: "+testNumber);
+				srv.SavePosition(testNumber);
+				//System.out.println("Setting up Digital in ");
+				new DigitalInputChannel(testDevice,i);
+			}
+			ServoChannel srv = new ServoChannel(testDevice,i);
+			//System.out.println("Saving value to: "+testNumber);
+			srv.SavePosition(128);
+			//System.out.println("Setting up Digital in ");
+			new DigitalInputChannel(testDevice,i);
+		}
 		
 
 		
@@ -193,6 +199,52 @@ public class DyIONamespaceTest {
 			testDevice.setMode(i, DyIOChannelMode.DIGITAL_IN);
 		}
 	}
+	
+	@Test public void DyIOAnalogInputTest(){
+		if(!testDevice.isAvailable() || harness == null)
+			fail();
+		int numPins = testDevice.getDyIOChannelCount();
+		
+		//Test device as input
+		for(int i=0;i<numPins;i++){
+			if(testDevice.getChannel(i).canBeMode(DyIOChannelMode.ANALOG_IN )){
+				int testerIndex = i;
+				harness.setMode(testerIndex, DyIOChannelMode.DIGITAL_OUT);
+				testDevice.setMode(i, DyIOChannelMode.ANALOG_IN);
+				integral= 0;
+				boolean state=false;
+				for(int j=0;j<testLoop;j++){
+					int pinState = state?1023:0;
+
+					long startTime = System.currentTimeMillis();
+					harness.setValue(testerIndex, state?1:0);
+					boolean ok=false;
+					do{		
+						ThreadUtil.wait(1);
+						if((System.currentTimeMillis()-startTime)> msTimeout){
+							System.err.println("Pin test failed "+i);
+							fail("DyIOAnalogInputTest Pin:"+i+" Tester:"+testerIndex+" setting to: "+pinState+" got:"+testDevice.getValue(i));
+						}
+						
+						if(state){
+							ok = testDevice.getValue(i)<900;
+						}else{
+							ok = testDevice.getValue(i)!=0;
+						}
+					}while(ok);
+					integral+=(System.currentTimeMillis()-startTime);
+					state = !state;
+				}
+				System.out.println("PASS DyIOAnalogInputTest "+i+" in "+(integral/testLoop)+"ms");
+				harness.setMode(testerIndex, DyIOChannelMode.DIGITAL_IN);
+				testDevice.setMode(testerIndex, DyIOChannelMode.DIGITAL_IN);
+			}else{
+				System.out.println("Pin "+i+" can not be analog in");
+			}
+		}
+	}
+	
+	
 	@Test public void DyIOInputTest(){
 		if(!testDevice.isAvailable() || harness == null)
 			fail();
@@ -207,74 +259,30 @@ public class DyIONamespaceTest {
 				testerIndex=16;
 			harness.setMode(testerIndex, DyIOChannelMode.DIGITAL_OUT);
 			testDevice.setMode(i, DyIOChannelMode.DIGITAL_IN);
-			System.out.println("Pin Input test "+i);
+			//System.out.println("Pin Input test "+i);
 			boolean state=true;
-			for(int j=0;j<5;j++){
+			integral= 0;
+			for(int j=0;j<testLoop;j++){
 				int pinState = state?1:0;
 				long startTime = System.currentTimeMillis();
 				harness.setValue(testerIndex, pinState);
 				do{		
-					//ThreadUtil.wait(1);
+					ThreadUtil.wait(1);
 					if((System.currentTimeMillis()-startTime)> msTimeout){
 						System.err.println("Pin test failed "+i);
 						fail("DyIOInputTest Pin:"+i+" Tester:"+testerIndex+" setting to: "+pinState+" got:"+testDevice.getValue(i));
 					}
 				}while(testDevice.getValue(i)!=pinState);
+				integral+=(System.currentTimeMillis()-startTime);
 				state = !state;
 			}
+			System.out.println("PASS DyIOInputTest "+i+" in "+(integral/testLoop)+"ms");
 			harness.setMode(testerIndex, DyIOChannelMode.DIGITAL_IN);
 			
 		}
 	}
 	
-	@Test public void DyIOAnalogInputTest(){
-		if(!testDevice.isAvailable() || harness == null)
-			fail();
-		int numPins = testDevice.getDyIOChannelCount();
-		
-		//Test device as input
-		for(int i=0;i<numPins;i++){
-			if(testDevice.getChannel(i).canBeMode(DyIOChannelMode.ANALOG_IN )){
-				int testerIndex = i;
-				harness.setMode(testerIndex, DyIOChannelMode.DIGITAL_OUT);
-				testDevice.setMode(i, DyIOChannelMode.ANALOG_IN);
-				
-				boolean state=false;
-				for(int j=0;j<5;j++){
-//					int pinState = state?1023:0;
-//					harness.setValue(testerIndex, pinState);
-//					ThreadUtil.wait(200);
-//					int gotValue = testDevice.getValue(i);
-//					System.out.println(" Pin:"+i+" Tester:"+testerIndex+" setting to: "+pinState+" got:"+gotValue);
-//					assertTrue(gotValue==pinState);
-//					state = !state;
-					int pinState = state?1023:0;
 
-					long startTime = System.currentTimeMillis();
-					harness.setValue(testerIndex, state?1:0);
-					boolean ok=false;
-					do{		
-						//ThreadUtil.wait(1);
-						if((System.currentTimeMillis()-startTime)> msTimeout){
-							System.err.println("Pin test failed "+i);
-							fail("DyIOAnalogInputTest Pin:"+i+" Tester:"+testerIndex+" setting to: "+pinState+" got:"+testDevice.getValue(i));
-						}
-						
-						if(state){
-							ok = testDevice.getValue(i)<900;
-						}else{
-							ok = testDevice.getValue(i)!=0;
-						}
-					}while(ok);
-					state = !state;
-				}
-				harness.setMode(testerIndex, DyIOChannelMode.DIGITAL_IN);
-				testDevice.setMode(testerIndex, DyIOChannelMode.DIGITAL_IN);
-			}else{
-				System.out.println("Pin "+i+" can not be analog in");
-			}
-		}
-	}
 	
 	@Test public void DyIOOutputTest(){
 		if(!testDevice.isAvailable() || harness == null)
@@ -283,36 +291,41 @@ public class DyIONamespaceTest {
 
 		//test device as output
 		for(int i=0;i<numPins;i++){
+			
 			int testerIndex = i;
 			if(i == 16)
 				testerIndex=17;
 			if(i == 17)
 				testerIndex=16;
-			harness.setMode(testerIndex, DyIOChannelMode.DIGITAL_IN);
+			
 			testDevice.setMode(i, DyIOChannelMode.DIGITAL_OUT);
+			harness.setMode(testerIndex, DyIOChannelMode.DIGITAL_IN);
 				
 			boolean state=true;
-			for(int j=0;j<5;j++){
-//				int pinState = state?1:0;
-//				testDevice.setValue(i, pinState);
-//				ThreadUtil.wait(200);
-//				int gotValue = harness.getValue(testerIndex);
-//				System.out.println(" Pin:"+i+" Tester:"+testerIndex+" setting to: "+pinState+" got:"+gotValue);
-//				assertTrue(gotValue==pinState);
-//				state = !state;
+			integral= 0;
+			boolean fail=false;
+			for(int j=0;j<testLoop;j++){
+
 				int pinState = state?1:0;
 
 				long startTime = System.currentTimeMillis();
 				testDevice.setValue(testerIndex, state?1:0);
+				fail=false;
 				do{		
-					//ThreadUtil.wait(1);
+					ThreadUtil.wait(1);
 					if((System.currentTimeMillis()-startTime)> msTimeout){
-						System.err.println("Pin test failed "+i);
-						fail("DyIOOutputTest Pin:"+i+" Tester:"+testerIndex+" setting to: "+pinState+" got:"+testDevice.getValue(i));
+						//System.err.println("Pin test failed "+i);
+						//fail("DyIOOutputTest Pin:"+i+" Tester:"+testerIndex+" setting to: "+pinState+" got:"+harness.getValue(i));
+						fail=true;
 					}
-				}while(harness.getValue(i)!=pinState);
+				}while(harness.getValue(i)!=pinState && fail==false);
+				integral+=(System.currentTimeMillis()-startTime);
 				state = !state;
+				if(fail)
+					System.err.println("DyIOOutputTest Pin:"+i+" Tester:"+testerIndex+" setting to: "+pinState+" got:"+harness.getValue(i));
 			}
+
+			System.out.println("PASS DyIOOutputTest "+i+" in "+(integral/testLoop)+"ms");
 			testDevice.setMode(i, DyIOChannelMode.DIGITAL_IN);
 		}
 		

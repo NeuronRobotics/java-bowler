@@ -181,7 +181,7 @@ public abstract class BowlerAbstractCommand implements ISendable {
 				case 1:
 					throw new InvalidResponseException("Failed to configure PID channel.");
 				case 3:
-					throw new InvalidResponseException("Invalid name string, either too short or too long");
+					throw new InvalidResponseException("Invalid name string, either too short or too long "+data);
 				}
 			}
 		}

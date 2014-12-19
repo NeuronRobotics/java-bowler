@@ -32,9 +32,8 @@ public class InfoCommand extends BowlerAbstractCommand {
 	public InfoCommand(String name) {
 		setOpCode("info");
 		setMethod(BowlerMethod.CRITICAL);
-		int len = name.length();
-		if (len>16)
-			len=16;
+		if(name.length()>16 || name.length()<1)
+			name="DyIO";
 		getCallingDataStorage().add(name.getBytes());
 	}
 
