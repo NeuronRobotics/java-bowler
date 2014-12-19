@@ -234,7 +234,7 @@ public class DyIOChannel implements IDyIOChannel {
 		}
 		BowlerDatagram bd = getDevice().send(new GetChannelModeCommand(number));
 		//System.out.println(bd);
-		setCurrentMode(DyIOChannelMode.get(bd.getData().getByte(1)));
+		fireModeChangeEvent(DyIOChannelMode.get(bd.getData().getByte(1)));
 		throw new RuntimeException();
 	}
 	
@@ -335,20 +335,34 @@ public class DyIOChannel implements IDyIOChannel {
 	 */
 	protected void fireModeChangeEvent(DyIOChannelMode e) {
 		boolean ok = false;
+		String modeList=" ";
 		for (DyIOChannelMode md :getAvailableModes()){
 			if(md == e)
 				ok=true;
+			modeList +=" "+md.toString()+",";
 		}
 		if(! ok){
-			Log.error("Mode is invalid!!!");
+			Log.error(e+" Mode is invalid for: "+number+modeList);
 			e = DyIOChannelMode.DIGITAL_IN;
 		}
-		if(e==getMode()) {
-			Log.info("Mode not changed: "+getChannelNumber()+" mode: "+getMode());
+
+		try {
+			if(!canBeMode(e)) {
+				String message = this.getClass()+" Can not set channel: "+getChannelNumber()+" to mode: "+e;
+				Log.error(message);
+				//throw new RuntimeException(message);
+			}
+		}catch(RuntimeException ex) {
+			ex.printStackTrace();
+			throw ex;
 		}
-		setCurrentMode(e);
+		if(e==getMode()) {
+			//Log.debug("Mode not changed: "+getChannelNumber()+" mode: "+getMode()+" not notifying");
+			return;
+		}
+		this.current = e;
 		for(int i=0;i<modeListeners.size();i++) {
-			Log.info("Notifying: "+modeListeners.get(i).getClass());
+			Log.debug("Notifying: "+modeListeners.get(i).getClass());
 			modeListeners.get(i).onModeChange(e);
 		}
 	}
@@ -427,17 +441,19 @@ public class DyIOChannel implements IDyIOChannel {
 		
 		//resyncIfNotSynced();
 		if(mode == null) {
-			return true;
+			throw new RuntimeException("Mode can not be set to null, must be set to a mode");
 		}
 		if(getMode()  == null) {
 			Log.info(this.getClass()+" First time setting mode.");
-			setCurrentMode(mode);
+			fireModeChangeEvent(mode); 
 			isAsync = isDefaultAsync(mode);
-			return true;
+			haveSetMode=false;
 		}
-		if ((getMode() == mode) && (async == isAsync) && haveSetMode) {
-			//Log.debug(this.getClass()+"Channel: "+getChannelNumber()+" Mode and Async is the same, ignoring...");
-			return true;
+		if ((getMode() == mode) && (async == isAsync) ) {
+			Log.debug(this.getClass()+"Channel: "+getChannelNumber()+" is already "+getMode());
+			if(!haveSetMode)
+				return true;
+			Log.debug("Setting mode first time");
 		}
 		
 		if(!canBeMode(mode)){
@@ -445,17 +461,20 @@ public class DyIOChannel implements IDyIOChannel {
 				new RuntimeException("\nChannel: "+getChannelNumber()+" can not be mode '"+mode+"' in current configuration. \nCheck the power switch settings and availible modes.").printStackTrace();
 			else
 				new RuntimeException("\nChannel: "+getChannelNumber()+" can not be mode '"+mode+"'.").printStackTrace();
-			mode=DyIOChannelMode.DIGITAL_IN;
+			mode=getMode();
 		}
 		settingMode=true;
 		
 		for(int i = 0; i < MAXATTEMPTS; i++) {
 			try {
 				isAsync = async;
-				setCurrentMode(mode);
-//				if(getDevice().isLegacyParser()){
+				haveSetMode=true;
+				/**
+				 * Legacy
+				 */
+				if(getDevice().isLegacyParser()){
 					getDevice().send(new SetChannelModeCommand(number, mode, async));			
-					haveSetMode=true;
+					
 					if(!getDevice().isMuteResyncOnModeChange()){
 						try {
 							getDevice().resync();
@@ -465,20 +484,24 @@ public class DyIOChannel implements IDyIOChannel {
 						}
 					}else{
 						Log.info("Not resyncing from channel: "+getChannelNumber());
-						
+						fireModeChangeEvent(mode); 
+					}	
+				}else{
+					//int printlevel = Log.getMinimumPrintLevel();
+					//Log.enableInfoPrint();
+					Object [] args = getDevice().send("bcs.io.setmode.*;0.3;;",
+							BowlerMethod.POST,
+											"schm",
+											new Object[]{getChannelNumber(),mode.getValue(),async?1:0});
+					ByteList currentModes = (ByteList) args[0];
+					
+					for (int j=0;j<currentModes.size();j++){
+						DyIOChannelMode cm = DyIOChannelMode.get(currentModes.getByte(j));
+						//System.out.println("Setting # "+j+" to "+cm);
+						getDevice().getChannel(j).fireModeChangeEvent(cm); 
 					}
-					fireModeChangeEvent(mode); 
-//				}else{
-//					Object [] args = getDevice().send("bcs.io.setmode*;0.3;;",
-//							BowlerMethod.GET,
-//											"schm",
-//											new Object[]{i,mode.getValue(),async?1:0});
-//					ByteList currentModes = (ByteList) args[0];
-//					for (byte b : currentModes){
-//						DyIOChannelMode cm = DyIOChannelMode.get(b);
-//						fireModeChangeEvent(cm); 
-//					}
-//				}
+					//Log.setMinimumPrintLevel(printlevel);
+				}
 				settingMode=false;
 				// Defaultuing the advanced async to on
 				if(isAsync)
@@ -681,23 +704,13 @@ public class DyIOChannel implements IDyIOChannel {
 		return  getDevice().configAdvancedAsyncAutoSample(getChannelNumber(),msTime);
 	}
 	
-	/**
-	 * Sets the current internal mode variable. 
-	 * @param mode the mode to set to.
-	 */
-	public void setCurrentMode(DyIOChannelMode mode) {
-		try {
-			if(!canBeMode(mode)) {
-				String message = this.getClass()+" Can not set channel: "+getChannelNumber()+" to mode: "+mode;
-				System.err.println(message);
-				//throw new RuntimeException(message);
-			}
-		}catch(RuntimeException ex) {
-			ex.printStackTrace();
-			throw ex;
-		}
-		this.current = mode;
-	}
+//	/**
+//	 * Sets the current internal mode variable. 
+//	 * @param mode the mode to set to.
+//	 */
+//	private void setCurrentMode(DyIOChannelMode mode) {
+//		
+//	}
 	/**
 	 * Gets the current mode.
 	 * @return the current staate of the mode storage variable
