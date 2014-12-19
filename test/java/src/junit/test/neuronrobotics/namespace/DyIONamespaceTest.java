@@ -10,6 +10,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.MACAddress;
 import com.neuronrobotics.sdk.dyio.DyIO;
@@ -121,29 +122,32 @@ public class DyIONamespaceTest {
 	
 	
 	@Test public void DyIONameTest(){
-
-		if(!testDevice.isAvailable())
-			fail();
+//
+//		if(!testDevice.isAvailable())
+//			fail();
+//		int level = Log.getMinimumPrintLevel();
+//		Log.enableInfoPrint();
+//		String name = testDevice.getInfo();
+//		System.out.println("Name is:"+name+ " "+new ByteList(name));
+//		String setName;
+//		if(name.contains("My DyIO"))
+//			setName="My DyIO2";
+//		else
+//			setName="My DyIO";
+//		System.out.println("Setting:"+setName);
+//		testDevice.setInfo(setName);
+//		
+//		String newName = testDevice.getInfo();
+//		
+//		System.out.println("New name is:"+newName+ " "+new ByteList(newName));
+//		testDevice.setInfo(name);
+//	
+//		assertTrue(setName.contains(newName));
+//		assertTrue(name.contains(testDevice.getInfo()));
+//		assertTrue(testDevice.ping() );
+//		
+//		Log.setMinimumPrintLevel(level);
 		
-		String name = testDevice.getInfo();
-		System.out.println("Name is:"+name);
-		String setName;
-		if(name.contains("My DyIO"))
-			setName="My DyIO2";
-		else
-			setName="My DyIO";
-		System.out.println("Setting:"+setName);
-		testDevice.setInfo(setName);
-		
-		String newName = testDevice.getInfo();
-		
-		System.out.println("New name is:"+newName);
-		testDevice.setInfo(name);
-	
-		assertTrue(setName.contains(newName));
-		assertTrue(name.contains(testDevice.getInfo()));
-		assertTrue(testDevice.ping() );
-
 	}
 	
 	@Test public void DyIOPowerTest(){
@@ -291,13 +295,10 @@ public class DyIONamespaceTest {
 
 		//test device as output
 		for(int i=0;i<numPins;i++){
-			
-			int testerIndex = i;
+	
 			if(i == 16)
-				testerIndex=17;
-			if(i == 17)
-				testerIndex=16;
-			
+				i=18;
+			int testerIndex = i;
 			testDevice.setMode(i, DyIOChannelMode.DIGITAL_OUT);
 			harness.setMode(testerIndex, DyIOChannelMode.DIGITAL_IN);
 				
@@ -315,7 +316,7 @@ public class DyIONamespaceTest {
 					ThreadUtil.wait(1);
 					if((System.currentTimeMillis()-startTime)> msTimeout){
 						//System.err.println("Pin test failed "+i);
-						//fail("DyIOOutputTest Pin:"+i+" Tester:"+testerIndex+" setting to: "+pinState+" got:"+harness.getValue(i));
+						fail("DyIOOutputTest Pin:"+i+" Tester:"+testerIndex+" setting to: "+pinState+" got:"+harness.getValue(i));
 						fail=true;
 					}
 				}while(harness.getValue(i)!=pinState && fail==false);
