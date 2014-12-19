@@ -168,7 +168,7 @@ public class DyIONamespaceTest {
 			}else{
 				modes.set(i, DyIOChannelMode.DIGITAL_IN);
 			}
-			System.out.println("Setting "+i+"to mode "+modes.get(i));
+			//System.out.println("Setting "+i+" to mode "+modes.get(i));
 			testDevice.setMode(i, modes.get(i));
 			long startTime = System.currentTimeMillis();
 			do{		
