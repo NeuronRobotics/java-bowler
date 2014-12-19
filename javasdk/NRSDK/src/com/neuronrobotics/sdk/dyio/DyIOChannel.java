@@ -491,11 +491,11 @@ public class DyIOChannel implements IDyIOChannel {
 											"schm",
 											new Object[]{getChannelNumber(),mode.getValue(),async?1:0});
 					ByteList currentModes = (ByteList) args[0];
-					System.out.println("Setting # "+getChannelNumber()+" to "+mode);
+					//System.out.println("Setting # "+getChannelNumber()+" to "+mode);
 					for (int j=0;j<getDevice().getChannels().size();j++){
 						DyIOChannelMode cm = DyIOChannelMode.get(currentModes.getByte(j));
 						if(getDevice().getChannel(j).getCurrentMode()!=cm ){
-							System.err.println("Setting # "+j+" to "+cm);
+							//System.err.println("Setting # "+j+" to "+cm);
 							getDevice().getChannel(j).fireModeChangeEvent(cm); 
 						}
 					}
