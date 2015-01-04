@@ -17,7 +17,9 @@ package com.neuronrobotics.sdk.dyio.peripherals;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import com.neuronrobotics.sdk.commands.bcs.io.SetChannelValueCommand;
 import com.neuronrobotics.sdk.commands.bcs.io.SetUARTBaudrateCommand;
+import com.neuronrobotics.sdk.common.BowlerMethod;
 import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.ISendable;
 import com.neuronrobotics.sdk.dyio.DyIO;
@@ -129,7 +131,19 @@ public class UARTChannel implements ISendable {
 		default:
 			throw new InvalidChannelOperationException("This channel can not be set to that baudrate");
 		}
-		device.send(new SetUARTBaudrateCommand(UART_IN, baudrate));
+		if(device.isLegacyParser()){
+			device.send(new SetUARTBaudrateCommand(UART_IN, baudrate));
+		}else{
+			
+			device.send("bcs.io.*;0.3;;",
+											BowlerMethod.CRITICAL,
+											"cchn",
+											new Object[]{	17,
+															true,
+															new int[]{baudrate}
+														});
+		}
+		
 		return true;
 
 	}

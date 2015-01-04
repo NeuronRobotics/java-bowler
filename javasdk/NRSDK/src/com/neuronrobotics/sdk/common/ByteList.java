@@ -419,7 +419,7 @@ public class ByteList implements ISendable, List<Byte> {
 	public byte getByte(int index) {
 		int size = size();
 		if(index < 0 || index >  size-1) {
-			throw new IndexOutOfBoundsException();
+			throw new IndexOutOfBoundsException("Requested : "+index+" have : "+size());
 		}
 		
 		return getBytes(index,1)[0];
@@ -513,38 +513,7 @@ public class ByteList implements ISendable, List<Byte> {
 		return b;
 	}
 	
-	/**
-	 * Generate a CRC of a section of bytes,.
-	 *
-	 * @param index Start o the section
-	 * @param len LEngth of the section
-	 * @return The Calculated CRC
-	 */
-	public byte genCRC(int index, int len) {
-		int check = 0;
-		for(int i = index; i < len+index; i++) {
-			check += getByte(i);
-		}
-		return (byte)(check&0x000000ff);
-	}
 	
-	/**
-	 * Assumes that the packet starts at byte 0.
-	 *
-	 * @return the byte
-	 */
-	public byte genCRC(){
-		return genCRC(0, (BowlerDatagram.HEADER_SIZE-1));
-	}
-	
-	/**
-	 * Assumes the packet starts at byte 0.
-	 *
-	 * @return the byte holding the header crc
-	 */
-	public byte getCRC(){
-		return getByte(BowlerDatagram.CRC_INDEX);
-	}
 	
 	/* (non-Javadoc)
 	 * @see java.util.List#clear()

@@ -14,21 +14,15 @@
  ******************************************************************************/
 package com.neuronrobotics.sdk.ui;
 
-import java.io.IOException;
-import java.net.Socket;
-import java.net.UnknownHostException;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
-
-
 import net.miginfocom.swing.MigLayout;
 
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.Log;
-
 import com.neuronrobotics.sdk.network.BowlerTCPClient;
 
 

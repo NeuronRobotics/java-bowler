@@ -2,7 +2,6 @@ package com.neuronrobotics.addons.driving.virtual;
 
 import com.neuronrobotics.addons.driving.IPuckBotKinematics;
 import com.neuronrobotics.addons.driving.PuckBot;
-import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.pid.IPIDEventListener;
 import com.neuronrobotics.sdk.pid.PIDEvent;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;

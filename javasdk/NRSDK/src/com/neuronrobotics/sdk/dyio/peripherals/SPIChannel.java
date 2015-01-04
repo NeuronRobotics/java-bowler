@@ -4,16 +4,21 @@ import com.neuronrobotics.sdk.commands.bcs.io.SetChannelValueCommand;
 import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.common.BowlerMethod;
 import com.neuronrobotics.sdk.common.ByteList;
+import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
+import com.neuronrobotics.sdk.dyio.DyIOChannelEvent;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.dyio.DyIORegestry;
+import com.neuronrobotics.sdk.dyio.IChannelEventListener;
+import com.neuronrobotics.sdk.util.ThreadUtil;
 /**
  * This class wraps ports 0,1, and 2 as an SPI interface
  * @author Kevin Harrington
  *
  */
-public class SPIChannel {
+public class SPIChannel implements IChannelEventListener{
 	DyIO dyio;
+	byte [] rx=null;
 	/**
 	 * Default constructor, assumes the DyIO regestry is being used
 	 */
@@ -27,6 +32,7 @@ public class SPIChannel {
 	public SPIChannel (DyIO d) {
 		d.setMode(0, DyIOChannelMode.SPI_CLOCK);
 		dyio = d;
+		dyio.getChannel(0).addChannelEventListener(this);
 	}
 	/**
 	 * THis method sends a byte array our the SPI peripheral. It uses another DyIO channel as its slave select pin. 
@@ -34,6 +40,7 @@ public class SPIChannel {
 	 * @param stream the Bytes to be sent out
 	 * @return true if success
 	 */
+	@Deprecated
 	private BowlerDatagram sendSPIStream(int ss, byte [] stream) {
 		
 		ByteList b = new ByteList();
@@ -68,15 +75,26 @@ public class SPIChannel {
 				return new byte[0];
 			return b.getData().getBytes(2);
 		}else{
+			ByteList data  = new ByteList(stream);
+			data.insert(0, (byte) ss);
 			dyio.send("bcs.io.*;0.3;;",
 					BowlerMethod.POST,
 					"strm",
-					new Object[]{0,new ByteList(stream)});
-			Object [] args = dyio.send("bcs.io.*;0.3;;",
-					BowlerMethod.GET,
-					"strm",
-					new Object[]{0});
-			return ((ByteList)args[0]).getBytes();
+					new Object[]{0,data});
+			int timeout = 1000;
+			rx=null;
+			while(timeout-->0){
+				ThreadUtil.wait(1);
+				if(rx!=null){
+					return rx;
+				}
+			}
+			return new byte [0];
 		}
+	}
+	@Override
+	public void onChannelEvent(DyIOChannelEvent e) {
+		//Log.error("SPI"+e);
+		rx = e.getData().getBytes();
 	}
 }

@@ -5,13 +5,14 @@ import java.util.ArrayList;
 import com.neuronrobotics.sdk.commands.bcs.io.GetValueCommand;
 import com.neuronrobotics.sdk.commands.bcs.io.SetChannelValueCommand;
 import com.neuronrobotics.sdk.common.BowlerDatagram;
+import com.neuronrobotics.sdk.common.BowlerMethod;
 import com.neuronrobotics.sdk.common.ByteList;
+import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIOChannel;
 import com.neuronrobotics.sdk.dyio.DyIOChannelEvent;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.dyio.DyIORegestry;
 import com.neuronrobotics.sdk.dyio.IChannelEventListener;
-import com.neuronrobotics.sdk.dyio.IDyIOChannel;
 
 /**
  * This class is a wrapper for the DyIO PPM signal reader.
@@ -73,7 +74,15 @@ public class PPMReaderChannel  extends DyIOAbstractPeripheral implements IChanne
 			//System.out.print(" "+crossLinks[i]);
 		}
 		//System.out.print("]");
-		getChannel().getDevice().send(new SetChannelValueCommand(23,crossLinks,myMode));
+		if(getChannel().getDevice().isLegacyParser()){
+			getChannel().getDevice().send(new SetChannelValueCommand(23,crossLinks,myMode));
+		}else{
+			ByteList data  = new ByteList(crossLinks);
+			getChannel().getDevice().send("bcs.io.*;0.3;;",
+					BowlerMethod.POST,
+					"strm",
+					new Object[]{23,data});
+		}
 	}
 	/**
 	 * Request the cross link map
@@ -102,21 +111,38 @@ public class PPMReaderChannel  extends DyIOAbstractPeripheral implements IChanne
 	}
 	
 	private void updateValues() {
-		BowlerDatagram b=null;
-		//System.out.println("Updating value map");
-		try {
-			b= getChannel().getDevice().send(new GetValueCommand(23));
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
-		if(b != null) {
+		if(getChannel().getDevice().isLegacyParser()){
+			BowlerDatagram b=null;
+			//System.out.println("Updating value map");
+			try {
+				b= getChannel().getDevice().send(new GetValueCommand(23));
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+			if(b != null) {
+				crossLinks = new int[6];
+				values= new int[6];
+				for(int i=0;i<values.length;i++) {
+					values[i] = b.getData().getUnsigned(1+i);
+				}
+				for(int i=0;i<crossLinks.length;i++) {
+					crossLinks[i] = b.getData().getUnsigned(1+6+i);
+				}
+			}
+		}else{
+			Object[] args = getChannel().getDevice().send("bcs.io.*;0.3;;",
+					BowlerMethod.GET,
+					"strm",
+					new Object[]{23});
 			crossLinks = new int[6];
 			values= new int[6];
+			ByteList data = (ByteList)args[1];
+			Log.debug("PPM link data: "+data.size());
 			for(int i=0;i<values.length;i++) {
-				values[i] = b.getData().getUnsigned(1+i);
+				values[i] = data.getUnsigned(i);
 			}
 			for(int i=0;i<crossLinks.length;i++) {
-				crossLinks[i] = b.getData().getUnsigned(1+6+i);
+				crossLinks[i] = data.getUnsigned(6+i);
 			}
 		}
 	}

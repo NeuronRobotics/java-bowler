@@ -15,9 +15,10 @@
 package com.neuronrobotics.sdk.dyio.peripherals;
 
 import com.neuronrobotics.sdk.commands.bcs.io.AsyncThreshholdEdgeType;
+import com.neuronrobotics.sdk.commands.bcs.io.GetDyIOChannelCountCommand;
 import com.neuronrobotics.sdk.commands.bcs.io.SetChannelValueCommand;
+import com.neuronrobotics.sdk.common.BowlerMethod;
 import com.neuronrobotics.sdk.common.ByteList;
-import com.neuronrobotics.sdk.common.ISendable;
 import com.neuronrobotics.sdk.common.InvalidResponseException;
 import com.neuronrobotics.sdk.dyio.DyIOChannel;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
@@ -29,6 +30,7 @@ import com.neuronrobotics.sdk.dyio.IDyIOChannel;
 public abstract class DyIOAbstractPeripheral implements IDyIOChannel {
 	private DyIOChannel channel;
 	private boolean enabled = false;
+	private int configuration=0;
 	/**
 	 * DyIOAbstractPeripheral.
 	 * 
@@ -42,9 +44,28 @@ public abstract class DyIOAbstractPeripheral implements IDyIOChannel {
 		this.enabled = true;
 		if(channel.getMode() != myMode)
 			channel.setMode(myMode, async);
+		setConfiguration(getConfigurationFromDevice());
 		//channel.removeAllChannelEventListeners();
 		//Always notify any listeners of mode changes
 			//channel.removeAllChannelModeChangeListener();
+	}
+	private int getConfigurationFromDevice() {
+		if(getChannel().getDevice().isLegacyParser()){
+			if(channel.getMode() == DyIOChannelMode.SERVO_OUT)
+				return 128;
+			return 0;
+		}else{
+			Object[] args = getChannel().getDevice().send("bcs.io.*;0.3;;",
+											BowlerMethod.CRITICAL,
+											"cchn",
+											new Object[]{	255,
+															false,
+															new int[]{}
+														});
+			Integer [] configs = (Integer[]) args[0];
+			return configs[getChannel().getChannelNumber()];
+		}
+		
 	}
 	/**
 	 * This method retrieves the channel mode of this peripheral
@@ -171,7 +192,26 @@ public abstract class DyIOAbstractPeripheral implements IDyIOChannel {
 			switch(mode){
 			case SERVO_OUT:
 			case PWM_OUT :
-				getChannel().send(new SetChannelValueCommand(getChannel().getChannelNumber(), pos , getMode(), true));
+				configuration = pos;
+				if(getChannel().getDevice().isLegacyParser()){
+					getChannel().send(new SetChannelValueCommand(getChannel().getChannelNumber(), pos , getMode(), true));
+				}else{
+					
+					getChannel().getDevice().send("bcs.io.*;0.3;;",
+													BowlerMethod.CRITICAL,
+													"cchn",
+													new Object[]{	getChannel().getChannelNumber(),
+																	true,
+																	new int[]{pos}
+																});
+					getChannel().setValue(pos);
+					try {
+						Thread.sleep(30);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
 				return true;
 			default:
 				return false;
@@ -274,5 +314,11 @@ public abstract class DyIOAbstractPeripheral implements IDyIOChannel {
 	 */
 	public void setAsync(boolean b) {
 		channel.setMode(getClassMode(), b);
+	}
+	public int getConfiguration() {
+		return configuration;
+	}
+	private void setConfiguration(int configuration) {
+		this.configuration = configuration;
 	}
 }

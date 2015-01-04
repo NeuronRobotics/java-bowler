@@ -126,6 +126,15 @@ public class LinkConfiguration {
 	public double getKD() {
 		return k[2];
 	}
+	public void setKP(double kP) {
+		k[0] = kP;
+	}
+	public void setKI(double kI) {
+		k[1] = kI;
+	}
+	public void setKD(double kD) {
+		k[2] = kD;
+	}
 	public void setInverted(boolean inverted) {
 		this.inverted = inverted;
 	}
@@ -188,6 +197,18 @@ public class LinkConfiguration {
 	}
 	public void setTotlaNumberOfLinks(int totlaNumberOfLinks) {
 		this.totlaNumberOfLinks = totlaNumberOfLinks;
+	}
+	
+	public PIDConfiguration getPidConfiguration(){
+		PIDConfiguration pid = new PIDConfiguration();
+		pid.setKD(getKD());
+		pid.setGroup(getHardwareIndex());
+		pid.setStopOnIndex(isStopOnLatch());
+		pid.setKI(getKI());
+		pid.setKP(getKP());
+		pid.setIndexLatch(getIndexLatch());
+		pid.setInverted(isInverted());
+		return pid;
 	}
 	public void setPidConfiguration(IPidControlNamespace pid) {
 		PIDConfiguration conf = pid.getPIDConfiguration(getHardwareIndex());

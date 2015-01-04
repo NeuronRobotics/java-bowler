@@ -2,15 +2,10 @@ package com.neuronrobotics.replicator.driver;
 
 import java.util.ArrayList;
 
-import javax.print.PrintService;
-import javax.vecmath.Point3f;
-
 import com.neuronrobotics.replicator.driver.PrinterStatus.PrinterState;
-import com.neuronrobotics.sdk.addons.kinematics.ITaskSpaceUpdateListenerNR;
 import com.neuronrobotics.sdk.addons.kinematics.LinkConfiguration;
 import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
-import com.neuronrobotics.sdk.commands.cartesian.CancelPrintCommand;
 import com.neuronrobotics.sdk.commands.cartesian.LinearInterpolationCommand;
 import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.common.BowlerMethod;
@@ -18,8 +13,6 @@ import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.pid.GenericPIDDevice;
 import com.neuronrobotics.sdk.pid.ILinkFactoryProvider;
-import com.neuronrobotics.sdk.pid.PIDConfiguration;
-import com.neuronrobotics.sdk.util.ThreadUtil;
 
 public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryProvider {
 	
@@ -170,10 +163,12 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 								conf.getHardwareIndex(),
 								conf.getScale(),
 								conf.getIndexLatch(),
-								conf.getLowerLimit(),
-								conf.getUpperLimit()}, 5);
+								(int)conf.getLowerLimit(),
+								(int)conf.getUpperLimit()}, 5);
+		ConfigurePIDController(conf.getPidConfiguration());
 		
 		return;
+		
 	}
 	
 	public void setSlic3rConfiguration(Slic3r conf){

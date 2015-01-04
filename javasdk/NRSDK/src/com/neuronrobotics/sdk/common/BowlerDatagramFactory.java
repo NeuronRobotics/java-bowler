@@ -180,7 +180,7 @@ public class BowlerDatagramFactory {
 		while(check==false) {
 			try{
 				if( (buffer.get(0) != BowlerDatagram.REVISION)
-						|| (!BowlerDatagram.CheckCRC(buffer))){
+						|| (!BowlerDatagram.CheckCRC(buffer,false))){
 					if(buffer.get(0) != BowlerDatagram.REVISION)
 						Log.error("First Byte Fail (second attempt) Junk byte: "+String.format("%02x ", buffer.pop()));
 					else
@@ -204,22 +204,35 @@ public class BowlerDatagramFactory {
 				return null;//Not enough bytes to even be a header, try back later
 			}
 		}
-		int len =(int) buffer.getByte(9);
-		if(len<0){
-			len+=256;
-		}
+		int len =buffer.getUnsigned(9);
+	
 		if(len<4){
 			Log.error("#*#*Warning, packet has no RPC, size: "+len);
 			
 		}
-		int totalLen = len+BowlerDatagram.HEADER_SIZE;
+		int totalLen;
+		if( BowlerDatagram.isUseBowlerV4()){
+			totalLen = len+BowlerDatagram.HEADER_SIZE+1;
+		}else{
+			totalLen = len+BowlerDatagram.HEADER_SIZE;	
+		}
 		// See if all the data has arrived for this packet
 		if (buffer.size()>=(totalLen) ){
 			failed=0;
 			ByteList rawContent = new ByteList(buffer.popList(totalLen));
 			staticMemory.setFree(false,instance);
-			staticMemory.parse(rawContent);
-			return  staticMemory;
+			try{
+				staticMemory.parse(rawContent);
+				if(BowlerDatagram.CheckCRC(rawContent,true)){
+					return  staticMemory;
+				}else{
+					Log.error("Data CRC check Fail  "+staticMemory);
+					failed = rawContent.size();
+				}
+			}catch(Exception E){
+				E.printStackTrace();
+				Log.error("Data CRC check Fail  "+staticMemory);
+			}
 		}
 		if(failed>0)
 			Log.error("Failed out "+failed+" bytes");

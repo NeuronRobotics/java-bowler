@@ -24,12 +24,12 @@ public class ServoTest implements IServoPositionUpdateListener{
                 //Loop 10 times setting the position of the servo 
                 //the time the loop waits will be the time it takes for the servo to arrive
 		srv.SetPosition(0);
-		float time = 5;
+		float time = 2;
 		
 		System.out.println("Moving with time");
 		for(int i = 0; i < 10; i++) {
 			// Set the value high every other time, exit if unsuccessful
-			int pos = ((i%2==0)?204:50);
+			int pos = ((i%2==0)?255:0);
                         //This will move the servo from the position it is currentlly in
 			srv.SetPosition(pos, time);
 			

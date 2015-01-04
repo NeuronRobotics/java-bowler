@@ -1,21 +1,21 @@
 package junit.test.neuronrobotics.utilities;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
 import com.neuronrobotics.sdk.commands.bcs.core.PingCommand;
-import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.common.BowlerDatagramFactory;
 import com.neuronrobotics.sdk.common.ByteList;
+import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.MACAddress;
-import com.neuronrobotics.sdk.ui.ConnectionDialog;
 
 public class PacketValidationTest {
 
 	@Test
 	public void packetTest() {
+		Log.enableInfoPrint();
 		BowlerDatagram bd = BowlerDatagramFactory.build(new MACAddress(), new PingCommand());
 		System.out.println(bd);
 		

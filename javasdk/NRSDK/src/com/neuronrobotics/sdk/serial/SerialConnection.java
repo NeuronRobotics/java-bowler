@@ -15,6 +15,7 @@
 package com.neuronrobotics.sdk.serial;
 
 import gnu.io.NRSerialPort;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.util.ArrayList;
@@ -24,7 +25,6 @@ import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.MACAddress;
 import com.neuronrobotics.sdk.common.MissingNativeLibraryException;
-import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.genericdevice.GenericDevice;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
@@ -173,6 +173,7 @@ public class SerialConnection extends BowlerAbstractConnection {
 	@Override
 	public void disconnect() {
 		if(isConnected())
+			//new RuntimeException().printStackTrace();
 			Log.warning("Disconnecting Serial Connection");
 		try{
 			try{
@@ -201,17 +202,22 @@ public class SerialConnection extends BowlerAbstractConnection {
 		List <String> ports = SerialConnection.getAvailableSerialPorts();
 		//Start by searching through all available serial connections for DyIOs connected to the system
 		for(String s: ports){
+			System.out.println("Searching "+s);
+		}
+		for(String s: ports){
 				try{
 					SerialConnection connection = new SerialConnection(s);
 					GenericDevice d = new GenericDevice(connection);
 					d.connect();
+					System.out.println("Pinging port: "+connection+" ");
 					if(d.ping()){
 						String addr = d.getAddress().toString();
 						if(addr.equalsIgnoreCase(mac.toString())){
 							connection.disconnect();
+							System.out.println("Device FOUND on port: "+connection+" "+addr);
 							return connection;
 						}
-						Log.warning("Device not on port: "+connection+" "+addr);
+						System.err.println("Device not on port: "+connection+" "+addr);
 					}
 					connection.disconnect();
 				}catch(Exception EX){

@@ -53,57 +53,71 @@ public class RpcEncapsulation {
 		command.setNamespaceIndex(getNamespaceIndex());
 		
 		for(int i=0;(i<arguments.length && i < doswnstreamData.length);i++ ){
-			switch(arguments[i]){
-			case ASCII:
-				command.getCallingDataStorage().add(doswnstreamData[i].toString());
-				command.getCallingDataStorage().add(0);
-				break;
-			case FIXED100:
-				double d = Double.parseDouble(doswnstreamData[i].toString())*100;
-				command.getCallingDataStorage().addAs32((int)d);
-				break;
-			case FIXED1k:
-				double k = Double.parseDouble(doswnstreamData[i].toString())*1000;
-				command.getCallingDataStorage().addAs32((int)k);
-				break;
-			case I08:
-				command.getCallingDataStorage().add(Integer.parseInt(doswnstreamData[i].toString()));
-				break;
-			case BOOL:
-				command.getCallingDataStorage().add(Boolean.parseBoolean((doswnstreamData[i].toString()))?1:0);
-				break;
-			case I16:
-				command.getCallingDataStorage().addAs16(Integer.parseInt(doswnstreamData[i].toString()));
-				break;
-			case I32:
-				command.getCallingDataStorage().addAs32(Integer.parseInt(doswnstreamData[i].toString()));
-				break;
-			case I32STR:
-				int [] data32 = (int [])doswnstreamData[i];
-				command.getCallingDataStorage().add(data32.length);
-				for(int i1=0;i1<data32.length;i1++){
-					command.getCallingDataStorage().addAs32(data32[i1]);
+			try{
+				switch(arguments[i]){
+				case ASCII:
+					command.getCallingDataStorage().add(doswnstreamData[i].toString());
+					command.getCallingDataStorage().add(0);
+					break;
+				case FIXED100:
+					double d = Double.parseDouble(doswnstreamData[i].toString())*100;
+					command.getCallingDataStorage().addAs32((int)d);
+					break;
+				case FIXED1k:
+					double k = Double.parseDouble(doswnstreamData[i].toString())*1000;
+					command.getCallingDataStorage().addAs32((int)k);
+					break;
+				case I08:
+					command.getCallingDataStorage().add(Integer.parseInt(doswnstreamData[i].toString()));
+					break;
+				case BOOL:
+					command.getCallingDataStorage().add(Boolean.parseBoolean((doswnstreamData[i].toString()))?1:0);
+					break;
+				case I16:
+					command.getCallingDataStorage().addAs16(Integer.parseInt(doswnstreamData[i].toString()));
+					break;
+				case I32:
+					command.getCallingDataStorage().addAs32(Integer.parseInt(doswnstreamData[i].toString()));
+					break;
+				case I32STR:
+					int [] data32 = (int [])doswnstreamData[i];
+					command.getCallingDataStorage().add(data32.length);
+					for(int i1=0;i1<data32.length;i1++){
+						command.getCallingDataStorage().addAs32(data32[i1]);
+					}
+					break;
+				case FIXED1k_STR:
+					double [] dataDouble = (double [])doswnstreamData[i];
+					command.getCallingDataStorage().add(dataDouble.length);
+					for(int i1=0;i1<dataDouble.length;i1++){
+						command.getCallingDataStorage().addAs32((int) (dataDouble[i1]*1000.0));
+					}
+					break;
+				case INVALID:
+					break;
+				case STR:
+					ByteList data = (ByteList )doswnstreamData[i];
+					command.getCallingDataStorage().add(data.size());
+					for(int i1=0;i1<data.size();i1++){
+						command.getCallingDataStorage().add(data.get(i1));
+					}
+					break;
+				default:
+					throw new RuntimeException("Unrecognized data type "+arguments[i]);
 				}
-				break;
-			case FIXED1k_STR:
-				double [] dataDouble = (double [])doswnstreamData[i];
-				command.getCallingDataStorage().add(dataDouble.length);
-				for(int i1=0;i1<dataDouble.length;i1++){
-					command.getCallingDataStorage().addAs32((int) (dataDouble[i1]*1000.0));
+			}catch(Exception e){
+				e.printStackTrace();
+				Log.error("Expected : "+ arguments[i]+" got: "+doswnstreamData[i].getClass());
+				if(arguments.length != doswnstreamData.length){
+					Log.error("Wrong size : "+ arguments.length+" got: "+doswnstreamData.length);
+				}else{
+					for(int j=0;j<arguments.length;j++){
+						Log.error("Valid : "+ arguments[j]+" got: "+doswnstreamData[i].getClass());
+					}
 				}
-				break;
-			case INVALID:
-				break;
-			case STR:
-				ByteList data = (ByteList )doswnstreamData[i];
-				command.getCallingDataStorage().add(data.size());
-				for(int i1=0;i1<data.size();i1++){
-					command.getCallingDataStorage().add(data.get(i1));
-				}
-				break;
-			default:
-				break;
+				
 			}
+
 		}
 		
 		return command;
@@ -188,9 +202,20 @@ public class RpcEncapsulation {
 					
 					break;
 				default:
-					break;
+					throw new RuntimeException("Unrecognized data type"+arguments[i]);
 				}
 			}
+		}catch(java.lang.ClassCastException e){
+			e.printStackTrace();
+			Log.error("Expected : "+ arguments[i]+" got: "+response[i].getClass());
+			if(arguments.length != response.length){
+				Log.error("Wrong size : "+ arguments.length+" got: "+response.length);
+			}else{
+				for(int j=0;j<arguments.length;j++){
+					Log.error("Valid : "+ arguments[j]+" got: "+response[i].getClass());
+				}
+			}
+			
 		}catch(RuntimeException ex){
 			Log.error("Failed to parse "+i+"\n"+datagram+"\nFrom "+this);
 			throw ex;
@@ -229,6 +254,11 @@ public class RpcEncapsulation {
 	
 
 	public void setDownstreamArguments(BowlerDataType[] downstreamArguments) {
+		for(int i=0;i<downstreamArguments.length;i++){
+			if(downstreamArguments[i] == null){
+				throw new RuntimeException("RPC argument can not be null");
+			}
+		}
 		this.downstreamArguments = downstreamArguments;
 	}
 
@@ -237,6 +267,11 @@ public class RpcEncapsulation {
 	}
 
 	public void setUpstreamArguments(BowlerDataType[] upstreamArguments) {
+		for(int i=0;i<upstreamArguments.length;i++){
+			if(upstreamArguments[i] == null){
+				throw new RuntimeException("RPC argument can not be null");
+			}
+		}
 		this.upstreamArguments = upstreamArguments;
 	}
 
@@ -254,6 +289,7 @@ public class RpcEncapsulation {
 		if(getDownstreamArguments()!=null){
 			s+=" (";
 			for(int i=0;i<getDownstreamArguments().length;i++){
+				
 				s+=getDownstreamArguments()[i]+ " ";
 			}
 			s+=") ";

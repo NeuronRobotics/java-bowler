@@ -1,7 +1,5 @@
 package com.neuronrobotics.test.nrdk;
 
-import com.neuronrobotics.sdk.common.Log;
-import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.genericdevice.GenericDevice;
 import com.neuronrobotics.sdk.serial.SerialConnection;
 

@@ -35,7 +35,6 @@ import java.util.ArrayList;
 
 import com.neuronrobotics.sdk.commands.bcs.core.PingCommand;
 import com.neuronrobotics.sdk.commands.neuronrobotics.dyio.InfoFirmwareRevisionCommand;
-import com.neuronrobotics.sdk.util.ThreadUtil;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -186,7 +185,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	 * @throws InvalidResponseException the invalid response exception
 	 */
 	public BowlerDatagram send(BowlerAbstractCommand command) throws NoConnectionAvailableException, InvalidResponseException {	
-		return connection.send(command, getAddress());
+		return send(command,1);
 	}
 	
 	/**
@@ -197,7 +196,8 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	 * @throws NoConnectionAvailableException the no connection available exception
 	 * @throws InvalidResponseException the invalid response exception
 	 */
-	public BowlerDatagram send(BowlerAbstractCommand command, int retry) throws NoConnectionAvailableException, InvalidResponseException {	
+	public BowlerDatagram send(BowlerAbstractCommand command, int retry) throws NoConnectionAvailableException, InvalidResponseException {
+		
 		return connection.send(command,getAddress(), retry);
 	}
 	/**
@@ -213,6 +213,20 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	public Object [] send(String namespace,BowlerMethod method, String rpcString, Object[] arguments, int retry) throws DeviceConnectionException{
 		return connection.send(getAddress(),namespace, method, rpcString, arguments, retry);
 	}
+	
+	/**
+	 * THis is the scripting interface to Bowler devices. THis allows a user to describe a namespace, rpc, and array or 
+	 * arguments to be paced into the packet based on the data types of the argument. The response in likewise unpacked 
+	 * into an array of objects.
+	 * @param namespace The string of the desired namespace
+	 * @param rpcString The string of the desired RPC
+	 * @param arguments An array of objects corresponding to the data to be stuffed into the packet.
+	 * @return The return arguments parsed and packet into an array of arguments
+	 * @throws DeviceConnectionException If the desired RPC's are not available then this will be thrown
+	 */
+	public Object [] send(String namespace,BowlerMethod method, String rpcString, Object[] arguments) throws DeviceConnectionException{
+		return send(namespace, method, rpcString, arguments, 5);
+	}
 		
 	/**
 	 * Implementation of the Bowler ping ("_png") command
@@ -221,22 +235,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	 * @return the device's address
 	 */
 	public boolean ping() {
-		try {
-			BowlerDatagram bd = send(new PingCommand(),5);
-			if(bd !=null){
-				//System.out.println("Ping success " + bd.getAddress());
-				setAddress(bd.getAddress());
-				BowlerDatagramFactory.freePacket(bd);
-				return true;
-			}
-		} catch (InvalidResponseException e) {
-			Log.error("Invalid response from Ping ");
-			e.printStackTrace();
-		} catch (Exception e) {
-			Log.error("No connection is available.");
-			e.printStackTrace();
-		}
-		return false;
+		return connection.ping(getAddress());
 	}
 	
 	/**

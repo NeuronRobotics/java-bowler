@@ -133,7 +133,7 @@ public abstract class BowlerAbstractCommand implements ISendable {
 			case 0:
 				switch(section) {
 				default:
-					throw new InvalidResponseException("Unknow error in the communications stack. (" + zone + " " + section + ")");
+					throw new InvalidResponseException("Unknow error in the communications stack. (" + zone + " " + section + ")"+data);
 				case 0x7f:
 					throw new InvalidResponseException("The method provided is invalid.");
 				case 0:
@@ -181,7 +181,7 @@ public abstract class BowlerAbstractCommand implements ISendable {
 				case 1:
 					throw new InvalidResponseException("Failed to configure PID channel.");
 				case 3:
-					throw new InvalidResponseException("Invalid name string, either too short or too long");
+					throw new InvalidResponseException("Invalid name string, either too short or too long "+data);
 				}
 			}
 		}

@@ -41,7 +41,6 @@ import com.neuronrobotics.sdk.commands.bcs.core.NamespaceCommand;
 import com.neuronrobotics.sdk.commands.bcs.core.PingCommand;
 import com.neuronrobotics.sdk.commands.bcs.core.RpcArgumentsCommand;
 import com.neuronrobotics.sdk.commands.bcs.core.RpcCommand;
-import com.neuronrobotics.sdk.config.SDKBuildInfo;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 
@@ -178,8 +177,8 @@ public abstract class BowlerAbstractConnection {
 			try {
 				//new RuntimeException().printStackTrace();
 				Log.error("No response from device, no response in "+(System.currentTimeMillis()-startOfReciveTime)+" ms");
-				reconnect();
-			} catch (IOException e) {
+				
+			} catch (Exception e) {
 				clearLastSyncronousResponse();
 				executingLock.unlock();
 				throw new RuntimeException(e);
@@ -635,6 +634,9 @@ public abstract class BowlerAbstractConnection {
 						//Found the command in the namespace
 
 							BowlerDatagram dg =  send(rpc.getCommand(arguments),addr,retry);
+							if(dg!=null){
+								addr.setValues(dg.getAddress());
+							}
 							Object [] en =rpc.parseResponse(dg);//parse and return
 							BowlerDatagramFactory.freePacket(dg);
 							return en;
@@ -651,7 +653,7 @@ public abstract class BowlerAbstractConnection {
 	
 	private boolean namespacesFinishedInitializing = false;
 
-	private double percentagePrint =10.0;
+	private double percentagePrint =75.0;
 	
 	public boolean isInitializedNamespaces(){
 		return namespaceList!=null && namespacesFinishedInitializing ;
@@ -681,11 +683,17 @@ public abstract class BowlerAbstractConnection {
 						namespacePacket = send(new NamespaceCommand(),addr,5);
 						
 						num= namespacePacket.getData().getByte(0);
+						if(num <=0){
+							Log.error("Not enougn namespaces!"+namespacePacket);
+						}
 						//Done with the packet
 						BowlerDatagramFactory.freePacket(namespacePacket);
 						Log.warning("This is an older implementation of core, depricated");
 					}else{
 						num= namespacePacket.getData().getByte(namespacePacket.getData().size()-1);
+						if(num <=0){
+							Log.error("Not enougn namespaces!"+namespacePacket);
+						}
 						//Done with the packet
 						BowlerDatagramFactory.freePacket(namespacePacket);
 						Log.info("This is the new core");
@@ -793,13 +801,20 @@ public abstract class BowlerAbstractConnection {
 		try{
 			//populate RPC set
 			BowlerDatagram b = send(new  RpcCommand(namespaceIndex),addr,5);
+			
 			if(!b.getRPC().contains("_rpc")){
 				System.err.println(b);
 				throw new RuntimeException("This RPC index request has failed");
 			}
 			//int ns = b.getData().getByte(0);// gets the index of the namespace
 			//int rpcIndex = b.getData().getByte(1);// gets the index of the selected RPC
-			int numRpcs = b.getData().getByte(2);// gets the number of RPC's
+			int numRpcs;
+			try{
+				numRpcs = b.getData().getByte(2);// gets the number of RPC's
+			}catch(IndexOutOfBoundsException e){
+				e.printStackTrace();
+				throw new RuntimeException(e.getMessage()+"\r\n"+b);
+			}
 			if(numRpcs<1){
 				Log.error("RPC request failed:\n"+b);
 			}else{
@@ -822,8 +837,7 @@ public abstract class BowlerAbstractConnection {
 					throw new RuntimeException("This RPC section failed");
 				}
 				byte []data = b.getData().getBytes(2);
-				//Done with the packet
-				BowlerDatagramFactory.freePacket(b);
+				
 				BowlerMethod downstreamMethod = BowlerMethod.get(data[0]);
 				int numDownArgs = data[1];
 				BowlerMethod upstreamMethod   = BowlerMethod.get(data[numDownArgs+2]);
@@ -838,8 +852,17 @@ public abstract class BowlerAbstractConnection {
 				for(int k=0;k<numUpArgs;k++){
 					upArgs[k] = BowlerDataType.get(data[k+numDownArgs+4]);
 				}
-				RpcEncapsulation tmpRpc = new RpcEncapsulation(namespaceIndex,namespace, rpcStr, downstreamMethod,downArgs,upstreamMethod,upArgs);
-				//System.out.println(tmpRpc);
+
+				RpcEncapsulation tmpRpc;
+				try{
+					tmpRpc = new RpcEncapsulation(namespaceIndex,namespace, rpcStr, downstreamMethod,downArgs,upstreamMethod,upArgs);
+				}catch (RuntimeException e){
+					Log.error("Argumet parsing failure!\r\n"+b);
+					throw e;
+				}
+				//Done with the packet
+				BowlerDatagramFactory.freePacket(b);
+				Log.debug(tmpRpc.toString());
 				namespaceList.get(namespaceIndex).getRpcList().add(tmpRpc);
 			}
 			
@@ -859,18 +882,42 @@ public abstract class BowlerAbstractConnection {
 	 */
 	public BowlerDatagram send(BowlerAbstractCommand command,MACAddress addr, int retry) throws NoConnectionAvailableException, InvalidResponseException {	
 		for(int i=0;i<retry;i++){
+
 			BowlerDatagram ret;
 			try{
 				ret = send( command,addr);
-				if(ret != null)
+				//System.out.println(ret);
+				if(ret != null){
+					addr.setValues(ret.getAddress());
 					//if(!ret.getRPC().contains("_err"))
-						return ret;
-			}catch(Exception ex){
-				//ex.printStackTrace();
+					
+					return ret;
+				}
+			}catch(Exception ex){			
+
+				ex.printStackTrace();
 				Log.error(ex.getMessage());
+			}
+			if(retry>1){
+				//only force a reconnect if the retry is above one. 
+				//a device failing to respond could just be the result of a wrong packet type level.
+				try {
+					Log.warning("Reconnecting in the send engine loop, retry "+retry+" times");
+					reconnect();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
 			}
 			Log.error("Sending Synchronus packet and there was a failure, will retry "+(retry-i-1)+" more times");
 			ThreadUtil.wait(150*i);
+			if( BowlerDatagram.isUseBowlerV4()){
+				//If the ping fails to get a response, try the older bowler format
+				BowlerDatagram.setUseBowlerV4(false);
+			}else{
+				BowlerDatagram.setUseBowlerV4(true);
+			}
 		}
 		return null;
 	}
@@ -893,22 +940,51 @@ public abstract class BowlerAbstractConnection {
 		}
 		BowlerDatagram cmd= BowlerDatagramFactory.build(addr, command);
 		BowlerDatagram back = sendSynchronusly(cmd);
+		if(back!=null){
+			addr.setValues(back.getAddress());
+		}
+		try{
+			return command.validate(back);
+		}catch (InvalidResponseException ex){
+			ex.printStackTrace();
+			Log.error("Failed to send synchronusly: "+cmd+"\r\nGot>> "+back);
+			return null;
+		}
 		//BowlerDatagramFactory.freePacket(cmd);
-		return command.validate(back);
+		
 	}
-	
+	private class PingCommand extends BowlerAbstractCommand {
+		
+		/**
+		 * Instantiates a new ping command.
+		 */
+		public PingCommand() {
+			setMethod(BowlerMethod.GET);
+			setOpCode("_png");
+		}
+	}
+
 	/**
 	 * Implementation of the Bowler ping ("_png") command
 	 * Sends a ping to the device returns the device's MAC address.
 	 *
 	 * @return the device's address
 	 */
-	private boolean ping() {
+	public boolean ping(MACAddress mac) {
 		try {
-			BowlerDatagram bd = send(new PingCommand(),new MACAddress(), 5);
+			//Log.warning("Ping device:");
+			BowlerDatagram bd = send(new PingCommand(),mac, 1);
 			if(bd !=null){
 				BowlerDatagramFactory.freePacket(bd);
 				return true;
+			}else{
+
+				bd = send(new PingCommand(),mac, 5);
+				if(bd !=null){
+					BowlerDatagramFactory.freePacket(bd);
+					return true;
+				}
+				
 			}
 		} catch (InvalidResponseException e) {
 			Log.error("Invalid response from Ping ");
@@ -937,7 +1013,7 @@ public abstract class BowlerAbstractConnection {
 	private void runHeartBeat(){
 		if((msSinceLastSend())>heartBeatTime){
 			try{
-				if(!ping()){
+				if(!ping(new MACAddress())){
 					Log.debug("Ping failed, disconnecting");
 					disconnect();
 				}
@@ -1057,6 +1133,7 @@ public abstract class BowlerAbstractConnection {
 			} catch (Exception e) {
 				if(isConnected()){
 					Log.error("Data read failed "+e.getMessage());
+					e.printStackTrace();
 					try {
 						reconnect();
 					} catch (IOException e1) {
@@ -1116,7 +1193,7 @@ public abstract class BowlerAbstractConnection {
 						long bufferClear=System.currentTimeMillis();
 						
 						if((System.currentTimeMillis()-getLastWrite())>(getSleepTime()*(getPercentagePrint() /100.0))&& bd.isSyncronous() && syncListen==null){
-							Log.error("Packet recive took more then "+getPercentagePrint()+"%. " +
+							Log.info("Packet recive took more then "+getPercentagePrint()+"%. " +
 									//"\nRaw receive\t"+(start-getLastWrite() )+"" +
 									//"\nStart Section\t"+(dataRead- start)+"" +
 									"\nData Read\t"+(dataReadEnd-dataRead)+"" +

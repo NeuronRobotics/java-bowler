@@ -1,10 +1,9 @@
 package com.neuronrobotics.sdk.genericdevice;
 
-import java.util.ArrayList;
-
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
 import com.neuronrobotics.sdk.common.BowlerDatagram;
+import com.neuronrobotics.sdk.common.BowlerMethod;
 import com.neuronrobotics.sdk.common.InvalidConnectionException;
 import com.neuronrobotics.sdk.common.MACAddress;
 
@@ -39,7 +38,6 @@ public class GenericDevice extends BowlerAbstractDevice {
 		// TODO Auto-generated method stub
 
 	}
-
 
 
 

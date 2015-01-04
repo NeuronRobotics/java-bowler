@@ -141,4 +141,10 @@ public class MACAddress implements ISendable {
 			}
 		}
 	}
+	public void setValues(MACAddress address2) {
+		//System.out.println("Setting new values: "+address2);
+		for(int i=0; i<6; i++) {
+			address[i] = address2.address[i];	
+		}
+	}
 }

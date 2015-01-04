@@ -21,9 +21,9 @@ package com.neuronrobotics.sdk.dyio.sequencer;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 
-import com.neuronrobotics.sdk.util.ThreadUtil;
-
 import javazoom.jl.player.MyPlayer;
+
+import com.neuronrobotics.sdk.util.ThreadUtil;
 public class SequencerMP3 {
     private MyPlayer player; 
     private String fn="";

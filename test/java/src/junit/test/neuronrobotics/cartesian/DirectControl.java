@@ -10,10 +10,9 @@ import javax.swing.JTabbedPane;
 import net.miginfocom.swing.MigLayout;
 
 import com.neuronrobotics.replicator.driver.BowlerBoardDevice;
-import com.neuronrobotics.replicator.driver.NRPrinter;
 import com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR;
-import com.neuronrobotics.sdk.addons.kinematics.ITaskSpaceUpdateListenerNR;
 import com.neuronrobotics.sdk.addons.kinematics.DHParameterKinematics;
+import com.neuronrobotics.sdk.addons.kinematics.ITaskSpaceUpdateListenerNR;
 import com.neuronrobotics.sdk.addons.kinematics.gui.DHKinematicsViewer;
 import com.neuronrobotics.sdk.addons.kinematics.gui.SampleGuiNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
@@ -24,16 +23,13 @@ import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIOChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.DigitalInputChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.IDigitalInputListener;
-import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
-import com.neuronrobotics.sdk.dyio.sequencer.ServoOutputScheduleChannel;
 import com.neuronrobotics.sdk.serial.SerialConnection;
-import com.neuronrobotics.sdk.ui.ConnectionDialog;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 public class DirectControl implements ITaskSpaceUpdateListenerNR, IDigitalInputListener {
 	DHParameterKinematics model;
 	//DeltaForgeDevice deltaRobot;
 	TransformNR current = new TransformNR();
-	double scale=.5;
+	double scale=.2;
 	double [] startVect = new double [] { 0,0,0,0,0,0};
 	private boolean button=false;
 	private boolean lastButton=false;
@@ -120,12 +116,12 @@ public class DirectControl implements ITaskSpaceUpdateListenerNR, IDigitalInputL
 		model = new DHParameterKinematics(master,"TrobotMaster.xml");
 		
 		
-		BowlerBoardDevice delt = new BowlerBoardDevice();
+		//BowlerBoardDevice delt = new BowlerBoardDevice();
 //		if(!ConnectionDialog.getBowlerDevice(delt)){
 //			System.exit(0);
 //		}
-		delt.setConnection(new SerialConnection("/dev/BowlerDevice.74F726000000"));		
-		delt.connect();
+		//delt.setConnection(new SerialConnection("/dev/BowlerDevice.74F726000000"));		
+		//delt.connect();
 		
 		//deltaRobot = new DeltaForgeDevice(delt);
 		//deltaRobot.setCurrentPoseTarget(new TransformNR());
@@ -145,7 +141,7 @@ public class DirectControl implements ITaskSpaceUpdateListenerNR, IDigitalInputL
 			JPanel starter = new JPanel(new MigLayout());
 			gui.setKinematicsModel(model);
 			try{
-				//tabs.add("Display",new DHKinematicsViewer(model));
+				tabs.add("Display",new DHKinematicsViewer(model));
 			}catch(Error ex){
 				JPanel error = new JPanel(new MigLayout());
 				error.add(new JLabel("Error while loading Java3d library:"),"wrap");
@@ -177,7 +173,7 @@ public class DirectControl implements ITaskSpaceUpdateListenerNR, IDigitalInputL
 		//Log.enableWarningPrint();
 		int loopTime=50;
 		master.getConnection().setSynchronusPacketTimeoutTime(2000);
-		delt.getConnection().setSynchronusPacketTimeoutTime(2000);
+		//delt.getConnection().setSynchronusPacketTimeoutTime(2000);
 		int x=0,y=0,z=0;
 		//Log.enableInfoPrint();
 		for (DyIOChannel c: master.getChannels()){
@@ -193,7 +189,7 @@ public class DirectControl implements ITaskSpaceUpdateListenerNR, IDigitalInputL
 //					y=(int)current.getY();
 //					z=(int)current.getZ();
 					if(current.getZ()<400&&current.getZ()>0){
-						delt.sendLinearSection(current, 0, 0,true);
+						//delt.sendLinearSection(current, 0, 0,true);
 						//System.out.println("Setting x="+current.getX()+" y="+current.getY()+" z="+current.getZ());
 					}
 				//}

@@ -15,21 +15,18 @@
 package com.neuronrobotics.sdk.dyio;
 
 import java.util.ArrayList;
-import java.util.Collection;
-
 
 import com.neuronrobotics.sdk.commands.bcs.io.AsyncMode;
 import com.neuronrobotics.sdk.commands.bcs.io.AsyncThreshholdEdgeType;
 import com.neuronrobotics.sdk.commands.bcs.io.ConfigAsyncCommand;
+import com.neuronrobotics.sdk.commands.bcs.io.GetChannelModeCommand;
 import com.neuronrobotics.sdk.commands.bcs.io.GetChannelModeListCommand;
 import com.neuronrobotics.sdk.commands.bcs.io.GetDyIOChannelCountCommand;
-import com.neuronrobotics.sdk.commands.bcs.io.GetChannelModeCommand;
 import com.neuronrobotics.sdk.commands.bcs.io.SetAllChannelValuesCommand;
 import com.neuronrobotics.sdk.commands.bcs.io.setmode.SetChannelModeCommand;
 import com.neuronrobotics.sdk.commands.bcs.pid.DyPID.ConfigureDynamicPIDCommand;
 import com.neuronrobotics.sdk.commands.bcs.safe.SafeModeCommand;
 import com.neuronrobotics.sdk.commands.neuronrobotics.dyio.GetAllChannelValuesCommand;
-import com.neuronrobotics.sdk.commands.neuronrobotics.dyio.InfoCommand;
 import com.neuronrobotics.sdk.commands.neuronrobotics.dyio.PowerCommand;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
@@ -64,7 +61,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	private ArrayList<DyIOChannel> channels = new ArrayList<DyIOChannel>();
 	
 	private byte [] firmware = {0, 0, 0};
-	private String info = "Unknown";
+	private String info = "DyIO";
 	
 	private DyIOPowerState bankAState;
 	private DyIOPowerState bankBState;
@@ -77,6 +74,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	private boolean haveBeenSynced =false;
 	
 	private boolean legacyParser = false;
+	private Boolean enableBrownOut=null;
 	
 	private GenericPIDDevice pid = new GenericPIDDevice();
 	/**
@@ -147,7 +145,9 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	 * @return true for success
 	 */
 	public boolean setMode(int channel, DyIOChannelMode mode) {
-		return getChannel(channel).setMode(mode);
+		boolean back =getChannel(channel).setMode(mode);
+		//ThreadUtil.wait(200);
+		return back;
 	}
 
 	/**
@@ -218,10 +218,10 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	 * @return The current string
 	 */
 	public String getInfo(){
-		BowlerDatagram response = send(new InfoCommand());
-		if (response != null) {
-			info = response.getData().asString();
-		}
+//		BowlerDatagram response = send(new InfoCommand());
+//		if (response != null) {
+//			info = response.getData().asString();
+//		}
 		return info;
 	}
 	
@@ -232,9 +232,9 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	 * @param info The String identifier to be stored by the DyIO.
 	 */
 	public void setInfo(String info){
-		if(send(new InfoCommand(info)) == null) {
-			return;
-		}
+//		if(send(new InfoCommand(info)) == null) {
+//			return;
+//		}
 		this.info = info;
 	}
 	
@@ -350,6 +350,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 			//if(getAddress().equals(new MACAddress(MACAddress.BROADCAST))) {
 				setAddress(response.getAddress());
 			//}
+			@SuppressWarnings("unused")
 			int count=0;
 			if(getDyIOChannelCount() != null){
 				count = getDyIOChannelCount();
@@ -408,19 +409,20 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 		setResyncing(true);
 		setMuteResyncOnModeChange(true);
 		Log.info("Re-syncing...");
+		getBatteryVoltage(true);
 		BowlerDatagram response;
 		try{
 			if (!haveFirmware()){
-				getBatteryVoltage(true);
+				
 				firmware = getRevisions().get(0).getBytes();
 			}
 			checkFirmwareRev();
-			if(info.contains("Unknown")){
-				response = send(new InfoCommand());
-				if (response != null) {
-					info = response.getData().asString();
-				}
-			}
+//			if(info.contains("Unknown")){
+//				response = send(new InfoCommand());
+//				if (response != null) {
+//					info = response.getData().asString();
+//				}
+//			}
 			
 		}catch (Exception e){
 			checkFirmwareRev();
@@ -609,7 +611,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 			send("bcs.io.*;0.3;;",
 					BowlerMethod.POST,
 					"sacv",
-					new Object[]{values});
+					new Object[]{new Integer((int) (seconds*1000)),values});
 		}
 		
 	}
@@ -624,14 +626,14 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 		return getConnection().isConnected();
 	
 	}
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.common.IBowlerDatagramListener#onAllResponse(com.neuronrobotics.sdk.common.BowlerDatagram)
-	 */
-	public void onAllResponse(BowlerDatagram data) {
-
-		getPid().onAllResponse(data);
-	}
-	
+//	/* (non-Javadoc)
+//	 * @see com.neuronrobotics.sdk.common.IBowlerDatagramListener#onAllResponse(com.neuronrobotics.sdk.common.BowlerDatagram)
+//	 */
+//	public void onAllResponse(BowlerDatagram data) {
+//
+//		getPid().onAllResponse(data);
+//	}
+//	
 	/**
 	 * This method returns the bank switch state of bank A (0-11)
 	 * This state is updated asynchronously by the DyIOEventListener
@@ -666,17 +668,26 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	 * @param data
 	 */
 	private void powerEvent(BowlerDatagram data) {
-		//System.out.println("Updating Power state");
-		ByteList bl = data.getData();
-		if(bl.size() != 4) {
-			return;
-		}
-		batteryVoltage = ((double)(ByteList.convertToInt(bl.getBytes(2, 2),false)))/1000.0;
-		bankAState = DyIOPowerState.valueOf(bl.get(0),batteryVoltage);
-		bankBState = DyIOPowerState.valueOf(bl.get(1),batteryVoltage);
 		
-		fireDyIOEvent(new DyIOPowerEvent(bankAState, bankBState, batteryVoltage));
-		return;
+		//Log.warning("POWER event "+data);
+		if(data.getRPC().contains("_pwr")){
+			ByteList bl = data.getData();
+			if(isLegacyParser() && bl.size() == 1){
+				enableBrownOut=bl.get(0)!=0;
+			}
+			if(bl.size()> 1){
+				batteryVoltage = ((double)(ByteList.convertToInt(bl.getBytes(2, 2),false)))/1000.0;
+				bankAState = DyIOPowerState.valueOf(bl.get(0),batteryVoltage);
+				bankBState = DyIOPowerState.valueOf(bl.get(1),batteryVoltage);
+				if(!isLegacyParser()){
+					enableBrownOut=bl.get(4)!=0;
+				}
+			}
+			fireDyIOEvent(new DyIOPowerEvent(bankAState, bankBState, batteryVoltage));
+			return;
+		}else{
+			Log.error("Wrong type for updating Power state "+data);
+		}
 	}
 
 	/* (non-Javadoc)
@@ -702,15 +713,42 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 			c.fireChannelEvent(new DyIOChannelEvent(c, bl));
 			return;
 		}if(data.getRPC().equals("gacv")) {
-			//Log.info("All channel values\n"+data.toString());
-			ByteList bl = data.getData();
-			for(DyIOChannel c:getChannels()){
-				ByteList val = new ByteList(bl.popList(4));
-				//Log.info("DyIO event "+c+" value: "+val);
-				if(!c.isStreamChannel())
-					c.fireChannelEvent(new DyIOChannelEvent(c,val));
+
+			if(isLegacyParser()){
+				Log.error("All channel values\n"+data.toString());
+				ByteList bl = data.getData();
+				for(DyIOChannel c:getChannels()){
+					ByteList val = new ByteList(bl.popList(4));
+					Log.error("DyIO event "+c+" value: "+val);
+					if(!c.isStreamChannel())
+						c.fireChannelEvent(new DyIOChannelEvent(c,val));
+				}
+			}else{
+				Log.info("All channel values\n"+data.toString());
+				ByteList bl = data.getData();
+				int numChan = bl.pop();
+				if(numChan !=getChannels().size() ){
+					Log.error("Bad packet, wrong number of values");
+				}
+				for(DyIOChannel c:getChannels()){
+					ByteList val = new ByteList(bl.popList(4));
+					Log.info("DyIO event "+c+" value: "+val);
+					if(!c.isStreamChannel())
+						c.fireChannelEvent(new DyIOChannelEvent(c,val));
+				}
 			}
 			
+		}if(data.getRPC().equals("strm")) {
+			Log.warning("STREAM Packet\n"+data.toString());
+			ByteList bl = data.getData();
+			
+			Byte b = bl.pop();// channel value
+			if(b == null) {
+				return;
+			}
+			bl.pop();// size of array
+			DyIOChannel c = getChannel(b);
+			c.fireChannelEvent(new DyIOChannelEvent(c, bl));
 		}else{
 			IDyIOEvent e = new DyIOAsyncEvent(data);
 			fireDyIOEvent(e);
@@ -985,24 +1023,24 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 		}	
 	}
 	
-	private boolean enableBrownOut=true;
-	/**
-	 * This method allows you to disable the brown out detect for the servo subsystem. If true is passed 
-	 * @param enable true to enable the borwnout, false to disable
-	 * @return True is success
-	 */
-	@Deprecated
-	public boolean enableBrownOutDetect(boolean enable) {
-		return setServoPowerSafeMode(enable);
-	}
-	/**
-	 * Tells the application whether or not to use the brownout detect
-	 * @return
-	 */
-	@Deprecated
-	public boolean isBrownOutDetectEnabled() {
-		return isServoPowerSafeMode();
-	}
+
+//	/**
+//	 * This method allows you to disable the brown out detect for the servo subsystem. If true is passed 
+//	 * @param enable true to enable the borwnout, false to disable
+//	 * @return True is success
+//	 */
+//	@Deprecated
+//	public boolean enableBrownOutDetect(boolean enable) {
+//		return setServoPowerSafeMode(enable);
+//	}
+//	/**
+//	 * Tells the application whether or not to use the brownout detect
+//	 * @return
+//	 */
+//	@Deprecated
+//	public boolean isBrownOutDetectEnabled() {
+//		return isServoPowerSafeMode();
+//	}
 	
 	/**
 	 * This method allows you to disable the brown out detect for the servo subsystem. If true is passed 
@@ -1011,13 +1049,17 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	 */
 	public boolean setServoPowerSafeMode(boolean enable) {
 		enableBrownOut=enable;
-		return send(new PowerCommand(!enableBrownOut))!=null;
+		powerEvent(send(new PowerCommand(!enableBrownOut)));
+		return  true;
 	}
 	/**
 	 * Tells the application whether or not to use the brownout detect
 	 * @return
 	 */
-	public boolean isServoPowerSafeMode() {
+	public Boolean isServoPowerSafeMode() {
+		if(enableBrownOut== null){
+			setServoPowerSafeMode(true);
+		}
 		return enableBrownOut;
 	}
 	
@@ -1116,7 +1158,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 		}else{
 			Object [] args = send("bcs.io.*;0.3;;",
 					BowlerMethod.GET,
-					"gchv",
+					"gacv",
 					new Object[]{});
 			Integer [] values = (Integer [])args[0];
 			for(int i=0;i<getChannels().size();i++){
