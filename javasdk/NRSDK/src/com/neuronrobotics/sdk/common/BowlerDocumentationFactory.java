@@ -25,12 +25,12 @@ import com.neuronrobotics.sdk.dyio.peripherals.UARTChannel;
 public class BowlerDocumentationFactory {
 
 	public static URI getDocumentationURL(Object input) {
-
+		String basURL = "http://neuronrobotics.github.io/Java-Code-Library/";
 		if (input instanceof DigitalInputChannel) {
 
 			try {
 				return new URI(
-						"http://wiki.neuronrobotics.com/Digital_Input_Channel");
+						basURL+"Digital-Input-Example-Simple/");
 			} catch (URISyntaxException e) {
 				Log.error(e.getMessage());
 			}
@@ -39,7 +39,7 @@ public class BowlerDocumentationFactory {
 
 			try {
 				return new URI(
-						"http://wiki.neuronrobotics.com/Analog_Input_Channel");
+						basURL+"Analog-Input-Example/");
 			} catch (URISyntaxException e) {
 				Log.error(e.getMessage());
 			}
@@ -47,7 +47,7 @@ public class BowlerDocumentationFactory {
 
 			try {
 				return new URI(
-						"http://wiki.neuronrobotics.com/Counter_Input_Channel");
+						basURL+"Counter-Input-Quadrature-Encoder-Example/");
 			} catch (URISyntaxException e) {
 				Log.error(e.getMessage());
 			}
@@ -55,7 +55,7 @@ public class BowlerDocumentationFactory {
 
 			try {
 				return new URI(
-						"http://wiki.neuronrobotics.com/Counter_Output_Channel");
+						basURL+"Counter-Output-Stepper-Example/");
 			} catch (URISyntaxException e) {
 				Log.error(e.getMessage());
 			}
@@ -63,7 +63,7 @@ public class BowlerDocumentationFactory {
 
 			try {
 				return new URI(
-						"http://wiki.neuronrobotics.com/Digital_Output_Channel");
+						basURL+"Digital-Output-Example/");
 			} catch (URISyntaxException e) {
 				Log.error(e.getMessage());
 			}
@@ -71,14 +71,14 @@ public class BowlerDocumentationFactory {
 
 			try {
 				return new URI(
-						"http://wiki.neuronrobotics.com/PPM_Reader_Channel");
+						basURL+"PPM-RC-Signal-Reader-Channle-Example/");
 			} catch (URISyntaxException e) {
 				Log.error(e.getMessage());
 			}
 		} else if (input instanceof ServoChannel) {
 
 			try {
-				return new URI("http://wiki.neuronrobotics.com/Servo_Channel");
+				return new URI(basURL+"Servo-Output-Example/");
 			} catch (URISyntaxException e) {
 				Log.error(e.getMessage());
 			}
@@ -86,7 +86,7 @@ public class BowlerDocumentationFactory {
 
 			try {
 				return new URI(
-						"http://wiki.neuronrobotics.com/SPI_Passthrough_Channel");
+						basURL+"SPI-Channel-Example/");
 			} catch (URISyntaxException e) {
 				Log.error(e.getMessage());
 			}
@@ -94,7 +94,7 @@ public class BowlerDocumentationFactory {
 
 			try {
 				return new URI(
-						"http://wiki.neuronrobotics.com/UART_Passthrough_Channel");
+						basURL+"USART-Channel-Example/");
 			} catch (URISyntaxException e) {
 				Log.error(e.getMessage());
 			}
