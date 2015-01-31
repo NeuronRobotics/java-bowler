@@ -45,23 +45,30 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements 
 	@SuppressWarnings("unchecked")
 	private static void dumpDevice(final UsbDevice device,ArrayList<UsbDevice> addrs) throws UnsupportedEncodingException, UsbDisconnectedException, UsbException
     {
-    	if(device.getUsbDeviceDescriptor().idVendor() == 0x04d8){// Neuron robotics devices
-	        // Dump information about the device itself
-	        System.out.println("Device: "+device.getProductString());
-	        addrs.add(device);
-	    }
-
-        //System.out.println();
-
-        // Dump child devices if device is a hub
-        if (device.isUsbHub())
-        {
-            final UsbHub hub = (UsbHub) device;
-            for (UsbDevice child: (List<UsbDevice>) hub.getAttachedUsbDevices())
-            {
-                dumpDevice(child,addrs);
-            }
-        }
+		try{
+	    	if(device.getUsbDeviceDescriptor().idVendor() == 0x04d8 ){// Neuron robotics devices
+		        // Dump information about the device itself
+		        //System.out.println("Device: "+device.getProductString());
+		        addrs.add(device);
+	
+		        // Dump device descriptor
+		        //System.out.println(device.getUsbDeviceDescriptor());
+		    }
+	
+	        //System.out.println();
+	
+	        // Dump child devices if device is a hub
+	        if (device.isUsbHub())
+	        {
+	            final UsbHub hub = (UsbHub) device;
+	            for (UsbDevice child: (List<UsbDevice>) hub.getAttachedUsbDevices())
+	            {
+	                dumpDevice(child,addrs);
+	            }
+	        }
+		}catch(Exception e){
+			e.printStackTrace();
+		}
     }
 	
 	public static ArrayList<UsbDevice>  getAllUsbBowlerDevices() throws UnsupportedEncodingException, UsbDisconnectedException, SecurityException, UsbException{
@@ -199,18 +206,17 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements 
             throw new LibUsbException("Unable to read device descriptor",
                 result);
         if(this.device.getUsbDeviceDescriptor().idVendor() == descriptor.idVendor() &&
-        		this.device.getUsbDeviceDescriptor().idProduct() == descriptor.idProduct() &&	
-        		event != LibUsb.HOTPLUG_EVENT_DEVICE_ARRIVED){
-        	System.err.format("%s: %04x:%04x%n",
-                    event == LibUsb.HOTPLUG_EVENT_DEVICE_ARRIVED ? "Connected" :
-                        "Disconnected",
-                    descriptor.idVendor(), descriptor.idProduct());
+        		this.device.getUsbDeviceDescriptor().idProduct() == descriptor.idProduct() ){
+//        	System.err.format("%s: %04x:%04x%n",
+//                    event == LibUsb.HOTPLUG_EVENT_DEVICE_ARRIVED ? "Connected" :
+//                        "Disconnected",
+//                    descriptor.idVendor(), descriptor.idProduct());
         	
         }else{
-	        System.out.format("%s: %04x:%04x%n",
-	            event == LibUsb.HOTPLUG_EVENT_DEVICE_ARRIVED ? "Connected" :
-	                "Disconnected",
-	            descriptor.idVendor(), descriptor.idProduct());
+//	        System.out.format("%s: %04x:%04x%n",
+//	            event == LibUsb.HOTPLUG_EVENT_DEVICE_ARRIVED ? "Connected" :
+//	                "Disconnected",
+//	            descriptor.idVendor(), descriptor.idProduct());
         }
         
         return 0;
