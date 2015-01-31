@@ -7,11 +7,17 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.usb.UsbConfiguration;
 import javax.usb.UsbDevice;
 import javax.usb.UsbDisconnectedException;
+import javax.usb.UsbEndpoint;
 import javax.usb.UsbException;
 import javax.usb.UsbHostManager;
 import javax.usb.UsbHub;
+import javax.usb.UsbInterface;
+import javax.usb.UsbInterfaceDescriptor;
+import javax.usb.UsbNotActiveException;
+import javax.usb.UsbNotOpenException;
 import javax.usb.UsbServices;
 
 import org.usb4java.Context;
@@ -29,7 +35,14 @@ import com.neuronrobotics.sdk.common.ByteList;
 public class UsbCDCSerialConnection extends BowlerAbstractConnection implements HotplugCallback{
 	static UsbServices services=null;
 	private HotplugCallbackHandle callbackHandle;
-	private UsbDevice device;
+	private UsbDevice mDevice;
+	private UsbInterface controlInterface;
+	private UsbEndpoint  controlEndpoint;
+	private UsbInterface dataInterface;
+	private UsbEndpoint dataInEndpoint;
+	private UsbEndpoint dataOutEndpoint;
+	
+	
 	static{
 		try {
 			services = UsbHostManager.getUsbServices();
@@ -87,11 +100,11 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements 
 		ArrayList<UsbDevice> devices;
 		try {
 			devices = getAllUsbBowlerDevices();
-			this.device = null;
+			this.mDevice = null;
 			
 			for(UsbDevice d:devices){
 				if(d.getProductString().contains(device)){
-					this.device = d;
+					this.mDevice = d;
 				}
 			}
 		} catch (UnsupportedEncodingException e) {
@@ -115,13 +128,14 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements 
 	public UsbCDCSerialConnection(UsbDevice device) {
 		if (device == null )
 			throw new NullPointerException("A valid USB device is needed to regester this connection.");
-		this.device = device;
+		this.mDevice = device;
 		
 	}
 	
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.common.BowlerAbstractConnection#connect()
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean connect() {
         callbackHandle = new HotplugCallbackHandle();
@@ -139,7 +153,43 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements 
                 result);
         }
         
+        //System.out.println(mDevice);
+        // Dump device descriptor
+        //System.out.println(mDevice.getUsbDeviceDescriptor());
+
+        // Process all configurations
+        for (UsbConfiguration configuration: (List<UsbConfiguration>) mDevice
+            .getUsbConfigurations())
+        {
+            // Process all interfaces
+            for (UsbInterface iface: (List<UsbInterface>) configuration
+                .getUsbInterfaces())
+            {
+                // Dump the interface descriptor
+                //System.out.println(iface.getUsbInterfaceDescriptor());
+                
+                if(iface.getUsbInterfaceDescriptor().bInterfaceClass() == 2){
+                	controlInterface = iface;
+                	controlEndpoint =  (UsbEndpoint) controlInterface.getUsbEndpoints().get(0);
+                }
+                if(iface.getUsbInterfaceDescriptor().bInterfaceClass() == 10){
+                	dataInterface = iface;
+                	// Process all endpoints
+                    for (UsbEndpoint endpoint: (List<UsbEndpoint>) dataInterface.getUsbEndpoints())
+                    {
+                        if(endpoint.getUsbEndpointDescriptor().bEndpointAddress()<0x80){
+                        	dataOutEndpoint = endpoint;
+                        }else{
+                        	dataInEndpoint = endpoint;
+                        }
+                    }
+                }
+                
+            }
+        }
         
+        
+        setConnected(true);
         
         
 		return isConnected();	
@@ -163,15 +213,58 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements 
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	//private ByteList outgoing = new ByteList();
-	public void write(byte[] data) throws IOException {
+	public void write(byte[] src) throws IOException {
 		waitForConnectioToBeReady();
-
 		
+		try {
+			dataOutEndpoint.getUsbPipe().syncSubmit(src);
+		} catch (UsbNotActiveException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UsbNotOpenException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UsbDisconnectedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UsbException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+        return ;
 	}
 	
 	@Override
 	public boolean loadPacketFromPhy(ByteList bytesToPacketBuffer) throws NullPointerException, IOException{
-
+		byte [] data = new byte[64];
+		int got=0;
+		try {
+			got = dataInEndpoint.getUsbPipe().syncSubmit(data);
+		} catch (UsbNotActiveException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UsbNotOpenException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UsbDisconnectedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UsbException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.err.println("Got bytes! "+ got);
+		for(int i=0;i<got;i++){
+			System.err.print(", "+ data[i]);
+			bytesToPacketBuffer.add(data[i]);
+		}
 	
 		return false;
 	}
@@ -205,8 +298,8 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements 
         if (result != LibUsb.SUCCESS)
             throw new LibUsbException("Unable to read device descriptor",
                 result);
-        if(this.device.getUsbDeviceDescriptor().idVendor() == descriptor.idVendor() &&
-        		this.device.getUsbDeviceDescriptor().idProduct() == descriptor.idProduct() ){
+        if(this.mDevice.getUsbDeviceDescriptor().idVendor() == descriptor.idVendor() &&
+        		this.mDevice.getUsbDeviceDescriptor().idProduct() == descriptor.idProduct() ){
 //        	System.err.format("%s: %04x:%04x%n",
 //                    event == LibUsb.HOTPLUG_EVENT_DEVICE_ARRIVED ? "Connected" :
 //                        "Disconnected",

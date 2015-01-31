@@ -115,7 +115,7 @@ public class UsbConnectionPanel extends AbstractConnectionPanel  implements Hotp
 
 		 // Unregister the hotplug callback and stop the event handling thread
         thread.abort();
-        LibUsb.hotplugDeregisterCallback(null, callbackHandle);
+        //LibUsb.hotplugDeregisterCallback(null, callbackHandle);
         try {
 			thread.join();
 		} catch (InterruptedException e) {
