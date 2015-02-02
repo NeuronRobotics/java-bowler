@@ -28,6 +28,8 @@ import javax.usb.UsbServices;
 import org.usb4java.Context;
 import org.usb4java.Device;
 import org.usb4java.DeviceDescriptor;
+import org.usb4java.DeviceHandle;
+import org.usb4java.DeviceList;
 import org.usb4java.HotplugCallback;
 import org.usb4java.HotplugCallbackHandle;
 import org.usb4java.LibUsb;
@@ -43,11 +45,13 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements 
 	private HotplugCallbackHandle callbackHandle;
 	private UsbDevice mDevice;
 	private UsbInterface controlInterface;
-	private UsbEndpoint  controlEndpoint;
 	private UsbInterface dataInterface;
+
 	private UsbEndpoint dataInEndpoint;
 	private UsbEndpoint dataOutEndpoint;
 	private byte [] data = new byte[64];
+	private DeviceHandle deviceHandle;
+	private int interfaceNumber;
 	
 	static{
 		try {
@@ -176,10 +180,11 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements 
                 
                 if(iface.getUsbInterfaceDescriptor().bInterfaceClass() == 2){
                 	controlInterface = iface;
-                	controlEndpoint =  (UsbEndpoint) controlInterface.getUsbEndpoints().get(0);
+                	//controlEndpoint =  (UsbEndpoint) controlInterface.getUsbEndpoints().get(0);
                 }
                 if(iface.getUsbInterfaceDescriptor().bInterfaceClass() == 10){
                 	dataInterface = iface;
+                	kernelDetatch(mDevice);
                 	if(!dataInterface.isClaimed()){
 	                	try {
 							dataInterface.claim();
@@ -223,6 +228,70 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements 
         
 		return isConnected();	
 	}
+	
+	public Device findDevice(short vendorId, short productId)
+	{
+	    // Read the USB device list
+	    DeviceList list = new DeviceList();
+	    int result = LibUsb.getDeviceList(null, list);
+	    if (result < 0) throw new LibUsbException("Unable to get device list", result);
+
+	    try
+	    {
+	        // Iterate over all devices and scan for the right one
+	        for (Device device: list)
+	        {
+	            DeviceDescriptor descriptor = new DeviceDescriptor();
+	            result = LibUsb.getDeviceDescriptor(device, descriptor);
+	            if (result != LibUsb.SUCCESS) throw new LibUsbException("Unable to read device descriptor", result);
+	            if (descriptor.idVendor() == vendorId && descriptor.idProduct() == productId) return device;
+	        }
+	    }
+	    finally
+	    {
+	        // Ensure the allocated device list is freed
+	        LibUsb.freeDeviceList(list, true);
+	    }
+
+	    // Device not found
+	    return null;
+	}
+	
+	private void kernelDetatch(UsbDevice mDevice){
+		Device kDev = findDevice(	mDevice.getUsbDeviceDescriptor().idVendor(), 
+									mDevice.getUsbDeviceDescriptor().idProduct());
+		
+		
+		deviceHandle= new DeviceHandle();
+		interfaceNumber=dataInterface.getUsbInterfaceDescriptor().bInterfaceNumber();
+		
+		int result = LibUsb.open(kDev, deviceHandle);
+		if (result != LibUsb.SUCCESS) throw new LibUsbException("Unable to open USB device", result);
+		try
+		{
+				// Check if kernel driver must be detached
+//	
+//				boolean detach = LibUsb.hasCapability(LibUsb.CAP_SUPPORTS_DETACH_KERNEL_DRIVER) 
+//					    && LibUsb.kernelDriverActive(deviceHandle, interfaceNumber)==0;
+//
+//				// Detach the kernel driver
+//				if (detach)
+//				{
+					int r = LibUsb.detachKernelDriver(deviceHandle, interfaceNumber);
+				    if (r != LibUsb.SUCCESS && 
+				        r != LibUsb.ERROR_NOT_SUPPORTED && 
+				        r != LibUsb.ERROR_NOT_FOUND) 
+				    	throw new LibUsbException("Unable to detach kernel     driver", r);
+				    System.out.println("Kernel detatched for device "+mDevice);
+				//}
+		}
+		finally
+		{
+		    LibUsb.close(deviceHandle);
+		}
+	    
+		
+	}
 
 	
 
@@ -232,6 +301,8 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements 
 	@Override
 	public void disconnect() {
 		LibUsb.hotplugDeregisterCallback(null, callbackHandle);
+		if(deviceHandle!=null)
+			LibUsb.attachKernelDriver(deviceHandle,  interfaceNumber);
 		try {
 			if(dataInterface.isClaimed())
 				dataInterface.release();
@@ -255,7 +326,8 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements 
 		
 		try {
 			UsbPipe camOutpipe = dataOutEndpoint.getUsbPipe();
-			camOutpipe.open();
+			if(!camOutpipe.isOpen())
+				camOutpipe.open();
 			UsbIrp write = camOutpipe.createUsbIrp();
             write.setData(src);
             write.setLength(src.length);
@@ -294,8 +366,8 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements 
 		int got=0;
 		try {
 			UsbPipe camInpipe = dataInEndpoint.getUsbPipe();
-			
-			camInpipe.open();
+			if(!camInpipe.isOpen())
+				camInpipe.open();
 			
 			 UsbIrp read = camInpipe.createUsbIrp();
 	        read.setData(data);
