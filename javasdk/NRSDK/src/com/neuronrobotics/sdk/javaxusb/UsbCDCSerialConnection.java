@@ -384,28 +384,16 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements 
 		
 		int result = LibUsb.open(kDev, deviceHandle);
 		if (result != LibUsb.SUCCESS) throw new LibUsbException("Unable to open USB device", result);
-		try
-		{
-				// Check if kernel driver must be detached
-//	
-//				boolean detach = LibUsb.hasCapability(LibUsb.CAP_SUPPORTS_DETACH_KERNEL_DRIVER) 
-//					    && LibUsb.kernelDriverActive(deviceHandle, interfaceNumber)==0;
-//
-//				// Detach the kernel driver
-//				if (detach)
-//				{
-					int r = LibUsb.detachKernelDriver(deviceHandle, interfaceNumber);
-				    if (r != LibUsb.SUCCESS && 
-				        r != LibUsb.ERROR_NOT_SUPPORTED && 
-				        r != LibUsb.ERROR_NOT_FOUND) 
-				    	throw new LibUsbException("Unable to detach kernel     driver", r);
-				    System.out.println("Kernel detatched for device "+mDevice);
-				//}
-		}
-		finally
-		{
-		    LibUsb.close(deviceHandle);
-		}
+
+
+		int r = LibUsb.detachKernelDriver(deviceHandle, interfaceNumber);
+	    if (r != LibUsb.SUCCESS && 
+	        r != LibUsb.ERROR_NOT_SUPPORTED && 
+	        r != LibUsb.ERROR_NOT_FOUND) 
+	    	throw new LibUsbException("Unable to detach kernel     driver", r);
+	    System.out.println("Kernel detatched for device "+mDevice);
+	
+
 	    
 		
 	}
@@ -431,7 +419,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements 
 			e1.printStackTrace();
 		} catch (UsbException e1) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			//e1.printStackTrace();
 		}
 		try {
 			camOutpipe.close();
@@ -446,7 +434,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements 
 			e1.printStackTrace();
 		} catch (UsbException e1) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			//e1.printStackTrace();
 		}
 		
 		if(deviceHandle!=null)
