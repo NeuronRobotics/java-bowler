@@ -25,6 +25,10 @@ import javax.usb.UsbNotActiveException;
 import javax.usb.UsbNotOpenException;
 import javax.usb.UsbPipe;
 import javax.usb.UsbServices;
+import javax.usb.event.UsbDeviceDataEvent;
+import javax.usb.event.UsbDeviceErrorEvent;
+import javax.usb.event.UsbDeviceEvent;
+import javax.usb.event.UsbDeviceListener;
 
 import org.usb4java.Context;
 import org.usb4java.Device;
@@ -40,10 +44,11 @@ import org.usb4java.LibUsbException;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.common.BowlerDatagramFactory;
+import com.neuronrobotics.sdk.common.BowlerRuntimeException;
 import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.Log;
 
-public class UsbCDCSerialConnection extends BowlerAbstractConnection {
+public class UsbCDCSerialConnection extends BowlerAbstractConnection implements IUsbDeviceEventListener, UsbDeviceListener {
 	static UsbServices services=null;
 	
 	private UsbDevice mDevice;
@@ -331,8 +336,10 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection {
             }
         }
         
-        if(dataInEndpoint != null && dataOutEndpoint != null )
+        if(dataInEndpoint != null && dataOutEndpoint != null ){
         	setConnected(true);
+        	mDevice.addUsbDeviceListener(this);
+        }
         
         
 		return isConnected();	
@@ -369,7 +376,8 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection {
 	private void kernelDetatch(UsbDevice mDevice){
 		Device kDev = findDevice(	mDevice.getUsbDeviceDescriptor().idVendor(), 
 									mDevice.getUsbDeviceDescriptor().idProduct());
-		
+		if(kDev==null)
+			return;
 		
 		deviceHandle= new DeviceHandle();
 		interfaceNumber=dataInterface.getUsbInterfaceDescriptor().bInterfaceNumber();
@@ -409,7 +417,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection {
 	 */
 	@Override
 	public void disconnect() {
-		
+		super.disconnect();
 		try {
 			camInpipe.close();
 		} catch (UsbNotActiveException e1) {
@@ -452,6 +460,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection {
 			e.printStackTrace();
 		}
 		
+		
 	}
 	
 	/**
@@ -462,6 +471,8 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection {
 	 */
 	//private ByteList outgoing = new ByteList();
 	public void write(byte[] src) throws IOException {
+		if(!isConnected())
+			return;
 		waitForConnectioToBeReady();
 		
 		try {
@@ -483,21 +494,10 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection {
             write.waitUntilComplete(getSleepTime());
             write.complete();
 			
-		} catch (UsbNotActiveException e) {
-			// TODO Auto-generated catch block
+		} catch (Exception e){// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (UsbNotOpenException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UsbDisconnectedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UsbException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			disconnect();
+			throw new BowlerRuntimeException("Connection is no longer availible "+e.getLocalizedMessage());
 		}
 
         return ;
@@ -532,21 +532,10 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection {
 	        read.complete();
 			
 			
-		} catch (UsbNotActiveException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (UsbNotOpenException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UsbDisconnectedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UsbException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			disconnect();
 		}
 		if(got>0){
 			bytesToPacketBuffer.add(Arrays.copyOfRange(data, 0, got));
@@ -583,5 +572,24 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection {
 		// TODO Auto-generated method stub
 		return false;
 	}
+	@Override
+	public void dataEventOccurred(UsbDeviceDataEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void errorEventOccurred(UsbDeviceErrorEvent arg0) {
+		disconnect();
+	}
+	@Override
+	public void usbDeviceDetached(UsbDeviceEvent arg0) {
+		disconnect();
+	}
+	@Override
+	public void onDeviceEvent(UsbDevice device) {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }
