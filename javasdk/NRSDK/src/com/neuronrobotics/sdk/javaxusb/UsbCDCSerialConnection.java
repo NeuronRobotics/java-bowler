@@ -471,7 +471,9 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection {
 			}
 			if(!camOutpipe.isOpen())
 				camOutpipe.open();
-			write = camOutpipe.createUsbIrp();
+			if(write == null)
+				write = camOutpipe.createUsbIrp();
+				
             write.setData(src);
             write.setLength(src.length);
             write.setOffset(0);
@@ -479,7 +481,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection {
 
             camOutpipe.syncSubmit(write);
             write.waitUntilComplete(getSleepTime());
-            camOutpipe.close();
+            write.complete();
 			
 		} catch (UsbNotActiveException e) {
 			// TODO Auto-generated catch block
@@ -514,8 +516,9 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection {
 			}
 			if(!camInpipe.isOpen())
 				camInpipe.open();
-			
-			read = camInpipe.createUsbIrp();
+			if(read == null)
+				read = camInpipe.createUsbIrp();
+				
 	        read.setData(data);
 	        read.setLength(data.length);
 	        read.setOffset(0);
@@ -526,7 +529,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection {
 	        read.waitUntilComplete(getSleepTime()); 
 	        
 	        got=read.getActualLength();
-	        
+	        read.complete();
 			
 			
 		} catch (UsbNotActiveException e) {
@@ -546,7 +549,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection {
 			e.printStackTrace();
 		}
 		if(got>0){
-			bytesToPacketBuffer.add(Arrays.copyOfRange(data, 0, read.getActualLength()));
+			bytesToPacketBuffer.add(Arrays.copyOfRange(data, 0, got));
 			BowlerDatagram bd = BowlerDatagramFactory.build(bytesToPacketBuffer);
 			if (bd!=null) {
 				//Log.info("\nR<<"+bd);
