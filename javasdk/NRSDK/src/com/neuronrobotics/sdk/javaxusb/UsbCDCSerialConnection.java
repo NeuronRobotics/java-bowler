@@ -5,6 +5,7 @@ package com.neuronrobotics.sdk.javaxusb;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.usb.UsbClaimException;
@@ -37,6 +38,8 @@ import org.usb4java.LibUsbException;
 
 
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
+import com.neuronrobotics.sdk.common.BowlerDatagram;
+import com.neuronrobotics.sdk.common.BowlerDatagramFactory;
 import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.Log;
 
@@ -464,10 +467,11 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection {
 		try {
 			if(camOutpipe == null){
 				camOutpipe = dataOutEndpoint.getUsbPipe();
-				if(!camOutpipe.isOpen())
-					camOutpipe.open();
-				write = camOutpipe.createUsbIrp();
+				
 			}
+			if(!camOutpipe.isOpen())
+				camOutpipe.open();
+			write = camOutpipe.createUsbIrp();
             write.setData(src);
             write.setLength(src.length);
             write.setOffset(0);
@@ -506,11 +510,12 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection {
 		try {
 			if(camInpipe == null){
 				 camInpipe = dataInEndpoint.getUsbPipe();
-				if(!camInpipe.isOpen())
-					camInpipe.open();
 				
-				 read = camInpipe.createUsbIrp();
 			}
+			if(!camInpipe.isOpen())
+				camInpipe.open();
+			
+			read = camInpipe.createUsbIrp();
 	        read.setData(data);
 	        read.setLength(data.length);
 	        read.setOffset(0);
@@ -541,12 +546,15 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection {
 			e.printStackTrace();
 		}
 		if(got>0){
-			System.err.println("Got bytes! "+ got);
-			for(int i=0;i<got;i++){
-				System.err.print(", "+ data[i]);
-				bytesToPacketBuffer.add(data[i]);
+			bytesToPacketBuffer.add(Arrays.copyOfRange(data, 0, read.getActualLength()));
+			BowlerDatagram bd = BowlerDatagramFactory.build(bytesToPacketBuffer);
+			if (bd!=null) {
+				//Log.info("\nR<<"+bd);
+				onDataReceived(bd);
+
+				//Packet found, break the loop and deal with it
+				return true;
 			}
-			return true;
 		}
 	
 		return false;
