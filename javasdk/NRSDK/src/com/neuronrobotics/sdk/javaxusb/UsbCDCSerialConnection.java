@@ -40,11 +40,11 @@ import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.Log;
 
-public class UsbCDCSerialConnection extends BowlerAbstractConnection implements HotplugCallback{
+public class UsbCDCSerialConnection extends BowlerAbstractConnection {
 	static UsbServices services=null;
-	private HotplugCallbackHandle callbackHandle;
+	
 	private UsbDevice mDevice;
-	private UsbInterface controlInterface;
+	//private UsbInterface controlInterface;
 	private UsbInterface dataInterface;
 
 	private UsbEndpoint dataInEndpoint;
@@ -53,9 +53,86 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements 
 	private DeviceHandle deviceHandle;
 	private int interfaceNumber;
 	
+	private UsbPipe camInpipe;
+	private  UsbIrp read;
+	
+	private UsbPipe camOutpipe;
+	private UsbIrp write;
+	
+	
+	private static HotplugCallbackHandle callbackHandle;
+	private static ArrayList<IUsbDeviceEventListener> usbDeviceEventListeners = new ArrayList<IUsbDeviceEventListener>();
+	private static EventHandlingThread thread;
+	
+    /**
+     * This is the event handling thread. libusb doesn't start threads by its
+     * own so it is our own responsibility to give libusb time to handle the
+     * events in our own thread.
+     */
+    static class EventHandlingThread extends Thread
+    {
+        /** If thread should abort. */
+        private volatile boolean abort;
+
+        /**
+         * Aborts the event handling thread.
+         */
+        public void abort()
+        {
+            this.abort = true;
+        }
+
+        @Override
+        public void run()
+        {
+            while (!this.abort)
+            {
+                // Let libusb handle pending events. This blocks until events
+                // have been handled, a hotplug callback has been deregistered
+                // or the specified time of .1 second (Specified in
+                // Microseconds) has passed.
+            	try{
+            		int result = LibUsb.handleEventsTimeout(null, 1000000);
+            	}catch (Exception e){
+            		
+            	}
+            }
+        }
+    }
+	
 	static{
 		try {
 			services = UsbHostManager.getUsbServices();
+	        callbackHandle = new HotplugCallbackHandle();
+	        int result = LibUsb.hotplugRegisterCallback(null,
+	            LibUsb.HOTPLUG_EVENT_DEVICE_ARRIVED
+	                | LibUsb.HOTPLUG_EVENT_DEVICE_LEFT,
+	            LibUsb.HOTPLUG_ENUMERATE,
+	            LibUsb.HOTPLUG_MATCH_ANY,
+	            LibUsb.HOTPLUG_MATCH_ANY,
+	            LibUsb.HOTPLUG_MATCH_ANY,
+	            new HotplugCallback() {
+					
+					@Override
+					public int processEvent(Context arg0, Device arg1, int arg2, Object arg3) {
+				        DeviceDescriptor descriptor = new DeviceDescriptor();
+				        int result = LibUsb.getDeviceDescriptor(arg1, descriptor);
+				        if (result != LibUsb.SUCCESS)
+				            throw new LibUsbException("Unable to read device descriptor",
+				                result);
+				        if(0x04d8 == descriptor.idVendor()){
+				        	for(IUsbDeviceEventListener d:usbDeviceEventListeners){
+				        		d.onDeviceEvent(mapLibUsbDevicetoJavaxDevice(arg1));
+				        	}
+				        }
+						return 0;
+					}
+				}, null, callbackHandle);
+	        if (result != LibUsb.SUCCESS)
+	        {
+	            throw new LibUsbException("Unable to register hotplug callback",
+	                result);
+	        }
 		} catch (SecurityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -63,6 +140,48 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements 
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+	     // Start the event handling thread
+        thread = new EventHandlingThread();
+        thread.start();
+	}
+	
+	static public void addUsbDeviceEventListener(IUsbDeviceEventListener l){
+		if(!usbDeviceEventListeners.contains(l))
+			usbDeviceEventListeners.add(l);
+	}
+	static public void removeUsbDeviceEventListener(IUsbDeviceEventListener l){
+		if(usbDeviceEventListeners.contains(l))
+			usbDeviceEventListeners.remove(l);
+	}
+	
+	public static UsbDevice mapLibUsbDevicetoJavaxDevice(Device device){
+		try {
+			DeviceDescriptor descriptor = new DeviceDescriptor();
+	        LibUsb.getDeviceDescriptor(device, descriptor);
+			ArrayList<UsbDevice>  javaxDev = getAllUsbBowlerDevices();
+			for(UsbDevice d:javaxDev){
+				if(descriptor.iSerialNumber() == d.getUsbDeviceDescriptor().iSerialNumber() &&
+						descriptor.idProduct() == d.getUsbDeviceDescriptor().iProduct()&&
+						descriptor.idVendor() == d.getUsbDeviceDescriptor().idVendor()){
+					return d;
+				}
+			}
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UsbDisconnectedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UsbException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+		
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -148,20 +267,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements 
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean connect(){
-        callbackHandle = new HotplugCallbackHandle();
-        int result = LibUsb.hotplugRegisterCallback(null,
-            LibUsb.HOTPLUG_EVENT_DEVICE_ARRIVED
-                | LibUsb.HOTPLUG_EVENT_DEVICE_LEFT,
-            LibUsb.HOTPLUG_ENUMERATE,
-            LibUsb.HOTPLUG_MATCH_ANY,
-            LibUsb.HOTPLUG_MATCH_ANY,
-            LibUsb.HOTPLUG_MATCH_ANY,
-            this, null, callbackHandle);
-        if (result != LibUsb.SUCCESS)
-        {
-            throw new LibUsbException("Unable to register hotplug callback",
-                result);
-        }
+
         
         //System.out.println(mDevice);
         // Dump device descriptor
@@ -179,7 +285,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements 
                 //System.out.println(iface.getUsbInterfaceDescriptor());
                 
                 if(iface.getUsbInterfaceDescriptor().bInterfaceClass() == 2){
-                	controlInterface = iface;
+                	//controlInterface = iface;
                 	//controlEndpoint =  (UsbEndpoint) controlInterface.getUsbEndpoints().get(0);
                 }
                 if(iface.getUsbInterfaceDescriptor().bInterfaceClass() == 10){
@@ -300,7 +406,38 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements 
 	 */
 	@Override
 	public void disconnect() {
-		LibUsb.hotplugDeregisterCallback(null, callbackHandle);
+		
+		try {
+			camInpipe.close();
+		} catch (UsbNotActiveException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (UsbNotOpenException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (UsbDisconnectedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (UsbException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		try {
+			camOutpipe.close();
+		} catch (UsbNotActiveException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (UsbNotOpenException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (UsbDisconnectedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (UsbException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		if(deviceHandle!=null)
 			LibUsb.attachKernelDriver(deviceHandle,  interfaceNumber);
 		try {
@@ -325,10 +462,12 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements 
 		waitForConnectioToBeReady();
 		
 		try {
-			UsbPipe camOutpipe = dataOutEndpoint.getUsbPipe();
-			if(!camOutpipe.isOpen())
-				camOutpipe.open();
-			UsbIrp write = camOutpipe.createUsbIrp();
+			if(camOutpipe == null){
+				camOutpipe = dataOutEndpoint.getUsbPipe();
+				if(!camOutpipe.isOpen())
+					camOutpipe.open();
+				write = camOutpipe.createUsbIrp();
+			}
             write.setData(src);
             write.setLength(src.length);
             write.setOffset(0);
@@ -365,11 +504,13 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements 
 			return false;
 		int got=0;
 		try {
-			UsbPipe camInpipe = dataInEndpoint.getUsbPipe();
-			if(!camInpipe.isOpen())
-				camInpipe.open();
-			
-			 UsbIrp read = camInpipe.createUsbIrp();
+			if(camInpipe == null){
+				 camInpipe = dataInEndpoint.getUsbPipe();
+				if(!camInpipe.isOpen())
+					camInpipe.open();
+				
+				 read = camInpipe.createUsbIrp();
+			}
 	        read.setData(data);
 	        read.setLength(data.length);
 	        read.setOffset(0);
@@ -381,7 +522,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements 
 	        
 	        got=read.getActualLength();
 	        
-			camInpipe.close();
+			
 			
 		} catch (UsbNotActiveException e) {
 			// TODO Auto-generated catch block
@@ -432,28 +573,4 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements 
 		return false;
 	}
 
-	@Override
-	public int processEvent(Context context, Device device, int event,
-            Object userData) {
-        DeviceDescriptor descriptor = new DeviceDescriptor();
-        int result = LibUsb.getDeviceDescriptor(device, descriptor);
-        if (result != LibUsb.SUCCESS)
-            throw new LibUsbException("Unable to read device descriptor",
-                result);
-        if(this.mDevice.getUsbDeviceDescriptor().idVendor() == descriptor.idVendor() &&
-        		this.mDevice.getUsbDeviceDescriptor().idProduct() == descriptor.idProduct() ){
-//        	System.err.format("%s: %04x:%04x%n",
-//                    event == LibUsb.HOTPLUG_EVENT_DEVICE_ARRIVED ? "Connected" :
-//                        "Disconnected",
-//                    descriptor.idVendor(), descriptor.idProduct());
-        	
-        }else{
-//	        System.out.format("%s: %04x:%04x%n",
-//	            event == LibUsb.HOTPLUG_EVENT_DEVICE_ARRIVED ? "Connected" :
-//	                "Disconnected",
-//	            descriptor.idVendor(), descriptor.idProduct());
-        }
-        
-        return 0;
-	}
 }

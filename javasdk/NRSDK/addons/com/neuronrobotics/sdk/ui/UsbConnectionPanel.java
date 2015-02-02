@@ -40,13 +40,14 @@ import net.miginfocom.swing.MigLayout;
 
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.Log;
+import com.neuronrobotics.sdk.javaxusb.IUsbDeviceEventListener;
 import com.neuronrobotics.sdk.javaxusb.UsbCDCSerialConnection;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 /**
  * 
  */
-public class UsbConnectionPanel extends AbstractConnectionPanel  implements HotplugCallback{
+public class UsbConnectionPanel extends AbstractConnectionPanel implements IUsbDeviceEventListener{
 
 	private static final long serialVersionUID = 1L;
 	
@@ -56,8 +57,6 @@ public class UsbConnectionPanel extends AbstractConnectionPanel  implements Hotp
 	
 	private UsbCDCSerialConnection connection = null;
 
-	private HotplugCallbackHandle callbackHandle;
-	private EventHandlingThread thread;
 	/**
 	 * 
 	 */
@@ -87,23 +86,9 @@ public class UsbConnectionPanel extends AbstractConnectionPanel  implements Hotp
 		
 		refresh();
 		
-		callbackHandle = new HotplugCallbackHandle();
-        int result = LibUsb.hotplugRegisterCallback(null,
-            LibUsb.HOTPLUG_EVENT_DEVICE_ARRIVED
-                | LibUsb.HOTPLUG_EVENT_DEVICE_LEFT,
-            LibUsb.HOTPLUG_ENUMERATE,
-            LibUsb.HOTPLUG_MATCH_ANY,
-            LibUsb.HOTPLUG_MATCH_ANY,
-            LibUsb.HOTPLUG_MATCH_ANY,
-            this, null, callbackHandle);
-        if (result != LibUsb.SUCCESS)
-        {
-            throw new LibUsbException("Unable to register hotplug callback",
-                result);
-        }
-     // Start the event handling thread
-        thread = new EventHandlingThread();
-        thread.start();
+		UsbCDCSerialConnection.addUsbDeviceEventListener(this);
+
+
 	}
 
 	
@@ -113,15 +98,7 @@ public class UsbConnectionPanel extends AbstractConnectionPanel  implements Hotp
 		connection = new UsbCDCSerialConnection(port);
 		Log.info("Using port:"+port+"\n");
 
-		 // Unregister the hotplug callback and stop the event handling thread
-        thread.abort();
-        //LibUsb.hotplugDeregisterCallback(null, callbackHandle);
-        try {
-			thread.join();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
         
 		setVisible(false);
 		
@@ -155,65 +132,16 @@ public class UsbConnectionPanel extends AbstractConnectionPanel  implements Hotp
 		}
 
 	}
-    /**
-     * This is the event handling thread. libusb doesn't start threads by its
-     * own so it is our own responsibility to give libusb time to handle the
-     * events in our own thread.
-     */
-    static class EventHandlingThread extends Thread
-    {
-        /** If thread should abort. */
-        private volatile boolean abort;
-
-        /**
-         * Aborts the event handling thread.
-         */
-        public void abort()
-        {
-            this.abort = true;
-        }
-
-        @Override
-        public void run()
-        {
-            while (!this.abort)
-            {
-                // Let libusb handle pending events. This blocks until events
-                // have been handled, a hotplug callback has been deregistered
-                // or the specified time of .1 second (Specified in
-                // Microseconds) has passed.
-            	try{
-            		int result = LibUsb.handleEventsTimeout(null, 1000000);
-            	}catch (Exception e){
-            		
-            	}
-            }
-        }
-    }
 
 	@Override
-	public int processEvent(Context context, Device device, int event,
-            Object userData) {
-        DeviceDescriptor descriptor = new DeviceDescriptor();
-        int result = LibUsb.getDeviceDescriptor(device, descriptor);
-        if (result != LibUsb.SUCCESS)
-            throw new LibUsbException("Unable to read device descriptor",
-                result);
-        if(0x04d8 == descriptor.idVendor() ){
-        	System.err.format("%s: %04x:%04x%n",
-                    event == LibUsb.HOTPLUG_EVENT_DEVICE_ARRIVED ? "Connected " :
-                        "Disconnected",
-                    descriptor.idVendor(), descriptor.idProduct());
-        	SwingUtilities.invokeLater(new Runnable() {
-        	    public void run() {
-        	    	ThreadUtil.wait(1000);
-        	    	refresh();
-        	    }
-        	});
-        	
-        	
-        }
-        
-        return 0;
+	public void onDeviceEvent(UsbDevice device) {
+		SwingUtilities.invokeLater(new Runnable() {
+    	    public void run() {
+    	    	ThreadUtil.wait(500);
+    	    	refresh();
+    	    }
+    	});
 	}
+
+
 }
