@@ -422,7 +422,7 @@ public abstract class BowlerAbstractConnection {
 					}
 				}
 			}else{
-				Log.warning("\nASYNC Not ready<<");
+				//Log.warning("\nASYNC Not ready<<");
 			}
 			
 		}
