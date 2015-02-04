@@ -470,7 +470,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements 
 			}
 			if(!camOutpipe.isOpen())
 				camOutpipe.open();
-			if(write == null)
+			//if(write == null)
 				write = camOutpipe.createUsbIrp();
 				
             write.setData(src);
@@ -504,7 +504,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements 
 			}
 			if(!camInpipe.isOpen())
 				camInpipe.open();
-			if(read == null)
+			//if(read == null)
 				read = camInpipe.createUsbIrp();
 				
 	        read.setData(data);
