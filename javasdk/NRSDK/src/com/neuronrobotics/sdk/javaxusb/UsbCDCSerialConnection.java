@@ -491,8 +491,8 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements 
 			//write  = new DefaultUsbIrp();	
 			prepIrp(write, src);
             
-            camOutpipe.syncSubmit(write);
-            //write.waitUntilComplete();
+            camOutpipe.asyncSubmit(write);
+            write.waitUntilComplete();
             
             while(!write.isComplete()){
 	        	ThreadUtil.wait(0,1);
@@ -527,9 +527,9 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements 
 			//read = new DefaultUsbIrp();	
 			prepIrp(read, data);
 	        
-	        camInpipe.syncSubmit(read);
+	        camInpipe.asyncSubmit(read);
 	 
-	        //read.waitUntilComplete(); 
+	        read.waitUntilComplete(); 
 	        
 	        got=read.getActualLength();
 	        
