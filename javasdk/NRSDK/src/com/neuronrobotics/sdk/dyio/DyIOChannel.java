@@ -306,7 +306,7 @@ public class DyIOChannel implements IDyIOChannel {
 	public int parseDyIOChannelEvent(DyIOChannelEvent e){
 		if(isStreamChannel())
 			return 0;
-		return ByteList.convertToInt(e.getData().getBytes());
+		return e.getValue();
 	}
 	
 	/**
