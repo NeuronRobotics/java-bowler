@@ -3,7 +3,6 @@
 	<name>NRDK_Test</name>
 	<comment></comment>
 	<projects>
-		<project>DyIO</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
