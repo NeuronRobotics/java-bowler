@@ -88,6 +88,7 @@ public class DHKinematicsViewer  extends JPanel implements IJointSpaceUpdateList
 	}
 	private class updater extends Thread{
 		public void run(){
+			setName("Bowler Platform D-H kinematics updater");
 			while(robot.getFactory().isConnected()){
 				ThreadUtil.wait(50);
 				Log.enableSystemPrint(false);

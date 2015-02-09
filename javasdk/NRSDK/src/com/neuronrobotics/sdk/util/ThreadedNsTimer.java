@@ -27,6 +27,7 @@ public class ThreadedNsTimer extends Thread {
 	}
 	
 	public void run(){
+		setName("Bowler Platform Threaded timer instance");
 		setStartTime(System.nanoTime());
 		recalculateTarget();
 		while(isRunning()){

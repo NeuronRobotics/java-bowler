@@ -537,13 +537,18 @@ public abstract class BowlerAbstractConnection {
 	}
 	public void setAsyncQueue(QueueManager asyncQueue) {
 		this.asyncQueue = asyncQueue;
-		if(this.asyncQueue != null && isUseThreadedStack())
+		if(this.asyncQueue != null && isUseThreadedStack()){
 			this.asyncQueue.start();
+			asyncQueue.setName("Bowler Platform Asynchronus Queue");
+		}
 	}
 	public void setSyncQueue(QueueManager syncQueue) {
 		this.syncQueue = syncQueue;
-		if(this.syncQueue != null && isUseThreadedStack())
+		if(this.syncQueue != null && isUseThreadedStack()){
 			this.syncQueue.start();
+			syncQueue.setName("Bowler Platform Synchronus Queue");
+		}
+		
 	}
 	public  QueueManager getAsyncQueue() {
 		return asyncQueue;

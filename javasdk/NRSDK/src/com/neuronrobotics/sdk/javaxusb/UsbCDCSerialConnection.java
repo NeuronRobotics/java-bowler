@@ -95,6 +95,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements 
         @Override
         public void run()
         {
+        	setName("Bowler Platform USB Events thread");
             while (!this.abort)
             {
                 // Let libusb handle pending events. This blocks until events
@@ -106,6 +107,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements 
             	}catch (Exception e){
             		
             	}
+            	ThreadUtil.wait(100);
             }
         }
     }

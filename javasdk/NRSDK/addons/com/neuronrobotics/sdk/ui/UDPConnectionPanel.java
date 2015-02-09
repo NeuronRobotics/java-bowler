@@ -137,6 +137,7 @@ public class UDPConnectionPanel extends AbstractConnectionPanel {
 	private class NetworkSearchProcess extends Thread implements IMonitorable {
 		private boolean isRunning = false;
 		public void run() {
+			setName("Bowler Platform UDP searcher");
 			isRunning = true;
 			//System.out.println("Searching for UDP devices, please wait...");
 			int prt;
