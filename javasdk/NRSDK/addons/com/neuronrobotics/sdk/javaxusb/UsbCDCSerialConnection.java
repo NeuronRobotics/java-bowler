@@ -446,8 +446,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements 
 		try {
 			if(dataInterface.isClaimed())
 				dataInterface.release();
-		} catch (UsbNotActiveException
-				| UsbDisconnectedException | UsbException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
