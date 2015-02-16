@@ -1093,7 +1093,7 @@ public abstract class BowlerAbstractConnection {
 		public void run() {
 			Log.info("Starting the Queue Manager as "+isSystemQueue);
 			ThreadUtil.wait(100);
-			while(isConnected() && !killSwitch) {
+			while(isConnected() && !killSwitch && isUseThreadedStack()) {
 
 				long start = System.currentTimeMillis();
 				if(isSystemQueue)
