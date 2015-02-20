@@ -52,7 +52,7 @@ public class UsbConnectionPanel extends AbstractConnectionPanel implements IUsbD
 	private static final long serialVersionUID = 1L;
 	
 
-	private JComboBox<String> connectionCbo = null;
+	private JComboBox connectionCbo = null;
 	private JButton refresh;
 	
 	private UsbCDCSerialConnection connection = null;
@@ -64,7 +64,7 @@ public class UsbConnectionPanel extends AbstractConnectionPanel implements IUsbD
 		super("USB", ConnectionImageIconFactory.getIcon("images/usb-icon.png"));
 		
 
-		connectionCbo = new JComboBox<String>();
+		connectionCbo = new JComboBox();
 		connectionCbo.setEditable(true);
 		
 		refresh = new JButton("Refresh");

@@ -12,7 +12,6 @@ import org.w3c.dom.NodeList;
 
 import com.neuronrobotics.sdk.network.BowlerTCPClient;
 import com.neuronrobotics.sdk.network.UDPBowlerConnection;
-import com.neuronrobotics.sdk.serial.SerialConnection;
 
 
 public class ConfigManager {
@@ -40,7 +39,7 @@ public class ConfigManager {
 					String host = getElementValue(e, "host", "127.0.0.1");
 					
 					if(type.equalsIgnoreCase("serial")) {
-						return new SerialConnection(port, Integer.parseInt(baud));
+						//return new SerialConnection(port, Integer.parseInt(baud));
 					}
 					
 					if(type.equalsIgnoreCase("udp")) {
