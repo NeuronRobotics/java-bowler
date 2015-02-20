@@ -103,11 +103,11 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements 
                 // or the specified time of .1 second (Specified in
                 // Microseconds) has passed.
             	try{
-            		int result = LibUsb.handleEventsTimeout(null, 1000000);
+            		int result = LibUsb.handleEventsTimeout(null, 10000);
             	}catch (Exception e){
             		
             	}
-            	ThreadUtil.wait(100);
+            	ThreadUtil.wait(0,1);
             }
         }
     }
@@ -200,7 +200,10 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements 
 	private static void dumpDevice(final UsbDevice device,ArrayList<UsbDevice> addrs) throws UnsupportedEncodingException, UsbDisconnectedException, UsbException
     {
 		try{
-	    	if(device.getUsbDeviceDescriptor().idVendor() == 0x04d8 ){// Neuron robotics devices
+	    	if(device.getUsbDeviceDescriptor().idVendor() == 0x04d8 && 
+	    			(device.getUsbDeviceDescriptor().idProduct() == 0x3742 ||
+	    			device.getUsbDeviceDescriptor().idProduct() == 0x0001
+	    			)){// Neuron robotics devices
 		        // Dump information about the device itself
 		        //System.out.println("Device: "+device.getProductString());
 		        addrs.add(device);
