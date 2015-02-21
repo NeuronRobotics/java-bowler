@@ -412,34 +412,10 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements 
 		super.disconnect();
 		try {
 			camInpipe.close();
-		} catch (UsbNotActiveException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (UsbNotOpenException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (UsbDisconnectedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (UsbException e1) {
-			// TODO Auto-generated catch block
-			//e1.printStackTrace();
-		}
+		} catch (Exception e1) {}
 		try {
 			camOutpipe.close();
-		} catch (UsbNotActiveException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (UsbNotOpenException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (UsbDisconnectedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (UsbException e1) {
-			// TODO Auto-generated catch block
-			//e1.printStackTrace();
-		}
+		} catch (Exception e1) {}
 		
 		if(deviceHandle!=null)
 			LibUsb.attachKernelDriver(deviceHandle,  interfaceNumber);
