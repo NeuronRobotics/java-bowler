@@ -24,6 +24,7 @@ import com.neuronrobotics.sdk.dyio.DyIOChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.DigitalInputChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.IDigitalInputListener;
 import com.neuronrobotics.sdk.serial.SerialConnection;
+import com.neuronrobotics.sdk.ui.ConnectionDialog;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 public class TrobotDisplayOnly implements ITaskSpaceUpdateListenerNR, IDigitalInputListener {
 	DHParameterKinematics model;
@@ -40,46 +41,9 @@ public class TrobotDisplayOnly implements ITaskSpaceUpdateListenerNR, IDigitalIn
 		DyIO.disableFWCheck();
 		
 		//Create the references for my known DyIOs
-		DyIO master = null;
+		DyIO master = new DyIO(ConnectionDialog.promptConnection());
 		
-		ArrayList<DyIO> temp= new ArrayList<DyIO>();
-		List <String> ports = SerialConnection.getAvailableSerialPorts();
-		//Start by searching through all available serial connections for DyIOs connected to the system
-		for(String s: ports){
-			if(s.toLowerCase().contains("dyio") ){//Change this to match the OS you are using and any known serial port filter
-				try{
-					DyIO d = new DyIO(new SerialConnection(s));
-					d.connect();
-					if(d.isAvailable()){
-						temp.add(d);
-					}
-				}catch(Exception EX){
-					EX.printStackTrace();
-					System.err.println("Serial port "+s+" is not a DyIO");
-				}
-			}
-		}
-		//BowlerAbstractConnection deltaConnection = null;
-		//Now that all connected DyIOs are connected, search for the correct MAC addresses 
-		for(DyIO d : temp){
-			String addr = d.getAddress().toString();
-			if(addr.equalsIgnoreCase("74:f7:26:00:00:00")){
-				d.getConnection().setSynchronusPacketTimeoutTime(2000);
-				master = d;
-				System.out.println("Master found! "+master);
-			}
-		}
-		//If both are not found then the system can not run
-		if(master == null ){
-			for(DyIO d:temp){
-				System.out.println(d);
-				if(d!= null){
-					if(d.isAvailable())
-						d.disconnect();
-				}
-			}
-			throw new RuntimeException("One or both devices were not found ");
-		}
+		master.connect();
 		
 		model = new DHParameterKinematics(master,"TrobotMaster.xml");
 	
@@ -107,7 +71,7 @@ public class TrobotDisplayOnly implements ITaskSpaceUpdateListenerNR, IDigitalIn
 			}
 			
 			frame.setLocationRelativeTo(null);
-			zero();
+			//zero();
 			
 			gui.add(starter);
 			tabs.add("Control",gui);
@@ -130,29 +94,20 @@ public class TrobotDisplayOnly implements ITaskSpaceUpdateListenerNR, IDigitalIn
 		//delt.getConnection().setSynchronusPacketTimeoutTime(2000);
 		int x=0,y=0,z=0;
 		//Log.enableInfoPrint();
-		for (DyIOChannel c: master.getChannels()){
-			c.setAsync(false);
-		}
+//		for (DyIOChannel c: master.getChannels()){
+//			c.setAsync(false);
+//		}
 		while ( true) {
 			long time = System.currentTimeMillis();
 			try {				
-				master.getAllChannelValues();
-				//printer.setDesiredTaskSpaceTransform(current,.1);
-//				if((int)current.getX() != x && (int)current.getY() != y && (int)current.getZ() != z ){
-//					x=(int)current.getX();
-//					y=(int)current.getY();
-//					z=(int)current.getZ();
-					if(current.getZ()<400&&current.getZ()>0){
-						//delt.sendLinearSection(current, 0, 0,true);
-						//System.out.println("Setting x="+current.getX()+" y="+current.getY()+" z="+current.getZ());
-					}
-				//}
-				ThreadUtil.wait(0,1);
+				//master.getAllChannelValues();
+				
+				ThreadUtil.wait(10,1);
 				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			//System.out.println("Took "+(System.currentTimeMillis()-time)+"ms");
+			
 		}
 		//throw new RuntimeException("Main exited!");
 	}
@@ -176,7 +131,7 @@ public class TrobotDisplayOnly implements ITaskSpaceUpdateListenerNR, IDigitalIn
 									((pose.getX()+180)*scale),
 									((pose.getZ())+100),
 				new RotationNR());
-		System.out.println("Current = "+current);
+		//System.out.println("Current = "+current);
 	}
 	public void onTargetTaskSpaceUpdate(AbstractKinematicsNR source,TransformNR pose) {}
 

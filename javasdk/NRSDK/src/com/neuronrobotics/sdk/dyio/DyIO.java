@@ -1156,6 +1156,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 				}
 			}
 		}else{
+			Log.enableInfoPrint();
 			Object [] args = send("bcs.io.*;0.3;;",
 					BowlerMethod.GET,
 					"gacv",
