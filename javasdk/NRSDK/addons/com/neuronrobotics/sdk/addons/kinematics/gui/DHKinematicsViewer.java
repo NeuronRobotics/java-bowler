@@ -55,14 +55,14 @@ public class DHKinematicsViewer  extends JPanel implements IJointSpaceUpdateList
         panel.add("Center", dh);
         
         jf = new JFrame();
-        jf.setSize(640, 480);
+        jf.setSize(1024, 768);
         jf.add(panel);
         jf.setVisible(true);
-        
+        jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         joints = robot.getCurrentJointSpaceVector();
         robot.addJointSpaceListener(this);
         new updater().start();
-        setSize(640, 480);
+        setSize(1024, 768);
 	}
 
 
@@ -88,6 +88,7 @@ public class DHKinematicsViewer  extends JPanel implements IJointSpaceUpdateList
 	}
 	private class updater extends Thread{
 		public void run(){
+			setName("Bowler Platform D-H kinematics updater");
 			while(robot.getFactory().isConnected()){
 				ThreadUtil.wait(50);
 				Log.enableSystemPrint(false);

@@ -29,6 +29,7 @@ import javax.usb.event.UsbDeviceDataEvent;
 import javax.usb.event.UsbDeviceErrorEvent;
 import javax.usb.event.UsbDeviceEvent;
 import javax.usb.event.UsbDeviceListener;
+import javax.usb.util.DefaultUsbIrp;
 
 import org.usb4java.Context;
 import org.usb4java.Device;
@@ -47,6 +48,7 @@ import com.neuronrobotics.sdk.common.BowlerDatagramFactory;
 import com.neuronrobotics.sdk.common.BowlerRuntimeException;
 import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.Log;
+import com.neuronrobotics.sdk.util.ThreadUtil;
 
 public class UsbCDCSerialConnection extends BowlerAbstractConnection implements IUsbDeviceEventListener, UsbDeviceListener {
 	static UsbServices services=null;
@@ -57,15 +59,15 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements 
 
 	private UsbEndpoint dataInEndpoint;
 	private UsbEndpoint dataOutEndpoint;
-	private byte [] data = new byte[64];
+	//private byte [] data = new byte[64];
 	private DeviceHandle deviceHandle;
 	private int interfaceNumber;
 	
 	private UsbPipe camInpipe;
-	private  UsbIrp read;
+	private  UsbIrp read= new DefaultUsbIrp();
 	
 	private UsbPipe camOutpipe;
-	private UsbIrp write;
+	private UsbIrp write = new DefaultUsbIrp();
 	
 	
 	private static HotplugCallbackHandle callbackHandle;
@@ -93,6 +95,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements 
         @Override
         public void run()
         {
+        	setName("Bowler Platform USB Events thread");
             while (!this.abort)
             {
                 // Let libusb handle pending events. This blocks until events
@@ -104,6 +107,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements 
             	}catch (Exception e){
             		
             	}
+            	ThreadUtil.wait(100);
             }
         }
     }
@@ -408,47 +412,32 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements 
 		super.disconnect();
 		try {
 			camInpipe.close();
-		} catch (UsbNotActiveException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (UsbNotOpenException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (UsbDisconnectedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (UsbException e1) {
-			// TODO Auto-generated catch block
-			//e1.printStackTrace();
-		}
+		} catch (Exception e1) {}
 		try {
 			camOutpipe.close();
-		} catch (UsbNotActiveException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (UsbNotOpenException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (UsbDisconnectedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (UsbException e1) {
-			// TODO Auto-generated catch block
-			//e1.printStackTrace();
-		}
+		} catch (Exception e1) {}
 		
 		if(deviceHandle!=null)
 			LibUsb.attachKernelDriver(deviceHandle,  interfaceNumber);
 		try {
 			if(dataInterface.isClaimed())
 				dataInterface.release();
-		} catch (UsbNotActiveException
-				| UsbDisconnectedException | UsbException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		
+	}
+	
+	private void prepIrp(UsbIrp irp, byte [] data){
+		irp.complete();
+		irp.setData(data);
+		irp.setLength(data.length);
+		irp.setOffset(0);
+		irp.setAcceptShortPacket(true);
+		irp.setComplete(false);
+		irp.setUsbException(null);
 	}
 	
 	/**
@@ -470,17 +459,21 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements 
 			}
 			if(!camOutpipe.isOpen())
 				camOutpipe.open();
-			//if(write == null)
-				write = camOutpipe.createUsbIrp();
-				
-            write.setData(src);
-            write.setLength(src.length);
-            write.setOffset(0);
-            write.setAcceptShortPacket(true);
-
-            camOutpipe.syncSubmit(write);
-            write.waitUntilComplete(getSleepTime());
-            write.complete();
+//			if(write == null){
+//				
+//				write =  camOutpipe.createUsbIrp();
+//				System.out.println("Write is a "+write.getClass());
+//				System.out.println("camOutpipe is a "+camOutpipe.getClass());
+//			}
+			//write  = new DefaultUsbIrp();	
+			prepIrp(write, src);
+            
+            camOutpipe.asyncSubmit(write);
+            write.waitUntilComplete();
+            
+            while(!write.isComplete()){
+	        	ThreadUtil.wait(0,1);
+	        }
 			
 		} catch (Exception e){// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -497,6 +490,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements 
 		if(dataInEndpoint == null)
 			return false;
 		int got=0;
+		byte []data = new byte [64];
 		try {
 			if(camInpipe == null){
 				 camInpipe = dataInEndpoint.getUsbPipe();
@@ -504,20 +498,21 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements 
 			}
 			if(!camInpipe.isOpen())
 				camInpipe.open();
-			//if(read == null)
-				read = camInpipe.createUsbIrp();
-				
-	        read.setData(data);
-	        read.setLength(data.length);
-	        read.setOffset(0);
-	        read.setAcceptShortPacket(true);
+//			if(read == null)
+//				read = camInpipe.createUsbIrp();
+			
+			//read = new DefaultUsbIrp();	
+			prepIrp(read, data);
 	        
 	        camInpipe.asyncSubmit(read);
 	 
-	        read.waitUntilComplete(getSleepTime()); 
+	        read.waitUntilComplete(); 
 	        
 	        got=read.getActualLength();
-	        read.complete();
+	        
+	        while(!read.isComplete()){
+	        	ThreadUtil.wait(0,1);
+	        }
 			
 			
 		} catch (Exception e) {

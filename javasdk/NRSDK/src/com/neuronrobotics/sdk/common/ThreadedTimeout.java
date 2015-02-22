@@ -80,6 +80,7 @@ public class ThreadedTimeout {
 		 * @see java.lang.Thread#run()
 		 */
 		public void run(){
+			setName("Bowler Platform Threaded timeout");
 			while(true){
 				if(getTimers().size()>0){
 					toRemove.clear();

@@ -52,6 +52,7 @@ public class SampleGuiNR extends JPanel{
 			public void actionPerformed(ActionEvent arg0) {
 				new Thread(){
 					public void run(){
+						setName("Bowler Platform Homing thread");
 						getModel().homeAllLinks();
 						getHomeAll().setText("Homed");
 						setButtonEnabled(true);

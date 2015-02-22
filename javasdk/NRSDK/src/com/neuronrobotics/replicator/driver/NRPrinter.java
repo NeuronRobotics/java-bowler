@@ -139,7 +139,7 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 
 	public void setDeltaDevice(BowlerBoardDevice d) {
 		this.deltaDevice = d;
-		
+		d.getConnection().setSynchronusPacketTimeoutTime(5000);
 	}
 
 	private double getTempreture() {
