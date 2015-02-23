@@ -30,5 +30,6 @@
 	<classpathentry kind="lib" path="lib_addons/usb4java-javax-1.2.0.jar"/>
 	<classpathentry kind="lib" path="lib_addons/vecmath.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="lib" path="/opt/microchip/mplabx/sys/java/jre1.7.0_25/lib/jfxrt.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

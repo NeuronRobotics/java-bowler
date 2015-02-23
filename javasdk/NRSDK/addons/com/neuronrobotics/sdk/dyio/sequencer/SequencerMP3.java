@@ -19,13 +19,21 @@ package com.neuronrobotics.sdk.dyio.sequencer;
  *************************************************************************/
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileInputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
 
-import javazoom.jl.player.MyPlayer;
+//import javazoom.jl.player.MyPlayer;
 
 import com.neuronrobotics.sdk.util.ThreadUtil;
+
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+
 public class SequencerMP3 {
-    private MyPlayer player; 
+    
     private String fn="";
     private boolean pause = false;
     private boolean playing = false;
@@ -35,7 +43,8 @@ public class SequencerMP3 {
         try {
             FileInputStream fis     = new FileInputStream(fn);
             BufferedInputStream bis = new BufferedInputStream(fis);
-            player = new MyPlayer(bis);
+            //player = new MyPlayer(bis);
+            
         }
         catch (Exception e) {
             System.out.println("Problem playing file " + filename);
@@ -49,48 +58,52 @@ public class SequencerMP3 {
     }
 
     public void close() { 
-    	if (player != null) 
-    		player.close(); 
+//    	if (player != null) 
+//    		player.close(); 
     }
 
     public boolean isPlaying() {
-		if(player!=null)
-			return !player.isComplete();
+//		if(player!=null)
+//			return !player.isComplete();
 		return false;
 	}
 	public int getCurrentTime() {
-		return player.getCurrentTime();
+		return 0;
+//		return player.getCurrentTime();
 	}
 	public void setCurrentTime(int time) {
 		//System.out.println("Setting current time="+time);
-		player.setCurrentTime(time);
+//		player.setCurrentTime(time);
 	}
 	/**
 	 * 
 	 * @return length in Ms
 	 */
 	public int getTrackLength(){
-		return player.getTrackLength();
+		return 0;
+//		return player.getTrackLength();
 	}
 	public double getPercent() {
-		if(player!=null) {
-			return player.getPercent();
-		}
 		return 0;
+//		if(player!=null) {
+//			return player.getPercent();
+//		}
+//		return 0;
 	}
 	private double getNumFrames() {
-		return player.getNumberOfFrames();
+		return 0;
+//		return player.getNumberOfFrames();
 	}
 	
 	public void playStep(){
-		player.playStep();
+//		player.playStep();
 	}
 
     // play the MP3 file to the sound card
     public void play() {
     	if(pause){
         	pause=false;
-        	player.setPause(false);
+//        	player.setPause(false);
         	if(playing)
         		return;
     	}
@@ -98,14 +111,14 @@ public class SequencerMP3 {
         new Thread() {
             public void run() {
             	playing=true;
-            	player.setCurrentFrame(0);
+//            	player.setCurrentFrame(0);
                 try { 
-                	do{
-            			while(pause){
-            				Thread.sleep(1);
-            			}
-                		playStep();
-                	}while(!player.isComplete());
+//                	do{
+//            			while(pause){
+//            				Thread.sleep(1);
+//            			}
+//                		playStep();
+//                	}while(!player.isComplete());
                 }catch (Exception e) {
                 	System.out.println(e); 
                 }
@@ -117,26 +130,13 @@ public class SequencerMP3 {
 
     // test client
     public static void main(String[] args) {
-        String filename = "track.mp3";
+    	new JFXPanel(); // initializes JavaFX environment
+    	File resource = new File("track.mp3"); 
+        Media hit;
+		hit = new Media(resource.toURI().toString());
+		MediaPlayer mediaPlayer = new MediaPlayer(hit);
+		mediaPlayer.play();
         
-        SequencerMP3 mp3 = new SequencerMP3(filename);
-        System.out.println("Number of frames="+mp3.getNumFrames());
-        mp3.play();
-        
-        ThreadUtil.wait(5000);
-        mp3.pause();
-        ThreadUtil.wait(5000);
-        mp3.play();
-        while(mp3.isPlaying()) {
-        	ThreadUtil.wait(500);
-        	System.out.println("Time = "+mp3.getCurrentTime());
-        }
-       
-        
-        mp3.close();
-     
-        System.out.println("Song done");
-        System.out.println("Number of frames="+mp3.getNumFrames());
 
     }
 
