@@ -7,6 +7,7 @@ import Jama.Matrix;
 import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
+import com.neuronrobotics.sdk.namespace.bcs.pid.IExtendedPIDControl;
 import com.neuronrobotics.sdk.pid.GenericPIDDevice;
 import com.neuronrobotics.sdk.pid.VirtualGenericPIDDevice;
 //import com.neuronrobotics.sdk.pid.IPIDControl;
@@ -18,7 +19,7 @@ public class GenericKinematicsModelNR extends AbstractKinematicsNR {
 	public GenericKinematicsModelNR(InputStream configFile,GenericPIDDevice device ){
 		super(configFile,new LinkFactory( device));
 	}
-	public GenericKinematicsModelNR(GenericPIDDevice dev){
+	public GenericKinematicsModelNR(IExtendedPIDControl dev){
 		super(XmlFactory.getDefaultConfigurationStream("GenericKinematics.xml"),new LinkFactory( dev));
 	}
 
