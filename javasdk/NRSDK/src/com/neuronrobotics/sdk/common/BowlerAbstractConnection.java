@@ -422,7 +422,7 @@ public abstract class BowlerAbstractConnection {
 					}
 				}
 			}else{
-				Log.warning("\nASYNC Not ready<<");
+				//Log.warning("\nASYNC Not ready<<");
 			}
 			
 		}
@@ -537,13 +537,18 @@ public abstract class BowlerAbstractConnection {
 	}
 	public void setAsyncQueue(QueueManager asyncQueue) {
 		this.asyncQueue = asyncQueue;
-		if(this.asyncQueue != null && isUseThreadedStack())
+		if(this.asyncQueue != null && isUseThreadedStack()){
 			this.asyncQueue.start();
+			asyncQueue.setName("Bowler Platform Asynchronus Queue");
+		}
 	}
 	public void setSyncQueue(QueueManager syncQueue) {
 		this.syncQueue = syncQueue;
-		if(this.syncQueue != null && isUseThreadedStack())
+		if(this.syncQueue != null && isUseThreadedStack()){
 			this.syncQueue.start();
+			syncQueue.setName("Bowler Platform Synchronus Queue");
+		}
+		
 	}
 	public  QueueManager getAsyncQueue() {
 		return asyncQueue;
@@ -610,7 +615,38 @@ public abstract class BowlerAbstractConnection {
 		}
 		syncListen=null;
 	} 
+	
+	public RpcEncapsulation locateRpc(String namespace,BowlerMethod method, String rpcString){
+		for (NamespaceEncapsulation ns:namespaceList){
+			if(ns.getNamespace().toLowerCase().contains(namespace.toLowerCase())){
+				//found the namespace
+				for(RpcEncapsulation rpc:ns.getRpcList()){
+					if(		rpc.getRpc().toLowerCase().contains(rpcString.toLowerCase()) &&
+							rpc.getDownstreamMethod() == method){
+						//Found the command in the namespace
+						return rpc;
+					}
+				}
+			}
+		}
+		return null;
+	}
+	
+	public BowlerAbstractCommand getCommand(String namespace,BowlerMethod method, String rpcString, Object[] arguments){
+		RpcEncapsulation rpc =  locateRpc(namespace, method, rpcString);
+		if(rpc != null)
+			return rpc.getCommand(arguments);
+		
+		return null;
+		
+	}
+	public Object [] parseResponse(String namespace,BowlerMethod method, String rpcString,BowlerDatagram dg){
+		RpcEncapsulation rpc =  locateRpc(namespace, method, rpcString);
+		if(rpc != null)
+			return rpc.parseResponse(dg);//parse and return
 
+		return new Object [0];
+	}
 	/**
 	 * This is the scripting interface to Bowler devices. THis allows a user to describe a namespace, rpc, and array or 
 	 * arguments to be paced into the packet based on the data types of the argument. The response in likewise unpacked 
@@ -625,25 +661,18 @@ public abstract class BowlerAbstractConnection {
 		if(namespaceList == null){
 			getNamespaces(addr);
 		}
-		for (NamespaceEncapsulation ns:namespaceList){
-			if(ns.getNamespace().toLowerCase().contains(namespace.toLowerCase())){
-				//found the namespace
-				for(RpcEncapsulation rpc:ns.getRpcList()){
-					if(		rpc.getRpc().toLowerCase().contains(rpcString.toLowerCase()) &&
-							rpc.getDownstreamMethod() == method){
-						//Found the command in the namespace
-
-							BowlerDatagram dg =  send(rpc.getCommand(arguments),addr,retry);
-							if(dg!=null){
-								addr.setValues(dg.getAddress());
-							}
-							Object [] en =rpc.parseResponse(dg);//parse and return
-							BowlerDatagramFactory.freePacket(dg);
-							return en;
-					}
-				}
+		BowlerAbstractCommand command = getCommand(namespace, method, rpcString,arguments);
+		
+		if(command != null){
+			BowlerDatagram dg =  send(command,addr,retry);
+			if(dg!=null){
+				addr.setValues(dg.getAddress());
 			}
+			Object [] en =parseResponse(namespace, method, rpcString,dg);//parse and return
+			BowlerDatagramFactory.freePacket(dg);
+			return en;
 		}
+		
 		Log.error("No method found, attempted "+namespace+" RPC: "+rpcString);
 		for (NamespaceEncapsulation ns:namespaceList){
 			Log.error("Namespace \n"+ns);
@@ -1064,7 +1093,7 @@ public abstract class BowlerAbstractConnection {
 		public void run() {
 			Log.info("Starting the Queue Manager as "+isSystemQueue);
 			ThreadUtil.wait(100);
-			while(isConnected() && !killSwitch) {
+			while(isConnected() && !killSwitch && isUseThreadedStack()) {
 
 				long start = System.currentTimeMillis();
 				if(isSystemQueue)

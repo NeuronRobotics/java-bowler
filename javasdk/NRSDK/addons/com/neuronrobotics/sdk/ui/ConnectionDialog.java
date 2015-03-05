@@ -106,10 +106,16 @@ public class ConnectionDialog extends JDialog {
 	}
 	
 	private void loadDefaultConnections() {
-		addConnectionPanel(new SerialConnectionPanel());
-		addConnectionPanel(new BluetoothConnectionPanel());
+		try{
+			addConnectionPanel(new UsbConnectionPanel());
+			addConnectionPanel(new BluetoothConnectionPanel());
+			addConnectionPanel(new SerialConnectionPanel());
+		}catch(Error e){
+			Log.error("This is not a java 7 compliant system, removing the serial, bluetooth and usb connections");
+		}
 		addConnectionPanel(new UDPConnectionPanel());
 		addConnectionPanel(new TCPConnectionPanel());
+		
 	}
 
 	public void addConnectionPanel(AbstractConnectionPanel panel) {

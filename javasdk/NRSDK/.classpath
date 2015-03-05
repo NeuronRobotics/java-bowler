@@ -6,18 +6,30 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="addons"/>
+	<classpathentry kind="lib" path="lib/Jama-1.0.2.jar"/>
 	<classpathentry kind="lib" path="lib/bluecove-2.1.1.jar"/>
 	<classpathentry kind="lib" path="lib/bluecove-gpl-2.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/nrjavaserial-3.9.0.jar"/>
+	<classpathentry kind="lib" path="lib_addons/commons-lang3-3.2.1.jar"/>
 	<classpathentry kind="lib" path="lib_addons/j3dcore.jar"/>
 	<classpathentry kind="lib" path="lib_addons/j3dutils.jar"/>
+	<classpathentry kind="lib" path="lib_addons/libusb4java-1.2.0-linux-arm.jar"/>
+	<classpathentry kind="lib" path="lib_addons/libusb4java-1.2.0-linux-x86_64.jar"/>
+	<classpathentry kind="lib" path="lib_addons/libusb4java-1.2.0-linux-x86.jar"/>
+	<classpathentry kind="lib" path="lib_addons/libusb4java-1.2.0-osx-x86_64.jar"/>
+	<classpathentry kind="lib" path="lib_addons/libusb4java-1.2.0-osx-x86.jar"/>
+	<classpathentry kind="lib" path="lib_addons/libusb4java-1.2.0-windows-x86_64.jar"/>
+	<classpathentry kind="lib" path="lib_addons/libusb4java-1.2.0-windows-x86.jar"/>
 	<classpathentry kind="lib" path="lib_addons/miglayout-3.7.2-swing.jar"/>
 	<classpathentry kind="lib" path="lib_addons/motej.0.9.jar"/>
-	<classpathentry kind="lib" path="lib_addons/vecmath.jar"/>
-	<classpathentry kind="lib" path="lib/Jama-1.0.2.jar"/>
 	<classpathentry kind="lib" path="lib_addons/nr-jinput.jar"/>
 	<classpathentry kind="lib" path="lib_addons/smack.jar"/>
 	<classpathentry kind="lib" path="lib_addons/smackx.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/nrjavaserial-3.9.0.jar"/>
+	<classpathentry kind="lib" path="lib_addons/usb-api-1.0.2.jar"/>
+	<classpathentry kind="lib" path="lib_addons/usb4java-1.2.0.jar"/>
+	<classpathentry kind="lib" path="lib_addons/usb4java-javax-1.2.0.jar"/>
+	<classpathentry kind="lib" path="lib_addons/vecmath.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="lib" path="/opt/microchip/mplabx/sys/java/jre1.7.0_25/lib/jfxrt.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

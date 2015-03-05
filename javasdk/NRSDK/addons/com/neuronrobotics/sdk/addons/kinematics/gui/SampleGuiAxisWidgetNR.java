@@ -70,6 +70,7 @@ public class SampleGuiAxisWidgetNR extends JPanel implements IJointSpaceUpdateLi
 				try {
 					new Thread(){
 						public void run(){
+							setName("Bowler Platform Homing thread");
 							getModel().homeLink(getAxis());
 							
 							setButtonEnabled(true);
