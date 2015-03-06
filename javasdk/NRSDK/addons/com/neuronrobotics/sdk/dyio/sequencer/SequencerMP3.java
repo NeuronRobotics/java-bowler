@@ -21,12 +21,6 @@ package com.neuronrobotics.sdk.dyio.sequencer;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.net.URISyntaxException;
-import java.net.URL;
-
-//import javazoom.jl.player.MyPlayer;
-
-import com.neuronrobotics.sdk.util.ThreadUtil;
 
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.media.Media;
