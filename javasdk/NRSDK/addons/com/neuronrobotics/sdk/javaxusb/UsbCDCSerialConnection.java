@@ -103,9 +103,11 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements 
                 // or the specified time of .1 second (Specified in
                 // Microseconds) has passed.
             	try{
-            		int result = LibUsb.handleEventsTimeout(null, 1000000);
+            		int result = LibUsb.handleEventsTimeoutCompleted(null,
+                            0,
+                            null);
             	}catch (Exception e){
-            		
+            		e.printStackTrace();
             	}
             	ThreadUtil.wait(100);
             }
