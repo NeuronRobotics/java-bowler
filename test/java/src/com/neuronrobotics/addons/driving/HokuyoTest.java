@@ -4,17 +4,24 @@ import gnu.io.NRSerialPort;
 
 import java.util.ArrayList;
 
+import javax.swing.JFrame;
+
 import com.neuronrobotics.addons.driving.virtual.ObsticleType;
 
 public class HokuyoTest implements ISensorListener {
 	
 	private SimpleDisplay display = new SimpleDisplay();
+	private JFrame frame = new JFrame();
 	private long start;
 	private HokuyoTest(){
-		LaserRangeSensor range = new LaserRangeSensor(new NRSerialPort("/dev/ttyACM1", 115200));
+		LaserRangeSensor range = new LaserRangeSensor(new NRSerialPort("/dev/ttyACM0", 115200));
 		range.addSensorListener(this);
 		start=System.currentTimeMillis();
 		range.StartSweep(-90, 90, .5);
+		frame.add(display);
+		frame.setSize(1024, 768);
+		frame.setVisible(true);
+		frame.setExtendedState(JFrame.EXIT_ON_CLOSE);
 		
 //		try {
 //			Thread.sleep(10000);

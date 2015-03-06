@@ -1,6 +1,13 @@
 eclipse.preferences.version=1
 org.eclipse.jdt.core.compiler.codegen.inlineJsrBytecode=enabled
+<<<<<<< HEAD
 org.eclipse.jdt.core.compiler.codegen.methodParameters=do not generate
+=======
+<<<<<<< HEAD
+org.eclipse.jdt.core.compiler.codegen.methodParameters=do not generate
+=======
+>>>>>>> branch 'development' of git@github.com:NeuronRobotics/java-bowler.git
+>>>>>>> branch 'development' of git@github.com:NeuronRobotics/java-bowler.git
 org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.7
 org.eclipse.jdt.core.compiler.codegen.unusedLocal=preserve
 org.eclipse.jdt.core.compiler.compliance=1.7
