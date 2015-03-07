@@ -153,7 +153,7 @@ public class Log {
 		}
 		//messages.add(m);
 		
-		if(systemprint && importance >= minprintlevel) {
+		if(isPrinting() && importance >= minprintlevel) {
 			errStream.println(m);
 			if(errStream != System.err)
 				 System.err.println(m);
@@ -396,6 +396,11 @@ public class Log {
 	
 	public static void setUseColoredPrints(boolean useColoredPrints) {
 		instance().useColoredPrints = useColoredPrints;
+	}
+
+	public static boolean isPrinting() {
+		// TODO Auto-generated method stub
+		return instance().systemprint;
 	}
 	
 }

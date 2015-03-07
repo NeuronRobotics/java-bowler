@@ -211,9 +211,35 @@ public class RotationNR {
 		
 		toString(rotationMatrix);
 	}
+	
+	private double calculateAxisAngle(double quaturnian){
+		double w = getRotationMatrix2QuaturnionW();
+		quaturnian=Math.abs(quaturnian);
+		double s = Math.sqrt(1-w*w);
+		if(s<.001)
+			return quaturnian;
+		return quaturnian/s;
+	}
+	
+
+	public double getRotationX() {
+
+		return calculateAxisAngle(getRotationMatrix2QuaturnionX());
+
+	}
+
+	public double getRotationY() {
+		return calculateAxisAngle(getRotationMatrix2QuaturnionY());
+	}
+
+	public double getRotationZ() {
+		return calculateAxisAngle(getRotationMatrix2QuaturnionZ());
+	}
 
 	public double getRotationMatrix2QuaturnionW() {
 		double temp = 0.5 * Math.sqrt(1 + rotationMatrix[0][0]+ rotationMatrix[1][1] + rotationMatrix[2][2]);
+		if(temp>1)
+			throw new RuntimeException("Matrix needs normalization");
 		return temp;
 	}
 

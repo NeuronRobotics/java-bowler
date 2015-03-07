@@ -1114,13 +1114,15 @@ public abstract class BowlerAbstractConnection {
 						BowlerDatagram b = queueBuffer.remove(0);
 						long pulledPacket = System.currentTimeMillis();
 						pushUp(b);
-						long pushedPacket = System.currentTimeMillis();
-						
-						if((System.currentTimeMillis()-getLastWrite())>(getSleepTime()*(getPercentagePrint() /100.0))&& b.isSyncronous()){
-							Log.error("Packet recive took more then "+getPercentagePrint()+"%. " +
-											"\nPacket Update\t"+(packetUpdate- start)+"" +
-											"\nPulled Packet\t"+(pulledPacket-packetUpdate)+"" +
-											"\nPushed Packet\t"+(pushedPacket-pulledPacket));
+						if(b!=null){
+							long pushedPacket = System.currentTimeMillis();
+							
+							if((System.currentTimeMillis()-getLastWrite())>(getSleepTime()*(getPercentagePrint() /100.0))&& b.isSyncronous()){
+								Log.error("Packet recive took more then "+getPercentagePrint()+"%. " +
+												"\nPacket Update\t"+(packetUpdate- start)+"" +
+												"\nPulled Packet\t"+(pulledPacket-packetUpdate)+"" +
+												"\nPushed Packet\t"+(pushedPacket-pulledPacket));
+							}
 						}
 					}catch(Exception e){
 						e.printStackTrace();
