@@ -238,16 +238,16 @@ public class SerialConnection extends BowlerAbstractConnection {
         return back;
     }
 
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.common.BowlerAbstractConnection#reconnect()
-	 */
-	@Override
-	public boolean reconnect() {
-		Log.warning("Reconnecting in serial");
-		disconnect();
-		ThreadUtil.wait(sleepTime);
-		return connect();
-	}
+//	/* (non-Javadoc)
+//	 * @see com.neuronrobotics.sdk.common.BowlerAbstractConnection#reconnect()
+//	 */
+//	@Override
+//	public boolean reconnect() {
+//		Log.warning("Reconnecting in serial");
+//		disconnect();
+//		ThreadUtil.wait(sleepTime);
+//		return connect();
+//	}
 
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.common.BowlerAbstractConnection#waitingForConnection()

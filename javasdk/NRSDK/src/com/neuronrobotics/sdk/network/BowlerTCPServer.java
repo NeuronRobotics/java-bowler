@@ -110,15 +110,15 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 	
 
 
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.common.BowlerAbstractConnection#reconnect()
-	 */
-	@Override
-	public boolean reconnect() {
-		Log.warning("TCP Server Reconnect, just disconnecting");
-		disconnect();
-		return false;
-	}
+//	/* (non-Javadoc)
+//	 * @see com.neuronrobotics.sdk.common.BowlerAbstractConnection#reconnect()
+//	 */
+//	@Override
+//	public boolean reconnect() {
+//		Log.warning("TCP Server Reconnect, just disconnecting");
+//		disconnect();
+//		return false;
+//	}
 	
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.common.BowlerAbstractConnection#waitingForConnection()

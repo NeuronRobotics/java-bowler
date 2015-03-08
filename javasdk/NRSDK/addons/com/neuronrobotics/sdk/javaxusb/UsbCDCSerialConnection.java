@@ -538,16 +538,16 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements 
 	}
 	
 
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.common.BowlerAbstractConnection#reconnect()
-	 */
-	@Override
-	public boolean reconnect() {
-		if(!isConnected())
-			return false;
-		else
-			return true;
-	}
+//	/* (non-Javadoc)
+//	 * @see com.neuronrobotics.sdk.common.BowlerAbstractConnection#reconnect()
+//	 */
+//	@Override
+//	public boolean reconnect() {
+//		if(!isConnected())
+//			return false;
+//		else
+//			return true;
+//	}
 
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.common.BowlerAbstractConnection#waitingForConnection()

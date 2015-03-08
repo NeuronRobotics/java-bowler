@@ -109,7 +109,7 @@ public abstract class BowlerAbstractConnection {
 	 * @return true, if successful
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	abstract public boolean reconnect() throws IOException;
+	//abstract public boolean reconnect() throws IOException;
 	
 	/**
 	 * Attempt to re-establish a connection. Return if the attempt was successful.
@@ -208,7 +208,7 @@ public abstract class BowlerAbstractConnection {
 			write(sendable.getBytes());
 		} catch (IOException e1) {
 			Log.error("No response from device...");
-			reconnect();
+			//reconnect();
 			throw  e1;		
 		}
 	}
@@ -292,7 +292,7 @@ public abstract class BowlerAbstractConnection {
 			}catch (Exception e){
 				//e.printStackTrace();
 				Log.error("Write failed. "+e.getMessage());
-				reconnect();
+				//reconnect();
 			}
 		}else{
 			Log.error("No data sent, stream closed");
@@ -930,13 +930,13 @@ public abstract class BowlerAbstractConnection {
 			if(retry>1){
 				//only force a reconnect if the retry is above one. 
 				//a device failing to respond could just be the result of a wrong packet type level.
-				try {
-					Log.warning("Reconnecting in the send engine loop, retry "+retry+" times");
-					reconnect();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+//				try {
+//					//Log.warning("Reconnecting in the send engine loop, retry "+retry+" times");
+//					//reconnect();
+//				} catch (IOException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
 				
 			}
 			Log.error("Sending Synchronus packet and there was a failure, will retry "+(retry-i-1)+" more times");
@@ -1044,7 +1044,7 @@ public abstract class BowlerAbstractConnection {
 			try{
 				if(!ping(new MACAddress())){
 					Log.debug("Ping failed, disconnecting");
-					disconnect();
+					//disconnect();
 				}
 			}catch(Exception e){
 				Log.debug("Ping failed, disconnecting");
@@ -1165,12 +1165,12 @@ public abstract class BowlerAbstractConnection {
 				if(isConnected()){
 					Log.error("Data read failed "+e.getMessage());
 					e.printStackTrace();
-					try {
-						reconnect();
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
+//					try {
+//						reconnect();
+//					} catch (IOException e1) {
+//						// TODO Auto-generated catch block
+//						e1.printStackTrace();
+//					}
 				}
 			}
 			return false;
@@ -1204,7 +1204,7 @@ public abstract class BowlerAbstractConnection {
 				long dataReadEnd=System.currentTimeMillis();
 				if(b<0){
 					Log.error("Stream is broken - unexpected: claimed to have "+getDataIns().available()+" bytes, read in "+b);
-					reconnect();
+					//reconnect();
 					//something went wrong
 					new RuntimeException().printStackTrace();
 					return false;
