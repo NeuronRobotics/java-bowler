@@ -15,7 +15,7 @@ public class SchedulerTest {
 	public static void main(String[] args) {
 		DyIO dyio = new DyIO(ConnectionDialog.promptConnection());
 		dyio.connect();
-		CoreScheduler cs = new CoreScheduler(dyio, new File("Test.xml"));
+		CoreScheduler cs = new CoreScheduler(dyio, new File("SparkParty.xml"));
 		cs.play();
 		while(cs.isPlaying()){
 			 try {

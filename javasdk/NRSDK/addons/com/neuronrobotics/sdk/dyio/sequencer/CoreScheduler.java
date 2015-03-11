@@ -197,6 +197,7 @@ public class CoreScheduler {
 	public void play(){
 		getSt().setPause(false);
 		callPlay();
+		ThreadUtil.wait(100);
 	}
 	public void play(int setpoint,long StartOffset) {
 		setSequenceParams( setpoint, StartOffset);
@@ -377,7 +378,7 @@ public class CoreScheduler {
 		}
 		public boolean isRun() {
 			if(mp3!=null){
-				return run && mp3.isPlaying();
+				return run ;
 			}
 			return run;
 		}
