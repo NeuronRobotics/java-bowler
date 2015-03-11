@@ -526,7 +526,7 @@ public class DyIOChannel implements IDyIOChannel {
 	 */
 	 
 	public boolean setValue(int value) {
-		Log.debug("Setting channel: "+number+" to value: "+value);
+
 		setCachedValue(value);
 		setCachedTime(0);
 		if(cachedMode)
@@ -569,6 +569,7 @@ public class DyIOChannel implements IDyIOChannel {
 			//Log.enableDebugPrint(false);
 			return back;
 		}else{
+			//Log.info("Setting channel: "+number+" to value: "+getCachedValue());
 			getDevice().send(	"bcs.io.*;0.3;;",
 								BowlerMethod.POST,
 								"schv",

@@ -52,8 +52,9 @@ public class SequencerMP3 {
 			});
         }
         catch (Exception e) {
-            System.out.println("Problem playing file " + filename);
-            e.printStackTrace();
+            System.out.println("Problem playing file " + filename+"\r\n");
+            //e.printStackTrace();
+            throw e;
         }
     }
     

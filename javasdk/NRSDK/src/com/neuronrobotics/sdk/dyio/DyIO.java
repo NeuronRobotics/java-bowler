@@ -612,6 +612,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 					BowlerMethod.POST,
 					"sacv",
 					new Object[]{new Integer((int) (seconds*1000)),values});
+			throw new RuntimeException("This API is broken, set channels individually");
 		}
 		
 	}

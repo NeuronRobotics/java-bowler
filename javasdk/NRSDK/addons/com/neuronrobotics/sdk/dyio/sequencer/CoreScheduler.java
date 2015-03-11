@@ -391,7 +391,7 @@ public class CoreScheduler {
 		}
 		public boolean isRun() {
 			if(mp3!=null){
-				return run ;
+				return run && mp3.isPlaying();
 			}
 			return run;
 		}
