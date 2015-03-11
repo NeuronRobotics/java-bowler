@@ -35,6 +35,7 @@ public class AnalogRotoryLink  extends AbstractRotoryLink implements IAnalogInpu
 	public void setAnalogChannel(AnalogInputChannel channel) {
 		channel.addAnalogInputListener(this);
 		channel.configAdvancedAsyncNotEqual(10);
+		//new RuntimeException().printStackTrace();
 		this.channel = channel;
 	}
 

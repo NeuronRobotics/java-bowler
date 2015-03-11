@@ -229,8 +229,8 @@ public class BowlerDatagramFactory {
 				Log.error("Data CRC check Fail  "+staticMemory);
 			}
 		}
-		if(failed>0)
-			Log.error("Failed out "+failed+" bytes");
+//		if(failed>0)
+//			Log.error("Failed out "+failed+" bytes");
 		return null;
 	}
 
