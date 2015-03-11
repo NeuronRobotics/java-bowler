@@ -415,7 +415,9 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 		if(isFree())
 			return "Empty Packet";
 		String str="";
-		
+		if(!Log.isPrinting()){
+			return str;
+		}
 		str += "\tRaw Packet:\t";
 		for (byte x : getBytes()){
 			// This writes out the hex values of all the data Bytes

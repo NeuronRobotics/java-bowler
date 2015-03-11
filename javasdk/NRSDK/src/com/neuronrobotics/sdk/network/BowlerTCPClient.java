@@ -201,7 +201,7 @@ public class BowlerTCPClient extends BowlerAbstractConnection{
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.common.BowlerAbstractConnection#reconnect()
 	 */
-	@Override
+	//@Override
 	public boolean reconnect() {
 		Log.warning("Reconnecting TCP Socket..");
 		disconnect();

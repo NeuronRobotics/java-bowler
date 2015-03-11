@@ -46,14 +46,14 @@ public class MockConnection extends BowlerAbstractConnection{
 		return true;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.common.BowlerAbstractConnection#reconnect()
-	 */
-	@Override
-	public boolean reconnect() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+//	/* (non-Javadoc)
+//	 * @see com.neuronrobotics.sdk.common.BowlerAbstractConnection#reconnect()
+//	 */
+//	@Override
+//	public boolean reconnect() {
+//		// TODO Auto-generated method stub
+//		return false;
+//	}
 
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.common.BowlerAbstractConnection#waitingForConnection()

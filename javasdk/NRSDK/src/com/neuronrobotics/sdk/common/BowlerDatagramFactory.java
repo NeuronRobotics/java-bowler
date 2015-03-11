@@ -55,43 +55,38 @@ public class BowlerDatagramFactory {
 	}
 	
 	private static synchronized BowlerDatagram getNextPacket(){
-		BowlerDatagram ref = null;
+		BowlerDatagram ref = new BowlerDatagram(instance);
 		
 		//Find the most recent free packet from the pool
-		for(int i=lastIndex;(i<pool.length && ref==null);i++){
-			//Log.warning("Checking pool packet "+i);
-			if(pool[i]==null){
-				pool[i]=new BowlerDatagram(instance);
-				freePacket(pool[i]);
-			}
-			if(pool[i].isFree()){
-				lastIndex=i;
-				ref=pool[i];
-			}
-			if(i==pool.length-1 && ref==null){
-				//loop around since we started at the last index
-				i=0;
-			}
-			if(i==lastIndex-1 && ref==null){
-				//looped around, bail
-				i=pool.length;
-			}
-		}
-		if(ref == null){
-			//The whole list was search and no free packets were found
-			pool= new BowlerDatagram[(int) ((float)pool.length)];
-			Log.warning("Resetting pool "+pool.length);
-			pool[0]= new BowlerDatagram(instance);
-			ref=pool[0];
-//			//Adding the new packets
-//			for(int i=0;i<newPool.length;i++){
-//				newPool[i] = new BowlerDatagram(instance);
-//				freePacket(newPool[i]);
-//				if(ref==null)
-//					ref=newPool[i];
+//		for(int i=lastIndex;(i<pool.length && ref==null);i++){
+//			//Log.warning("Checking pool packet "+i);
+//			if(pool[i]==null){
+//				pool[i]=new BowlerDatagram(instance);
 //			}
-//			pool = newPool;
-		}
+//			freePacket(pool[i]);
+//			if(pool[i].isFree()){
+//				lastIndex=i;
+//				ref=pool[i];
+//			}
+//			if(i==pool.length-1 && ref==null){
+//				//loop around since we started at the last index
+//				i=0;
+//			}
+//			if(i==lastIndex-1 && ref==null){
+//				//looped around, bail
+//				i=pool.length;
+//			}
+//			if(ref!=null){
+//				lastIndex=i++;
+//			}
+//		}
+//		if(ref == null){
+//			//The whole list was search and no free packets were found
+//			//pool= new BowlerDatagram[(int) ((float)pool.length)];
+//			//Log.warning("Resetting pool "+pool.length);
+//			//pool[0]= new BowlerDatagram(instance);
+//			ref=pool[0];
+//		}
 		//old pool data given to the GC
 		ref.setFree(false,instance);
 		return ref;
@@ -234,8 +229,8 @@ public class BowlerDatagramFactory {
 				Log.error("Data CRC check Fail  "+staticMemory);
 			}
 		}
-		if(failed>0)
-			Log.error("Failed out "+failed+" bytes");
+//		if(failed>0)
+//			Log.error("Failed out "+failed+" bytes");
 		return null;
 	}
 
