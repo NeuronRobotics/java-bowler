@@ -1,6 +1,7 @@
 package com.neuronrobotics.sdk.dyio.sequencer;
 
 import java.io.File;
+import com.neuronrobotics.sdk.common.Log;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -141,6 +142,7 @@ public class CoreScheduler {
 		filename=f.getAbsolutePath();
     	mp3 = new SequencerMP3(f.getAbsolutePath());
     	msDuration = mp3.getTrackLength();
+    	System.out.println("Setting track length: "+msDuration);
     	setSequenceParams( msDuration, 0);
     	
 	}
@@ -163,8 +165,8 @@ public class CoreScheduler {
 		System.out.println("Adding DyIO channel: "+dyIOChannel);
 		ServoChannel srv = new ServoChannel(getDyIO().getChannel(dyIOChannel));
 		srv.SetPosition(srv.getValue());
-		srv.flush();
-		srv.getChannel().setCachedMode(true);
+		//srv.flush();
+		//srv.getChannel().setCachedMode(true);
 		ServoOutputScheduleChannel soc = new ServoOutputScheduleChannel(srv);
 		soc.setIntervalTime(getLoopTime(), getTrackLength());
 		addISchedulerListener(soc);
@@ -195,6 +197,7 @@ public class CoreScheduler {
 		}
 	}
 	public void play(){
+		mp3.play();
 		getSt().setPause(false);
 		callPlay();
 		ThreadUtil.wait(100);
@@ -206,6 +209,7 @@ public class CoreScheduler {
 	public void pause() {
 		if(getSt()!=null)
 			getSt().pause();
+		mp3.pause();
 		callPause();
 	}
 	
@@ -220,7 +224,9 @@ public class CoreScheduler {
 		listeners.remove(l);
 	}
 	public void setCurrentTime(long time) {
-		flusher.setFlush();
+		for(ServoOutputScheduleChannel s :getOutputs()){
+			s.onTimeUpdate(time);
+		}
 		for(ISchedulerListener l:listeners){
 			l.onTimeUpdate(time);
 		}
@@ -270,15 +276,19 @@ public class CoreScheduler {
 		private boolean running = true;
 		private boolean flush = false;
 		public void run(){
+			setName("DyIO scheduler flush thread");
 			while(isRunning()){
 				if(isFlush()){
 					flush = false;
 					long start = System.currentTimeMillis();
 					if(getDyIO()!=null){
-						//Log.enableDebugPrint(true);
+						//Log.enableInfoPrint();
 						double seconds =((double)(getLoopTime()))/1000;
-						getDyIO().flushCache(seconds);
-						//Log.enableDebugPrint(false);
+						//getDyIO().flushCache(getLoopTime());
+						for(ServoOutputScheduleChannel s :getOutputs()){
+							s.sync((int) seconds);
+						}
+						//Log.enableDebugPrint();
 					}
 					flushTime = System.currentTimeMillis()-start;
 					if(flushTime>getLoopTime()){
@@ -326,9 +336,7 @@ public class CoreScheduler {
 				s.setIntervalTime(getLoopTime(), (int) time);
 			}
 		}
-		public boolean isPlaying() {
-			return run;
-		}
+
 		public void playStep(){
 			//System.out.println("Stepping scheduler");
 			boolean playing;
@@ -338,7 +346,7 @@ public class CoreScheduler {
 				playing = (((double)(System.currentTimeMillis()-start))<(time-StartOffset));
 				current =((System.currentTimeMillis()-start))+StartOffset;
 			}else{
-				mp3.playStep();
+				
 				playing = mp3.isPlaying();
 				current = mp3.getCurrentTime();
 			}
@@ -356,7 +364,12 @@ public class CoreScheduler {
 					while(pause){
 						ThreadUtil.wait(10);
 					}
+					
+					long start = System.currentTimeMillis();
 					playStep();
+					flusher.setFlush();
+					ThreadUtil.wait(getLoopTime());
+					//System.out.println("Flush took "+(System.currentTimeMillis()-start));
 				}while(isRun());
 				setCurrentTime(0);
 				setPause(true);

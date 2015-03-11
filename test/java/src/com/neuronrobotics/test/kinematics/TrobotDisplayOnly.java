@@ -15,7 +15,7 @@ public class TrobotDisplayOnly implements ITaskSpaceUpdateListenerNR {
 
 	public TrobotDisplayOnly() {
 		DyIO.disableFWCheck();
-		Log.enableInfoPrint();
+		//Log.enableInfoPrint();
 		//Create the references for my known DyIOs
 		DyIO master = new DyIO(ConnectionDialog.promptConnection());
 

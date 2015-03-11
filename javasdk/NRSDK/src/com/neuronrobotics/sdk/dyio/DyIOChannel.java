@@ -544,7 +544,7 @@ public class DyIOChannel implements IDyIOChannel {
 //		if(getCachedMode())
 //			throw new RuntimeException("In chached mode and flushing from channel");
 		//Log.enableDebugPrint(true);
-		Log.debug("Flushing channel: "+number);
+		Log.info("Flushing channel: "+number);
 		if(getDevice().isLegacyParser()){
 			ByteList b = new ByteList();
 			switch(getMode()){
