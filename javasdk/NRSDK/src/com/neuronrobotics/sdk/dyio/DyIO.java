@@ -608,11 +608,16 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 				}
 			}
 		}else{
+//			for(DyIOChannel d:getInternalChannels()) {
+//				d.setCachedTime((float) seconds);
+//				if(d.getMode()==DyIOChannelMode.SERVO_OUT)
+//						d.flush();
+//			}
 			send("bcs.io.*;0.3;;",
 					BowlerMethod.POST,
 					"sacv",
 					new Object[]{new Integer((int) (seconds*1000)),values});
-			throw new RuntimeException("This API is broken, set channels individually");
+	
 		}
 		
 	}
