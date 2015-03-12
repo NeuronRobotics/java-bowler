@@ -2,6 +2,8 @@
 
 	
   <property file="src/com/neuronrobotics/sdk/config/build.properties"/>
+	<property name="ant.build.javac.source" value="1.6"/>
+	<property name="ant.build.javac.target" value="1.6"/>
  
   <property name="app.path"      value="/${app.name}"/>
   <property name="build.home"    value="${basedir}/build"/>
@@ -159,17 +161,17 @@
    description="Create Javadoc API documentation">
     
     <javadoc sourcepath="${srcCore.home}" destdir="${dist.home}/docs/coreApi" packagenames="*" 
-    	source="1.7" splitindex="true" use="true" version="true">
+    	 splitindex="true" use="true" version="true">
       <classpath refid="compile.classpath"/> 
       <bottom><![CDATA[<script type="text/javascript" src="/googleanalytics.js"></script>]]></bottom>
    	</javadoc>
   	<javadoc sourcepath="${srcAddon.home}" destdir="${dist.home}/docs/addonApi" packagenames="*" 
-    	source="1.7" splitindex="true" use="true" version="true">
+    	splitindex="true" use="true" version="true">
       <classpath refid="compile.classpath"/> 
       <bottom><![CDATA[<script type="text/javascript" src="/googleanalytics.js"></script>]]></bottom>
    	</javadoc>
   </target>
 
-  <target name="deploy" depends="clean, prepare, compileCore,distCore,compileAddon, distCore,distAddon, javadoc"
+  <target name="deploy" depends="clean, prepare, compileCore,distCore,compileAddon, distCore,distAddon"
    description="Builds the full deployment" />
 </project>

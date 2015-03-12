@@ -149,7 +149,7 @@ public class BowlerDatagramFactory {
 		}
 		
 		while(fb!=BowlerDatagram.REVISION) {
-			Log.error("First Byte Fail, Junk byte: "+String.format("%02x ", buffer.pop()));
+			//Log.error("First Byte Fail, Junk byte: "+String.format("%02x ", buffer.pop()));
 			failed++;
 			try{
 				if(buffer.size()==0){
