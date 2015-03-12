@@ -24,59 +24,60 @@ import java.io.FileInputStream;
 
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
-import javafx.embed.swing.JFXPanel;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javafx.util.Duration;
+//import javafx.embed.swing.JFXPanel;
+//import javafx.scene.media.Media;
+//import javafx.scene.media.MediaPlayer;
+//import javafx.util.Duration;
 
 public class SequencerMP3 {
     
     private String fn="";
     // constructor that takes the name of an MP3 file
-    private MediaPlayer player;
+    //private MediaPlayer player;
     private int trackLength = 37;
     public SequencerMP3(String filename) {
-    	fn = filename;
-        try {
-        	new JFXPanel(); // initializes JavaFX environment 
-        	player = new MediaPlayer(
-    													new Media(
-    															new File(fn).toURI().toString()));
-        	while(player.getStatus() != MediaPlayer.Status.READY){ThreadUtil.wait(200);}
-        	trackLength =(int) player.getCycleDuration().toMillis();
-        	player.setOnStopped(new Runnable() {
-				@Override
-				public void run() {
-//					pause=true;
-				}
-			});
-        }
-        catch (Exception e) {
-            System.out.println("Problem playing file " + filename+"\r\n");
-            //e.printStackTrace();
-            throw e;
-        }
+//    	fn = filename;
+//        try {
+//        	new JFXPanel(); // initializes JavaFX environment 
+//        	player = new MediaPlayer(
+//    													new Media(
+//    															new File(fn).toURI().toString()));
+//        	while(player.getStatus() != MediaPlayer.Status.READY){ThreadUtil.wait(200);}
+//        	trackLength =(int) player.getCycleDuration().toMillis();
+//        	player.setOnStopped(new Runnable() {
+//				@Override
+//				public void run() {
+////					pause=true;
+//				}
+//			});
+//        }
+//        catch (Exception e) {
+//            System.out.println("Problem playing file " + filename+"\r\n");
+//            //e.printStackTrace();
+//            throw e;
+//        }
     }
     
     public void pause(){
-    	player.pause();
+//    	player.pause();
     }
 
     public void close() { 
-    	if (player != null) 
-    		player.stop(); 
+//    	if (player != null) 
+//    		player.stop(); 
     }
 
     public boolean isPlaying() {
-		if(player!=null)
-			return (player.getCurrentTime().toMillis()<getTrackLength());
+//		if(player!=null)
+//			return (player.getCurrentTime().toMillis()<getTrackLength());
 		return false;
 	}
 	public int getCurrentTime() {
-		return (int) player.getCurrentTime().toMillis();
+//		return (int) player.getCurrentTime().toMillis();
+		return 0;
 	}
 	public void setCurrentTime(int time) {
-		player.seek(new Duration(time));
+//		player.seek(new Duration(time));
 	}
 	/**
 	 * 
@@ -87,28 +88,26 @@ public class SequencerMP3 {
 	}
 	
 	private double getPercent() {
-		if(player.getCurrentTime().toMillis()<=0){
-			return 0;
-		}
-		if(player!=null) {
-			return (player.getCurrentTime().toMillis()*100/getTrackLength());
-		}
+//		if(player.getCurrentTime().toMillis()<=0){
+//			return 0;
+//		}
+//		if(player!=null) {
+//			return (player.getCurrentTime().toMillis()*100/getTrackLength());
+//		}
 		return 0;
 	}
 
 	
 	public void playStep(){
-//		player.setStartTime(player.getCurrentTime());
-//		player.setStopTime(new Duration(player.getCurrentTime().toMillis()+getMsStepDuration()));
-		player.play();
+		//player.play();
 		
 	}
 
     // play the MP3 file to the sound card
     public void play() {
-
-        player.play();
-    	
+//
+//        player.play();
+//    	
 
     }
 
