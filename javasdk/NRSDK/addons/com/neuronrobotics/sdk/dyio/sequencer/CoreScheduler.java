@@ -165,8 +165,8 @@ public class CoreScheduler {
 		System.out.println("Adding DyIO channel: "+dyIOChannel);
 		ServoChannel srv = new ServoChannel(getDyIO().getChannel(dyIOChannel));
 		srv.SetPosition(srv.getValue());
-		//srv.flush();
-		//srv.getChannel().setCachedMode(true);
+		srv.flush();
+		srv.getChannel().setCachedMode(true);
 		ServoOutputScheduleChannel soc = new ServoOutputScheduleChannel(srv);
 		soc.setIntervalTime(getLoopTime(), getTrackLength());
 		addISchedulerListener(soc);
@@ -224,9 +224,11 @@ public class CoreScheduler {
 		listeners.remove(l);
 	}
 	public void setCurrentTime(long time) {
+		
 		for(ServoOutputScheduleChannel s :getOutputs()){
 			s.onTimeUpdate(time);
 		}
+		flusher.setFlush();
 		for(ISchedulerListener l:listeners){
 			l.onTimeUpdate(time);
 		}
@@ -284,10 +286,10 @@ public class CoreScheduler {
 					if(getDyIO()!=null){
 						//Log.enableInfoPrint();
 						double seconds =((double)(getLoopTime()))/1000;
-						//getDyIO().flushCache(getLoopTime());
 						for(ServoOutputScheduleChannel s :getOutputs()){
 							s.sync((int) seconds);
 						}
+						getDyIO().flushCache(seconds);
 						//Log.enableDebugPrint();
 					}
 					flushTime = System.currentTimeMillis()-start;
@@ -367,7 +369,6 @@ public class CoreScheduler {
 					
 					long start = System.currentTimeMillis();
 					playStep();
-					flusher.setFlush();
 					ThreadUtil.wait(getLoopTime());
 					//System.out.println("Flush took "+(System.currentTimeMillis()-start));
 				}while(isRun());
