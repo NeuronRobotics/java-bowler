@@ -10,27 +10,27 @@
 			<channel>9</channel>
 			<inverse>-1</inverse>
 			<linkLen>0.59</linkLen>
-			<scale>0.9090909090909091</scale>
+			<scale>0.38626609442060084</scale>
 			<type>hip</type>
 		</link>
 		<link>
-			<ulimit>203</ulimit>
-			<llimit>56</llimit>
-			<home>137</home>
+			<ulimit>255</ulimit>
+			<llimit>0</llimit>
+			<home>158</home>
 			<channel>10</channel>
 			<inverse>1</inverse>
 			<linkLen>1.41</linkLen>
-			<scale>0.9090909090909091</scale>
+			<scale>0.38626609442060084</scale>
 			<type>knee</type>
 		</link>
 		<link>
-			<ulimit>185</ulimit>
-			<llimit>47</llimit>
-			<home>54</home>
+			<ulimit>255</ulimit>
+			<llimit>0</llimit>
+			<home>22</home>
 			<channel>11</channel>
 			<inverse>-1</inverse>
 			<linkLen>1.97</linkLen>
-			<scale>0.9090909090909091</scale>
+			<scale>0.38626609442060084</scale>
 			<type>ankle</type>
 		</link>
 	</leg>
@@ -45,27 +45,27 @@
 			<channel>6</channel>
 			<inverse>-1</inverse>
 			<linkLen>0.59</linkLen>
-			<scale>0.9090909090909091</scale>
+			<scale>0.37344398340248963</scale>
 			<type>hip</type>
 		</link>
 		<link>
-			<ulimit>203</ulimit>
-			<llimit>50</llimit>
-			<home>127</home>
+			<ulimit>255</ulimit>
+			<llimit>0</llimit>
+			<home>110</home>
 			<channel>7</channel>
 			<inverse>-1</inverse>
 			<linkLen>1.41</linkLen>
-			<scale>0.9090909090909091</scale>
+			<scale>0.37344398340248963</scale>
 			<type>knee</type>
 		</link>
 		<link>
-			<ulimit>203</ulimit>
-			<llimit>53</llimit>
-			<home>197</home>
+			<ulimit>255</ulimit>
+			<llimit>0</llimit>
+			<home>241</home>
 			<channel>8</channel>
 			<inverse>1</inverse>
 			<linkLen>1.97</linkLen>
-			<scale>0.9090909090909091</scale>
+			<scale>0.37344398340248963</scale>
 			<type>ankle</type>
 		</link>
 	</leg>
@@ -80,27 +80,27 @@
 			<channel>3</channel>
 			<inverse>-1</inverse>
 			<linkLen>0.59</linkLen>
-			<scale>0.9090909090909091</scale>
+			<scale>0.37815126050420167</scale>
 			<type>hip</type>
 		</link>
 		<link>
-			<ulimit>203</ulimit>
-			<llimit>47</llimit>
-			<home>136</home>
+			<ulimit>255</ulimit>
+			<llimit>0</llimit>
+			<home>143</home>
 			<channel>4</channel>
 			<inverse>-1</inverse>
 			<linkLen>1.41</linkLen>
-			<scale>0.9090909090909091</scale>
+			<scale>0.37815126050420167</scale>
 			<type>knee</type>
 		</link>
 		<link>
-			<ulimit>210</ulimit>
-			<llimit>36</llimit>
-			<home>206</home>
+			<ulimit>255</ulimit>
+			<llimit>0</llimit>
+			<home>254</home>
 			<channel>5</channel>
 			<inverse>1</inverse>
 			<linkLen>1.97</linkLen>
-			<scale>0.9090909090909091</scale>
+			<scale>0.37815126050420167</scale>
 			<type>ankle</type>
 		</link>
 	</leg>
@@ -110,32 +110,32 @@
 		<theta>180.0</theta>
 		<link>
 			<ulimit>197</ulimit>
-			<llimit>127</llimit>
-			<home>137</home>
+			<llimit>107</llimit>
+			<home>117</home>
 			<channel>20</channel>
 			<inverse>-1</inverse>
 			<linkLen>0.59</linkLen>
-			<scale>0.9090909090909091</scale>
+			<scale>0.430622009569378</scale>
 			<type>hip</type>
 		</link>
 		<link>
 			<ulimit>203</ulimit>
 			<llimit>47</llimit>
-			<home>107</home>
+			<home>77</home>
 			<channel>19</channel>
 			<inverse>1</inverse>
 			<linkLen>1.41</linkLen>
-			<scale>0.9090909090909091</scale>
+			<scale>0.430622009569378</scale>
 			<type>knee</type>
 		</link>
 		<link>
-			<ulimit>204</ulimit>
-			<llimit>47</llimit>
-			<home>63</home>
+			<ulimit>255</ulimit>
+			<llimit>0</llimit>
+			<home>1</home>
 			<channel>18</channel>
 			<inverse>-1</inverse>
 			<linkLen>1.97</linkLen>
-			<scale>0.9090909090909091</scale>
+			<scale>0.430622009569378</scale>
 			<type>ankle</type>
 		</link>
 	</leg>
@@ -144,33 +144,33 @@
 		<y>0.0</y>
 		<theta>180.0</theta>
 		<link>
-			<ulimit>142</ulimit>
+			<ulimit>162</ulimit>
 			<llimit>106</llimit>
-			<home>131</home>
+			<home>142</home>
 			<channel>17</channel>
 			<inverse>-1</inverse>
 			<linkLen>0.59</linkLen>
-			<scale>0.9090909090909091</scale>
+			<scale>0.4166666666666667</scale>
 			<type>hip</type>
 		</link>
 		<link>
-			<ulimit>203</ulimit>
-			<llimit>36</llimit>
-			<home>132</home>
+			<ulimit>255</ulimit>
+			<llimit>0</llimit>
+			<home>147</home>
 			<channel>16</channel>
 			<inverse>1</inverse>
 			<linkLen>1.41</linkLen>
-			<scale>0.9090909090909091</scale>
+			<scale>0.4166666666666667</scale>
 			<type>knee</type>
 		</link>
 		<link>
-			<ulimit>203</ulimit>
-			<llimit>47</llimit>
-			<home>68</home>
+			<ulimit>255</ulimit>
+			<llimit>0</llimit>
+			<home>1</home>
 			<channel>15</channel>
 			<inverse>-1</inverse>
 			<linkLen>1.97</linkLen>
-			<scale>0.9090909090909091</scale>
+			<scale>0.4166666666666667</scale>
 			<type>ankle</type>
 		</link>
 	</leg>
@@ -185,27 +185,27 @@
 			<channel>14</channel>
 			<inverse>-1</inverse>
 			<linkLen>0.59</linkLen>
-			<scale>0.9090909090909091</scale>
+			<scale>0.3879310344827586</scale>
 			<type>hip</type>
 		</link>
 		<link>
-			<ulimit>203</ulimit>
-			<llimit>47</llimit>
-			<home>128</home>
+			<ulimit>255</ulimit>
+			<llimit>0</llimit>
+			<home>111</home>
 			<channel>13</channel>
 			<inverse>-1</inverse>
 			<linkLen>1.41</linkLen>
-			<scale>0.9090909090909091</scale>
+			<scale>0.3879310344827586</scale>
 			<type>knee</type>
 		</link>
 		<link>
-			<ulimit>203</ulimit>
-			<llimit>47</llimit>
-			<home>186</home>
+			<ulimit>255</ulimit>
+			<llimit>0</llimit>
+			<home>254</home>
 			<channel>12</channel>
 			<inverse>1</inverse>
 			<linkLen>1.97</linkLen>
-			<scale>0.9090909090909091</scale>
+			<scale>0.3879310344827586</scale>
 			<type>ankle</type>
 		</link>
 	</leg>

@@ -245,7 +245,7 @@ public class ServoOutputScheduleChannel implements ISchedulerListener, IAnalogIn
 	}
 	public void flush(){
 		output.SetPosition(getCurrentTargetValue());
-		//output.flush();
+		output.flush();
 	}
 	public void setAnalogInputChannelNumber(int analogInputChannelNumber) {
 		//System.out.println("Setting analog input number: "+analogInputChannelNumber);
