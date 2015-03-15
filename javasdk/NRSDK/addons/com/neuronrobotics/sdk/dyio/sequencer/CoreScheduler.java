@@ -109,6 +109,16 @@ public class CoreScheduler {
 			    		for(int j=0;j<data.length;j++){
 			    			data[j]=Integer.parseInt(sdata[j]);
 			    		}
+			    		// smooth out and out of place zeros. i should figure out how they keep sneeking in here...
+			    		for(int j=1;j<data.length-1;j++){
+			    			int before = data[j-1];
+			    			int current = data[j];
+			    			int after = data[j+1];
+			    			if(current == 0 &&before!=0 &&  after!=0){
+			    				System.out.println("Smoothing xml");
+			    				data[j]=(before+after)/2;
+			    			}
+			    		}
 			    		ServoOutputScheduleChannel so = addServoChannel(channel);
 			    		so.setOutputMinMax(min,max);
 			    		so.setInputCenter(outCenter);
