@@ -253,17 +253,17 @@ public class Leg {
 		zSetPoint=start[2];
 	}
 	public void toMinAngleHip() {
-		stepToHipAngle(getHipLink().getMinAngle()+10);
+		stepToHipAngle(getHipLink().getMinAngle());
 	}
 	public void toMaxAngleHip() {
-		stepToHipAngle(getHipLink().getMaxAngle()-10);
+		stepToHipAngle(getHipLink().getMaxAngle());
 	}
 	public void stepToSetpoint() {
 		double [] current = getCartesian();
 
 		liftLeg();
 		
-		setCartesian(xSetPoint,ySetPoint, current[2]+1);
+		setCartesian(xSetPoint,ySetPoint, current[2]+.2);
 		
 		putLegDown();
 	}
