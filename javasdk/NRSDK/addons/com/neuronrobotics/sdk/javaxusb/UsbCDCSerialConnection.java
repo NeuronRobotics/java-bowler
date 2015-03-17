@@ -237,7 +237,10 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements 
 		return addrs;
 	}
 
-
+	public static String getUniqueID(UsbDevice d) throws UnsupportedEncodingException, UsbDisconnectedException, UsbException{
+		return d.getProductString().trim()+" "+d.getSerialNumberString().trim();
+	}
+	
 	public UsbCDCSerialConnection(String device) {
 		
 		ArrayList<UsbDevice> devices;
@@ -246,7 +249,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements 
 			this.mDevice = null;
 			
 			for(UsbDevice d:devices){
-				if(d.getProductString().contains(device)){
+				if(getUniqueID(d).contains(device)){
 					this.mDevice = d;
 				}
 			}
