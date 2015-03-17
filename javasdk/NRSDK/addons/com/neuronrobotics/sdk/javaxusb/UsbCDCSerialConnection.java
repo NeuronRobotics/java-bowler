@@ -448,9 +448,12 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 		}
 
 		if (deviceHandle != null) {
-
-			LibUsb.attachKernelDriver(deviceHandle, interfaceNumber);
-			LibUsb.close(deviceHandle);
+			try{
+				LibUsb.attachKernelDriver(deviceHandle, interfaceNumber);
+				LibUsb.close(deviceHandle);
+			}catch (Exception e){
+				
+			}
 		}
 		try {
 			if (dataInterface.isClaimed())

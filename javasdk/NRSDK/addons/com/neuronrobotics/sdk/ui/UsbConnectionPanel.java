@@ -117,19 +117,7 @@ public class UsbConnectionPanel extends AbstractConnectionPanel implements IUsbD
 				String s = UsbCDCSerialConnection.getUniqueID(prts.get(i));
 				connectionCbo.addItem(s);
 			}
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UsbDisconnectedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UsbException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} catch (Exception e) {}
 
 	}
 
