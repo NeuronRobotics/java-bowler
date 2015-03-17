@@ -315,6 +315,15 @@ public abstract class BowlerAbstractConnection {
 			setAsyncQueue(new QueueManager(false));
 			
 			fireConnectEvent();
+			Runtime.getRuntime().addShutdownHook(new Thread() {
+				@Override
+				public void run() {
+					if(isConnected()){
+						System.out.println("WARNING: Bowler devices should be shut down before exit");
+						disconnect();
+					}
+				}
+			});
 		}else{
 			try {
 				if(dataIns !=null)
