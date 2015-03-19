@@ -1125,15 +1125,18 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	 
 	public String toString() {
 		
-		String chFmt = "%02d - %-20s   %02d - %-20s\n";
+		String chFmt = "%02d - %-20s ( %04d )  %02d - %-20s ( %04d )\n";
 		
 		String s = getFirmwareRevString()+ " \nMAC: " + getAddress() + "\n";
 		for(int i = 0; i < getInternalChannels().size()/2; i++) {
+			int oppisite=getInternalChannels().size()-1-i;
 			s += String.format(chFmt, 
-					           getInternalChannels().size() - 1 - i, 
-					           getInternalChannels().get(getInternalChannels().size()-1-i).getMode().toSlug(), 
+							   oppisite, 
+					           getInternalChannels().get(oppisite).getMode().toSlug(),
+					           getInternalChannels().get(oppisite).getPreviousValue(),
 					           i, 
-					           getInternalChannels().get(i).getMode().toSlug());
+					           getInternalChannels().get(i).getMode().toSlug(),
+					           getInternalChannels().get(i).getPreviousValue());
 		}
 		
 		return s;

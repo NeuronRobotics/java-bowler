@@ -747,7 +747,7 @@ public class DyIOChannel implements IDyIOChannel {
 		this.previousValue = previousValue;
 	}
 
-	private int getPreviousValue() {
+	protected int getPreviousValue() {
 		return previousValue;
 	}
 	public boolean isStreamChannel(){
