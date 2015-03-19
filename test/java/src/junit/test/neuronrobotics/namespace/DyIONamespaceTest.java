@@ -4,13 +4,9 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.MACAddress;
 import com.neuronrobotics.sdk.dyio.DyIO;
@@ -20,7 +16,7 @@ import com.neuronrobotics.sdk.dyio.peripherals.DigitalInputChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 import com.neuronrobotics.sdk.pid.PIDConfiguration;
 import com.neuronrobotics.sdk.serial.SerialConnection;
-import com.neuronrobotics.sdk.types.DigitalInput;
+
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 
