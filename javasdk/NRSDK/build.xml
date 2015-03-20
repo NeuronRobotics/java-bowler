@@ -2,8 +2,8 @@
 
 	
   <property file="src/com/neuronrobotics/sdk/config/build.properties"/>
-	<property name="ant.build.javac.source" value="1.6"/>
-	<property name="ant.build.javac.target" value="1.6"/>
+	<property name="ant.build.javac.source" value="1.7"/>
+	<property name="ant.build.javac.target" value="1.7"/>
  
   <property name="app.path"      value="/${app.name}"/>
   <property name="build.home"    value="${basedir}/build"/>
