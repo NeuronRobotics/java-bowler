@@ -922,20 +922,16 @@ public abstract class BowlerAbstractConnection {
 		for(int i=0;i<retry;i++){
 
 			BowlerDatagram ret;
-			try{
-				ret = send( command,addr);
-				//System.out.println(ret);
-				if(ret != null){
-					addr.setValues(ret.getAddress());
-					//if(!ret.getRPC().contains("_err"))
-					
-					return ret;
-				}
-			}catch(Exception ex){			
-
-				ex.printStackTrace();
-				Log.error(ex.getMessage());
+		
+			ret = send( command,addr);
+			//System.out.println(ret);
+			if(ret != null){
+				addr.setValues(ret.getAddress());
+				//if(!ret.getRPC().contains("_err"))
+				
+				return ret;
 			}
+	
 			if(retry>1){
 				//only force a reconnect if the retry is above one. 
 				//a device failing to respond could just be the result of a wrong packet type level.
