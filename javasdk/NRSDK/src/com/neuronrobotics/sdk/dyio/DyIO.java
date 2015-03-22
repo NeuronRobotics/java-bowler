@@ -736,7 +736,8 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 				if(numChan !=getChannels().size() ){
 					Log.error("Bad packet, wrong number of values");
 				}
-				for(DyIOChannel c:getChannels()){
+				for(int i=0;i<getChannels().size();i++){
+					DyIOChannel c= getChannels().get(i);
 					ByteList val = new ByteList(bl.popList(4));
 					Log.info("DyIO event "+c+" value: "+val);
 					if(!c.isStreamChannel())
