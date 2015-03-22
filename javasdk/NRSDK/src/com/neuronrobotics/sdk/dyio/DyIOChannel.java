@@ -323,8 +323,8 @@ public class DyIOChannel implements IDyIOChannel {
 			Log.info("Value is not the same, last was: "+getPreviousValue()+" current: "+value);
 		}
 		setPreviousValue(value);
-		for(IChannelEventListener l : listeners) {
-			l.onChannelEvent(e);
+		for(int i=0;i<listeners.size();i++) {
+			listeners.get(i).onChannelEvent(e);
 		}
 	}
 	
