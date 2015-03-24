@@ -98,6 +98,7 @@ public  abstract class BowlerAbstractServer  implements ISynchronousDatagramList
 		serverSocket = new ServerSocket(1866);
 		new Thread(){
 			public void run(){
+				setName("Bowler Platform Network Server");
 				while(true){
 					Socket s;
 					try {

@@ -37,12 +37,14 @@ public class PingSpeedTest {
 		int i;
 		avg=0;
 		dev.ping();
-		for(i=1;i<500000;i++) {
+		for(i=1;i<5000000 && dev.isAvailable();i++) {
 			start = System.currentTimeMillis();
 			dev.ping();
+			
 			double ms=System.currentTimeMillis()-start;
 			avg +=ms;			
 			System.out.println("Average cycle time: "+(int)(avg/i)+"ms\t\t\t this loop was: "+ms);
+			dev.getNamespaces();
 		}
 		System.out.println("Average cycle time for ping: "+(avg/i)+" ms");	
 		dev.disconnect();

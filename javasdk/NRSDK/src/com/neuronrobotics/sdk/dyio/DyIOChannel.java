@@ -306,7 +306,7 @@ public class DyIOChannel implements IDyIOChannel {
 	public int parseDyIOChannelEvent(DyIOChannelEvent e){
 		if(isStreamChannel())
 			return 0;
-		return ByteList.convertToInt(e.getData().getBytes());
+		return e.getValue();
 	}
 	
 	/**
@@ -323,8 +323,8 @@ public class DyIOChannel implements IDyIOChannel {
 			Log.info("Value is not the same, last was: "+getPreviousValue()+" current: "+value);
 		}
 		setPreviousValue(value);
-		for(IChannelEventListener l : listeners) {
-			l.onChannelEvent(e);
+		for(int i=0;i<listeners.size();i++) {
+			listeners.get(i).onChannelEvent(e);
 		}
 	}
 	
@@ -526,7 +526,7 @@ public class DyIOChannel implements IDyIOChannel {
 	 */
 	 
 	public boolean setValue(int value) {
-		Log.debug("Setting channel: "+number+" to value: "+value);
+
 		setCachedValue(value);
 		setCachedTime(0);
 		if(cachedMode)
@@ -544,7 +544,7 @@ public class DyIOChannel implements IDyIOChannel {
 //		if(getCachedMode())
 //			throw new RuntimeException("In chached mode and flushing from channel");
 		//Log.enableDebugPrint(true);
-		Log.debug("Flushing channel: "+number);
+		Log.info("Flushing channel: "+number);
 		if(getDevice().isLegacyParser()){
 			ByteList b = new ByteList();
 			switch(getMode()){
@@ -569,6 +569,7 @@ public class DyIOChannel implements IDyIOChannel {
 			//Log.enableDebugPrint(false);
 			return back;
 		}else{
+			//Log.info("Setting channel: "+number+" to value: "+getCachedValue());
 			getDevice().send(	"bcs.io.*;0.3;;",
 								BowlerMethod.POST,
 								"schv",
@@ -746,7 +747,7 @@ public class DyIOChannel implements IDyIOChannel {
 		this.previousValue = previousValue;
 	}
 
-	private int getPreviousValue() {
+	protected int getPreviousValue() {
 		return previousValue;
 	}
 	public boolean isStreamChannel(){

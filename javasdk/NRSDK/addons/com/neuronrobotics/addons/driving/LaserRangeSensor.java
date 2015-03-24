@@ -11,6 +11,7 @@ public class LaserRangeSensor extends AbstractSensor {
 	public void StartSweep(final double start, final double stop, final double  increment) {
 		new Thread(){
 			public void run(){
+				setName("Bowler platform Laser range sweeper");
 				URG2Packet p =dev.startSweep(start, stop, increment);
 				fireRangeSensorEvent(p.getData(), System.currentTimeMillis());
 			}

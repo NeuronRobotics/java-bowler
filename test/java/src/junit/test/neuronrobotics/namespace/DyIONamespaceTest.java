@@ -4,13 +4,9 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.MACAddress;
 import com.neuronrobotics.sdk.dyio.DyIO;
@@ -20,7 +16,7 @@ import com.neuronrobotics.sdk.dyio.peripherals.DigitalInputChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 import com.neuronrobotics.sdk.pid.PIDConfiguration;
 import com.neuronrobotics.sdk.serial.SerialConnection;
-import com.neuronrobotics.sdk.types.DigitalInput;
+
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 
@@ -211,7 +207,10 @@ public class DyIONamespaceTest {
 		
 		//Test device as input
 		for(int i=0;i<numPins;i++){
+			if(i == 13)
+				i=14;
 			if(testDevice.getChannel(i).canBeMode(DyIOChannelMode.ANALOG_IN )){
+				
 				int testerIndex = i;
 				harness.setMode(testerIndex, DyIOChannelMode.DIGITAL_OUT);
 				testDevice.setMode(i, DyIOChannelMode.ANALOG_IN);
@@ -257,6 +256,8 @@ public class DyIONamespaceTest {
 		
 		//Test device as input
 		for(int i=0;i<numPins;i++){
+			if(i == 13)
+				i=14;
 			int testerIndex = i;
 			if(i == 16)
 				testerIndex=17;
@@ -299,6 +300,8 @@ public class DyIONamespaceTest {
 	
 			if(i == 16)
 				i=18;
+			if(i == 13)
+				i=14;
 			int testerIndex = i;
 			testDevice.setMode(i, DyIOChannelMode.DIGITAL_OUT);
 			harness.setMode(testerIndex, DyIOChannelMode.DIGITAL_IN);

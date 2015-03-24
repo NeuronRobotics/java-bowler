@@ -592,7 +592,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	 */
 	public void flushCache(double seconds) {
 		//System.out.println("Updating all channels");
-		Integer [] values = new Integer[getInternalChannels().size()];
+		int [] values = new int[getInternalChannels().size()];
 		int i=0;
 		for(DyIOChannel d:getInternalChannels()) {
 			values[i++]=d.getCachedValue();
@@ -608,10 +608,16 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 				}
 			}
 		}else{
+//			for(DyIOChannel d:getInternalChannels()) {
+//				d.setCachedTime((float) seconds);
+//				if(d.getMode()==DyIOChannelMode.SERVO_OUT)
+//						d.flush();
+//			}
 			send("bcs.io.*;0.3;;",
 					BowlerMethod.POST,
 					"sacv",
 					new Object[]{new Integer((int) (seconds*1000)),values});
+	
 		}
 		
 	}
@@ -730,7 +736,8 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 				if(numChan !=getChannels().size() ){
 					Log.error("Bad packet, wrong number of values");
 				}
-				for(DyIOChannel c:getChannels()){
+				for(int i=0;i<getChannels().size();i++){
+					DyIOChannel c= getChannels().get(i);
 					ByteList val = new ByteList(bl.popList(4));
 					Log.info("DyIO event "+c+" value: "+val);
 					if(!c.isStreamChannel())
@@ -1119,15 +1126,20 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	 
 	public String toString() {
 		
-		String chFmt = "%02d - %-20s   %02d - %-20s\n";
+		String chFmt = "%02d - ( %04d ) - %-20s   %02d - ( %04d ) - %-20s\n";
 		
 		String s = getFirmwareRevString()+ " \nMAC: " + getAddress() + "\n";
 		for(int i = 0; i < getInternalChannels().size()/2; i++) {
+			int oppisite=getInternalChannels().size()-1-i;
 			s += String.format(chFmt, 
-					           getInternalChannels().size() - 1 - i, 
-					           getInternalChannels().get(getInternalChannels().size()-1-i).getMode().toSlug(), 
+							   oppisite,
+							   getInternalChannels().get(oppisite).getPreviousValue(),
+					           getInternalChannels().get(oppisite).getMode().toSlug(),
+					           
 					           i, 
-					           getInternalChannels().get(i).getMode().toSlug());
+					           getInternalChannels().get(i).getPreviousValue(),
+					           getInternalChannels().get(i).getMode().toSlug()
+					           );
 		}
 		
 		return s;
@@ -1156,6 +1168,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 				}
 			}
 		}else{
+			Log.enableInfoPrint();
 			Object [] args = send("bcs.io.*;0.3;;",
 					BowlerMethod.GET,
 					"gacv",

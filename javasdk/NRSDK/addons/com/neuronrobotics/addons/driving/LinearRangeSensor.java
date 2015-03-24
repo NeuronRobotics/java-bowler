@@ -55,6 +55,7 @@ public class LinearRangeSensor extends AbstractSensor {
 			
 		}
 		public void run() {
+			setName("Bowler Platform Linear range finder");
 			data = new ArrayList<DataPoint>();
 			while(getCurrentAngle()<stop) {
 

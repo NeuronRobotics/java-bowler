@@ -5,6 +5,7 @@ import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.peripherals.AnalogInputChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
+import com.neuronrobotics.sdk.namespace.bcs.pid.IExtendedPIDControl;
 import com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace;
 import com.neuronrobotics.sdk.pid.GenericPIDDevice;
 import com.neuronrobotics.sdk.pid.ILinkFactoryProvider;
@@ -37,7 +38,7 @@ public class LinkFactory {
 		hasServo=true;
 		hasStepper=true;
 	}
-	public LinkFactory (GenericPIDDevice d){
+	public LinkFactory (IExtendedPIDControl d){
 		if(d==null){
 			forceVirtual=true;
 			//pid=virtual;
@@ -48,7 +49,7 @@ public class LinkFactory {
 		hasPid=true;
 	}
 	
-	public LinkFactory(ILinkFactoryProvider connection,GenericPIDDevice d) {
+	public LinkFactory(ILinkFactoryProvider connection,IExtendedPIDControl d) {
 		pid=d;
 		hasPid=true;
 		//Log.enableInfoPrint();

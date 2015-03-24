@@ -111,11 +111,11 @@ public class UDPBowlerConnection extends BowlerAbstractConnection{
 	 */
 	//private ByteList outgoing = new ByteList();
 	public void write(byte[] data) throws IOException {
-		waitForConnectioToBeReady();
+		//waitForConnectioToBeReady();
 		setLastWrite(System.currentTimeMillis());
 		
 		DatagramPacket sendPacket = new DatagramPacket(data, data.length, IPAddressSet, port);
-		Log.info("Sending UDP packet: "+sendPacket);
+		//Log.info("Sending UDP packet: "+sendPacket);
 		udpSock.send(sendPacket);
 		
 	}
@@ -125,13 +125,13 @@ public class UDPBowlerConnection extends BowlerAbstractConnection{
 		byte[] receiveData=new byte[4096];
 		
 		DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
-		Log.info("Waiting for UDP packet");
+		//Log.info("Waiting for UDP packet");
 		udpSock.setSoTimeout(1);// Timeout the socket after 1 ms
 		try{
 			udpSock.receive(receivePacket);
 		}catch(Exception ex){
 			// disconnect called
-			Log. warning("Receive bailed out because of close");
+			//Log. warning("Receive bailed out because of close");
 			return false;
 		}
 		
@@ -217,7 +217,7 @@ public class UDPBowlerConnection extends BowlerAbstractConnection{
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.common.BowlerAbstractConnection#reconnect()
 	 */
-	@Override
+	//@Override
 	public boolean reconnect() throws IOException {
 		disconnect();
 		connect();

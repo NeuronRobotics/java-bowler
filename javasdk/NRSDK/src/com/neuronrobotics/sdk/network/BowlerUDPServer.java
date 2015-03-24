@@ -95,7 +95,7 @@ public class BowlerUDPServer extends BowlerAbstractConnection {
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.common.BowlerAbstractConnection#reconnect()
 	 */
-	@Override
+	//@Override
 	public boolean reconnect() throws IOException {
 		disconnect();
 		connect();

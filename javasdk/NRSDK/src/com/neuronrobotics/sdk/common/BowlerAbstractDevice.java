@@ -307,6 +307,17 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	}
 	
 	/**
+	 * Loads all the Requests for the RPC's from all namespaces
+	 */
+	public void loadRpcList() {
+		 ArrayList<String> names = getNamespaces();
+		 
+		 for (String s:names){
+			 System.out.println(getRpcList(s));
+		 }
+		 
+	}
+	/**
 	 * On all response.
 	 *
 	 * @param data the data

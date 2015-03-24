@@ -109,7 +109,7 @@ public abstract class BowlerAbstractConnection {
 	 * @return true, if successful
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	abstract public boolean reconnect() throws IOException;
+	//abstract public boolean reconnect() throws IOException;
 	
 	/**
 	 * Attempt to re-establish a connection. Return if the attempt was successful.
@@ -208,7 +208,7 @@ public abstract class BowlerAbstractConnection {
 			write(sendable.getBytes());
 		} catch (IOException e1) {
 			Log.error("No response from device...");
-			reconnect();
+			//reconnect();
 			throw  e1;		
 		}
 	}
@@ -292,7 +292,7 @@ public abstract class BowlerAbstractConnection {
 			}catch (Exception e){
 				//e.printStackTrace();
 				Log.error("Write failed. "+e.getMessage());
-				reconnect();
+				//reconnect();
 			}
 		}else{
 			Log.error("No data sent, stream closed");
@@ -315,6 +315,15 @@ public abstract class BowlerAbstractConnection {
 			setAsyncQueue(new QueueManager(false));
 			
 			fireConnectEvent();
+			Runtime.getRuntime().addShutdownHook(new Thread() {
+				@Override
+				public void run() {
+					if(isConnected()){
+						System.out.println("WARNING: Bowler devices should be shut down before exit");
+						disconnect();
+					}
+				}
+			});
 		}else{
 			try {
 				if(dataIns !=null)
@@ -422,7 +431,7 @@ public abstract class BowlerAbstractConnection {
 					}
 				}
 			}else{
-				Log.warning("\nASYNC Not ready<<");
+				//Log.warning("\nASYNC Not ready<<");
 			}
 			
 		}
@@ -537,13 +546,18 @@ public abstract class BowlerAbstractConnection {
 	}
 	public void setAsyncQueue(QueueManager asyncQueue) {
 		this.asyncQueue = asyncQueue;
-		if(this.asyncQueue != null && isUseThreadedStack())
+		if(this.asyncQueue != null && isUseThreadedStack()){
 			this.asyncQueue.start();
+			asyncQueue.setName("Bowler Platform Asynchronus Queue");
+		}
 	}
 	public void setSyncQueue(QueueManager syncQueue) {
 		this.syncQueue = syncQueue;
-		if(this.syncQueue != null && isUseThreadedStack())
+		if(this.syncQueue != null && isUseThreadedStack()){
 			this.syncQueue.start();
+			syncQueue.setName("Bowler Platform Synchronus Queue");
+		}
+		
 	}
 	public  QueueManager getAsyncQueue() {
 		return asyncQueue;
@@ -610,7 +624,38 @@ public abstract class BowlerAbstractConnection {
 		}
 		syncListen=null;
 	} 
+	
+	public RpcEncapsulation locateRpc(String namespace,BowlerMethod method, String rpcString){
+		for (NamespaceEncapsulation ns:namespaceList){
+			if(ns.getNamespace().toLowerCase().contains(namespace.toLowerCase())){
+				//found the namespace
+				for(RpcEncapsulation rpc:ns.getRpcList()){
+					if(		rpc.getRpc().toLowerCase().contains(rpcString.toLowerCase()) &&
+							rpc.getDownstreamMethod() == method){
+						//Found the command in the namespace
+						return rpc;
+					}
+				}
+			}
+		}
+		return null;
+	}
+	
+	public BowlerAbstractCommand getCommand(String namespace,BowlerMethod method, String rpcString, Object[] arguments){
+		RpcEncapsulation rpc =  locateRpc(namespace, method, rpcString);
+		if(rpc != null)
+			return rpc.getCommand(arguments);
+		
+		return null;
+		
+	}
+	public Object [] parseResponse(String namespace,BowlerMethod method, String rpcString,BowlerDatagram dg){
+		RpcEncapsulation rpc =  locateRpc(namespace, method, rpcString);
+		if(rpc != null)
+			return rpc.parseResponse(dg);//parse and return
 
+		return new Object [0];
+	}
 	/**
 	 * This is the scripting interface to Bowler devices. THis allows a user to describe a namespace, rpc, and array or 
 	 * arguments to be paced into the packet based on the data types of the argument. The response in likewise unpacked 
@@ -625,25 +670,18 @@ public abstract class BowlerAbstractConnection {
 		if(namespaceList == null){
 			getNamespaces(addr);
 		}
-		for (NamespaceEncapsulation ns:namespaceList){
-			if(ns.getNamespace().toLowerCase().contains(namespace.toLowerCase())){
-				//found the namespace
-				for(RpcEncapsulation rpc:ns.getRpcList()){
-					if(		rpc.getRpc().toLowerCase().contains(rpcString.toLowerCase()) &&
-							rpc.getDownstreamMethod() == method){
-						//Found the command in the namespace
-
-							BowlerDatagram dg =  send(rpc.getCommand(arguments),addr,retry);
-							if(dg!=null){
-								addr.setValues(dg.getAddress());
-							}
-							Object [] en =rpc.parseResponse(dg);//parse and return
-							BowlerDatagramFactory.freePacket(dg);
-							return en;
-					}
-				}
+		BowlerAbstractCommand command = getCommand(namespace, method, rpcString,arguments);
+		
+		if(command != null){
+			BowlerDatagram dg =  send(command,addr,retry);
+			if(dg!=null){
+				addr.setValues(dg.getAddress());
 			}
+			Object [] en =parseResponse(namespace, method, rpcString,dg);//parse and return
+			BowlerDatagramFactory.freePacket(dg);
+			return en;
 		}
+		
 		Log.error("No method found, attempted "+namespace+" RPC: "+rpcString);
 		for (NamespaceEncapsulation ns:namespaceList){
 			Log.error("Namespace \n"+ns);
@@ -884,30 +922,26 @@ public abstract class BowlerAbstractConnection {
 		for(int i=0;i<retry;i++){
 
 			BowlerDatagram ret;
-			try{
-				ret = send( command,addr);
-				//System.out.println(ret);
-				if(ret != null){
-					addr.setValues(ret.getAddress());
-					//if(!ret.getRPC().contains("_err"))
-					
-					return ret;
-				}
-			}catch(Exception ex){			
-
-				ex.printStackTrace();
-				Log.error(ex.getMessage());
+		
+			ret = send( command,addr);
+			//System.out.println(ret);
+			if(ret != null){
+				addr.setValues(ret.getAddress());
+				//if(!ret.getRPC().contains("_err"))
+				
+				return ret;
 			}
+	
 			if(retry>1){
 				//only force a reconnect if the retry is above one. 
 				//a device failing to respond could just be the result of a wrong packet type level.
-				try {
-					Log.warning("Reconnecting in the send engine loop, retry "+retry+" times");
-					reconnect();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+//				try {
+//					//Log.warning("Reconnecting in the send engine loop, retry "+retry+" times");
+//					//reconnect();
+//				} catch (IOException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
 				
 			}
 			Log.error("Sending Synchronus packet and there was a failure, will retry "+(retry-i-1)+" more times");
@@ -1015,7 +1049,7 @@ public abstract class BowlerAbstractConnection {
 			try{
 				if(!ping(new MACAddress())){
 					Log.debug("Ping failed, disconnecting");
-					disconnect();
+					//disconnect();
 				}
 			}catch(Exception e){
 				Log.debug("Ping failed, disconnecting");
@@ -1064,7 +1098,7 @@ public abstract class BowlerAbstractConnection {
 		public void run() {
 			Log.info("Starting the Queue Manager as "+isSystemQueue);
 			ThreadUtil.wait(100);
-			while(isConnected() && !killSwitch) {
+			while(isConnected() && !killSwitch && isUseThreadedStack()) {
 
 				long start = System.currentTimeMillis();
 				if(isSystemQueue)
@@ -1085,13 +1119,15 @@ public abstract class BowlerAbstractConnection {
 						BowlerDatagram b = queueBuffer.remove(0);
 						long pulledPacket = System.currentTimeMillis();
 						pushUp(b);
-						long pushedPacket = System.currentTimeMillis();
-						
-						if((System.currentTimeMillis()-getLastWrite())>(getSleepTime()*(getPercentagePrint() /100.0))&& b.isSyncronous()){
-							Log.error("Packet recive took more then "+getPercentagePrint()+"%. " +
-											"\nPacket Update\t"+(packetUpdate- start)+"" +
-											"\nPulled Packet\t"+(pulledPacket-packetUpdate)+"" +
-											"\nPushed Packet\t"+(pushedPacket-pulledPacket));
+						if(b!=null){
+							long pushedPacket = System.currentTimeMillis();
+							
+							if((System.currentTimeMillis()-getLastWrite())>(getSleepTime()*(getPercentagePrint() /100.0))&& b.isSyncronous()){
+								Log.error("Packet recive took more then "+getPercentagePrint()+"%. " +
+												"\nPacket Update\t"+(packetUpdate- start)+"" +
+												"\nPulled Packet\t"+(pulledPacket-packetUpdate)+"" +
+												"\nPushed Packet\t"+(pushedPacket-pulledPacket));
+							}
 						}
 					}catch(Exception e){
 						e.printStackTrace();
@@ -1134,12 +1170,12 @@ public abstract class BowlerAbstractConnection {
 				if(isConnected()){
 					Log.error("Data read failed "+e.getMessage());
 					e.printStackTrace();
-					try {
-						reconnect();
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
+//					try {
+//						reconnect();
+//					} catch (IOException e1) {
+//						// TODO Auto-generated catch block
+//						e1.printStackTrace();
+//					}
 				}
 			}
 			return false;
@@ -1173,7 +1209,7 @@ public abstract class BowlerAbstractConnection {
 				long dataReadEnd=System.currentTimeMillis();
 				if(b<0){
 					Log.error("Stream is broken - unexpected: claimed to have "+getDataIns().available()+" bytes, read in "+b);
-					reconnect();
+					//reconnect();
 					//something went wrong
 					new RuntimeException().printStackTrace();
 					return false;

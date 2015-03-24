@@ -167,6 +167,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 		
 		private boolean pause =false;
 		public void run() {
+			setName("Bowler Platform Virtual PID sync thread");
 			while(true) {
 				try {Thread.sleep(threadTime);} catch (InterruptedException e) {}
 				while(isPause()){

@@ -132,6 +132,7 @@ public class BluetoothConnectionPanel extends AbstractConnectionPanel {
 	private class BluetoothSearchProcess extends Thread implements IMonitorable {
 		private boolean isRunning = false;
 		public void run() {
+			setName("Bowler Platform Bluetooth connection thread");
 			isRunning = true;
 			try {
 				if (blue == null)
