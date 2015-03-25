@@ -21,6 +21,7 @@ import com.neuronrobotics.sdk.common.ConfigManager;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIOCommunicationException;
 import com.neuronrobotics.sdk.serial.SerialConnection;
+import com.neuronrobotics.sdk.util.OsInfoUtil;
 
 public class ConnectionDialog extends JDialog {
 
@@ -107,9 +108,18 @@ public class ConnectionDialog extends JDialog {
 	
 	private void loadDefaultConnections() {
 		try{
-			addConnectionPanel(new UsbConnectionPanel());
+			if(!OsInfoUtil.isWindows() || OsInfoUtil.getOsName().contains("Windows 8") ){
+				
+				addConnectionPanel(new UsbConnectionPanel());
+			}else{
+				System.out.println(OsInfoUtil.getOsName());
+				addConnectionPanel(new SerialConnectionPanel());
+			}
 			addConnectionPanel(new BluetoothConnectionPanel());
-			addConnectionPanel(new SerialConnectionPanel());
+			//serial at the end if USB is enabled
+			if(!OsInfoUtil.isWindows())
+				addConnectionPanel(new SerialConnectionPanel());
+			
 		}catch(Error e){
 			e.printStackTrace();
 			Log.error("This is not a java 8 compliant system, removing the serial, bluetooth and usb connections");
