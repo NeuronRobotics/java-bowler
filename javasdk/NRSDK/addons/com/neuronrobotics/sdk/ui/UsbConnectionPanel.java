@@ -107,7 +107,7 @@ public class UsbConnectionPanel extends AbstractConnectionPanel implements IUsbD
 
 	
 	public void refresh() {	
-		System.err.println("Refreshing USB");
+		//System.err.println("Refreshing USB");
 		connectionCbo.removeAllItems();
 
 		List<UsbDevice> prts=null;
