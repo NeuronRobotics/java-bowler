@@ -45,7 +45,7 @@ import com.neuronrobotics.sdk.common.BowlerDatagramFactory;
 import com.neuronrobotics.sdk.common.BowlerRuntimeException;
 import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.Log;
-import com.neuronrobotics.sdk.util.OsInfoUtil;
+//import com.neuronrobotics.sdk.util.OsInfoUtil;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
@@ -90,7 +90,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 
 		@Override
 		public void run() {
-			if(!OsInfoUtil.isWindows()){
+			//if(!OsInfoUtil.isWindows()){
 				setName("Bowler Platform USB Events thread");
 				while (!this.abort) {
 					// Let libusb handle pending events. This blocks until events
@@ -105,14 +105,14 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 					}
 					ThreadUtil.wait(100);
 				}
-			}
+			//}
 		}
 	}
 
 	static {
 		try {
 			services = UsbHostManager.getUsbServices();
-			if(!OsInfoUtil.isWindows()){
+			//if(!OsInfoUtil.isWindows()){
 				callbackHandle = new HotplugCallbackHandle();
 				int result = LibUsb.hotplugRegisterCallback(null,
 						LibUsb.HOTPLUG_EVENT_DEVICE_ARRIVED
@@ -142,7 +142,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 				if (result != LibUsb.SUCCESS) {
 					throw new LibUsbException("Unable to register hotplug callback", result);
 				}
-			}
+			//}
 		} catch (SecurityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -375,7 +375,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 	}
 
 	public Device findDevice(String seriualNumber) {
-		if(!OsInfoUtil.isWindows()){
+		//if(!OsInfoUtil.isWindows()){
 			// Read the USB device list
 			DeviceList list = new DeviceList();
 			int result = LibUsb.getDeviceList(null, list);
@@ -407,7 +407,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 				// Ensure the allocated device list is freed
 				LibUsb.freeDeviceList(list, true);
 			}
-		}
+		//}
 		// Device not found
 		return null;
 	}
@@ -415,7 +415,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 	private void kernelDetatch(UsbDevice mDevice)
 			throws UnsupportedEncodingException, UsbDisconnectedException,
 			UsbException {
-		if(!OsInfoUtil.isWindows()){
+		//if(!OsInfoUtil.isWindows()){
 			Device kDev = findDevice(mDevice.getSerialNumberString());
 			if (kDev == null)
 				return;
@@ -433,7 +433,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 					&& r != LibUsb.ERROR_NOT_FOUND)
 				throw new LibUsbException("Unable to detach kernel     driver", r);
 			// System.out.println("Kernel detatched for device "+mDevice);
-		}
+		//}
 	}
 
 	/*
@@ -452,7 +452,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 			camOutpipe.close();
 		} catch (Exception e1) {
 		}
-		if(!OsInfoUtil.isWindows()){
+		//if(!OsInfoUtil.isWindows()){
 			if (deviceHandle != null) {
 				try{
 					LibUsb.attachKernelDriver(deviceHandle, interfaceNumber);
@@ -461,7 +461,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 					
 				}
 			}
-		}
+		//}
 		try {
 			if (dataInterface.isClaimed())
 				dataInterface.release();
