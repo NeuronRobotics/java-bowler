@@ -108,18 +108,14 @@ public class ConnectionDialog extends JDialog {
 	
 	private void loadDefaultConnections() {
 		try{
-			if(!OsInfoUtil.isWindows() || OsInfoUtil.getOsName().contains("Windows 8") ){
-				
+			try{
 				addConnectionPanel(new UsbConnectionPanel());
-			}else{
-				System.out.println(OsInfoUtil.getOsName());
+				addConnectionPanel(new BluetoothConnectionPanel());
 				addConnectionPanel(new SerialConnectionPanel());
+			}catch(Exception ex){
+				addConnectionPanel(new SerialConnectionPanel());
+				addConnectionPanel(new BluetoothConnectionPanel());
 			}
-			addConnectionPanel(new BluetoothConnectionPanel());
-			//serial at the end if USB is enabled
-			if(!OsInfoUtil.isWindows())
-				addConnectionPanel(new SerialConnectionPanel());
-			
 		}catch(Error e){
 			e.printStackTrace();
 			Log.error("This is not a java 8 compliant system, removing the serial, bluetooth and usb connections");

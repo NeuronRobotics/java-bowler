@@ -107,19 +107,28 @@ public class UsbConnectionPanel extends AbstractConnectionPanel implements IUsbD
 
 	
 	public void refresh() {	
-		System.err.println("Refreshing USB");
+		//System.err.println("Refreshing USB");
 		connectionCbo.removeAllItems();
 
-		List<UsbDevice> prts;
-		try {
-			prts = UsbCDCSerialConnection.getAllUsbBowlerDevices();
-			for(int i=0;i<prts.size();i++) {
-				String s = UsbCDCSerialConnection.getUniqueID(prts.get(i));
-				connectionCbo.addItem(s);
+		List<UsbDevice> prts=null;
+		
+			try {
+				prts = UsbCDCSerialConnection.getAllUsbBowlerDevices();
+			} catch (UnsupportedEncodingException | UsbDisconnectedException
+					| SecurityException | UsbException e1) {
+				e1.printStackTrace();
+				throw new RuntimeException(e1);
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+			for(int i=0;i<prts.size();i++) {
+				try {
+					String s = UsbCDCSerialConnection.getUniqueID(prts.get(i));
+					connectionCbo.addItem(s);
+				} catch (Exception e) {
+					e.printStackTrace();
+					throw new RuntimeException(e);
+				}
+			}
+		
 
 	}
 
