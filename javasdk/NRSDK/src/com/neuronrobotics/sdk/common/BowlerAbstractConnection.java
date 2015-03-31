@@ -37,6 +37,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.locks.ReentrantLock;
 
+import javax.management.RuntimeErrorException;
+
 import com.neuronrobotics.sdk.commands.bcs.core.NamespaceCommand;
 import com.neuronrobotics.sdk.commands.bcs.core.PingCommand;
 import com.neuronrobotics.sdk.commands.bcs.core.RpcArgumentsCommand;
@@ -922,36 +924,26 @@ public abstract class BowlerAbstractConnection {
 		for(int i=0;i<retry;i++){
 
 			BowlerDatagram ret;
-		
-			ret = send( command,addr);
-			//System.out.println(ret);
-			if(ret != null){
-				addr.setValues(ret.getAddress());
-				//if(!ret.getRPC().contains("_err"))
-				
-				return ret;
+			try{
+				ret = send( command,addr);
+				//System.out.println(ret);
+				if(ret != null){
+					addr.setValues(ret.getAddress());
+					//if(!ret.getRPC().contains("_err"))
+					
+					return ret;
+				}
+			}catch(MalformattedDatagram  | NullPointerException e){
+				Log.error("Sending Synchronus packet and there was a failure, will retry "+(retry-i-1)+" more times");
+				ThreadUtil.wait(150*i);
+				if( BowlerDatagram.isUseBowlerV4()){
+					//If the ping fails to get a response, try the older bowler format
+					BowlerDatagram.setUseBowlerV4(false);
+				}else{
+					BowlerDatagram.setUseBowlerV4(true);
+				}
 			}
-	
-			if(retry>1){
-				//only force a reconnect if the retry is above one. 
-				//a device failing to respond could just be the result of a wrong packet type level.
-//				try {
-//					//Log.warning("Reconnecting in the send engine loop, retry "+retry+" times");
-//					//reconnect();
-//				} catch (IOException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-				
-			}
-			Log.error("Sending Synchronus packet and there was a failure, will retry "+(retry-i-1)+" more times");
-			ThreadUtil.wait(150*i);
-			if( BowlerDatagram.isUseBowlerV4()){
-				//If the ping fails to get a response, try the older bowler format
-				BowlerDatagram.setUseBowlerV4(false);
-			}else{
-				BowlerDatagram.setUseBowlerV4(true);
-			}
+
 		}
 		return null;
 	}
