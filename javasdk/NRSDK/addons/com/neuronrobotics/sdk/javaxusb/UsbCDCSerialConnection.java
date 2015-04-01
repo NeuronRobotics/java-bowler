@@ -45,6 +45,7 @@ import com.neuronrobotics.sdk.common.BowlerDatagramFactory;
 import com.neuronrobotics.sdk.common.BowlerRuntimeException;
 import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.Log;
+import com.neuronrobotics.sdk.util.OsInfoUtil;
 //import com.neuronrobotics.sdk.util.OsInfoUtil;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
@@ -111,8 +112,9 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 
 	static {
 		try {
+			
 			services = UsbHostManager.getUsbServices();
-			//if(!OsInfoUtil.isWindows()){
+			if(!OsInfoUtil.isWindows()){
 				callbackHandle = new HotplugCallbackHandle();
 				int result = LibUsb.hotplugRegisterCallback(null,
 						LibUsb.HOTPLUG_EVENT_DEVICE_ARRIVED
@@ -142,7 +144,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 				if (result != LibUsb.SUCCESS) {
 					throw new LibUsbException("Unable to register hotplug callback", result);
 				}
-			//}
+			}
 		} catch (SecurityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
