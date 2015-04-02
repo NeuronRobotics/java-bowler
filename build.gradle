@@ -5,9 +5,25 @@ sourceCompatibility = '1.7'
 targetCompatibility = '1.7'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
+Properties props = new Properties()
+props.load(new FileInputStream("javasdk/NRSDK/src/com/neuronrobotics/sdk/config/build.properties"))
+
 manifest {
-    attributes 'Implementation-Title': componentTitle    
+    attributes(	
+    			//"Main-Class": "com.dcx.epep.Start",
+    			"Manifest-Version": "1.0",
+    			"Created-By": "Neuron Robotics Cooperative",
+    			"Specification-Title": props."app.name",
+    			"Specification-Version": props."app.version",
+    			"Specification-Vendor": "Neuron Robotics Cooperative",,
+    			"Implementation-Title": props."app.name",
+    			"Implementation-Version" : props."app.version",
+    			"Implementation-Vendor": "Neuron Robotics Cooperative"
+        		
+    )
 }
+
+jar.archiveName = "nrsdk-"+props."app.version"+"-jar-with-dependencies.jar"
 
 //apply from: 'http://gradle-plugins.mihosoft.eu/latest/vlicenseheader.gradle'
 //repairHeaders.licenseHeaderText = new File(projectDir,'./license-template.txt')
