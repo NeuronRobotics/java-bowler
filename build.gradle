@@ -5,8 +5,10 @@ sourceCompatibility = '1.7'
 targetCompatibility = '1.7'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
+File buildDir = file(".");
+
 Properties props = new Properties()
-props.load(new FileInputStream("javasdk/NRSDK/src/com/neuronrobotics/sdk/config/build.properties"))
+props.load(new FileInputStream(buildDir.getAbsolutePath()+"/javasdk/NRSDK/src/com/neuronrobotics/sdk/config/build.properties"))
 
 manifest {
     attributes(	
@@ -41,10 +43,10 @@ repositories {
 sourceSets {
     main {
         java {
-            srcDir 'javasdk/NRSDK/src/'
+            srcDir buildDir.getAbsolutePath()+'/javasdk/NRSDK/src/'
         }
         resources {
-            srcDir 'javasdk/NRSDK/addons/'
+            srcDir buildDir.getAbsolutePath()+'/javasdk/NRSDK/addons/'
         }
     }
 }
@@ -52,8 +54,8 @@ sourceSets {
 	
 dependencies {
 	//TODO change as many of these as possible to Maven repositories
-    compile fileTree (dir: 'javasdk/NRSDK/lib/', includes: ['*.jar'])
-    compile fileTree (dir: 'javasdk/NRSDK/lib_addons/', includes: ['*.jar'])
+    compile fileTree (dir: buildDir.getAbsolutePath()+'/javasdk/NRSDK/lib/', includes: ['*.jar'])
+    compile fileTree (dir: buildDir.getAbsolutePath()+'/javasdk/NRSDK/lib_addons/', includes: ['*.jar'])
 }
 
 
