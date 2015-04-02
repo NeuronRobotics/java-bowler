@@ -1,31 +1,49 @@
 apply plugin: 'java'
-
+apply plugin: 'eclipse'
+	
 sourceCompatibility = '1.7'
+targetCompatibility = '1.7'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+manifest {
+    attributes 'Implementation-Title': componentTitle    
+}
 
 //apply from: 'http://gradle-plugins.mihosoft.eu/latest/vlicenseheader.gradle'
 //repairHeaders.licenseHeaderText = new File(projectDir,'./license-template.txt')
 
 task wrapper(type: Wrapper, description: 'Creates and deploys the Gradle wrapper to the current directory.') {
-    gradleVersion = '1.11'
+    gradleVersion = '2.0'
 }
-
-applicationDefaultJvmArgs = ["-Xss515m"]
 
 repositories {
     mavenCentral()
+    maven {
+        url "https://jcenter.bintray.com"
+    }
+}
+sourceSets {
+    main {
+        java {
+            srcDir 'javasdk/NRSDK/src/'
+        }
+        resources {
+            srcDir 'javasdk/NRSDK/addons/'
+        }
+    }
 }
 
-
+	
 dependencies {
-    
     compile fileTree (dir: 'javasdk/NRSDK/lib/', includes: ['*.jar'])
+    compile fileTree (dir: 'javasdk/NRSDK/lib_addons/', includes: ['*.jar'])
 }
+
 
 // create a fat-jar (class files plus dependencies
 // excludes VRL.jar (plugin jar files must not start with 'vrl-\\d+')
 jar {
-
+	
     // dependencies except VRL
     from configurations.runtime.asFileTree.
         filter({file->return !file.name.startsWith("vrl-0")}).
