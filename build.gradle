@@ -31,7 +31,7 @@ jar.archiveName = "nrsdk-"+props."app.version"+"-jar-with-dependencies.jar"
 //repairHeaders.licenseHeaderText = new File(projectDir,'./license-template.txt')
 
 task wrapper(type: Wrapper, description: 'Creates and deploys the Gradle wrapper to the current directory.') {
-    gradleVersion = '2.0'
+    gradleVersion = '2.1'
 }
 
 repositories {
