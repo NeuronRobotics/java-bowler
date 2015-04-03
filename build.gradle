@@ -43,10 +43,11 @@ repositories {
 sourceSets {
     main {
         java {
-            srcDir buildDir.getAbsolutePath()+'/javasdk/NRSDK/src/'
+            srcDirs = [buildDir.getAbsolutePath()+'/javasdk/NRSDK/src/', buildDir.getAbsolutePath()+'/javasdk/NRSDK/addons/']
         }
         resources {
-            srcDir buildDir.getAbsolutePath()+'/javasdk/NRSDK/addons/'
+            srcDirs = [buildDir.getAbsolutePath()+'/javasdk/NRSDK/src/', buildDir.getAbsolutePath()+'/javasdk/NRSDK/addons/']
+            includes = ["**/*.fxml","**/*.xml","**/*.png"]
         }
     }
 }
