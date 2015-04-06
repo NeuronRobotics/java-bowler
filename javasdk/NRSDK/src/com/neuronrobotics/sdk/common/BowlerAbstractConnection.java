@@ -316,6 +316,21 @@ public abstract class BowlerAbstractConnection {
 			setSyncQueue(new QueueManager(true));
 			setAsyncQueue(new QueueManager(false));
 			
+//			if(!ping(new MACAddress())){
+/*				if( BowlerDatagram.isUseBowlerV4()){
+					//If the ping fails to get a response, try the older bowler format
+					Log.warning("Switching to legacy parser");
+					BowlerDatagram.setUseBowlerV4(false);
+				}else{
+					Log.warning("Switching to v4 parser");
+					BowlerDatagram.setUseBowlerV4(true);
+				}
+				if(!ping(new MACAddress())){
+					//neither packet format is working, bail out
+					setConnected(false);
+				}
+			}
+		*/	
 			fireConnectEvent();
 			Runtime.getRuntime().addShutdownHook(new Thread() {
 				@Override
@@ -326,6 +341,8 @@ public abstract class BowlerAbstractConnection {
 					}
 				}
 			});
+			
+			
 		}else{
 			try {
 				if(dataIns !=null)
@@ -936,12 +953,6 @@ public abstract class BowlerAbstractConnection {
 			}catch(MalformattedDatagram  | NullPointerException e){
 				Log.error("Sending Synchronus packet and there was a failure, will retry "+(retry-i-1)+" more times");
 				ThreadUtil.wait(150*i);
-				if( BowlerDatagram.isUseBowlerV4()){
-					//If the ping fails to get a response, try the older bowler format
-					BowlerDatagram.setUseBowlerV4(false);
-				}else{
-					BowlerDatagram.setUseBowlerV4(true);
-				}
 			}
 
 		}
@@ -999,18 +1010,10 @@ public abstract class BowlerAbstractConnection {
 	public boolean ping(MACAddress mac) {
 		try {
 			//Log.warning("Ping device:");
-			BowlerDatagram bd = send(new PingCommand(),mac, 1);
+			BowlerDatagram bd = send(new PingCommand(),mac,2);
 			if(bd !=null){
 				BowlerDatagramFactory.freePacket(bd);
 				return true;
-			}else{
-
-				bd = send(new PingCommand(),mac, 5);
-				if(bd !=null){
-					BowlerDatagramFactory.freePacket(bd);
-					return true;
-				}
-				
 			}
 		} catch (InvalidResponseException e) {
 			Log.error("Invalid response from Ping ");

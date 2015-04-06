@@ -215,24 +215,26 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 		setUpstream((raw.getByte(8)<0));
 		// Make sure that the size of the data payload is the stated length
 		int dataLength = raw.getUnsigned(9);
-		int amountOfData;
-		if( isUseBowlerV4()){
-			amountOfData = raw.getBytes(11).length-1;
-		}else{
-			amountOfData = raw.getBytes(11).length;
-		}
-		if(dataLength != amountOfData) {
+		//Either legacy parser or the v4 parser
+		if((dataLength != raw.getBytes(11).length-1) && (dataLength != raw.getBytes(11).length) ) {
 			throw new MalformattedDatagram("Datagram payload length is mismatched");
 		}	
-		
-		
 		// Put the remaining data into the data payload 
 		setData(raw.getBytes(HEADER_SIZE,dataLength));
 
 		// Validate the CRC
 		if(!CheckCRC(raw,true) ) {
-			System.err.println("CRC failed check");
-			throw new MalformattedDatagram("CRC does not match");
+			Log.error("CRC failed check");
+			if( BowlerDatagram.isUseBowlerV4()){
+				//If the ping fails to get a response, try the older bowler format
+				Log.error("Switching to legacy parser");
+				BowlerDatagram.setUseBowlerV4(false);
+			}else{
+				Log.error("Switching to v4 parser");
+				BowlerDatagram.setUseBowlerV4(true);
+			}
+			if(!CheckCRC(raw,true) ) 
+				throw new MalformattedDatagram("CRC does not match");
 		}else{
 			setCrc(getCRC(raw));
 			setDataCrc(raw.getByte(raw.size()-1));
