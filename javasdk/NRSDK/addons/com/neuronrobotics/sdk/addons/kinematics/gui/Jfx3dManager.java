@@ -287,7 +287,7 @@ public class Jfx3dManager extends JFXPanel {
     private void buildAxes() {
 
         axisGroup.getChildren().addAll(new Axis());
-        world.getChildren().addAll(axisGroup);
+        world.getChildren().addAll(axisGroup,lookGroup);
     }
 
     private void buildMolecule() {
