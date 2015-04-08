@@ -40,7 +40,7 @@ public class TransformFactory {
 	
 	public static Group getLabledAxis(Affine trans, String text,Color color){
 		Group back = new Group();
-		back.getChildren().add(new Axis(color));
+		back.getChildren().add(new Axis());
 		back.getTransforms().add(trans);
 		
 		return back;

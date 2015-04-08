@@ -5,6 +5,7 @@ import com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR;
 import com.neuronrobotics.sdk.addons.kinematics.DHParameterKinematics;
 import com.neuronrobotics.sdk.addons.kinematics.ITaskSpaceUpdateListenerNR;
 import com.neuronrobotics.sdk.addons.kinematics.gui.DHKinematicsViewer;
+import com.neuronrobotics.sdk.addons.kinematics.gui.MoleculeSampleApp;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.common.Log;
 //import com.neuronrobotics.sdk.common.Log;
@@ -26,6 +27,7 @@ public class TrobotDisplayOnly implements ITaskSpaceUpdateListenerNR {
 		try{
 			JFrame frame  = new JFrame();
 			frame.setContentPane(new DHKinematicsViewer(model));
+			
 			frame.setSize(1024, 1024);
             frame.setVisible(true);
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

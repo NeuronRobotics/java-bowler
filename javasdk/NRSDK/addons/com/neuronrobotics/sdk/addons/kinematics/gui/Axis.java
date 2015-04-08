@@ -42,24 +42,38 @@ package com.neuronrobotics.sdk.addons.kinematics.gui;
  *   2. Using LineArray to draw 3D lines.
  */
 
-
+import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Sphere;
+import javafx.scene.shape.Box;
 
+public class Axis extends Group {
 
-
-
-    public class Axis extends Sphere{
-
-	////////////////////////////////////////////
+	// //////////////////////////////////////////
 	//
 	// create axis visual object
 	//
-	public Axis(java.awt.Color color) {
-		super(10);
-		setMaterial(new PhongMaterial(Color.rgb(color.getRed(), color.getGreen(), color.getBlue())));
+	public Axis() {
+		final PhongMaterial redMaterial = new PhongMaterial();
+		redMaterial.setDiffuseColor(Color.DARKRED);
+		redMaterial.setSpecularColor(Color.RED);
+
+		final PhongMaterial greenMaterial = new PhongMaterial();
+		greenMaterial.setDiffuseColor(Color.DARKGREEN);
+		greenMaterial.setSpecularColor(Color.GREEN);
+
+		final PhongMaterial blueMaterial = new PhongMaterial();
+		blueMaterial.setDiffuseColor(Color.DARKBLUE);
+		blueMaterial.setSpecularColor(Color.BLUE);
+
+		final Box xAxis = new Box(240.0, 1, 1);
+		final Box yAxis = new Box(1, 240.0, 1);
+		final Box zAxis = new Box(1, 1, 240.0);
+
+		xAxis.setMaterial(redMaterial);
+		yAxis.setMaterial(greenMaterial);
+		zAxis.setMaterial(blueMaterial);
+		getChildren().addAll(xAxis,yAxis,zAxis);
 	}
 
-
-    } // end of class Axis
+} // end of class Axis
