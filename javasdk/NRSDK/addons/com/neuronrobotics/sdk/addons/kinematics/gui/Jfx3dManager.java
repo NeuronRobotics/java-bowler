@@ -17,6 +17,7 @@ import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.dypid.DyPIDConfiguration;
 import com.neuronrobotics.sdk.dyio.peripherals.DigitalInputChannel;
+import com.neuronrobotics.sdk.dyio.peripherals.IDigitalInputListener;
 import com.neuronrobotics.sdk.javaxusb.UsbCDCSerialConnection;
 import com.neuronrobotics.sdk.pid.PIDConfiguration;
 
@@ -63,18 +64,21 @@ public class Jfx3dManager extends SubScene {
 		setSubSceneCamera(new PerspectiveCamera(false));
 
 		setCamera(getSubSceneCamera());
-		
+
 		getBasegroup().getTransforms().addAll(
 		// new Rotate(90, Rotate.X_AXIS),
 				new Rotate(180, Rotate.Y_AXIS), new Rotate(180, Rotate.Z_AXIS));
 
-		Platform.runLater(() -> {
-			// viewGroup.setTranslateZ(viewContainer.heightProperty().divide(2).doubleValue());
-			manipulator.setTranslateX(0);
-			manipulator.setTranslateY(150);
-			manipulator.setTranslateZ(120);
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				// viewGroup.setTranslateZ(viewContainer.heightProperty().divide(2).doubleValue());
+				manipulator.setTranslateX(0);
+				manipulator.setTranslateY(150);
+				manipulator.setTranslateZ(120);
 
-			manipulator.getTransforms().add(new Rotate(45, Rotate.Z_AXIS));
+				manipulator.getTransforms().add(new Rotate(45, Rotate.Z_AXIS));
+			}
 		});
 
 		// rotateZ.setAngle(-15);
@@ -83,69 +87,70 @@ public class Jfx3dManager extends SubScene {
 		// n.setTranslateX(-302.99);
 		// n.setTranslateY(-156.00);
 		// });
-		
+
 		getBasegroup().getChildren().add(lookGroup);
-		
+
 		VFX3DUtil.addMouseBehavior(lookGroup, viewContainer);
 
 	}
-	
-	public MeshView replaceObject(MeshView previous, MeshView current){
-        if(previous!=null){
-        	lookGroup.getChildren().remove(previous);
-        }
-        
-        PhongMaterial m = new PhongMaterial(Color.RED);
 
-        current.setCullFace(CullFace.NONE);
+	public MeshView replaceObject(MeshView previous, MeshView current) {
+		if (previous != null) {
+			lookGroup.getChildren().remove(previous);
+		}
 
-        current.setMaterial(m);
-        
-        lookGroup.getChildren().add(current);
-        return current;
+		PhongMaterial m = new PhongMaterial(Color.RED);
+
+		current.setCullFace(CullFace.NONE);
+
+		current.setMaterial(m);
+
+		lookGroup.getChildren().add(current);
+		return current;
 	}
-	
-	public void saveToPng(File f){
-		 String fName = f.getAbsolutePath();
 
-	        if (!fName.toLowerCase().endsWith(".png")) {
-	            fName += ".png";
-	        }
+	public void saveToPng(File f) {
+		String fName = f.getAbsolutePath();
 
-	        int snWidth = 1024;
-	        int snHeight = 1024;
+		if (!fName.toLowerCase().endsWith(".png")) {
+			fName += ".png";
+		}
 
-	        double realWidth = getBasegroup().getBoundsInLocal().getWidth();
-	        double realHeight = getBasegroup().getBoundsInLocal().getHeight();
+		int snWidth = 1024;
+		int snHeight = 1024;
 
-	        double scaleX = snWidth / realWidth;
-	        double scaleY = snHeight / realHeight;
+		double realWidth = getBasegroup().getBoundsInLocal().getWidth();
+		double realHeight = getBasegroup().getBoundsInLocal().getHeight();
 
-	        double scale = Math.min(scaleX, scaleY);
+		double scaleX = snWidth / realWidth;
+		double scaleY = snHeight / realHeight;
 
-	        PerspectiveCamera snCam = new PerspectiveCamera(false);
-	        snCam.setTranslateZ(-200);
+		double scale = Math.min(scaleX, scaleY);
 
-	        SnapshotParameters snapshotParameters = new SnapshotParameters();
-	        snapshotParameters.setTransform(new Scale(scale, scale));
-	        snapshotParameters.setCamera(snCam);
-	        snapshotParameters.setDepthBuffer(true);
-	        snapshotParameters.setFill(Color.TRANSPARENT);
+		PerspectiveCamera snCam = new PerspectiveCamera(false);
+		snCam.setTranslateZ(-200);
 
-	        WritableImage snapshot = new WritableImage(snWidth, (int) (realHeight * scale));
+		SnapshotParameters snapshotParameters = new SnapshotParameters();
+		snapshotParameters.setTransform(new Scale(scale, scale));
+		snapshotParameters.setCamera(snCam);
+		snapshotParameters.setDepthBuffer(true);
+		snapshotParameters.setFill(Color.TRANSPARENT);
 
-	        getBasegroup().snapshot(snapshotParameters, snapshot);
+		WritableImage snapshot = new WritableImage(snWidth,
+				(int) (realHeight * scale));
 
-	        try {
-	            ImageIO.write(SwingFXUtils.fromFXImage(snapshot, null),
-	                    "png", new File(fName));
-	        } catch (IOException ex) {
-	            ex.printStackTrace();
-	            Log.error(ex.getMessage());
-	        }
+		getBasegroup().snapshot(snapshotParameters, snapshot);
+
+		try {
+			ImageIO.write(SwingFXUtils.fromFXImage(snapshot, null), "png",
+					new File(fName));
+		} catch (IOException ex) {
+			ex.printStackTrace();
+			Log.error(ex.getMessage());
+		}
 	}
-	
-	public void attachArm(DHParameterKinematics model,DyIO master) {
+
+	public void attachArm(final DHParameterKinematics model, DyIO master) {
 
 		model.addPoseUpdateListener(new ITaskSpaceUpdateListenerNR() {
 			int packetIndex = 0;
@@ -155,36 +160,46 @@ public class Jfx3dManager extends SubScene {
 			@Override
 			public void onTaskSpaceUpdate(AbstractKinematicsNR source,
 					TransformNR pose) {
-				ArrayList<TransformNR> jointLocations = model
+				final ArrayList<TransformNR> jointLocations = model
 						.getChainTransformations();
 
 				if (packetIndex++ == numSkip) {
 					packetIndex = 0;
-					Platform.runLater(() -> {
-						for (int i = 0; i < joints.size(); i++) {
-							joints.get(i).setTranslateX(
-									jointLocations.get(i).getX() * armScale);
-							joints.get(i).setTranslateY(
-									jointLocations.get(i).getY() * armScale);
-							joints.get(i).setTranslateZ(
-									jointLocations.get(i).getZ() * armScale);
+					Platform.runLater(new Runnable() {
+						@Override
+						public void run() {
+							for (int i = 0; i < joints.size(); i++) {
+								joints.get(i)
+										.setTranslateX(
+												jointLocations.get(i).getX()
+														* armScale);
+								joints.get(i)
+										.setTranslateY(
+												jointLocations.get(i).getY()
+														* armScale);
+								joints.get(i)
+										.setTranslateZ(
+												jointLocations.get(i).getZ()
+														* armScale);
 
-						}
-						try {
-							if (buttonPressed) {
-								//TransformFactory.getTransform( pose , rotations);
-								// System.out.println("Camera Transform z="+subSceneCamera.getTranslateZ()+
-								// " y="+subSceneCamera.getTranslateY()+
-								// " x="+subSceneCamera.getTranslateX()+
-								// " o="+subSceneCamera.getNodeOrientation());
-
-								for (Transform t : getSubSceneCamera()
-										.getTransforms()) {
-									// System.out.println(t);
-								}
 							}
-						} catch (Exception e) {
-							e.printStackTrace();
+							try {
+								if (buttonPressed) {
+									// TransformFactory.getTransform( pose ,
+									// rotations);
+									// System.out.println("Camera Transform z="+subSceneCamera.getTranslateZ()+
+									// " y="+subSceneCamera.getTranslateY()+
+									// " x="+subSceneCamera.getTranslateX()+
+									// " o="+subSceneCamera.getNodeOrientation());
+
+									for (Transform t : getSubSceneCamera()
+											.getTransforms()) {
+										// System.out.println(t);
+									}
+								}
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
 						}
 					});
 
@@ -196,10 +211,14 @@ public class Jfx3dManager extends SubScene {
 					TransformNR pose) {
 			}
 		});
-		new DigitalInputChannel(master, 23).addDigitalInputListener((source,
-				isHigh) -> {
-			buttonPressed = !isHigh;
-		});
+		new DigitalInputChannel(master, 23)
+				.addDigitalInputListener(new IDigitalInputListener() {
+					@Override
+					public void onDigitalValueChange(
+							DigitalInputChannel source, boolean isHigh) {
+						buttonPressed = !isHigh;
+					}
+				});
 
 		ArrayList<TransformNR> jointLocations = model.getChainTransformations();
 		for (int i = 0; i < jointLocations.size(); i++) {
@@ -218,11 +237,11 @@ public class Jfx3dManager extends SubScene {
 			master.ConfigureDynamicPIDChannels(new DyPIDConfiguration(i));
 			master.ConfigurePIDController(new PIDConfiguration());
 		}
-		attachArm(new DHParameterKinematics(master, xml),master);
+		attachArm(new DHParameterKinematics(master, xml), master);
 	}
-	
+
 	public void disconnect() {
-		if(master!=null){
+		if (master != null) {
 			master.disconnect();
 		}
 	}
@@ -238,6 +257,5 @@ public class Jfx3dManager extends SubScene {
 	public static Group getBasegroup() {
 		return baseGroup;
 	}
-
 
 }

@@ -17,7 +17,7 @@ public class DHKinematicsViewer extends JFXPanel {
 	DHParameterKinematics robot;
 	private Group viewContainer = new Group();
 
-	public DHKinematicsViewer(DHParameterKinematics bot) {
+	public DHKinematicsViewer(final DHParameterKinematics bot) {
 		robot = bot;
 		Platform.runLater(new Runnable() {
 			@Override
