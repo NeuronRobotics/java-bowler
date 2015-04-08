@@ -23,6 +23,7 @@ import com.neuronrobotics.sdk.pid.PIDConfiguration;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Group;
+import javafx.scene.Parent;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SnapshotParameters;
@@ -56,30 +57,18 @@ public class Jfx3dManager extends SubScene {
 
 	private boolean buttonPressed = false;
 
-	public Jfx3dManager(Pane viewContainer) {
-		super(baseGroup, 500, 500, true, SceneAntialiasing.BALANCED);
+	public Jfx3dManager(Parent viewContainer) {
+		super(getBasegroup(), 500, 500, true, SceneAntialiasing.BALANCED);
 
-		subSceneCamera = new PerspectiveCamera(false);
+		setSubSceneCamera(new PerspectiveCamera(false));
 
-		setCamera(subSceneCamera);
+		setCamera(getSubSceneCamera());
 		
-		baseGroup.getTransforms().addAll(
+		getBasegroup().getTransforms().addAll(
 		// new Rotate(90, Rotate.X_AXIS),
 				new Rotate(180, Rotate.Y_AXIS), new Rotate(180, Rotate.Z_AXIS));
-		widthProperty().bind(viewContainer.widthProperty());
-		heightProperty().bind(viewContainer.heightProperty());
 
 		Platform.runLater(() -> {
-
-			subSceneCamera.setTranslateX(viewContainer.widthProperty()
-					.divide(-1).doubleValue());
-			subSceneCamera.setTranslateY(viewContainer.heightProperty()
-					.divide(-1).doubleValue());
-
-			baseGroup.setTranslateX(-viewContainer.widthProperty().divide(2)
-					.doubleValue());
-			baseGroup.setTranslateY(-viewContainer.heightProperty().divide(2)
-					.doubleValue());
 			// viewGroup.setTranslateZ(viewContainer.heightProperty().divide(2).doubleValue());
 			manipulator.setTranslateX(0);
 			manipulator.setTranslateY(150);
@@ -95,10 +84,10 @@ public class Jfx3dManager extends SubScene {
 		// n.setTranslateY(-156.00);
 		// });
 		
-		baseGroup.getChildren().add(lookGroup);
+		getBasegroup().getChildren().add(lookGroup);
 		
 		VFX3DUtil.addMouseBehavior(lookGroup, viewContainer);
-		viewContainer.getChildren().add(this);
+
 	}
 	
 	public MeshView replaceObject(MeshView previous, MeshView current){
@@ -126,8 +115,8 @@ public class Jfx3dManager extends SubScene {
 	        int snWidth = 1024;
 	        int snHeight = 1024;
 
-	        double realWidth = baseGroup.getBoundsInLocal().getWidth();
-	        double realHeight = baseGroup.getBoundsInLocal().getHeight();
+	        double realWidth = getBasegroup().getBoundsInLocal().getWidth();
+	        double realHeight = getBasegroup().getBoundsInLocal().getHeight();
 
 	        double scaleX = snWidth / realWidth;
 	        double scaleY = snHeight / realHeight;
@@ -145,7 +134,7 @@ public class Jfx3dManager extends SubScene {
 
 	        WritableImage snapshot = new WritableImage(snWidth, (int) (realHeight * scale));
 
-	        baseGroup.snapshot(snapshotParameters, snapshot);
+	        getBasegroup().snapshot(snapshotParameters, snapshot);
 
 	        try {
 	            ImageIO.write(SwingFXUtils.fromFXImage(snapshot, null),
@@ -156,7 +145,7 @@ public class Jfx3dManager extends SubScene {
 	        }
 	}
 	
-	public void attachArm(DHParameterKinematics model) {
+	public void attachArm(DHParameterKinematics model,DyIO master) {
 
 		model.addPoseUpdateListener(new ITaskSpaceUpdateListenerNR() {
 			int packetIndex = 0;
@@ -189,7 +178,7 @@ public class Jfx3dManager extends SubScene {
 								// " x="+subSceneCamera.getTranslateX()+
 								// " o="+subSceneCamera.getNodeOrientation());
 
-								for (Transform t : subSceneCamera
+								for (Transform t : getSubSceneCamera()
 										.getTransforms()) {
 									// System.out.println(t);
 								}
@@ -229,13 +218,25 @@ public class Jfx3dManager extends SubScene {
 			master.ConfigureDynamicPIDChannels(new DyPIDConfiguration(i));
 			master.ConfigurePIDController(new PIDConfiguration());
 		}
-		attachArm(new DHParameterKinematics(master, xml));
+		attachArm(new DHParameterKinematics(master, xml),master);
 	}
 	
 	public void disconnect() {
 		if(master!=null){
 			master.disconnect();
 		}
+	}
+
+	public PerspectiveCamera getSubSceneCamera() {
+		return subSceneCamera;
+	}
+
+	public void setSubSceneCamera(PerspectiveCamera subSceneCamera) {
+		this.subSceneCamera = subSceneCamera;
+	}
+
+	public static Group getBasegroup() {
+		return baseGroup;
 	}
 
 

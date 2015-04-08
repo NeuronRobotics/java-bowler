@@ -2,6 +2,7 @@ package com.neuronrobotics.sdk.addons.kinematics.gui;
 
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 
@@ -14,16 +15,17 @@ public class DHKinematicsViewer extends JFXPanel {
 	 */
 	private static final long serialVersionUID = 4624867202513493512L;
 	DHParameterKinematics robot;
-	private Pane viewContainer = new Pane();
+	private Group viewContainer = new Group();
 
 	public DHKinematicsViewer(DHParameterKinematics bot) {
 		robot = bot;
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
+				
 				Jfx3dManager viewer = new Jfx3dManager(viewContainer);
 
-				viewer.attachArm(bot);
+				viewer.attachArm(bot,bot.getFactory().getDyio());
 
 				setScene(new Scene(viewContainer));
 			}
