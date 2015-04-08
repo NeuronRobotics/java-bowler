@@ -5,7 +5,7 @@ import com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR;
 import com.neuronrobotics.sdk.addons.kinematics.DHParameterKinematics;
 import com.neuronrobotics.sdk.addons.kinematics.ITaskSpaceUpdateListenerNR;
 import com.neuronrobotics.sdk.addons.kinematics.gui.DHKinematicsViewer;
-import com.neuronrobotics.sdk.addons.kinematics.gui.MoleculeSampleApp;
+import com.neuronrobotics.sdk.addons.kinematics.gui.Jfx3dManager;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.common.Log;
 //import com.neuronrobotics.sdk.common.Log;

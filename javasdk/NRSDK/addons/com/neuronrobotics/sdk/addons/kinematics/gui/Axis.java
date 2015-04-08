@@ -46,14 +46,17 @@ import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
+import javafx.scene.shape.Sphere;
 
 public class Axis extends Group {
-
+	public Axis() {
+		this(240);
+	}
 	// //////////////////////////////////////////
 	//
 	// create axis visual object
 	//
-	public Axis() {
+	public Axis(int i) {
 		final PhongMaterial redMaterial = new PhongMaterial();
 		redMaterial.setDiffuseColor(Color.DARKRED);
 		redMaterial.setSpecularColor(Color.RED);
@@ -66,13 +69,14 @@ public class Axis extends Group {
 		blueMaterial.setDiffuseColor(Color.DARKBLUE);
 		blueMaterial.setSpecularColor(Color.BLUE);
 
-		final Box xAxis = new Box(240.0, 1, 1);
-		final Box yAxis = new Box(1, 240.0, 1);
-		final Box zAxis = new Box(1, 1, 240.0);
+		final Box xAxis = new Box(i, 1, 1);
+		final Box yAxis = new Box(1, i, 1);
+		final Box zAxis = new Box(1, 1, i);
 
 		xAxis.setMaterial(redMaterial);
 		yAxis.setMaterial(greenMaterial);
 		zAxis.setMaterial(blueMaterial);
+		
 		getChildren().addAll(xAxis,yAxis,zAxis);
 	}
 
