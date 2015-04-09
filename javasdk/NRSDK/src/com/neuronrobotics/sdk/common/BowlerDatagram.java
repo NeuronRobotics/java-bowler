@@ -458,6 +458,7 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	 * @return true, if successful
 	 */
 	static boolean CheckCRC(ByteList buffer, boolean checkData) {
+		try{
 		byte generated,inPacket;
 		generated = genCrc(buffer);
 		inPacket  = getCRC(buffer);
@@ -473,6 +474,10 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 				Log.error("Data CRC of packet is: "+generated+" Expected: "+inPacket);
 				return false;
 			}
+		}
+		}catch(Exception ex){
+			if(InterruptedException.class.isInstance(ex))throw ex;
+			return false;
 		}
 		return true;
 	}
