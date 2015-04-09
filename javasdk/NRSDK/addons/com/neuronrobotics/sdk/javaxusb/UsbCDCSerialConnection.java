@@ -481,8 +481,10 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 		try {
 			if(camInpipe!=null)
 				camInpipe.close();
+			camInpipe=null;
 			if(camOutpipe!=null)
 				camOutpipe.close();
+			camOutpipe=null;
 		} catch (UsbNotActiveException | UsbNotOpenException
 				| UsbDisconnectedException | UsbException e1) {
 			// TODO Auto-generated catch block
@@ -493,6 +495,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 			if (dataInterface.isClaimed()){
 				try {
 					dataInterface.release();
+					dataInterface=null;
 				} catch (UsbNotActiveException | 
 						UsbDisconnectedException
 						| UsbException e) {
@@ -506,6 +509,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 				//LibUsb.attachKernelDriver(deviceHandle, interfaceNumber);
 			try{
 				LibUsb.close(deviceHandle);
+				deviceHandle=null;
 			}catch(IllegalStateException e){
 				e.printStackTrace();
 			}
