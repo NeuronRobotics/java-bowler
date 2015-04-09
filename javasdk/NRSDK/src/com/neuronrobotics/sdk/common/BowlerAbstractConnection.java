@@ -1026,7 +1026,7 @@ public abstract class BowlerAbstractConnection {
 	}
 	
 	public void startHeartBeat(){
-		beater=true;
+		setBeater(true);
 	}
 	
 	public void startHeartBeat(long msHeartBeatTime){
@@ -1036,11 +1036,12 @@ public abstract class BowlerAbstractConnection {
 		startHeartBeat();
 	}
 	public void stopHeartBeat(){
-		beater=false;
+		setBeater(false);
 	}
 	
 	private void runHeartBeat(){
 		if((msSinceLastSend())>heartBeatTime){
+			//System.out.println("Heartbeat");
 			try{
 				if(!ping(new MACAddress())){
 					Log.debug("Ping failed, disconnecting");
@@ -1099,7 +1100,7 @@ public abstract class BowlerAbstractConnection {
 				if(isSystemQueue)
 					runPacketUpdate();
 				else{ 
-					if(beater)
+					if(isBeater())
 						runHeartBeat();
 					
 				}
@@ -1253,6 +1254,14 @@ public abstract class BowlerAbstractConnection {
 
 	public static void setUseThreadedStack(boolean useThreadedStack) {
 		BowlerAbstractConnection.useThreadedStack = useThreadedStack;
+	}
+
+	public boolean isBeater() {
+		return beater;
+	}
+
+	public void setBeater(boolean beater) {
+		this.beater = beater;
 	}
 	
 
