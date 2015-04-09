@@ -441,7 +441,7 @@ public class Jfx3dManager extends JFXPanel {
                         if (event.isShiftDown()) {
                             cameraXform.ry.setAngle(0.0);
                             cameraXform.rx.setAngle(0.0);
-                            camera.setTranslateZ(-300.0);
+                            camera.setTranslateZ(-1000.0);
                         }
                         cameraXform2.t.setX(0.0);
                         cameraXform2.t.setY(0.0);
