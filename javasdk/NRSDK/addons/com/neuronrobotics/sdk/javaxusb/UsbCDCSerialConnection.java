@@ -575,7 +575,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 			write.waitUntilComplete();
 
 			while (!write.isComplete()) {
-				ThreadUtil.wait(0, 1);
+				ThreadUtil.wait(1);
 			}
 
 		} catch (Exception e) {// TODO Auto-generated catch block
@@ -618,7 +618,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 			got = read.getActualLength();
 
 			while (!read.isComplete()) {
-				ThreadUtil.wait(0, 1);
+				ThreadUtil.wait(1);
 			}
 
 		} catch ( IllegalArgumentException 
