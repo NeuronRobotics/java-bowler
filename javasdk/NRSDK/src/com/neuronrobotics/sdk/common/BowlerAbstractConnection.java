@@ -176,14 +176,11 @@ public abstract class BowlerAbstractConnection {
 		}
 		
 		if (getLastSyncronousResponse() == null){
-			try {
-				//new RuntimeException().printStackTrace();
-				Log.error("No response from device, no response in "+(System.currentTimeMillis()-startOfReciveTime)+" ms");
-				
-			} catch (Exception e) {
-				clearLastSyncronousResponse();
-				executingLock.unlock();
-				throw new RuntimeException(e);
+			Log.error("No response from device, no response in "+(System.currentTimeMillis()-startOfReciveTime)+" ms");
+			if( BowlerDatagram.isUseBowlerV4()){
+				//If the ping fails to get a response, try the older bowler format
+				Log.error("Switching to legacy parser");
+				BowlerDatagram.setUseBowlerV4(false);
 			}
 		}
 		BowlerDatagram b = getLastSyncronousResponse();
@@ -939,7 +936,8 @@ public abstract class BowlerAbstractConnection {
 	 */
 	public BowlerDatagram send(BowlerAbstractCommand command,MACAddress addr, int retry) throws NoConnectionAvailableException, InvalidResponseException {	
 		for(int i=0;i<retry;i++){
-
+			if(i!=0)
+				Log.error("Re-sending");
 			BowlerDatagram ret;
 			try{
 				ret = send( command,addr);
@@ -949,10 +947,12 @@ public abstract class BowlerAbstractConnection {
 					//if(!ret.getRPC().contains("_err"))
 					
 					return ret;
+				}else{
+					 throw new InvalidResponseException("No response from device");
 				}
-			}catch(MalformattedDatagram  | NullPointerException e){
+			}catch(MalformattedDatagram |InvalidResponseException | NullPointerException e){
 				Log.error("Sending Synchronus packet and there was a failure, will retry "+(retry-i-1)+" more times");
-				ThreadUtil.wait(150*i);
+				ThreadUtil.wait(150*i);				
 			}
 
 		}
@@ -980,13 +980,9 @@ public abstract class BowlerAbstractConnection {
 		if(back!=null){
 			addr.setValues(back.getAddress());
 		}
-		try{
-			return command.validate(back);
-		}catch (InvalidResponseException ex){
-			ex.printStackTrace();
-			Log.error("Failed to send synchronusly: "+cmd+"\r\nGot>> "+back);
-			return null;
-		}
+		
+		return command.validate(back);
+
 		//BowlerDatagramFactory.freePacket(cmd);
 		
 	}
@@ -1010,7 +1006,7 @@ public abstract class BowlerAbstractConnection {
 	public boolean ping(MACAddress mac) {
 		try {
 			//Log.warning("Ping device:");
-			BowlerDatagram bd = send(new PingCommand(),mac,2);
+			BowlerDatagram bd = send(new PingCommand(),mac,5);
 			if(bd !=null){
 				BowlerDatagramFactory.freePacket(bd);
 				return true;
@@ -1022,6 +1018,7 @@ public abstract class BowlerAbstractConnection {
 			Log.error("No connection is available.");
 			e.printStackTrace();
 		}
+		
 		return false;
 	}
 	
@@ -1161,7 +1158,7 @@ public abstract class BowlerAbstractConnection {
 		private boolean runPacketUpdate() {
 			try {
 				if(loadPacketFromPhy(bytesToPacketBuffer))
-					bytesToPacketBuffer= new ByteList();
+					bytesToPacketBuffer.clear();
 			} catch (Exception e) {
 				if(isConnected()){
 					Log.error("Data read failed "+e.getMessage());
@@ -1198,50 +1195,34 @@ public abstract class BowlerAbstractConnection {
 	
 	public boolean loadPacketFromPhy(ByteList bytesToPacketBuffer) throws NullPointerException, IOException{
 		if(dataIns!=null){	
-			while(getDataIns().available()>0){
-				long dataRead=System.currentTimeMillis();
-				//we want to run this until the buffer is clear or a packet is found
-				int b = getDataIns().read();
-				long dataReadEnd=System.currentTimeMillis();
-				if(b<0){
-					Log.error("Stream is broken - unexpected: claimed to have "+getDataIns().available()+" bytes, read in "+b);
-					//reconnect();
-					//something went wrong
-					new RuntimeException().printStackTrace();
-					return false;
-				}else{
-					
-					bytesToPacketBuffer.add(b);
-					long dataAdd=System.currentTimeMillis();
-					BowlerDatagram bd = BowlerDatagramFactory.build(bytesToPacketBuffer);
-					long dataBuild=System.currentTimeMillis();
-					if (bd!=null) {
-						Log.info("\nR<<"+bd);
-						onDataReceived(bd);
-
-						long dataSet=System.currentTimeMillis();
-						//bytesToPacketBuffer.clear();
-						
-						long bufferClear=System.currentTimeMillis();
-						
-						if((System.currentTimeMillis()-getLastWrite())>(getSleepTime()*(getPercentagePrint() /100.0))&& bd.isSyncronous() && syncListen==null){
-							Log.info("Packet recive took more then "+getPercentagePrint()+"%. " +
-									//"\nRaw receive\t"+(start-getLastWrite() )+"" +
-									//"\nStart Section\t"+(dataRead- start)+"" +
-									"\nData Read\t"+(dataReadEnd-dataRead)+"" +
-									"\nAdd data\t"+(dataAdd-dataReadEnd)+
-									"\nBuild Packet\t"+(dataBuild-dataAdd)+
-									"\nSet Packet\t"+(dataSet-dataBuild)+
-									"\nClear Packet buffer\t"+(bufferClear-dataSet)											
-									);
-						}
-
-						//Packet found, break the loop and deal with it
-						return true;
-					}
+			if(getDataIns().available()==0)
+				return false;
+			byte  [] buff = new byte[getDataIns().available()];
+			//we want to run this until the buffer is clear or a packet is found
+			int b = getDataIns().read(buff);
+		
+			if(b<0 || buff.length != b){
+				Log.error("Stream is broken - unexpected: claimed to have "+getDataIns().available()+" bytes, read in "+b);
+				//reconnect();
+				//something went wrong
+				new RuntimeException(" Buffer attempted to read "+buff.length+" got "+b).printStackTrace();
+				return false;
+			}else{
+				bytesToPacketBuffer.add(buff);
+				BowlerDatagram bd=null;
+				try{
+					bd = BowlerDatagramFactory.build(bytesToPacketBuffer);
+				}catch(Exception ex){
+					ex.printStackTrace();
 				}
-				//Log.info("buffer: "+buffer);
+				if (bd!=null) {
+					Log.info("\nR<<"+bd);
+					onDataReceived(bd);
+					return true;
+				}
 			}
+			//ThreadUtil.wait(1);
+			
 		}else{
 			Log.error("Data In is null");
 		}

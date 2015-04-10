@@ -206,23 +206,21 @@ public class BowlerDatagramFactory {
 		}
 		int totalLen = len+BowlerDatagram.HEADER_SIZE;	
 		
+		if(BowlerDatagram.isUseBowlerV4())
+			totalLen+=1;
+		staticMemory.setFree(false,instance);
 		// See if all the data has arrived for this packet
-		if (buffer.size()>=(totalLen) ||  buffer.size()>=(totalLen+1)){
+		if (buffer.size()>=(totalLen)){
 			failed=0;
-			ByteList rawContent = new ByteList(buffer.popList(totalLen));
-			staticMemory.setFree(false,instance);
-			try{
-				staticMemory.parse(rawContent);
-				if(BowlerDatagram.CheckCRC(rawContent,true)){
-					return  staticMemory;
-				}else{
-					Log.error("Data CRC check Fail  "+staticMemory);
-					failed = rawContent.size();
-				}
-			}catch(Exception E){
-				E.printStackTrace();
+			ByteList rawContent = new ByteList(buffer.popList(totalLen));	
+			staticMemory.parse(rawContent);
+			if(BowlerDatagram.CheckCRC(rawContent,true)){
+				return  staticMemory;
+			}else{
 				Log.error("Data CRC check Fail  "+staticMemory);
+				failed = rawContent.size();
 			}
+			
 		}
 //		if(failed>0)
 //			Log.error("Failed out "+failed+" bytes");
