@@ -47,10 +47,11 @@ public class UDPConnectionPanel extends AbstractConnectionPanel {
 	
 	
 	/**
+	 * @param connectionDialog 
 	 * 
 	 */
-	public UDPConnectionPanel() {
-		super("UDP",ConnectionImageIconFactory.getIcon("images/ethernet-icon.png"));
+	public UDPConnectionPanel(ConnectionDialog connectionDialog) {
+		super("UDP",ConnectionImageIconFactory.getIcon("images/ethernet-icon.png"),connectionDialog);
 		
 		
 		port.setText(new Integer(defaultPortNum).toString());
@@ -131,7 +132,8 @@ public class UDPConnectionPanel extends AbstractConnectionPanel {
 		});
 		
 		pm.start();
-		nsp.start();		
+		nsp.start();	
+		getConnectionDialog().pack();
 	}
 	
 	private class NetworkSearchProcess extends Thread implements IMonitorable {

@@ -235,7 +235,11 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 			ArrayList<UsbDevice> addrs) throws UnsupportedEncodingException,
 			UsbDisconnectedException, UsbException {
 		try {
-			if (device.getUsbDeviceDescriptor().idVendor() == 0x04d8) {// Neuron
+			if (device.getUsbDeviceDescriptor().idVendor() == 0x04d8 &&
+					(	device.getUsbDeviceDescriptor().idProduct() == 0x0001||
+						device.getUsbDeviceDescriptor().idProduct() == 0x3742
+					)
+				) {// Neuron
 																		// robotics
 																		// devices
 				// Dump information about the device itself
@@ -632,11 +636,9 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 		}
 		if (got > 0) {
 			bytesToPacketBuffer.add(Arrays.copyOfRange(data, 0, got));
-			return BowlerDatagramFactory
-					.build(bytesToPacketBuffer);
 		}
-
-		return null;
+		return BowlerDatagramFactory
+				.build(bytesToPacketBuffer);
 	}
 
 	// /* (non-Javadoc)

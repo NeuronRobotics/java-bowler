@@ -50,10 +50,11 @@ public class BluetoothConnectionPanel extends AbstractConnectionPanel {
 	private JLabel message = new JLabel();
 	
 	/**
+	 * @param connectionDialog 
 	 * 
 	 */
-	public BluetoothConnectionPanel() {
-		super("Bluetooth", ConnectionImageIconFactory.getIcon("images/bluetooth-icon.png"));
+	public BluetoothConnectionPanel(ConnectionDialog connectionDialog) {
+		super("Bluetooth", ConnectionImageIconFactory.getIcon("images/bluetooth-icon.png"),connectionDialog);
 
 		if(displayWarning) {
 			return;
@@ -82,6 +83,8 @@ public class BluetoothConnectionPanel extends AbstractConnectionPanel {
 	}
 
 	
+
+
 	public BluetoothSerialConnection getConnection() {
 		try {
 			String port = connectionCbo.getSelectedItem().toString();
@@ -127,6 +130,7 @@ public class BluetoothConnectionPanel extends AbstractConnectionPanel {
 		});
 		pm.start();
 		bsp.start();
+		getConnectionDialog().pack();
 	}
 	
 	private class BluetoothSearchProcess extends Thread implements IMonitorable {

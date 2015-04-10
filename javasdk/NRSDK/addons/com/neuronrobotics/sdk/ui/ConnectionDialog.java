@@ -89,9 +89,9 @@ public class ConnectionDialog extends JDialog {
 		panel.add(cancelBtn, "cell 0 2 2 2");
 		
 		add(panel);
-		setResizable(false);
+		//setResizable(false);
 		setTitle("Connection Information");
-		pack();
+		//pack();
 		
 		if (connection != null) {
 			connection.disconnect();
@@ -104,24 +104,25 @@ public class ConnectionDialog extends JDialog {
 		    }
 		});
 		pack();
+		
 	}
 	
 	private void loadDefaultConnections() {
 		try{
 			try{
-				addConnectionPanel(new UsbConnectionPanel());
-				addConnectionPanel(new BluetoothConnectionPanel());
-				addConnectionPanel(new SerialConnectionPanel());
+				addConnectionPanel(new UsbConnectionPanel(this));
+				addConnectionPanel(new BluetoothConnectionPanel(this));
+				addConnectionPanel(new SerialConnectionPanel(this));
 			}catch(Exception ex){
-				addConnectionPanel(new SerialConnectionPanel());
-				addConnectionPanel(new BluetoothConnectionPanel());
+				addConnectionPanel(new SerialConnectionPanel(this));
+				addConnectionPanel(new BluetoothConnectionPanel(this));
 			}
 		}catch(Error e){
 			e.printStackTrace();
 			Log.error("This is not a java 8 compliant system, removing the serial, bluetooth and usb connections");
 		}
-		addConnectionPanel(new UDPConnectionPanel());
-		addConnectionPanel(new TCPConnectionPanel());
+		addConnectionPanel(new UDPConnectionPanel(this));
+		addConnectionPanel(new TCPConnectionPanel(this));
 		
 	}
 

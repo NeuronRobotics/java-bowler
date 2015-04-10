@@ -26,19 +26,24 @@ public abstract class AbstractConnectionPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private String title;
 	private ImageIcon icon;
+	private ConnectionDialog connectionDialog;
 	
 	public abstract BowlerAbstractConnection getConnection();
 	public abstract void refresh();
 	
-	public AbstractConnectionPanel(String title, ImageIcon icon) {
+
+	
+	public AbstractConnectionPanel(String title, ImageIcon icon,ConnectionDialog connectionDialog) {
 		setTitle(title);
 		
 		setIcon(icon);
+		this.setConnectionDialog(connectionDialog);
 	}
 	
-	public AbstractConnectionPanel(String title) {
+	public AbstractConnectionPanel(String title,ConnectionDialog connectionDialog) {
 		setTitle(title);
 		setIcon(ConnectionImageIconFactory.getIcon("images/connection-icon.png"));
+		this.setConnectionDialog(connectionDialog);
 	}
 
 	public void setTitle(String title) {
@@ -58,5 +63,12 @@ public abstract class AbstractConnectionPanel extends JPanel {
 		if(icon == null)
 			return new ImageIcon();
 		return icon;
+	}
+	
+	public ConnectionDialog getConnectionDialog() {
+		return connectionDialog;
+	}
+	public void setConnectionDialog(ConnectionDialog connectionDialog) {
+		this.connectionDialog = connectionDialog;
 	}
 }

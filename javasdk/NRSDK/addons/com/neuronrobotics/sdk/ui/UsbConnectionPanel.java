@@ -58,10 +58,11 @@ public class UsbConnectionPanel extends AbstractConnectionPanel implements IUsbD
 	private UsbCDCSerialConnection connection = null;
 
 	/**
+	 * @param connectionDialog 
 	 * 
 	 */
-	public UsbConnectionPanel() {
-		super("USB", ConnectionImageIconFactory.getIcon("images/usb-icon.png"));
+	public UsbConnectionPanel(ConnectionDialog connectionDialog) {
+		super("USB", ConnectionImageIconFactory.getIcon("images/usb-icon.png"),connectionDialog);
 		
 
 		connectionCbo = new JComboBox();
@@ -129,7 +130,7 @@ public class UsbConnectionPanel extends AbstractConnectionPanel implements IUsbD
 				}
 			}
 		
-
+			getConnectionDialog().pack();
 	}
 
 	@Override
