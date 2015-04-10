@@ -1180,30 +1180,31 @@ public abstract class BowlerAbstractConnection {
 	}
 	
 	public BowlerDatagram loadPacketFromPhy(ByteList bytesToPacketBuffer) throws NullPointerException, IOException{
-		BowlerDatagram bd=null;
+		BowlerDatagram bd=BowlerDatagramFactory.build(bytesToPacketBuffer);
 		if(dataIns!=null){	
-			byte  [] buff = new byte[getDataIns().available()];
-			if(buff.length==0)
+			int have = getDataIns().available();
+			if(have==0)
 				return null;
 			int b,ret =0;
 			
 			try{
-				for(b=0;b<buff.length;b++){
+				for(b=0;b<have;b++){
+					if(bd!=null)
+						Log.error("Adding "+(have-b-1)+" after packet found");
 					ret = getDataIns().read();
 					if(ret<0){
 						Log.error("Stream is broken - unexpected: claimed to have "+getDataIns().available()+" bytes, read in "+b);
 						//reconnect();
 						//something went wrong
-						new RuntimeException(" Buffer attempted to read "+buff.length+" got "+b).printStackTrace();
+						new RuntimeException(" Buffer attempted to read "+have+" got "+b).printStackTrace();
 						return null;
 					}else{
 						bytesToPacketBuffer.add(ret);
 						if(bd==null)
-							try{
-								bd = BowlerDatagramFactory.build(bytesToPacketBuffer);
-							}catch(Exception ex){
-								ex.printStackTrace();
-							}
+							bd = BowlerDatagramFactory.build(bytesToPacketBuffer);
+						if(bd!=null)
+							return bd;
+
 					}
 				
 				}
