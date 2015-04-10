@@ -590,11 +590,11 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 	}
 
 	@Override
-	public boolean loadPacketFromPhy(ByteList bytesToPacketBuffer)
+	public BowlerDatagram loadPacketFromPhy(ByteList bytesToPacketBuffer)
 			throws NullPointerException, IOException {
 
 		if (dataInEndpoint == null)
-			return false;
+			return null;
 		int got = 0;
 		byte[] data = new byte[64];
 		try {
@@ -628,22 +628,15 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 				| UsbException e) {
 			e.printStackTrace();
 			connect();
-			return false;
+			return null;
 		}
 		if (got > 0) {
 			bytesToPacketBuffer.add(Arrays.copyOfRange(data, 0, got));
-			BowlerDatagram bd = BowlerDatagramFactory
+			return BowlerDatagramFactory
 					.build(bytesToPacketBuffer);
-			if (bd != null) {
-				// Log.info("\nR<<"+bd);
-				onDataReceived(bd);
-
-				// Packet found, break the loop and deal with it
-				return true;
-			}
 		}
 
-		return false;
+		return null;
 	}
 
 	// /* (non-Javadoc)

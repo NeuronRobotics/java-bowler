@@ -268,36 +268,7 @@ public abstract class BowlerAbstractConnection {
 		}
 		return System.currentTimeMillis() - getLastWrite() ;
 	}
-	/**
-	 * Write.
-	 *
-	 * @param data the data
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	//private ByteList outgoing = new ByteList();
-	public void write(byte[] data) throws IOException {
-		waitForConnectioToBeReady();
-		setLastWrite(System.currentTimeMillis());
-		if(dataOuts != null){
-			try{
-				//Log.info("Writing: "+data.length+" bytes");
-				
-				//while(outgoing.size()>0){
-					//byte[] b =outgoing.popList(getChunkSize());
-				//System.out.println("Writing "+new ByteList(data));
-				getDataOuts().write(data);
-				getDataOuts().flush();
-				//}
-			}catch (Exception e){
-				//e.printStackTrace();
-				Log.error("Write failed. "+e.getMessage());
-				//reconnect();
-			}
-		}else{
-			Log.error("No data sent, stream closed");
-		}
-		
-	}
+
 	
 	/**
 	 * Sets the connected.
@@ -1154,25 +1125,25 @@ public abstract class BowlerAbstractConnection {
 			//throw new RuntimeException();
 		}
 		
-
 		private boolean runPacketUpdate() {
 			try {
-				if(loadPacketFromPhy(bytesToPacketBuffer))
-					bytesToPacketBuffer.clear();
+				BowlerDatagram bd = loadPacketFromPhy(bytesToPacketBuffer);
+				if(bd!=null){
+					Log.info("\nR<<"+bd);
+					onDataReceived(bd);
+					bytesToPacketBuffer=new ByteList();
+				}
 			} catch (Exception e) {
+				e.printStackTrace();
 				if(isConnected()){
 					Log.error("Data read failed "+e.getMessage());
 					e.printStackTrace();
-//					try {
-//						reconnect();
-//					} catch (IOException e1) {
-//						// TODO Auto-generated catch block
-//						e1.printStackTrace();
-//					}
+
 				}
 			}
 			return false;
 		}
+
 		
 		/**
 		 * Adds the datagram.
@@ -1192,43 +1163,6 @@ public abstract class BowlerAbstractConnection {
 		}
 	}
 	
-	
-	public boolean loadPacketFromPhy(ByteList bytesToPacketBuffer) throws NullPointerException, IOException{
-		if(dataIns!=null){	
-			if(getDataIns().available()==0)
-				return false;
-			byte  [] buff = new byte[getDataIns().available()];
-			//we want to run this until the buffer is clear or a packet is found
-			int b = getDataIns().read(buff);
-		
-			if(b<0 || buff.length != b){
-				Log.error("Stream is broken - unexpected: claimed to have "+getDataIns().available()+" bytes, read in "+b);
-				//reconnect();
-				//something went wrong
-				new RuntimeException(" Buffer attempted to read "+buff.length+" got "+b).printStackTrace();
-				return false;
-			}else{
-				bytesToPacketBuffer.add(buff);
-				BowlerDatagram bd=null;
-				try{
-					bd = BowlerDatagramFactory.build(bytesToPacketBuffer);
-				}catch(Exception ex){
-					ex.printStackTrace();
-				}
-				if (bd!=null) {
-					Log.info("\nR<<"+bd);
-					onDataReceived(bd);
-					return true;
-				}
-			}
-			//ThreadUtil.wait(1);
-			
-		}else{
-			Log.error("Data In is null");
-		}
-		return false;
-	}
-
 	public static boolean isUseThreadedStack() {
 		return useThreadedStack;
 	}
@@ -1245,5 +1179,77 @@ public abstract class BowlerAbstractConnection {
 		this.beater = beater;
 	}
 	
+	public BowlerDatagram loadPacketFromPhy(ByteList bytesToPacketBuffer) throws NullPointerException, IOException{
+		BowlerDatagram bd=null;
+		if(dataIns!=null){	
+			byte  [] buff = new byte[getDataIns().available()];
+			if(buff.length==0)
+				return null;
+			int b,ret =0;
+			
+			try{
+				for(b=0;b<buff.length;b++){
+					ret = getDataIns().read();
+					if(ret<0){
+						Log.error("Stream is broken - unexpected: claimed to have "+getDataIns().available()+" bytes, read in "+b);
+						//reconnect();
+						//something went wrong
+						new RuntimeException(" Buffer attempted to read "+buff.length+" got "+b).printStackTrace();
+						return null;
+					}else{
+						bytesToPacketBuffer.add(ret);
+						if(bd==null)
+							try{
+								bd = BowlerDatagramFactory.build(bytesToPacketBuffer);
+							}catch(Exception ex){
+								ex.printStackTrace();
+							}
+					}
+				
+				}
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+			//ThreadUtil.wait(1);
+			
+		}else{
+			Log.error("Data In is null");
+		}
+		return bd;
+	}
+	
+	/**
+	 * Write.
+	 *
+	 * @param data the data
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	//private ByteList outgoing = new ByteList();
+	public void write(byte[] data) throws IOException {
+		waitForConnectioToBeReady();
+		setLastWrite(System.currentTimeMillis());
+		if(dataOuts != null){
+			try{
+				//Log.info("Writing: "+data.length+" bytes");
+				ByteList outgoing = new ByteList(data);
+				
+				while(outgoing.size()>0){
+					byte[] b =outgoing.popList(getChunkSize());
+					//System.out.println("Writing "+new ByteList(data));
+					getDataOuts().write( b );
+					getDataOuts().flush();
+				}
+			}catch (Exception e){
+				//e.printStackTrace();
+				Log.error("Write failed. "+e.getMessage());
+				//reconnect();
+			}
+		}else{
+			Log.error("No data sent, stream closed");
+		}
+		
+	}
+
+
 
 }
