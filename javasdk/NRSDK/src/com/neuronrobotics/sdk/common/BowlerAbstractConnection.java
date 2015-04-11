@@ -95,7 +95,7 @@ public abstract class BowlerAbstractConnection {
 	private ArrayList<NamespaceEncapsulation> namespaceList=null;
 	private ArrayList<String> nameSpaceStrings = null;
 	private boolean beater = false;
-	private ReentrantLock executingLock = new ReentrantLock();
+	//private ReentrantLock executingLock = new ReentrantLock();
 	
 	
 	/**
@@ -145,7 +145,7 @@ public abstract class BowlerAbstractConnection {
 			Log.error("Can not send message because the engine is not connected.");
 			return null;
 		}
-		executingLock.lock();
+		//executingLock.lock();
 		clearLastSyncronousResponse();
 		try {
 			long send = System.currentTimeMillis();
@@ -154,7 +154,7 @@ public abstract class BowlerAbstractConnection {
 			write(sendable.getBytes());
 			Log.info("Transmit took: "+(System.currentTimeMillis()-send)+" ms");
 		} catch (IOException e1) {
-			executingLock.unlock();
+			//executingLock.unlock();
 			throw new RuntimeException(e1);
 		}
 		long startOfReciveTime = System.currentTimeMillis();
@@ -185,7 +185,7 @@ public abstract class BowlerAbstractConnection {
 		}
 		BowlerDatagram b = getLastSyncronousResponse();
 		clearLastSyncronousResponse();
-		executingLock.unlock();
+		//executingLock.unlock();
 		return b;
 	}
 	
