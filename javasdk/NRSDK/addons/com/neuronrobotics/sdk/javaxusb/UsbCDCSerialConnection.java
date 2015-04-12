@@ -567,13 +567,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 			}
 			if (!camOutpipe.isOpen())
 				camOutpipe.open();
-			// if(write == null){
-			//
-			// write = camOutpipe.createUsbIrp();
-			// System.out.println("Write is a "+write.getClass());
-			// System.out.println("camOutpipe is a "+camOutpipe.getClass());
-			// }
-			// write = new DefaultUsbIrp();
+
 			prepIrp(write, src);
 
 			camOutpipe.asyncSubmit(write);
@@ -594,12 +588,12 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 		return;
 	}
 	
-	enum usbReadState{
+	enum usbControlState{
 		init,
 		submitted,
 		done
 	} ;
-	usbReadState usbState = usbReadState.init;
+	usbControlState usbReadState = usbControlState.init;
 
 	@Override
 	public BowlerDatagram loadPacketFromPhy(ByteList bytesToPacketBuffer)
@@ -610,7 +604,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 		int got = 0;
 		
 			
-		switch (usbState){
+		switch (usbReadState){
 
 		case init:
 			try {
@@ -620,10 +614,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 				}
 				if (!camInpipe.isOpen())
 					camInpipe.open();
-				// if(read == null)
-				// read = camInpipe.createUsbIrp();
-	
-				// read = new DefaultUsbIrp();
+
 				prepIrp(read, data);
 		
 				camInpipe.asyncSubmit(read);
@@ -631,7 +622,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 	
 				read.waitUntilComplete();
 	
-				usbState = usbReadState.submitted;
+				usbReadState = usbControlState.submitted;
 	
 			} catch ( IllegalArgumentException 
 					| UsbNotActiveException 
@@ -649,7 +640,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 				if (got > 0) {
 					bytesToPacketBuffer.add(Arrays.copyOfRange(data, 0, got));
 				}
-				usbState = usbReadState.init;
+				usbReadState = usbControlState.init;
 			}
 		default:
 			break;	

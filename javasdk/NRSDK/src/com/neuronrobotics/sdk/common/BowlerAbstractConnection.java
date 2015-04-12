@@ -1133,12 +1133,12 @@ public abstract class BowlerAbstractConnection {
 					onDataReceived(bd);
 					bytesToPacketBuffer=new ByteList();
 				}
-			} catch (Exception e) {
+			} catch (IOException e) {
 				e.printStackTrace();
 				if(isConnected()){
 					Log.error("Data read failed "+e.getMessage());
 					e.printStackTrace();
-
+					disconnect();
 				}
 			}
 			return false;
