@@ -73,6 +73,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 	private static HotplugCallbackHandle callbackHandle;
 	private static ArrayList<IUsbDeviceEventListener> usbDeviceEventListeners = new ArrayList<IUsbDeviceEventListener>();
 	private static EventHandlingThread thread;
+	byte[] data = new byte[64];
 	
 	public UsbCDCSerialConnection(String deviceString) {
 		MyDeviceString=deviceString;
@@ -584,7 +585,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 
 		} catch (Exception e) {// TODO Auto-generated catch block
 			e.printStackTrace();
-			connect();
+			disconnect();
 			throw new BowlerRuntimeException(
 					"Connection is no longer availible "
 							+ e.getLocalizedMessage());
@@ -592,6 +593,13 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 
 		return;
 	}
+	
+	enum usbReadState{
+		init,
+		submitted,
+		done
+	} ;
+	usbReadState usbState = usbReadState.init;
 
 	@Override
 	public BowlerDatagram loadPacketFromPhy(ByteList bytesToPacketBuffer)
@@ -600,43 +608,54 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 		if (dataInEndpoint == null)
 			return null;
 		int got = 0;
-		byte[] data = new byte[64];
-		try {
-			if (camInpipe == null) {
-				camInpipe = dataInEndpoint.getUsbPipe();
-
-			}
-			if (!camInpipe.isOpen())
-				camInpipe.open();
-			// if(read == null)
-			// read = camInpipe.createUsbIrp();
-
-			// read = new DefaultUsbIrp();
-			prepIrp(read, data);
-	
-			camInpipe.asyncSubmit(read);
 		
+			
+		switch (usbState){
 
-			read.waitUntilComplete();
-
-			got = read.getActualLength();
-
-			while (!read.isComplete()) {
-				ThreadUtil.wait(1);
+		case init:
+			try {
+				if (camInpipe == null) {
+					camInpipe = dataInEndpoint.getUsbPipe();
+	
+				}
+				if (!camInpipe.isOpen())
+					camInpipe.open();
+				// if(read == null)
+				// read = camInpipe.createUsbIrp();
+	
+				// read = new DefaultUsbIrp();
+				prepIrp(read, data);
+		
+				camInpipe.asyncSubmit(read);
+			
+	
+				read.waitUntilComplete();
+	
+				usbState = usbReadState.submitted;
+	
+			} catch ( IllegalArgumentException 
+					| UsbNotActiveException 
+					| UsbNotOpenException
+					| UsbDisconnectedException 
+					| UsbException e) {
+				e.printStackTrace();
+				disconnect();
+				return null;
 			}
+			break;
+		case submitted:
+			if(read.isComplete()){
+				got = read.getActualLength();
+				if (got > 0) {
+					bytesToPacketBuffer.add(Arrays.copyOfRange(data, 0, got));
+				}
+				usbState = usbReadState.init;
+			}
+		default:
+			break;	
+		}
 
-		} catch ( IllegalArgumentException 
-				| UsbNotActiveException 
-				| UsbNotOpenException
-				| UsbDisconnectedException 
-				| UsbException e) {
-			e.printStackTrace();
-			connect();
-			return null;
-		}
-		if (got > 0) {
-			bytesToPacketBuffer.add(Arrays.copyOfRange(data, 0, got));
-		}
+
 		return BowlerDatagramFactory
 				.build(bytesToPacketBuffer);
 	}
@@ -675,8 +694,8 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 	public void errorEventOccurred(UsbDeviceErrorEvent arg0) {
 		if(arg0.getUsbDevice() == mDevice){
 			new RuntimeException("Disconnect in USB called").printStackTrace();
-			//disconnect();
-			connect() ;
+			disconnect();
+			//connect() ;
 		}
 	}
 
@@ -685,8 +704,8 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 		
 		if(arg0.getUsbDevice() == mDevice){
 			new RuntimeException("Disconnect in USB called").printStackTrace();
-			//disconnect();
-			connect() ;
+			disconnect();
+			//connect() ;
 		}
 	}
 

@@ -942,10 +942,10 @@ public abstract class BowlerAbstractConnection {
 	 * @throws InvalidResponseException the invalid response exception
 	 */
 	public BowlerDatagram send(BowlerAbstractCommand command,MACAddress addr) throws NoConnectionAvailableException, InvalidResponseException {	
-		if(!isConnected()) {
-			if(!connect())
-				throw new NoConnectionAvailableException();
-		}
+//		if(!isConnected()) {
+//			if(!connect())
+//				throw new NoConnectionAvailableException();
+//		}
 		BowlerDatagram cmd= BowlerDatagramFactory.build(addr, command);
 		BowlerDatagram back = sendSynchronusly(cmd);
 		if(back!=null){
