@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 
 import com.neuronrobotics.sdk.addons.kinematics.DHParameterKinematics;
+import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 import com.neuronrobotics.sdk.util.ThreadUtil;
@@ -43,7 +44,7 @@ public class DHKinematicsViewer extends JFXPanel {
         
         
 		DyIO.disableFWCheck();
-		//Log.enableInfoPrint();
+		Log.enableInfoPrint();
 		//Create the references for my known DyIOs
 		DyIO master = new DyIO(ConnectionDialog.promptConnection());
 
@@ -56,6 +57,7 @@ public class DHKinematicsViewer extends JFXPanel {
 	        frame.setVisible(true);
 	        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		}
+		Log.enableSystemPrint(false);
         while(true){
         	ThreadUtil.wait(1);
         	master.getAllChannelValues();
