@@ -578,7 +578,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 			}
 
 		} catch (Exception e) {// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 			disconnect();
 			throw new BowlerRuntimeException(
 					"Connection is no longer availible "
@@ -629,7 +629,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 					| UsbNotOpenException
 					| UsbDisconnectedException 
 					| UsbException e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 				disconnect();
 				return null;
 			}

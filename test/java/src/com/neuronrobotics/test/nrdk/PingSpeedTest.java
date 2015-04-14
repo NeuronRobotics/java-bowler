@@ -37,7 +37,7 @@ public class PingSpeedTest {
 		int i;
 		avg=0;
 		dev.ping();
-		for(i=1;i<5000000 && dev.isAvailable();i++) {
+		for(i=1;i<500 && dev.isAvailable();i++) {
 			start = System.currentTimeMillis();
 			dev.ping();
 			
