@@ -11,6 +11,7 @@ import javafx.scene.layout.Pane;
 import com.neuronrobotics.sdk.addons.kinematics.DHParameterKinematics;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
+import com.neuronrobotics.sdk.util.ThreadUtil;
 
 public class DHKinematicsViewer extends JFXPanel {
 
@@ -55,7 +56,10 @@ public class DHKinematicsViewer extends JFXPanel {
 	        frame.setVisible(true);
 	        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		}
-        
+        while(true){
+        	ThreadUtil.wait(1);
+        	master.getAllChannelValues();
+        }
         
     }
 }
