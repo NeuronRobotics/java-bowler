@@ -1138,7 +1138,7 @@ public abstract class BowlerAbstractConnection {
 					bytesToPacketBuffer=new ByteList();
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 				if(isConnected()){
 					Log.error("Data read failed "+e.getMessage());
 					e.printStackTrace();

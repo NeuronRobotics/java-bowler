@@ -493,7 +493,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 		} catch (UsbNotActiveException | UsbNotOpenException
 				| UsbDisconnectedException | UsbException e1) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			//e1.printStackTrace();
 		}
 
 		if(dataInterface!=null){
@@ -694,7 +694,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 	public void usbDeviceDetached(UsbDeviceEvent arg0) {
 		
 		if(arg0.getUsbDevice() == mDevice){
-			new RuntimeException("Disconnect in USB called").printStackTrace();
+			//new RuntimeException("Disconnect in USB called").printStackTrace();
 			disconnect();
 			//connect() ;
 		}
