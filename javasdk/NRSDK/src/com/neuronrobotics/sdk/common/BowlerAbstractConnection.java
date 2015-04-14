@@ -181,6 +181,10 @@ public abstract class BowlerAbstractConnection {
 				//If the ping fails to get a response, try the older bowler format
 				Log.error("Switching to legacy parser");
 				BowlerDatagram.setUseBowlerV4(false);
+			}else{
+				//If the ping fails to get a response, try the older bowler format
+				Log.error("Switching to legacy parser");
+				BowlerDatagram.setUseBowlerV4(true);
 			}
 		}
 		BowlerDatagram b = getLastSyncronousResponse();
