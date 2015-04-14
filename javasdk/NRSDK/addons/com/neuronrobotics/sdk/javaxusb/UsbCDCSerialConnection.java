@@ -505,7 +505,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 						UsbDisconnectedException
 						| UsbException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					//e.printStackTrace();
 				}
 			}
 		}
