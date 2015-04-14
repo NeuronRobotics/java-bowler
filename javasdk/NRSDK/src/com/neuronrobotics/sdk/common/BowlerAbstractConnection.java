@@ -988,10 +988,10 @@ public abstract class BowlerAbstractConnection {
 			}
 		} catch (InvalidResponseException e) {
 			Log.error("Invalid response from Ping ");
-			e.printStackTrace();
+			//e.printStackTrace();
 		} catch (Exception e) {
 			Log.error("No connection is available.");
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		
 		return false;
