@@ -129,7 +129,18 @@ public abstract class BowlerAbstractConnection {
 	}
 	
 	
-
+	/**
+	 * Sends any "universal" data to the connection and returns either the syncronous response or null in the
+	 * event that the connection has determined a timeout. Before sending, use clearLastSyncronousResponse()
+	 * and use getLastSyncronousResponse() to get the last response since clearing.
+	 *
+	 * @param sendable the sendable
+	 * @param switchParser 
+	 * @return the bowler datagram
+	 */
+	public BowlerDatagram sendSynchronusly(BowlerDatagram sendable){
+		return sendSynchronusly(sendable,false);
+	}
 	
 	/**
 	 * Sends any "universal" data to the connection and returns either the syncronous response or null in the
@@ -137,9 +148,10 @@ public abstract class BowlerAbstractConnection {
 	 * and use getLastSyncronousResponse() to get the last response since clearing.
 	 *
 	 * @param sendable the sendable
+	 * @param switchParser 
 	 * @return the bowler datagram
 	 */
-	public synchronized BowlerDatagram sendSynchronusly(BowlerDatagram sendable){
+	public synchronized BowlerDatagram sendSynchronusly(BowlerDatagram sendable, boolean switchParser){
 		
 		if(!isConnected()) {
 			Log.error("Can not send message because the engine is not connected.");
@@ -177,14 +189,16 @@ public abstract class BowlerAbstractConnection {
 		
 		if (getLastSyncronousResponse() == null){
 			Log.error("No response from device, no response in "+(System.currentTimeMillis()-startOfReciveTime)+" ms");
-			if( BowlerDatagram.isUseBowlerV4()){
-				//If the ping fails to get a response, try the older bowler format
-				Log.error("Switching to legacy parser");
-				BowlerDatagram.setUseBowlerV4(false);
-			}else{
-				//If the ping fails to get a response, try the older bowler format
-				Log.error("Switching to legacy parser");
-				BowlerDatagram.setUseBowlerV4(true);
+			if(switchParser){
+				if( BowlerDatagram.isUseBowlerV4()){
+					//If the ping fails to get a response, try the older bowler format
+					Log.error("Switching to legacy parser");
+					BowlerDatagram.setUseBowlerV4(false);
+				}else{
+//					//If the ping fails to get a response, try the older bowler format
+//					Log.error("Switching to legacy parser");
+//					BowlerDatagram.setUseBowlerV4(true);
+				}
 			}
 		}
 		BowlerDatagram b = getLastSyncronousResponse();
@@ -900,22 +914,34 @@ public abstract class BowlerAbstractConnection {
 		}
 		return namespaceList.get(namespaceIndex).getRpcList();
 	}
-	
 	/**
 	 * Send a command to the connection.
 	 *
 	 * @param command the command
+	 * @param switchParser 
 	 * @return the syncronous response
 	 * @throws NoConnectionAvailableException the no connection available exception
 	 * @throws InvalidResponseException the invalid response exception
 	 */
 	public BowlerDatagram send(BowlerAbstractCommand command,MACAddress addr, int retry) throws NoConnectionAvailableException, InvalidResponseException {	
+		return send(command,addr,retry,false);
+	}
+	/**
+	 * Send a command to the connection.
+	 *
+	 * @param command the command
+	 * @param switchParser 
+	 * @return the syncronous response
+	 * @throws NoConnectionAvailableException the no connection available exception
+	 * @throws InvalidResponseException the invalid response exception
+	 */
+	public BowlerDatagram send(BowlerAbstractCommand command,MACAddress addr, int retry, boolean switchParser) throws NoConnectionAvailableException, InvalidResponseException {	
 		for(int i=0;i<retry;i++){
 			if(i!=0)
 				Log.error("Re-sending");
 			BowlerDatagram ret;
 			try{
-				ret = send( command,addr);
+				ret = send( command,addr,switchParser);
 				//System.out.println(ret);
 				if(ret != null){
 					addr.setValues(ret.getAddress());
@@ -927,7 +953,8 @@ public abstract class BowlerAbstractConnection {
 				}
 			}catch(MalformattedDatagram |InvalidResponseException | NullPointerException e){
 				Log.error("Sending Synchronus packet and there was a failure, will retry "+(retry-i-1)+" more times");
-				ThreadUtil.wait(150*i);				
+				ThreadUtil.wait(150*i);	
+
 			}
 
 		}
@@ -946,12 +973,23 @@ public abstract class BowlerAbstractConnection {
 	 * @throws InvalidResponseException the invalid response exception
 	 */
 	public BowlerDatagram send(BowlerAbstractCommand command,MACAddress addr) throws NoConnectionAvailableException, InvalidResponseException {	
+		return send(command,addr,false);
+	}
+	/**
+	 * Send a command to the connection.
+	 *
+	 * @param command the command
+	 * @return the syncronous response
+	 * @throws NoConnectionAvailableException the no connection available exception
+	 * @throws InvalidResponseException the invalid response exception
+	 */
+	public BowlerDatagram send(BowlerAbstractCommand command,MACAddress addr,boolean switchParser) throws NoConnectionAvailableException, InvalidResponseException {	
 //		if(!isConnected()) {
 //			if(!connect())
 //				throw new NoConnectionAvailableException();
 //		}
 		BowlerDatagram cmd= BowlerDatagramFactory.build(addr, command);
-		BowlerDatagram back = sendSynchronusly(cmd);
+		BowlerDatagram back = sendSynchronusly(cmd,switchParser);
 		if(back!=null){
 			addr.setValues(back.getAddress());
 		}
@@ -961,6 +999,7 @@ public abstract class BowlerAbstractConnection {
 		//BowlerDatagramFactory.freePacket(cmd);
 		
 	}
+	
 	private class PingCommand extends BowlerAbstractCommand {
 		
 		/**
@@ -971,17 +1010,28 @@ public abstract class BowlerAbstractConnection {
 			setOpCode("_png");
 		}
 	}
-
 	/**
 	 * Implementation of the Bowler ping ("_png") command
 	 * Sends a ping to the device returns the device's MAC address.
+	 * @param switchParser 
 	 *
 	 * @return the device's address
 	 */
 	public boolean ping(MACAddress mac) {
+
+		return ping( mac,false);
+	}
+	/**
+	 * Implementation of the Bowler ping ("_png") command
+	 * Sends a ping to the device returns the device's MAC address.
+	 * @param switchParser 
+	 *
+	 * @return the device's address
+	 */
+	public boolean ping(MACAddress mac, boolean switchParser) {
 		try {
 			//Log.warning("Ping device:");
-			BowlerDatagram bd = send(new PingCommand(),mac,5);
+			BowlerDatagram bd = send(new PingCommand(),mac,5,switchParser);
 			if(bd !=null){
 				BowlerDatagramFactory.freePacket(bd);
 				return true;
