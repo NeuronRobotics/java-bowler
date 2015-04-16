@@ -346,7 +346,7 @@ public class Jfx3dManager extends JFXPanel {
                     double z = camera.getTranslateZ();
                     double newZ = z + zoomFactor;
                     camera.setTranslateZ(newZ);
-		            System.out.println("Z = "+newZ);
+		            //System.out.println("Z = "+newZ);
 				}
 				t.consume();
 			}
