@@ -141,17 +141,13 @@ public class Jfx3dManager extends JFXPanel {
        setScene(new Scene(new Group(getSubScene())));
        
    }
-   
-	public MeshView replaceObject(MeshView previous, MeshView current) {
+   public void removeObject(MeshView previous) {
 		if (previous != null) {
 			lookGroup.getChildren().remove(previous);
 		}
 
-		PhongMaterial m = new PhongMaterial(Color.RED);
-
-		current.setCullFace(CullFace.NONE);
-
-		current.setMaterial(m);
+	}
+	public MeshView addObject( MeshView current) {
 
 		lookGroup.getChildren().add(current);
 		return current;
