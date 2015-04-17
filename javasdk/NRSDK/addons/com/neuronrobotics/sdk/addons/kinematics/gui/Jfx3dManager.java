@@ -224,9 +224,9 @@ public class Jfx3dManager extends JFXPanel {
 								// selectedObject.
 								TransformFactory.getTransform(pose,
 										selsectedAffine);
-								selsectedAffine.setTx(selsectedAffine.getTx() -robotBase.getTx() );
-								selsectedAffine.setTy(selsectedAffine.getTy() -robotBase.getTy() );
-								selsectedAffine.setTz(selsectedAffine.getTz() -robotBase.getTz() );
+								selsectedAffine.setTx(selsectedAffine.getTx() +robotBase.getTx() );
+								selsectedAffine.setTy(selsectedAffine.getTy() +robotBase.getTy() );
+								selsectedAffine.setTz(selsectedAffine.getTz() +robotBase.getTz() );
 							}
 						}
 					});
@@ -264,7 +264,7 @@ public class Jfx3dManager extends JFXPanel {
 								}
 								if (selectedObject != null) {
 									selectedObject.getTransforms().clear();
-									selectedObject.getTransforms().addAll(
+									selectedObject.getTransforms().add(
 											selsectedAffine
 											);
 								}
@@ -274,7 +274,7 @@ public class Jfx3dManager extends JFXPanel {
 							if (selectedObject != null) {
 								// freeze it in place
 								selectedObject.getTransforms().clear();
-								selectedObject.getTransforms().addAll(
+								selectedObject.getTransforms().add(
 										selsectedAffine.clone());
 								selectedObject = null;
 							}
@@ -308,12 +308,12 @@ public class Jfx3dManager extends JFXPanel {
 
 	private boolean threedBoundCheck(double x, double y, double z, Affine a,
 			double distance) {
-		if (oneDBound(x, a.getTx(), distance))
-			return false;
-		if (oneDBound(y, a.getTy(), distance))
-			return false;
-		if (oneDBound(z, a.getTz(), distance))
-			return false;
+//		if (oneDBound(x, a.getTx(), distance))
+//			return false;
+//		if (oneDBound(y, a.getTy(), distance))
+//			return false;
+//		if (oneDBound(z, a.getTz(), distance))
+//			return false;
 		return true;
 	}
 
