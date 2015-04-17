@@ -63,10 +63,6 @@ public class DHParameterKinematics extends AbstractKinematicsNR {
 		if(jointSpaceVector == null || getDhChain() == null)
 			return new TransformNR();
 		TransformNR rt = getDhChain().forwardKinematics(jointSpaceVector);
-		ArrayList<TransformNR> joints = getChainTransformations();
-		for(int i=0;i<joints.size();i++)		{
-			TransformFactory.getTransform(joints.get(i), linksListeners.get(i));
-		}
 		return rt;
 	}
 	
@@ -104,6 +100,17 @@ public class DHParameterKinematics extends AbstractKinematicsNR {
 			dh.setListener(a);
 			linksListeners.add(a);
 		}
+		addPoseUpdateListener(new ITaskSpaceUpdateListenerNR() {	
+			@Override
+			public void onTaskSpaceUpdate(AbstractKinematicsNR source, TransformNR pose) {
+				ArrayList<TransformNR> joints = getChainTransformations();
+				for(int i=0;i<joints.size();i++)		{
+					TransformFactory.getTransform(joints.get(i), linksListeners.get(i));
+				}
+			}
+			@Override
+			public void onTargetTaskSpaceUpdate(AbstractKinematicsNR source,TransformNR pose) {}
+		});
 	}
 
 
