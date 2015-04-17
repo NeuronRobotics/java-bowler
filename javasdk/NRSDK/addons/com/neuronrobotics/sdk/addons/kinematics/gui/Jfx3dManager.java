@@ -88,29 +88,29 @@ import javafx.scene.Node;
  */
 public class Jfx3dManager extends JFXPanel {
 
-    private final Group root = new Group();
-    final Group axisGroup = new Group();
-    final Xform world = new Xform();
-    final PerspectiveCamera camera = new PerspectiveCamera(true);
-    final Xform cameraXform = new Xform();
-    final Xform cameraXform2 = new Xform();
-    final Xform cameraXform3 = new Xform();
-    final double cameraDistance = 1000;
-    final Xform moleculeGroup = new Xform();
-    private Timeline timeline;
-    boolean timelinePlaying = false;
-    double ONE_FRAME = 1.0 / 24.0;
-    double DELTA_MULTIPLIER = 200.0;
-    double CONTROL_MULTIPLIER = 0.1;
-    double SHIFT_MULTIPLIER = 0.1;
-    double ALT_MULTIPLIER = 0.5;
-    double mousePosX;
-    double mousePosY;
-    double mouseOldX;
-    double mouseOldY;
-    double mouseDeltaX;
-    double mouseDeltaY;
-    
+	private final Group root = new Group();
+	final Group axisGroup = new Group();
+	final Xform world = new Xform();
+	final PerspectiveCamera camera = new PerspectiveCamera(true);
+	final Xform cameraXform = new Xform();
+	final Xform cameraXform2 = new Xform();
+	final Xform cameraXform3 = new Xform();
+	final double cameraDistance = 1000;
+	final Xform moleculeGroup = new Xform();
+	private Timeline timeline;
+	boolean timelinePlaying = false;
+	double ONE_FRAME = 1.0 / 24.0;
+	double DELTA_MULTIPLIER = 200.0;
+	double CONTROL_MULTIPLIER = 0.1;
+	double SHIFT_MULTIPLIER = 0.1;
+	double ALT_MULTIPLIER = 0.5;
+	double mousePosX;
+	double mousePosY;
+	double mouseOldX;
+	double mouseOldY;
+	double mouseDeltaX;
+	double mouseDeltaY;
+
 	private final Group manipulator = new Group();
 	private final Group lookGroup = new Group();
 
@@ -118,39 +118,38 @@ public class Jfx3dManager extends JFXPanel {
 	// private Box myBox = new Box(1, 1,boxSize);
 	private ArrayList<Affine> joints = new ArrayList<Affine>();
 
-
 	private DHParameterKinematics model;
 	private DyIO master;
 
 	private boolean buttonPressed = false;
 	private SubScene scene;
-	private MeshView selectedObject=null;
+	private MeshView selectedObject = null;
 	private Affine selsectedAffine = new Affine();
-	private TransformNR pose=null;
-   public Jfx3dManager(){
-       buildScene();
-       buildCamera();
-       buildAxes();
-       
-       
-       
-       setSubScene(new  SubScene(getRoot(), 1024, 1024, true, null));
-       getSubScene().setFill(Color.GREY);
-       handleKeyboard(getSubScene(), world);
-       handleMouse(getSubScene(), world);
-       getSubScene().setCamera(camera);
-       
-       
-       setScene(new Scene(new Group(getSubScene())));
-       
-   }
-   public void removeObject(MeshView previous) {
+	private TransformNR pose = null;
+
+	public Jfx3dManager() {
+		buildScene();
+		buildCamera();
+		buildAxes();
+
+		setSubScene(new SubScene(getRoot(), 1024, 1024, true, null));
+		getSubScene().setFill(Color.GREY);
+		handleKeyboard(getSubScene(), world);
+		handleMouse(getSubScene(), world);
+		getSubScene().setCamera(camera);
+
+		setScene(new Scene(new Group(getSubScene())));
+
+	}
+
+	public void removeObject(MeshView previous) {
 		if (previous != null) {
 			lookGroup.getChildren().remove(previous);
 		}
 
 	}
-	public MeshView addObject( MeshView current) {
+
+	public MeshView addObject(MeshView current) {
 
 		lookGroup.getChildren().add(current);
 		return current;
@@ -203,13 +202,13 @@ public class Jfx3dManager extends JFXPanel {
 			int packetIndex = 0;
 			int numSkip = 1;
 			int armScale = 1;
-			
 
 			@Override
 			public void onTaskSpaceUpdate(AbstractKinematicsNR source,
 					final TransformNR p) {
 				pose = p;
-				final ArrayList<TransformNR> jointLocations = model.getChainTransformations();
+				final ArrayList<TransformNR> jointLocations = model
+						.getChainTransformations();
 				if (packetIndex++ == numSkip) {
 					packetIndex = 0;
 					Platform.runLater(new Runnable() {
@@ -217,11 +216,13 @@ public class Jfx3dManager extends JFXPanel {
 						public void run() {
 							for (int i = 0; i < joints.size(); i++) {
 								// setting the current location of each joint
-								 TransformFactory.getTransform( jointLocations.get(i) ,joints.get(i));
+								TransformFactory.getTransform(
+										jointLocations.get(i), joints.get(i));
 							}
-							if(selectedObject !=null){
-								//selectedObject.
-								TransformFactory.getTransform( pose ,selsectedAffine);
+							if (selectedObject != null) {
+								// selectedObject.
+								TransformFactory.getTransform(pose,
+										selsectedAffine);
 							}
 						}
 					});
@@ -237,35 +238,42 @@ public class Jfx3dManager extends JFXPanel {
 		new DigitalInputChannel(master, 23)
 				.addDigitalInputListener(new IDigitalInputListener() {
 					@Override
-					public void onDigitalValueChange(DigitalInputChannel source, boolean isHigh) {
-						if(!isHigh){
-							//button pressed, look for devices
-							if(pose!=null){
-								TransformFactory.getTransform( pose ,selsectedAffine);
-								ObservableList<Node> cadBits = lookGroup.getChildren();
-								for(Node n:cadBits){
+					public void onDigitalValueChange(
+							DigitalInputChannel source, boolean isHigh) {
+						if (!isHigh) {
+							// button pressed, look for devices
+							if (pose != null) {
+								TransformFactory.getTransform(pose,
+										selsectedAffine);
+								ObservableList<Node> cadBits = lookGroup
+										.getChildren();
+								for (Node n : cadBits) {
 									double x = n.getTranslateX();
 									double y = n.getTranslateY();
 									double z = n.getTranslateZ();
-									if(threedBoundCheck(x,y,z,selsectedAffine,10)){
-										if(MeshView.class.isInstance(n)){
-											System.out.println("Selecting Object");
-											selectedObject = (MeshView)n;
+									if (threedBoundCheck(x, y, z,
+											selsectedAffine, 10)) {
+										if (MeshView.class.isInstance(n)) {
+											System.out
+													.println("Selecting Object");
+											selectedObject = (MeshView) n;
 										}
 									}
 								}
-								if(selectedObject!=null){
+								if (selectedObject != null) {
 									selectedObject.getTransforms().clear();
-									selectedObject.getTransforms().add(selsectedAffine);
+									selectedObject.getTransforms().add(
+											selsectedAffine);
 								}
 							}
-						}else{
-							//button released, look for devices
-							if(selectedObject!=null){
+						} else {
+							// button released, look for devices
+							if (selectedObject != null) {
 								// freeze it in place
 								selectedObject.getTransforms().clear();
-								selectedObject.getTransforms().add(selsectedAffine.clone());
-								selectedObject=null;
+								selectedObject.getTransforms().add(
+										selsectedAffine.clone());
+								selectedObject = null;
 							}
 						}
 					}
@@ -282,24 +290,25 @@ public class Jfx3dManager extends JFXPanel {
 		}
 		manipulator.setTranslateX(200);
 		manipulator.setTranslateY(200);
-		manipulator.setTranslateZ(10);
-		 world.getChildren().addAll(manipulator);
+		manipulator.setTranslateZ(-10);
+		world.getChildren().addAll(manipulator);
 	}
-	
-	private boolean oneDBound(double location, double target, double bound){
-		if(location > (target+bound))
+
+	private boolean oneDBound(double location, double target, double bound) {
+		if (location > (target + bound))
 			return false;
-		if(location < (target-bound))
+		if (location < (target - bound))
 			return false;
 		return true;
 	}
-	
-	private boolean threedBoundCheck(double x, double y, double z, Affine a, double distance){
-		if(oneDBound(x,a.getTx(),distance))
+
+	private boolean threedBoundCheck(double x, double y, double z, Affine a,
+			double distance) {
+		if (oneDBound(x, a.getTx(), distance))
 			return false;
-		if(oneDBound(y,a.getTy(),distance))
+		if (oneDBound(y, a.getTy(), distance))
 			return false;
-		if(oneDBound(z,a.getTz(),distance))
+		if (oneDBound(z, a.getTz(), distance))
 			return false;
 		return true;
 	}
@@ -320,223 +329,240 @@ public class Jfx3dManager extends JFXPanel {
 		}
 	}
 
+	private void buildScene() {
+		world.rx.setAngle(-90);// point z upwards
+		world.ry.setAngle(180);// arm out towards user
+		getRoot().getChildren().add(world);
+	}
 
-    private void buildScene() {
-    	world.rx.setAngle(-90);//point z upwards
-    	world.ry.setAngle(180);//arm out towards user
-        getRoot().getChildren().add(world);
-    }
+	private void buildCamera() {
+		getRoot().getChildren().add(cameraXform);
+		cameraXform.getChildren().add(cameraXform2);
+		cameraXform2.getChildren().add(cameraXform3);
+		cameraXform3.getChildren().add(camera);
+		cameraXform3.setRotateZ(180.0);
 
-    private void buildCamera() {
-        getRoot().getChildren().add(cameraXform);
-        cameraXform.getChildren().add(cameraXform2);
-        cameraXform2.getChildren().add(cameraXform3);
-        cameraXform3.getChildren().add(camera);
-        cameraXform3.setRotateZ(180.0);
+		camera.setNearClip(0.1);
+		camera.setFarClip(10000.0);
+		camera.setTranslateZ(-cameraDistance);
+		cameraXform.ry.setAngle(320.0);
+		cameraXform.rx.setAngle(40);
 
-        camera.setNearClip(0.1);
-        camera.setFarClip(10000.0);
-        camera.setTranslateZ(-cameraDistance);
-        cameraXform.ry.setAngle(320.0);
-        cameraXform.rx.setAngle(40);
-        
-    }
+	}
 
-    private void buildAxes() {
+	private void buildAxes() {
 
-        axisGroup.getChildren().addAll(new Axis());
-        world.getChildren().addAll(axisGroup,lookGroup);
-    }
+		axisGroup.getChildren().addAll(new Axis());
+		world.getChildren().addAll(axisGroup, lookGroup);
+	}
 
-    private void handleMouse(SubScene scene, final Node root) {
-        scene.setOnMousePressed(new EventHandler<MouseEvent>() {
-            @Override public void handle(MouseEvent me) {
-                mousePosX = me.getSceneX();
-                mousePosY = me.getSceneY();
-                mouseOldX = me.getSceneX();
-                mouseOldY = me.getSceneY();
-            }
-        });
-        scene.setOnMouseDragged(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent me) {
-                mouseOldX = mousePosX;
-                mouseOldY = mousePosY;
-                mousePosX = me.getSceneX();
-                mousePosY = me.getSceneY();
-                mouseDeltaX = (mousePosX - mouseOldX);
-                mouseDeltaY = (mousePosY - mouseOldY);
+	private void handleMouse(SubScene scene, final Node root) {
+		scene.setOnMousePressed(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent me) {
+				mousePosX = me.getSceneX();
+				mousePosY = me.getSceneY();
+				mouseOldX = me.getSceneX();
+				mouseOldY = me.getSceneY();
+			}
+		});
+		scene.setOnMouseDragged(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent me) {
+				mouseOldX = mousePosX;
+				mouseOldY = mousePosY;
+				mousePosX = me.getSceneX();
+				mousePosY = me.getSceneY();
+				mouseDeltaX = (mousePosX - mouseOldX);
+				mouseDeltaY = (mousePosY - mouseOldY);
 
-                double modifier = 1.0;
-                double modifierFactor = 0.1;
+				double modifier = 1.0;
+				double modifierFactor = 0.1;
 
-                if (me.isControlDown()) {
-                    modifier = 0.1;
-                }
-                if (me.isShiftDown()) {
-                    modifier = 10.0;
-                }
-                if (me.isPrimaryButtonDown()) {
-                    cameraXform.ry.setAngle(cameraXform.ry.getAngle() - mouseDeltaX * modifierFactor * modifier * 2.0);  // +
-                    cameraXform.rx.setAngle(cameraXform.rx.getAngle() + mouseDeltaY * modifierFactor * modifier * 2.0);  // -
-                } else if (me.isSecondaryButtonDown()) {
-                    double z = camera.getTranslateZ();
-                    double newZ = z + mouseDeltaX * modifierFactor * modifier;
-                    camera.setTranslateZ(newZ);
-                } else if (me.isMiddleButtonDown()) {
-                    cameraXform2.t.setX(cameraXform2.t.getX() + mouseDeltaX * modifierFactor * modifier * 0.3);  // -
-                    cameraXform2.t.setY(cameraXform2.t.getY() + mouseDeltaY * modifierFactor * modifier * 0.3);  // -
-                }
-            }
-        });
-        scene.addEventHandler(ScrollEvent.ANY, new EventHandler<ScrollEvent>() {
-
+				if (me.isControlDown()) {
+					modifier = 0.1;
+				}
+				if (me.isShiftDown()) {
+					modifier = 10.0;
+				}
+				if (me.isPrimaryButtonDown()) {
+					cameraXform.ry.setAngle(cameraXform.ry.getAngle()
+							- mouseDeltaX * modifierFactor * modifier * 2.0); // +
+					cameraXform.rx.setAngle(cameraXform.rx.getAngle()
+							+ mouseDeltaY * modifierFactor * modifier * 2.0); // -
+				} else if (me.isSecondaryButtonDown()) {
+					double z = camera.getTranslateZ();
+					double newZ = z + mouseDeltaX * modifierFactor * modifier;
+					camera.setTranslateZ(newZ);
+				} else if (me.isMiddleButtonDown()) {
+					cameraXform2.t.setX(cameraXform2.t.getX() + mouseDeltaX
+							* modifierFactor * modifier * 0.3); // -
+					cameraXform2.t.setY(cameraXform2.t.getY() + mouseDeltaY
+							* modifierFactor * modifier * 0.3); // -
+				}
+			}
+		});
+		scene.addEventHandler(ScrollEvent.ANY, new EventHandler<ScrollEvent>() {
 
 			@Override
 			public void handle(ScrollEvent t) {
-				if (ScrollEvent.SCROLL==(t).getEventType()) {
+				if (ScrollEvent.SCROLL == (t).getEventType()) {
 
 					double zoomFactor = (t.getDeltaY());
 
-                    double z = camera.getTranslateZ();
-                    double newZ = z + zoomFactor;
-                    camera.setTranslateZ(newZ);
-		            //System.out.println("Z = "+newZ);
+					double z = camera.getTranslateZ();
+					double newZ = z + zoomFactor;
+					camera.setTranslateZ(newZ);
+					// System.out.println("Z = "+newZ);
 				}
 				t.consume();
 			}
 		});
-        
-    }
-    
- 
 
-    private void handleKeyboard(SubScene scene, final Node root) {
-        final boolean moveCamera = true;
-        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                Duration currentTime;
-                switch (event.getCode()) {
-                    case Z:
-                        if (event.isShiftDown()) {
-                            cameraXform.ry.setAngle(0.0);
-                            cameraXform.rx.setAngle(0.0);
-                            camera.setTranslateZ(-1000.0);
-                        }
-                        cameraXform2.t.setX(0.0);
-                        cameraXform2.t.setY(0.0);
-                        break;
-                    case X:
-                        if (event.isControlDown()) {
-                            if (axisGroup.isVisible()) {
-                                axisGroup.setVisible(false);
-                            } else {
-                                axisGroup.setVisible(true);
-                            }
-                        }
-                        break;
-                    case S:
-                        if (event.isControlDown()) {
-                            if (moleculeGroup.isVisible()) {
-                                moleculeGroup.setVisible(false);
-                            } else {
-                                moleculeGroup.setVisible(true);
-                            }
-                        }
-                        break;
-                    case SPACE:
-                        if (timelinePlaying) {
-                            timeline.pause();
-                            timelinePlaying = false;
-                        } else {
-                            timeline.play();
-                            timelinePlaying = true;
-                        }
-                        break;
-                    case UP:
-                        if (event.isControlDown() && event.isShiftDown()) {
-                            cameraXform2.t.setY(cameraXform2.t.getY() - 10.0 * CONTROL_MULTIPLIER);
-                        } else if (event.isAltDown() && event.isShiftDown()) {
-                            cameraXform.rx.setAngle(cameraXform.rx.getAngle() - 10.0 * ALT_MULTIPLIER);
-                        } else if (event.isControlDown()) {
-                            cameraXform2.t.setY(cameraXform2.t.getY() - 1.0 * CONTROL_MULTIPLIER);
-                        } else if (event.isAltDown()) {
-                            cameraXform.rx.setAngle(cameraXform.rx.getAngle() - 2.0 * ALT_MULTIPLIER);
-                        } else if (event.isShiftDown()) {
-                            double z = camera.getTranslateZ();
-                            double newZ = z + 5.0 * SHIFT_MULTIPLIER;
-                            camera.setTranslateZ(newZ);
-                        }
-                        break;
-                    case DOWN:
-                        if (event.isControlDown() && event.isShiftDown()) {
-                            cameraXform2.t.setY(cameraXform2.t.getY() + 10.0 * CONTROL_MULTIPLIER);
-                        } else if (event.isAltDown() && event.isShiftDown()) {
-                            cameraXform.rx.setAngle(cameraXform.rx.getAngle() + 10.0 * ALT_MULTIPLIER);
-                        } else if (event.isControlDown()) {
-                            cameraXform2.t.setY(cameraXform2.t.getY() + 1.0 * CONTROL_MULTIPLIER);
-                        } else if (event.isAltDown()) {
-                            cameraXform.rx.setAngle(cameraXform.rx.getAngle() + 2.0 * ALT_MULTIPLIER);
-                        } else if (event.isShiftDown()) {
-                            double z = camera.getTranslateZ();
-                            double newZ = z - 5.0 * SHIFT_MULTIPLIER;
-                            camera.setTranslateZ(newZ);
-                        }
-                        break;
-                    case RIGHT:
-                        if (event.isControlDown() && event.isShiftDown()) {
-                            cameraXform2.t.setX(cameraXform2.t.getX() + 10.0 * CONTROL_MULTIPLIER);
-                        } else if (event.isAltDown() && event.isShiftDown()) {
-                            cameraXform.ry.setAngle(cameraXform.ry.getAngle() - 10.0 * ALT_MULTIPLIER);
-                        } else if (event.isControlDown()) {
-                            cameraXform2.t.setX(cameraXform2.t.getX() + 1.0 * CONTROL_MULTIPLIER);
-                        } else if (event.isAltDown()) {
-                            cameraXform.ry.setAngle(cameraXform.ry.getAngle() - 2.0 * ALT_MULTIPLIER);
-                        }
-                        break;
-                    case LEFT:
-                        if (event.isControlDown() && event.isShiftDown()) {
-                            cameraXform2.t.setX(cameraXform2.t.getX() - 10.0 * CONTROL_MULTIPLIER);
-                        } else if (event.isAltDown() && event.isShiftDown()) {
-                            cameraXform.ry.setAngle(cameraXform.ry.getAngle() + 10.0 * ALT_MULTIPLIER);  // -
-                        } else if (event.isControlDown()) {
-                            cameraXform2.t.setX(cameraXform2.t.getX() - 1.0 * CONTROL_MULTIPLIER);
-                        } else if (event.isAltDown()) {
-                            cameraXform.ry.setAngle(cameraXform.ry.getAngle() + 2.0 * ALT_MULTIPLIER);  // -
-                        }
-                        break;
-                }
-            }
-        });
-    }
-    
-//        @Override
-//    public void start(Stage primaryStage) {
-//
-//
-//    }
+	}
 
-    /**
-     * The main() method is ignored in correctly deployed JavaFX application.
-     * main() serves only as fallback in case the application can not be
-     * launched through deployment artifacts, e.g., in IDEs with limited FX
-     * support. NetBeans ignores main().
-     *
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        System.setProperty("prism.dirtyopts", "false");
-       
-		JFrame frame  = new JFrame();
-		frame.setContentPane( new Jfx3dManager());
-		
+	private void handleKeyboard(SubScene scene, final Node root) {
+		final boolean moveCamera = true;
+		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+			@Override
+			public void handle(KeyEvent event) {
+				Duration currentTime;
+				switch (event.getCode()) {
+				case Z:
+					if (event.isShiftDown()) {
+						cameraXform.ry.setAngle(0.0);
+						cameraXform.rx.setAngle(0.0);
+						camera.setTranslateZ(-1000.0);
+					}
+					cameraXform2.t.setX(0.0);
+					cameraXform2.t.setY(0.0);
+					break;
+				case X:
+					if (event.isControlDown()) {
+						if (axisGroup.isVisible()) {
+							axisGroup.setVisible(false);
+						} else {
+							axisGroup.setVisible(true);
+						}
+					}
+					break;
+				case S:
+					if (event.isControlDown()) {
+						if (moleculeGroup.isVisible()) {
+							moleculeGroup.setVisible(false);
+						} else {
+							moleculeGroup.setVisible(true);
+						}
+					}
+					break;
+				case SPACE:
+					if (timelinePlaying) {
+						timeline.pause();
+						timelinePlaying = false;
+					} else {
+						timeline.play();
+						timelinePlaying = true;
+					}
+					break;
+				case UP:
+					if (event.isControlDown() && event.isShiftDown()) {
+						cameraXform2.t.setY(cameraXform2.t.getY() - 10.0
+								* CONTROL_MULTIPLIER);
+					} else if (event.isAltDown() && event.isShiftDown()) {
+						cameraXform.rx.setAngle(cameraXform.rx.getAngle()
+								- 10.0 * ALT_MULTIPLIER);
+					} else if (event.isControlDown()) {
+						cameraXform2.t.setY(cameraXform2.t.getY() - 1.0
+								* CONTROL_MULTIPLIER);
+					} else if (event.isAltDown()) {
+						cameraXform.rx.setAngle(cameraXform.rx.getAngle() - 2.0
+								* ALT_MULTIPLIER);
+					} else if (event.isShiftDown()) {
+						double z = camera.getTranslateZ();
+						double newZ = z + 5.0 * SHIFT_MULTIPLIER;
+						camera.setTranslateZ(newZ);
+					}
+					break;
+				case DOWN:
+					if (event.isControlDown() && event.isShiftDown()) {
+						cameraXform2.t.setY(cameraXform2.t.getY() + 10.0
+								* CONTROL_MULTIPLIER);
+					} else if (event.isAltDown() && event.isShiftDown()) {
+						cameraXform.rx.setAngle(cameraXform.rx.getAngle()
+								+ 10.0 * ALT_MULTIPLIER);
+					} else if (event.isControlDown()) {
+						cameraXform2.t.setY(cameraXform2.t.getY() + 1.0
+								* CONTROL_MULTIPLIER);
+					} else if (event.isAltDown()) {
+						cameraXform.rx.setAngle(cameraXform.rx.getAngle() + 2.0
+								* ALT_MULTIPLIER);
+					} else if (event.isShiftDown()) {
+						double z = camera.getTranslateZ();
+						double newZ = z - 5.0 * SHIFT_MULTIPLIER;
+						camera.setTranslateZ(newZ);
+					}
+					break;
+				case RIGHT:
+					if (event.isControlDown() && event.isShiftDown()) {
+						cameraXform2.t.setX(cameraXform2.t.getX() + 10.0
+								* CONTROL_MULTIPLIER);
+					} else if (event.isAltDown() && event.isShiftDown()) {
+						cameraXform.ry.setAngle(cameraXform.ry.getAngle()
+								- 10.0 * ALT_MULTIPLIER);
+					} else if (event.isControlDown()) {
+						cameraXform2.t.setX(cameraXform2.t.getX() + 1.0
+								* CONTROL_MULTIPLIER);
+					} else if (event.isAltDown()) {
+						cameraXform.ry.setAngle(cameraXform.ry.getAngle() - 2.0
+								* ALT_MULTIPLIER);
+					}
+					break;
+				case LEFT:
+					if (event.isControlDown() && event.isShiftDown()) {
+						cameraXform2.t.setX(cameraXform2.t.getX() - 10.0
+								* CONTROL_MULTIPLIER);
+					} else if (event.isAltDown() && event.isShiftDown()) {
+						cameraXform.ry.setAngle(cameraXform.ry.getAngle()
+								+ 10.0 * ALT_MULTIPLIER); // -
+					} else if (event.isControlDown()) {
+						cameraXform2.t.setX(cameraXform2.t.getX() - 1.0
+								* CONTROL_MULTIPLIER);
+					} else if (event.isAltDown()) {
+						cameraXform.ry.setAngle(cameraXform.ry.getAngle() + 2.0
+								* ALT_MULTIPLIER); // -
+					}
+					break;
+				}
+			}
+		});
+	}
+
+	// @Override
+	// public void start(Stage primaryStage) {
+	//
+	//
+	// }
+
+	/**
+	 * The main() method is ignored in correctly deployed JavaFX application.
+	 * main() serves only as fallback in case the application can not be
+	 * launched through deployment artifacts, e.g., in IDEs with limited FX
+	 * support. NetBeans ignores main().
+	 *
+	 * @param args
+	 *            the command line arguments
+	 */
+	public static void main(String[] args) {
+		System.setProperty("prism.dirtyopts", "false");
+
+		JFrame frame = new JFrame();
+		frame.setContentPane(new Jfx3dManager());
+
 		frame.setSize(1024, 1024);
-        frame.setVisible(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
-        
-    }
+		frame.setVisible(true);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+	}
 
 	public SubScene getSubScene() {
 		return scene;
