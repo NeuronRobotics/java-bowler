@@ -71,6 +71,7 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Transform;
 import javafx.animation.Timeline;
+import javafx.collections.ObservableList;
 import javafx.embed.swing.JFXPanel;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
@@ -123,7 +124,9 @@ public class Jfx3dManager extends JFXPanel {
 
 	private boolean buttonPressed = false;
 	private SubScene scene;
-    
+	private MeshView selectedObject=null;
+	private Affine selsectedAffine = new Affine();
+	private TransformNR pose=null;
    public Jfx3dManager(){
        buildScene();
        buildCamera();
@@ -200,10 +203,12 @@ public class Jfx3dManager extends JFXPanel {
 			int packetIndex = 0;
 			int numSkip = 1;
 			int armScale = 1;
+			
 
 			@Override
 			public void onTaskSpaceUpdate(AbstractKinematicsNR source,
-					final TransformNR pose) {
+					final TransformNR p) {
+				pose = p;
 				final ArrayList<TransformNR> jointLocations = model.getChainTransformations();
 				if (packetIndex++ == numSkip) {
 					packetIndex = 0;
@@ -213,6 +218,10 @@ public class Jfx3dManager extends JFXPanel {
 							for (int i = 0; i < joints.size(); i++) {
 								// setting the current location of each joint
 								 TransformFactory.getTransform( jointLocations.get(i) ,joints.get(i));
+							}
+							if(selectedObject !=null){
+								//selectedObject.
+								TransformFactory.getTransform( pose ,selsectedAffine);
 							}
 						}
 					});
@@ -228,9 +237,37 @@ public class Jfx3dManager extends JFXPanel {
 		new DigitalInputChannel(master, 23)
 				.addDigitalInputListener(new IDigitalInputListener() {
 					@Override
-					public void onDigitalValueChange(
-							DigitalInputChannel source, boolean isHigh) {
-						buttonPressed = !isHigh;
+					public void onDigitalValueChange(DigitalInputChannel source, boolean isHigh) {
+						if(!isHigh){
+							//button pressed, look for devices
+							if(pose!=null){
+								TransformFactory.getTransform( pose ,selsectedAffine);
+								ObservableList<Node> cadBits = lookGroup.getChildren();
+								for(Node n:cadBits){
+									double x = n.getTranslateX();
+									double y = n.getTranslateY();
+									double z = n.getTranslateZ();
+									if(threedBoundCheck(x,y,z,selsectedAffine,10)){
+										if(MeshView.class.isInstance(n)){
+											System.out.println("Selecting Object");
+											selectedObject = (MeshView)n;
+										}
+									}
+								}
+								if(selectedObject!=null){
+									selectedObject.getTransforms().clear();
+									selectedObject.getTransforms().add(selsectedAffine);
+								}
+							}
+						}else{
+							//button released, look for devices
+							if(selectedObject!=null){
+								// freeze it in place
+								selectedObject.getTransforms().clear();
+								selectedObject.getTransforms().add(selsectedAffine.clone());
+								selectedObject=null;
+							}
+						}
 					}
 				});
 
@@ -247,6 +284,24 @@ public class Jfx3dManager extends JFXPanel {
 		manipulator.setTranslateY(200);
 		manipulator.setTranslateZ(10);
 		 world.getChildren().addAll(manipulator);
+	}
+	
+	private boolean oneDBound(double location, double target, double bound){
+		if(location > (target+bound))
+			return false;
+		if(location < (target-bound))
+			return false;
+		return true;
+	}
+	
+	private boolean threedBoundCheck(double x, double y, double z, Affine a, double distance){
+		if(oneDBound(x,a.getTx(),distance))
+			return false;
+		if(oneDBound(y,a.getTy(),distance))
+			return false;
+		if(oneDBound(z,a.getTz(),distance))
+			return false;
+		return true;
 	}
 
 	public void attachArm(DyIO master, String xml) {
