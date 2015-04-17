@@ -125,6 +125,7 @@ public class Jfx3dManager extends JFXPanel {
 	private SubScene scene;
 	private MeshView selectedObject = null;
 	private Affine selsectedAffine = new Affine();
+	private Affine robotBase = new Affine();
 	private TransformNR pose = null;
 
 	public Jfx3dManager() {
@@ -262,8 +263,10 @@ public class Jfx3dManager extends JFXPanel {
 								}
 								if (selectedObject != null) {
 									selectedObject.getTransforms().clear();
-									selectedObject.getTransforms().add(
-											selsectedAffine);
+									selectedObject.getTransforms().addAll(
+											selsectedAffine,
+											robotBase
+											);
 								}
 							}
 						} else {
@@ -271,8 +274,9 @@ public class Jfx3dManager extends JFXPanel {
 							if (selectedObject != null) {
 								// freeze it in place
 								selectedObject.getTransforms().clear();
-								selectedObject.getTransforms().add(
-										selsectedAffine.clone());
+								selectedObject.getTransforms().addAll(
+										selsectedAffine.clone(),
+										robotBase.clone());
 								selectedObject = null;
 							}
 						}
@@ -288,9 +292,10 @@ public class Jfx3dManager extends JFXPanel {
 			joints.add(s);
 			manipulator.getChildren().add(a);
 		}
-		manipulator.setTranslateX(200);
-		manipulator.setTranslateY(200);
-		manipulator.setTranslateZ(-10);
+		robotBase.setTx(100);
+		robotBase.setTy(100);
+		robotBase.setTz(-5);
+		manipulator.getTransforms().add(robotBase);
 		world.getChildren().addAll(manipulator);
 	}
 
