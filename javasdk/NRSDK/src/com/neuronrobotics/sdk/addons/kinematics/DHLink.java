@@ -1,9 +1,15 @@
 package com.neuronrobotics.sdk.addons.kinematics;
 
+import javax.xml.transform.TransformerFactory;
+
+import javafx.scene.transform.Affine;
+
 import org.w3c.dom.Element;
 
 import Jama.Matrix;
 
+import com.neuronrobotics.sdk.addons.kinematics.gui.TransformFactory;
+import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
 
 public class DHLink {
@@ -21,6 +27,7 @@ public class DHLink {
 	private Matrix rotX_J;
 	private Matrix transZ_J;
 	private Matrix rotZ_J;
+	private Affine listener=null;
 	
 	public DHLink(double d, double theta,double r, double alpha) {
 		this.d = d;
@@ -74,7 +81,9 @@ public class DHLink {
 		step = step.times(getRotZ());
 		step = step.times(getTransX());
 		step = step.times(getRotX());
-		
+		if(getListener()!=null){
+			TransformFactory.getTransform(new TransformNR(step), getListener());
+		}
 		return step;
 	}
 	
@@ -215,6 +224,14 @@ public class DHLink {
 		s+=" Radius = "+r;
 		s+=" Alpha = "+Math.toDegrees(alpha)+" deg";
 		return s;
+	}
+
+	public Affine getListener() {
+		return listener;
+	}
+
+	public void setListener(Affine listener) {
+		this.listener = listener;
 	}
 
 }
