@@ -3,6 +3,8 @@ package com.neuronrobotics.sdk.addons.kinematics;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+import javafx.scene.transform.Affine;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -26,7 +28,7 @@ public  class DHChain {
 		    Node nNode = nList.item(i);
 		    if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 		    	getLinks().add(new DHLink((Element)	nNode));//0->1
-		  
+		    	
 		    }
 		}
 		upperLimits = f.getUpperLimits();

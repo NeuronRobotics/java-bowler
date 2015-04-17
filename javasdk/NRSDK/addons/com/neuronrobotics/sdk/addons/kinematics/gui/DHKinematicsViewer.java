@@ -1,5 +1,7 @@
 package com.neuronrobotics.sdk.addons.kinematics.gui;
 
+import java.util.ArrayList;
+
 import javax.swing.JFrame;
 
 import javafx.application.Platform;
@@ -7,12 +9,17 @@ import javafx.embed.swing.JFXPanel;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+import javafx.scene.transform.Affine;
 
+import com.neuronrobotics.sdk.addons.kinematics.DHLink;
 import com.neuronrobotics.sdk.addons.kinematics.DHParameterKinematics;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 import com.neuronrobotics.sdk.util.ThreadUtil;
+
+import eu.mihosoft.vrl.v3d.CSG;
+import eu.mihosoft.vrl.v3d.Cube;
 
 public class DHKinematicsViewer extends JFXPanel {
 
@@ -31,6 +38,16 @@ public class DHKinematicsViewer extends JFXPanel {
 				
 				Jfx3dManager viewer = new Jfx3dManager();
 				viewer.attachArm(bot);
+				ArrayList<Object> links = new ArrayList<Object>();
+				for(DHLink dh:bot.getDhChain().getLinks()){
+					System.out.println("Link D-H values = "+dh);
+					// Create an axis to represent the link
+					CSG cube = new Cube(20).toCSG();
+					//add listner to axis
+					cube.setManipulator(dh.getListener());
+					// add ax to list of objects to be returned
+					links.add(cube);
+				}
 				
 				setScene(viewer.getScene());
 			}
@@ -51,6 +68,7 @@ public class DHKinematicsViewer extends JFXPanel {
 		master.connect();
 		if(master.isAvailable()){
 			DHParameterKinematics model = new DHParameterKinematics(master,"TrobotMaster.xml");
+			
 			frame.setContentPane( new DHKinematicsViewer(model));
 			
 			frame.setSize(1024, 1024);
