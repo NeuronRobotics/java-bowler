@@ -39,15 +39,15 @@ public class DHKinematicsViewer extends JFXPanel {
 				Jfx3dManager viewer = new Jfx3dManager();
 				viewer.attachArm(bot);
 				ArrayList<Object> links = new ArrayList<Object>();
-				for(DHLink dh:bot.getDhChain().getLinks()){
-					System.out.println("Link D-H values = "+dh);
-					// Create an axis to represent the link
-					CSG cube = new Cube(20).toCSG();
-					//add listner to axis
-					cube.setManipulator(dh.getListener());
-					// add ax to list of objects to be returned
-					links.add(cube);
-				}
+//				for(DHLink dh:bot.getDhChain().getLinks()){
+//					System.out.println("Link D-H values = "+dh);
+//					// Create an axis to represent the link
+//					CSG cube = new Cube(20).toCSG();
+//					//add listner to axis
+//					cube.setManipulator(dh.getListener());
+//					// add ax to list of objects to be returned
+//					links.add(cube);
+//				}
 				
 				setScene(viewer.getScene());
 			}
