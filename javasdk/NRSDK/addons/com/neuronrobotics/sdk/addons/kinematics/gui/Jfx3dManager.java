@@ -224,6 +224,9 @@ public class Jfx3dManager extends JFXPanel {
 								// selectedObject.
 								TransformFactory.getTransform(pose,
 										selsectedAffine);
+								selsectedAffine.setTx(selsectedAffine.getTx() -robotBase.getTx() );
+								selsectedAffine.setTy(selsectedAffine.getTy() -robotBase.getTy() );
+								selsectedAffine.setTz(selsectedAffine.getTz() -robotBase.getTz() );
 							}
 						}
 					});
@@ -244,8 +247,6 @@ public class Jfx3dManager extends JFXPanel {
 						if (!isHigh) {
 							// button pressed, look for devices
 							if (pose != null) {
-								TransformFactory.getTransform(pose,
-										selsectedAffine);
 								ObservableList<Node> cadBits = lookGroup
 										.getChildren();
 								for (Node n : cadBits) {
@@ -264,8 +265,7 @@ public class Jfx3dManager extends JFXPanel {
 								if (selectedObject != null) {
 									selectedObject.getTransforms().clear();
 									selectedObject.getTransforms().addAll(
-											selsectedAffine,
-											robotBase
+											selsectedAffine
 											);
 								}
 							}
@@ -275,8 +275,7 @@ public class Jfx3dManager extends JFXPanel {
 								// freeze it in place
 								selectedObject.getTransforms().clear();
 								selectedObject.getTransforms().addAll(
-										selsectedAffine.clone(),
-										robotBase.clone());
+										selsectedAffine.clone());
 								selectedObject = null;
 							}
 						}
