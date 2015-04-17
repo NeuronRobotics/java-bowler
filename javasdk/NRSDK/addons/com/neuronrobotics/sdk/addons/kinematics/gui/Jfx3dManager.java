@@ -211,6 +211,7 @@ public class Jfx3dManager extends JFXPanel {
 						@Override
 						public void run() {
 							for (int i = 0; i < joints.size(); i++) {
+								// setting the current location of each joint
 								 TransformFactory.getTransform( jointLocations.get(i) ,joints.get(i));
 							}
 						}
@@ -235,13 +236,16 @@ public class Jfx3dManager extends JFXPanel {
 
 		ArrayList<TransformNR> jointLocations = model.getChainTransformations();
 		for (int i = 0; i < jointLocations.size(); i++) {
-			Axis a = new Axis(25);
-			a.getChildren().add(new Sphere(10));
+			Axis a = new Axis(15);
+			a.getChildren().add(new Sphere(5));
 			Affine s = new Affine();
 			a.getTransforms().add(s);
 			joints.add(s);
 			manipulator.getChildren().add(a);
 		}
+		manipulator.setTranslateX(200);
+		manipulator.setTranslateY(200);
+		manipulator.setTranslateZ(10);
 		 world.getChildren().addAll(manipulator);
 	}
 
