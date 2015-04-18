@@ -45,10 +45,11 @@ public class SerialConnectionPanel extends AbstractConnectionPanel {
 	private SerialConnection connection = null;
 	
 	/**
+	 * @param connectionDialog 
 	 * 
 	 */
-	public SerialConnectionPanel() {
-		super("Serial", ConnectionImageIconFactory.getIcon("images/usb-icon.png"));
+	public SerialConnectionPanel(ConnectionDialog connectionDialog) {
+		super("Serial", ConnectionImageIconFactory.getIcon("images/usb-icon.png"),connectionDialog);
 		
 		baudrateTxt.setText("115200");
 
@@ -138,5 +139,6 @@ public class SerialConnectionPanel extends AbstractConnectionPanel {
 			JOptionPane.showMessageDialog(this, m,"NRSDK not installed properly", JOptionPane.ERROR_MESSAGE);
 			throw new MissingNativeLibraryException(m);		
 		}
+		getConnectionDialog().pack();
 	}
 }

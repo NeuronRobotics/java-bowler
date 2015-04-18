@@ -40,10 +40,11 @@ public class TCPConnectionPanel extends AbstractConnectionPanel {
 	
 	
 	/**
+	 * @param connectionDialog 
 	 * 
 	 */
-	public TCPConnectionPanel() {
-		super("TCP", ConnectionImageIconFactory.getIcon("images/ethernet-icon.png"));
+	public TCPConnectionPanel(ConnectionDialog connectionDialog) {
+		super("TCP", ConnectionImageIconFactory.getIcon("images/ethernet-icon.png"),connectionDialog);
 		
 		
 		port.setText(new Integer(defaultPortNum).toString());
@@ -113,6 +114,6 @@ public class TCPConnectionPanel extends AbstractConnectionPanel {
 
 	@Override
 	public void refresh() {
-		
+		getConnectionDialog().pack();
 	}
 }

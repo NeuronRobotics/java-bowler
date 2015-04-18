@@ -152,7 +152,7 @@ public class BowlerUDPServer extends BowlerAbstractConnection {
 	}
 	
 	@Override
-	public boolean loadPacketFromPhy(ByteList bytesToPacketBuffer) throws NullPointerException, IOException{
+	public BowlerDatagram loadPacketFromPhy(ByteList bytesToPacketBuffer) throws NullPointerException, IOException{
 		byte[] receiveData=new byte[4096];
 		
 		DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
@@ -163,7 +163,7 @@ public class BowlerUDPServer extends BowlerAbstractConnection {
 		}catch(SocketException ex){
 			// disconnect called
 			Log. warning("Receive bailed out because of close");
-			return false;
+			return null;
 		}
 		
 		IPAddressSet=(receivePacket.getAddress());
@@ -176,19 +176,16 @@ public class BowlerUDPServer extends BowlerAbstractConnection {
 		for (int i=0;i<receivePacket.getLength();i++){
 			internalReceiveBuffer.add(data[i]);
 		}
+		BowlerDatagram bd =null;
 		
 		while(internalReceiveBuffer.size()>0){
 			bytesToPacketBuffer.add(internalReceiveBuffer.pop());
-			BowlerDatagram bd = BowlerDatagramFactory.build(bytesToPacketBuffer);
-			if (bd!=null) {
-				Log.info("\nR<<"+bd);
-				onDataReceived(bd);
-
-				return true;
+			if (bd==null) {
+				bd = BowlerDatagramFactory.build(bytesToPacketBuffer);
 			}
 		}
 	
-		return false;
+		return bd;
 	}
 	
 

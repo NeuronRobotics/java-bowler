@@ -9,8 +9,6 @@
 	<classpathentry kind="lib" path="/NRSDK/lib/bluecove-2.1.1.jar"/>
 	<classpathentry kind="lib" path="/NRSDK/lib/bluecove-gpl-2.1.1.jar"/>
 	<classpathentry kind="lib" path="lib/PIDSIm.jar"/>
-	<classpathentry kind="lib" path="/NRSDK/lib_addons/j3dcore.jar"/>
-	<classpathentry kind="lib" path="/NRSDK/lib_addons/j3dutils.jar"/>
 	<classpathentry kind="lib" path="/NRSDK/lib_addons/miglayout-3.7.2-swing.jar"/>
 	<classpathentry kind="lib" path="/NRSDK/lib_addons/motej.0.9.jar"/>
 	<classpathentry kind="lib" path="/NRSDK/lib_addons/vecmath.jar"/>

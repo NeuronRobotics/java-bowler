@@ -4,6 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import javafx.embed.swing.JFXPanel;
+
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -129,7 +131,7 @@ public class SampleGuiNR extends JPanel{
 		
 	}
 	
-	public void addExtraPanel(JPanel jp){
+	public void addExtraPanel(JFXPanel jp){
 		extra.add(jp);
 	}
 	

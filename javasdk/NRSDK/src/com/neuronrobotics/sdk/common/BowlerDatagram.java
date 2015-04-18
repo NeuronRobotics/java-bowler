@@ -215,24 +215,16 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 		setUpstream((raw.getByte(8)<0));
 		// Make sure that the size of the data payload is the stated length
 		int dataLength = raw.getUnsigned(9);
-		int amountOfData;
-		if( isUseBowlerV4()){
-			amountOfData = raw.getBytes(11).length-1;
-		}else{
-			amountOfData = raw.getBytes(11).length;
-		}
-		if(dataLength != amountOfData) {
-			throw new MalformattedDatagram("Datagram payload length is mismatched");
+		//Either legacy parser or the v4 parser
+		if((dataLength != raw.getBytes(11).length-1) && (dataLength != raw.getBytes(11).length) ) {
+			throw new MalformattedDatagram("Datagram payload length is mismatched expected "+dataLength+" got "+raw.getBytes(11).length);
 		}	
-		
-		
-		// Put the remaining data into the data payload 
+		// Put the remaining data into the data payload  
 		setData(raw.getBytes(HEADER_SIZE,dataLength));
 
 		// Validate the CRC
 		if(!CheckCRC(raw,true) ) {
-			System.err.println("CRC failed check");
-			throw new MalformattedDatagram("CRC does not match");
+				throw new MalformattedDatagram("CRC does not match");
 		}else{
 			setCrc(getCRC(raw));
 			setDataCrc(raw.getByte(raw.size()-1));
@@ -365,16 +357,6 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	
 	/**
 	 * Get the datagram's current data payload after the RPC.
-	 * @Deprecated use getData() instead
-	 * @return the current data payload
-	 */
-	@Deprecated
-	public ByteList getRPCData() {
-		checkValidPacket();
-		return getData();
-	}
-	/**
-	 * Get the datagram's current data payload after the RPC.
 	 *
 	 * @return the current data payload
 	 */
@@ -400,7 +382,7 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 		bl.add(getCRC());
 		bl.add(data);
 		if(isUseBowlerV4()){
-			
+			//Log.warning("parsing v4 ");
 			setDataCrc(genDataCrc(bl));
 			bl.add(getDataCrc());
 		}
@@ -456,21 +438,27 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	 * @return true, if successful
 	 */
 	static boolean CheckCRC(ByteList buffer, boolean checkData) {
-		byte generated,inPacket;
-		generated = genCrc(buffer);
-		inPacket  = getCRC(buffer);
-		if(generated != inPacket){
-			Log.error("CRC of packet is: "+generated+" Expected: "+inPacket);
-			return false;
-		}
-		
-		if(checkData && isUseBowlerV4()){
-			generated = genDataCrc(buffer);
-			inPacket  = getDataCrc(buffer);
+		try{
+			byte generated,inPacket;
+			generated = genCrc(buffer);
+			inPacket  = getCRC(buffer);
 			if(generated != inPacket){
-				Log.error("Data CRC of packet is: "+generated+" Expected: "+inPacket);
+				Log.error("CRC of packet is: "+generated+" Expected: "+inPacket);
 				return false;
 			}
+			
+			if(checkData && isUseBowlerV4()){
+				generated = genDataCrc(buffer);
+				inPacket  = getDataCrc(buffer);
+				if(generated != inPacket){
+					Log.error("Data CRC of packet is: "+generated+" Expected: "+inPacket);
+					return false;
+				}
+			}
+		}catch(Exception ex){
+			if(InterruptedException.class.isInstance(ex))throw ex;
+			ex.printStackTrace();
+			return false;
 		}
 		return true;
 	}
@@ -585,6 +573,8 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	}
 
 	public static void setUseBowlerV4(boolean useBowlerV4) {
+		Log.warning("Setting V4 mode = "+useBowlerV4);
+		//new Exception().printStackTrace();
 		BowlerDatagram.useBowlerV4 = useBowlerV4;
 	}
 }

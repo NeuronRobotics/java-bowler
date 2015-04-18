@@ -235,9 +235,17 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	 * @return the device's address
 	 */
 	public boolean ping() {
-		return connection.ping(getAddress());
+		return ping(false);
 	}
-	
+	/**
+	 * Implementation of the Bowler ping ("_png") command
+	 * Sends a ping to the device returns the device's MAC address.
+	 *
+	 * @return the device's address
+	 */
+	public boolean ping(boolean switchParser) {
+		return connection.ping(getAddress(),switchParser);
+	}
 	/**
 	 * Gets the revisions.
 	 *

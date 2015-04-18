@@ -976,6 +976,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	public boolean connect(){
 		if(getConnection()!=null) {
 			getConnection().addConnectionEventListener(this);
+			getConnection().setSynchronusPacketTimeoutTime(3000);
 		}
 		if(super.connect()) {
 			getPid().setConnection(getConnection());
@@ -1168,7 +1169,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 				}
 			}
 		}else{
-			Log.enableInfoPrint();
+			//Log.enableInfoPrint();
 			Object [] args = send("bcs.io.*;0.3;;",
 					BowlerMethod.GET,
 					"gacv",
