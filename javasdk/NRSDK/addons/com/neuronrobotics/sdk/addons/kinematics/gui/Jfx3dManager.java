@@ -142,6 +142,9 @@ public class Jfx3dManager extends JFXPanel {
 		setScene(new Scene(new Group(getSubScene())));
 
 	}
+	public void removeObjects(){
+		lookGroup.getChildren().clear();
+	}
 
 	public void removeObject(MeshView previous) {
 		if (previous != null) {
