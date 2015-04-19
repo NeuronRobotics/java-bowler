@@ -55,6 +55,8 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	/** The address. */
 	private MACAddress address = new MACAddress(MACAddress.BROADCAST);
 	private static ArrayList<IConnectionEventListener> disconnectListeners = new ArrayList<IConnectionEventListener> ();
+	
+	private String scriptingName = "device";
 
 	
 	/**
@@ -349,6 +351,16 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 
 	public void setLastPacketTime(long lastPacketTime) {
 		this.lastPacketTime = lastPacketTime;
+	}
+
+
+	public String getScriptingName() {
+		return scriptingName;
+	}
+
+
+	public void setScriptingName(String scriptingName) {
+		this.scriptingName = scriptingName;
 	}
 	
 }
