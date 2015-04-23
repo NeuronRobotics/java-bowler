@@ -104,6 +104,7 @@ public class ConnectionDialog extends JDialog {
 		    }
 		});
 		pack();
+		setAlwaysOnTop(true);
 		
 	}
 	
