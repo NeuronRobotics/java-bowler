@@ -218,6 +218,7 @@ public class Jfx3dManager extends JFXPanel {
 										jointLocations.get(i), joints.get(i));
 							}
 							if (selectedObject != null) {
+								//System.out.println("Moving Object to "+pose);
 								// selectedObject.
 								TransformFactory.getTransform(pose,
 										selsectedAffine);
@@ -251,10 +252,14 @@ public class Jfx3dManager extends JFXPanel {
 											System.out
 													.println("Selecting Object");
 											selectedObject = (MeshView) n;
+										}else{
+											System.out.println("Not Touching "+n.getClass());
 										}
 									}
 								}
 								if (selectedObject != null) {
+									System.out
+									.println("Grabbing Object ");
 									selectedObject.getTransforms().clear();
 									selectedObject.getTransforms().add(
 											selsectedAffine
