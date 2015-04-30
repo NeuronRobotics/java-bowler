@@ -203,18 +203,12 @@ public class Jfx3dManager extends JFXPanel {
 	public void attachArm(final DHParameterKinematics model) {
 		master = model.getFactory().getDyio();
 		model.addPoseUpdateListener(new ITaskSpaceUpdateListenerNR() {
-			int packetIndex = 0;
-			int numSkip = 1;
-			int armScale = 1;
-
 			@Override
 			public void onTaskSpaceUpdate(AbstractKinematicsNR source,
 					final TransformNR p) {
 				pose = p;
 				final ArrayList<TransformNR> jointLocations = model
 						.getChainTransformations();
-				if (packetIndex++ == numSkip) {
-					packetIndex = 0;
 					Platform.runLater(new Runnable() {
 						@Override
 						public void run() {
@@ -234,13 +228,8 @@ public class Jfx3dManager extends JFXPanel {
 						}
 					});
 
-				}
 			}
-
-			@Override
-			public void onTargetTaskSpaceUpdate(AbstractKinematicsNR source,
-					TransformNR pose) {
-			}
+			@Override public void onTargetTaskSpaceUpdate(AbstractKinematicsNR source,TransformNR pose) {}
 		});
 		new DigitalInputChannel(master, 23)
 				.addDigitalInputListener(new IDigitalInputListener() {
