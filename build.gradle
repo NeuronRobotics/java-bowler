@@ -8,7 +8,7 @@ targetCompatibility = '1.7'
 File buildDir = file(".");
 
 Properties props = new Properties()
-props.load(new FileInputStream(buildDir.getAbsolutePath()+"/src/main/java/com/neuronrobotics/sdk/config/build.properties"))
+props.load(new FileInputStream(buildDir.getAbsolutePath()+"/src/main/resources/com/neuronrobotics/sdk/config/build.properties"))
 
 manifest {
     attributes(	
