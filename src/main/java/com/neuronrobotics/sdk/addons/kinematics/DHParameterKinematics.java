@@ -3,6 +3,7 @@ package com.neuronrobotics.sdk.addons.kinematics;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+import javafx.application.Platform;
 import javafx.scene.transform.Affine;
 import Jama.Matrix;
 
@@ -95,6 +96,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR {
 
 	public void setChain(DHChain chain) {
 		this.chain = chain;
+		
 		for(DHLink dh:chain.getLinks()){
 			Affine a = new Affine();
 			dh.setListener(a);
@@ -103,10 +105,18 @@ public class DHParameterKinematics extends AbstractKinematicsNR {
 		addPoseUpdateListener(new ITaskSpaceUpdateListenerNR() {	
 			@Override
 			public void onTaskSpaceUpdate(AbstractKinematicsNR source, TransformNR pose) {
-				ArrayList<TransformNR> joints = getChainTransformations();
-				for(int i=0;i<joints.size();i++)		{
-					TransformFactory.getTransform(joints.get(i), linksListeners.get(i));
-				}
+				System.err.println("Liny updating to "+pose);
+				final ArrayList<TransformNR> joints = getChainTransformations();
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						for(int i=0;i<joints.size();i++)		{
+							//System.err.println("Liny updating to "+joints.get(i));
+							TransformFactory.getTransform(joints.get(i), linksListeners.get(i));
+						}
+					}
+				});
+
 			}
 			@Override
 			public void onTargetTaskSpaceUpdate(AbstractKinematicsNR source,TransformNR pose) {}

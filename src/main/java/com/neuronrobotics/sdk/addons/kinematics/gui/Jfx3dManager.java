@@ -207,18 +207,19 @@ public class Jfx3dManager extends JFXPanel {
 			public void onTaskSpaceUpdate(AbstractKinematicsNR source,
 					final TransformNR p) {
 				pose = p;
+				System.err.println("Pose "+p);
 				final ArrayList<TransformNR> jointLocations = model
 						.getChainTransformations();
-					Platform.runLater(new Runnable() {
-						@Override
-						public void run() {
+//					Platform.runLater(new Runnable() {
+//						@Override
+//						public void run() {
 							for (int i = 0; i < joints.size() && i< jointLocations.size(); i++) {
 								// setting the current location of each joint
 								TransformFactory.getTransform(
 										jointLocations.get(i), joints.get(i));
 							}
 							if (selectedObject != null) {
-								System.out.println("Moving Object to "+pose);
+								//System.out.println("Moving Object to "+pose);
 								// selectedObject.
 								TransformFactory.getTransform(pose,
 										selsectedAffine);
@@ -226,8 +227,8 @@ public class Jfx3dManager extends JFXPanel {
 								selsectedAffine.setTy(selsectedAffine.getTy() +robotBase.getTy() );
 								selsectedAffine.setTz(selsectedAffine.getTz() +robotBase.getTz() );
 							}
-						}
-					});
+//						}
+//					});
 
 			}
 			@Override public void onTargetTaskSpaceUpdate(AbstractKinematicsNR source,TransformNR pose) {}

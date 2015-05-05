@@ -81,9 +81,7 @@ public class DHLink {
 		step = step.times(getRotZ());
 		step = step.times(getTransX());
 		step = step.times(getRotX());
-		if(getListener()!=null){
-			TransformFactory.getTransform(new TransformNR(step), getListener());
-		}
+
 		return step;
 	}
 	
@@ -230,7 +228,7 @@ public class DHLink {
 		return listener;
 	}
 
-	public void setListener(Affine listener) {
+	void setListener(Affine listener) {
 		this.listener = listener;
 	}
 
