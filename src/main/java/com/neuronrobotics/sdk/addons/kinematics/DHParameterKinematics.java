@@ -105,7 +105,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR {
 		addPoseUpdateListener(new ITaskSpaceUpdateListenerNR() {	
 			@Override
 			public void onTaskSpaceUpdate(AbstractKinematicsNR source, TransformNR pose) {
-				System.err.println("Liny updating to "+pose);
+				//System.err.println("Liny updating to "+pose);
 				final ArrayList<TransformNR> joints = getChainTransformations();
 				Platform.runLater(new Runnable() {
 					@Override
