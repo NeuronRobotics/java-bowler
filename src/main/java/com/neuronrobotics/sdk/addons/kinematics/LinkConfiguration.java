@@ -42,11 +42,13 @@ public class LinkConfiguration {
     		setType("pid");
     	}
     	if(getType().contains("pid")){
-	    	k[0]=Double.parseDouble(XmlFactory.getTagValue("pGain",eElement));
-	    	k[1]=Double.parseDouble(XmlFactory.getTagValue("iGain",eElement));
-	    	k[2]=Double.parseDouble(XmlFactory.getTagValue("dGain",eElement));
-	    	inverted=XmlFactory.getTagValue("isInverted",eElement).contains("true");
-	    	setHomingTicksPerSecond(Integer.parseInt(XmlFactory.getTagValue("homingTPS",eElement)));
+    		try{
+		    	k[0]=Double.parseDouble(XmlFactory.getTagValue("pGain",eElement));
+		    	k[1]=Double.parseDouble(XmlFactory.getTagValue("iGain",eElement));
+		    	k[2]=Double.parseDouble(XmlFactory.getTagValue("dGain",eElement));
+		    	inverted=XmlFactory.getTagValue("isInverted",eElement).contains("true");
+		    	setHomingTicksPerSecond(Integer.parseInt(XmlFactory.getTagValue("homingTPS",eElement)));
+    		}catch (Exception ex){}
     	}
     	
     	try{

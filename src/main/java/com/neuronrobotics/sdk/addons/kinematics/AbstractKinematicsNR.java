@@ -470,12 +470,12 @@ public abstract class AbstractKinematicsNR implements IPIDEventListener, ILinkLi
 			new RuntimeException("not adding "+l.getClass().getName()).printStackTrace();
 			return;
 		}
-		new RuntimeException("adding "+l.getClass().getName()).printStackTrace();
+		//new RuntimeException("adding "+l.getClass().getName()).printStackTrace();
 		taskSpaceUpdateListeners.add(l);
 	}
 	public void removePoseUpdateListener(ITaskSpaceUpdateListenerNR l){
 		if(taskSpaceUpdateListeners.contains(l)){
-			new RuntimeException("Removing "+l.getClass().getName()).printStackTrace();
+			//new RuntimeException("Removing "+l.getClass().getName()).printStackTrace();
 			taskSpaceUpdateListeners.remove(l);
 		}
 	}
