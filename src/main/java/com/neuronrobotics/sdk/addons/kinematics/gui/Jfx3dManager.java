@@ -40,9 +40,12 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 import com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR;
+import com.neuronrobotics.sdk.addons.kinematics.DHLink;
 import com.neuronrobotics.sdk.addons.kinematics.DHParameterKinematics;
 import com.neuronrobotics.sdk.addons.kinematics.ITaskSpaceUpdateListenerNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
+import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
+import com.neuronrobotics.sdk.common.IConnectionEventListener;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.dypid.DyPIDConfiguration;
@@ -116,7 +119,6 @@ public class Jfx3dManager extends JFXPanel {
 
 	private int boxSize = 50;
 	// private Box myBox = new Box(1, 1,boxSize);
-	private ArrayList<Affine> joints = new ArrayList<Affine>();
 
 	private DHParameterKinematics model;
 	private DyIO master;
@@ -126,7 +128,6 @@ public class Jfx3dManager extends JFXPanel {
 	private MeshView selectedObject = null;
 	private Affine selsectedAffine = new Affine();
 	private Affine robotBase = new Affine();
-	private TransformNR pose = null;
 
 	public Jfx3dManager() {
 		buildScene();
@@ -202,98 +203,91 @@ public class Jfx3dManager extends JFXPanel {
 
 	public void attachArm(final DHParameterKinematics model) {
 		master = model.getFactory().getDyio();
-		model.addPoseUpdateListener(new ITaskSpaceUpdateListenerNR() {
-			@Override
-			public void onTaskSpaceUpdate(AbstractKinematicsNR source,
-					final TransformNR p) {
-				pose = p;
-				System.err.println("Pose "+p);
-				final ArrayList<TransformNR> jointLocations = model
-						.getChainTransformations();
-//					Platform.runLater(new Runnable() {
-//						@Override
-//						public void run() {
-							for (int i = 0; i < joints.size() && i< jointLocations.size(); i++) {
-								// setting the current location of each joint
-								TransformFactory.getTransform(
-										jointLocations.get(i), joints.get(i));
-							}
-							if (selectedObject != null) {
-								//System.out.println("Moving Object to "+pose);
-								// selectedObject.
-								TransformFactory.getTransform(pose,
-										selsectedAffine);
-								selsectedAffine.setTx(selsectedAffine.getTx() +robotBase.getTx() );
-								selsectedAffine.setTy(selsectedAffine.getTy() +robotBase.getTy() );
-								selsectedAffine.setTz(selsectedAffine.getTz() +robotBase.getTz() );
-							}
-//						}
-//					});
 
-			}
-			@Override public void onTargetTaskSpaceUpdate(AbstractKinematicsNR source,TransformNR pose) {}
-		});
 		new DigitalInputChannel(master, 23)
 				.addDigitalInputListener(new IDigitalInputListener() {
 					@Override
 					public void onDigitalValueChange(
-							DigitalInputChannel source, boolean isHigh) {
-						if (!isHigh) {
-							// button pressed, look for devices
-							if (pose != null) {
-								ObservableList<Node> cadBits = lookGroup
-										.getChildren();
-								for (Node n : cadBits) {
-									double x = n.getTranslateX();
-									double y = n.getTranslateY();
-									double z = n.getTranslateZ();
-									if (threedBoundCheck(x, y, z,
-											selsectedAffine, 10)) {
-										if (MeshView.class.isInstance(n)) {
-											System.out
-													.println("Selecting Object");
-											selectedObject = (MeshView) n;
-										}else{
-											System.out.println("Not Touching "+n.getClass());
-										}
+							DigitalInputChannel source, final boolean isHigh) {
+						//System.err.println("Button pressed");
+						Platform.runLater(new Runnable() {
+							
+							@Override
+							public void run() {
+								if (!isHigh) {
+
+									ObservableList<Node> cadBits = lookGroup
+											.getChildren();
+									for (Node n : cadBits) {
+										double x = n.getTranslateX();
+										double y = n.getTranslateY();
+										double z = n.getTranslateZ();
+										//if (threedBoundCheck(x, y, z,/selsectedAffine, 10)) {
+											if (MeshView.class.isInstance(n)) {
+												System.out
+														.println("Selecting Object");
+												selectedObject = (MeshView) n;
+											}else{
+												System.out.println("Not Touching "+n.getClass());
+											}
+										//}
+									}
+									if (selectedObject != null) {
+										System.out
+										.println("Grabbing Object ");
+										selectedObject.getTransforms().clear();
+										selectedObject.getTransforms().addAll(
+												robotBase,
+												selsectedAffine
+												);
+									}
+									
+								} else {
+									// button released, look for devices
+									if (selectedObject != null) {
+										// freeze it in place
+										selectedObject.getTransforms().clear();
+										selectedObject.getTransforms().addAll(
+												robotBase,
+												selsectedAffine.clone());
+										selectedObject = null;
 									}
 								}
-								if (selectedObject != null) {
-									System.out
-									.println("Grabbing Object ");
-									selectedObject.getTransforms().clear();
-									selectedObject.getTransforms().add(
-											selsectedAffine
-											);
-								}
 							}
-						} else {
-							// button released, look for devices
-							if (selectedObject != null) {
-								// freeze it in place
-								selectedObject.getTransforms().clear();
-								selectedObject.getTransforms().add(
-										selsectedAffine.clone());
-								selectedObject = null;
-							}
-						}
+						});
+	
 					}
 				});
 
-		ArrayList<TransformNR> jointLocations = model.getChainTransformations();
-		for (int i = 0; i < jointLocations.size(); i++) {
-			Axis a = new Axis(15);
-			a.getChildren().add(new Sphere(5));
-			Affine s = new Affine();
-			a.getTransforms().add(s);
-			joints.add(s);
-			manipulator.getChildren().add(a);
-		}
-		robotBase.setTx(100);
-		robotBase.setTy(100);
-		robotBase.setTz(-5);
-		manipulator.getTransforms().add(robotBase);
-		world.getChildren().addAll(manipulator);
+		Platform.runLater(new Runnable() {
+			
+			@Override
+			public void run() {
+				ArrayList<DHLink> links = model.getDhChain().getLinks();
+				for(DHLink dh : links) {
+					final Axis a = new Axis(15);
+					a.getChildren().add(new Sphere(5));
+					a.getTransforms().add(dh.getListener());
+					manipulator.getChildren().add(a);
+					master.addConnectionEventListener(new IConnectionEventListener() {
+						@Override public void onDisconnect(BowlerAbstractConnection source) {
+							manipulator.getChildren().remove(a);
+							a.getTransforms().clear();
+						}
+						@Override public void onConnect(BowlerAbstractConnection source) {}
+					});
+				}
+				//get the affine of the tip of the chain
+				selsectedAffine =  links.get(links.size()-1).getListener();
+
+				robotBase.setTx(100);
+				robotBase.setTy(100);
+				robotBase.setTz(-5);
+				manipulator.getTransforms().add(robotBase);
+				world.getChildren().addAll(manipulator);
+			}
+		});
+
 	}
 
 	private boolean oneDBound(double location, double target, double bound) {
