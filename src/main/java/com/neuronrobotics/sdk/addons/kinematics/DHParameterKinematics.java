@@ -14,7 +14,7 @@ import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.pid.GenericPIDDevice;
 
 
-public class DHParameterKinematics extends AbstractKinematicsNR {
+public class DHParameterKinematics extends AbstractKinematicsNR implements ITaskSpaceUpdateListenerNR {
 	
 	private DHChain chain=null;
 
@@ -102,25 +102,41 @@ public class DHParameterKinematics extends AbstractKinematicsNR {
 			dh.setListener(a);
 			linksListeners.add(a);
 		}
-		addPoseUpdateListener(new ITaskSpaceUpdateListenerNR() {	
-			@Override
-			public void onTaskSpaceUpdate(AbstractKinematicsNR source, TransformNR pose) {
-				//System.err.println("Liny updating to "+pose);
-				final ArrayList<TransformNR> joints = getChainTransformations();
-				Platform.runLater(new Runnable() {
-					@Override
-					public void run() {
-						for(int i=0;i<joints.size();i++)		{
-							//System.err.println("Liny updating to "+joints.get(i));
-							TransformFactory.getTransform(joints.get(i), linksListeners.get(i));
-						}
-					}
-				});
+		addPoseUpdateListener(this);
+	}
 
-			}
+	@Override
+	public void disconnectDevice() {
+		// TODO Auto-generated method stub
+		removePoseUpdateListener(this);
+	}
+
+	@Override
+	public boolean connectDevice() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void onTaskSpaceUpdate(AbstractKinematicsNR source, TransformNR pose) {
+		//System.err.println("Liny updating to "+pose);
+		final ArrayList<TransformNR> joints = getChainTransformations();
+		Platform.runLater(new Runnable() {
 			@Override
-			public void onTargetTaskSpaceUpdate(AbstractKinematicsNR source,TransformNR pose) {}
+			public void run() {
+				for(int i=0;i<joints.size();i++)		{
+					//System.err.println("Liny updating to "+joints.get(i));
+					TransformFactory.getTransform(joints.get(i), linksListeners.get(i));
+				}
+			}
 		});
+	}
+
+	@Override
+	public void onTargetTaskSpaceUpdate(AbstractKinematicsNR source,
+			TransformNR pose) {
+		// TODO Auto-generated method stub
+		
 	}
 
 

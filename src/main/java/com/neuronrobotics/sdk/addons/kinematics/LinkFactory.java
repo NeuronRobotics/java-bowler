@@ -205,4 +205,11 @@ public class LinkFactory {
 		}
 		return linkConfigurations;
 	}
+
+	public void removeLinkListener(AbstractKinematicsNR l) {
+		// TODO Auto-generated method stub
+		for(AbstractLink lin:links){
+			lin.removeLinkListener(l);
+		}
+	}
 }

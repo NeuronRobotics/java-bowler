@@ -7,6 +7,7 @@ import Jama.Matrix;
 import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
+import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.namespace.bcs.pid.IExtendedPIDControl;
 import com.neuronrobotics.sdk.pid.GenericPIDDevice;
 import com.neuronrobotics.sdk.pid.VirtualGenericPIDDevice;
@@ -64,6 +65,16 @@ public class GenericKinematicsModelNR extends AbstractKinematicsNR {
 		//Z rotation
 		inv[5]=Math.atan2(-rotationMatrixArray.get(0, 1), rotationMatrixArray.get(0, 0))*180/Math.PI;
 		return inv;
+	}
+	@Override
+	public void disconnectDevice() {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public boolean connectDevice() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

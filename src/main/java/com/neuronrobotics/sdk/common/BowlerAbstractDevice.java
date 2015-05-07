@@ -75,17 +75,29 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	 *
 	 * @param connection the new connection
 	 */
-
+	protected void fireDisconnectEvent() {
+		for(IConnectionEventListener l:disconnectListeners) {
+			l.onDisconnect(connection);
+		}
+	}
+	protected void fireConnectEvent() {
+		for(IConnectionEventListener l:disconnectListeners) {
+			l.onConnect(connection);
+		}
+	}
 	
 	public void addConnectionEventListener(IConnectionEventListener l ) {
 		if(!disconnectListeners.contains(l)) {
 			disconnectListeners.add(l);
 		}
+		if(connection !=null)
+		connection.addConnectionEventListener(l);
 	}
 	public void removeConnectionEventListener(IConnectionEventListener l ) {
 		if(disconnectListeners.contains(l)) {
 			disconnectListeners.remove(l);
 		}
+		if(connection !=null)connection.removeConnectionEventListener(l);
 	}
 	public void setConnection(BowlerAbstractConnection connection) {
 		setThreadedUpstreamPackets(false);

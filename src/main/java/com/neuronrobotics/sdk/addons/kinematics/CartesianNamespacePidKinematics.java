@@ -131,6 +131,17 @@ public class CartesianNamespacePidKinematics extends AbstractKinematicsNR{
 		
 		throw new RuntimeException("This method is unavailible on cartesian devices");
 	}
+
+	@Override
+	public void disconnectDevice() {
+		
+	}
+
+	@Override
+	public boolean connectDevice() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 	
 	
 
