@@ -62,6 +62,7 @@ public  class DHChain {
 		
 		//is = new GradiantDecent(this,debug);
 		//is = new SearchTreeSolver(this,debug);
+		is = new PseudoJacobian(this, getJacobian(jointSpaceVector));
 		if(is == null)
 			is = new ComputedGeometricModel(this,debug);
 		
