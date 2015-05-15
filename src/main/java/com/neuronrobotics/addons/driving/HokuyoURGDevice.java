@@ -24,6 +24,7 @@ public class HokuyoURGDevice extends NonBowlerDevice{
 	
 	private URG2Packet packet=null;
 	boolean run=true;
+	protected boolean done=false;
 	public HokuyoURGDevice(NRSerialPort port){
 		serial=port;
 	}
@@ -109,8 +110,16 @@ public class HokuyoURGDevice extends NonBowlerDevice{
 
 	@Override
 	public void disconnectDeviceImp() {
-		serial.disconnect();
 		run=false;
+		if(receive!=null){
+			receive.interrupt();
+			while(!done && receive.isAlive());
+			receive=null;
+		}
+		try{
+			if(serial.isConnected())
+				serial.disconnect();
+		}catch(Exception ex){}
 		
 	}
 
@@ -130,7 +139,7 @@ public class HokuyoURGDevice extends NonBowlerDevice{
 				while(run && !Thread.interrupted()){
 					try {
 						if(ins.available()>0){
-							while(ins.available()>0){
+							while(ins.available()>0 && run && !Thread.interrupted()){
 								int b = ins.read();
 								if(b==10 && bl.get(bl.size()-1)==10){
 									if(bl.size()>0){
@@ -149,17 +158,20 @@ public class HokuyoURGDevice extends NonBowlerDevice{
 								}else{
 									bl.add(b);
 								}
+								ThreadUtil.wait(1);
 							}
 						}else{
 							
 						}
-					} catch (IOException e) {
+					} catch (Exception e) {
 
-						e.printStackTrace();
-						break;
+						//e.printStackTrace();
+						run=false;
+						
 					}
 					try {Thread.sleep(1);} catch (InterruptedException e) {run=false;}
 				}
+				done=true;
 			}
 		};
 		clear();
