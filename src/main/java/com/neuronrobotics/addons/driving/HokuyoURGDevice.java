@@ -7,10 +7,12 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
 
+import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
 import com.neuronrobotics.sdk.common.ByteList;
+import com.neuronrobotics.sdk.common.NonBowlerDevice;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
-public class HokuyoURGDevice {
+public class HokuyoURGDevice extends NonBowlerDevice{
 	private NRSerialPort serial;
 	private DataInputStream ins;
 	private DataOutputStream outs;
@@ -21,57 +23,9 @@ public class HokuyoURGDevice {
 	
 	
 	private URG2Packet packet=null;
-	
+	boolean run=true;
 	public HokuyoURGDevice(NRSerialPort port){
 		serial=port;
-		serial.connect();                                 
-		 
-
-		ins = new DataInputStream(serial.getInputStream());                         
-		 
-		outs = new DataOutputStream(serial.getOutputStream());
-		
-		receive = new Thread(){
-			public void run(){
-				ByteList bl = new ByteList();
-				//System.out.println("Starting listener");
-				while(true){
-					try {
-						if(ins.available()>0){
-							while(ins.available()>0){
-								int b = ins.read();
-								if(b==10 && bl.get(bl.size()-1)==10){
-									if(bl.size()>0){
-										try{
-											URG2Packet p =new URG2Packet(new String(bl.getBytes()));
-											//System.out.println("New Packet: \n"+p);
-											setPacket(p);
-											bl = new ByteList();
-										}catch(Exception ex){
-											setPacket(null);
-											//System.out.println("Unknown packet");
-											//ex.printStackTrace();
-										}
-										
-									}
-								}else{
-									bl.add(b);
-								}
-							}
-						}else{
-							
-						}
-					} catch (IOException e) {
-
-						e.printStackTrace();
-						break;
-					}
-					try {Thread.sleep(1);} catch (InterruptedException e) {}
-				}
-			}
-		};
-		clear();
-		receive.start();
 	}
 	
 	public void clear() {
@@ -151,5 +105,65 @@ public class HokuyoURGDevice {
 
 	public void setPacket(URG2Packet packet) {
 		this.packet = packet;
+	}
+
+	@Override
+	public void disconnectDeviceImp() {
+		serial.disconnect();
+		run=false;
+		
+	}
+
+	@Override
+	public boolean connectDeviceImp() {
+		serial.connect();                                 
+		 
+
+		ins = new DataInputStream(serial.getInputStream());                         
+		 
+		outs = new DataOutputStream(serial.getOutputStream());
+		
+		receive = new Thread(){
+			public void run(){
+				ByteList bl = new ByteList();
+				//System.out.println("Starting listener");
+				while(run && !Thread.interrupted()){
+					try {
+						if(ins.available()>0){
+							while(ins.available()>0){
+								int b = ins.read();
+								if(b==10 && bl.get(bl.size()-1)==10){
+									if(bl.size()>0){
+										try{
+											URG2Packet p =new URG2Packet(new String(bl.getBytes()));
+											//System.out.println("New Packet: \n"+p);
+											setPacket(p);
+											bl = new ByteList();
+										}catch(Exception ex){
+											setPacket(null);
+											//System.out.println("Unknown packet");
+											//ex.printStackTrace();
+										}
+										
+									}
+								}else{
+									bl.add(b);
+								}
+							}
+						}else{
+							
+						}
+					} catch (IOException e) {
+
+						e.printStackTrace();
+						break;
+					}
+					try {Thread.sleep(1);} catch (InterruptedException e) {run=false;}
+				}
+			}
+		};
+		clear();
+		receive.start();
+		return serial.isConnected();
 	}
 }
