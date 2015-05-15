@@ -134,6 +134,7 @@ public class HokuyoURGDevice extends NonBowlerDevice{
 		
 		receive = new Thread(){
 			public void run(){
+				setName("HokuyoURGDevice updater");
 				ByteList bl = new ByteList();
 				//System.out.println("Starting listener");
 				while(run && !Thread.interrupted()){
