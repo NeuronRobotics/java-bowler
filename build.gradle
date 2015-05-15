@@ -8,7 +8,7 @@ targetCompatibility = '1.7'
 File buildDir = file(".");
 
 Properties props = new Properties()
-props.load(new FileInputStream(buildDir.getAbsolutePath()+"/javasdk/NRSDK/src/com/neuronrobotics/sdk/config/build.properties"))
+props.load(new FileInputStream(buildDir.getAbsolutePath()+"/src/main/resources/com/neuronrobotics/sdk/config/build.properties"))
 
 manifest {
     attributes(	
@@ -40,23 +40,10 @@ repositories {
         url "https://jcenter.bintray.com"
     }
 }
-sourceSets {
-    main {
-        java {
-            srcDirs = [buildDir.getAbsolutePath()+'/javasdk/NRSDK/src/', buildDir.getAbsolutePath()+'/javasdk/NRSDK/addons/']
-        }
-        resources {
-            srcDirs = [buildDir.getAbsolutePath()+'/javasdk/NRSDK/src/', buildDir.getAbsolutePath()+'/javasdk/NRSDK/addons/']
-            includes = ["**/*.fxml","**/*.xml","**/*.png"]
-        }
-    }
-}
-
 	
 dependencies {
 	//TODO change as many of these as possible to Maven repositories
-    compile fileTree (dir: buildDir.getAbsolutePath()+'/javasdk/NRSDK/lib/', includes: ['*.jar'])
-    compile fileTree (dir: buildDir.getAbsolutePath()+'/javasdk/NRSDK/lib_addons/', includes: ['*.jar'])
+    compile fileTree (dir: 'libs', includes: ['*.jar'])
 }
 
 // create a fat-jar (class files plus dependencies
