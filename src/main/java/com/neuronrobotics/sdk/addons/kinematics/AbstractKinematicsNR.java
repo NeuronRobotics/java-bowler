@@ -58,6 +58,14 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	
 	public abstract  boolean connectDevice();
 	
+	@Override
+	public ArrayList<String> getNamespacesImp() {
+		// TODO Auto-generated method stub
+		ArrayList<String> back = new ArrayList<String>();
+		back.add("bcs.cartesian.*");
+		return back;
+	}
+	
 	public void disconnectDeviceImp(){
 		getFactory().removeLinkListener(this);
 		IPidControlNamespace device = getFactory().getPid();

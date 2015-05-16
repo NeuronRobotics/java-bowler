@@ -1,5 +1,7 @@
 package com.neuronrobotics.sdk.common;
 
+import java.util.ArrayList;
+
 import com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace;
 
 public abstract class  NonBowlerDevice extends BowlerAbstractDevice {
@@ -10,7 +12,7 @@ public abstract class  NonBowlerDevice extends BowlerAbstractDevice {
 	public abstract void disconnectDeviceImp();
 	
 	public abstract  boolean connectDeviceImp();
-	
+	public abstract  ArrayList<String>  getNamespacesImp();
 	
 	@Override
 	public boolean connect(){
@@ -43,5 +45,15 @@ public abstract class  NonBowlerDevice extends BowlerAbstractDevice {
 	public void onAsyncResponse(BowlerDatagram data) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	/**
+	 * Get all the namespaces.
+	 *
+	 * @return the namespaces
+	 */
+	@Override
+	public ArrayList<String>  getNamespaces(){
+		return getNamespacesImp();	
 	}
 }

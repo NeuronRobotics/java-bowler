@@ -6,6 +6,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
 import com.neuronrobotics.sdk.common.ByteList;
@@ -178,5 +179,11 @@ public class HokuyoURGDevice extends NonBowlerDevice{
 		clear();
 		receive.start();
 		return serial.isConnected();
+	}
+
+	@Override
+	public ArrayList<String> getNamespacesImp() {
+		// TODO Auto-generated method stub
+		return new ArrayList<String>();
 	}
 }

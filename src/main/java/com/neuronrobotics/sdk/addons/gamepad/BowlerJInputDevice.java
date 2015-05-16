@@ -90,5 +90,11 @@ public class BowlerJInputDevice extends NonBowlerDevice {
 		if(!listeners.contains(l))
 			this.listeners.add(l);
 	}
+	
+	@Override
+	public ArrayList<String> getNamespacesImp() {
+		// TODO Auto-generated method stub
+		return new ArrayList<String>();
+	}
 
 }
