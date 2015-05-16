@@ -179,7 +179,7 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 	}
 	public Slic3r getSlic3rConfiguration(){
 		int l = Log.getMinimumPrintLevel();
-		Log.enableInfoPrint();
+		//Log.enableInfoPrint();
 		Object [] args = send("bcs.cartesian.*",
 				BowlerMethod.GET,
 		"slcr",
