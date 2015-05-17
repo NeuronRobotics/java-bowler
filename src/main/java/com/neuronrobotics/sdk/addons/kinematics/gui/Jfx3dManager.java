@@ -584,4 +584,7 @@ public class Jfx3dManager extends JFXPanel {
 	public void setCameraVR(Affine cameraVR) {
 		this.cameraVR = cameraVR;
 	}
+	public void removeArm() {
+		world.getChildren().remove(manipulator);
+	}
 }
