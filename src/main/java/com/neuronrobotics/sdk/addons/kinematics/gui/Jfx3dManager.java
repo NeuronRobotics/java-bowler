@@ -205,7 +205,7 @@ public class Jfx3dManager extends JFXPanel {
 
 	public void attachArm(final DHParameterKinematics model) {
 		master = model.getFactory().getDyio();
-
+		if (master != null)
 		new DigitalInputChannel(master, 23)
 				.addDigitalInputListener(new IDigitalInputListener() {
 					@Override
@@ -271,13 +271,14 @@ public class Jfx3dManager extends JFXPanel {
 					a.getChildren().add(new Sphere(5));
 					a.getTransforms().add(dh.getListener());
 					manipulator.getChildren().add(a);
-					master.addConnectionEventListener(new IConnectionEventListener() {
-						@Override public void onDisconnect(BowlerAbstractConnection source) {
-							manipulator.getChildren().remove(a);
-							a.getTransforms().clear();
-						}
-						@Override public void onConnect(BowlerAbstractConnection source) {}
-					});
+					if(master!=null)
+						master.addConnectionEventListener(new IConnectionEventListener() {
+							@Override public void onDisconnect(BowlerAbstractConnection source) {
+								manipulator.getChildren().remove(a);
+								a.getTransforms().clear();
+							}
+							@Override public void onConnect(BowlerAbstractConnection source) {}
+						});
 				}
 				//get the affine of the tip of the chain
 				selsectedAffine =  links.get(links.size()-1).getListener();

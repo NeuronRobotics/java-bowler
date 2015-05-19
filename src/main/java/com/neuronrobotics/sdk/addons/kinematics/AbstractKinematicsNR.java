@@ -150,6 +150,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		try{
 			
 		    Node baseToZframeConfig = bf.item(0);
+		    if(baseToZframeConfig!=null)
 		    if (baseToZframeConfig.getNodeType() == Node.ELEMENT_NODE) {
 		    	Element eElement = (Element)baseToZframeConfig;	    	    
 		    	setBaseToZframeTransform(new TransformNR(	Double.parseDouble(XmlFactory.getTagValue("x",eElement)),
