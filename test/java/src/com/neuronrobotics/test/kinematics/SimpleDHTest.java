@@ -13,10 +13,11 @@ import com.neuronrobotics.sdk.addons.kinematics.gui.DHKinematicsViewer;
 import com.neuronrobotics.sdk.addons.kinematics.gui.SampleGuiNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.common.Log;
+import com.neuronrobotics.sdk.pid.VirtualGenericPIDDevice;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 public class SimpleDHTest {
-	DHParameterKinematics model = new DHParameterKinematics(
+	DHParameterKinematics model = new DHParameterKinematics(new VirtualGenericPIDDevice(100000),
 			SimpleDHTest.class.getResourceAsStream("SimpleDH.xml"),
 			SimpleDHTest.class.getResourceAsStream("SimpleDH.xml"));
 	double [] startVect = new double [] { 0,0,0,0};
