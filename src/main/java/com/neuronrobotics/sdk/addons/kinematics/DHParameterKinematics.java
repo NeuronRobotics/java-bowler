@@ -1,5 +1,8 @@
 package com.neuronrobotics.sdk.addons.kinematics;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
@@ -10,15 +13,30 @@ import Jama.Matrix;
 import com.neuronrobotics.sdk.addons.kinematics.gui.TransformFactory;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
+import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
+import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
+import com.neuronrobotics.sdk.common.IConnectionEventListener;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.pid.GenericPIDDevice;
 
 
-public class DHParameterKinematics extends AbstractKinematicsNR implements ITaskSpaceUpdateListenerNR {
+public class DHParameterKinematics extends AbstractKinematicsNR implements ITaskSpaceUpdateListenerNR{
 	
 	private DHChain chain=null;
 
 	private ArrayList<Affine> linksListeners = new ArrayList<Affine>();
+	boolean disconnecting=false;
+	IConnectionEventListener l = new IConnectionEventListener() {
+		@Override public void onDisconnect(BowlerAbstractConnection source) {
+			if(!disconnecting){
+				disconnecting=true;
+				disconnect();
+			}
+			
+		}
+		@Override public void onConnect(BowlerAbstractConnection source) {}
+	} ;
+	
 	public DHParameterKinematics() {
 		this((DyIO)null,"TrobotLinks.xml");
 	}
@@ -39,14 +57,13 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 		this(dev,XmlFactory.getDefaultConfigurationStream(file),XmlFactory.getDefaultConfigurationStream(file));
 		
 	}
-	public DHParameterKinematics( DyIO dev, InputStream linkStream, InputStream dhStream) {
+	public DHParameterKinematics( BowlerAbstractDevice dev, InputStream linkStream, InputStream dhStream) {
 		super(linkStream,new LinkFactory( dev));
 		setChain(new DHChain(dhStream,getFactory()));
+		dev.addConnectionEventListener(l);
 	}
-	
-	public DHParameterKinematics(GenericPIDDevice dev, InputStream linkStream, InputStream dhStream) {
-		super(linkStream,new LinkFactory( dev));
-		setChain(new DHChain(dhStream,getFactory()));
+	public DHParameterKinematics( BowlerAbstractDevice dev, File configFile) throws FileNotFoundException {
+		this(dev,new FileInputStream(configFile),new FileInputStream(configFile));
 	}
 
 	public DHParameterKinematics(InputStream linkStream, InputStream dhStream) {
@@ -66,6 +83,8 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 		TransformNR rt = getDhChain().forwardKinematics(jointSpaceVector);
 		return rt;
 	}
+	
+	
 	
 	/**
 	 * Gets the Jacobian matrix
@@ -138,6 +157,15 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 		// TODO Auto-generated method stub
 		
 	}
+
+	public DhInverseSolver getInverseSolver() {
+		return chain.getInverseSolver();
+	}
+
+	public void setInverseSolver(DhInverseSolver inverseSolver) {
+		chain.setInverseSolver(inverseSolver);
+	}
+
 
 
 }

@@ -20,9 +20,9 @@ public class GenericKinematicsModelNR extends AbstractKinematicsNR {
 	public GenericKinematicsModelNR(InputStream configFile,GenericPIDDevice device ){
 		super(configFile,new LinkFactory( device));
 	}
-	public GenericKinematicsModelNR(IExtendedPIDControl dev){
-		super(XmlFactory.getDefaultConfigurationStream("GenericKinematics.xml"),new LinkFactory( dev));
-	}
+//	public GenericKinematicsModelNR(IExtendedPIDControl dev){
+//		super(XmlFactory.getDefaultConfigurationStream("GenericKinematics.xml"),new LinkFactory( dev));
+//	}
 
 	public GenericKinematicsModelNR() {
 		super(XmlFactory.getDefaultConfigurationStream("GenericKinematics.xml"),new LinkFactory( new VirtualGenericPIDDevice(1000000)));

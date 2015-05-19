@@ -1,5 +1,7 @@
 package com.neuronrobotics.replicator.driver;
 
+import gnu.io.NativeResource;
+
 import java.io.File;
 import java.io.InputStream;
 
@@ -12,6 +14,7 @@ import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 import com.neuronrobotics.sdk.util.ThreadUtil;
+import com.neuronrobotics.sdk.utils.NativeResourceException;
 
 public class NRPrinter extends CartesianNamespacePidKinematics implements PrinterStatusListener{
 	private ServoStockGCodeParser parser;
@@ -42,7 +45,7 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 				if(source == hotEnd) {
 					setTempreture(engineeringUnitsValue);
 				}
-				Log.info("Link Position update "+source+" "+engineeringUnitsValue);
+				//Log.info("Link Position update "+source+" "+engineeringUnitsValue);
 			}
 			
 			@Override
@@ -58,8 +61,10 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 		setExtrusionTempreture(getTempreture());
 
 		setParser(new ServoStockGCodeParser(this));
-		
-		reloadSlic3rSettings();
+			
+		try{
+			reloadSlic3rSettings();
+		}catch(Exception e){e.printStackTrace();}
 		addPrinterStatusListener(this);
 
 		

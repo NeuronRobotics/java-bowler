@@ -48,7 +48,7 @@ public class FileChangeWatcher extends Thread {
 	private boolean run = true;
 	private final WatchService watcher;
 	private final Map<WatchKey, Path> keys;
-	private final boolean recursive;
+	private final boolean recursive=false;
 	private ArrayList<IFileChangeListener> listeners = new ArrayList<IFileChangeListener>();
 	
 	public FileChangeWatcher(File fileToWatch) throws IOException {
@@ -56,7 +56,6 @@ public class FileChangeWatcher extends Thread {
 		setName("File Watcher Thread for " + fileToWatch.getAbsolutePath());
 		this.watcher = FileSystems.getDefault().newWatchService();
 		this.keys = new HashMap<WatchKey, Path>();
-		this.recursive = true;
 		Path dir = Paths.get(fileToWatch.getParent());
 		if (recursive) {
 			System.out.format("Scanning %s ...\n", dir);

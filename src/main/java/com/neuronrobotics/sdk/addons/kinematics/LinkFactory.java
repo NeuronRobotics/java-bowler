@@ -1,6 +1,7 @@
 package com.neuronrobotics.sdk.addons.kinematics;
 import java.util.ArrayList;
 
+import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.peripherals.AnalogInputChannel;
@@ -27,26 +28,20 @@ public class LinkFactory {
 		forceVirtual=true;
 	}
 	
-	public LinkFactory (DyIO d){
+	public LinkFactory (BowlerAbstractDevice d){
 		if(d==null){
 			forceVirtual=true;
 			return;
 		}
-		dyio=d;
-		pid=d;
-		hasPid=true;
-		hasServo=true;
-		hasStepper=true;
-	}
-	public LinkFactory (IExtendedPIDControl d){
-		if(d==null){
-			forceVirtual=true;
-			//pid=virtual;
+		if(DyIO.class.isInstance(d)){
+			dyio=(DyIO)d;
+			hasServo=true;
+			hasStepper=true;
+		}
+		if(IExtendedPIDControl.class.isInstance(d)){
+			pid=(IExtendedPIDControl)d;
 			hasPid=true;
-			return;
 		}
-		pid=d;
-		hasPid=true;
 	}
 	
 	public LinkFactory(ILinkFactoryProvider connection,IExtendedPIDControl d) {
@@ -101,7 +96,7 @@ public class LinkFactory {
 											(int)c.getLowerLimit(),
 											(int)c.getUpperLimit(),
 											c.getScale());
-			} else if (c.getType().equals("dummy")){
+			} else if (c.getType().equals("dummy")|| c.getType().equals("virtual")){
 //				tmp=new PidRotoryLink(	virtual.getPIDChannel(c.getHardwareIndex()),
 //						(int)0,
 //						(int)c.getLowerLimit(),

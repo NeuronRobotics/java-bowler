@@ -19,6 +19,7 @@ import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.common.InvalidConnectionException;
 //import com.neuronrobotics.sdk.addons.kinematics.PidRotoryLink;
 import com.neuronrobotics.sdk.common.Log;
+import com.neuronrobotics.sdk.common.NonBowlerDevice;
 import com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace;
 import com.neuronrobotics.sdk.pid.IPIDEventListener;
 import com.neuronrobotics.sdk.pid.PIDChannel;
@@ -30,7 +31,7 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
 //import javax.swing.JFrame;
 //import javax.swing.JOptionPane;
 
-public abstract class AbstractKinematicsNR extends BowlerAbstractDevice implements IPIDEventListener, ILinkListener {
+public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IPIDEventListener, ILinkListener {
 	
 	/** The configurations. */
 	private ArrayList<PIDConfiguration> pidConfigurations= new ArrayList<PIDConfiguration>();
@@ -58,42 +59,25 @@ public abstract class AbstractKinematicsNR extends BowlerAbstractDevice implemen
 	public abstract  boolean connectDevice();
 	
 	@Override
-	public boolean connect(){
-		fireConnectEvent();
-		return connectDevice();
+	public ArrayList<String> getNamespacesImp() {
+		// TODO Auto-generated method stub
+		ArrayList<String> back = new ArrayList<String>();
+		back.add("bcs.cartesian.*");
+		return back;
 	}
 	
-	/**
-	 * Determines if the device is available.
-	 *
-	 * @return true if the device is avaiable, false if it is not
-	 * @throws InvalidConnectionException the invalid connection exception
-	 */
-	@Override
-	public boolean isAvailable() throws InvalidConnectionException{
-		return true;
-	}
-	
-	/**
-	 * This method tells the connection object to disconnect its pipes and close out the connection. Once this is called, it is safe to remove your device.
-	 */
-	@Override
-	public void disconnect(){
-		fireDisconnectEvent();
+	public void disconnectDeviceImp(){
 		getFactory().removeLinkListener(this);
 		IPidControlNamespace device = getFactory().getPid();
 		if(device!=null)
 			device.removePIDEventListener(this);
 		disconnectDevice();
-		
 	}
 	
-	@Override
-	public void onAsyncResponse(BowlerDatagram data) {
-		// TODO Auto-generated method stub
-		
+	public  boolean connectDeviceImp(){
+		return connectDevice();
 	}
-	
+		
 	/* The device */
 	//private IPIDControl device =null;
 	private LinkFactory factory=null;
@@ -166,6 +150,7 @@ public abstract class AbstractKinematicsNR extends BowlerAbstractDevice implemen
 		try{
 			
 		    Node baseToZframeConfig = bf.item(0);
+		    if(baseToZframeConfig!=null)
 		    if (baseToZframeConfig.getNodeType() == Node.ELEMENT_NODE) {
 		    	Element eElement = (Element)baseToZframeConfig;	    	    
 		    	setBaseToZframeTransform(new TransformNR(	Double.parseDouble(XmlFactory.getTagValue("x",eElement)),

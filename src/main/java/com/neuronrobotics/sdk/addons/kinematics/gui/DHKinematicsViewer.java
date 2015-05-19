@@ -55,7 +55,7 @@ public class DHKinematicsViewer extends JFXPanel {
         
         
 		DyIO.disableFWCheck();
-		Log.enableInfoPrint();
+		//Log.enableInfoPrint();
 		//Create the references for my known DyIOs
 		DyIO master = new DyIO(ConnectionDialog.promptConnection());
 

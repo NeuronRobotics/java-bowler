@@ -64,10 +64,10 @@ public  class DHChain {
 		
 		//is = new GradiantDecent(this,debug);
 		//is = new SearchTreeSolver(this,debug);
-		if(is == null)
-			is = new ComputedGeometricModel(this,debug);
+		if(getInverseSolver() == null)
+			setInverseSolver(new ComputedGeometricModel(this,debug));
 		
-		double [] inv = is.inverseKinematics(target, jointSpaceVector);	
+		double [] inv = getInverseSolver().inverseKinematics(target, jointSpaceVector);	
 		if(debug){
 			//getViewer().updatePoseDisplay(getChain(jointSpaceVector));
 		}
@@ -202,6 +202,14 @@ public  class DHChain {
 		}
 		return s;
 				
+	}
+
+	public DhInverseSolver getInverseSolver() {
+		return is;
+	}
+
+	public void setInverseSolver(DhInverseSolver is) {
+		this.is = is;
 	}
 
 }

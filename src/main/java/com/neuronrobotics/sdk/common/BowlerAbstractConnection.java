@@ -1152,19 +1152,19 @@ public abstract class BowlerAbstractConnection {
 					}
 				}
 				
-				int index = 0;
+				int index = queueBuffer.size()-1;
 				int max = 500;
 				while(queueBuffer.size()>max){
 					if(queueBuffer.get(index).isFree()){
 						Log.error("Removing packet because freed "+queueBuffer.remove(index));
 					}else{
-						if(!queueBuffer.get(index).isSyncronous() && queueBuffer.get(index).getMethod() != BowlerMethod.CRITICAL){
+						if(!queueBuffer.get(index).isSyncronous()){
 							int state = Log.getMinimumPrintLevel();
 							Log.enableErrorPrint();
 							Log.error("Removing packet from overflow: "+queueBuffer.remove(index));
 							Log.setMinimumPrintLevel(state);
 						}else{
-							index++;
+							index--;
 						}
 					}
 					if(index >= max){

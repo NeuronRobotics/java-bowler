@@ -111,6 +111,21 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 		}
 		return true;
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#flushPIDChannels
+	 */
+	@Override
+	public void flushPIDChannels(double time) {
+		int [] data = new int[getChannels().size()];
+		for(int i=0;i<data.length;i++){
+			data[i]=getPIDChannel(i).getCachedTargetValue();
+		}
+		Log.info("Flushing in "+time+"ms");
+		SetAllPIDSetPoint(data, time);
+	}
+	
+	
 	@Override
 	public boolean SetAllPIDSetPoint(int[] setpoints, double seconds) {
 		sync.setPause(true);

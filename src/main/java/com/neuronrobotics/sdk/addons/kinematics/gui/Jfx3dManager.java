@@ -74,6 +74,7 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Transform;
 import javafx.animation.Timeline;
+import javafx.beans.property.DoubleProperty;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.JFXPanel;
 import javafx.embed.swing.SwingFXUtils;
@@ -128,6 +129,7 @@ public class Jfx3dManager extends JFXPanel {
 	private MeshView selectedObject = null;
 	private Affine selsectedAffine = new Affine();
 	private Affine robotBase = new Affine();
+	private Affine cameraVR = new Affine();
 
 	public Jfx3dManager() {
 		buildScene();
@@ -203,7 +205,7 @@ public class Jfx3dManager extends JFXPanel {
 
 	public void attachArm(final DHParameterKinematics model) {
 		master = model.getFactory().getDyio();
-
+		if (master != null)
 		new DigitalInputChannel(master, 23)
 				.addDigitalInputListener(new IDigitalInputListener() {
 					@Override
@@ -269,13 +271,14 @@ public class Jfx3dManager extends JFXPanel {
 					a.getChildren().add(new Sphere(5));
 					a.getTransforms().add(dh.getListener());
 					manipulator.getChildren().add(a);
-					master.addConnectionEventListener(new IConnectionEventListener() {
-						@Override public void onDisconnect(BowlerAbstractConnection source) {
-							manipulator.getChildren().remove(a);
-							a.getTransforms().clear();
-						}
-						@Override public void onConnect(BowlerAbstractConnection source) {}
-					});
+					if(master!=null)
+						master.addConnectionEventListener(new IConnectionEventListener() {
+							@Override public void onDisconnect(BowlerAbstractConnection source) {
+								manipulator.getChildren().remove(a);
+								a.getTransforms().clear();
+							}
+							@Override public void onConnect(BowlerAbstractConnection source) {}
+						});
 				}
 				//get the affine of the tip of the chain
 				selsectedAffine =  links.get(links.size()-1).getListener();
@@ -341,9 +344,14 @@ public class Jfx3dManager extends JFXPanel {
 		camera.setNearClip(0.1);
 		camera.setFarClip(10000.0);
 		camera.setTranslateZ(-cameraDistance);
+		camera.getTransforms().add(getCameraVR());
 		cameraXform.ry.setAngle(320.0);
 		cameraXform.rx.setAngle(40);
-
+		
+	}
+	
+	public DoubleProperty getCameraFieldOfViewProperty(){
+		return camera.fieldOfViewProperty();
 	}
 
 	private void buildAxes() {
@@ -570,5 +578,14 @@ public class Jfx3dManager extends JFXPanel {
 
 	public Group getRoot() {
 		return root;
+	}
+	public Affine getCameraVR() {
+		return cameraVR;
+	}
+	public void setCameraVR(Affine cameraVR) {
+		this.cameraVR = cameraVR;
+	}
+	public void removeArm() {
+		world.getChildren().remove(manipulator);
 	}
 }
