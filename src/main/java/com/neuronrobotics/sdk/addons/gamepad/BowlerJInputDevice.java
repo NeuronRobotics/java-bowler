@@ -58,7 +58,7 @@ public class BowlerJInputDevice extends NonBowlerDevice {
 			                     buffer.append("Off");
 			                  }
 			               }
-			               Log.warning(buffer.toString());
+			               Log.info(buffer.toString());
 			               for(IJInputEventListener l:listeners){
 			            	   l.onEvent(comp, event, value, buffer.toString());
 			               }
