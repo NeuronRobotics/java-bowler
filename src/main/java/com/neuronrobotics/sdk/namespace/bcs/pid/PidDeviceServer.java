@@ -1,9 +1,10 @@
-package com.neuronrobotics.sdk.common.device.server;
+package com.neuronrobotics.sdk.namespace.bcs.pid;
 
 import java.io.IOException;
 
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.MACAddress;
+import com.neuronrobotics.sdk.common.device.server.BowlerAbstractServer;
 
 public class PidDeviceServer extends BowlerAbstractServer {
 
