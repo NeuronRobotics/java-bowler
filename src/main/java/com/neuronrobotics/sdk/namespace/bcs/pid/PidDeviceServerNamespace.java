@@ -112,13 +112,24 @@ public class PidDeviceServerNamespace extends BowlerAbstractDeviceServerNamespac
 				getNamespace() , 
 				"apid", 
 				BowlerMethod.POST, 
-				new BowlerDataType[]{BowlerDataType.}, 
-				BowlerMethod., 
-				new BowlerDataType[]{BowlerDataType.},
+				new BowlerDataType[]{	BowlerDataType.I32,
+										BowlerDataType.I32STR
+										}, 
+				BowlerMethod.STATUS, 
+				new BowlerDataType[]{	BowlerDataType.I08,
+										BowlerDataType.I08,
+					},
 				new IBowlerCommandProcessor() {
 					@Override
 					public Object[] process(Object[] data) {
-						return new Object[]{};
+						Integer time = (Integer)data[0];
+						Integer [] d = (Integer [])data[1];
+						int [] current = new int[d.length];
+						for(int i=0;i<current.length;i++){
+							current[i] = d[i];
+						}
+						SetAllPIDSetPoint(current, time);
+						return new Object[]{new Integer(66),new Integer(3)};
 					}
 				}));//Name
 		rpc.add(new RpcEncapsulation(getNamespaceIndex(), 
