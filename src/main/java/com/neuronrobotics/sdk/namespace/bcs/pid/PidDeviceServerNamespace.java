@@ -1,5 +1,7 @@
 package com.neuronrobotics.sdk.namespace.bcs.pid;
 
+import javafx.geometry.VPos;
+
 import com.neuronrobotics.sdk.common.BowlerDataType;
 import com.neuronrobotics.sdk.common.BowlerMethod;
 import com.neuronrobotics.sdk.common.MACAddress;
@@ -87,7 +89,7 @@ public class PidDeviceServerNamespace extends BowlerAbstractDeviceServerNamespac
 				BowlerMethod.POST, 
 				new BowlerDataType[]{	BowlerDataType.I08,
 										BowlerDataType.FIXED100,
-										BowlerDataType.FIXED100,},
+										BowlerDataType.FIXED100},
 				new IBowlerCommandProcessor() {
 					@Override
 					public Object[] process(Object[] data) {
@@ -180,60 +182,84 @@ public class PidDeviceServerNamespace extends BowlerAbstractDeviceServerNamespac
 				getNamespace() , 
 				"rpid", 
 				BowlerMethod.POST, 
-				new BowlerDataType[]{BowlerDataType.
-			}, 
+				new BowlerDataType[]{	BowlerDataType.I08,
+										BowlerDataType.I32
+				}, 
 				BowlerMethod.STATUS, 
-				new BowlerDataType[]{BowlerDataType.
-			},
+				new BowlerDataType[]{	BowlerDataType.I08,
+										BowlerDataType.I08
+				},
 				new IBowlerCommandProcessor() {
 					@Override
 					public Object[] process(Object[] data) {
-						return new Object[]{};
+						ResetPIDChannel((Integer)data[0], (Integer)data[1]);
+						return new Object[]{new Integer(66),new Integer(6)};
 					}
 				}));//Name
 		rpc.add(new RpcEncapsulation(getNamespaceIndex(), 
 				getNamespace() , 
 				"kpid", 
 				BowlerMethod.CRITICAL, 
-				new BowlerDataType[]{BowlerDataType.
-			}, 
+				new BowlerDataType[]{}, 
 				BowlerMethod.STATUS, 
-				new BowlerDataType[]{BowlerDataType.
-			},
+				new BowlerDataType[]{	BowlerDataType.I08,
+							BowlerDataType.I08
+				},
 				new IBowlerCommandProcessor() {
 					@Override
 					public Object[] process(Object[] data) {
-						return new Object[]{};
+						killAllPidGroups();
+						return new Object[]{new Integer(66),new Integer(0)};
 					}
 				}));//Name
 		rpc.add(new RpcEncapsulation(getNamespaceIndex(), 
 				getNamespace() , 
 				"cpid", 
 				BowlerMethod.CRITICAL, 
-				new BowlerDataType[]{BowlerDataType.
-			}, 
+				new BowlerDataType[]{	BowlerDataType.I08,
+										BowlerDataType.I08,
+										BowlerDataType.I08,
+										BowlerDataType.I08,
+										BowlerDataType.FIXED100,
+										BowlerDataType.FIXED100,
+										BowlerDataType.FIXED100,
+										BowlerDataType.I32,
+										BowlerDataType.I08,
+										BowlerDataType.I08,
+										BowlerDataType.FIXED1k,
+										BowlerDataType.FIXED1k,
+										BowlerDataType.FIXED1k
+				}, 
 				BowlerMethod.STATUS, 
-				new BowlerDataType[]{BowlerDataType.
-			},
+				new BowlerDataType[]{	BowlerDataType.I08,
+					BowlerDataType.I08
+				},
 				new IBowlerCommandProcessor() {
 					@Override
 					public Object[] process(Object[] data) {
-						return new Object[]{};
+						PIDConfiguration conf = new PIDConfiguration(data);
+						ConfigurePIDController(conf);
+						return new Object[]{new Integer(66),new Integer(1)};
 					}
 				}));//Name
 		rpc.add(new RpcEncapsulation(getNamespaceIndex(), 
 				getNamespace() , 
 				"cpdv", 
 				BowlerMethod.CRITICAL, 
-				new BowlerDataType[]{BowlerDataType.
-			}, 
+				new BowlerDataType[]{	BowlerDataType.I08,
+										BowlerDataType.FIXED100,
+										BowlerDataType.FIXED100
+				}, 
 				BowlerMethod.STATUS, 
-				new BowlerDataType[]{BowlerDataType.
-			},
+				new BowlerDataType[]{	BowlerDataType.I08,
+										BowlerDataType.I08
+				},
 				new IBowlerCommandProcessor() {
 					@Override
 					public Object[] process(Object[] data) {
-						return new Object[]{};
+						PDVelocityConfiguration conf = new PDVelocityConfiguration(data);
+						ConfigurePDVelovityController(conf);
+						return new Object[]{new Integer(66),new Integer(2)};
 					}
 				}));//Name
 		rpc.add(new RpcEncapsulation(getNamespaceIndex(), 
