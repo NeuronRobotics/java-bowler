@@ -44,13 +44,13 @@ public class PidDeviceServerNamespace extends BowlerAbstractDeviceServerNamespac
 				getNamespace() , 
 				"_pid", 
 				BowlerMethod.GET, 
-				new BowlerDataType[]{BowlerDataType.}, 
-				BowlerMethod., 
-				new BowlerDataType[]{BowlerDataType.},
+				new BowlerDataType[]{BowlerDataType.I08}, 
+				BowlerMethod.POST, 
+				new BowlerDataType[]{BowlerDataType.I08,BowlerDataType.I32},
 				new IBowlerCommandProcessor() {
 					@Override
 					public Object[] process(Object[] data) {
-						return new Object[]{};
+						return new Object[]{new Integer(GetPIDPosition((Integer) data[0]))};
 					}
 				}));//Name
 		rpc.add(new RpcEncapsulation(getNamespaceIndex(), 
