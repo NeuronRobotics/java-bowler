@@ -4,6 +4,7 @@ import javafx.geometry.VPos;
 
 import com.neuronrobotics.sdk.common.BowlerDataType;
 import com.neuronrobotics.sdk.common.BowlerMethod;
+import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.MACAddress;
 import com.neuronrobotics.sdk.common.RpcEncapsulation;
 import com.neuronrobotics.sdk.common.device.server.BowlerAbstractDeviceServerNamespace;
@@ -171,9 +172,15 @@ public class PidDeviceServerNamespace extends BowlerAbstractDeviceServerNamespac
 				new IBowlerCommandProcessor() {
 					@Override
 					public Object[] process(Object[] data) {
-						SetPDVelocity((Integer)data[0], 
-								(Integer)data[1], 
-								(Integer)data[2]);
+						try {
+							SetPDVelocity((Integer)data[0], 
+									(Integer)data[1], 
+									(Integer)data[2]);
+						} catch (PIDCommandException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+							return new Object[]{new Integer(55),new Integer(66)};
+						}
 						
 						return new Object[]{new Integer(66),new Integer(4)};
 					}
@@ -239,6 +246,7 @@ public class PidDeviceServerNamespace extends BowlerAbstractDeviceServerNamespac
 					public Object[] process(Object[] data) {
 						PIDConfiguration conf = new PIDConfiguration(data);
 						ConfigurePIDController(conf);
+						Log.info("PID setting "+conf);
 						return new Object[]{new Integer(66),new Integer(1)};
 					}
 				}));//Name
@@ -259,6 +267,7 @@ public class PidDeviceServerNamespace extends BowlerAbstractDeviceServerNamespac
 					public Object[] process(Object[] data) {
 						PDVelocityConfiguration conf = new PDVelocityConfiguration(data);
 						ConfigurePDVelovityController(conf);
+						Log.info("VPD setting "+conf);
 						return new Object[]{new Integer(66),new Integer(2)};
 					}
 				}));//Name
@@ -266,15 +275,17 @@ public class PidDeviceServerNamespace extends BowlerAbstractDeviceServerNamespac
 				getNamespace() , 
 				"acal", 
 				BowlerMethod.CRITICAL, 
-				new BowlerDataType[]{BowlerDataType.
-			}, 
+				new BowlerDataType[]{BowlerDataType.I08
+				}, 
 				BowlerMethod.STATUS, 
-				new BowlerDataType[]{BowlerDataType.
-			},
+				new BowlerDataType[]{	BowlerDataType.I08,
+										BowlerDataType.I08
+				},
 				new IBowlerCommandProcessor() {
 					@Override
 					public Object[] process(Object[] data) {
-						return new Object[]{};
+						runOutputHysteresisCalibration((Integer)data[0]);
+						return new Object[]{new Integer(37),new Integer(0)};
 					}
 				}));//Name
 	}

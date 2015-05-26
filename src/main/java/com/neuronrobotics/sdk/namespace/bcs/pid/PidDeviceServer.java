@@ -8,8 +8,9 @@ import com.neuronrobotics.sdk.common.device.server.BowlerAbstractServer;
 
 public class PidDeviceServer extends BowlerAbstractServer {
 
-	public PidDeviceServer(MACAddress mac) {
+	public PidDeviceServer(MACAddress mac,IExtendedPIDControl device) {
 		super(mac);
+		addBowlerDeviceServerNamespace(new PidDeviceServerNamespace(mac, device));
 		Log.info("Starting UDP");
 		try {
 			startNetworkServer();
