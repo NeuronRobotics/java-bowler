@@ -158,22 +158,33 @@ public class PidDeviceServerNamespace extends BowlerAbstractDeviceServerNamespac
 				getNamespace() , 
 				"_vpd", 
 				BowlerMethod.POST, 
-				new BowlerDataType[]{BowlerDataType.}, 
-				BowlerMethod., 
-				new BowlerDataType[]{BowlerDataType.},
+				new BowlerDataType[]{	BowlerDataType.I08,
+										BowlerDataType.I32,
+										BowlerDataType.I32
+				}, 
+				BowlerMethod.STATUS, 
+				new BowlerDataType[]{	BowlerDataType.I08,
+										BowlerDataType.I08
+				},
 				new IBowlerCommandProcessor() {
 					@Override
 					public Object[] process(Object[] data) {
-						return new Object[]{};
+						SetPDVelocity((Integer)data[0], 
+								(Integer)data[1], 
+								(Integer)data[2]);
+						
+						return new Object[]{new Integer(66),new Integer(4)};
 					}
 				}));//Name
 		rpc.add(new RpcEncapsulation(getNamespaceIndex(), 
 				getNamespace() , 
 				"rpid", 
 				BowlerMethod.POST, 
-				new BowlerDataType[]{BowlerDataType.}, 
-				BowlerMethod., 
-				new BowlerDataType[]{BowlerDataType.},
+				new BowlerDataType[]{BowlerDataType.
+			}, 
+				BowlerMethod.STATUS, 
+				new BowlerDataType[]{BowlerDataType.
+			},
 				new IBowlerCommandProcessor() {
 					@Override
 					public Object[] process(Object[] data) {
@@ -184,9 +195,11 @@ public class PidDeviceServerNamespace extends BowlerAbstractDeviceServerNamespac
 				getNamespace() , 
 				"kpid", 
 				BowlerMethod.CRITICAL, 
-				new BowlerDataType[]{BowlerDataType.}, 
-				BowlerMethod., 
-				new BowlerDataType[]{BowlerDataType.},
+				new BowlerDataType[]{BowlerDataType.
+			}, 
+				BowlerMethod.STATUS, 
+				new BowlerDataType[]{BowlerDataType.
+			},
 				new IBowlerCommandProcessor() {
 					@Override
 					public Object[] process(Object[] data) {
@@ -197,9 +210,11 @@ public class PidDeviceServerNamespace extends BowlerAbstractDeviceServerNamespac
 				getNamespace() , 
 				"cpid", 
 				BowlerMethod.CRITICAL, 
-				new BowlerDataType[]{BowlerDataType.}, 
-				BowlerMethod., 
-				new BowlerDataType[]{BowlerDataType.},
+				new BowlerDataType[]{BowlerDataType.
+			}, 
+				BowlerMethod.STATUS, 
+				new BowlerDataType[]{BowlerDataType.
+			},
 				new IBowlerCommandProcessor() {
 					@Override
 					public Object[] process(Object[] data) {
@@ -210,9 +225,11 @@ public class PidDeviceServerNamespace extends BowlerAbstractDeviceServerNamespac
 				getNamespace() , 
 				"cpdv", 
 				BowlerMethod.CRITICAL, 
-				new BowlerDataType[]{BowlerDataType.}, 
-				BowlerMethod., 
-				new BowlerDataType[]{BowlerDataType.},
+				new BowlerDataType[]{BowlerDataType.
+			}, 
+				BowlerMethod.STATUS, 
+				new BowlerDataType[]{BowlerDataType.
+			},
 				new IBowlerCommandProcessor() {
 					@Override
 					public Object[] process(Object[] data) {
@@ -223,9 +240,11 @@ public class PidDeviceServerNamespace extends BowlerAbstractDeviceServerNamespac
 				getNamespace() , 
 				"acal", 
 				BowlerMethod.CRITICAL, 
-				new BowlerDataType[]{BowlerDataType.}, 
-				BowlerMethod., 
-				new BowlerDataType[]{BowlerDataType.},
+				new BowlerDataType[]{BowlerDataType.
+			}, 
+				BowlerMethod.STATUS, 
+				new BowlerDataType[]{BowlerDataType.
+			},
 				new IBowlerCommandProcessor() {
 					@Override
 					public Object[] process(Object[] data) {
