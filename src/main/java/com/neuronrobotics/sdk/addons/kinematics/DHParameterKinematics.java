@@ -4,6 +4,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.net.URL;
+//import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 
 import javafx.application.Platform;
@@ -47,12 +51,12 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 	}
 	public DHParameterKinematics( DyIO dev, String file) {
 		this(dev,XmlFactory.getDefaultConfigurationStream(file),XmlFactory.getDefaultConfigurationStream(file));
-		
 	}
 	public DHParameterKinematics( GenericPIDDevice dev) {
 		this(dev,"TrobotLinks.xml");
 
 	}
+	
 	public DHParameterKinematics( GenericPIDDevice dev, String file) {
 		this(dev,XmlFactory.getDefaultConfigurationStream(file),XmlFactory.getDefaultConfigurationStream(file));
 		
