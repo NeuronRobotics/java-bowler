@@ -1,4 +1,4 @@
-package com.neuronrobotics.sdk.common.device.server.pid;
+package com.neuronrobotics.sdk.namespace.bcs.pid;
 
 import com.neuronrobotics.sdk.common.BowlerDataType;
 import com.neuronrobotics.sdk.common.BowlerMethod;
@@ -6,7 +6,6 @@ import com.neuronrobotics.sdk.common.MACAddress;
 import com.neuronrobotics.sdk.common.RpcEncapsulation;
 import com.neuronrobotics.sdk.common.device.server.BowlerAbstractDeviceServerNamespace;
 import com.neuronrobotics.sdk.common.device.server.IBowlerCommandProcessor;
-import com.neuronrobotics.sdk.namespace.bcs.pid.IExtendedPIDControl;
 import com.neuronrobotics.sdk.pid.IPIDEventListener;
 import com.neuronrobotics.sdk.pid.PDVelocityConfiguration;
 import com.neuronrobotics.sdk.pid.PIDChannel;
@@ -57,9 +56,22 @@ public class PidDeviceServerNamespace extends BowlerAbstractDeviceServerNamespac
 				getNamespace() , 
 				"cpid", 
 				BowlerMethod.GET, 
-				new BowlerDataType[]{BowlerDataType.}, 
-				BowlerMethod., 
-				new BowlerDataType[]{BowlerDataType.},
+				new BowlerDataType[]{BowlerDataType.I08}, 
+				BowlerMethod.POST, 
+				new BowlerDataType[]{	BowlerDataType.I08,
+										BowlerDataType.I08,
+										BowlerDataType.I08,
+										BowlerDataType.I08,
+										BowlerDataType.FIXED100,
+										BowlerDataType.FIXED100,
+										BowlerDataType.FIXED100,
+										BowlerDataType.I32,
+										BowlerDataType.I08,
+										BowlerDataType.I08,
+										BowlerDataType.FIXED1k,
+										BowlerDataType.FIXED1k,
+										BowlerDataType.FIXED1k
+									},
 				new IBowlerCommandProcessor() {
 					@Override
 					public Object[] process(Object[] data) {
