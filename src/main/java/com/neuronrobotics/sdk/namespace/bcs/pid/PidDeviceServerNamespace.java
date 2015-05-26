@@ -16,11 +16,11 @@ import com.neuronrobotics.sdk.pid.PIDCommandException;
 import com.neuronrobotics.sdk.pid.PIDConfiguration;
 
 
-public class PidDeviceServerNamespace extends BowlerAbstractDeviceServerNamespace implements IExtendedPIDControl {
+public class PidDeviceServerNamespace extends BowlerAbstractDeviceServerNamespace implements IPidControlNamespace {
 
-	private IExtendedPIDControl device;
+	private IPidControlNamespace device;
 
-	public PidDeviceServerNamespace(MACAddress addr,IExtendedPIDControl device ) {
+	public PidDeviceServerNamespace(MACAddress addr,IPidControlNamespace device ) {
 		super(addr, "bcs.pid.*;1.0;;");
 		this.device = device;
 		rpc.add(new RpcEncapsulation(getNamespaceIndex(), 
@@ -271,23 +271,23 @@ public class PidDeviceServerNamespace extends BowlerAbstractDeviceServerNamespac
 						return new Object[]{new Integer(66),new Integer(2)};
 					}
 				}));//Name
-		rpc.add(new RpcEncapsulation(getNamespaceIndex(), 
-				getNamespace() , 
-				"acal", 
-				BowlerMethod.CRITICAL, 
-				new BowlerDataType[]{BowlerDataType.I08
-				}, 
-				BowlerMethod.STATUS, 
-				new BowlerDataType[]{	BowlerDataType.I08,
-										BowlerDataType.I08
-				},
-				new IBowlerCommandProcessor() {
-					@Override
-					public Object[] process(Object[] data) {
-						runOutputHysteresisCalibration((Integer)data[0]);
-						return new Object[]{new Integer(37),new Integer(0)};
-					}
-				}));//Name
+//		rpc.add(new RpcEncapsulation(getNamespaceIndex(), 
+//				getNamespace() , 
+//				"acal", 
+//				BowlerMethod.CRITICAL, 
+//				new BowlerDataType[]{BowlerDataType.I08
+//				}, 
+//				BowlerMethod.STATUS, 
+//				new BowlerDataType[]{	BowlerDataType.I08,
+//										BowlerDataType.I08
+//				},
+//				new IBowlerCommandProcessor() {
+//					@Override
+//					public Object[] process(Object[] data) {
+//						runOutputHysteresisCalibration((Integer)data[0]);
+//						return new Object[]{new Integer(37),new Integer(0)};
+//					}
+//				}));//Name
 	}
 
 	@Override
@@ -382,9 +382,9 @@ public class PidDeviceServerNamespace extends BowlerAbstractDeviceServerNamespac
 		return true;
 	}
 
-	@Override
-	public boolean runOutputHysteresisCalibration(int group) {
-		return device.runOutputHysteresisCalibration(group);
-	}
+//	@Override
+//	public boolean runOutputHysteresisCalibration(int group) {
+//		return device.runOutputHysteresisCalibration(group);
+//	}
 
 }

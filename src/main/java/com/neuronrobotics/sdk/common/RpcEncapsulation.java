@@ -99,7 +99,7 @@ public class RpcEncapsulation {
 					command.getCallingDataStorage().addAs32(Integer.parseInt(doswnstreamData[i].toString()));
 					break;
 				case I32STR:
-					int [] data32 = (int [])doswnstreamData[i];
+					Integer [] data32 = (Integer [])doswnstreamData[i];
 					command.getCallingDataStorage().add(data32.length);
 					for(int i1=0;i1<data32.length;i1++){
 						command.getCallingDataStorage().addAs32(data32[i1]);
