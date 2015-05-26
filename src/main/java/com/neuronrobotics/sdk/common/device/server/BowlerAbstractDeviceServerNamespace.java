@@ -58,7 +58,7 @@ public abstract class BowlerAbstractDeviceServerNamespace {
 			return null;
 		dataParsed = parser.parseResponseDownstream(data);
 		
-		Object [] backData = parser.getProcessor().process(dataParsed, data.getRPC(), data.getMethod());
+		Object [] backData = parser.getProcessor().process(dataParsed);
 		
 		BowlerAbstractCommand back = parser.getCommandUpstream(backData);
 		

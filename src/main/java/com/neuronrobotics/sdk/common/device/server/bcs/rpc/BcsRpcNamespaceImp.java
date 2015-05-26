@@ -31,7 +31,7 @@ public class BcsRpcNamespaceImp extends BowlerAbstractDeviceServerNamespace{
 										new IBowlerCommandProcessor() {
 											
 											@Override
-											public Object[] process(Object[] data, String rpc, BowlerMethod method) {
+											public Object[] process(Object[] data) {
 												int nsIndex = 	(Integer) data[0];
 												int rpcIndex = 	(Integer) data[1];
 												Object[] back = new Object[4];
@@ -61,7 +61,7 @@ public class BcsRpcNamespaceImp extends BowlerAbstractDeviceServerNamespace{
 										new IBowlerCommandProcessor() {
 			
 											@Override
-											public Object[] process(Object[] data, String rpc, BowlerMethod method) {
+											public Object[] process(Object[] data) {
 												int nsIndex = 	(Integer) data[0];
 												int rpcIndex = 	(Integer) data[1];
 												Object[] back = new Object[6];

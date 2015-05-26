@@ -25,7 +25,7 @@ public class BcsCoreNamespaceImp extends BowlerAbstractDeviceServerNamespace{
 				new BowlerDataType[]{},
 				new IBowlerCommandProcessor() {
 					@Override
-					public Object[] process(Object[] data, String rpc, BowlerMethod method) {
+					public Object[] process(Object[] data) {
 						Object[] back = new Object[0];
 						return back;
 					}
@@ -40,7 +40,7 @@ public class BcsCoreNamespaceImp extends BowlerAbstractDeviceServerNamespace{
 				new BowlerDataType[]{BowlerDataType.ASCII,BowlerDataType.I08},
 				new IBowlerCommandProcessor() {
 					@Override
-					public Object[] process(Object[] data, String rpc, BowlerMethod method) {
+					public Object[] process(Object[] data) {
 						int nsIndex = 	(Integer) data[0];
 						Object[] back = new Object[2];
 						

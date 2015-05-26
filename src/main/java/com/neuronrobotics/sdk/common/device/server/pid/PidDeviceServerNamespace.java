@@ -23,16 +23,177 @@ public class PidDeviceServerNamespace extends BowlerAbstractDeviceServerNamespac
 		this.device = device;
 		rpc.add(new RpcEncapsulation(getNamespaceIndex(), 
 				getNamespace() , 
-				"name", 
+				"apid", 
 				BowlerMethod.GET, 
 				new BowlerDataType[]{}, 
 				BowlerMethod.POST, 
-				new BowlerDataType[]{BowlerDataType.ASCII},
+				new BowlerDataType[]{BowlerDataType.I32STR},
 				new IBowlerCommandProcessor() {
 					@Override
-					public Object[] process(Object[] data, String rpc, BowlerMethod method) {
-						// TODO Auto-generated method stub
-						return null;
+					public Object[] process(Object[] data) {
+						int [] current = GetAllPIDPosition();
+						Integer [] d = new Integer[current.length];
+						for(int i=0;i<current.length;i++){
+							d[i]=new Integer(current[i]);
+						}
+						return new Object[]{d};
+					}
+				}));//Name
+		
+		rpc.add(new RpcEncapsulation(getNamespaceIndex(), 
+				getNamespace() , 
+				"_pid", 
+				BowlerMethod.GET, 
+				new BowlerDataType[]{BowlerDataType.}, 
+				BowlerMethod., 
+				new BowlerDataType[]{BowlerDataType.},
+				new IBowlerCommandProcessor() {
+					@Override
+					public Object[] process(Object[] data) {
+						return new Object[]{};
+					}
+				}));//Name
+		rpc.add(new RpcEncapsulation(getNamespaceIndex(), 
+				getNamespace() , 
+				"cpid", 
+				BowlerMethod.GET, 
+				new BowlerDataType[]{BowlerDataType.}, 
+				BowlerMethod., 
+				new BowlerDataType[]{BowlerDataType.},
+				new IBowlerCommandProcessor() {
+					@Override
+					public Object[] process(Object[] data) {
+						return new Object[]{};
+					}
+				}));//Name
+		rpc.add(new RpcEncapsulation(getNamespaceIndex(), 
+				getNamespace() , 
+				"cpdv", 
+				BowlerMethod.GET, 
+				new BowlerDataType[]{BowlerDataType.}, 
+				BowlerMethod., 
+				new BowlerDataType[]{BowlerDataType.},
+				new IBowlerCommandProcessor() {
+					@Override
+					public Object[] process(Object[] data) {
+						return new Object[]{};
+					}
+				}));//Name
+		rpc.add(new RpcEncapsulation(getNamespaceIndex(), 
+				getNamespace() , 
+				"gpdc", 
+				BowlerMethod.GET, 
+				new BowlerDataType[]{BowlerDataType.}, 
+				BowlerMethod., 
+				new BowlerDataType[]{BowlerDataType.},
+				new IBowlerCommandProcessor() {
+					@Override
+					public Object[] process(Object[] data) {
+						return new Object[]{};
+					}
+				}));//Name
+		rpc.add(new RpcEncapsulation(getNamespaceIndex(), 
+				getNamespace() , 
+				"apid", 
+				BowlerMethod.POST, 
+				new BowlerDataType[]{BowlerDataType.}, 
+				BowlerMethod., 
+				new BowlerDataType[]{BowlerDataType.},
+				new IBowlerCommandProcessor() {
+					@Override
+					public Object[] process(Object[] data) {
+						return new Object[]{};
+					}
+				}));//Name
+		rpc.add(new RpcEncapsulation(getNamespaceIndex(), 
+				getNamespace() , 
+				"_pid", 
+				BowlerMethod.POST, 
+				new BowlerDataType[]{BowlerDataType.}, 
+				BowlerMethod., 
+				new BowlerDataType[]{BowlerDataType.},
+				new IBowlerCommandProcessor() {
+					@Override
+					public Object[] process(Object[] data) {
+						return new Object[]{};
+					}
+				}));//Name
+		rpc.add(new RpcEncapsulation(getNamespaceIndex(), 
+				getNamespace() , 
+				"_vpd", 
+				BowlerMethod.POST, 
+				new BowlerDataType[]{BowlerDataType.}, 
+				BowlerMethod., 
+				new BowlerDataType[]{BowlerDataType.},
+				new IBowlerCommandProcessor() {
+					@Override
+					public Object[] process(Object[] data) {
+						return new Object[]{};
+					}
+				}));//Name
+		rpc.add(new RpcEncapsulation(getNamespaceIndex(), 
+				getNamespace() , 
+				"rpid", 
+				BowlerMethod.POST, 
+				new BowlerDataType[]{BowlerDataType.}, 
+				BowlerMethod., 
+				new BowlerDataType[]{BowlerDataType.},
+				new IBowlerCommandProcessor() {
+					@Override
+					public Object[] process(Object[] data) {
+						return new Object[]{};
+					}
+				}));//Name
+		rpc.add(new RpcEncapsulation(getNamespaceIndex(), 
+				getNamespace() , 
+				"kpid", 
+				BowlerMethod.CRITICAL, 
+				new BowlerDataType[]{BowlerDataType.}, 
+				BowlerMethod., 
+				new BowlerDataType[]{BowlerDataType.},
+				new IBowlerCommandProcessor() {
+					@Override
+					public Object[] process(Object[] data) {
+						return new Object[]{};
+					}
+				}));//Name
+		rpc.add(new RpcEncapsulation(getNamespaceIndex(), 
+				getNamespace() , 
+				"cpid", 
+				BowlerMethod.CRITICAL, 
+				new BowlerDataType[]{BowlerDataType.}, 
+				BowlerMethod., 
+				new BowlerDataType[]{BowlerDataType.},
+				new IBowlerCommandProcessor() {
+					@Override
+					public Object[] process(Object[] data) {
+						return new Object[]{};
+					}
+				}));//Name
+		rpc.add(new RpcEncapsulation(getNamespaceIndex(), 
+				getNamespace() , 
+				"cpdv", 
+				BowlerMethod.CRITICAL, 
+				new BowlerDataType[]{BowlerDataType.}, 
+				BowlerMethod., 
+				new BowlerDataType[]{BowlerDataType.},
+				new IBowlerCommandProcessor() {
+					@Override
+					public Object[] process(Object[] data) {
+						return new Object[]{};
+					}
+				}));//Name
+		rpc.add(new RpcEncapsulation(getNamespaceIndex(), 
+				getNamespace() , 
+				"acal", 
+				BowlerMethod.CRITICAL, 
+				new BowlerDataType[]{BowlerDataType.}, 
+				BowlerMethod., 
+				new BowlerDataType[]{BowlerDataType.},
+				new IBowlerCommandProcessor() {
+					@Override
+					public Object[] process(Object[] data) {
+						return new Object[]{};
 					}
 				}));//Name
 	}
