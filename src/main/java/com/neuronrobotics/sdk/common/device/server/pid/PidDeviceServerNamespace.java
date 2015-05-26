@@ -1,8 +1,11 @@
 package com.neuronrobotics.sdk.common.device.server.pid;
 
+import com.neuronrobotics.sdk.common.BowlerDataType;
 import com.neuronrobotics.sdk.common.BowlerMethod;
 import com.neuronrobotics.sdk.common.MACAddress;
+import com.neuronrobotics.sdk.common.RpcEncapsulation;
 import com.neuronrobotics.sdk.common.device.server.BowlerAbstractDeviceServerNamespace;
+import com.neuronrobotics.sdk.common.device.server.IBowlerCommandProcessor;
 import com.neuronrobotics.sdk.namespace.bcs.pid.IExtendedPIDControl;
 import com.neuronrobotics.sdk.pid.IPIDEventListener;
 import com.neuronrobotics.sdk.pid.PDVelocityConfiguration;
@@ -18,13 +21,20 @@ public class PidDeviceServerNamespace extends BowlerAbstractDeviceServerNamespac
 	public PidDeviceServerNamespace(MACAddress addr,IExtendedPIDControl device ) {
 		super(addr, "bcs.pid.*;1.0;;");
 		this.device = device;
-		
-	}
-
-	@Override
-	public Object[] process(Object[] data, String rpc, BowlerMethod method) {
-		// TODO Auto-generated method stub
-		return null;
+		rpc.add(new RpcEncapsulation(getNamespaceIndex(), 
+				getNamespace() , 
+				"name", 
+				BowlerMethod.GET, 
+				new BowlerDataType[]{}, 
+				BowlerMethod.POST, 
+				new BowlerDataType[]{BowlerDataType.ASCII},
+				new IBowlerCommandProcessor() {
+					@Override
+					public Object[] process(Object[] data, String rpc, BowlerMethod method) {
+						// TODO Auto-generated method stub
+						return null;
+					}
+				}));//Name
 	}
 
 	@Override

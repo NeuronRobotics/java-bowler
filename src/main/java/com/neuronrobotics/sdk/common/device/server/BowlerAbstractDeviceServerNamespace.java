@@ -58,15 +58,13 @@ public abstract class BowlerAbstractDeviceServerNamespace {
 			return null;
 		dataParsed = parser.parseResponseDownstream(data);
 		
-		Object [] backData = process(dataParsed, data.getRPC(), data.getMethod());
+		Object [] backData = parser.getProcessor().process(dataParsed, data.getRPC(), data.getMethod());
 		
 		BowlerAbstractCommand back = parser.getCommandUpstream(backData);
 		
 		return BowlerDatagramFactory.build(getAddress(), back);
 		
 	}
-	
-	public abstract Object [] process(Object [] data, String rpc, BowlerMethod method);
 
 	public int getNamespaceIndex() {
 		return namespaceIndex;
