@@ -59,14 +59,24 @@ public class PidDeviceServer extends BowlerAbstractServer implements IPIDEventLi
 
 	@Override
 	public void onPIDLimitEvent(PIDLimitEvent e) {
-		// TODO Auto-generated method stub
-		
+		pushAsyncPacket(2,//0 is core, 1 is rpc 
+				pidServer.getNamespace(), 
+				"pidl", 
+				new Object[]{
+					new Byte((byte) e.getGroup()),
+					new Byte( e.getLimitType().getValue()),
+					new Integer(e.getValue()),
+					new Integer((int) e.getTimeStamp()),
+				}, 
+				new BowlerDataType[]{
+					BowlerDataType.I08,//channel
+					BowlerDataType.I08,//type
+					BowlerDataType.I32,//position
+					BowlerDataType.I32,//timestamp
+				} );
 	}
 
 	@Override
-	public void onPIDReset(int group, int currentValue) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void onPIDReset(int group, int currentValue) {}//used for object state not commands
 
 }
