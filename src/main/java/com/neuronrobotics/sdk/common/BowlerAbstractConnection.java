@@ -952,10 +952,16 @@ public abstract class BowlerAbstractConnection {
 				}else{
 					 throw new InvalidResponseException("No response from device");
 				}
-			}catch(MalformattedDatagram |InvalidResponseException | NullPointerException e){
+			}catch(MalformattedDatagram e){
 				Log.error("Sending Synchronus packet and there was a failure, will retry "+(retry-i-1)+" more times");
 				ThreadUtil.wait(150*i);	
 
+			} catch (InvalidResponseException e) {
+				Log.error("Sending Synchronus packet and there was a failure, will retry "+(retry-i-1)+" more times");
+				ThreadUtil.wait(150*i);
+			} catch (NullPointerException e) {
+				Log.error("Sending Synchronus packet and there was a failure, will retry "+(retry-i-1)+" more times");
+				ThreadUtil.wait(150*i);
 			}
 
 		}

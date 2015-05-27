@@ -456,7 +456,7 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 				}
 			}
 		}catch(Exception ex){
-			if(InterruptedException.class.isInstance(ex))throw ex;
+			if(InterruptedException.class.isInstance(ex))throw new RuntimeException(ex);
 			ex.printStackTrace();
 			return false;
 		}

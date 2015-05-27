@@ -54,7 +54,7 @@ public class SequencerMP3 {
         catch (Exception e) {
             System.out.println("Problem playing file " + filename+"\r\n");
             //e.printStackTrace();
-            throw e;
+            throw new RuntimeException(e);
         }
     }
     
