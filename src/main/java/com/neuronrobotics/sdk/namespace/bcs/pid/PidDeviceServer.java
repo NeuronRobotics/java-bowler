@@ -46,11 +46,13 @@ public class PidDeviceServer extends BowlerAbstractServer implements IPIDEventLi
 				new Object[]{
 					new Byte((byte) e.getGroup()),
 					new Integer(e.getValue()),
+					new Integer((int) e.getTimeStamp()),
 					new Integer(e.getVelocity())
 				}, 
 				new BowlerDataType[]{
 					BowlerDataType.I08,//channel
 					BowlerDataType.I32,//position
+					BowlerDataType.I32,//timestamp
 					BowlerDataType.I32//velocity
 				} );
 	}
