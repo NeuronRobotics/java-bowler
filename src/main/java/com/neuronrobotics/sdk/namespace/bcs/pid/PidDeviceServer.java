@@ -31,12 +31,6 @@ public class PidDeviceServer extends BowlerAbstractServer implements IPIDEventLi
 		}
 	}
 	
-	public static void main(String [] args){
-		Log.enableInfoPrint();
-		PidDeviceServer srv = new PidDeviceServer(new MACAddress(), new VirtualGenericPIDDevice(10000) );
-		
-	}
-
 	@Override
 	public void onPIDEvent(PIDEvent e) {
 		Log.info("Pushing "+e);
@@ -79,4 +73,10 @@ public class PidDeviceServer extends BowlerAbstractServer implements IPIDEventLi
 	@Override
 	public void onPIDReset(int group, int currentValue) {}//used for object state not commands
 
+	
+	public static void main(String [] args){
+		Log.enableInfoPrint();
+		PidDeviceServer srv = new PidDeviceServer(new MACAddress(), new VirtualGenericPIDDevice(10000) );
+		
+	}
 }
