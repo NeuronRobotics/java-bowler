@@ -11,7 +11,7 @@ import com.neuronrobotics.sdk.pid.PIDCommandException;
 import com.neuronrobotics.sdk.pid.PIDEvent;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 
-public abstract class GenericPidNamespaceImp implements IExtendedPIDControl {
+public abstract class AbstractPidNamespaceImp implements IExtendedPIDControl {
 
 	private ArrayList<IPIDEventListener> PIDEventListeners = new ArrayList<IPIDEventListener>();
 	protected ArrayList<PIDChannel> channels = null;
@@ -19,7 +19,7 @@ public abstract class GenericPidNamespaceImp implements IExtendedPIDControl {
 	private BowlerAbstractDevice device;
 	private Integer channelCount=null;
 	
-	public GenericPidNamespaceImp(BowlerAbstractDevice device){
+	public AbstractPidNamespaceImp(BowlerAbstractDevice device){
 		this.setDevice(device);
 		addPIDEventListener(new IPIDEventListener() {
 			public void onPIDReset(int group, int currentValue) {}

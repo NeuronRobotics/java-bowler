@@ -286,6 +286,8 @@ public class RpcEncapsulation {
 	}
 
 	public void setUpstreamArguments(BowlerDataType[] upstreamArguments) {
+		if(upstreamArguments== null)
+			return;// asynchronus packets have no upstream
 		for(int i=0;i<upstreamArguments.length;i++){
 			if(upstreamArguments[i] == null){
 				throw new RuntimeException("RPC argument can not be null");

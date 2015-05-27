@@ -646,8 +646,8 @@ public abstract class BowlerAbstractConnection {
 		return null;
 	}
 	
-	public BowlerAbstractCommand getCommand(String namespace,BowlerMethod method, String rpcString, Object[] arguments){
-		RpcEncapsulation rpc =  locateRpc(namespace, method, rpcString);
+	public static  BowlerAbstractCommand getCommand(String namespace,BowlerMethod method, String rpcString, Object[] arguments,RpcEncapsulation rpc){
+		
 		if(rpc != null)
 			return rpc.getCommand(arguments);
 		
@@ -675,7 +675,8 @@ public abstract class BowlerAbstractConnection {
 		if(namespaceList == null){
 			getNamespaces(addr);
 		}
-		BowlerAbstractCommand command = getCommand(namespace, method, rpcString,arguments);
+		RpcEncapsulation rpc =  locateRpc(namespace, method, rpcString);
+		BowlerAbstractCommand command = getCommand(namespace, method, rpcString,arguments,rpc);
 		
 		if(command != null){
 			BowlerDatagram dg =  send(command,addr,retry);

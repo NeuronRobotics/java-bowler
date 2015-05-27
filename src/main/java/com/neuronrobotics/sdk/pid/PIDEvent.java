@@ -22,6 +22,8 @@ public class PIDEvent {
 		setTimeStamp(System.currentTimeMillis());
 		setVelocity(ByteList.convertToInt(data.getData().getBytes(9, 4),true));
 	}
+	
+	
 	public void setGroup(int channel) {
 		this.channel = channel;
 	}

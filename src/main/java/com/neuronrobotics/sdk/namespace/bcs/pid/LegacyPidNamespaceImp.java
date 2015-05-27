@@ -19,7 +19,7 @@ import com.neuronrobotics.sdk.pid.PIDConfiguration;
 import com.neuronrobotics.sdk.pid.PIDEvent;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 
-public class LegacyPidNamespaceImp extends GenericPidNamespaceImp {
+public class LegacyPidNamespaceImp extends AbstractPidNamespaceImp {
 
 	
 	public LegacyPidNamespaceImp(BowlerAbstractDevice device) {

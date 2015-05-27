@@ -1,7 +1,5 @@
 package com.neuronrobotics.sdk.namespace.bcs.pid;
 
-import javafx.geometry.VPos;
-
 import com.neuronrobotics.sdk.common.BowlerDataType;
 import com.neuronrobotics.sdk.common.BowlerMethod;
 import com.neuronrobotics.sdk.common.Log;

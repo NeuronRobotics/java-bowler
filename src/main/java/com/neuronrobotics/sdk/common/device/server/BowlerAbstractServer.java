@@ -5,12 +5,21 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import javax.management.RuntimeErrorException;
+
+import com.neuronrobotics.sdk.common.BowlerAbstractCommand;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
+import com.neuronrobotics.sdk.common.BowlerDataType;
 import com.neuronrobotics.sdk.common.BowlerDatagram;
+import com.neuronrobotics.sdk.common.BowlerDatagramFactory;
+import com.neuronrobotics.sdk.common.BowlerMethod;
+import com.neuronrobotics.sdk.common.DeviceConnectionException;
 import com.neuronrobotics.sdk.common.IConnectionEventListener;
 import com.neuronrobotics.sdk.common.ISynchronousDatagramListener;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.MACAddress;
+import com.neuronrobotics.sdk.common.NamespaceEncapsulation;
+import com.neuronrobotics.sdk.common.RpcEncapsulation;
 import com.neuronrobotics.sdk.common.device.server.bcs.core.BcsCoreNamespaceImp;
 import com.neuronrobotics.sdk.common.device.server.bcs.rpc.BcsRpcNamespaceImp;
 import com.neuronrobotics.sdk.network.BowlerTCPServer;
@@ -176,6 +185,34 @@ public  abstract class BowlerAbstractServer  implements ISynchronousDatagramList
 		
 		getServers().remove(b);
 	}
+	/**
+	 * THis is the scripting interface to Bowler devices. THis allows a user to describe a namespace, rpc, and array or 
+	 * arguments to be paced into the packet based on the data types of the argument. The response in likewise unpacked 
+	 * into an array of objects.
+	 * @param namespace The string of the desired namespace
+	 * @param rpcString The string of the desired RPC
+	 * @param arguments An array of objects corresponding to the data to be stuffed into the packet.
+	 * @throws DeviceConnectionException If the desired RPC's are not available then this will be thrown
+	 */
+	public void pushAsyncPacket(int namespaceIndex,String namespace, String rpcString, Object[] arguments,BowlerDataType[] asyncArguments){
+		if(arguments.length!=asyncArguments.length){
+			throw new RuntimeException("Arguments must match argument types exactly, your two arrays are different lengths");
+		}
+		RpcEncapsulation rpcl =  new RpcEncapsulation(	namespaceIndex, 
+														namespace, 
+														rpcString, 
+														BowlerMethod.ASYNCHRONOUS, 
+														asyncArguments, 
+														null, 
+														null);
+		BowlerAbstractCommand command = BowlerAbstractConnection.getCommand(namespace, BowlerMethod.ASYNCHRONOUS, rpcString,arguments,rpcl );
+		BowlerDatagram cmd= BowlerDatagramFactory.build(new MACAddress(), command);
+		Log.info("Async>>"+cmd);
+		pushAsyncPacket(cmd);
+	}
+
+
+
 
 	public synchronized void pushAsyncPacket(BowlerDatagram data) {
 		localServers.clear();
@@ -203,6 +240,8 @@ public  abstract class BowlerAbstractServer  implements ISynchronousDatagramList
 						localServers.get(i).sendAsync(data);
 						Log.info("Sent packet to "+classString);
 					}
+				}else{
+					localServers.get(i).sendAsync(data);
 				}
 			}catch (IndexOutOfBoundsException ie){
 				ie.printStackTrace();
