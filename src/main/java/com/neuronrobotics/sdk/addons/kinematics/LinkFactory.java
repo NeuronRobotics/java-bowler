@@ -10,6 +10,7 @@ import com.neuronrobotics.sdk.namespace.bcs.pid.IExtendedPIDControl;
 import com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace;
 import com.neuronrobotics.sdk.pid.GenericPIDDevice;
 import com.neuronrobotics.sdk.pid.ILinkFactoryProvider;
+import com.neuronrobotics.sdk.pid.VirtualGenericPIDDevice;
 
 public class LinkFactory {
 	private IPidControlNamespace pid=null;
@@ -97,11 +98,11 @@ public class LinkFactory {
 											(int)c.getUpperLimit(),
 											c.getScale());
 			} else if (c.getType().equals("dummy")|| c.getType().equals("virtual")){
-//				tmp=new PidRotoryLink(	virtual.getPIDChannel(c.getHardwareIndex()),
-//						(int)0,
-//						(int)c.getLowerLimit(),
-//						(int)c.getUpperLimit(),
-//						c.getScale());
+				tmp=new PidRotoryLink(	new VirtualGenericPIDDevice(100000).getPIDChannel(c.getHardwareIndex()),
+						(int)0,
+						(int)c.getLowerLimit(),
+						(int)c.getUpperLimit(),
+						c.getScale());
 				tmp.setUseLimits(false);
 			}else{
 				tmp=new PidRotoryLink(	pid.getPIDChannel(c.getHardwareIndex()),

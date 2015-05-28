@@ -12,7 +12,6 @@ props.load(new FileInputStream(buildDir.getAbsolutePath()+"/src/main/resources/c
 
 manifest {
     attributes(	
-    			//"Main-Class": "com.dcx.epep.Start",
     			"Manifest-Version": "1.0",
     			"Created-By": "Neuron Robotics Cooperative",
     			"Specification-Title": props."app.name",
@@ -64,8 +63,6 @@ jar {
 	    }
 	}
 	
-
-
     // project class files compiled from source
     from files(sourceSets.main.output.classesDir)
 
