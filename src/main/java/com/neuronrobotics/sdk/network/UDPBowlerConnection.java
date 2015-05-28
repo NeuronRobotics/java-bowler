@@ -43,7 +43,7 @@ public class UDPBowlerConnection extends BowlerAbstractConnection{
 	
 	private InetAddress IPAddressSet=null;
 	private ArrayList<InetAddress>  addrs=null;
-	private ByteList internalReceiveBuffer= new ByteList();
+	//private ByteList internalReceiveBuffer= new ByteList();
 	private DatagramSocket udpSock = null;
 	
 	/**
@@ -143,19 +143,12 @@ public class UDPBowlerConnection extends BowlerAbstractConnection{
 		byte [] data = receivePacket.getData();
 		
 		for (int i=0;i<receivePacket.getLength();i++){
-			internalReceiveBuffer.add(data[i]);
+			bytesToPacketBuffer.add(data[i]);
 		}
 		
 		BowlerDatagram bd =null;
-		
-		while(internalReceiveBuffer.size()>0){
-			bytesToPacketBuffer.add(internalReceiveBuffer.pop());
-			if (bd==null) {
-				bd = BowlerDatagramFactory.build(bytesToPacketBuffer);
-			}
-		}
 	
-		return bd;
+		return BowlerDatagramFactory.build(bytesToPacketBuffer);
 	}
 	
 	
