@@ -56,7 +56,7 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
 public abstract class BowlerAbstractConnection {
 	
 	//private boolean threadedUpstreamPackets=false;
-	private static boolean useThreadedStack=true;
+	private boolean useThreadedStack=true;
 	
 	/** The sleep time. */
 	private int sleepTime = 1000;
@@ -1224,12 +1224,12 @@ public abstract class BowlerAbstractConnection {
 		}
 	}
 	
-	public static boolean isUseThreadedStack() {
+	public boolean isUseThreadedStack() {
 		return useThreadedStack;
 	}
 
-	public static void setUseThreadedStack(boolean useThreadedStack) {
-		BowlerAbstractConnection.useThreadedStack = useThreadedStack;
+	public  void setUseThreadedStack(boolean useThreadedStack) {
+		this.useThreadedStack = useThreadedStack;
 	}
 
 	public boolean isBeater() {
