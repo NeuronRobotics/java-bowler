@@ -21,6 +21,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
@@ -129,9 +130,13 @@ public class UDPBowlerConnection extends BowlerAbstractConnection{
 		udpSock.setSoTimeout(1);// Timeout the socket after 1 ms
 		try{
 			udpSock.receive(receivePacket);
+			
+		}catch(SocketTimeoutException ste){
+			return null;
 		}catch(Exception ex){
 			// disconnect called
 			//Log. warning("Receive bailed out because of close");
+			ex.printStackTrace();
 			return null;
 		}
 		
@@ -145,8 +150,6 @@ public class UDPBowlerConnection extends BowlerAbstractConnection{
 		for (int i=0;i<receivePacket.getLength();i++){
 			bytesToPacketBuffer.add(data[i]);
 		}
-		
-		BowlerDatagram bd =null;
 	
 		return BowlerDatagramFactory.build(bytesToPacketBuffer);
 	}
