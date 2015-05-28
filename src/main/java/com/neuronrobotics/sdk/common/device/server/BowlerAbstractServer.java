@@ -241,7 +241,9 @@ public  abstract class BowlerAbstractServer  implements ISynchronousDatagramList
 						Log.info("Sent packet to "+classString);
 					}
 				}else{
-					localServers.get(i).sendAsync(data);
+					try{
+						localServers.get(i).sendAsync(data);
+					}catch(NullPointerException ex){}
 				}
 			}catch (IndexOutOfBoundsException ie){
 				ie.printStackTrace();
