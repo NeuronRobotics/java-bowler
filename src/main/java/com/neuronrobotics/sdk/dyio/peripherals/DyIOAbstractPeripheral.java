@@ -60,7 +60,7 @@ public abstract class DyIOAbstractPeripheral implements IDyIOChannel {
 											"cchn",
 											new Object[]{	255,
 															false,
-															new int[]{}
+															new Integer[]{}
 														});
 			Integer [] configs = (Integer[]) args[0];
 			return configs[getChannel().getChannelNumber()];
