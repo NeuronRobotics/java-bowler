@@ -139,17 +139,19 @@ public class DeviceManager {
 		if(devs.size()==0)
 			return null;
 		else
-			for (BowlerAbstractDevice d:devices) {
-				if(d.getScriptingName().contains(name));
-					return  d;
+			for (String d:devs) {
+				if(d.contentEquals(name)){
+					for (int i = 0; i < devices.size(); i++) {
+						if(devices.get(i).getScriptingName().contains(d))
+							return devices.get(i);
+					}
+				}
 				
 			}
 		return null;
 	}
 	
 	public static List<String> listConnectedDevice(Class<?> class1){
-		if (devices.size() == 0)
-			return null;
 		List<String> choices = new ArrayList<String>();
 		for (int i = 0; i < devices.size(); i++) {
 			if(class1==null)

@@ -44,7 +44,7 @@ public class SampleGuiAxisWidgetNR extends JPanel implements IJointSpaceUpdateLi
 		setAxis(i);
 		model=m;
 		model.addJointSpaceListener(this);
-		add(new JLabel("#"+getAxis()+" \""+model.getLinkConfiguration(i).getName()+"\""));
+		add(new JLabel("#"+getAxis()+" \""+model.getLinkConfiguration(i).getName()+"\" "+model.getLinkConfiguration(i).getType()));
 		
 		value.setEnabled(false);
 		target.setEnabled(false);

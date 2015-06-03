@@ -83,7 +83,7 @@ public class LinkFactory {
 				return l;
 		}
 		AbstractLink tmp=null;
-
+		System.err.println("Loading link: "+c.getName()+" type = "+c.getType()+" device= "+c.getDeviceScriptingName());
 		if(c.getType().equals("servo-rotory")){
 			
 			DyIO d = dyio;

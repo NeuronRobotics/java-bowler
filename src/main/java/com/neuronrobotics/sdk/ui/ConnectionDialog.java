@@ -111,9 +111,10 @@ public class ConnectionDialog extends JDialog {
 	private void loadDefaultConnections() {
 		try{
 			try{
-				addConnectionPanel(new UsbConnectionPanel(this));
-				addConnectionPanel(new BluetoothConnectionPanel(this));
 				addConnectionPanel(new SerialConnectionPanel(this));
+				//addConnectionPanel(new UsbConnectionPanel(this));
+				addConnectionPanel(new BluetoothConnectionPanel(this));
+				//addConnectionPanel(new SerialConnectionPanel(this));
 			}catch(Exception ex){
 				addConnectionPanel(new SerialConnectionPanel(this));
 				addConnectionPanel(new BluetoothConnectionPanel(this));
