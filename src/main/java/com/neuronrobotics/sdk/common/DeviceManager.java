@@ -133,7 +133,22 @@ public class DeviceManager {
 		if(deviceAddedListener.contains(l))
 			deviceAddedListener.remove(l);
 	}
-	public static List<String> listConnectedDevice(Class class1){
+	
+	public static BowlerAbstractDevice getSpecificDevice(Class<?> class1, String name){
+		List<String> devs =listConnectedDevice( class1);
+		if(devs.size()==0)
+			return null;
+		else
+			for (BowlerAbstractDevice d:devices) {
+		
+				if(d.getScriptingName().contains(name));
+					return  d;
+				
+			}
+		return null;
+	}
+	
+	public static List<String> listConnectedDevice(Class<?> class1){
 		if (devices.size() == 0)
 			return null;
 		List<String> choices = new ArrayList<String>();
