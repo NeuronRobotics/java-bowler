@@ -82,6 +82,8 @@ public class LinkConfiguration {
 	}
 	public String toString(){
 		String s="LinkConfiguration: \n\tName: "+getName();
+		if(deviceScriptingName!=null)
+			s="Device Name: \n\tName: "+getDeviceScriptingName();
 		s+=	"\n\tType: "+getType();
 		s+=	"\n\tHardware Board Index: "+getHardwareIndex();
 		s+=	"\n\tScale: "+getScale();

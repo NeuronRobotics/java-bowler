@@ -2,6 +2,7 @@ package com.neuronrobotics.sdk.addons.kinematics;
 import java.util.ArrayList;
 
 import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
+import com.neuronrobotics.sdk.common.DeviceManager;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.peripherals.AnalogInputChannel;
@@ -82,46 +83,55 @@ public class LinkFactory {
 				return l;
 		}
 		AbstractLink tmp=null;
-		if(!forceVirtual){
-			if(c.getType().equals("servo-rotory")){
-				
-				tmp = new ServoRotoryLink(	new ServoChannel(dyio.getChannel(c.getHardwareIndex())), 
+
+		if(c.getType().equals("servo-rotory")){
+			
+			DyIO d = dyio;
+			if(c.getDeviceScriptingName()!=null)
+				d=(DyIO) DeviceManager.getSpecificDevice(DyIO.class, c.getDeviceScriptingName());
+			if(d!=null){
+				tmp = new ServoRotoryLink(	new ServoChannel(d.getChannel(c.getHardwareIndex())), 
 											(int)c.getIndexLatch(),
 											(int)c.getLowerLimit(),
 											(int)c.getUpperLimit(),
 											c.getScale());
-			}else if(c.getType().equals("analog-rotory")){
-				
-				tmp = new AnalogRotoryLink(	new AnalogInputChannel(dyio.getChannel(c.getHardwareIndex())), 
+			}
+		}else if(c.getType().equals("analog-rotory")){
+			DyIO d = dyio;
+			if(c.getDeviceScriptingName()!=null)
+				d=(DyIO) DeviceManager.getSpecificDevice(DyIO.class, c.getDeviceScriptingName());
+			if(d!=null)
+				tmp = new AnalogRotoryLink(	new AnalogInputChannel(d.getChannel(c.getHardwareIndex())), 
 											(int)c.getIndexLatch(),
 											(int)c.getLowerLimit(),
 											(int)c.getUpperLimit(),
 											c.getScale());
-			} else if (c.getType().equals("dummy")|| c.getType().equals("virtual")){
-				tmp=new PidRotoryLink(	new VirtualGenericPIDDevice(100000).getPIDChannel(c.getHardwareIndex()),
-						(int)0,
-						(int)c.getLowerLimit(),
-						(int)c.getUpperLimit(),
-						c.getScale());
-				tmp.setUseLimits(false);
-			}else{
-				tmp=new PidRotoryLink(	pid.getPIDChannel(c.getHardwareIndex()),
+		} else if (c.getType().equals("dummy")|| c.getType().equals("virtual")){
+			tmp=new PidRotoryLink(	new VirtualGenericPIDDevice(100000).getPIDChannel(c.getHardwareIndex()),
+					(int)0,
+					(int)c.getLowerLimit(),
+					(int)c.getUpperLimit(),
+					c.getScale());
+			tmp.setUseLimits(false);
+		}else{
+			IPidControlNamespace p = pid;
+			if(c.getDeviceScriptingName()!=null)
+				p=(IPidControlNamespace) DeviceManager.getSpecificDevice(IPidControlNamespace.class, c.getDeviceScriptingName());
+			if(p!=null)
+				tmp=new PidRotoryLink(	p.getPIDChannel(c.getHardwareIndex()),
 										(int)0,
 										(int)c.getLowerLimit(),
 										(int)c.getUpperLimit(),
 										c.getScale());
-			}
-		}else{
-			
-			int home=0;
-//			if(c.getType().equals("servo-rotory"))
-//				home = c.getIndexLatch();
-//			tmp=new PidRotoryLink(	virtual.getPIDChannel(c.getHardwareIndex()),
-//					(int)home,
-//					(int)c.getLowerLimit(),
-//					(int)c.getUpperLimit(),
-//					c.getScale());
-			//tmp.setUseLimits(false);
+		}
+	
+		
+		if(tmp==null){
+			tmp=new PidRotoryLink(	new VirtualGenericPIDDevice(100000).getPIDChannel(c.getHardwareIndex()),
+					(int)0,
+					(int)c.getLowerLimit(),
+					(int)c.getUpperLimit(),
+					c.getScale());
 		}
 		tmp.setLinkConfiguration(c);
 		links.add(tmp);

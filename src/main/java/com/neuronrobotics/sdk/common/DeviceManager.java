@@ -140,7 +140,6 @@ public class DeviceManager {
 			return null;
 		else
 			for (BowlerAbstractDevice d:devices) {
-		
 				if(d.getScriptingName().contains(name));
 					return  d;
 				
