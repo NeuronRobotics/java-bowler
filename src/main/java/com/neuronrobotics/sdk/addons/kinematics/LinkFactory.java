@@ -169,7 +169,11 @@ public class LinkFactory {
 			pid.flushPIDChannels(seconds);
 			Log.info("Flushing PID");
 		}
-
+		
+		for(AbstractLink l:links){
+			if(l.getLinkConfiguration().getDeviceScriptingName()!=null)
+				l.flush(seconds);
+		}
 		//System.out.println("Flush Took "+(System.currentTimeMillis()-time)+"ms");
 	}
 	public IPidControlNamespace getPid() {
