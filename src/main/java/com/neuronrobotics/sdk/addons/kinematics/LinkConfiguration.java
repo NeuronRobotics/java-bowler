@@ -29,6 +29,7 @@ public class LinkConfiguration {
 	private int homingTicksPerSecond;
 	private double upperVelocity = 100000000;
 	private double lowerVelocity = -100000000;
+	private String deviceScriptingName=null;
 	
 	public LinkConfiguration(Element eElement){
     	setName(XmlFactory.getTagValue("name",eElement));
@@ -36,6 +37,11 @@ public class LinkConfiguration {
     	setScale(Double.parseDouble(XmlFactory.getTagValue("scale",eElement)));
     	setUpperLimit(Double.parseDouble(XmlFactory.getTagValue("upperLimit",eElement)));
     	setLowerLimit(Double.parseDouble(XmlFactory.getTagValue("lowerLimit",eElement)));
+    	try{
+    		setDeviceScriptingName(XmlFactory.getTagValue("deviceName",eElement));		
+    	}catch(NullPointerException e){
+    		// no device from connection engine specified
+    	}
     	try{
     		setType(XmlFactory.getTagValue("type",eElement));
     	}catch (NullPointerException e){
@@ -228,6 +234,12 @@ public class LinkConfiguration {
 //    	if(indexLatch>getUpperLimit() || indexLatch<getLowerLimit() )
 //    	    throw new RuntimeException("PID group "+getHardwareIndex()+" Index latch is "+indexLatch+" but needs to be between "+getUpperLimit()+" and "+getLowerLimit());
     	
+	}
+	public String getDeviceScriptingName() {
+		return deviceScriptingName;
+	}
+	public void setDeviceScriptingName(String deviceScriptingName) {
+		this.deviceScriptingName = deviceScriptingName;
 	}
 	
 }
