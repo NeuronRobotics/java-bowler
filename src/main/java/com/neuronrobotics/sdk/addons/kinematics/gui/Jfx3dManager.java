@@ -61,6 +61,9 @@ import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.SubScene;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
 import javafx.stage.Stage;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.paint.PhongMaterial;
@@ -137,7 +140,9 @@ public class Jfx3dManager extends JFXPanel {
 		buildAxes();
 
 		setSubScene(new SubScene(getRoot(), 1024, 1024, true, null));
-		getSubScene().setFill(Color.GREY);
+		Stop[] stops = null;
+		getSubScene().setFill(new LinearGradient(125, 0, 225, 0, false, CycleMethod.NO_CYCLE, stops));
+		
 		handleKeyboard(getSubScene(), world);
 		handleMouse(getSubScene(), world);
 		getSubScene().setCamera(camera);
@@ -355,8 +360,12 @@ public class Jfx3dManager extends JFXPanel {
 	}
 
 	private void buildAxes() {
-
-		axisGroup.getChildren().addAll(new Axis());
+		Box ground = new Box(500, 500, 1);
+		Affine groundPlacment = new Affine();
+		groundPlacment.setTz(-1);
+		ground.setOpacity(.1);
+		ground.getTransforms().add(groundPlacment);
+		axisGroup.getChildren().addAll(new Axis(),ground );
 		world.getChildren().addAll(axisGroup, lookGroup);
 	}
 
