@@ -133,6 +133,7 @@ public class Jfx3dManager extends JFXPanel {
 	private Affine selsectedAffine = new Affine();
 	private Affine robotBase = new Affine();
 	private Affine cameraVR = new Affine();
+	private Group ground;
 
 	public Jfx3dManager() {
 		buildScene();
@@ -360,14 +361,33 @@ public class Jfx3dManager extends JFXPanel {
 	}
 
 	private void buildAxes() {
-		Box ground = new Box(500, 500, 1);
-		Affine groundPlacment = new Affine();
+		
+		int gridSize=1000;
+		int gridDensity=gridSize/10;
+		ground = new Group();
+		Affine groundPlacment=new Affine();
+		for(int i=-gridSize;i<gridSize;i++){
+			for(int j=-gridSize;j<gridSize;j++){
+				if(i%gridDensity==0 &&j%gridDensity==0){
+					Sphere s = new Sphere(3);
+					Affine sp=new Affine();
+					sp.setTy(i);
+					sp.setTx(j);
+					System.err.println("Placing sphere at "+i+" , "+j);
+					s.getTransforms().add(sp);
+					ground.getChildren().add(s);
+				}
+			}
+		}
+
 		groundPlacment.setTz(-1);
-		ground.setOpacity(.1);
+		//ground.setOpacity(.5);
 		ground.getTransforms().add(groundPlacment);
-		axisGroup.getChildren().addAll(new Axis(),ground );
+		axisGroup.getChildren().addAll(new Axis(),ground);
 		world.getChildren().addAll(axisGroup, lookGroup);
 	}
+	
+	
 
 	private void handleMouse(SubScene scene, final Node root) {
 		scene.setOnMousePressed(new EventHandler<MouseEvent>() {
