@@ -3,6 +3,7 @@ package com.neuronrobotics.sdk.addons.kinematics;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+import javafx.application.Platform;
 import javafx.scene.transform.Affine;
 
 import org.w3c.dom.Element;
@@ -11,6 +12,7 @@ import org.w3c.dom.NodeList;
 
 import Jama.Matrix;
 
+import com.neuronrobotics.sdk.addons.kinematics.gui.TransformFactory;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
 public  class DHChain {
@@ -159,6 +161,14 @@ public  class DHChain {
 			Matrix step = getLinks().get(i).DhStepRotory(Math.toRadians(jointSpaceVector[i]));
 			//System.out.println("Current:\n"+current+"Step:\n"+step);
 			current = current.times(step);
+			final Matrix update=current.copy();
+			final int index=i;
+			Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+							TransformFactory.getTransform(new TransformNR(update), getLinks().get(index).getListener());
+				}
+			});
 			if(store){
 				intChain.add(new TransformNR(step));
 				chain.add(new TransformNR(current));

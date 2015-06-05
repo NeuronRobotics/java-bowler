@@ -29,6 +29,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 	private DHChain chain=null;
 
 	private ArrayList<Affine> linksListeners = new ArrayList<Affine>();
+	private Affine currentTarget = new Affine();
 	boolean disconnecting=false;
 	IConnectionEventListener l = new IConnectionEventListener() {
 		@Override public void onDisconnect(BowlerAbstractConnection source) {
@@ -142,24 +143,20 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 
 	@Override
 	public void onTaskSpaceUpdate(AbstractKinematicsNR source, TransformNR pose) {
-		//System.err.println("Liny updating to "+pose);
-		final ArrayList<TransformNR> joints = getChainTransformations();
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				for(int i=0;i<joints.size();i++)		{
-					//System.err.println("Liny updating to "+joints.get(i));
-					TransformFactory.getTransform(joints.get(i), linksListeners.get(i));
-				}
-			}
-		});
+		
+//		final ArrayList<TransformNR> joints = getChainTransformations();
+//		for(int i=0;i<joints.size()&& i<linksListeners.size();i++)		{
+//			final int var =i;
+//			System.err.println("LinK "+var+" updating to "+joints.get(var));
+//
+//		}
 	}
 
 	@Override
 	public void onTargetTaskSpaceUpdate(AbstractKinematicsNR source,
 			TransformNR pose) {
 		// TODO Auto-generated method stub
-		
+		TransformFactory.getTransform(pose, getCurrentTargetAffine());
 	}
 
 	public DhInverseSolver getInverseSolver() {
@@ -169,6 +166,11 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 	public void setInverseSolver(DhInverseSolver inverseSolver) {
 		chain.setInverseSolver(inverseSolver);
 	}
+
+	public Affine getCurrentTargetAffine() {
+		return currentTarget;
+	}
+
 
 
 

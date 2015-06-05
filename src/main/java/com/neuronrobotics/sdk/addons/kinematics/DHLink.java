@@ -2,6 +2,7 @@ package com.neuronrobotics.sdk.addons.kinematics;
 
 import javax.xml.transform.TransformerFactory;
 
+import javafx.application.Platform;
 import javafx.scene.transform.Affine;
 
 import org.w3c.dom.Element;
@@ -81,6 +82,7 @@ public class DHLink {
 		step = step.times(getRotZ());
 		step = step.times(getTransX());
 		step = step.times(getRotX());
+		
 
 		return step;
 	}
