@@ -373,7 +373,7 @@ public class Jfx3dManager extends JFXPanel {
 					Affine sp=new Affine();
 					sp.setTy(i);
 					sp.setTx(j);
-					System.err.println("Placing sphere at "+i+" , "+j);
+					//System.err.println("Placing sphere at "+i+" , "+j);
 					s.getTransforms().add(sp);
 					ground.getChildren().add(s);
 				}
