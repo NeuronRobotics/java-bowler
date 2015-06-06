@@ -46,7 +46,7 @@ import com.neuronrobotics.sdk.commands.neuronrobotics.dyio.InfoFirmwareRevisionC
  */
 public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	private boolean keepAlive = true;
-	
+	private boolean disconnecting = false;
 	
 	private long lastPacketTime=0;
 	
@@ -57,7 +57,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	private static ArrayList<IConnectionEventListener> disconnectListeners = new ArrayList<IConnectionEventListener> ();
 	
 	private String scriptingName = "device";
-
+	
 	
 	/**
 	 * Determines if the device is available.
@@ -66,7 +66,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	 * @throws InvalidConnectionException the invalid connection exception
 	 */
 	public boolean isAvailable() throws InvalidConnectionException{
-		return getConnection().isConnected();
+		return getConnection().isConnected()&&disconnecting==false;
 	}
 
 	
@@ -138,7 +138,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	 * This method tells the connection object to disconnect its pipes and close out the connection. Once this is called, it is safe to remove your device.
 	 */
 	public void disconnect() {
-		
+		disconnecting=true;
 		if (connection != null) {
 			if(connection.isConnected()){
 				Log.info("Disconnecting Bowler Device");
