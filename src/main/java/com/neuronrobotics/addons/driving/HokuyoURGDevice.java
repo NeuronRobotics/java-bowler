@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
 import com.neuronrobotics.sdk.common.ByteList;
+import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.NonBowlerDevice;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
@@ -42,17 +43,20 @@ public class HokuyoURGDevice extends NonBowlerDevice{
 			tick=1;
 		tick=1;//HACK
 		scan(degreeToTicks(startDeg),degreeToTicks(endDeg),tick,0,1);
+		ThreadUtil.wait(10);
 		long start = System.currentTimeMillis();
-		while(getPacket() == null) {
+		 do{
 			if(System.currentTimeMillis()-start>2000)
 				break;
 			ThreadUtil.wait(10);
-		}
+			
+		}while(getPacket() == null ||!getPacket().getCmd().contains("MD") );
 		if(getPacket()==null){
 			System.err.println("Sweep failed, resetting and trying again");
 			clear();
 			startSweep(startDeg, endDeg, degPerStep);
 		}
+		System.out.print("Sweep got packet= "+getPacket());
 		return getPacket();
 	}
 	private int degreeToTicks(double degrees) {
@@ -147,7 +151,7 @@ public class HokuyoURGDevice extends NonBowlerDevice{
 									if(bl.size()>0){
 										try{
 											URG2Packet p =new URG2Packet(new String(bl.getBytes()));
-											//System.out.println("New Packet: \n"+p);
+											Log.debug("New Packet: \n"+p);
 											setPacket(p);
 											bl = new ByteList();
 										}catch(Exception ex){

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.neuronrobotics.sdk.common.ByteList;
 
 public class URG2Packet {
-	String cmd;
+	private String cmd;
 	String junk;
 	String status;
 	int timestamp=0;
@@ -20,13 +20,13 @@ public class URG2Packet {
 	
 	public URG2Packet(String line){
 		String [] sections = line.split("\\n");//This removes the \n from the data
-		cmd = sections[0];
-		if(cmd.contains("MD")||cmd.contains("MS")){
+		setCmd(sections[0]);
+		if(getCmd().contains("MD")||getCmd().contains("MS")){
 			//junk = sections[1];
 			status = sections[1];
-			start = Integer.parseInt(cmd.substring(2, 6));
-			end   = Integer.parseInt(cmd.substring(6, 10));
-			stepsPerDataPoint = Integer.parseInt(cmd.substring(10, 12));
+			start = Integer.parseInt(getCmd().substring(2, 6));
+			end   = Integer.parseInt(getCmd().substring(6, 10));
+			stepsPerDataPoint = Integer.parseInt(getCmd().substring(10, 12));
 			if(sections.length>2){
 				String ts = new String(new ByteList(sections[2].getBytes()).getBytes(0,4));
 				//timestamp = decodeURG(ts);
@@ -46,10 +46,10 @@ public class URG2Packet {
 					angleTicks+=stepsPerDataPoint;
 				}
 			}else {
-				throw new RuntimeException("Unknown packet: "+line+" Command="+cmd);
+				throw new RuntimeException("Unknown packet: "+line+" Command="+getCmd());
 			}
 			
-		}else if(cmd.contains("QT")) {
+		}else if(getCmd().contains("QT")) {
 			//do nothing
 		}else{
 			throw new RuntimeException("Unknown packet: "+line);
@@ -77,7 +77,7 @@ public class URG2Packet {
 	}
 	@Override
 	public String toString(){
-		String s="Command: "+cmd;
+		String s="Command: "+getCmd();
 		s+="\nStatus: "+status;
 		if(getData().size()>0){
 			s+="\nStart: "+start;
@@ -108,6 +108,12 @@ public class URG2Packet {
 
 	public ArrayList<DataPoint> getData() {
 		return data;
+	}
+	public String getCmd() {
+		return cmd;
+	}
+	public void setCmd(String cmd) {
+		this.cmd = cmd;
 	}
 	
 }
