@@ -1,5 +1,7 @@
 package com.neuronrobotics.addons.driving;
 
+import java.util.ArrayList;
+
 import com.neuronrobotics.sdk.addons.kinematics.ServoRotoryLink;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.peripherals.DigitalOutputChannel;
@@ -42,7 +44,9 @@ public class AckermanBot extends AbstractRobotDrive {
 						PIDChannel rSteer,
 						PIDChannel bSteer, 
 						DigitalOutputChannel driveEnable, 
-						DigitalOutputChannel driveDirection) {
+						DigitalOutputChannel driveDirection,
+						IAckermanBotKinematics akermanConfigs) {
+		ak=akermanConfigs;
 		this.driveEnable = driveEnable;
 		this.driveDirection = driveDirection;
 		setPIDChanel(drive);
@@ -165,6 +169,24 @@ public class AckermanBot extends AbstractRobotDrive {
 
 	public IAckermanBotKinematics getAckermanKinematics() {
 		return ak;
+	}
+
+	@Override
+	public void disconnectDeviceImp() {
+		// TODO Auto-generated method stub
+		drive.removePIDEventListener(this);
+	}
+
+	@Override
+	public boolean connectDeviceImp() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public ArrayList<String> getNamespacesImp() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

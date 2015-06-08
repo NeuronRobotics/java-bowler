@@ -2,10 +2,11 @@ package com.neuronrobotics.addons.driving;
 
 import java.util.ArrayList;
 
+import com.neuronrobotics.sdk.common.NonBowlerDevice;
 import com.neuronrobotics.sdk.pid.IPIDEventListener;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 
-public abstract class AbstractRobotDrive implements IPIDEventListener{
+public abstract class AbstractRobotDrive extends NonBowlerDevice implements IPIDEventListener{
 	private ArrayList<IRobotDriveEventListener> dl = new  ArrayList<IRobotDriveEventListener> ();
 	
 	private double currentX=0;
