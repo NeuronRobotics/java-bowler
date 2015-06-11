@@ -5,7 +5,9 @@ import java.text.DecimalFormat;
 import Jama.Matrix;
 
 public class TransformNR {
-	private final double x,y,z;
+	private double x;
+	private double y;
+	private double z;
 	private final RotationNR rotation;
 	
 	
@@ -159,6 +161,16 @@ public class TransformNR {
 
 	public TransformNR copy() {
 		return new TransformNR(getMatrixTransform());
+	}
+	
+	public void translateX(double translation){
+		x+=translation;
+	}
+	public void translateY(double translation){
+		y+=translation;
+	}
+	public void translateZ(double translation){
+		z+=translation;
 	}
 	
 
