@@ -163,8 +163,10 @@ public class Jfx3dManager extends JFXPanel {
 	}
 
 	public MeshView addObject(MeshView current) {
-
-		lookGroup.getChildren().add(current);
+		Group og = new Group();
+		og.getChildren().add(current);
+		og.getChildren().add(new Axis());
+		lookGroup.getChildren().add(og);
 		return current;
 	}
 
