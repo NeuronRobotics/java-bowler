@@ -592,11 +592,11 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	 */
 	public void flushCache(double seconds) {
 		//System.out.println("Updating all channels");
-		int [] values = new int[getInternalChannels().size()];
+		Integer [] values = new Integer[getInternalChannels().size()];
 		int i=0;
 		for(DyIOChannel d:getInternalChannels()) {
 			values[i++]=d.getCachedValue();
-			//d.flush();
+			//System.out.println("Flushing chan "+d+" to "+d.getCachedValue());
 		}
 		if(isLegacyParser()){
 			for(int j=0;j<5;j++) {

@@ -40,6 +40,9 @@ public class PidDeviceServerNamespace extends BowlerAbstractDeviceServerNamespac
 					}
 				}));//Name
 		
+		
+		
+		
 		rpc.add(new RpcEncapsulation(getNamespaceIndex(), 
 				getNamespace() , 
 				"_pid", 
@@ -50,9 +53,13 @@ public class PidDeviceServerNamespace extends BowlerAbstractDeviceServerNamespac
 				new IBowlerCommandProcessor() {
 					@Override
 					public Object[] process(Object[] data) {
+						//anythign
 						return new Object[]{new Integer(GetPIDPosition((Integer) data[0]))};
 					}
 				}));//Name
+		
+		
+		
 		rpc.add(new RpcEncapsulation(getNamespaceIndex(), 
 				getNamespace() , 
 				"cpid", 

@@ -297,9 +297,7 @@ public class ServoOutputScheduleChannel implements ISchedulerListener, IAnalogIn
 		this.currentValue = currentValue;
 	}
 	public void sync(int loopTime) {
-		if(getChannelNumber() ==11){
-			System.out.println("Servo "+getCurrentValue());
-		}
+
 		getOutput().SetPosition(getCurrentValue(), loopTime);
 	}
 
