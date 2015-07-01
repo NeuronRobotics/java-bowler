@@ -44,7 +44,18 @@ public class DHLink {
 		r		=				XmlFactory.getTagValueDouble("Radius", nNode);
 		alpha	=Math.toRadians(XmlFactory.getTagValueDouble("Alpha", nNode));
 	}
-
+	/*
+	 * 
+	 * Generate the xml configuration to generate a link of this configuration. 
+	 */
+	public String getXml(){
+		return "<DHParameters>\n"+
+		    "<Delta>"+d+"</Delta>\n"+
+		    "<Theta>"+theta+"</Theta>\n"+
+		   "<Radius>"+r+"</Radius>\n"+
+		   "<Alpha>"+alpha+"</Alpha>\n"+
+		"</DHParameters>";
+	}
 	public double getD() {
 		return d;
 	}

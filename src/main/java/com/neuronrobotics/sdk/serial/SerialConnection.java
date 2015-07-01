@@ -146,6 +146,8 @@ public class SerialConnection extends BowlerAbstractConnection {
 		
 		try 
 		{
+			if(serial != null)
+				serial.disconnect();
 			serial = new NRSerialPort(getPort(), baud);
 			serial.connect();	
 			setDataIns(new DataInputStream(serial.getInputStream()));

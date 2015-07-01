@@ -95,7 +95,7 @@ public class LinkConfiguration {
 	
 	/*
 	 * 
-	 * Generate the xml configuration to generate a link o fhtis configuration. 
+	 * Generate the xml configuration to generate a link of this configuration. 
 	 */
 	public String getXml(){
 		return "<name>"+getName()+"</name>\n"+
