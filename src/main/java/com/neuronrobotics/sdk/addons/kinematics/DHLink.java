@@ -17,7 +17,7 @@ public class DHLink {
 	
 	private double d;
 	private double theta;
-	private double r;
+	private double radius;
 	private double alpha;
 	private Matrix transX;
 	private Matrix rotX;
@@ -31,22 +31,22 @@ public class DHLink {
 	private Affine listener=null;
 	
 	public DHLink(double d, double theta,double r, double alpha) {
-		this.d = d;
-		this.theta = theta;
-		this.r = r;
-		this.alpha = alpha;
+		this.setDelta(d);
+		this.setTheta(theta);
+		this.setRadius(r);
+		this.setAlpha(alpha);
 		
 	}
 
 	public DHLink(Element nNode) {
-		d		=				XmlFactory.getTagValueDouble("Delta", nNode);
-		theta	=Math.toRadians(XmlFactory.getTagValueDouble("Theta", nNode));
-		r		=				XmlFactory.getTagValueDouble("Radius", nNode);
-		alpha	=Math.toRadians(XmlFactory.getTagValueDouble("Alpha", nNode));
+		setDelta(XmlFactory.getTagValueDouble("Delta", nNode));
+		setTheta(Math.toRadians(XmlFactory.getTagValueDouble("Theta", nNode)));
+		setRadius(XmlFactory.getTagValueDouble("Radius", nNode));
+		setAlpha(Math.toRadians(XmlFactory.getTagValueDouble("Alpha", nNode)));
 	}
 
 	public double getD() {
-		return d;
+		return getDelta();
 	}
 
 	public double getTheta() {
@@ -54,7 +54,7 @@ public class DHLink {
 	}
 
 	public double getR() {
-		return r;
+		return getRadius();
 	}
 
 	public double getAlpha() {
@@ -219,10 +219,10 @@ public class DHLink {
 	@Override 
 	public String toString(){
 		String s="";
-		s+=" Delta = "+d;
-		s+=" Theta = "+Math.toDegrees(theta)+" deg";
-		s+=" Radius = "+r;
-		s+=" Alpha = "+Math.toDegrees(alpha)+" deg";
+		s+=" Delta = "+getDelta();
+		s+=" Theta = "+Math.toDegrees(getTheta())+" deg";
+		s+=" Radius = "+getRadius();
+		s+=" Alpha = "+Math.toDegrees(getAlpha())+" deg";
 		return s;
 	}
 
@@ -232,6 +232,30 @@ public class DHLink {
 
 	void setListener(Affine listener) {
 		this.listener = listener;
+	}
+
+	public double getDelta() {
+		return d;
+	}
+
+	public void setDelta(double d) {
+		this.d = d;
+	}
+
+	public double getRadius() {
+		return radius;
+	}
+
+	public void setRadius(double radius) {
+		this.radius = radius;
+	}
+
+	public void setTheta(double theta) {
+		this.theta = theta;
+	}
+
+	public void setAlpha(double alpha) {
+		this.alpha = alpha;
 	}
 
 }

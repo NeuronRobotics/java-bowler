@@ -192,7 +192,9 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	protected LinkFactory getDevice(){
 		return getFactory();
 	}
-	
+	public AbstractLink getAbstractLink(int index){
+		return getFactory().getLink(getLinkConfiguration(index));
+	}
 	protected void setDevice(LinkFactory f){
 		Log.info("Loading device: "+f.getClass()+" "+f);
 		setFactory(f);
