@@ -52,7 +52,7 @@ public class DHLink {
 		return "<DHParameters>\n"+
 		    "<Delta>"+d+"</Delta>\n"+
 		    "<Theta>"+theta+"</Theta>\n"+
-		   "<Radius>"+r+"</Radius>\n"+
+		   "<Radius>"+radius+"</Radius>\n"+
 		   "<Alpha>"+alpha+"</Alpha>\n"+
 		"</DHParameters>";
 	}
