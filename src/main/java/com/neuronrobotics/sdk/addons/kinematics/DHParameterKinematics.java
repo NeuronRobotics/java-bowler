@@ -128,6 +128,23 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 		}
 		addPoseUpdateListener(this);
 	}
+	
+	/*
+	 * 
+	 * Generate the xml configuration to generate an XML of this robot. 
+	 */
+	public String getXml(){
+		String xml = "<root>\n";
+		ArrayList<DHLink> dhLinks = chain.getLinks();
+		for(int i=0;i<dhLinks.size();i++){
+			xml+="<link>\n";
+			xml+=getLinkConfiguration(i).getXml();
+			xml+=dhLinks.get(i).getXml();
+			xml+="\n</link>";
+		}
+		xml+="\n</root>";
+		return xml;
+	}
 
 	@Override
 	public void disconnectDevice() {

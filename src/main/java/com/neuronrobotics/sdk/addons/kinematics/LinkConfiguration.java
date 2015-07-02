@@ -93,6 +93,24 @@ public class LinkConfiguration {
 		return s;
 	}
 	
+	/*
+	 * 
+	 * Generate the xml configuration to generate a link of this configuration. 
+	 */
+	public String getXml(){
+		return "<name>"+getName()+"</name>\n"+
+				deviceScriptingName!= null?"<deviceName>"+getDeviceScriptingName()+"</deviceName>\n":""+
+				"<type>"+getType()+"</type>\n"+
+				"<index>"+getHardwareIndex()+"</index>\n"+
+				"<scale>"+getScale()+"</scale>\n"+
+				"<upperLimit>"+getUpperLimit()+"</upperLimit>\n"+
+				"<lowerLimit>"+getLowerLimit()+"</lowerLimit>\n"+
+				"<isLatch>"+isLatch+"</isLatch>\n"+
+				"<indexLatch>"+indexLatch+"</indexLatch>\n"+
+				"<isStopOnLatch>"+"</isStopOnLatch>\n"+	
+				"<homingTPS>"+getHomingTicksPerSecond()+"</homingTPS>";
+	}
+	
 
 	public void setName(String name) {
 		Log.info("Setting controller name: "+name);
