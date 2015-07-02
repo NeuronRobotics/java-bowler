@@ -49,12 +49,12 @@ public class DHLink {
 	 * Generate the xml configuration to generate a link of this configuration. 
 	 */
 	public String getXml(){
-		return "<DHParameters>\n"+
-		    "<Delta>"+d+"</Delta>\n"+
-		    "<Theta>"+theta+"</Theta>\n"+
-		   "<Radius>"+radius+"</Radius>\n"+
-		   "<Alpha>"+alpha+"</Alpha>\n"+
-		"</DHParameters>";
+		return "\n\t<DHParameters>\n"+
+		    "\t\t<Delta>"+d+"</Delta>\n"+
+		    "\t\t<Theta>"+Math.toDegrees(theta)+"</Theta>\n"+
+		   "\t\t<Radius>"+radius+"</Radius>\n"+
+		   "\t\t<Alpha>"+Math.toDegrees(alpha)+"</Alpha>\n"+
+		"\t</DHParameters>\n";
 	}
 	public double getD() {
 		return getDelta();
@@ -259,6 +259,8 @@ public class DHLink {
 
 	public void setRadius(double radius) {
 		this.radius = radius;
+		transX_J=null;
+		transX=null;
 	}
 
 	public void setTheta(double theta) {
@@ -267,6 +269,8 @@ public class DHLink {
 
 	public void setAlpha(double alpha) {
 		this.alpha = alpha;
+		rotX=null;
+		rotX_J=null;
 	}
 
 }

@@ -98,17 +98,19 @@ public class LinkConfiguration {
 	 * Generate the xml configuration to generate a link of this configuration. 
 	 */
 	public String getXml(){
-		return "<name>"+getName()+"</name>\n"+
-				deviceScriptingName!= null?"<deviceName>"+getDeviceScriptingName()+"</deviceName>\n":""+
-				"<type>"+getType()+"</type>\n"+
-				"<index>"+getHardwareIndex()+"</index>\n"+
-				"<scale>"+getScale()+"</scale>\n"+
-				"<upperLimit>"+getUpperLimit()+"</upperLimit>\n"+
-				"<lowerLimit>"+getLowerLimit()+"</lowerLimit>\n"+
-				"<isLatch>"+isLatch+"</isLatch>\n"+
-				"<indexLatch>"+indexLatch+"</indexLatch>\n"+
-				"<isStopOnLatch>"+"</isStopOnLatch>\n"+	
-				"<homingTPS>"+getHomingTicksPerSecond()+"</homingTPS>";
+		String DevStr=deviceScriptingName!= null?"<deviceName>"+getDeviceScriptingName()+"</deviceName>\n":"";
+		
+		return "\t<name>"+getName()+"</name>\n"+
+				"\t"+DevStr+
+				"\t<type>"+getType()+"</type>\n"+
+				"\t<index>"+getHardwareIndex()+"</index>\n"+
+				"\t<scale>"+getScale()+"</scale>\n"+
+				"\t<upperLimit>"+getUpperLimit()+"</upperLimit>\n"+
+				"\t<lowerLimit>"+getLowerLimit()+"</lowerLimit>\n"+
+				"\t<isLatch>"+isLatch+"</isLatch>\n"+
+				"\t<indexLatch>"+indexLatch+"</indexLatch>\n"+
+				"\t<isStopOnLatch>"+isStopOnLatch+"</isStopOnLatch>\n"+	
+				"\t<homingTPS>"+getHomingTicksPerSecond()+"</homingTPS>\n";
 	}
 	
 

@@ -140,7 +140,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 			xml+="<link>\n";
 			xml+=getLinkConfiguration(i).getXml();
 			xml+=dhLinks.get(i).getXml();
-			xml+="\n</link>";
+			xml+="\n</link>\n";
 		}
 		xml+="\n</root>";
 		return xml;

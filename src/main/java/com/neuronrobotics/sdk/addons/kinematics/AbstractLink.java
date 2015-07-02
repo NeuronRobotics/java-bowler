@@ -120,10 +120,16 @@ public abstract class AbstractLink {
 		return toEngineeringUnits(getTargetValue());
 	}
 	public double getMaxEngineeringUnits() {
-		return toEngineeringUnits(getUpperLimit());
+		if(scale>0)
+			return toEngineeringUnits(getUpperLimit());
+		else
+			return toEngineeringUnits(getLowerLimit());
 	}
 	public double getMinEngineeringUnits() {
-		return toEngineeringUnits(getLowerLimit());
+		if(scale>0)
+			return toEngineeringUnits(getLowerLimit());
+		else
+			return toEngineeringUnits(getUpperLimit());
 	}
 	public boolean isMaxEngineeringUnits() {
 		if(getTargetValue() == getUpperLimit()) {

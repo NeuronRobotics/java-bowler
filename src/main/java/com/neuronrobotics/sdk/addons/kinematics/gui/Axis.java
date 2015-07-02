@@ -52,7 +52,7 @@ import javafx.scene.transform.Affine;
 
 public class Axis extends Group {
 	public Axis() {
-		this(240);
+		this(50);
 	}
 	// //////////////////////////////////////////
 	//
