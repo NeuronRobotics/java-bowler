@@ -30,6 +30,7 @@ public class LinkConfiguration {
 	private double upperVelocity = 100000000;
 	private double lowerVelocity = -100000000;
 	private String deviceScriptingName=null;
+	private double staticOffset=0;
 	
 	public LinkConfiguration(Element eElement){
     	setName(XmlFactory.getTagValue("name",eElement));
@@ -60,6 +61,11 @@ public class LinkConfiguration {
     	try{
     		setUpperVelocity(Double.parseDouble(XmlFactory.getTagValue("upperVelocity",eElement)));
     		setLowerVelocity(Double.parseDouble(XmlFactory.getTagValue("lowerVelocity",eElement)));
+    	}catch (Exception e){
+    		
+    	}
+    	try{
+    		setStaticOffset(Double.parseDouble(XmlFactory.getTagValue("staticOffset",eElement)));
     	}catch (Exception e){
     		
     	}
@@ -107,6 +113,7 @@ public class LinkConfiguration {
 				"\t<scale>"+getScale()+"</scale>\n"+
 				"\t<upperLimit>"+getUpperLimit()+"</upperLimit>\n"+
 				"\t<lowerLimit>"+getLowerLimit()+"</lowerLimit>\n"+
+				"\t<staticOffset>"+staticOffset+"</staticOffset>\n"+
 				"\t<isLatch>"+isLatch+"</isLatch>\n"+
 				"\t<indexLatch>"+indexLatch+"</indexLatch>\n"+
 				"\t<isStopOnLatch>"+isStopOnLatch+"</isStopOnLatch>\n"+	
@@ -262,6 +269,12 @@ public class LinkConfiguration {
 	}
 	public void setDeviceScriptingName(String deviceScriptingName) {
 		this.deviceScriptingName = deviceScriptingName;
+	}
+	public double getStaticOffset() {
+		return staticOffset;
+	}
+	public void setStaticOffset(double staticOffset) {
+		this.staticOffset = staticOffset;
 	}
 	
 }
