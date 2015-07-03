@@ -95,6 +95,7 @@ public class LinkFactory {
 											(int)c.getLowerLimit(),
 											(int)c.getUpperLimit(),
 											c.getScale());
+				tmp.setUseLimits(true);
 			}
 		}else if(c.getType().equals("analog-rotory")){
 			DyIO d = dyio;
@@ -106,6 +107,7 @@ public class LinkFactory {
 											(int)c.getLowerLimit(),
 											(int)c.getUpperLimit(),
 											c.getScale());
+			tmp.setUseLimits(false);
 		} else if (c.getType().equals("dummy")|| c.getType().equals("virtual")){
 			tmp=new PidRotoryLink(	new VirtualGenericPIDDevice(100000).getPIDChannel(c.getHardwareIndex()),
 					(int)0,
@@ -123,6 +125,7 @@ public class LinkFactory {
 										(int)c.getLowerLimit(),
 										(int)c.getUpperLimit(),
 										c.getScale());
+			tmp.setUseLimits(true);
 		}
 	
 		
@@ -132,6 +135,7 @@ public class LinkFactory {
 					(int)c.getLowerLimit(),
 					(int)c.getUpperLimit(),
 					c.getScale());
+			tmp.setUseLimits(false);
 		}
 		tmp.setLinkConfiguration(c);
 		links.add(tmp);

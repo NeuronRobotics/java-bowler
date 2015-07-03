@@ -113,8 +113,8 @@ public class ConnectionDialog extends JDialog {
 	private void loadDefaultConnections() {
 		try{
 			try{
-				if(OsInfoUtil.isLinux())
-					addConnectionPanel(new UsbConnectionPanel(this));
+//				if(OsInfoUtil.isLinux())
+//					addConnectionPanel(new UsbConnectionPanel(this));
 				addConnectionPanel(new SerialConnectionPanel(this));
 				addConnectionPanel(new BluetoothConnectionPanel(this));
 				//addConnectionPanel(new SerialConnectionPanel(this));
