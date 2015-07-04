@@ -113,6 +113,8 @@ public class LinkConfiguration {
 				"\t<scale>"+getScale()+"</scale>\n"+
 				"\t<upperLimit>"+getUpperLimit()+"</upperLimit>\n"+
 				"\t<lowerLimit>"+getLowerLimit()+"</lowerLimit>\n"+
+				"\t<upperVelocity>"+upperVelocity+"</upperVelocity>\n"+
+				"\t<lowerVelocity>"+lowerVelocity+"</lowerVelocity>\n"+
 				"\t<staticOffset>"+staticOffset+"</staticOffset>\n"+
 				"\t<isLatch>"+isLatch+"</isLatch>\n"+
 				"\t<indexLatch>"+indexLatch+"</indexLatch>\n"+

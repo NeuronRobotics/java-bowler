@@ -1,6 +1,9 @@
 package com.neuronrobotics.sdk.addons.kinematics.math;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+
+import com.neuronrobotics.sdk.addons.kinematics.DHLink;
 
 import Jama.Matrix;
 
@@ -172,6 +175,23 @@ public class TransformNR {
 	public void translateZ(double translation){
 		z+=translation;
 	}
+	
+	/*
+	 * 
+	 * Generate the xml configuration to generate an XML of this robot. 
+	 */
+	public String getXml(){
+		String xml = 	"\t<x>"+x+"</x>\n"+
+						"\t<y>"+y+"</y>\n"+
+						"\t<z>"+z+"</z>\n"+
+						"\t<rotw>"+getRotation().getRotationMatrix2QuaturnionW()+"</rotw>\n"+
+						"\t<rotx>"+getRotation().getRotationMatrix2QuaturnionX()+"</rotx>\n"+
+						"\t<roty>"+getRotation().getRotationMatrix2QuaturnionY()+"</roty>\n"+
+						"\t<rotz>"+getRotation().getRotationMatrix2QuaturnionZ()+"</rotz>";
+
+		return xml;
+	}
+
 	
 
 }

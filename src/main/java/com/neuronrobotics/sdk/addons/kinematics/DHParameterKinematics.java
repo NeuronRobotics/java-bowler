@@ -142,6 +142,13 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 			xml+=dhLinks.get(i).getXml();
 			xml+="\n</link>\n";
 		}
+		xml+="\n<ZframeToRAS>";
+		xml+=getFiducialToGlobalTransform().getXml();
+		xml+="\n</ZframeToRAS>";
+		
+		xml+="\n<baseToZframe>";
+		xml+=getRobotToFiducialTransform().getXml();
+		xml+="\n</baseToZframe>";
 		xml+="\n</root>";
 		return xml;
 	}

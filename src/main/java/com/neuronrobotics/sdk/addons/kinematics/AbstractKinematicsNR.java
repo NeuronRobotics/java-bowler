@@ -169,6 +169,29 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		}
 		
 	}
+	
+	/*
+	 * 
+	 * Generate the xml configuration to generate an XML of this robot. 
+	 */
+	public String getXml(){
+		String xml = "<root>\n";
+		for(int i=0;i<getLinkConfigurations().size();i++){
+			xml+="<link>\n";
+			xml+=getLinkConfiguration(i).getXml();
+			xml+="\n</link>\n";
+		}
+		xml+="\n<ZframeToRAS>";
+		xml+=getFiducialToGlobalTransform().getXml();
+		xml+="\n</ZframeToRAS>";
+		
+		xml+="\n<baseToZframe>";
+		xml+=getRobotToFiducialTransform().getXml();
+		xml+="\n</baseToZframe>";
+		xml+="\n</root>";
+		return xml;
+	}
+
 
 	public LinkConfiguration getLinkConfiguration(int linkIndex){
 		return getLinkConfigurations().get(linkIndex);
