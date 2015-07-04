@@ -91,7 +91,7 @@ public class LinkFactory {
 				d=(DyIO) DeviceManager.getSpecificDevice(DyIO.class, c.getDeviceScriptingName());
 			if(d!=null){
 				tmp = new ServoRotoryLink(	new ServoChannel(d.getChannel(c.getHardwareIndex())), 
-											(int)c.getIndexLatch(),
+											(int)c.getStaticOffset(),
 											(int)c.getLowerLimit(),
 											(int)c.getUpperLimit(),
 											c.getScale());
@@ -104,14 +104,14 @@ public class LinkFactory {
 				d=(DyIO) DeviceManager.getSpecificDevice(DyIO.class, c.getDeviceScriptingName());
 			if(d!=null)
 				tmp = new AnalogRotoryLink(	new AnalogInputChannel(d.getChannel(c.getHardwareIndex())), 
-											(int)c.getIndexLatch(),
+											(int)c.getStaticOffset(),
 											(int)c.getLowerLimit(),
 											(int)c.getUpperLimit(),
 											c.getScale());
 			tmp.setUseLimits(false);
 		} else if (c.getType().equals("dummy")|| c.getType().equals("virtual")){
 			tmp=new PidRotoryLink(	new VirtualGenericPIDDevice(100000).getPIDChannel(c.getHardwareIndex()),
-					(int)0,
+					(int)c.getStaticOffset(),
 					(int)c.getLowerLimit(),
 					(int)c.getUpperLimit(),
 					c.getScale());
@@ -122,7 +122,7 @@ public class LinkFactory {
 				p=(IPidControlNamespace) DeviceManager.getSpecificDevice(IPidControlNamespace.class, c.getDeviceScriptingName());
 			if(p!=null)
 				tmp=new PidRotoryLink(	p.getPIDChannel(c.getHardwareIndex()),
-										(int)0,
+										(int)c.getStaticOffset(),
 										(int)c.getLowerLimit(),
 										(int)c.getUpperLimit(),
 										c.getScale());
@@ -132,7 +132,7 @@ public class LinkFactory {
 		
 		if(tmp==null){
 			tmp=new PidRotoryLink(	new VirtualGenericPIDDevice(100000).getPIDChannel(c.getHardwareIndex()),
-					(int)0,
+					(int)c.getStaticOffset(),
 					(int)c.getLowerLimit(),
 					(int)c.getUpperLimit(),
 					c.getScale());
