@@ -120,10 +120,13 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 
 	public void setChain(DHChain chain) {
 		this.chain = chain;
-		
-		for(DHLink dh:chain.getLinks()){
+		ArrayList<DHLink> dhLinks = chain.getLinks();
+		for(int i=0;i<dhLinks.size();i++){
 			Affine a = new Affine();
-			dh.setListener(a);
+			dhLinks.get(i).setListener(a);
+			if(getLinkConfiguration(i).getType().contains("tool")){
+				dhLinks.get(i).setDegenerate(true);
+			}
 			linksListeners.add(a);
 		}
 		addPoseUpdateListener(this);
@@ -168,12 +171,6 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 	@Override
 	public void onTaskSpaceUpdate(AbstractKinematicsNR source, TransformNR pose) {
 		
-//		final ArrayList<TransformNR> joints = getChainTransformations();
-//		for(int i=0;i<joints.size()&& i<linksListeners.size();i++)		{
-//			final int var =i;
-//			System.err.println("LinK "+var+" updating to "+joints.get(var));
-//
-//		}
 	}
 
 	@Override

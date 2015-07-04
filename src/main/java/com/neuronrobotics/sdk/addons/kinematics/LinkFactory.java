@@ -84,7 +84,7 @@ public class LinkFactory {
 		}
 		AbstractLink tmp=null;
 		System.err.println("Loading link: "+c.getName()+" type = "+c.getType()+" device= "+c.getDeviceScriptingName());
-		if(c.getType().equals("servo-rotory")){
+		if(c.getType().equals("servo-rotory") || c.getType().equals("servo-tool")){
 			
 			DyIO d = dyio;
 			if(c.getDeviceScriptingName()!=null)
@@ -96,6 +96,7 @@ public class LinkFactory {
 											(int)c.getUpperLimit(),
 											c.getScale());
 				tmp.setUseLimits(true);
+				
 			}
 		}else if(c.getType().equals("analog-rotory")){
 			DyIO d = dyio;

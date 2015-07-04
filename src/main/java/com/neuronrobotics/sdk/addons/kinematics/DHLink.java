@@ -29,6 +29,8 @@ public class DHLink {
 	private Matrix transZ_J;
 	private Matrix rotZ_J;
 	private Affine listener=null;
+	private boolean degenerate = false;
+	
 	
 	public DHLink(double d, double theta,double r, double alpha) {
 		this.setDelta(d);
@@ -72,15 +74,23 @@ public class DHLink {
 		return alpha;
 	}
 	public Matrix DhStepInverseRotory(Matrix end, double jointValue) {	
+		if(degenerate)
+			jointValue=0;
 		return  DhStepInverse(end,jointValue,0);
 	}
 	public Matrix DhStepInversePrismatic(Matrix end, double jointValue) {	
+		if(degenerate)
+			jointValue=0;
 		return  DhStepInverse(end,0,jointValue);
 	}
 	public Matrix DhStepRotory(double jointValue) {	
+		if(degenerate)
+			jointValue=0;
 		return DhStep(jointValue,0);
 	}
 	public Matrix DhStepPrismatic(double jointValue) {
+		if(degenerate)
+			jointValue=0;
 		
 		return DhStep(0,jointValue);
 	}
@@ -271,6 +281,14 @@ public class DHLink {
 		this.alpha = alpha;
 		rotX=null;
 		rotX_J=null;
+	}
+
+	public boolean isDegenerate() {
+		return degenerate;
+	}
+
+	public void setDegenerate(boolean degenerate) {
+		this.degenerate = degenerate;
 	}
 
 }
