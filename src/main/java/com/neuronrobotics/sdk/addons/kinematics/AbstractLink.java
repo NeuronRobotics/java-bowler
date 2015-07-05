@@ -213,11 +213,6 @@ public abstract class AbstractLink {
 
 	public void setUseLimits(boolean useLimits) {
 		this.useLimits = useLimits;
-		try{
-			throw new RuntimeException();
-		}catch(Exception e){
-			e.printStackTrace();
-		}
 	}
 
 	public boolean isUseLimits() {

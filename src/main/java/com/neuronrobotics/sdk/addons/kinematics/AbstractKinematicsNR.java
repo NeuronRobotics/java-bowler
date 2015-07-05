@@ -39,7 +39,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	private ArrayList<ITaskSpaceUpdateListenerNR> taskSpaceUpdateListeners = new ArrayList<ITaskSpaceUpdateListenerNR>();
 	protected ArrayList<IJointSpaceUpdateListenerNR> jointSpaceUpdateListeners = new ArrayList<IJointSpaceUpdateListenerNR>();
 	private ArrayList<IRegistrationListenerNR> regListeners= new ArrayList<IRegistrationListenerNR>();	
-	private ArrayList<LinkConfiguration> localConfigsFromXml=new ArrayList<LinkConfiguration>();
+
 	/*This is in RAW joint level ticks*/
 	protected double[] currentJointSpacePositions=null;
 	protected double [] currentJointSpaceTarget;
@@ -98,8 +98,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		this();
 		noXmlConfig=false;
 		if(configFile!=null && f!=null){
-			loadConfig(configFile);
-			setDevice(f);
+			setDevice(f,loadConfig(configFile));
 		}
 		
 	}
@@ -111,7 +110,8 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 * Load XML configuration file, 
 	 * then store in LinkConfiguration (ArrayList type)
 	 */
-	protected void loadConfig(InputStream config){
+	protected ArrayList<LinkConfiguration> loadConfig(InputStream config){
+		ArrayList<LinkConfiguration> localConfigsFromXml=new ArrayList<LinkConfiguration>();
 
 		Document doc =XmlFactory.getAllNodesDocument(config);
 		NodeList nList = doc.getElementsByTagName("link");
@@ -121,7 +121,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		for (int i = 0; i < nList.getLength(); i++) {			
 		    Node nNode = nList.item(i);
 		    if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-		    	getLinkConfigurations().add(new LinkConfiguration((Element) nNode));
+		    	localConfigsFromXml.add(new LinkConfiguration((Element) nNode));
 		    }else{
 		    	Log.info("Not Element Node");
 		    }
@@ -167,7 +167,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 			ex.printStackTrace();
 			Log.warning("No base to Z frame transform defined");
 		}
-		
+		return localConfigsFromXml;
 	}
 	
 	/*
@@ -181,13 +181,13 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 			xml+=getLinkConfiguration(i).getXml();
 			xml+="\n</link>\n";
 		}
-		xml+="\n<ZframeToRAS>";
+		xml+="\n<ZframeToRAS>\n";
 		xml+=getFiducialToGlobalTransform().getXml();
-		xml+="\n</ZframeToRAS>";
+		xml+="\n</ZframeToRAS>\n";
 		
-		xml+="\n<baseToZframe>";
+		xml+="\n<baseToZframe>\n";
 		xml+=getRobotToFiducialTransform().getXml();
-		xml+="\n</baseToZframe>";
+		xml+="\n</baseToZframe>\n";
 		xml+="\n</root>";
 		return xml;
 	}
@@ -198,10 +198,9 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	}
 	
 	public ArrayList<LinkConfiguration> getLinkConfigurations() {
-		if(noXmlConfig){
-			return getFactory().getLinkConfigurations();
-		}
-		return localConfigsFromXml;
+
+		return getFactory().getLinkConfigurations();
+	
 	}
 
 	
@@ -218,12 +217,12 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	public AbstractLink getAbstractLink(int index){
 		return getFactory().getLink(getLinkConfiguration(index));
 	}
-	protected void setDevice(LinkFactory f){
+	protected void setDevice(LinkFactory f, ArrayList<LinkConfiguration> linkConfigs){
 		Log.info("Loading device: "+f.getClass()+" "+f);
 		setFactory(f);
 		//Log.enableDebugPrint(true);
-		for(int i=0;i<getLinkConfigurations().size();i++){
-			LinkConfiguration c = getLinkConfigurations().get(i);
+		for(int i=0;i<linkConfigs.size();i++){
+			LinkConfiguration c = linkConfigs.get(i);
 			c.setLinkIndex(i);
 			getFactory().getLink(c);
 			Log.info("\nAxis #"+i+" Configuration:\n"+c);

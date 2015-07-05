@@ -22,6 +22,7 @@ import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
 import com.neuronrobotics.sdk.common.IConnectionEventListener;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.pid.GenericPIDDevice;
+import com.neuronrobotics.sdk.pid.VirtualGenericPIDDevice;
 
 
 public class DHParameterKinematics extends AbstractKinematicsNR implements ITaskSpaceUpdateListenerNR{
@@ -43,7 +44,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 	} ;
 	
 	public DHParameterKinematics() {
-		this((DyIO)null,"TrobotLinks.xml");
+		this(new VirtualGenericPIDDevice(100000),"TrobotLinks.xml");
 	}
 	
 	public DHParameterKinematics( DyIO dev) {
@@ -121,13 +122,15 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 	public void setChain(DHChain chain) {
 		this.chain = chain;
 		ArrayList<DHLink> dhLinks = chain.getLinks();
+		for(int i=linksListeners.size();i<dhLinks.size();i++){
+			linksListeners.add(new Affine());
+		}
+
 		for(int i=0;i<dhLinks.size();i++){
-			Affine a = new Affine();
-			dhLinks.get(i).setListener(a);
+			dhLinks.get(i).setListener(linksListeners.get(i));
 			if(getLinkConfiguration(i).getType().isTool()){
 				dhLinks.get(i).setDegenerate(true);
 			}
-			linksListeners.add(a);
 		}
 		addPoseUpdateListener(this);
 	}
