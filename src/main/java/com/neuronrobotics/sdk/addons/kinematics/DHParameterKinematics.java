@@ -203,6 +203,32 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 		return currentTarget;
 	}
 
+	public void addNewLink(LinkConfiguration newLink, DHLink dhLink) {
+		LinkFactory factory  =getFactory();
+		//remove the link listener while the number of links could chnage
+		factory.removeLinkListener(this);
+		factory.getLink(newLink);// adds new link internally
+		DHChain chain =  getDhChain() ;
+		chain.addLink(dhLink);
+		//set the modified kinematics chain
+		setChain(chain);
+		//once the new link configuration is set up, re add the listener
+		factory.addLinkListener(this);
+	}
+
+	public void removeLink(int index) {
+		LinkFactory factory  =getFactory();
+		//remove the link listener while the number of links could chnage
+		factory.removeLinkListener(this);
+		DHChain chain = getDhChain() ;
+		chain.getLinks().remove(index);
+		factory.deleteLink(index);
+		//set the modified kinematics chain
+		setChain(chain);
+		//once the new link configuration is set up, re add the listener
+		factory.addLinkListener(this);
+	}
+
 
 
 

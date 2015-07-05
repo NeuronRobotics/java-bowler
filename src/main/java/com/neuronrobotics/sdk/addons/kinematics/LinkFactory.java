@@ -278,4 +278,9 @@ public class LinkFactory {
 			lin.removeLinkListener(l);
 		}
 	}
+
+	public void deleteLink(int i) {
+		links.remove(i);
+		getLinkConfigurations().remove(i);
+	}
 }
