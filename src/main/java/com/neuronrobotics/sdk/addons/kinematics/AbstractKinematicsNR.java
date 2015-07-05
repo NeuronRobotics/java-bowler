@@ -524,7 +524,6 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	
 	public void addPoseUpdateListener(ITaskSpaceUpdateListenerNR l){
 		if(taskSpaceUpdateListeners.contains(l) || l==null){
-			new RuntimeException("not adding "+l.getClass().getName()).printStackTrace();
 			return;
 		}
 		//new RuntimeException("adding "+l.getClass().getName()).printStackTrace();

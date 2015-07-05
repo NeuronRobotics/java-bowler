@@ -6,8 +6,9 @@ import com.neuronrobotics.sdk.dyio.peripherals.IAnalogInputListener;
 
 public class AnalogPrismaticLink  extends AbstractPrismaticLink implements IAnalogInputListener{
 	private AnalogInputChannel channel;
-	public AnalogPrismaticLink(AnalogInputChannel c,int home, int lowerLimit, int upperLimit, double scale) {
-		super(home, lowerLimit, upperLimit, scale);
+	public AnalogPrismaticLink(AnalogInputChannel c,LinkConfiguration conf) {
+		super(conf);
+		
 		setAnalogChannel(c);
 	}
 

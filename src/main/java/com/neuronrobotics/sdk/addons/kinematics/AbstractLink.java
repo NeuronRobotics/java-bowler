@@ -7,10 +7,7 @@ import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 
 // Kevin Shouldn't the Link's channel be kept in this level of Abstraction? The way I designg AbstractCartesianPositonDevice  Requires this
 public abstract class AbstractLink {
-	private double scale;
-	private int upperLimit;
-	private int lowerLimit;
-	private int home;
+
 	private int targetValue=0;
 	
 	private double targetEngineeringUnits=0;
@@ -18,11 +15,8 @@ public abstract class AbstractLink {
 	private ArrayList<ILinkListener> links = new ArrayList<ILinkListener>();
 	private LinkConfiguration conf =null;
 	
-	public AbstractLink(int home,int lowerLimit,int upperLimit,double scale){
-		setScale(scale);
-		setUpperLimit(upperLimit);
-		setLowerLimit(lowerLimit);
-		setHome(home);
+	public AbstractLink(LinkConfiguration conf){
+		this.conf=conf;
 	}
 	
 	/**
@@ -108,7 +102,7 @@ public abstract class AbstractLink {
 	public void setCurrentEngineeringUnits(double angle) {
 		double current = (double)(getCurrentPosition()-getHome());
 		if(current != 0)
-			setScale(angle/current);
+			conf.setScale(angle/current);
 	}
 	public double getCurrentEngineeringUnits(){
 		int link = getCurrentPosition();
@@ -120,13 +114,13 @@ public abstract class AbstractLink {
 		return toEngineeringUnits(getTargetValue());
 	}
 	public double getMaxEngineeringUnits() {
-		if(scale>0)
+		if(conf.getScale()>0)
 			return toEngineeringUnits(getUpperLimit());
 		else
 			return toEngineeringUnits(getLowerLimit());
 	}
 	public double getMinEngineeringUnits() {
-		if(scale>0)
+		if(conf.getScale()>0)
 			return toEngineeringUnits(getLowerLimit());
 		else
 			return toEngineeringUnits(getUpperLimit());
@@ -174,41 +168,47 @@ public abstract class AbstractLink {
 			Log.info("Abstract Link: limits disabled");
 		}
 	}
+
 	public int getTargetValue() {
 		return targetValue;
 	}
-
-	public void setScale(double scale) {
-		this.scale = scale;
-	}
-	public double getScale() {
-		return scale;
-	}	
+	
 	public void setUpperLimit(int upperLimit) {
-		this.upperLimit = upperLimit;
-	}
-	public int getUpperLimit() {
-		return upperLimit;
+		conf.setUpperLimit(upperLimit);
 	}
 	public void setLowerLimit(int lowerLimit) {
-		this.lowerLimit = lowerLimit;
-	}
-	public int getLowerLimit() {
-		return lowerLimit;
+		conf.setLowerLimit(lowerLimit);
 	}
 	public void setHome(int home) {
-		this.home = home;
+		conf.setStaticOffset(home);
 	}
+
+	public void setScale(double d) {
+		conf.setScale(d);
+	}
+
+	public double getScale() {
+		return conf.getScale();
+	}	
+
+	public int getUpperLimit() {
+		return (int) conf.getUpperLimit();
+	}
+
+	public int getLowerLimit() {
+		return (int) conf.getLowerLimit();
+	}
+
 	public int getHome() {
-		return home;
+		return (int) conf.getStaticOffset();
 	}
 	
 	public void setCurrentAsUpperLimit() {
-		setUpperLimit(getCurrentPosition());
+		conf.setUpperLimit(getCurrentPosition());
 	}
 	
 	public void setCurrentAsLowerLimit() {
-		setLowerLimit(getCurrentPosition());
+		conf.setLowerLimit(getCurrentPosition());
 	}
 
 	public void setUseLimits(boolean useLimits) {

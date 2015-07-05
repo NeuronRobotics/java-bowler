@@ -19,6 +19,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import com.neuronrobotics.sdk.addons.kinematics.LinkConfiguration;
+import com.neuronrobotics.sdk.addons.kinematics.LinkType;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIOPowerState;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
@@ -121,7 +123,7 @@ public class BasicWalker {
 			    		String type = getTagValue("type",lElement);
 			    		if(useHardware){
 				    		ServoChannel srv = new ServoChannel(getDyio().getChannel(channel));
-				    		WalkerServoLink tmpLink = new WalkerServoLink(srv,home,llimit,ulimit,(scale*inverse),linkLen,type);
+				    		WalkerServoLink tmpLink = new WalkerServoLink(srv,new LinkConfiguration(home,llimit,ulimit,(scale*inverse)),linkLen,type);
 				
 				    		legLinks.add(tmpLink);
 			    		}

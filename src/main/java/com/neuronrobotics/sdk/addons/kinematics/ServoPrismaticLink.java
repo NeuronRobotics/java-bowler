@@ -7,8 +7,8 @@ import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 public class ServoPrismaticLink extends AbstractPrismaticLink{
 	private ServoChannel srv;
 	
-	public ServoPrismaticLink(ServoChannel srv,int home, int lowerLimit, int upperLimit, double scale) {
-		super(home, lowerLimit, upperLimit, scale);
+	public ServoPrismaticLink(ServoChannel srv,LinkConfiguration conf) {
+		super(conf);
 		setServoChannel(srv);
 	}
 

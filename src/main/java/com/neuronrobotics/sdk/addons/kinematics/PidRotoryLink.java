@@ -7,8 +7,8 @@ import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 
 public class PidRotoryLink extends AbstractRotoryLink{
 	private PIDChannel channel;
-	public PidRotoryLink(PIDChannel c,int home, int lowerLimit, int upperLimit, double scale) {
-		super(home, lowerLimit, upperLimit, scale);
+	public PidRotoryLink(PIDChannel c,LinkConfiguration conf) {
+		super(conf);
 		setPIDChannel(c);
 	}
 

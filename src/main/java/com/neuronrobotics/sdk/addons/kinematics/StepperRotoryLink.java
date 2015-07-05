@@ -6,8 +6,8 @@ import com.neuronrobotics.sdk.dyio.peripherals.ICounterOutputListener;
 public class StepperRotoryLink extends AbstractRotoryLink {
 	private CounterOutputChannel channel;
 	
-	public StepperRotoryLink(CounterOutputChannel chan, int home, int lowerLimit, int upperLimit,double scale) {
-		super(home, lowerLimit, upperLimit, scale);
+	public StepperRotoryLink(CounterOutputChannel chan, LinkConfiguration conf) {
+		super(conf);
 		this.setChannel(chan);
 	}
 

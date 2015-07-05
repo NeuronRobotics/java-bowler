@@ -6,8 +6,8 @@ import com.neuronrobotics.sdk.dyio.peripherals.IAnalogInputListener;
 
 public class AnalogRotoryLink  extends AbstractRotoryLink implements IAnalogInputListener{
 	private AnalogInputChannel channel;
-	public AnalogRotoryLink(AnalogInputChannel c,int home, int lowerLimit, int upperLimit, double scale) {
-		super(home, lowerLimit, upperLimit, scale);
+	public AnalogRotoryLink(AnalogInputChannel c,LinkConfiguration conf) {
+		super(conf);
 		setAnalogChannel(c);
 	}
 

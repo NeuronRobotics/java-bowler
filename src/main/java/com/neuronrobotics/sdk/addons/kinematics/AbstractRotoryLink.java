@@ -2,8 +2,8 @@ package com.neuronrobotics.sdk.addons.kinematics;
 
 public abstract class AbstractRotoryLink extends AbstractLink {
 
-	public AbstractRotoryLink(int home, int lowerLimit, int upperLimit,double scale) {
-		super(home, lowerLimit, upperLimit, scale);
+	public AbstractRotoryLink(LinkConfiguration conf) {
+		super(conf);
 		// TODO Auto-generated constructor stub
 	}
 	

@@ -89,6 +89,13 @@ public class LinkConfiguration {
 	public LinkConfiguration() {
 		//default values
 	}
+
+	public LinkConfiguration(int home, int llimit, int ulimit, double d) {
+    	setScale(d);
+    	setUpperLimit(ulimit);
+    	setLowerLimit(llimit);
+    	setStaticOffset(home);
+	}
 	public String toString(){
 		String s="LinkConfiguration: \n\tName: "+getName();
 		if(deviceScriptingName!=null)

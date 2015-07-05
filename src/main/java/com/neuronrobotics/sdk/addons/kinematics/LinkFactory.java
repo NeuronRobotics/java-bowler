@@ -95,10 +95,7 @@ public class LinkFactory {
 				d=(DyIO) DeviceManager.getSpecificDevice(DyIO.class, c.getDeviceScriptingName());
 			if(d!=null)
 				tmp = new AnalogPrismaticLink(	new AnalogInputChannel(d.getChannel(c.getHardwareIndex())), 
-											(int)c.getStaticOffset(),
-											(int)c.getLowerLimit(),
-											(int)c.getUpperLimit(),
-											c.getScale());
+											c);
 			tmp.setUseLimits(false);
 			break;
 		case ANALOG_ROTORY:
@@ -107,10 +104,7 @@ public class LinkFactory {
 				d=(DyIO) DeviceManager.getSpecificDevice(DyIO.class, c.getDeviceScriptingName());
 			if(d!=null)
 				tmp = new AnalogRotoryLink(	new AnalogInputChannel(d.getChannel(c.getHardwareIndex())), 
-											(int)c.getStaticOffset(),
-											(int)c.getLowerLimit(),
-											(int)c.getUpperLimit(),
-											c.getScale());
+											c);
 			tmp.setUseLimits(false);
 			break;
 		case PID_TOOL:
@@ -120,10 +114,7 @@ public class LinkFactory {
 				p=(IPidControlNamespace) DeviceManager.getSpecificDevice(IPidControlNamespace.class, c.getDeviceScriptingName());
 			if(p!=null)
 				tmp=new PidRotoryLink(	p.getPIDChannel(c.getHardwareIndex()),
-										(int)c.getStaticOffset(),
-										(int)c.getLowerLimit(),
-										(int)c.getUpperLimit(),
-										c.getScale());
+										c);
 			tmp.setUseLimits(true);
 			break;
 		case PID_PRISMATIC:
@@ -132,10 +123,7 @@ public class LinkFactory {
 				p=(IPidControlNamespace) DeviceManager.getSpecificDevice(IPidControlNamespace.class, c.getDeviceScriptingName());
 			if(p!=null)
 				tmp=new PidPrismaticLink(	p.getPIDChannel(c.getHardwareIndex()),
-										(int)c.getStaticOffset(),
-										(int)c.getLowerLimit(),
-										(int)c.getUpperLimit(),
-										c.getScale());
+										c);
 			tmp.setUseLimits(true);
 			break;
 		case SERVO_PRISMATIC:
@@ -144,10 +132,7 @@ public class LinkFactory {
 				d=(DyIO) DeviceManager.getSpecificDevice(DyIO.class, c.getDeviceScriptingName());
 			if(d!=null){
 				tmp = new ServoPrismaticLink(	new ServoChannel(d.getChannel(c.getHardwareIndex())), 
-											(int)c.getStaticOffset(),
-											(int)c.getLowerLimit(),
-											(int)c.getUpperLimit(),
-											c.getScale());
+											c);
 				tmp.setUseLimits(true);
 				
 			}
@@ -159,10 +144,7 @@ public class LinkFactory {
 				d=(DyIO) DeviceManager.getSpecificDevice(DyIO.class, c.getDeviceScriptingName());
 			if(d!=null){
 				tmp = new ServoRotoryLink(	new ServoChannel(d.getChannel(c.getHardwareIndex())), 
-											(int)c.getStaticOffset(),
-											(int)c.getLowerLimit(),
-											(int)c.getUpperLimit(),
-											c.getScale());
+											c);
 				tmp.setUseLimits(true);
 				
 			}
@@ -173,10 +155,7 @@ public class LinkFactory {
 				d=(DyIO) DeviceManager.getSpecificDevice(DyIO.class, c.getDeviceScriptingName());
 			if(d!=null){
 				tmp = new StepperPrismaticLink(	new CounterOutputChannel(d.getChannel(c.getHardwareIndex())), 
-											(int)c.getStaticOffset(),
-											(int)c.getLowerLimit(),
-											(int)c.getUpperLimit(),
-											c.getScale());
+											c);
 				tmp.setUseLimits(true);
 				
 			}
@@ -188,10 +167,7 @@ public class LinkFactory {
 				d=(DyIO) DeviceManager.getSpecificDevice(DyIO.class, c.getDeviceScriptingName());
 			if(d!=null){
 				tmp = new StepperRotoryLink(	new CounterOutputChannel(d.getChannel(c.getHardwareIndex())), 
-											(int)c.getStaticOffset(),
-											(int)c.getLowerLimit(),
-											(int)c.getUpperLimit(),
-											c.getScale());
+											c);
 				tmp.setUseLimits(true);
 				
 			}
@@ -199,10 +175,7 @@ public class LinkFactory {
 		case DUMMY:
 		case VIRTUAL:
 			tmp=new PidRotoryLink(	new VirtualGenericPIDDevice(100000).getPIDChannel(c.getHardwareIndex()),
-					(int)c.getStaticOffset(),
-					(int)c.getLowerLimit(),
-					(int)c.getUpperLimit(),
-					c.getScale());
+					c);
 			tmp.setUseLimits(false);
 			break;
 		}
@@ -210,22 +183,17 @@ public class LinkFactory {
 		if(tmp==null){
 			if(!c.getType().isPrismatic()){
 				tmp=new PidRotoryLink(	new VirtualGenericPIDDevice(100000).getPIDChannel(c.getHardwareIndex()),
-						(int)c.getStaticOffset(),
-						(int)c.getLowerLimit(),
-						(int)c.getUpperLimit(),
-						c.getScale());
+						c);
 				tmp.setUseLimits(false);
 			}else{
 				tmp=new PidPrismaticLink(	new VirtualGenericPIDDevice(100000).getPIDChannel(c.getHardwareIndex()),
-						(int)c.getStaticOffset(),
-						(int)c.getLowerLimit(),
-						(int)c.getUpperLimit(),
-						c.getScale());
+						c);
 				tmp.setUseLimits(false);
 			}
 		}
 		tmp.setLinkConfiguration(c);
 		links.add(tmp);
+		getLinkConfigurations().add(c);
 		return tmp;
 	}
 	
@@ -300,9 +268,6 @@ public class LinkFactory {
 	public ArrayList<LinkConfiguration> getLinkConfigurations() {
 		if(linkConfigurations== null){
 			linkConfigurations=new ArrayList<LinkConfiguration>();
-			for(AbstractLink l:links){
-				linkConfigurations.add(l.getLinkConfiguration());
-			}
 		}
 		return linkConfigurations;
 	}

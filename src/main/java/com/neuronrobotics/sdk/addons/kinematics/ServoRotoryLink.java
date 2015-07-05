@@ -7,8 +7,8 @@ import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 public class ServoRotoryLink extends AbstractRotoryLink{
 	private ServoChannel srv;
 	
-	public ServoRotoryLink(ServoChannel srv,int home, int lowerLimit, int upperLimit, double scale) {
-		super(home, lowerLimit, upperLimit, scale);
+	public ServoRotoryLink(ServoChannel srv,LinkConfiguration conf) {
+		super(conf);
 		setServoChannel(srv);
 	}
 
