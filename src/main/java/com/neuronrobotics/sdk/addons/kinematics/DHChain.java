@@ -313,11 +313,12 @@ public  class DHChain {
 					inv[1] = -Math.toDegrees((A+elevation+links.get(1).getTheta()));
 					inv[2] = (Math.toDegrees(C))+//interior angle of the triangle, map to external angle
 							Math.toDegrees(links.get(2).getTheta());// offset for kinematics
-					if(links.size()>3){
+					if(links.size()>3)
 						inv[3] =(inv[1] -inv[2]);// keep it parallell
 						// We know the wrist twist will always be 0 for this model
+					if(links.size()>4)
 						inv[4] = inv[0];//keep the camera orentation paralell from the base
-					}
+					
 					for(int i=0;i<inv.length;i++){
 						Log.info( "Link#"+i+" is set to "+inv[i]);
 					}
