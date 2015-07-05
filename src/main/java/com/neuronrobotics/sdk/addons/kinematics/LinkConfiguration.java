@@ -86,6 +86,9 @@ public class LinkConfiguration {
     	setType(LinkType.PID);
     	setTotlaNumberOfLinks((Integer)args[1]);
 	}
+	public LinkConfiguration() {
+		//default values
+	}
 	public String toString(){
 		String s="LinkConfiguration: \n\tName: "+getName();
 		if(deviceScriptingName!=null)
