@@ -6,6 +6,7 @@ import com.neuronrobotics.sdk.common.DeviceManager;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.peripherals.AnalogInputChannel;
+import com.neuronrobotics.sdk.dyio.peripherals.CounterOutputChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 import com.neuronrobotics.sdk.namespace.bcs.pid.IExtendedPIDControl;
 import com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace;
@@ -84,9 +85,76 @@ public class LinkFactory {
 		}
 		AbstractLink tmp=null;
 		System.err.println("Loading link: "+c.getName()+" type = "+c.getType()+" device= "+c.getDeviceScriptingName());
-		if(c.getType().equals("servo-rotory") || c.getType().equals("servo-tool")){
-			
-			DyIO d = dyio;
+		DyIO d;
+		IPidControlNamespace p;
+		switch(c.getType()){
+
+		case ANALOG_PRISMATIC:
+			d = dyio;
+			if(c.getDeviceScriptingName()!=null)
+				d=(DyIO) DeviceManager.getSpecificDevice(DyIO.class, c.getDeviceScriptingName());
+			if(d!=null)
+				tmp = new AnalogPrismaticLink(	new AnalogInputChannel(d.getChannel(c.getHardwareIndex())), 
+											(int)c.getStaticOffset(),
+											(int)c.getLowerLimit(),
+											(int)c.getUpperLimit(),
+											c.getScale());
+			tmp.setUseLimits(false);
+			break;
+		case ANALOG_ROTORY:
+			d = dyio;
+			if(c.getDeviceScriptingName()!=null)
+				d=(DyIO) DeviceManager.getSpecificDevice(DyIO.class, c.getDeviceScriptingName());
+			if(d!=null)
+				tmp = new AnalogRotoryLink(	new AnalogInputChannel(d.getChannel(c.getHardwareIndex())), 
+											(int)c.getStaticOffset(),
+											(int)c.getLowerLimit(),
+											(int)c.getUpperLimit(),
+											c.getScale());
+			tmp.setUseLimits(false);
+			break;
+		case PID_TOOL:
+		case PID:
+			p = pid;
+			if(c.getDeviceScriptingName()!=null)
+				p=(IPidControlNamespace) DeviceManager.getSpecificDevice(IPidControlNamespace.class, c.getDeviceScriptingName());
+			if(p!=null)
+				tmp=new PidRotoryLink(	p.getPIDChannel(c.getHardwareIndex()),
+										(int)c.getStaticOffset(),
+										(int)c.getLowerLimit(),
+										(int)c.getUpperLimit(),
+										c.getScale());
+			tmp.setUseLimits(true);
+			break;
+		case PID_PRISMATIC:
+			 p = pid;
+			if(c.getDeviceScriptingName()!=null)
+				p=(IPidControlNamespace) DeviceManager.getSpecificDevice(IPidControlNamespace.class, c.getDeviceScriptingName());
+			if(p!=null)
+				tmp=new PidPrismaticLink(	p.getPIDChannel(c.getHardwareIndex()),
+										(int)c.getStaticOffset(),
+										(int)c.getLowerLimit(),
+										(int)c.getUpperLimit(),
+										c.getScale());
+			tmp.setUseLimits(true);
+			break;
+		case SERVO_PRISMATIC:
+			d = dyio;
+			if(c.getDeviceScriptingName()!=null)
+				d=(DyIO) DeviceManager.getSpecificDevice(DyIO.class, c.getDeviceScriptingName());
+			if(d!=null){
+				tmp = new ServoPrismaticLink(	new ServoChannel(d.getChannel(c.getHardwareIndex())), 
+											(int)c.getStaticOffset(),
+											(int)c.getLowerLimit(),
+											(int)c.getUpperLimit(),
+											c.getScale());
+				tmp.setUseLimits(true);
+				
+			}
+			break;
+		case SERVO_ROTORY:
+		case SERVO_TOOL:
+			d = dyio;
 			if(c.getDeviceScriptingName()!=null)
 				d=(DyIO) DeviceManager.getSpecificDevice(DyIO.class, c.getDeviceScriptingName());
 			if(d!=null){
@@ -98,45 +166,63 @@ public class LinkFactory {
 				tmp.setUseLimits(true);
 				
 			}
-		}else if(c.getType().equals("analog-rotory")){
-			DyIO d = dyio;
+			break;
+		case STEPPER_PRISMATIC:
+			d = dyio;
 			if(c.getDeviceScriptingName()!=null)
 				d=(DyIO) DeviceManager.getSpecificDevice(DyIO.class, c.getDeviceScriptingName());
-			if(d!=null)
-				tmp = new AnalogRotoryLink(	new AnalogInputChannel(d.getChannel(c.getHardwareIndex())), 
+			if(d!=null){
+				tmp = new StepperPrismaticLink(	new CounterOutputChannel(d.getChannel(c.getHardwareIndex())), 
 											(int)c.getStaticOffset(),
 											(int)c.getLowerLimit(),
 											(int)c.getUpperLimit(),
 											c.getScale());
-			tmp.setUseLimits(false);
-		} else if (c.getType().equals("dummy")|| c.getType().equals("virtual")){
+				tmp.setUseLimits(true);
+				
+			}
+			break;
+		case STEPPER_TOOL:
+		case STEPPER_ROTORY:
+			d = dyio;
+			if(c.getDeviceScriptingName()!=null)
+				d=(DyIO) DeviceManager.getSpecificDevice(DyIO.class, c.getDeviceScriptingName());
+			if(d!=null){
+				tmp = new StepperRotoryLink(	new CounterOutputChannel(d.getChannel(c.getHardwareIndex())), 
+											(int)c.getStaticOffset(),
+											(int)c.getLowerLimit(),
+											(int)c.getUpperLimit(),
+											c.getScale());
+				tmp.setUseLimits(true);
+				
+			}
+			break;
+		case DUMMY:
+		case VIRTUAL:
 			tmp=new PidRotoryLink(	new VirtualGenericPIDDevice(100000).getPIDChannel(c.getHardwareIndex()),
 					(int)c.getStaticOffset(),
 					(int)c.getLowerLimit(),
 					(int)c.getUpperLimit(),
 					c.getScale());
 			tmp.setUseLimits(false);
-		}else{
-			IPidControlNamespace p = pid;
-			if(c.getDeviceScriptingName()!=null)
-				p=(IPidControlNamespace) DeviceManager.getSpecificDevice(IPidControlNamespace.class, c.getDeviceScriptingName());
-			if(p!=null)
-				tmp=new PidRotoryLink(	p.getPIDChannel(c.getHardwareIndex()),
-										(int)c.getStaticOffset(),
-										(int)c.getLowerLimit(),
-										(int)c.getUpperLimit(),
-										c.getScale());
-			tmp.setUseLimits(true);
+			break;
 		}
-	
 		
 		if(tmp==null){
-			tmp=new PidRotoryLink(	new VirtualGenericPIDDevice(100000).getPIDChannel(c.getHardwareIndex()),
-					(int)c.getStaticOffset(),
-					(int)c.getLowerLimit(),
-					(int)c.getUpperLimit(),
-					c.getScale());
-			tmp.setUseLimits(false);
+			if(!c.getType().isPrismatic()){
+				tmp=new PidRotoryLink(	new VirtualGenericPIDDevice(100000).getPIDChannel(c.getHardwareIndex()),
+						(int)c.getStaticOffset(),
+						(int)c.getLowerLimit(),
+						(int)c.getUpperLimit(),
+						c.getScale());
+				tmp.setUseLimits(false);
+			}else{
+				tmp=new PidPrismaticLink(	new VirtualGenericPIDDevice(100000).getPIDChannel(c.getHardwareIndex()),
+						(int)c.getStaticOffset(),
+						(int)c.getLowerLimit(),
+						(int)c.getUpperLimit(),
+						c.getScale());
+				tmp.setUseLimits(false);
+			}
 		}
 		tmp.setLinkConfiguration(c);
 		links.add(tmp);

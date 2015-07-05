@@ -9,8 +9,10 @@ public enum LinkType {
 	SERVO_TOOL("servo-tool"), 
 	SERVO_PRISMATIC("servo-prismatic"), 
 	PID("pid"),
+	PID_TOOL("pid-tool"), 
 	PID_PRISMATIC("pid-prismatic"), 
 	ANALOG_ROTORY("analog-rotory"),
+	ANALOG_PRISMATIC("analog-prismatic"),
 	DUMMY("dummy"),
 	VIRTUAL("virtual"),
 	STEPPER_ROTORY("stepper-rotory"), 
@@ -56,14 +58,29 @@ public enum LinkType {
 	 
 	 public boolean isTool(){
 		 switch(this){
+		case SERVO_TOOL:
 		case STEPPER_TOOL:
+		case PID_TOOL:
 			return true;
 		default:
 			return false;
 		 
-		 }
-		 
+		 } 
 	 }
+	 
+	 public boolean isPrismatic(){
+		 switch(this){
+		case ANALOG_PRISMATIC:
+		case PID_PRISMATIC:
+		case SERVO_PRISMATIC:
+		case STEPPER_PRISMATIC:
+			return true;
+		default:
+			return false;
+
+		 } 
+	 }
+	 
 	 
 	 @Override
 	 public String toString(){
