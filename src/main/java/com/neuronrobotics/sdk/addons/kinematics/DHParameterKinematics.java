@@ -124,7 +124,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 		for(int i=0;i<dhLinks.size();i++){
 			Affine a = new Affine();
 			dhLinks.get(i).setListener(a);
-			if(getLinkConfiguration(i).getType().contains("tool")){
+			if(getLinkConfiguration(i).getType().isTool()){
 				dhLinks.get(i).setDegenerate(true);
 			}
 			linksListeners.add(a);

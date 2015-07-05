@@ -227,7 +227,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 			c.setLinkIndex(i);
 			getFactory().getLink(c);
 			Log.info("\nAxis #"+i+" Configuration:\n"+c);
-			if(c.getType().contains("pid")){
+			if(c.getType()==LinkType.PID){
 				IPidControlNamespace device = getFactory().getPid();
 				try{
 					PIDConfiguration tmpConf = device.getPIDConfiguration(c.getHardwareIndex());
@@ -620,7 +620,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 			throw new IndexOutOfBoundsException("There are only "+getNumberOfLinks()+" known links, requested:"+link);
 		}
 		LinkConfiguration conf = getLinkConfiguration(link);
-		if(conf.getType().contains("pid")){
+		if(conf.getType() == LinkType.PID){
 			getFactory().getPid().removePIDEventListener(this);
 			//Range is in encoder units
 			double range = Math.abs(conf.getUpperLimit()-conf.getLowerLimit())*2;

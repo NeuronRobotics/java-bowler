@@ -12,21 +12,21 @@ import com.neuronrobotics.sdk.pid.PIDConfiguration;
 
 
 public class LinkConfiguration {
-	private String name;// = getTagValue("name",eElement);
-	private String type;
-	private int index;// = Double.parseDouble(getTagValue("index",eElement));
+	private String name="newLink";// = getTagValue("name",eElement);
+	private LinkType type=LinkType.VIRTUAL;
+	private int index=0;// = Double.parseDouble(getTagValue("index",eElement));
 	private int totlaNumberOfLinks=0;
 	private int linkIndex = 0;
 	//private double length;// = Double.parseDouble(getTagValue("length",eElement));
-	private double scale;// = Double.parseDouble(getTagValue("scale",eElement));
-	private double upperLimit;// = Double.parseDouble(getTagValue("upperLimit",eElement));
-	private double lowerLimit;// = Double.parseDouble(getTagValue("lowerLimit",eElement));
-	private double k[] = new double[3];
-	private boolean inverted;
-	private boolean isLatch;
+	private double scale=1.0;// = Double.parseDouble(getTagValue("scale",eElement));
+	private double upperLimit=100000;// = Double.parseDouble(getTagValue("upperLimit",eElement));
+	private double lowerLimit=-100000;// = Double.parseDouble(getTagValue("lowerLimit",eElement));
+	private double k[] = new double[]{1,0,0};
+	private boolean inverted=false;
+	private boolean isLatch=false;
 	private int indexLatch=0;
-	private boolean isStopOnLatch;
-	private int homingTicksPerSecond;
+	private boolean isStopOnLatch=false;
+	private int homingTicksPerSecond=10000000;
 	private double upperVelocity = 100000000;
 	private double lowerVelocity = -100000000;
 	private String deviceScriptingName=null;
@@ -44,11 +44,11 @@ public class LinkConfiguration {
     		// no device from connection engine specified
     	}
     	try{
-    		setType(XmlFactory.getTagValue("type",eElement));
+    		setType(LinkType.fromString(XmlFactory.getTagValue("type",eElement)));
     	}catch (NullPointerException e){
-    		setType("pid");
+    		setType(LinkType.PID);
     	}
-    	if(getType().contains("pid")){
+    	if(getType()==LinkType.PID){
     		try{
 		    	k[0]=Double.parseDouble(XmlFactory.getTagValue("pGain",eElement));
 		    	k[1]=Double.parseDouble(XmlFactory.getTagValue("iGain",eElement));
@@ -83,7 +83,7 @@ public class LinkConfiguration {
     	setScale((Double)args[5]);
     	setUpperLimit((Integer)args[4]);
     	setLowerLimit((Integer)args[3]);
-    	setType("pid");
+    	setType(LinkType.PID);
     	setTotlaNumberOfLinks((Integer)args[1]);
 	}
 	public String toString(){
@@ -204,14 +204,14 @@ public class LinkConfiguration {
 	public int getHomingTicksPerSecond() {
 		return homingTicksPerSecond;
 	}
-	public void setType(String type) {
+	public void setType(LinkType type) {
 		if(type!=null)
 			this.type = type;
 		else
-			this.type="pid";
+			this.type=LinkType.VIRTUAL;
 	}
-	public String getType() {
-		return type.toLowerCase();
+	public LinkType getType() {
+		return type;
 	}
 	public void setUpperVelocity(double upperVelocity) {
 		this.upperVelocity = upperVelocity;
@@ -251,7 +251,7 @@ public class LinkConfiguration {
 	}
 	public void setPidConfiguration(IPidControlNamespace pid) {
 		PIDConfiguration conf = pid.getPIDConfiguration(getHardwareIndex());
-    	if(getType().contains("pid")){
+    	if(getType()==LinkType.PID){
 	    	k[0]=conf.getKP();
 	    	k[1]=conf.getKI();
 	    	k[2]=conf.getKD();
