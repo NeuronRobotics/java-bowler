@@ -98,6 +98,16 @@ public class RotationNR {
 
 		return new RotationNR(rotation);
 	}
+	
+	// create a new object with the given simplified rotations
+	public RotationNR( double x, double y, double z) {
+		TransformNR tmp = new TransformNR();
+		
+		tmp = tmp.times(new TransformNR(0, 0, 0, RotationNR.getRotationX(x)));
+		tmp = tmp.times(new TransformNR(0, 0, 0, RotationNR.getRotationY(y)));
+		tmp = tmp.times(new TransformNR(0, 0, 0, RotationNR.getRotationZ(z)));
+		loadRotations(tmp.getRotationMatrixArray());
+	}
 
 	// create a new object with the given components
 	public RotationNR(double w, double x, double y, double z) {

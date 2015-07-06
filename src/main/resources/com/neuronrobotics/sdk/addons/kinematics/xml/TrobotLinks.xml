@@ -13,7 +13,7 @@
 	<isLatch>true</isLatch>
 	<indexLatch>235</indexLatch>
 	<isStopOnLatch>false</isStopOnLatch>
-	<homingTPS>0</homingTPS>
+	<homingTPS>10000000</homingTPS>
 
 	<DHParameters>
 		<Delta>13.0</Delta>
@@ -37,7 +37,7 @@
 	<isLatch>true</isLatch>
 	<indexLatch>128</indexLatch>
 	<isStopOnLatch>false</isStopOnLatch>
-	<homingTPS>0</homingTPS>
+	<homingTPS>10000000</homingTPS>
 
 	<DHParameters>
 		<Delta>25.0</Delta>
@@ -61,7 +61,7 @@
 	<isLatch>true</isLatch>
 	<indexLatch>121</indexLatch>
 	<isStopOnLatch>false</isStopOnLatch>
-	<homingTPS>0</homingTPS>
+	<homingTPS>10000000</homingTPS>
 
 	<DHParameters>
 		<Delta>11.0</Delta>
@@ -85,7 +85,7 @@
 	<isLatch>true</isLatch>
 	<indexLatch>175</indexLatch>
 	<isStopOnLatch>false</isStopOnLatch>
-	<homingTPS>0</homingTPS>
+	<homingTPS>10000000</homingTPS>
 
 	<DHParameters>
 		<Delta>0.0</Delta>
@@ -109,7 +109,7 @@
 	<isLatch>true</isLatch>
 	<indexLatch>255</indexLatch>
 	<isStopOnLatch>false</isStopOnLatch>
-	<homingTPS>0</homingTPS>
+	<homingTPS>10000000</homingTPS>
 
 	<DHParameters>
 		<Delta>98.0</Delta>
@@ -128,12 +128,12 @@
 	<roty>0.0</roty>
 	<rotz>0.0</rotz>
 </ZframeToRAS>
-<baseToZframe>	<x>0.0</x>
-	<y>0.0</y>
+<baseToZframe>	<x>200.0</x>
+	<y>200.0</y>
 	<z>0.0</z>
-	<rotw>1.0</rotw>
+	<rotw>0.7071067811865476</rotw>
 	<rotx>0.0</rotx>
 	<roty>0.0</roty>
-	<rotz>0.0</rotz>
+	<rotz>-0.7071067811865475</rotz>
 </baseToZframe>
 </root>

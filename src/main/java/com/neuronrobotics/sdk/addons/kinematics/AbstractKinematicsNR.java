@@ -488,7 +488,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		Matrix ztr = getRobotToFiducialTransform().getMatrixTransform().inverse();
 
 		Matrix current = t.getMatrixTransform();
-		Matrix mForward = rtz.times(ztr).times(current);
+		Matrix mForward = ztr.times(rtz).times(current);
 		
 		return new TransformNR( mForward);
 	}

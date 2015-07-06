@@ -229,6 +229,10 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 		factory.addLinkListener(this);
 	}
 
+	public void setRobotToFiducialTransform(TransformNR newTrans) {
+		setBaseToZframeTransform(newTrans);
+	}
+
 
 
 
