@@ -303,11 +303,18 @@ public class RotationNR {
 	
 	private double calculateAxisAngle(double quaturnian){
 		double w = getRotationMatrix2QuaturnionW();
+		double neg = quaturnian<0?-1:1;
 		quaturnian=Math.abs(quaturnian);
 		double s = Math.sqrt(1-w*w);
-		if(s<.001)
+		if(Math.abs(s)<.001)
 			return quaturnian;
-		return quaturnian/s;
+		double angle = 2*Math.acos(w);
+		double currentAxis = (quaturnian/s);
+		double degAng=Math.toDegrees(angle);
+		double ret=(angle*currentAxis)*neg;
+		double deg=Math.toDegrees(ret);
+		
+		return ret;
 	}
 	
 
