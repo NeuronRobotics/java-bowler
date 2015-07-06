@@ -24,8 +24,10 @@ public  class DHChain {
 	private double[] lowerLimits;
 	private boolean debug=false;
 	private DhInverseSolver is;
+	private AbstractKinematicsNR kin;
 	
-	public DHChain(InputStream configFile,LinkFactory f){
+	public DHChain(InputStream configFile,LinkFactory f, AbstractKinematicsNR kin){
+		this.kin = kin;
 		NodeList nList = XmlFactory.getAllNodesFromTag("DHParameters", configFile);
 		for (int i = 0; i < nList.getLength(); i++) {			
 		    Node nNode = nList.item(i);
@@ -180,8 +182,10 @@ public  class DHChain {
 			Platform.runLater(new Runnable() {
 				@Override
 				public void run() {
-							TransformFactory.getTransform(new TransformNR(update), getLinks().get(index).getListener());
+							TransformFactory.getTransform(forwardOffset(new TransformNR(update)), getLinks().get(index).getListener());
 				}
+
+
 			});
 			if(store){
 				intChain.add(new TransformNR(step));
@@ -190,6 +194,10 @@ public  class DHChain {
 		}
 		//Log.info( "Final:\n"+current);
 		return current;
+	}
+	
+	private TransformNR forwardOffset(TransformNR transformNR) {
+		return kin.forwardOffset(transformNR);
 	}
 
 	public void setChain(ArrayList<TransformNR> chain) {

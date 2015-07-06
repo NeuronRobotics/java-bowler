@@ -65,7 +65,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 	}
 	public DHParameterKinematics( BowlerAbstractDevice dev, InputStream linkStream, InputStream dhStream) {
 		super(linkStream,new LinkFactory( dev));
-		setChain(new DHChain(dhStream,getFactory()));
+		setChain(new DHChain(dhStream,getFactory(),this));
 		dev.addConnectionEventListener(l);
 	}
 	public DHParameterKinematics( BowlerAbstractDevice dev, File configFile) throws FileNotFoundException {
@@ -74,7 +74,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 
 	public DHParameterKinematics(InputStream linkStream, InputStream dhStream) {
 		super(linkStream,new LinkFactory());
-		setChain(new DHChain(dhStream,getFactory()));
+		setChain(new DHChain(dhStream,getFactory(),this));
 	}
 
 	@Override

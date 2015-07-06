@@ -456,7 +456,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		return fiducial2RAS;
 	}
 
-	private void setBaseToZframeTransform(TransformNR baseToFiducial) {
+	public void setBaseToZframeTransform(TransformNR baseToFiducial) {
 		Log.info("Setting Fiducial To base Transform "+baseToFiducial);
 		this.base2Fiducial = baseToFiducial;
 		for(IRegistrationListenerNR r: regListeners){
