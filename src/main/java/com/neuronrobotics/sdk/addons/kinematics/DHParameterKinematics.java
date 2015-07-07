@@ -155,6 +155,16 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 	 */
 	public String getXml(){
 		String xml = "<root>\n";
+		xml+=getEmbedableXml();
+		xml+="\n</root>";
+		return xml;
+	}
+	/*
+	 * 
+	 * Generate the xml configuration to generate an XML of this robot. 
+	 */
+	public String getEmbedableXml(){
+		String xml = "";
 		ArrayList<DHLink> dhLinks = chain.getLinks();
 		for(int i=0;i<dhLinks.size();i++){
 			xml+="<link>\n";
@@ -162,14 +172,13 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 			xml+=dhLinks.get(i).getXml();
 			xml+="\n</link>\n";
 		}
-		xml+="\n<ZframeToRAS>";
+		xml+="\n<ZframeToRAS\n>";
 		xml+=getFiducialToGlobalTransform().getXml();
-		xml+="\n</ZframeToRAS>";
+		xml+="\n</ZframeToRAS>\n";
 		
-		xml+="\n<baseToZframe>";
+		xml+="\n<baseToZframe>\n";
 		xml+=getRobotToFiducialTransform().getXml();
-		xml+="\n</baseToZframe>";
-		xml+="\n</root>";
+		xml+="\n</baseToZframe>\n";
 		return xml;
 	}
 
