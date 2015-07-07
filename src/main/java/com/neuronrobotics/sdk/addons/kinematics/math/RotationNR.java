@@ -344,14 +344,14 @@ public class RotationNR {
 		aw=Math.abs(w);
 		double target=.01;
 		
-		if(		bound(ay-target,ay+target,ax)
+		if(		  bound(ay-target,ay+target,ax)
 				&&bound(az-target,az+target,ax)
 				&&bound(ay-target,ay+target,az)
 				&&bound(ay-target,ay+target,aw)
 				&&bound(az-target,az+target,aw)
 				&&bound(ax-target,ax+target,aw)
 				){
-			Log.warning("Zeroing the rotation vector");
+			//Log.warning("Zeroing the rotation vector");
 			x=y=z=0.0;
 		}
 			
