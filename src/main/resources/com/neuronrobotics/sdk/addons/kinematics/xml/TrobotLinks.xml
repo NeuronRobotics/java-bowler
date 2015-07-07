@@ -120,7 +120,7 @@
 
 </link>
 
-<ZframeToRAS>	<x>0</x>
+<ZframeToRAS>	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
 	<rotw>1.0</rotw>
@@ -131,9 +131,9 @@
 <baseToZframe>	<x>200.0</x>
 	<y>200.0</y>
 	<z>0.0</z>
-	<rotw>0.7167980081795148</rotw>
+	<rotw>0.7071067811865476</rotw>
 	<rotx>0.0</rotx>
 	<roty>0.0</roty>
-	<rotz>-0.6972808727262496</rotz>
+	<rotz>-0.7071067811865475</rotz>
 </baseToZframe>
 </root>

@@ -1,5 +1,7 @@
 package com.neuronrobotics.sdk.addons.kinematics.math;
 
+import com.neuronrobotics.sdk.common.Log;
+
 import Jama.Matrix;
 
 /**
@@ -169,7 +171,11 @@ public class RotationNR {
 				+"W="+ getRotationMatrix2QuaturnionW() + ", "
 				+"x="+ getRotationMatrix2QuaturnionX() + ", "
 				+"y="+ getRotationMatrix2QuaturnionY() + ", "
-				+"z="+ getRotationMatrix2QuaturnionZ() + "";
+				+"z="+ getRotationMatrix2QuaturnionZ() + "\n"+
+				 "Rotation angle (degrees): "
+					+"rx="+ getRotationX() + ", "
+					+"ry="+ getRotationY() + ", "
+					+"rz="+ getRotationZ() + "";
 	}
 	
 	// return a string representation of the invoking object
@@ -232,16 +238,17 @@ public class RotationNR {
 		double epsilon2 = 0.1; // margin to distinguish between 0 and 180 degrees
 		// optional check that input is pure rotation, 'isRotationMatrix' is defined at:
 		// http://www.euclideanspace.com/maths/algebra/matrix/orthogonal/rotation/
-		if ((Math.abs(rotationMatrix[0][1]-rotationMatrix[1][0])< epsilon)
-		  && (Math.abs(rotationMatrix[0][2]-rotationMatrix[2][0])< epsilon)
-		  && (Math.abs(rotationMatrix[1][2]-rotationMatrix[2][1])< epsilon)) {
+		if (( (Math.abs(rotationMatrix[0][1])-Math.abs(rotationMatrix[1][0]))< epsilon)
+		  && ((Math.abs(rotationMatrix[0][2])-Math.abs(rotationMatrix[2][0]))< epsilon)
+		  && ((Math.abs(rotationMatrix[1][2])-Math.abs(rotationMatrix[2][1]))< epsilon)) {
 			// singularity found
 			// first check for identity matrix which must have +1 for all terms
 			//  in leading diagonaland zero in other terms
-			if ((Math.abs(rotationMatrix[0][1]+rotationMatrix[1][0]) < epsilon2)
-			  && (Math.abs(rotationMatrix[0][2]+rotationMatrix[2][0]) < epsilon2)
-			  && (Math.abs(rotationMatrix[1][2]+rotationMatrix[2][1]) < epsilon2)
-			  && (Math.abs(rotationMatrix[0][0]+rotationMatrix[1][1]+rotationMatrix[2][2]-3) < epsilon2)) {
+			if (
+					(Math.abs(rotationMatrix[0][1])+Math.abs(rotationMatrix[1][0])) < epsilon2
+			  && 	(Math.abs(rotationMatrix[0][2])+Math.abs(rotationMatrix[2][0])) < epsilon2
+			  && 	(Math.abs(rotationMatrix[1][2])+Math.abs(rotationMatrix[2][1]))< epsilon2
+			  && 	(Math.abs(rotationMatrix[0][0])+Math.abs(rotationMatrix[1][1])+Math.abs(rotationMatrix[2][2])-3) < epsilon2) {
 				// this singularity is identity matrix so angle = 0
 				return new double[]{0,1,0,0}; // zero angle, arbitrary axis
 			}
@@ -302,14 +309,18 @@ public class RotationNR {
 
 	
 	private double calculateAxisAngle(double quaturnian){
-		double w = getRotationMatrix2QuaturnionW();
+		double w =getRotationMatrix2QuaturnionW();
 		double neg = quaturnian<0?-1:1;
 		quaturnian=Math.abs(quaturnian);
 		double s = Math.sqrt(1-w*w);
-		if(Math.abs(s)<.001)
-			return quaturnian;
+		double currentAxis;
+		if(Math.abs(s)<.001||Double.isNaN(s))
+			currentAxis= 0;
+		else
+			 currentAxis = (quaturnian/s);
 		double angle = 2*Math.acos(w);
-		double currentAxis = (quaturnian/s);
+		if(Double.isNaN(angle))
+			angle=0;
 		double degAng=Math.toDegrees(angle);
 		double ret=(angle*currentAxis)*neg;
 		double deg=Math.toDegrees(ret);
@@ -317,19 +328,61 @@ public class RotationNR {
 		return ret;
 	}
 	
-
+	private  boolean bound(double low, double high, double n) {
+	    return n >= low && n <= high;
+	}
+	private double getRotAngle(int index){
+		double x,y,z,w;
+		x=calculateAxisAngle(getRotationMatrix2QuaturnionX() );
+		y=calculateAxisAngle(getRotationMatrix2QuaturnionY() );
+		z=calculateAxisAngle(getRotationMatrix2QuaturnionZ() );
+		w=calculateAxisAngle(getRotationMatrix2QuaturnionW() );
+		double ax,ay,az,aw;
+		ax=Math.abs(x);
+		ay=Math.abs(y);
+		az=Math.abs(z);
+		aw=Math.abs(w);
+		double target=.01;
+		
+		if(		bound(ay-target,ay+target,ax)
+				&&bound(az-target,az+target,ax)
+				&&bound(ay-target,ay+target,az)
+				&&bound(ay-target,ay+target,aw)
+				&&bound(az-target,az+target,aw)
+				&&bound(ax-target,ax+target,aw)
+				){
+			Log.warning("Zeroing the rotation vector");
+			x=y=z=0.0;
+		}
+			
+		
+		switch(index){
+		case 0:
+			return x;
+		case 1:
+			return y;
+		case 2:
+			return z;
+		default: 
+			return 0;
+		}
+		
+	}
+	
 	public double getRotationX() {
 
-		return calculateAxisAngle(getRotationMatrix2QuaturnionX());
+		return getRotAngle(0) ;
 
 	}
 
 	public double getRotationY() {
-		return calculateAxisAngle(getRotationMatrix2QuaturnionY());
+		
+		return getRotAngle(1);
 	}
 
 	public double getRotationZ() {
-		return calculateAxisAngle(getRotationMatrix2QuaturnionZ());
+		
+		return getRotAngle(2) ;
 	}
 
 	public double getRotationMatrix2QuaturnionW() {
