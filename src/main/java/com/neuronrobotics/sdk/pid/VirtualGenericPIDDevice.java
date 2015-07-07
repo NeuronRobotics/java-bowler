@@ -19,8 +19,11 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 	SyncThread sync = new SyncThread ();
 	private double maxTicksPerSecond;
 	
-	private int numChannels = 16;
+	private int numChannels = 24;
 	
+	public  VirtualGenericPIDDevice( ) {
+		this(1000000);
+	}
 	public  VirtualGenericPIDDevice( double maxTicksPerSecond) {
 		this.setMaxTicksPerSecond(maxTicksPerSecond);
 		getImplementation().setChannelCount(new Integer(numChannels));

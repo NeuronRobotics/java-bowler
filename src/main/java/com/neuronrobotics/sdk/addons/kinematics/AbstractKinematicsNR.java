@@ -326,6 +326,30 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	}
 	
 	/**
+	 * Checks the desired pose for ability for the IK to calculate a valid pose
+	 * @param taskSpaceTransform
+	 * @return True if pose is reachable, false if it is not
+	 */
+	public boolean checkTaskSpaceTransform(TransformNR taskSpaceTransform) {
+		try{
+			Log.info("Checking target pose: "+taskSpaceTransform);
+			taskSpaceTransform = inverseOffset(taskSpaceTransform);
+			double [] jointSpaceVect = inverseKinematics(taskSpaceTransform);
+			double[] uLim=factory.getUpperLimits();
+			double[] lLim=factory.getLowerLimits();
+			for(int i=0;i<jointSpaceVect.length;i++){
+				if(jointSpaceVect[i]>uLim[i])
+					return false;
+				if(jointSpaceVect[i]<lLim[i])
+					return false;
+			}
+		}catch(Exception ex){
+			return false;
+		}
+		return true;
+	}
+	
+	/**
 	 * This calculates the target pose 
 	 * @param JointSpaceVector the target joint space vector
 	 * @param seconds the time for the transition to take from current position to target, unit seconds
@@ -728,4 +752,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		}
 	}
 
+	public void setRobotToFiducialTransform(TransformNR newTrans) {
+		setBaseToZframeTransform(newTrans);
+	}
 }

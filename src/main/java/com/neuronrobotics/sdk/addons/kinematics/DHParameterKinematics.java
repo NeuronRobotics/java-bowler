@@ -19,6 +19,7 @@ import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
+import com.neuronrobotics.sdk.common.DeviceManager;
 import com.neuronrobotics.sdk.common.IConnectionEventListener;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.pid.GenericPIDDevice;
@@ -43,39 +44,44 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 		@Override public void onConnect(BowlerAbstractConnection source) {}
 	} ;
 	
+	
+	public DHParameterKinematics( BowlerAbstractDevice bad, InputStream linkStream, InputStream dhStream) {
+		super(linkStream,new LinkFactory(bad));
+		setChain(new DHChain(dhStream,getFactory(),this));
+		if(getFactory().getDyio()!=null)
+			getFactory().getDyio().addConnectionEventListener(l);
+	}
+	
+	
+	public DHParameterKinematics(BowlerAbstractDevice bad) {
+		this(bad,XmlFactory.getDefaultConfigurationStream("TrobotLinks.xml"),XmlFactory.getDefaultConfigurationStream("TrobotLinks.xml"));
+	}
+
+	public DHParameterKinematics(BowlerAbstractDevice bad, String file) {
+		this(bad,XmlFactory.getDefaultConfigurationStream(file),XmlFactory.getDefaultConfigurationStream(file));
+	}
+
+	public DHParameterKinematics(BowlerAbstractDevice bad,  File configFile) throws FileNotFoundException {
+		this(bad,new FileInputStream(configFile),new FileInputStream(configFile));
+	}
+	
 	public DHParameterKinematics() {
-		this(new VirtualGenericPIDDevice(100000),"TrobotLinks.xml");
+		this(null,XmlFactory.getDefaultConfigurationStream("TrobotLinks.xml"),XmlFactory.getDefaultConfigurationStream("TrobotLinks.xml"));
 	}
 	
-	public DHParameterKinematics( DyIO dev) {
-		this(dev,"TrobotLinks.xml");
 
+	public DHParameterKinematics( String file) {
+		this(null,XmlFactory.getDefaultConfigurationStream(file),XmlFactory.getDefaultConfigurationStream(file));
 	}
-	public DHParameterKinematics( DyIO dev, String file) {
-		this(dev,XmlFactory.getDefaultConfigurationStream(file),XmlFactory.getDefaultConfigurationStream(file));
-	}
-	public DHParameterKinematics( GenericPIDDevice dev) {
-		this(dev,"TrobotLinks.xml");
 
+	public DHParameterKinematics( InputStream linkStream, InputStream dhStream) {
+		this(null,linkStream,dhStream);
 	}
 	
-	public DHParameterKinematics( GenericPIDDevice dev, String file) {
-		this(dev,XmlFactory.getDefaultConfigurationStream(file),XmlFactory.getDefaultConfigurationStream(file));
-		
-	}
-	public DHParameterKinematics( BowlerAbstractDevice dev, InputStream linkStream, InputStream dhStream) {
-		super(linkStream,new LinkFactory( dev));
-		setChain(new DHChain(dhStream,getFactory(),this));
-		dev.addConnectionEventListener(l);
-	}
-	public DHParameterKinematics( BowlerAbstractDevice dev, File configFile) throws FileNotFoundException {
-		this(dev,new FileInputStream(configFile),new FileInputStream(configFile));
+	public DHParameterKinematics( File configFile) throws FileNotFoundException {
+		this(null,new FileInputStream(configFile),new FileInputStream(configFile));
 	}
 
-	public DHParameterKinematics(InputStream linkStream, InputStream dhStream) {
-		super(linkStream,new LinkFactory());
-		setChain(new DHChain(dhStream,getFactory(),this));
-	}
 
 	@Override
 	public double[] inverseKinematics(TransformNR taskSpaceTransform)throws Exception {
@@ -229,9 +235,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 		factory.addLinkListener(this);
 	}
 
-	public void setRobotToFiducialTransform(TransformNR newTrans) {
-		setBaseToZframeTransform(newTrans);
-	}
+
 
 
 

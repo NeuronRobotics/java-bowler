@@ -15,57 +15,34 @@ import com.neuronrobotics.sdk.pid.ILinkFactoryProvider;
 import com.neuronrobotics.sdk.pid.VirtualGenericPIDDevice;
 
 public class LinkFactory {
-	private IPidControlNamespace pid=null;
-	private DyIO dyio=null;
-	//private VirtualGenericPIDDevice virtual = new VirtualGenericPIDDevice(1000000);
-	private boolean hasPid=false;
-	private boolean hasServo=false;
-	private boolean hasStepper=false;
-	private boolean forceVirtual = false;
+	private VirtualGenericPIDDevice virtual=null; 
 	private ArrayList<AbstractLink> links = new ArrayList<AbstractLink>();
 	private ArrayList<LinkConfiguration> linkConfigurations=null ;
-	public LinkFactory (){
-		hasPid=false;
-		hasServo=false;
-		hasStepper=false;
-		forceVirtual=true;
-	}
+	private String myVirtualDevName="virtual_"+(int)(Math.random()*9999.0);
+	private DyIO dyio;
+	private IPidControlNamespace pid;
 	
-	public LinkFactory (BowlerAbstractDevice d){
-		if(d==null){
-			forceVirtual=true;
-			return;
-		}
-		if(DyIO.class.isInstance(d)){
-			dyio=(DyIO)d;
-			hasServo=true;
-			hasStepper=true;
-		}
-		if(IExtendedPIDControl.class.isInstance(d)){
-			pid=(IExtendedPIDControl)d;
-			hasPid=true;
-		}
+	public LinkFactory(){}
+	public LinkFactory(BowlerAbstractDevice bad){
+		if(bad!=null)
+			DeviceManager.addConnection(bad, bad.getScriptingName());
 	}
 	
 	public LinkFactory(ILinkFactoryProvider connection,IExtendedPIDControl d) {
-		pid=d;
-		hasPid=true;
 		//Log.enableInfoPrint();
 		//TODO fill in the auto link configuration
 		LinkConfiguration first = connection.requestLinkConfiguration(0);
-		first.setPidConfiguration( pid);
+		first.setPidConfiguration( d);
 		getLink(first);
 		
 		for (int i=1;i<first.getTotlaNumberOfLinks();i++){
 			LinkConfiguration tmp = connection.requestLinkConfiguration(i);
-			tmp.setPidConfiguration(pid);
+			tmp.setPidConfiguration(d);
 			getLink(tmp);
 		}
 		
 	}
 	
-	
-
 	public AbstractLink getLink(String name) {
 		for(AbstractLink l:links){
 			if(l.getLinkConfiguration().getName().equalsIgnoreCase(name))
@@ -83,55 +60,47 @@ public class LinkFactory {
 			if(l.getLinkConfiguration() == c)
 				return l;
 		}
+		virtual = (VirtualGenericPIDDevice)DeviceManager.getSpecificDevice(VirtualGenericPIDDevice.class, myVirtualDevName);
+		if(virtual==null){
+			virtual=new VirtualGenericPIDDevice();
+			DeviceManager.addConnection(virtual, myVirtualDevName);
+		}
+		if(dyio==null)
+			dyio=(DyIO) DeviceManager.getSpecificDevice(DyIO.class, c.getDeviceScriptingName());
+		if(pid==null)
+			pid=(IPidControlNamespace) DeviceManager.getSpecificDevice(IPidControlNamespace.class, c.getDeviceScriptingName());
 		AbstractLink tmp=null;
-		System.err.println("Loading link: "+c.getName()+" type = "+c.getType()+" device= "+c.getDeviceScriptingName());
-		DyIO d;
-		IPidControlNamespace p;
+		Log.info("Loading link: "+c.getName()+" type = "+c.getType()+" device= "+c.getDeviceScriptingName());
 		switch(c.getType()){
 
 		case ANALOG_PRISMATIC:
-			d = dyio;
-			if(c.getDeviceScriptingName()!=null)
-				d=(DyIO) DeviceManager.getSpecificDevice(DyIO.class, c.getDeviceScriptingName());
-			if(d!=null)
-				tmp = new AnalogPrismaticLink(	new AnalogInputChannel(d.getChannel(c.getHardwareIndex())), 
+			if(dyio!=null){
+				tmp = new AnalogPrismaticLink(	new AnalogInputChannel(dyio.getChannel(c.getHardwareIndex())), 
 											c);
-			tmp.setUseLimits(false);
+			tmp.setUseLimits(false);}
 			break;
 		case ANALOG_ROTORY:
-			d = dyio;
-			if(c.getDeviceScriptingName()!=null)
-				d=(DyIO) DeviceManager.getSpecificDevice(DyIO.class, c.getDeviceScriptingName());
-			if(d!=null)
-				tmp = new AnalogRotoryLink(	new AnalogInputChannel(d.getChannel(c.getHardwareIndex())), 
+			if(dyio!=null){
+				tmp = new AnalogRotoryLink(	new AnalogInputChannel(dyio.getChannel(c.getHardwareIndex())), 
 											c);
-			tmp.setUseLimits(false);
+			tmp.setUseLimits(false);}
 			break;
 		case PID_TOOL:
 		case PID:
-			p = pid;
-			if(c.getDeviceScriptingName()!=null)
-				p=(IPidControlNamespace) DeviceManager.getSpecificDevice(IPidControlNamespace.class, c.getDeviceScriptingName());
-			if(p!=null)
-				tmp=new PidRotoryLink(	p.getPIDChannel(c.getHardwareIndex()),
+			if(pid!=null){
+				tmp=new PidRotoryLink(	pid.getPIDChannel(c.getHardwareIndex()),
 										c);
-			tmp.setUseLimits(true);
+			tmp.setUseLimits(true);}
 			break;
 		case PID_PRISMATIC:
-			 p = pid;
-			if(c.getDeviceScriptingName()!=null)
-				p=(IPidControlNamespace) DeviceManager.getSpecificDevice(IPidControlNamespace.class, c.getDeviceScriptingName());
-			if(p!=null)
-				tmp=new PidPrismaticLink(	p.getPIDChannel(c.getHardwareIndex()),
+			if(pid!=null){
+				tmp=new PidPrismaticLink(	pid.getPIDChannel(c.getHardwareIndex()),
 										c);
-			tmp.setUseLimits(true);
+			tmp.setUseLimits(true);}
 			break;
 		case SERVO_PRISMATIC:
-			d = dyio;
-			if(c.getDeviceScriptingName()!=null)
-				d=(DyIO) DeviceManager.getSpecificDevice(DyIO.class, c.getDeviceScriptingName());
-			if(d!=null){
-				tmp = new ServoPrismaticLink(	new ServoChannel(d.getChannel(c.getHardwareIndex())), 
+			if(dyio!=null){
+				tmp = new ServoPrismaticLink(	new ServoChannel(dyio.getChannel(c.getHardwareIndex())), 
 											c);
 				tmp.setUseLimits(true);
 				
@@ -139,22 +108,16 @@ public class LinkFactory {
 			break;
 		case SERVO_ROTORY:
 		case SERVO_TOOL:
-			d = dyio;
-			if(c.getDeviceScriptingName()!=null)
-				d=(DyIO) DeviceManager.getSpecificDevice(DyIO.class, c.getDeviceScriptingName());
-			if(d!=null){
-				tmp = new ServoRotoryLink(	new ServoChannel(d.getChannel(c.getHardwareIndex())), 
+			if(dyio!=null){
+				tmp = new ServoRotoryLink(	new ServoChannel(dyio.getChannel(c.getHardwareIndex())), 
 											c);
 				tmp.setUseLimits(true);
 				
 			}
 			break;
 		case STEPPER_PRISMATIC:
-			d = dyio;
-			if(c.getDeviceScriptingName()!=null)
-				d=(DyIO) DeviceManager.getSpecificDevice(DyIO.class, c.getDeviceScriptingName());
-			if(d!=null){
-				tmp = new StepperPrismaticLink(	new CounterOutputChannel(d.getChannel(c.getHardwareIndex())), 
+			if(dyio!=null){
+				tmp = new StepperPrismaticLink(	new CounterOutputChannel(dyio.getChannel(c.getHardwareIndex())), 
 											c);
 				tmp.setUseLimits(true);
 				
@@ -162,11 +125,8 @@ public class LinkFactory {
 			break;
 		case STEPPER_TOOL:
 		case STEPPER_ROTORY:
-			d = dyio;
-			if(c.getDeviceScriptingName()!=null)
-				d=(DyIO) DeviceManager.getSpecificDevice(DyIO.class, c.getDeviceScriptingName());
-			if(d!=null){
-				tmp = new StepperRotoryLink(	new CounterOutputChannel(d.getChannel(c.getHardwareIndex())), 
+			if(dyio!=null){
+				tmp = new StepperRotoryLink(	new CounterOutputChannel(dyio.getChannel(c.getHardwareIndex())), 
 											c);
 				tmp.setUseLimits(true);
 				
@@ -174,7 +134,7 @@ public class LinkFactory {
 			break;
 		case DUMMY:
 		case VIRTUAL:
-			tmp=new PidRotoryLink(	new VirtualGenericPIDDevice(100000).getPIDChannel(c.getHardwareIndex()),
+			tmp=new PidRotoryLink(	virtual.getPIDChannel(c.getHardwareIndex()),
 					c);
 			tmp.setUseLimits(false);
 			break;
@@ -182,11 +142,11 @@ public class LinkFactory {
 		
 		if(tmp==null){
 			if(!c.getType().isPrismatic()){
-				tmp=new PidRotoryLink(	new VirtualGenericPIDDevice(100000).getPIDChannel(c.getHardwareIndex()),
+				tmp=new PidRotoryLink(	virtual.getPIDChannel(c.getHardwareIndex()),
 						c);
 				tmp.setUseLimits(false);
 			}else{
-				tmp=new PidPrismaticLink(	new VirtualGenericPIDDevice(100000).getPIDChannel(c.getHardwareIndex()),
+				tmp=new PidPrismaticLink(virtual.getPIDChannel(c.getHardwareIndex()),
 						c);
 				tmp.setUseLimits(false);
 			}
@@ -220,14 +180,6 @@ public class LinkFactory {
 	}
 	public void flush(final double seconds){
 		long time = System.currentTimeMillis();
-		if(hasServo){
-			dyio.flushCache(seconds);
-			Log.info("Flushing DyIO");
-		}
-		if(hasPid){
-			pid.flushPIDChannels(seconds);
-			Log.info("Flushing PID");
-		}
 		
 		for(AbstractLink l:links){
 			if(l.getLinkConfiguration().getDeviceScriptingName()!=null)
@@ -256,10 +208,10 @@ public class LinkFactory {
 	}
 
 	public boolean isConnected() {
-		if(hasPid){
+		if(pid!=null){
 			return pid.isAvailable();
 		}
-		if(hasServo){
+		if(dyio!=null){
 			return dyio.isAvailable();
 		}
 		return true;
