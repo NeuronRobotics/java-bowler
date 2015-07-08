@@ -20,7 +20,7 @@ import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIOChannel;
 import com.neuronrobotics.sdk.dyio.DyIOChannelEvent;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
-import com.neuronrobotics.sdk.dyio.DyIORegestry;
+import com.neuronrobotics.sdk.common.DeviceManager;
 import com.neuronrobotics.sdk.dyio.IChannelEventListener;
 
 /**
@@ -53,7 +53,7 @@ public class DigitalInputChannel extends DyIOAbstractPeripheral implements IChan
 	 * @param channel - the channel object requested from the DyIO
 	 */
 	public  DigitalInputChannel(int channel){
-		this(DyIORegestry.get().getChannel(channel));	
+		this(((DyIO) DeviceManager.getSpecificDevice(DyIO.class, null)).getChannel(channel));	
 	}
 	
 	/**
