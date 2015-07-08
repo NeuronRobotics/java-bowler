@@ -1,4 +1,7 @@
 <root>
+	<mobilebase>
+	<driveType>none</driveType>
+	<name>RobotArm</name>
 <appendage>
 <link>
 	<name>basePan</name>
@@ -138,4 +141,5 @@
 	<rotz>-0.7071067811865475</rotz>
 </baseToZframe>
 </appendage>
+</mobilebase>
 </root>
