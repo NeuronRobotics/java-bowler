@@ -22,13 +22,21 @@ public class LinkFactory {
 	private DyIO dyio;
 	private IPidControlNamespace pid;
 	
-	public LinkFactory(){}
+	public LinkFactory(){
+		this(null);
+	}
 	public LinkFactory(BowlerAbstractDevice bad){
 		if(bad!=null)
 			DeviceManager.addConnection(bad, bad.getScriptingName());
+		virtual = (VirtualGenericPIDDevice)DeviceManager.getSpecificDevice(VirtualGenericPIDDevice.class, myVirtualDevName);
+		if(virtual==null){
+			virtual=new VirtualGenericPIDDevice();
+			DeviceManager.addConnection(virtual, myVirtualDevName);
+		}
 	}
 	
 	public LinkFactory(ILinkFactoryProvider connection,IExtendedPIDControl d) {
+		this(null);
 		//Log.enableInfoPrint();
 		//TODO fill in the auto link configuration
 		LinkConfiguration first = connection.requestLinkConfiguration(0);
@@ -40,6 +48,7 @@ public class LinkFactory {
 			tmp.setPidConfiguration(d);
 			getLink(tmp);
 		}
+
 		
 	}
 	
@@ -60,11 +69,7 @@ public class LinkFactory {
 			if(l.getLinkConfiguration() == c)
 				return l;
 		}
-		virtual = (VirtualGenericPIDDevice)DeviceManager.getSpecificDevice(VirtualGenericPIDDevice.class, myVirtualDevName);
-		if(virtual==null){
-			virtual=new VirtualGenericPIDDevice();
-			DeviceManager.addConnection(virtual, myVirtualDevName);
-		}
+
 		if(dyio==null)
 			dyio=(DyIO) DeviceManager.getSpecificDevice(DyIO.class, c.getDeviceScriptingName());
 		if(pid==null)
