@@ -31,11 +31,9 @@ public  class DHChain {
 		new JFXPanel(); // initializes JavaFX environment
 	}
 	
-	public DHChain(LinkFactory factory, AbstractKinematicsNR kin){
-		this.setFactory(factory);
+	public DHChain( AbstractKinematicsNR kin){
 		this.kin = kin;
-		upperLimits = factory.getUpperLimits();
-		lowerLimits = factory.getLowerLimits();
+
 	}
 	
 	public void addLink(DHLink link){
@@ -357,6 +355,8 @@ public  class DHChain {
 	}
 
 	public void setFactory(LinkFactory factory) {
+		upperLimits = factory.getUpperLimits();
+		lowerLimits = factory.getLowerLimits();
 		this.factory = factory;
 	}
 

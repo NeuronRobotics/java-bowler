@@ -71,7 +71,7 @@ public class DHLink {
 	 * Generate the xml configuration to generate a link of this configuration. 
 	 */
 	public String getXml(){
-		String mb = embedableXml==null?"":"\n\t\t<mobilebase>\n"+embedableXml+"\n\t\t</mobilebase>\n";
+		String mb = embedableXml==null?"":"\n\t\t"+embedableXml+"\n";
 		return "\n\t<DHParameters>\n"+
 		    "\t\t<Delta>"+d+"</Delta>\n"+
 		    "\t\t<Theta>"+Math.toDegrees(theta)+"</Theta>\n"+

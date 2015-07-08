@@ -29,19 +29,25 @@ public class MobileBase extends AbstractKinematicsNR{
 	public MobileBase(InputStream configFile){
 		this();
 		Document doc =XmlFactory.getAllNodesDocument(configFile);
-		NodeList nodListofLinks = doc.getElementsByTagName("mobilebase");
-		if(nodListofLinks.getLength()>1){
-			throw new RuntimeException("only one mobile base is allowed per level");
-		}
-		for (int i = 0; i < nodListofLinks.getLength(); i++) {			
-		    Node linkNode = nodListofLinks.item(i);
-		    if (linkNode.getNodeType() == Node.ELEMENT_NODE) {
+		NodeList nodListofLinks = doc.getElementsByTagName("root");
+		
+		if(nodListofLinks.getLength()!=1 ){
+			System.out.println("Found "+nodListofLinks.getLength());
+			throw new RuntimeException("one mobile base is needed per level");
+		}	
+		NodeList rootNode  = nodListofLinks.item(0).getChildNodes();
+		 
+		
+	    for(int i=0;i<rootNode.getLength();i++){
+	    	
+	        Node linkNode = rootNode.item(i);
+			if (linkNode .getNodeType() == Node.ELEMENT_NODE && linkNode.getNodeName().contains("mobilebase")) {
 		    	Element e = (Element) linkNode;
 		    	loadConfigs( e);
-		    }else{
-		    	
 		    }
-		}
+	    }
+	
+		
 	}
 	
 	public MobileBase(Element doc) {
@@ -64,10 +70,10 @@ public class MobileBase extends AbstractKinematicsNR{
 	}
 	
 	private void loadLimb(Element doc,String tag, ArrayList<DHParameterKinematics> list){
-		NodeList legNodes 			= doc.getElementsByTagName(tag);
-		for (int i = 0; i < legNodes.getLength(); i++) {			
-		    Node linkNode = legNodes.item(i);
-		    if (linkNode.getNodeType() == Node.ELEMENT_NODE) {
+		NodeList nodListofLinks = doc.getChildNodes();
+		for (int i = 0; i < nodListofLinks.getLength(); i++) {			
+		    Node linkNode = nodListofLinks.item(i);
+		    if (linkNode.getNodeType() == Node.ELEMENT_NODE&& linkNode.getNodeName().contentEquals(tag)) {
 		    	Element e = (Element) linkNode;
 		    	final DHParameterKinematics kin = new DHParameterKinematics(e);
 		    	list.add(kin);
@@ -271,8 +277,10 @@ public class MobileBase extends AbstractKinematicsNR{
 	}
 	
 	public static void main(String[] args){
-		MobileBase m = new MobileBase(XmlFactory.getDefaultConfigurationStream("WalkingMobileBase.xml"));
-		System.out.println(m.getXml());
+		try{
+			MobileBase m = new MobileBase(XmlFactory.getDefaultConfigurationStream("WalkingMobileBase.xml"));
+			System.out.println(m.getXml());
+		}catch(Exception e){e.printStackTrace();}
 		System.exit(0);
 	}
 

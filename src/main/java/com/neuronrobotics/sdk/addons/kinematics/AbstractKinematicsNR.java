@@ -94,12 +94,13 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 //		} catch (FileNotFoundException e1) {
 //			e1.printStackTrace();
 //		}
+		setDhParametersChain(new DHChain( this));
 	}
 	public AbstractKinematicsNR(InputStream configFile,LinkFactory f){
 		this();
 		Document doc =XmlFactory.getAllNodesDocument(configFile);
 		NodeList nodListofLinks = doc.getElementsByTagName("appendage");
-		for (int i = 0; i < nodListofLinks.getLength(); i++) {			
+		for (int i = 0; i < 1; i++) {			
 		    Node linkNode = nodListofLinks.item(i);
 		    if (linkNode.getNodeType() == Node.ELEMENT_NODE) {
 				noXmlConfig=false;
@@ -120,6 +121,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		if(doc!=null && f!=null){
 			setDevice(f,loadConfig(doc));
 		}
+
 		
 	}
 	
@@ -134,62 +136,59 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	protected ArrayList<LinkConfiguration> loadConfig(Element doc){
 		ArrayList<LinkConfiguration> localConfigsFromXml=new ArrayList<LinkConfiguration>();
 		
-		NodeList nodListofLinks = doc.getElementsByTagName("link");
-		NodeList zf = 	 doc.getElementsByTagName("ZframeToRAS");
-		NodeList bf = 	 doc.getElementsByTagName("baseToZframe");
-		dHParameters = doc.getElementsByTagName("DHParameters");
-		mobileBasesNodeList = doc.getElementsByTagName("mobileBase");
 		
-		for (int i = 0; i < nodListofLinks.getLength(); i++) {			
+		NodeList nodListofLinks = doc.getChildNodes();
+		
+		for (int i = 0; i < nodListofLinks .getLength(); i++) {			
 		    Node linkNode = nodListofLinks.item(i);
-		    if (linkNode.getNodeType() == Node.ELEMENT_NODE) {
+		    if (linkNode.getNodeType() == Node.ELEMENT_NODE && linkNode.getNodeName().contentEquals("link")) {
 		    	localConfigsFromXml.add(new LinkConfiguration((Element) linkNode));
-		    }else{
-		    	Log.info("Not Element Node");
-		    }
-		}
-		
-		try{
-			Node zframeToRASConfig = zf.item(0);
-			if(zframeToRASConfig!=null)
-		    if (zframeToRASConfig.getNodeType() == Node.ELEMENT_NODE) {
-		    	Element eElement = (Element)zframeToRASConfig;	    		    
+		    	
+		    	NodeList dHParameters =linkNode.getChildNodes();
+				for (int x = 0; x < dHParameters .getLength(); x++) {			
+				    Node nNode = dHParameters.item(x);
+				    if (nNode.getNodeType() == Node.ELEMENT_NODE && nNode.getNodeName().contentEquals("DHParameters")) {
+				    	Element dhNode =(Element)	nNode;
+				    	DHLink newLink = new DHLink(dhNode);
+				    	getDhParametersChain().addLink(newLink);//0->1
+				    	NodeList mobileBasesNodeList = dhNode.getChildNodes();
+						for (int j = 0; j < mobileBasesNodeList.getLength(); j++) {			
+						    Node mb = mobileBasesNodeList.item(j);
+						    if (mb.getNodeType() == Node.ELEMENT_NODE && mb.getNodeName().contentEquals("mobilebase")) {
+						    	final MobileBase newMobileBase = new MobileBase((Element)mb);
+						    	mobileBases.add(newMobileBase);
+						    	newLink.setMobileBaseXml(newMobileBase.getEmbedableXml());
+						    	newLink.addDhLinkPositionListener(new IDhLinkPositionListener() {
+									@Override
+									public void onLinkGlobalPositionChange(TransformNR newPose) {
+										Log.debug("Motion in the D-H link has caused this mobile base to move");
+										newMobileBase.setGlobalToFiducialTransform(newPose);
+									}
+								});
+						    }
+						}
+				    }
+				}
+		    }else if (linkNode.getNodeType() == Node.ELEMENT_NODE && linkNode.getNodeName().contentEquals("ZframeToRAS")) {
+		    	Element eElement = (Element)linkNode;	    		    
 		    	setZframeToGlobalTransform(new TransformNR(	Double.parseDouble(XmlFactory.getTagValue("x",eElement)),
 							    			Double.parseDouble(XmlFactory.getTagValue("y",eElement)),
 							    			Double.parseDouble(XmlFactory.getTagValue("z",eElement)), 
 							    			new RotationNR(	Double.parseDouble(XmlFactory.getTagValue("rotw",eElement)),
 							    							Double.parseDouble(XmlFactory.getTagValue("rotx",eElement)),
 							    							Double.parseDouble(XmlFactory.getTagValue("roty",eElement)),
-							    							Double.parseDouble(XmlFactory.getTagValue("rotz",eElement)))));	    	
-		    }else{
-		    	throw new RuntimeException("No Z frame to RAS transform defined");
-		    }
-		}catch (Exception ex){
-			ex.printStackTrace();
-			Log.warning("No Z frame to RAS transform defined");
-		}
-		
-		try{
-			
-		    Node baseToZframeConfig = bf.item(0);
-		    if(baseToZframeConfig!=null)
-		    if (baseToZframeConfig.getNodeType() == Node.ELEMENT_NODE) {
-		    	Element eElement = (Element)baseToZframeConfig;	    	    
+							    							Double.parseDouble(XmlFactory.getTagValue("rotz",eElement)))));	
+		    }else if (linkNode.getNodeType() == Node.ELEMENT_NODE && linkNode.getNodeName().contentEquals("baseToZframe")) {
+		    	Element eElement = (Element)linkNode;	    	    
 		    	setBaseToZframeTransform(new TransformNR(	Double.parseDouble(XmlFactory.getTagValue("x",eElement)),
 							    			Double.parseDouble(XmlFactory.getTagValue("y",eElement)),
 							    			Double.parseDouble(XmlFactory.getTagValue("z",eElement)), 
 							    			new RotationNR(	Double.parseDouble(XmlFactory.getTagValue("rotw",eElement)),
 							    							Double.parseDouble(XmlFactory.getTagValue("rotx",eElement)),
 							    							Double.parseDouble(XmlFactory.getTagValue("roty",eElement)),
-							    							Double.parseDouble(XmlFactory.getTagValue("rotz",eElement)))));	    	
-		    }else{
-		    	throw new RuntimeException("No base to Z frame transform defined");
+							    							Double.parseDouble(XmlFactory.getTagValue("rotz",eElement)))));	 
 		    }
-		}catch (Exception ex){
-			ex.printStackTrace();
-			Log.warning("No base to Z frame transform defined");
 		}
-		
 
 		
 		return localConfigsFromXml;
@@ -281,31 +280,10 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		}
 		getCurrentTaskSpaceTransform();
 		getFactory().addLinkListener(this);
-		setDhParametersChain(new DHChain(getFactory(), this));
-		for (int i = 0; i < dHParameters.getLength(); i++) {			
-		    Node nNode = dHParameters.item(i);
-		    if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-		    	Element dhNode =(Element)	nNode;
-		    	DHLink newLink = new DHLink(dhNode);
-		    	getDhParametersChain().addLink(newLink);//0->1
-		    	mobileBasesNodeList = dhNode.getElementsByTagName("mobileBase");
-				for (int j = 0; j < mobileBasesNodeList.getLength(); j++) {			
-				    Node mb = mobileBasesNodeList.item(i);
-				    if (mb.getNodeType() == Node.ELEMENT_NODE) {
-				    	final MobileBase newMobileBase = new MobileBase((Element)mb);
-				    	mobileBases.add(newMobileBase);
-				    	newLink.setMobileBaseXml(newMobileBase.getEmbedableXml());
-				    	newLink.addDhLinkPositionListener(new IDhLinkPositionListener() {
-							@Override
-							public void onLinkGlobalPositionChange(TransformNR newPose) {
-								Log.debug("Motion in the D-H link has caused this mobile base to move");
-								newMobileBase.setGlobalToFiducialTransform(newPose);
-							}
-						});
-				    }
-				}
-		    }
-		}
+		getDhParametersChain().setFactory(getFactory());
+		
+		
+		
 
 		//filling up the d-h parameters so the chain sizes match
 		while(getDhParametersChain().getLinks().size() < linkConfigs.size()){
@@ -666,9 +644,6 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 */
 	private long homeTime;
 
-	private NodeList dHParameters;
-
-	private NodeList mobileBasesNodeList;
 	private void runHome(PIDChannel joint, int tps){
 		IPIDEventListener listen = new IPIDEventListener() {
 			
