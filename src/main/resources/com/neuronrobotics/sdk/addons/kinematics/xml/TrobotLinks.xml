@@ -1,8 +1,11 @@
 <root>
 	<mobilebase>
+		<name>BasicArmWorkspace</name><!-- Name, used to regester the link with a specific location in the robot  -->
+	
 	<driveType>none</driveType>
-	<name>RobotArm</name>
+	
 <appendage>
+<name>RobotArm</name>
 <link>
 	<name>basePan</name>
 	<deviceName>dyio</deviceName>
