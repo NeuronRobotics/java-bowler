@@ -45,7 +45,9 @@ import com.neuronrobotics.sdk.addons.kinematics.DHParameterKinematics;
 import com.neuronrobotics.sdk.addons.kinematics.ITaskSpaceUpdateListenerNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
+import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
 import com.neuronrobotics.sdk.common.IConnectionEventListener;
+import com.neuronrobotics.sdk.common.IDeviceConnectionEventListener;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.dypid.DyPIDConfiguration;
@@ -283,12 +285,20 @@ public class Jfx3dManager extends JFXPanel {
 					a.getTransforms().add(dh.getListener());
 					manipulator.getChildren().add(a);
 					if(master!=null)
-						master.addConnectionEventListener(new IConnectionEventListener() {
-							@Override public void onDisconnect(BowlerAbstractConnection source) {
+						master.addConnectionEventListener(new IDeviceConnectionEventListener() {
+							
+							@Override
+							public void onDisconnect(BowlerAbstractDevice source) {
+								// TODO Auto-generated method stub
 								manipulator.getChildren().remove(a);
 								a.getTransforms().clear();
 							}
-							@Override public void onConnect(BowlerAbstractConnection source) {}
+							
+							@Override
+							public void onConnect(BowlerAbstractDevice source) {
+								// TODO Auto-generated method stub
+								
+							}
 						});
 				}
 				//get the affine of the tip of the chain

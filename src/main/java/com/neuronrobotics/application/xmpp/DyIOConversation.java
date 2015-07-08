@@ -9,9 +9,10 @@ import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
 
 import com.neuronrobotics.application.xmpp.GoogleChat.IChatLog;
+import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIOChannelEvent;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
-import com.neuronrobotics.sdk.dyio.DyIORegestry;
+import com.neuronrobotics.sdk.common.DeviceManager;
 import com.neuronrobotics.sdk.dyio.IChannelEventListener;
 
 
@@ -50,9 +51,9 @@ public class DyIOConversation implements IConversation, MessageListener, IChanne
 	public String onMessage(String input,Chat chat,String from) {
 		String [] packet = input.split("\\ ");
 		if(packet[0].toLowerCase().contains("ping")){
-			return "ping: \n"+DyIORegestry.get().ping();
+			return "ping: \n"+((DyIO) DeviceManager.getSpecificDevice(DyIO.class, null)).ping();
 		}else if(packet[0].toLowerCase().contains("state")){
-			return "state: \n"+DyIORegestry.get().toString();
+			return "state: \n"+((DyIO) DeviceManager.getSpecificDevice(DyIO.class, null)).toString();
 		}else if(packet[0].toLowerCase().contains("setmode")){
 			DyIOChannelMode m = DyIOChannelMode.DIGITAL_IN;
 			boolean found = false;
@@ -66,8 +67,8 @@ public class DyIOConversation implements IConversation, MessageListener, IChanne
 			}
 			try{
 				int port = Integer.parseInt(packet[1]);
-				if(found && DyIORegestry.get().getChannel(port).canBeMode(m)){
-					DyIORegestry.get().setMode(port, m);
+				if(found && ((DyIO) DeviceManager.getSpecificDevice(DyIO.class, null)).getChannel(port).canBeMode(m)){
+					((DyIO) DeviceManager.getSpecificDevice(DyIO.class, null)).setMode(port, m);
 					return "setMode "+port+" "+m.toSlug();
 				}
 			}catch(Exception ex){
@@ -77,11 +78,11 @@ public class DyIOConversation implements IConversation, MessageListener, IChanne
 		}else if(packet[0].toLowerCase().contains("setvalue")){
 			int port = Integer.parseInt(packet[1]);
 			int value = Integer.parseInt(packet[2]);
-			DyIORegestry.get().getChannel(port).setValue(value);
+			((DyIO) DeviceManager.getSpecificDevice(DyIO.class, null)).getChannel(port).setValue(value);
 			return "setValue "+port+" "+value;
 		}else if(packet[0].toLowerCase().contains("getvalue")){
 			int port = Integer.parseInt(packet[1]);
-			int value = DyIORegestry.get().getChannel(port).getValue();
+			int value = ((DyIO) DeviceManager.getSpecificDevice(DyIO.class, null)).getChannel(port).getValue();
 			return "getValue "+port+" "+value;
 		}else if(packet[0].toLowerCase().contains("addasync")){
 			int port = Integer.parseInt(packet[1]);
@@ -93,19 +94,19 @@ public class DyIOConversation implements IConversation, MessageListener, IChanne
 			}
 			if(rate < 500)
 				rate = 500;
-			DyIORegestry.get().getChannel(port).setAsync(true);
-			DyIORegestry.get().getChannel(port).configAdvancedAsyncNotEqual(rate);
-			DyIORegestry.get().getChannel(port).addChannelEventListener( getListener(chat, from));
+			((DyIO) DeviceManager.getSpecificDevice(DyIO.class, null)).getChannel(port).setAsync(true);
+			((DyIO) DeviceManager.getSpecificDevice(DyIO.class, null)).getChannel(port).configAdvancedAsyncNotEqual(rate);
+			((DyIO) DeviceManager.getSpecificDevice(DyIO.class, null)).getChannel(port).addChannelEventListener( getListener(chat, from));
 			return "async "+port+" "+rate;
 		}
 		else if(packet[0].toLowerCase().contains("removeasync")){
 			int port = Integer.parseInt(packet[1]);
-			DyIORegestry.get().getChannel(port).removeChannelEventListener( getListener(chat, from));
+			((DyIO) DeviceManager.getSpecificDevice(DyIO.class, null)).getChannel(port).removeChannelEventListener( getListener(chat, from));
 			return "async removed "+port+" ";
 		}
 		else if(packet[0].toLowerCase().contains("reset")){
 			for (int i=0;i<24;i++){
-				DyIORegestry.get().getChannel(i).removeAllChannelEventListeners();
+				((DyIO) DeviceManager.getSpecificDevice(DyIO.class, null)).getChannel(i).removeAllChannelEventListeners();
 			}
 			return "system reset!";
 		}else{

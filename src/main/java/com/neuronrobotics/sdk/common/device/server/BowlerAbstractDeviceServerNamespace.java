@@ -41,7 +41,12 @@ public abstract class BowlerAbstractDeviceServerNamespace {
 		
 		return rpc;
 	}
-
+	
+	
+	public void addRpc(RpcEncapsulation newRpc) {
+		rpc.add(newRpc);
+	}
+	
 	public MACAddress getAddress() {
 		return mac;
 	}

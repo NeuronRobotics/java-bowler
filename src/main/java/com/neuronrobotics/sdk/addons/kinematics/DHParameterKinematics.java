@@ -21,6 +21,7 @@ import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
 import com.neuronrobotics.sdk.common.DeviceManager;
 import com.neuronrobotics.sdk.common.IConnectionEventListener;
+import com.neuronrobotics.sdk.common.IDeviceConnectionEventListener;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.pid.GenericPIDDevice;
 import com.neuronrobotics.sdk.pid.VirtualGenericPIDDevice;
@@ -33,15 +34,15 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 	private ArrayList<Affine> linksListeners = new ArrayList<Affine>();
 	private Affine currentTarget = new Affine();
 	boolean disconnecting=false;
-	IConnectionEventListener l = new IConnectionEventListener() {
-		@Override public void onDisconnect(BowlerAbstractConnection source) {
+	IDeviceConnectionEventListener l = new IDeviceConnectionEventListener() {
+		@Override public void onDisconnect(BowlerAbstractDevice source) {
 			if(!disconnecting){
 				disconnecting=true;
 				disconnect();
 			}
 			
 		}
-		@Override public void onConnect(BowlerAbstractConnection source) {}
+		@Override public void onConnect(BowlerAbstractDevice source) {}
 	} ;
 	
 	

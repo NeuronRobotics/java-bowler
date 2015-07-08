@@ -31,11 +31,11 @@ public class DeviceManager {
 			name = name+numOfThisDeviceType;
 		newDevice.setScriptingName(name);
 		devices.add(newDevice);
-		newDevice.addConnectionEventListener(new IConnectionEventListener() {
-			@Override public void onDisconnect(BowlerAbstractConnection source) {
+		newDevice.addConnectionEventListener(new IDeviceConnectionEventListener(){
+			@Override public void onDisconnect(BowlerAbstractDevice source) {
 				DeviceManager.remove(newDevice);
 			}
-			@Override public void onConnect(BowlerAbstractConnection source) {}
+			@Override public void onConnect(BowlerAbstractDevice source) {}
 		});
 		for(IDeviceAddedListener l :deviceAddedListener){
 			l.onNewDeviceAdded(newDevice);
@@ -140,7 +140,8 @@ public class DeviceManager {
 			return null;
 		else
 			for (String d:devs) {
-				if(d.contentEquals(name)){
+				// if the string is null it just returns the first of its kind
+				if(d.contentEquals(name) || name == null){
 					for (int i = 0; i < devices.size(); i++) {
 						if(devices.get(i).getScriptingName().contains(d))
 							return devices.get(i);
