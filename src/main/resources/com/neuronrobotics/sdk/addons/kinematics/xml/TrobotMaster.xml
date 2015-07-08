@@ -1,5 +1,7 @@
 <root>
+	<name>BasicArmWorkspace</name><!-- Name, used to regester the link with a specific location in the robot  -->
 	<appendage>
+	<name>BasicArm</name><!-- Name, used to regester the link with a specific location in the robot  -->
 	<link>
 		<name>basePan</name><!-- Name, used to regester the link with a specific location in the robot  -->
 		<type>analog-rotory</type><!-- This is the actual type of the link as used by the kinematics to  -->
