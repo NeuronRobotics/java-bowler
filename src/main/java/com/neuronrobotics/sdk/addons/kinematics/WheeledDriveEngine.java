@@ -1,16 +1,11 @@
 package com.neuronrobotics.sdk.addons.kinematics;
 
+import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
+
 public class WheeledDriveEngine implements IDriveEngine {
 
 	@Override
-	public void DriveStraight(MobileBase source, double cm, double seconds) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void DriveArc(MobileBase source, double cmRadius, double degrees,
-			double seconds) {
+	public void DriveArc(MobileBase source, TransformNR newPose, double seconds) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -27,6 +22,7 @@ public class WheeledDriveEngine implements IDriveEngine {
 		// TODO Auto-generated method stub
 		
 	}
+
 
 
 }

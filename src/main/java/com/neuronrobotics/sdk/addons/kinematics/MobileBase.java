@@ -152,7 +152,7 @@ public class MobileBase extends AbstractKinematicsNR{
 	 * Generate the xml configuration to generate an XML of this robot. 
 	 */
 	public String getEmbedableXml(){
-		String xml = "";
+		String xml = "<mobilebase>\n";
 		for(DHParameterKinematics l:legs){
 			xml+="<leg>\n";
 			xml+=l.getEmbedableXml();
@@ -163,21 +163,26 @@ public class MobileBase extends AbstractKinematicsNR{
 			xml+=l.getEmbedableXml();
 			xml+="\n</appendage>\n";
 		}
-		ArrayList<DHLink> dhLinks = getDhParametersChain().getLinks();
-		for(int i=0;i<dhLinks.size();i++){
-			xml+="<link>\n";
-			xml+=getLinkConfiguration(i).getXml();
-			xml+=dhLinks.get(i).getXml();
-			xml+="\n</link>\n";
+		
+		for(DHParameterKinematics l:steerable){
+			xml+="<steerable>\n";
+			xml+=l.getEmbedableXml();
+			xml+="\n</steerable>\n";
+		}
+		for(DHParameterKinematics l:drivable){
+			xml+="<drivable>\n";
+			xml+=l.getEmbedableXml();
+			xml+="\n</drivable>\n";
 		}
 		
-		xml+="\n<ZframeToRAS\n>";
+		xml+="\n<ZframeToRAS>\n";
 		xml+=getFiducialToGlobalTransform().getXml();
 		xml+="\n</ZframeToRAS>\n";
 		
 		xml+="\n<baseToZframe>\n";
 		xml+=getRobotToFiducialTransform().getXml();
 		xml+="\n</baseToZframe>\n";
+		xml+="\n</mobilebase>\n";
 		return xml;
 	}
 
@@ -220,32 +225,17 @@ public class MobileBase extends AbstractKinematicsNR{
 	public void setDriveType(DrivingType driveType) {
 		this.driveType = driveType;
 	}
-
 	
-	public void DriveStraight(double cm, double seconds) {
-		switch(driveType){
-		case DRIVING:
-			getWheeledDriveEngine().DriveStraight(this,cm, seconds);
-			break;
-		case NONE:
-			break;
-		case WALKING:
-			getWalkingDriveEngine().DriveStraight(this,cm, seconds);
-			break;
-		}
-	}
-
-	
-	public void DriveArc(double cmRadius, double degrees, double seconds) {
+	public void DriveArc( TransformNR newPose, double seconds) {
 		// TODO Auto-generated method stub
 		switch(driveType){
 		case DRIVING:
-			getWheeledDriveEngine().DriveArc(this,cmRadius, degrees, seconds);
+			getWheeledDriveEngine().DriveArc(this,newPose, seconds);
 			break;
 		case NONE:
 			break;
 		case WALKING:
-			getWalkingDriveEngine().DriveArc(this,cmRadius, degrees, seconds);
+			getWalkingDriveEngine().DriveArc(this,newPose, seconds);
 			break;
 		}
 	}
@@ -278,6 +268,12 @@ public class MobileBase extends AbstractKinematicsNR{
 			getWalkingDriveEngine().DriveVelocityArc(this,degreesPerSecond, cmRadius);
 			break;
 		}
+	}
+	
+	public static void main(String[] args){
+		MobileBase m = new MobileBase(XmlFactory.getDefaultConfigurationStream("WalkingMobileBase.xml"));
+		System.out.println(m.getXml());
+		System.exit(0);
 	}
 
 }

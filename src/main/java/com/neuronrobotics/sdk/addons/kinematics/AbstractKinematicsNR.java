@@ -294,6 +294,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 				    if (mb.getNodeType() == Node.ELEMENT_NODE) {
 				    	final MobileBase newMobileBase = new MobileBase((Element)mb);
 				    	mobileBases.add(newMobileBase);
+				    	newLink.setMobileBaseXml(newMobileBase.getEmbedableXml());
 				    	newLink.addDhLinkPositionListener(new IDhLinkPositionListener() {
 							@Override
 							public void onLinkGlobalPositionChange(TransformNR newPose) {

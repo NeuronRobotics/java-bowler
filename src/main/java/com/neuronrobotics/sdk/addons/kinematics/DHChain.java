@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
 import javafx.scene.transform.Affine;
 
 import org.w3c.dom.Element;
@@ -26,6 +27,9 @@ public  class DHChain {
 	private DhInverseSolver is;
 	private AbstractKinematicsNR kin;
 	private LinkFactory factory;
+	static{
+		new JFXPanel(); // initializes JavaFX environment
+	}
 	
 	public DHChain(LinkFactory factory, AbstractKinematicsNR kin){
 		this.setFactory(factory);

@@ -1,22 +1,18 @@
 package com.neuronrobotics.sdk.addons.kinematics;
 
+import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
+
 public interface IDriveEngine {
-	/**
-	 * Driving kinematics should be implemented in here
-	 * Before driving, a reset for each drive wheel should be called
-	 * @param cm how many centimeters should be driven
-	 * @param seconds how many seconds it should take
-	 */
-	public abstract void DriveStraight(MobileBase source,double cm,double seconds);
+
 	/**
 	 * Driving kinematics should be implemented in here
 	 * Before driving, a reset for each drive wheel should be called
 	 * NOTE This should obey the right-hand rule.
-	 * @param cmRadius radius of curve (centimeters)
-	 * @param degrees degrees of the arch to sweep through
+	 * @param newPose the new pose that should be achived. 
 	 * @param seconds how many seconds it should take
 	 */
-	public abstract void DriveArc(MobileBase source,double cmRadius,double degrees,double seconds);
+	public abstract void DriveArc(MobileBase source,TransformNR newPose,double seconds);
+
 	
 	/**
 	 * Tells the robot to start driving at a speed without any endpoint. 

@@ -34,6 +34,7 @@ public class DHLink {
 	private boolean degenerate = false;
 	
 	private ArrayList<IDhLinkPositionListener> dhlisteners = new ArrayList<IDhLinkPositionListener>();
+	private String embedableXml=null;
 	
 	
 	public DHLink(double d, double theta,double r, double alpha) {
@@ -70,11 +71,13 @@ public class DHLink {
 	 * Generate the xml configuration to generate a link of this configuration. 
 	 */
 	public String getXml(){
+		String mb = embedableXml==null?"":"\n\t\t<mobilebase>\n"+embedableXml+"\n\t\t</mobilebase>\n";
 		return "\n\t<DHParameters>\n"+
 		    "\t\t<Delta>"+d+"</Delta>\n"+
 		    "\t\t<Theta>"+Math.toDegrees(theta)+"</Theta>\n"+
 		   "\t\t<Radius>"+radius+"</Radius>\n"+
 		   "\t\t<Alpha>"+Math.toDegrees(alpha)+"</Alpha>\n"+
+		   embedableXml+
 		"\t</DHParameters>\n";
 	}
 	public double getD() {
@@ -308,6 +311,10 @@ public class DHLink {
 
 	public void setDegenerate(boolean degenerate) {
 		this.degenerate = degenerate;
+	}
+
+	public void setMobileBaseXml(String embedableXml) {
+		this.embedableXml = embedableXml;
 	}
 
 }
