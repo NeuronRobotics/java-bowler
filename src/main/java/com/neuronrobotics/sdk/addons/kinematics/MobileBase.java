@@ -11,7 +11,9 @@ import org.w3c.dom.NodeList;
 import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
+import com.neuronrobotics.sdk.common.DeviceManager;
 import com.neuronrobotics.sdk.common.Log;
+import com.neuronrobotics.sdk.dyio.DyIO;
 
 public class MobileBase extends AbstractKinematicsNR{
 	
@@ -68,6 +70,21 @@ public class MobileBase extends AbstractKinematicsNR{
 		}
 		
 	}
+	private String getname(Element e,String tag){
+		try{
+			NodeList nodListofLinks = e.getChildNodes();
+			
+			for (int i = 0; i < nodListofLinks .getLength(); i++) {			
+			    Node linkNode = nodListofLinks.item(i);
+			   if (linkNode.getNodeType() == Node.ELEMENT_NODE && linkNode.getNodeName().contentEquals("name")) {
+			    	return XmlFactory.getTagValue("name",(Element)linkNode);
+			    }
+			}
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+		return tag;
+	}
 	
 	private void loadLimb(Element doc,String tag, ArrayList<DHParameterKinematics> list){
 		NodeList nodListofLinks = doc.getChildNodes();
@@ -75,12 +92,21 @@ public class MobileBase extends AbstractKinematicsNR{
 		    Node linkNode = nodListofLinks.item(i);
 		    if (linkNode.getNodeType() == Node.ELEMENT_NODE&& linkNode.getNodeName().contentEquals(tag)) {
 		    	Element e = (Element) linkNode;
-		    	final DHParameterKinematics kin = new DHParameterKinematics(e);
+		    	final String name =  getname( e,tag);
+		    	
+		    	DHParameterKinematics kin=null;
+		    	if(kin==null)
+		    		kin=(DHParameterKinematics) DeviceManager.getSpecificDevice(DHParameterKinematics.class, name);
+		    	if(kin==null){
+		    		kin= new DHParameterKinematics(e);
+		    		DeviceManager.addConnection(kin, name);
+		    	}
 		    	list.add(kin);
 		    	addRegistrationListener(new IRegistrationListenerNR() {
 					@Override
 					public void onFiducialToGlobalUpdate(AbstractKinematicsNR source,
 							TransformNR regestration) {
+						DHParameterKinematics kin=(DHParameterKinematics) DeviceManager.getSpecificDevice(DHParameterKinematics.class, name);
 						Log.debug("Motion of mobile base event ");
 						//this represents motion of the mobile base
 						kin.setGlobalToFiducialTransform(regestration);
@@ -90,6 +116,7 @@ public class MobileBase extends AbstractKinematicsNR{
 					@Override
 					public void onBaseToFiducialUpdate(AbstractKinematicsNR source,
 							TransformNR regestration) {
+						DHParameterKinematics kin=(DHParameterKinematics) DeviceManager.getSpecificDevice(DHParameterKinematics.class, name);
 						// update the joints on the motion
 						kin.getCurrentTaskSpaceTransform();
 					}

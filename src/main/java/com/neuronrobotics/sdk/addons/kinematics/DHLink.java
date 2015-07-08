@@ -34,7 +34,7 @@ public class DHLink {
 	private boolean degenerate = false;
 	
 	private ArrayList<IDhLinkPositionListener> dhlisteners = new ArrayList<IDhLinkPositionListener>();
-	private String embedableXml=null;
+	private MobileBase embedableXml=null;
 	
 	
 	public DHLink(double d, double theta,double r, double alpha) {
@@ -313,7 +313,7 @@ public class DHLink {
 		this.degenerate = degenerate;
 	}
 
-	public void setMobileBaseXml(String embedableXml) {
+	public void setMobileBaseXml(MobileBase embedableXml) {
 		this.embedableXml = embedableXml;
 	}
 

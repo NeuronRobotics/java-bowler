@@ -1,5 +1,7 @@
 <root>
 	<mobilebase>
+	<driveType>walking</driveType>
+	<name>WalkingBase</name>
 		<leg>
 			<link>
 				<name>basePan</name>

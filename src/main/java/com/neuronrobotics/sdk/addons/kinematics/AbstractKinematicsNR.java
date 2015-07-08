@@ -157,7 +157,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 						    if (mb.getNodeType() == Node.ELEMENT_NODE && mb.getNodeName().contentEquals("mobilebase")) {
 						    	final MobileBase newMobileBase = new MobileBase((Element)mb);
 						    	mobileBases.add(newMobileBase);
-						    	newLink.setMobileBaseXml(newMobileBase.getEmbedableXml());
+						    	newLink.setMobileBaseXml(newMobileBase);
 						    	newLink.addDhLinkPositionListener(new IDhLinkPositionListener() {
 									@Override
 									public void onLinkGlobalPositionChange(TransformNR newPose) {
@@ -169,7 +169,10 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 						}
 				    }
 				}
-		    }else if (linkNode.getNodeType() == Node.ELEMENT_NODE && linkNode.getNodeName().contentEquals("ZframeToRAS")) {
+		    }else if (linkNode.getNodeType() == Node.ELEMENT_NODE && linkNode.getNodeName().contentEquals("name")) {
+		    	setScriptingName(XmlFactory.getTagValue("name",(Element)linkNode));
+		    }
+		    else if (linkNode.getNodeType() == Node.ELEMENT_NODE && linkNode.getNodeName().contentEquals("ZframeToRAS")) {
 		    	Element eElement = (Element)linkNode;	    		    
 		    	setZframeToGlobalTransform(new TransformNR(	Double.parseDouble(XmlFactory.getTagValue("x",eElement)),
 							    			Double.parseDouble(XmlFactory.getTagValue("y",eElement)),
@@ -200,6 +203,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 */
 	public String getXml(){
 		String xml = "<root>\n";
+		xml+="\n<name>"+getScriptingName()+"</name>\n";
 		for(int i=0;i<getLinkConfigurations().size();i++){
 			xml+="<link>\n";
 			xml+=getLinkConfiguration(i).getXml();
