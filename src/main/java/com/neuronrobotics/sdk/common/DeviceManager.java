@@ -33,6 +33,7 @@ public class DeviceManager {
 		devices.add(newDevice);
 		newDevice.addConnectionEventListener(new IDeviceConnectionEventListener(){
 			@Override public void onDisconnect(BowlerAbstractDevice source) {
+				if(source==newDevice && source!=null)
 				DeviceManager.remove(newDevice);
 			}
 			@Override public void onConnect(BowlerAbstractDevice source) {}
@@ -117,7 +118,7 @@ public class DeviceManager {
 	}
 
 	public static void remove(BowlerAbstractDevice newDevice) {
-		if(devices.contains(newDevice)){
+		if(devices.contains(newDevice) && newDevice!=null){
 			devices.remove(newDevice);
 			for(IDeviceAddedListener l :deviceAddedListener){
 				l.onDeviceRemoved(newDevice);

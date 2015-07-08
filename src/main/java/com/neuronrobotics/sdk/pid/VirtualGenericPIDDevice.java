@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.neuronrobotics.sdk.common.BowlerAbstractCommand;
 import com.neuronrobotics.sdk.common.BowlerDatagram;
+import com.neuronrobotics.sdk.common.InvalidConnectionException;
 import com.neuronrobotics.sdk.common.InvalidResponseException;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.NoConnectionAvailableException;
@@ -329,6 +330,20 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 		private void setPause(boolean pause) {
 			this.pause = pause;
 		}
+	}
+	@Override
+	public boolean connect(){
+		fireConnectEvent();
+		return true;
+	}
+	
+	/**
+	 * This method tells the connection object to disconnect its pipes and close out the connection. Once this is called, it is safe to remove your device.
+	 */
+	@Override
+	public void disconnect(){
+		fireDisconnectEvent();
+		
 	}
 	
 }

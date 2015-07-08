@@ -95,6 +95,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 			
 			@Override
 			public void onDisconnect(BowlerAbstractConnection source) {
+				
 				l.onDisconnect(getDevice());
 			}
 			
