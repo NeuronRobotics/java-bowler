@@ -1,4 +1,5 @@
 <root>
+<appendage>
 <link>
 	<name>basePan</name>
 	<deviceName>dyio</deviceName>
@@ -136,4 +137,5 @@
 	<roty>0.0</roty>
 	<rotz>-0.7071067811865475</rotz>
 </baseToZframe>
+</appendage>
 </root>

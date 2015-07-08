@@ -1,5 +1,7 @@
 package com.neuronrobotics.sdk.addons.kinematics;
 
+import java.util.ArrayList;
+
 import javax.xml.transform.TransformerFactory;
 
 import javafx.application.Platform;
@@ -31,6 +33,8 @@ public class DHLink {
 	private Affine listener=null;
 	private boolean degenerate = false;
 	
+	private ArrayList<IDhLinkPositionListener> dhlisteners = new ArrayList<IDhLinkPositionListener>();
+	
 	
 	public DHLink(double d, double theta,double r, double alpha) {
 		this.setDelta(d);
@@ -45,6 +49,21 @@ public class DHLink {
 		setTheta(Math.toRadians(XmlFactory.getTagValueDouble("Theta", nNode)));
 		setRadius(XmlFactory.getTagValueDouble("Radius", nNode));
 		setAlpha(Math.toRadians(XmlFactory.getTagValueDouble("Alpha", nNode)));
+	}
+	
+	public void fireOnLinkGlobalPositionChange(TransformNR newPose){
+		for(IDhLinkPositionListener l:dhlisteners){
+			l.onLinkGlobalPositionChange(newPose);
+		}
+	}
+	
+	public void addDhLinkPositionListener(IDhLinkPositionListener l){
+		if(!dhlisteners.contains(l))
+			dhlisteners.add(l);
+	}
+	public void removeDhLinkPositionListener(IDhLinkPositionListener l){
+		if(dhlisteners.contains(l))
+			dhlisteners.remove(l);
 	}
 	/*
 	 * 

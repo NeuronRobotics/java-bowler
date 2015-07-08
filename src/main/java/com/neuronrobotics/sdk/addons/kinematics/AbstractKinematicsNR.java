@@ -38,7 +38,8 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 
 	private ArrayList<ITaskSpaceUpdateListenerNR> taskSpaceUpdateListeners = new ArrayList<ITaskSpaceUpdateListenerNR>();
 	protected ArrayList<IJointSpaceUpdateListenerNR> jointSpaceUpdateListeners = new ArrayList<IJointSpaceUpdateListenerNR>();
-	private ArrayList<IRegistrationListenerNR> regListeners= new ArrayList<IRegistrationListenerNR>();	
+	private ArrayList<IRegistrationListenerNR> regListeners= new ArrayList<IRegistrationListenerNR>();
+	private ArrayList<MobileBase> mobileBases = new ArrayList<MobileBase>();
 
 	/*This is in RAW joint level ticks*/
 	protected double[] currentJointSpacePositions=null;
@@ -49,7 +50,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	
 	private boolean noFlush = false;
 	private boolean noXmlConfig=true;
-	
+	private DHChain dhParametersChain=null;
 	/**
 	 * This method tells the connection object to disconnect its pipes and close out the connection. Once this is called, it is safe to remove your device.
 	 */
@@ -96,12 +97,32 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	}
 	public AbstractKinematicsNR(InputStream configFile,LinkFactory f){
 		this();
+		Document doc =XmlFactory.getAllNodesDocument(configFile);
+		NodeList nodListofLinks = doc.getElementsByTagName("appendage");
+		for (int i = 0; i < nodListofLinks.getLength(); i++) {			
+		    Node linkNode = nodListofLinks.item(i);
+		    if (linkNode.getNodeType() == Node.ELEMENT_NODE) {
+				noXmlConfig=false;
+				if(configFile!=null && f!=null){
+					setDevice(f,loadConfig((Element) linkNode));
+				}
+		    }else{
+		    	Log.info("Not Element Node");
+		    }
+		}
+
+		
+	}
+	
+	public AbstractKinematicsNR(Element doc,LinkFactory f){
+		this();
 		noXmlConfig=false;
-		if(configFile!=null && f!=null){
-			setDevice(f,loadConfig(configFile));
+		if(doc!=null && f!=null){
+			setDevice(f,loadConfig(doc));
 		}
 		
 	}
+	
 	private String getDate(){
 		Timestamp t = new Timestamp(System.currentTimeMillis());
 		return t.toString().split("\\ ")[0];
@@ -110,18 +131,19 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 * Load XML configuration file, 
 	 * then store in LinkConfiguration (ArrayList type)
 	 */
-	protected ArrayList<LinkConfiguration> loadConfig(InputStream config){
+	protected ArrayList<LinkConfiguration> loadConfig(Element doc){
 		ArrayList<LinkConfiguration> localConfigsFromXml=new ArrayList<LinkConfiguration>();
-
-		Document doc =XmlFactory.getAllNodesDocument(config);
-		NodeList nList = doc.getElementsByTagName("link");
+		
+		NodeList nodListofLinks = doc.getElementsByTagName("links");
 		NodeList zf = 	 doc.getElementsByTagName("ZframeToRAS");
 		NodeList bf = 	 doc.getElementsByTagName("baseToZframe");
+		dHParameters = doc.getElementsByTagName("DHParameters");
+		mobileBasesNodeList = doc.getElementsByTagName("mobileBase");
 		
-		for (int i = 0; i < nList.getLength(); i++) {			
-		    Node nNode = nList.item(i);
-		    if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-		    	localConfigsFromXml.add(new LinkConfiguration((Element) nNode));
+		for (int i = 0; i < nodListofLinks.getLength(); i++) {			
+		    Node linkNode = nodListofLinks.item(i);
+		    if (linkNode.getNodeType() == Node.ELEMENT_NODE) {
+		    	localConfigsFromXml.add(new LinkConfiguration((Element) linkNode));
 		    }else{
 		    	Log.info("Not Element Node");
 		    }
@@ -167,6 +189,9 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 			ex.printStackTrace();
 			Log.warning("No base to Z frame transform defined");
 		}
+		
+
+		
 		return localConfigsFromXml;
 	}
 	
@@ -256,6 +281,35 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		}
 		getCurrentTaskSpaceTransform();
 		getFactory().addLinkListener(this);
+		setDhParametersChain(new DHChain(getFactory(), this));
+		for (int i = 0; i < dHParameters.getLength(); i++) {			
+		    Node nNode = dHParameters.item(i);
+		    if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+		    	Element dhNode =(Element)	nNode;
+		    	DHLink newLink = new DHLink(dhNode);
+		    	getDhParametersChain().addLink(newLink);//0->1
+		    	mobileBasesNodeList = dhNode.getElementsByTagName("mobileBase");
+				for (int j = 0; j < mobileBasesNodeList.getLength(); j++) {			
+				    Node mb = mobileBasesNodeList.item(i);
+				    if (mb.getNodeType() == Node.ELEMENT_NODE) {
+				    	final MobileBase newMobileBase = new MobileBase((Element)mb);
+				    	mobileBases.add(newMobileBase);
+				    	newLink.addDhLinkPositionListener(new IDhLinkPositionListener() {
+							@Override
+							public void onLinkGlobalPositionChange(TransformNR newPose) {
+								Log.debug("Motion in the D-H link has caused this mobile base to move");
+								newMobileBase.setGlobalToFiducialTransform(newPose);
+							}
+						});
+				    }
+				}
+		    }
+		}
+
+		//filling up the d-h parameters so the chain sizes match
+		while(getDhParametersChain().getLinks().size() < linkConfigs.size()){
+			getDhParametersChain().addLink(new DHLink(0,0,0,0));
+		}
 	}
 	/**
 	 * Gets the number of links defined in the configuration file
@@ -610,6 +664,10 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 * @param link The link to be homed
 	 */
 	private long homeTime;
+
+	private NodeList dHParameters;
+
+	private NodeList mobileBasesNodeList;
 	private void runHome(PIDChannel joint, int tps){
 		IPIDEventListener listen = new IPIDEventListener() {
 			
@@ -754,5 +812,13 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 
 	public void setRobotToFiducialTransform(TransformNR newTrans) {
 		setBaseToZframeTransform(newTrans);
+	}
+
+	public DHChain getDhParametersChain() {
+		return dhParametersChain;
+	}
+
+	public void setDhParametersChain(DHChain dhParametersChain) {
+		this.dhParametersChain = dhParametersChain;
 	}
 }

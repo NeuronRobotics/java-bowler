@@ -1,5 +1,5 @@
 <root>
-	
+	<appendage>
 	<link>
 		<name>basePan</name><!-- Name, used to regester the link with a specific location in the robot  -->
 		<type>analog-rotory</type><!-- This is the actual type of the link as used by the kinematics to  -->
@@ -121,4 +121,5 @@
 		<roty>0</roty>
 		<rotz>0</rotz>
 	</baseToZframe>
+	</appendage>
 </root>

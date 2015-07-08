@@ -10,6 +10,8 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 
+import org.w3c.dom.Element;
+
 import javafx.application.Platform;
 import javafx.scene.transform.Affine;
 import Jama.Matrix;
@@ -45,42 +47,51 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 		@Override public void onConnect(BowlerAbstractDevice source) {}
 	} ;
 	
-	
-	public DHParameterKinematics( BowlerAbstractDevice bad, InputStream linkStream, InputStream dhStream) {
+	public DHParameterKinematics( BowlerAbstractDevice bad, Element  linkStream ){
 		super(linkStream,new LinkFactory(bad));
-		setChain(new DHChain(dhStream,getFactory(),this));
+		setChain(getDhParametersChain());
 		if(getFactory().getDyio()!=null)
 			getFactory().getDyio().addConnectionEventListener(l);
 	}
 	
+	public DHParameterKinematics( BowlerAbstractDevice bad, InputStream  linkStream ){
+		super(linkStream,new LinkFactory(bad));
+		setChain(getDhParametersChain());
+		if(getFactory().getDyio()!=null)
+			getFactory().getDyio().addConnectionEventListener(l);
+	}
+	@Deprecated
+	public DHParameterKinematics( BowlerAbstractDevice bad, InputStream linkStream ,InputStream depricated ){
+		this(bad, linkStream);
+	}
 	
 	public DHParameterKinematics(BowlerAbstractDevice bad) {
-		this(bad,XmlFactory.getDefaultConfigurationStream("TrobotLinks.xml"),XmlFactory.getDefaultConfigurationStream("TrobotLinks.xml"));
+		this(bad,XmlFactory.getDefaultConfigurationStream("TrobotLinks.xml"));
 	}
 
 	public DHParameterKinematics(BowlerAbstractDevice bad, String file) {
-		this(bad,XmlFactory.getDefaultConfigurationStream(file),XmlFactory.getDefaultConfigurationStream(file));
+		this(bad,XmlFactory.getDefaultConfigurationStream(file));
 	}
 
 	public DHParameterKinematics(BowlerAbstractDevice bad,  File configFile) throws FileNotFoundException {
-		this(bad,new FileInputStream(configFile),new FileInputStream(configFile));
+		this(bad,new FileInputStream(configFile));
 	}
 	
 	public DHParameterKinematics() {
-		this(null,XmlFactory.getDefaultConfigurationStream("TrobotLinks.xml"),XmlFactory.getDefaultConfigurationStream("TrobotLinks.xml"));
+		this(null,XmlFactory.getDefaultConfigurationStream("TrobotLinks.xml"));
 	}
 	
 
 	public DHParameterKinematics( String file) {
-		this(null,XmlFactory.getDefaultConfigurationStream(file),XmlFactory.getDefaultConfigurationStream(file));
+		this(null,XmlFactory.getDefaultConfigurationStream(file));
 	}
 
-	public DHParameterKinematics( InputStream linkStream, InputStream dhStream) {
-		this(null,linkStream,dhStream);
+	public DHParameterKinematics( Element linkStream) {
+		this(null,linkStream);
 	}
 	
 	public DHParameterKinematics( File configFile) throws FileNotFoundException {
-		this(null,new FileInputStream(configFile),new FileInputStream(configFile));
+		this(null,new FileInputStream(configFile));
 	}
 
 

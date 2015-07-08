@@ -27,17 +27,9 @@ public  class DHChain {
 	private AbstractKinematicsNR kin;
 	private LinkFactory factory;
 	
-	public DHChain(InputStream configFile,LinkFactory factory, AbstractKinematicsNR kin){
+	public DHChain(LinkFactory factory, AbstractKinematicsNR kin){
 		this.setFactory(factory);
 		this.kin = kin;
-		NodeList nList = XmlFactory.getAllNodesFromTag("DHParameters", configFile);
-		for (int i = 0; i < nList.getLength(); i++) {			
-		    Node nNode = nList.item(i);
-		    if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-		    	getLinks().add(new DHLink((Element)	nNode));//0->1
-		    	
-		    }
-		}
 		upperLimits = factory.getUpperLimits();
 		lowerLimits = factory.getLowerLimits();
 	}
@@ -186,13 +178,13 @@ public  class DHChain {
 			current = current.times(step);
 			final Matrix update=current.copy();
 			final int index=i;
+			final TransformNR pose =forwardOffset(new TransformNR(update));
+			getLinks().get(index).fireOnLinkGlobalPositionChange(pose);	
 			Platform.runLater(new Runnable() {
 				@Override
 				public void run() {
-							TransformFactory.getTransform(forwardOffset(new TransformNR(update)), getLinks().get(index).getListener());
+					TransformFactory.getTransform(pose, getLinks().get(index).getListener());
 				}
-
-
 			});
 			if(store){
 				intChain.add(new TransformNR(step));

@@ -1,5 +1,5 @@
 <root>
-	
+<appendage>	
 	<link>
 		<name>xTranslation</name>
 		<type>pid</type>
@@ -120,5 +120,5 @@
 		<roty>0</roty>
 		<rotz>0</rotz>
 	</baseToZframe>
-		
+</appendage>		
 </root>

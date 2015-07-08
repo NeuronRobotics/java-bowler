@@ -1,14 +1,90 @@
 package com.neuronrobotics.sdk.addons.kinematics;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 
-import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
-public class MobileBase extends DHParameterKinematics {
+import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
+import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
+import com.neuronrobotics.sdk.common.Log;
+
+public class MobileBase extends AbstractKinematicsNR {
 	
 	private ArrayList<DHParameterKinematics> legs=new ArrayList<DHParameterKinematics>();
 	private ArrayList<DHParameterKinematics> appendages=new ArrayList<DHParameterKinematics>();
+	private ArrayList<DHParameterKinematics> steerable=new ArrayList<DHParameterKinematics>();
+	private ArrayList<DHParameterKinematics> drivable=new ArrayList<DHParameterKinematics>();
 	
+
+	public MobileBase(){}// used for building new bases live
+	
+	public MobileBase(InputStream configFile){
+		this();
+		Document doc =XmlFactory.getAllNodesDocument(configFile);
+		NodeList nodListofLinks = doc.getElementsByTagName("mobilebase");
+		if(nodListofLinks.getLength()>1){
+			throw new RuntimeException("only one mobile base is allowed per level");
+		}
+		for (int i = 0; i < nodListofLinks.getLength(); i++) {			
+		    Node linkNode = nodListofLinks.item(i);
+		    if (linkNode.getNodeType() == Node.ELEMENT_NODE) {
+		    	Element e = (Element) linkNode;
+		    	loadConfigs( e);
+		    }else{
+		    	
+		    }
+		}
+	}
+	
+	public MobileBase(Element doc) {
+		
+		loadConfigs( doc);
+		
+	}
+	
+	private void loadConfigs(Element doc){
+		loadLimb(doc,"leg",legs);
+		loadLimb(doc,"drivable",drivable);
+		loadLimb(doc,"steerable",steerable);
+		loadLimb(doc,"appendage",appendages);
+		
+	}
+	
+	private void loadLimb(Element doc,String tag, ArrayList<DHParameterKinematics> list){
+		NodeList legNodes 			= doc.getElementsByTagName(tag);
+		for (int i = 0; i < legNodes.getLength(); i++) {			
+		    Node linkNode = legNodes.item(i);
+		    if (linkNode.getNodeType() == Node.ELEMENT_NODE) {
+		    	Element e = (Element) linkNode;
+		    	final DHParameterKinematics kin = new DHParameterKinematics(e);
+		    	list.add(kin);
+		    	addRegistrationListener(new IRegistrationListenerNR() {
+					@Override
+					public void onFiducialToGlobalUpdate(AbstractKinematicsNR source,
+							TransformNR regestration) {
+						Log.debug("Motion of mobile base event ");
+						//this represents motion of the mobile base
+						kin.setGlobalToFiducialTransform(regestration);
+						kin.getCurrentTaskSpaceTransform();
+					}
+					
+					@Override
+					public void onBaseToFiducialUpdate(AbstractKinematicsNR source,
+							TransformNR regestration) {
+						// update the joints on the motion
+						kin.getCurrentTaskSpaceTransform();
+					}
+				});
+		    }
+		}
+	}
+
+
+
 	@Override
 	public void disconnectDevice() {
 		// TODO Auto-generated method stub
@@ -78,7 +154,7 @@ public class MobileBase extends DHParameterKinematics {
 			xml+=l.getEmbedableXml();
 			xml+="\n</appendage>\n";
 		}
-		ArrayList<DHLink> dhLinks = getChain().getLinks();
+		ArrayList<DHLink> dhLinks = getDhParametersChain().getLinks();
 		for(int i=0;i<dhLinks.size();i++){
 			xml+="<link>\n";
 			xml+=getLinkConfiguration(i).getXml();
@@ -94,6 +170,22 @@ public class MobileBase extends DHParameterKinematics {
 		xml+=getRobotToFiducialTransform().getXml();
 		xml+="\n</baseToZframe>\n";
 		return xml;
+	}
+
+	public ArrayList<DHParameterKinematics> getSteerable() {
+		return steerable;
+	}
+
+	public void setSteerable(ArrayList<DHParameterKinematics> steerable) {
+		this.steerable = steerable;
+	}
+
+	public ArrayList<DHParameterKinematics> getDrivable() {
+		return drivable;
+	}
+
+	public void setDrivable(ArrayList<DHParameterKinematics> drivable) {
+		this.drivable = drivable;
 	}
 
 }
