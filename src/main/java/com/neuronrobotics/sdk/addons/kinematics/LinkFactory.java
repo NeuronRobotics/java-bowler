@@ -18,7 +18,7 @@ public class LinkFactory {
 	private VirtualGenericPIDDevice virtual=null; 
 	private ArrayList<AbstractLink> links = new ArrayList<AbstractLink>();
 	private ArrayList<LinkConfiguration> linkConfigurations=null ;
-	private String myVirtualDevName="virtual_"+(int)(Math.random()*9999.0);
+	private final String myVirtualDevName="virtual_"+(int)(Math.random()*9999.0);
 	private DyIO dyio;
 	private IPidControlNamespace pid;
 	

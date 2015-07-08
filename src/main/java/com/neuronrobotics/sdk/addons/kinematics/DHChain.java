@@ -25,8 +25,10 @@ public  class DHChain {
 	private boolean debug=false;
 	private DhInverseSolver is;
 	private AbstractKinematicsNR kin;
+	private LinkFactory factory;
 	
-	public DHChain(InputStream configFile,LinkFactory f, AbstractKinematicsNR kin){
+	public DHChain(InputStream configFile,LinkFactory factory, AbstractKinematicsNR kin){
+		this.setFactory(factory);
 		this.kin = kin;
 		NodeList nList = XmlFactory.getAllNodesFromTag("DHParameters", configFile);
 		for (int i = 0; i < nList.getLength(); i++) {			
@@ -36,8 +38,8 @@ public  class DHChain {
 		    	
 		    }
 		}
-		upperLimits = f.getUpperLimits();
-		lowerLimits = f.getLowerLimits();
+		upperLimits = factory.getUpperLimits();
+		lowerLimits = factory.getLowerLimits();
 	}
 	
 	public void addLink(DHLink link){
@@ -174,7 +176,12 @@ public  class DHChain {
 		if(store)
 			setChain(new ArrayList<TransformNR>());
 		for(int i=0;i<getLinks().size();i++) {
-			Matrix step = getLinks().get(i).DhStepRotory(Math.toRadians(jointSpaceVector[i]));
+			LinkConfiguration conf= getFactory().getLinkConfigurations().get(i);
+			Matrix step;
+			if(conf.getType().isPrismatic())
+				step= getLinks().get(i).DhStepPrismatic(jointSpaceVector[i]);
+			else
+				step= getLinks().get(i).DhStepRotory(Math.toRadians(jointSpaceVector[i]));
 			//Log.info( "Current:\n"+current+"Step:\n"+step);
 			current = current.times(step);
 			final Matrix update=current.copy();
@@ -347,6 +354,14 @@ public  class DHChain {
 
 	public void setInverseSolver(DhInverseSolver is) {
 		this.is = is;
+	}
+
+	public LinkFactory getFactory() {
+		return factory;
+	}
+
+	public void setFactory(LinkFactory factory) {
+		this.factory = factory;
 	}
 
 }
