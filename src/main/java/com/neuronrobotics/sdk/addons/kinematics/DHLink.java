@@ -77,7 +77,7 @@ public class DHLink {
 		    "\t\t<Theta>"+Math.toDegrees(theta)+"</Theta>\n"+
 		   "\t\t<Radius>"+radius+"</Radius>\n"+
 		   "\t\t<Alpha>"+Math.toDegrees(alpha)+"</Alpha>\n"+
-		   embedableXml+
+		   mb+
 		"\t</DHParameters>\n";
 	}
 	public double getD() {
