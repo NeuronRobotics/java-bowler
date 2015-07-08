@@ -109,8 +109,8 @@ public class MobileBase extends AbstractKinematicsNR{
 						DHParameterKinematics kin=(DHParameterKinematics) DeviceManager.getSpecificDevice(DHParameterKinematics.class, name);
 						Log.debug("Motion of mobile base event ");
 						//this represents motion of the mobile base
-						kin.setGlobalToFiducialTransform(regestration);
-						kin.getCurrentTaskSpaceTransform();
+						if(kin!=null)kin.setGlobalToFiducialTransform(regestration);
+						if(kin!=null)kin.getCurrentTaskSpaceTransform();
 					}
 					
 					@Override
@@ -118,6 +118,7 @@ public class MobileBase extends AbstractKinematicsNR{
 							TransformNR regestration) {
 						DHParameterKinematics kin=(DHParameterKinematics) DeviceManager.getSpecificDevice(DHParameterKinematics.class, name);
 						// update the joints on the motion
+						if(kin!=null)
 						kin.getCurrentTaskSpaceTransform();
 					}
 				});

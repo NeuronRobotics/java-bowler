@@ -18,7 +18,6 @@ public class LinkFactory {
 	private VirtualGenericPIDDevice virtual=null; 
 	private ArrayList<AbstractLink> links = new ArrayList<AbstractLink>();
 	private ArrayList<LinkConfiguration> linkConfigurations=null ;
-	private final String myVirtualDevName="virtual_"+(int)(Math.random()*9999.0);
 	private DyIO dyio;
 	private IPidControlNamespace pid;
 	
@@ -28,11 +27,6 @@ public class LinkFactory {
 	public LinkFactory(BowlerAbstractDevice bad){
 		if(bad!=null)
 			DeviceManager.addConnection(bad, bad.getScriptingName());
-		virtual = (VirtualGenericPIDDevice)DeviceManager.getSpecificDevice(VirtualGenericPIDDevice.class, myVirtualDevName);
-		if(virtual==null){
-			virtual=new VirtualGenericPIDDevice();
-			DeviceManager.addConnection(virtual, myVirtualDevName);
-		}
 	}
 	
 	public LinkFactory(ILinkFactoryProvider connection,IExtendedPIDControl d) {
@@ -74,6 +68,7 @@ public class LinkFactory {
 			dyio=(DyIO) DeviceManager.getSpecificDevice(DyIO.class, c.getDeviceScriptingName());
 		if(pid==null)
 			pid=(IPidControlNamespace) DeviceManager.getSpecificDevice(IPidControlNamespace.class, c.getDeviceScriptingName());
+		
 		AbstractLink tmp=null;
 		Log.info("Loading link: "+c.getName()+" type = "+c.getType()+" device= "+c.getDeviceScriptingName());
 		switch(c.getType()){
@@ -139,6 +134,12 @@ public class LinkFactory {
 			break;
 		case DUMMY:
 		case VIRTUAL:
+			String myVirtualDevName=c.getDeviceScriptingName();
+			virtual = (VirtualGenericPIDDevice)DeviceManager.getSpecificDevice(VirtualGenericPIDDevice.class, myVirtualDevName);
+			if(virtual==null){
+				virtual=new VirtualGenericPIDDevice();
+				DeviceManager.addConnection(virtual, myVirtualDevName);
+			}
 			tmp=new PidRotoryLink(	virtual.getPIDChannel(c.getHardwareIndex()),
 					c);
 			tmp.setUseLimits(false);
@@ -146,6 +147,12 @@ public class LinkFactory {
 		}
 		
 		if(tmp==null){
+			String myVirtualDevName="virtual_"+c.getDeviceScriptingName();
+			virtual = (VirtualGenericPIDDevice)DeviceManager.getSpecificDevice(VirtualGenericPIDDevice.class, myVirtualDevName);
+			if(virtual==null){
+				virtual=new VirtualGenericPIDDevice();
+				DeviceManager.addConnection(virtual, myVirtualDevName);
+			}
 			if(!c.getType().isPrismatic()){
 				tmp=new PidRotoryLink(	virtual.getPIDChannel(c.getHardwareIndex()),
 						c);

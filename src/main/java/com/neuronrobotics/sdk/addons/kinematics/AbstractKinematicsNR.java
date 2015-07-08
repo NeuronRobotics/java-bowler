@@ -767,6 +767,8 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		this.factory = factory;
 	}
 	public LinkFactory getFactory() {
+		if(factory==null)
+			factory=new LinkFactory();
 		return factory;
 	}
 	public void setNoFlush(boolean noFlush) {
