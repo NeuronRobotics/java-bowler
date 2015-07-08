@@ -8,17 +8,21 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
 import com.neuronrobotics.sdk.common.Log;
 
-public class MobileBase extends AbstractKinematicsNR {
+public class MobileBase extends AbstractKinematicsNR{
 	
 	private ArrayList<DHParameterKinematics> legs=new ArrayList<DHParameterKinematics>();
 	private ArrayList<DHParameterKinematics> appendages=new ArrayList<DHParameterKinematics>();
 	private ArrayList<DHParameterKinematics> steerable=new ArrayList<DHParameterKinematics>();
 	private ArrayList<DHParameterKinematics> drivable=new ArrayList<DHParameterKinematics>();
+	private DrivingType driveType = DrivingType.NONE;
 	
+	private IDriveEngine walkingDriveEngine = new WalkingDriveEngine();
+	private IDriveEngine wheeledDriveEngine = new WheeledDriveEngine();
 
 	public MobileBase(){}// used for building new bases live
 	
@@ -51,6 +55,11 @@ public class MobileBase extends AbstractKinematicsNR {
 		loadLimb(doc,"drivable",drivable);
 		loadLimb(doc,"steerable",steerable);
 		loadLimb(doc,"appendage",appendages);
+		try{
+			setDriveType(DrivingType.fromString(XmlFactory.getTagValue("driveType",doc)));
+		}catch(Exception ex ){
+			setDriveType(DrivingType.NONE);
+		}
 		
 	}
 	
@@ -186,6 +195,89 @@ public class MobileBase extends AbstractKinematicsNR {
 
 	public void setDrivable(ArrayList<DHParameterKinematics> drivable) {
 		this.drivable = drivable;
+	}
+
+	public IDriveEngine getWalkingDriveEngine() {
+		return walkingDriveEngine;
+	}
+
+	public void setWalkingDriveEngine(IDriveEngine walkingDriveEngine) {
+		this.walkingDriveEngine = walkingDriveEngine;
+	}
+
+	public IDriveEngine getWheeledDriveEngine() {
+		return wheeledDriveEngine;
+	}
+
+	public void setWheeledDriveEngine(IDriveEngine wheeledDriveEngine) {
+		this.wheeledDriveEngine = wheeledDriveEngine;
+	}
+
+	public DrivingType getDriveType() {
+		return driveType;
+	}
+
+	public void setDriveType(DrivingType driveType) {
+		this.driveType = driveType;
+	}
+
+	
+	public void DriveStraight(double cm, double seconds) {
+		switch(driveType){
+		case DRIVING:
+			getWheeledDriveEngine().DriveStraight(this,cm, seconds);
+			break;
+		case NONE:
+			break;
+		case WALKING:
+			getWalkingDriveEngine().DriveStraight(this,cm, seconds);
+			break;
+		}
+	}
+
+	
+	public void DriveArc(double cmRadius, double degrees, double seconds) {
+		// TODO Auto-generated method stub
+		switch(driveType){
+		case DRIVING:
+			getWheeledDriveEngine().DriveArc(this,cmRadius, degrees, seconds);
+			break;
+		case NONE:
+			break;
+		case WALKING:
+			getWalkingDriveEngine().DriveArc(this,cmRadius, degrees, seconds);
+			break;
+		}
+	}
+
+	
+	public void DriveVelocityStraight(double cmPerSecond) {
+		// TODO Auto-generated method stub
+		switch(driveType){
+		case DRIVING:
+			getWheeledDriveEngine().DriveVelocityStraight(this,cmPerSecond);
+			break;
+		case NONE:
+			break;
+		case WALKING:
+			getWalkingDriveEngine().DriveVelocityStraight(this,cmPerSecond);
+			break;
+		}
+	}
+
+	
+	public void DriveVelocityArc(double degreesPerSecond, double cmRadius) {
+		// TODO Auto-generated method stub
+		switch(driveType){
+		case DRIVING:
+			getWheeledDriveEngine().DriveVelocityArc(this,degreesPerSecond, cmRadius);
+			break;
+		case NONE:
+			break;
+		case WALKING:
+			getWalkingDriveEngine().DriveVelocityArc(this,degreesPerSecond, cmRadius);
+			break;
+		}
 	}
 
 }

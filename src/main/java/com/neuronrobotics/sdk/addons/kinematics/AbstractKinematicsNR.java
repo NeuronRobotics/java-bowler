@@ -134,7 +134,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	protected ArrayList<LinkConfiguration> loadConfig(Element doc){
 		ArrayList<LinkConfiguration> localConfigsFromXml=new ArrayList<LinkConfiguration>();
 		
-		NodeList nodListofLinks = doc.getElementsByTagName("links");
+		NodeList nodListofLinks = doc.getElementsByTagName("link");
 		NodeList zf = 	 doc.getElementsByTagName("ZframeToRAS");
 		NodeList bf = 	 doc.getElementsByTagName("baseToZframe");
 		dHParameters = doc.getElementsByTagName("DHParameters");
