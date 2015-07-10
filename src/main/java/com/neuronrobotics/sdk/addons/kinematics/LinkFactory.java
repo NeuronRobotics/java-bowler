@@ -156,11 +156,11 @@ public class LinkFactory {
 			if(!c.getType().isPrismatic()){
 				tmp=new PidRotoryLink(	virtual.getPIDChannel(c.getHardwareIndex()),
 						c);
-				tmp.setUseLimits(false);
+				//tmp.setUseLimits(false);
 			}else{
 				tmp=new PidPrismaticLink(virtual.getPIDChannel(c.getHardwareIndex()),
 						c);
-				tmp.setUseLimits(false);
+				//tmp.setUseLimits(false);
 			}
 		}
 		tmp.setLinkConfiguration(c);

@@ -32,7 +32,7 @@ public enum DrivingType {
 	   if (map.containsKey(name)) {
 	     return map.get(name);
 	   }
-	   throw new NoSuchElementException(name + "not found");
+	   return NONE;
 	 }
 	 
 	 

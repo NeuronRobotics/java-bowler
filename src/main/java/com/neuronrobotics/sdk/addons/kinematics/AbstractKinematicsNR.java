@@ -4,6 +4,8 @@ import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
+import javax.management.RuntimeErrorException;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -170,7 +172,11 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 				    }
 				}
 		    }else if (linkNode.getNodeType() == Node.ELEMENT_NODE && linkNode.getNodeName().contentEquals("name")) {
-		    	setScriptingName(XmlFactory.getTagValue("name",(Element)linkNode));
+		    	try{
+		    		setScriptingName(XmlFactory.getTagValue("name",doc));
+		    	}catch(Exception E){
+		    		E.printStackTrace();
+		    	}
 		    }
 		    else if (linkNode.getNodeType() == Node.ELEMENT_NODE && linkNode.getNodeName().contentEquals("ZframeToRAS")) {
 		    	Element eElement = (Element)linkNode;	    		    
@@ -203,6 +209,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 */
 	public String getXml(){
 		String xml = "<root>\n";
+		xml+="\n<appendage>";
 		xml+="\n<name>"+getScriptingName()+"</name>\n";
 		for(int i=0;i<getLinkConfigurations().size();i++){
 			xml+="<link>\n";
@@ -216,6 +223,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		xml+="\n<baseToZframe>\n";
 		xml+=getRobotToFiducialTransform().getXml();
 		xml+="\n</baseToZframe>\n";
+		xml+="\n</appendage>";
 		xml+="\n</root>";
 		return xml;
 	}
@@ -309,6 +317,8 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 */
 	public TransformNR getCurrentTaskSpaceTransform() {
 		TransformNR fwd  = forwardKinematics(getCurrentJointSpaceVector());
+		if(fwd==null)
+			throw new RuntimeException("Implementations of the kinematics need to return a transform not null");
 		//Log.info("Getting robot task space "+fwd);
 		TransformNR taskSpaceTransform=forwardOffset(fwd);
 		//Log.info("Getting global task space "+taskSpaceTransform);
@@ -358,6 +368,8 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		setCurrentPoseTarget(taskSpaceTransform);
 		taskSpaceTransform = inverseOffset(taskSpaceTransform);
 		double [] jointSpaceVect = inverseKinematics(taskSpaceTransform);
+		if(jointSpaceVect==null)
+			throw new RuntimeException("The kinematics model muts return and array, not null");
 		setDesiredJointSpaceVector(jointSpaceVect,  seconds);
 		return jointSpaceVect;
 	}
@@ -435,6 +447,16 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		return jointSpaceVect;
 	}
 	
+	public TransformNR calcForward(double[] jointSpaceVect){
+		return forwardOffset(forwardKinematics(jointSpaceVect));
+	}
+	public TransformNR calcHome(){
+		double homevect[] = new double[getNumberOfLinks()];
+		for(int i=0;i<homevect.length;i++){
+			homevect[i]=0;
+		}
+		return forwardOffset(forwardKinematics(homevect));
+	}
 	/**
 	 * Sets an individual target joint position 
 	 * @param axis the joint index to set

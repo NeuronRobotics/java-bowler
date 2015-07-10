@@ -11,7 +11,7 @@ public class TransformNR {
 	private double x;
 	private double y;
 	private double z;
-	private final RotationNR rotation;
+	private  RotationNR rotation;
 	
 	
 	
@@ -19,46 +19,46 @@ public class TransformNR {
 		this.x=m.get(0, 3);
 		this.y=m.get(1, 3);
 		this.z=m.get(2, 3);
-		this.rotation = new RotationNR(m);
+		this.setRotation(new RotationNR(m));
 	}
 	
 	public TransformNR(double x, double y, double z, double w, double rotx, double roty, double rotz){
 		this.x=x;
 		this.y=y;
 		this.z=z;
-		this.rotation = new RotationNR(w,rotx,roty,rotz);
+		this.setRotation(new RotationNR(w,rotx,roty,rotz));
 	}
 	public TransformNR(double[] cartesianSpaceVector, double[][] rotationMatrix) {
 		this.x=cartesianSpaceVector[0];
 		this.y=cartesianSpaceVector[1];
 		this.z=cartesianSpaceVector[2];
-		this.rotation = new RotationNR(rotationMatrix);
+		this.setRotation(new RotationNR(rotationMatrix));
 	}
 	public TransformNR(double[] cartesianSpaceVector, double[] quaternionVector) {
 		this.x=cartesianSpaceVector[0];
 		this.y=cartesianSpaceVector[1];
 		this.z=cartesianSpaceVector[2];
-		this.rotation = new RotationNR(quaternionVector);
+		this.setRotation(new RotationNR(quaternionVector));
 	}
 	
 	public TransformNR(double x, double y, double z, RotationNR q){
 		this.x=x;
 		this.y=y;
 		this.z=z;
-		this.rotation = q;
+		this.setRotation(q);
 	}
 	
 	public TransformNR(double[] cartesianSpaceVector, RotationNR q) {
 		this.x=cartesianSpaceVector[0];
 		this.y=cartesianSpaceVector[1];
 		this.z=cartesianSpaceVector[2];
-		this.rotation = q;
+		this.setRotation(q);
 	}
 	public TransformNR() {
 		this.x=0;
 		this.y=0;
 		this.z=0;
-		this.rotation = new RotationNR();
+		this.setRotation(new RotationNR());
 	}
 	public double getX() {
 		return x;
@@ -70,15 +70,15 @@ public class TransformNR {
 		return z;
 	}
 	public double [][] getRotationMatrixArray(){
-		return rotation.getRotationMatrix();
+		return getRotation().getRotationMatrix();
 	}
 
 	public RotationNR getRotationMatrix() {
-		return rotation;
+		return getRotation();
 	}
 
 	public double getRotationValue(int i,int j) {
-		return rotation.getRotationMatrix()[i][j];
+		return getRotation().getRotationMatrix()[i][j];
 	}
 	public RotationNR getRotation() {
 
@@ -190,6 +190,10 @@ public class TransformNR {
 						"\t<rotz>"+getRotation().getRotationMatrix2QuaturnionZ()+"</rotz>";
 
 		return xml;
+	}
+
+	public void setRotation(RotationNR rotation) {
+		this.rotation = rotation;
 	}
 
 	

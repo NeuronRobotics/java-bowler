@@ -105,9 +105,10 @@ public class RotationNR {
 	public RotationNR( double x, double y, double z) {
 		TransformNR tmp = new TransformNR();
 		
+		tmp = tmp.times(new TransformNR(0, 0, 0, RotationNR.getRotationZ(z)));
 		tmp = tmp.times(new TransformNR(0, 0, 0, RotationNR.getRotationX(x)));
 		tmp = tmp.times(new TransformNR(0, 0, 0, RotationNR.getRotationY(y)));
-		tmp = tmp.times(new TransformNR(0, 0, 0, RotationNR.getRotationZ(z)));
+		
 		loadRotations(tmp.getRotationMatrixArray());
 	}
 

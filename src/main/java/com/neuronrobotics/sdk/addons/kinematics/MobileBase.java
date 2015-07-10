@@ -59,6 +59,7 @@ public class MobileBase extends AbstractKinematicsNR{
 	}
 	
 	private void loadConfigs(Element doc){
+		setScriptingName(XmlFactory.getTagValue("name",doc));
 		loadLimb(doc,"leg",legs);
 		loadLimb(doc,"drivable",drivable);
 		loadLimb(doc,"steerable",steerable);
@@ -77,7 +78,7 @@ public class MobileBase extends AbstractKinematicsNR{
 			for (int i = 0; i < nodListofLinks .getLength(); i++) {			
 			    Node linkNode = nodListofLinks.item(i);
 			   if (linkNode.getNodeType() == Node.ELEMENT_NODE && linkNode.getNodeName().contentEquals("name")) {
-			    	return XmlFactory.getTagValue("name",(Element)linkNode);
+			    	return XmlFactory.getTagValue("name",e);
 			    }
 			}
 		}catch(Exception ex){
@@ -99,8 +100,10 @@ public class MobileBase extends AbstractKinematicsNR{
 		    		kin=(DHParameterKinematics) DeviceManager.getSpecificDevice(DHParameterKinematics.class, name);
 		    	if(kin==null){
 		    		kin= new DHParameterKinematics(e);
+		    		
 		    		DeviceManager.addConnection(kin, name);
 		    	}
+		    	kin.setScriptingName(name);
 		    	list.add(kin);
 		    	addRegistrationListener(new IRegistrationListenerNR() {
 					@Override
@@ -146,13 +149,13 @@ public class MobileBase extends AbstractKinematicsNR{
 	public double[] inverseKinematics(TransformNR taskSpaceTransform)
 			throws Exception {
 		// TODO Auto-generated method stub
-		return null;
+		return new double[ getNumberOfLinks()];
 	}
 
 	@Override
 	public TransformNR forwardKinematics(double[] jointSpaceVector) {
 		// TODO Auto-generated method stub
-		return null;
+		return new TransformNR();
 	}
 
 	public ArrayList<DHParameterKinematics> getLegs() {
@@ -171,6 +174,23 @@ public class MobileBase extends AbstractKinematicsNR{
 		this.appendages = appendages;
 	}
 	
+	public ArrayList<DHParameterKinematics> getAllDHChains() {
+		ArrayList<DHParameterKinematics> copy = new ArrayList<DHParameterKinematics>();
+		for(DHParameterKinematics l:legs){
+			copy.add(l);	
+		}
+		for(DHParameterKinematics l:appendages){
+			copy.add(l);	
+		}
+		for(DHParameterKinematics l:steerable){
+			copy.add(l);	
+		}
+		for(DHParameterKinematics l:drivable){
+			copy.add(l);	
+		}
+		return copy;
+	}
+	
 	/*
 	 * 
 	 * Generate the xml configuration to generate an XML of this robot. 
@@ -187,24 +207,29 @@ public class MobileBase extends AbstractKinematicsNR{
 	 */
 	public String getEmbedableXml(){
 		String xml = "<mobilebase>\n";
+		xml+="\n<name>"+getScriptingName()+"</name>\n";
 		for(DHParameterKinematics l:legs){
 			xml+="<leg>\n";
+			xml+="\n<name>"+l.getScriptingName()+"</name>\n";
 			xml+=l.getEmbedableXml();
 			xml+="\n</leg>\n";
 		}
 		for(DHParameterKinematics l:appendages){
 			xml+="<appendage>\n";
+			xml+="\n<name>"+l.getScriptingName()+"</name>\n";
 			xml+=l.getEmbedableXml();
 			xml+="\n</appendage>\n";
 		}
 		
 		for(DHParameterKinematics l:steerable){
 			xml+="<steerable>\n";
+			xml+="\n<name>"+l.getScriptingName()+"</name>\n";
 			xml+=l.getEmbedableXml();
 			xml+="\n</steerable>\n";
 		}
 		for(DHParameterKinematics l:drivable){
 			xml+="<drivable>\n";
+			xml+="\n<name>"+l.getScriptingName()+"</name>\n";
 			xml+=l.getEmbedableXml();
 			xml+="\n</drivable>\n";
 		}
@@ -267,6 +292,15 @@ public class MobileBase extends AbstractKinematicsNR{
 			getWheeledDriveEngine().DriveArc(this,newPose, seconds);
 			break;
 		case NONE:
+			try {
+				//do a simple coordinated motion task
+				for(DHParameterKinematics dh:appendages){
+					dh.setDesiredTaskSpaceTransform(newPose,  seconds);
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			break;
 		case WALKING:
 			getWalkingDriveEngine().DriveArc(this,newPose, seconds);
