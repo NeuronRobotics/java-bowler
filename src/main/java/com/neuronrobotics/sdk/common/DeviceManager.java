@@ -142,7 +142,7 @@ public class DeviceManager {
 		else
 			for (String d:devs) {
 				// if the string is null it just returns the first of its kind
-				if(d.contentEquals(name) || name == null){
+				if(name == null||d.contentEquals(name) ){
 					for (int i = 0; i < devices.size(); i++) {
 						if(devices.get(i).getScriptingName().contains(d))
 							return devices.get(i);
