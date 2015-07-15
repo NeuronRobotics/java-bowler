@@ -1,4 +1,6 @@
 package com.neuronrobotics.sdk.addons.kinematics;
+import java.util.ArrayList;
+
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 
 public class ComputedGeometricModel  implements DhInverseSolver{
@@ -7,7 +9,7 @@ public class ComputedGeometricModel  implements DhInverseSolver{
 		this.dhChain = dhChain;
 	}
 
-	public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector ) {
+	public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector, ArrayList<DHLink> links ) {
 		//viewer.addTransform(target, "Target",Color.pink);
 				int linkNum = jointSpaceVector.length;
 		double [] inv = new double[linkNum];

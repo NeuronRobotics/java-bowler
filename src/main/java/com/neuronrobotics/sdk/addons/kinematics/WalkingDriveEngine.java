@@ -10,6 +10,7 @@ public class WalkingDriveEngine implements IDriveEngine {
 	double stepOverHeight=5;
 	@Override
 	public void DriveArc(MobileBase source, TransformNR newPose, double seconds) {
+
 		int numlegs = source.getLegs().size();
 		TransformNR [] feetLocations = new TransformNR[numlegs];
 		TransformNR [] home = new TransformNR[numlegs];

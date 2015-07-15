@@ -81,7 +81,7 @@ public  class DHChain {
 		if(getInverseSolver() == null)
 			setInverseSolver(new ComputedGeometricModel(this,debug));
 		
-		double [] inv = getInverseSolver().inverseKinematics(target, jointSpaceVector);	
+		double [] inv = getInverseSolver().inverseKinematics(target, jointSpaceVector,links);	
 		if(debug){
 			//getViewer().updatePoseDisplay(getChain(jointSpaceVector));
 		}
@@ -243,7 +243,7 @@ public  class DHChain {
 				
 				@Override
 				public double[] inverseKinematics(TransformNR target,
-						double[] jointSpaceVector) {
+						double[] jointSpaceVector, ArrayList<DHLink> links) {
 					int linkNum = jointSpaceVector.length;
 					double [] inv = new double[linkNum];
 					// this is an ad-hock kinematic model for d-h parameters and only works for specific configurations

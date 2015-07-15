@@ -19,7 +19,7 @@ public class SearchTreeSolver implements DhInverseSolver {
 	}
 
 	@Override
-	public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector) {
+	public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector, ArrayList<DHLink> links) {
 		setTarget(target);
 		searchTree step=new searchTree(jointSpaceVector,startingIncrement);;
 		boolean done = false;
