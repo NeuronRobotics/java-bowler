@@ -206,7 +206,10 @@ public class MobileBase extends AbstractKinematicsNR{
 	 * Generate the xml configuration to generate an XML of this robot. 
 	 */
 	public String getEmbedableXml(){
+		TransformNR location = getFiducialToGlobalTransform();
+		setGlobalToFiducialTransform(new TransformNR());
 		String xml = "<mobilebase>\n";
+		xml+="\n<driveType>"+getDriveType()+"</driveType>\n";
 		xml+="\n<name>"+getScriptingName()+"</name>\n";
 		for(DHParameterKinematics l:legs){
 			xml+="<leg>\n";
@@ -242,6 +245,7 @@ public class MobileBase extends AbstractKinematicsNR{
 		xml+=getRobotToFiducialTransform().getXml();
 		xml+="\n</baseToZframe>\n";
 		xml+="\n</mobilebase>\n";
+		setGlobalToFiducialTransform(location);
 		return xml;
 	}
 

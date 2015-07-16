@@ -176,6 +176,16 @@ public class TransformNR {
 		z+=translation;
 	}
 	
+	public void setX(double translation){
+		x=translation;
+	}
+	public void setY(double translation){
+		y=translation;
+	}
+	public void setZ(double translation){
+		z=translation;
+	}
+	
 	/*
 	 * 
 	 * Generate the xml configuration to generate an XML of this robot. 
