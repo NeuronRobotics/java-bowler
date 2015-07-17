@@ -102,12 +102,12 @@ public class RotationNR {
 	}
 	
 	// create a new object with the given simplified rotations
-	public RotationNR( double x, double y, double z) {
+	public RotationNR( double xDegrees, double yDegrees, double zDegrees) {
 		TransformNR tmp = new TransformNR();
 		
-		tmp = tmp.times(new TransformNR(0, 0, 0, RotationNR.getRotationZ(z)));
-		tmp = tmp.times(new TransformNR(0, 0, 0, RotationNR.getRotationX(x)));
-		tmp = tmp.times(new TransformNR(0, 0, 0, RotationNR.getRotationY(y)));
+		tmp = tmp.times(new TransformNR(0, 0, 0, RotationNR.getRotationZ(zDegrees)));
+		tmp = tmp.times(new TransformNR(0, 0, 0, RotationNR.getRotationX(xDegrees)));
+		tmp = tmp.times(new TransformNR(0, 0, 0, RotationNR.getRotationY(yDegrees)));
 		
 		loadRotations(tmp.getRotationMatrixArray());
 	}
