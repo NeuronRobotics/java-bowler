@@ -31,6 +31,7 @@ public class DHLink {
 	private Matrix transZ_J;
 	private Matrix rotZ_J;
 	private Affine listener=null;
+	private Affine root=null;
 	private boolean degenerate = false;
 	
 	private ArrayList<IDhLinkPositionListener> dhlisteners = new ArrayList<IDhLinkPositionListener>();
@@ -276,7 +277,13 @@ public class DHLink {
 	void setListener(Affine listener) {
 		this.listener = listener;
 	}
+	public Affine getRootListener() {
+		return root;
+	}
 
+	void setRootListener(Affine listener) {
+		this.root = listener;
+	}
 	public double getDelta() {
 		return d;
 	}

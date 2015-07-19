@@ -29,13 +29,21 @@ import com.neuronrobotics.sdk.pid.GenericPIDDevice;
 import com.neuronrobotics.sdk.pid.VirtualGenericPIDDevice;
 
 
-public class DHParameterKinematics extends AbstractKinematicsNR implements ITaskSpaceUpdateListenerNR{
+public class DHParameterKinematics extends AbstractKinematicsNR implements ITaskSpaceUpdateListenerNR,IRegistrationListenerNR{
 	
 	private DHChain chain=null;
 
 	private ArrayList<Affine> linksListeners = new ArrayList<Affine>();
 	private Affine currentTarget = new Affine();
 	boolean disconnecting=false;
+	private Affine root = new Affine();
+	public Affine getRootListener() {
+		return root;
+	}
+
+	void setRootListener(Affine listener) {
+		this.root = listener;
+	}
 	IDeviceConnectionEventListener l = new IDeviceConnectionEventListener() {
 		@Override public void onDisconnect(BowlerAbstractDevice source) {
 			if(!disconnecting){
@@ -146,11 +154,13 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 
 		for(int i=0;i<dhLinks.size();i++){
 			dhLinks.get(i).setListener(linksListeners.get(i));
+			dhLinks.get(i).setRootListener(root);
 			if(getLinkConfiguration(i).getType().isTool()){
 				dhLinks.get(i).setDegenerate(true);
 			}
 		}
 		addPoseUpdateListener(this);
+		addRegistrationListener(this);
 		try {
 			currentJointSpacePositions=null;
 			currentJointSpaceTarget=null;
@@ -254,6 +264,20 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 		setChain(chain);
 		//once the new link configuration is set up, re add the listener
 		factory.addLinkListener(this);
+	}
+
+	@Override
+	public void onBaseToFiducialUpdate(AbstractKinematicsNR source,
+			TransformNR regestration) {
+
+		TransformFactory.getTransform(forwardOffset(new TransformNR()), root);
+	}
+
+	@Override
+	public void onFiducialToGlobalUpdate(AbstractKinematicsNR source,
+			TransformNR regestration) {
+
+		TransformFactory.getTransform(forwardOffset(new TransformNR()), root);
 	}
 
 
