@@ -110,7 +110,7 @@ public class MobileBase extends AbstractKinematicsNR{
 					public void onFiducialToGlobalUpdate(AbstractKinematicsNR source,
 							TransformNR regestration) {
 						DHParameterKinematics kin=(DHParameterKinematics) DeviceManager.getSpecificDevice(DHParameterKinematics.class, name);
-						Log.debug("Motion of mobile base event ");
+						//Log.debug("Motion of mobile base event ");
 						//this represents motion of the mobile base
 						if(kin!=null)kin.setGlobalToFiducialTransform(regestration);
 						if(kin!=null)kin.getCurrentTaskSpaceTransform();
@@ -345,7 +345,7 @@ public class MobileBase extends AbstractKinematicsNR{
 	public static void main(String[] args){
 		try{
 			MobileBase m = new MobileBase(XmlFactory.getDefaultConfigurationStream("WalkingMobileBase.xml"));
-			System.out.println(m.getXml());
+			//System.out.println(m.getXml());
 		}catch(Exception e){e.printStackTrace();}
 		System.exit(0);
 	}

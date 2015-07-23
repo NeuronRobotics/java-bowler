@@ -270,14 +270,26 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 	public void onBaseToFiducialUpdate(AbstractKinematicsNR source,
 			TransformNR regestration) {
 
-		TransformFactory.getTransform(forwardOffset(new TransformNR()), root);
+		Platform.runLater(new Runnable() {
+			
+			@Override
+			public void run() {
+				TransformFactory.getTransform(forwardOffset(new TransformNR()), root);
+			}
+		});
 	}
 
 	@Override
 	public void onFiducialToGlobalUpdate(AbstractKinematicsNR source,
 			TransformNR regestration) {
-
-		TransformFactory.getTransform(forwardOffset(new TransformNR()), root);
+		Platform.runLater(new Runnable() {
+			
+			@Override
+			public void run() {
+				TransformFactory.getTransform(forwardOffset(new TransformNR()), root);
+			}
+		});
+		
 	}
 
 
