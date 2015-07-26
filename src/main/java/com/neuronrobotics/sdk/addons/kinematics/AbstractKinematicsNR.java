@@ -4,6 +4,9 @@ import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
+import javafx.application.Platform;
+import javafx.scene.transform.Affine;
+
 import javax.management.RuntimeErrorException;
 
 import org.w3c.dom.Document;
@@ -13,6 +16,7 @@ import org.w3c.dom.NodeList;
 
 import Jama.Matrix;
 
+import com.neuronrobotics.sdk.addons.kinematics.gui.TransformFactory;
 import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
@@ -53,6 +57,16 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	private boolean noFlush = false;
 	private boolean noXmlConfig=true;
 	private DHChain dhParametersChain=null;
+	
+	private Affine root = new Affine();
+	public Affine getRootListener() {
+		return root;
+	}
+
+	void setRootListener(Affine listener) {
+		this.root = listener;
+	}
+	
 	/**
 	 * This method tells the connection object to disconnect its pipes and close out the connection. Once this is called, it is safe to remove your device.
 	 */
@@ -545,6 +559,13 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		for(IRegistrationListenerNR r: regListeners){
 			r.onBaseToFiducialUpdate(this, baseToFiducial);
 		}
+		Platform.runLater(new Runnable() {
+			
+			@Override
+			public void run() {
+				TransformFactory.getTransform(forwardOffset(new TransformNR()), root);
+			}
+		});
 	}
 	
 	private void setZframeToGlobalTransform(TransformNR fiducialToRAS) {
@@ -559,9 +580,17 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	public void setGlobalToFiducialTransform(TransformNR frameToBase) {
 		Log.info("Setting Global To Fiducial Transform "+frameToBase);
 		this.fiducial2RAS = frameToBase;
+	
 		for(IRegistrationListenerNR r: regListeners){
 			r.onFiducialToGlobalUpdate(this, frameToBase);
 		}
+		Platform.runLater(new Runnable() {
+			
+			@Override
+			public void run() {
+				TransformFactory.getTransform(forwardOffset(new TransformNR()), root);
+			}
+		});
 	}
 	
 	protected TransformNR inverseOffset(TransformNR t){
