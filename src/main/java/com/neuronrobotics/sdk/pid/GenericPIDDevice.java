@@ -85,7 +85,11 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IExtendedP
 	public int getPIDChannelCount() {
 		return getImplementation().getNumberOfChannels();
 	}
-
+	
+	//This is added for backward compatibility
+	public int getNumberOfChannels(){
+		return getPIDChannelCount();
+	}
 	@Override
 	public boolean SetPIDSetPoint(int group, int setpoint, double seconds) {
 		return getImplementation().SetPIDSetPoint(group, setpoint, seconds);
