@@ -963,6 +963,8 @@ public abstract class BowlerAbstractConnection {
 				Log.error("Sending Synchronus packet and there was a failure, will retry "+(retry-i-1)+" more times");
 				ThreadUtil.wait(150*i);
 			}
+			// Toggle chackeing for different protocol versions while fail checking
+			BowlerDatagram.setUseBowlerV4(i%2==0);
 
 		}
 		return null;
@@ -1078,7 +1080,7 @@ public abstract class BowlerAbstractConnection {
 				}
 			}catch(Exception e){
 				Log.debug("Ping failed, disconnecting");
-
+				disconnect();
 			}
 		}
 	}
