@@ -964,7 +964,7 @@ public abstract class BowlerAbstractConnection {
 				ThreadUtil.wait(150*i);
 			}
 			// Toggle chackeing for different protocol versions while fail checking
-			BowlerDatagram.setUseBowlerV4(i%2==0);
+			//BowlerDatagram.setUseBowlerV4(i%2==0);
 
 		}
 		return null;
