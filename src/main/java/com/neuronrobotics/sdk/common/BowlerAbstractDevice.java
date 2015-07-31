@@ -159,7 +159,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 				//startHeartBeat();
 			}
 		}
-		startHeartBeat();
+		
 		return this.isAvailable();
 	}
 	

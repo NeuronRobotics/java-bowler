@@ -1043,6 +1043,7 @@ public abstract class BowlerAbstractConnection {
 			BowlerDatagram bd = send(new PingCommand(),mac,5,switchParser);
 			if(bd !=null){
 				BowlerDatagramFactory.freePacket(bd);
+				startHeartBeat();
 				return true;
 			}
 		} catch (InvalidResponseException e) {
