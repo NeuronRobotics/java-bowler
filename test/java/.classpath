@@ -5,30 +5,30 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="NRSDK/native/linux/32"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/PIDSIm.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/java-bowler"/>
-	<classpathentry kind="lib" path="/java-bowler/libs/bluecove-2.1.1.jar"/>
-	<classpathentry kind="lib" path="/java-bowler/libs/bluecove-gpl-2.1.1.jar"/>
-	<classpathentry kind="lib" path="/java-bowler/libs/commons-lang3-3.2.1.jar"/>
-	<classpathentry kind="lib" path="/java-bowler/libs/Jama-1.0.2.jar"/>
-	<classpathentry kind="lib" path="/java-bowler/libs/libusb4java-1.2.0-linux-arm.jar"/>
-	<classpathentry kind="lib" path="/java-bowler/libs/libusb4java-1.2.0-linux-x86_64.jar"/>
-	<classpathentry kind="lib" path="/java-bowler/libs/libusb4java-1.2.0-linux-x86.jar"/>
-	<classpathentry kind="lib" path="/java-bowler/libs/libusb4java-1.2.0-osx-x86_64.jar"/>
-	<classpathentry kind="lib" path="/java-bowler/libs/libusb4java-1.2.0-osx-x86.jar"/>
-	<classpathentry kind="lib" path="/java-bowler/libs/libusb4java-1.2.0-windows-x86_64.jar"/>
-	<classpathentry kind="lib" path="/java-bowler/libs/libusb4java-1.2.0-windows-x86.jar"/>
-	<classpathentry kind="lib" path="/java-bowler/libs/miglayout-3.7.2-swing.jar"/>
-	<classpathentry kind="lib" path="/java-bowler/libs/motej.0.9.jar"/>
-	<classpathentry kind="lib" path="/java-bowler/libs/nr-jinput.jar"/>
-	<classpathentry kind="lib" path="/java-bowler/libs/nrjavaserial-3.9.0.jar"/>
-	<classpathentry kind="lib" path="/java-bowler/libs/smack.jar"/>
-	<classpathentry kind="lib" path="/java-bowler/libs/smackx.jar"/>
-	<classpathentry kind="lib" path="/java-bowler/libs/usb-api-1.0.2.jar"/>
-	<classpathentry kind="lib" path="/java-bowler/libs/usb4java-1.2.0.jar"/>
-	<classpathentry kind="lib" path="/java-bowler/libs/usb4java-javax-1.2.0.jar"/>
-	<classpathentry kind="lib" path="/java-bowler/libs/vecmath.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/java-bowler-git"/>
+	<classpathentry kind="lib" path="/java-bowler-git/libs/bluecove-2.1.1.jar"/>
+	<classpathentry kind="lib" path="/java-bowler-git/libs/bluecove-gpl-2.1.1.jar"/>
+	<classpathentry kind="lib" path="/java-bowler-git/libs/commons-lang3-3.2.1.jar"/>
+	<classpathentry kind="lib" path="/java-bowler-git/libs/Jama-1.0.2.jar"/>
+	<classpathentry kind="lib" path="/java-bowler-git/libs/libusb4java-1.2.0-linux-arm.jar"/>
+	<classpathentry kind="lib" path="/java-bowler-git/libs/libusb4java-1.2.0-linux-x86_64.jar"/>
+	<classpathentry kind="lib" path="/java-bowler-git/libs/libusb4java-1.2.0-linux-x86.jar"/>
+	<classpathentry kind="lib" path="/java-bowler-git/libs/libusb4java-1.2.0-osx-x86_64.jar"/>
+	<classpathentry kind="lib" path="/java-bowler-git/libs/libusb4java-1.2.0-osx-x86.jar"/>
+	<classpathentry kind="lib" path="/java-bowler-git/libs/libusb4java-1.2.0-windows-x86_64.jar"/>
+	<classpathentry kind="lib" path="/java-bowler-git/libs/libusb4java-1.2.0-windows-x86.jar"/>
+	<classpathentry kind="lib" path="/java-bowler-git/libs/miglayout-3.7.2-swing.jar"/>
+	<classpathentry kind="lib" path="/java-bowler-git/libs/motej.0.9.jar"/>
+	<classpathentry kind="lib" path="/java-bowler-git/libs/nr-jinput.jar"/>
+	<classpathentry kind="lib" path="/java-bowler-git/libs/nrjavaserial-3.9.0.jar"/>
+	<classpathentry kind="lib" path="/java-bowler-git/libs/smack.jar"/>
+	<classpathentry kind="lib" path="/java-bowler-git/libs/smackx.jar"/>
+	<classpathentry kind="lib" path="/java-bowler-git/libs/usb-api-1.0.2.jar"/>
+	<classpathentry kind="lib" path="/java-bowler-git/libs/usb4java-1.2.0.jar"/>
+	<classpathentry kind="lib" path="/java-bowler-git/libs/usb4java-javax-1.2.0.jar"/>
+	<classpathentry kind="lib" path="/java-bowler-git/libs/vecmath.jar"/>
+	<classpathentry kind="lib" path="lib/PIDSIm.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
