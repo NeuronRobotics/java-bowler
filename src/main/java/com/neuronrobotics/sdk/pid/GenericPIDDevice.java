@@ -168,7 +168,7 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IExtendedP
 		
 
 		if(implementation==null){
-			if(this.getClass() == VirtualGenericPIDDevice.class){
+			if(this instanceof VirtualGenericPIDDevice){
 				setImplementation(new LegacyPidNamespaceImp(this));
 				return implementation;
 			}else{
