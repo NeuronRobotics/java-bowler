@@ -59,6 +59,14 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	private DHChain dhParametersChain=null;
 	
 	private Affine root = new Affine();
+	
+	/* The device */
+	//private IPIDControl device =null;
+	private LinkFactory factory=null;
+	
+	private int retryNumberBeforeFail = 5;
+	
+	
 	public Affine getRootListener() {
 		return root;
 	}
@@ -95,11 +103,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		return connectDevice();
 	}
 		
-	/* The device */
-	//private IPIDControl device =null;
-	private LinkFactory factory=null;
-	
-	private int retryNumberBeforeFail = 5;
+
 	public AbstractKinematicsNR(){
 //		File l = new File("RobotLog_"+getDate()+"_"+System.currentTimeMillis()+".txt");
 //		//File e = new File("RobotError_"+getDate()+"_"+System.currentTimeMillis()+".txt");

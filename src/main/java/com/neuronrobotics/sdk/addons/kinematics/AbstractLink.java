@@ -53,14 +53,14 @@ public abstract class AbstractLink {
 	
 	public void addLinkListener(ILinkListener l){
 		//Log.info("Adding link listener: "+l);
-		if(links.contains(l))
+		if(getLinks().contains(l))
 			return;
-		links.add(l);
+		getLinks().add(l);
 	}
 	public void removeLinkListener(ILinkListener l){
 		//Log.info("Removing link listener: "+l);
-		if(links.contains(l))
-			links.remove(l);
+		if(getLinks().contains(l))
+			getLinks().remove(l);
 		//throw new RuntimeException();
 	}
 	/**
@@ -69,7 +69,7 @@ public abstract class AbstractLink {
 	 * @param value in un-scaled link units. This method converts to an angle then sends to listeners. 
 	 */
 	public void fireLinkListener(int linkUnitsValue){
-		for(ILinkListener l:links){
+		for(ILinkListener l:getLinks()){
 			//Log.info("Link Event, RAW="+linkUnitsValue);
 			l.onLinkPositionUpdate(this,toEngineeringUnits(linkUnitsValue));
 		}
@@ -80,7 +80,7 @@ public abstract class AbstractLink {
 	 * @param e
 	 */
 	public void fireLinkLimitEvent(PIDLimitEvent e){
-		for(ILinkListener l:links){
+		for(ILinkListener l:getLinks()){
 			//Log.info("Link Event, RAW="+linkUnitsValue);
 			l.onLinkLimit(this, e);
 		}
@@ -225,6 +225,18 @@ public abstract class AbstractLink {
 
 	public LinkConfiguration getLinkConfiguration() {
 		return conf;
+	}
+
+	public ArrayList<ILinkListener> getLinks() {
+		return links;
+	}
+
+	public void setLinks(ArrayList<ILinkListener> links) {
+		this.links = links;
+	}
+
+	public void removeAllLinkListener() {
+		links.clear();
 	}
 	
 	

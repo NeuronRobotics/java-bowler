@@ -51,18 +51,33 @@ public class LinkFactory {
 			if(l.getLinkConfiguration().getName().equalsIgnoreCase(name))
 				return l;
 		}
-		String data = "No linke of name '"+name+"' exists";
+		String data = "No link of name '"+name+"' exists";
 		for(AbstractLink l:links){
 			data +="\n"+l.getLinkConfiguration().getName();
 		}
 		throw new RuntimeException(data);
 	}
-	
 	public AbstractLink getLink(LinkConfiguration c){
 		for(AbstractLink l:links){
 			if(l.getLinkConfiguration() == c)
 				return l;
 		}
+		return getLinkLocal( c);
+	}
+	
+	public void refreshHardwareLayer(LinkConfiguration c){
+		//retreive the old link
+		AbstractLink oldLink = getLink( c);
+		links.remove(oldLink);
+		AbstractLink newLink = getLinkLocal( c);
+		for(ILinkListener l:oldLink.getLinks()){
+			newLink.addLinkListener(l);
+		}
+		oldLink.removeAllLinkListener();
+		
+	}
+	
+	private AbstractLink getLinkLocal(LinkConfiguration c){
 
 		if(dyio==null)
 			dyio=(DyIO) DeviceManager.getSpecificDevice(DyIO.class, c.getDeviceScriptingName());
@@ -165,7 +180,8 @@ public class LinkFactory {
 		}
 		tmp.setLinkConfiguration(c);
 		links.add(tmp);
-		getLinkConfigurations().add(c);
+		if(!getLinkConfigurations().contains(c))
+			getLinkConfigurations().add(c);
 		return tmp;
 	}
 	

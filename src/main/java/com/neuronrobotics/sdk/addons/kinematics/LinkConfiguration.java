@@ -73,8 +73,8 @@ public class LinkConfiguration {
     	isLatch=XmlFactory.getTagValue("isLatch",eElement).contains("true");
     	indexLatch=Integer.parseInt(XmlFactory.getTagValue("indexLatch",eElement));
     	isStopOnLatch=XmlFactory.getTagValue("isStopOnLatch",eElement).contains("true");
-    	if(indexLatch>getUpperLimit() || indexLatch<getLowerLimit() )
-    	    throw new RuntimeException("PID group "+getHardwareIndex()+" Index latch is "+indexLatch+" but needs to be between "+getUpperLimit()+" and "+getLowerLimit());
+    	if(staticOffset>getUpperLimit() || staticOffset<getLowerLimit() )
+    	   Log.error("PID group "+getHardwareIndex()+" staticOffset is "+staticOffset+" but needs to be between "+getUpperLimit()+" and "+getLowerLimit());
     	//System.out.println("Interted"+ inverted);
 	}
 	public LinkConfiguration(Object[] args) {
