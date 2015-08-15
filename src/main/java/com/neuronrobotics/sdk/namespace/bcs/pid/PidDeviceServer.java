@@ -27,7 +27,7 @@ public class PidDeviceServer extends BowlerAbstractServer implements IPIDEventLi
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			System.exit(1);
+			//System.exit(1);
 		}
 	}
 	

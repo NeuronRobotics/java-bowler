@@ -1203,7 +1203,7 @@ public abstract class BowlerAbstractConnection {
 					Log.error("Data read failed "+e.getMessage());
 					e.printStackTrace();
 					disconnect();
-					connect();
+					//connect();
 				}
 			}
 			return false;
