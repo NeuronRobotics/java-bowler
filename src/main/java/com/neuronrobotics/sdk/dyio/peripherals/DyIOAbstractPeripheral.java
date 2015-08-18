@@ -202,7 +202,7 @@ public abstract class DyIOAbstractPeripheral implements IDyIOChannel {
 													"cchn",
 													new Object[]{	getChannel().getChannelNumber(),
 																	true,
-																	new int[]{pos}
+																	new Integer[]{pos}
 																});
 					getChannel().setValue(pos);
 					try {

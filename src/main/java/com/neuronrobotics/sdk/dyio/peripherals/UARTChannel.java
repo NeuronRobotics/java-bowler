@@ -140,7 +140,7 @@ public class UARTChannel implements ISendable {
 											"cchn",
 											new Object[]{	17,
 															true,
-															new int[]{baudrate}
+															new Integer[]{baudrate}
 														});
 		}
 		
