@@ -9,7 +9,9 @@ public class ComputedGeometricModel  implements DhInverseSolver{
 		this.dhChain = dhChain;
 	}
 
-	public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector, ArrayList<DHLink> links ) {
+	public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector, 
+			DHChain chain ) {
+		ArrayList<DHLink> links = chain.getLinks();
 		//viewer.addTransform(target, "Target",Color.pink);
 				int linkNum = jointSpaceVector.length;
 		double [] inv = new double[linkNum];

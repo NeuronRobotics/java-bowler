@@ -16,7 +16,9 @@ public class GradiantDecent implements DhInverseSolver{
 		this.debug = debug;
 	}
 	
-	public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector, ArrayList<DHLink> links ){
+	public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector, 
+			DHChain chain ) {
+		ArrayList<DHLink> links = chain.getLinks();
 		int linkNum = jointSpaceVector.length;
 		double [] inv = new double[linkNum];	
 		

@@ -145,7 +145,7 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	 * @return the byte
 	 */
 	public  static byte genDataCrc(ByteList data){
-		return genCRC(BowlerDatagram.HEADER_SIZE, data.getByte(9), data);
+		return genCRC(BowlerDatagram.HEADER_SIZE, data.getUnsigned(9), data);
 	}
 	
 	/**
@@ -154,7 +154,7 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	 * @return the byte holding the header crc
 	 */
 	private  static byte getDataCrc(ByteList data){
-		return data.getByte((BowlerDatagram.HEADER_SIZE)+data.getByte(9));
+		return data.getByte((BowlerDatagram.HEADER_SIZE)+data.getUnsigned(9));
 	}
 	
 	private byte getDataCrc() {
