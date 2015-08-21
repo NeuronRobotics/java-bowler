@@ -1,5 +1,6 @@
 package com.neuronrobotics.addons.driving;
 
+import com.neuronrobotics.sdk.addons.kinematics.LinkConfiguration;
 import com.neuronrobotics.sdk.addons.kinematics.ServoRotoryLink;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
@@ -34,7 +35,7 @@ public class KeepDistance implements IRobotDriveEventListener,IAnalogInputListen
 		
 		PIDChannel drive = dyio.getPIDChannel(0);
 		ServoChannel srv = new ServoChannel(dyio.getChannel(10));
-		ack = new AckermanBot(	new ServoRotoryLink(srv, 98, 51, 143, 1), 
+		ack = new AckermanBot(	new ServoRotoryLink(srv, new LinkConfiguration(98, 51, 143, 1)), 
 								drive );
 		
 		AnalogInputChannel IR = new AnalogInputChannel(dyio.getChannel(12),true);

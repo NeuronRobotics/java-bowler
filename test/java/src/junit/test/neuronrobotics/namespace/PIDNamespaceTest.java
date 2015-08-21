@@ -6,7 +6,6 @@ import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.neuronrobotics.sdk.dyio.DyIORegestry;
 import com.neuronrobotics.sdk.pid.GenericPIDDevice;
 import com.neuronrobotics.sdk.pid.PDVelocityConfiguration;
 import com.neuronrobotics.sdk.pid.PIDConfiguration;
@@ -123,7 +122,7 @@ public class PIDNamespaceTest {
 	
 	
 	public static GenericPIDDevice getPid() {
-		if( DyIORegestry.get().isAvailable() == false&& 
+		if(// DyIORegestry.get().isAvailable() == false&& 
 				PIDNamespaceTest.pid == null ){
 			setPid(new GenericPIDDevice());
 			System.out.println("Creating PID device");
