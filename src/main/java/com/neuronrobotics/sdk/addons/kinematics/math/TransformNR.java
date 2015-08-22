@@ -26,7 +26,7 @@ public class TransformNR {
 		this.x=x;
 		this.y=y;
 		this.z=z;
-		this.setRotation(new RotationNR(w,rotx,roty,rotz));
+		this.setRotation(new RotationNR(new double[]{w,rotx,roty,rotz}));
 	}
 	public TransformNR(double[] cartesianSpaceVector, double[][] rotationMatrix) {
 		this.x=cartesianSpaceVector[0];

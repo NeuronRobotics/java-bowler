@@ -101,16 +101,7 @@ public class RotationNR {
 		return new RotationNR(rotation);
 	}
 	
-	// create a new object with the given simplified rotations
-	public RotationNR( double xDegrees, double yDegrees, double zDegrees) {
-		TransformNR tmp = new TransformNR();
-		
-		tmp = tmp.times(new TransformNR(0, 0, 0, RotationNR.getRotationZ(zDegrees)));
-		tmp = tmp.times(new TransformNR(0, 0, 0, RotationNR.getRotationX(xDegrees)));
-		tmp = tmp.times(new TransformNR(0, 0, 0, RotationNR.getRotationY(yDegrees)));
-		
-		loadRotations(tmp.getRotationMatrixArray());
-	}
+
 
 	// create a new object with the given components
 	public RotationNR(double w, double x, double y, double z) {
@@ -332,38 +323,62 @@ public class RotationNR {
 	private  boolean bound(double low, double high, double n) {
 	    return n >= low && n <= high;
 	}
-	private double getRotAngle(int index){
-		double x,y,z,w;
-		x=calculateAxisAngle(getRotationMatrix2QuaturnionX() );
-		y=calculateAxisAngle(getRotationMatrix2QuaturnionY() );
-		z=calculateAxisAngle(getRotationMatrix2QuaturnionZ() );
-		w=calculateAxisAngle(getRotationMatrix2QuaturnionW() );
-		double ax,ay,az,aw;
-		ax=Math.abs(x);
-		ay=Math.abs(y);
-		az=Math.abs(z);
-		aw=Math.abs(w);
-		double target=.01;
+	// create a new object with the given simplified rotations
+	public RotationNR( double bank, double attitude, double heading) {
+		double c1,c2,c3,s1,s2,s3,w,x,y,z;
 		
-		if(		  bound(ay-target,ay+target,ax)
-				&&bound(az-target,az+target,ax)
-				&&bound(ay-target,ay+target,az)
-				&&bound(ay-target,ay+target,aw)
-				&&bound(az-target,az+target,aw)
-				&&bound(ax-target,ax+target,aw)
-				){
-			//Log.warning("Zeroing the rotation vector");
-			x=y=z=0.0;
+		c1 = Math.cos(Math.toRadians(heading) / 2);
+		c2 = Math.cos(Math.toRadians(attitude) / 2);
+		if ((int)attitude == 90) 
+			c2 = 0.7071; 
+		if ((int)attitude == -90)
+			c2 =  0.7071;
+		c3 = Math.cos(Math.toRadians(bank) / 2);
+		s1 = Math.sin(Math.toRadians(heading) / 2);
+		s2 = Math.sin(Math.toRadians(attitude) / 2);
+		if ((int)attitude == 90)
+			s2 = 0.7071 ;
+		if ((int)attitude == -90)
+			s2 = -0.7071;
+		s3 = Math.sin(Math.toRadians(bank) / 2);
+		w = c1*c2* c3 - s1* s2 *s3;
+		x = s1 *s2 *c3 +c1* c2 *s3;
+		y = s1* c2* c3 + c1* s2 *s3;
+		z = c1* s2 *c3 - s1* c2 *s3;
+		quaternion2RotationMatrix(w, x, y, z);
+	}
+	private double getRotAngle(int index){
+		double w,x,y,z,heading,attitude,bank;
+		w=getRotationMatrix2QuaturnionW();
+		x=getRotationMatrix2QuaturnionX();
+		y=getRotationMatrix2QuaturnionY();
+		z=getRotationMatrix2QuaturnionZ();
+		double test = x*y + z*w;
+		if (test > 0.499) { // singularity at north pole
+			heading = 2 * Math.atan2(x,w);
+			attitude = Math.PI/2;
+			bank = 0;
+		}else
+		if (test < -0.499) { // singularity at south pole
+			heading = -2 * Math.atan2(x,w);
+			attitude = - Math.PI/2;
+			bank = 0;
+		}else{
+		    double sqx = x*x;
+		    double sqy = y*y;
+		    double sqz = z*z;
+		    heading = Math.atan2(2*y*w-2*x*z , 1 - 2*sqy - 2*sqz);
+			attitude = Math.asin(2*test);
+			bank = Math.atan2(2*x*w-2*y*z , 1 - 2*sqx - 2*sqz);
 		}
-			
 		
 		switch(index){
 		case 0:
-			return x;
+			return bank;
 		case 1:
-			return y;
+			return attitude;
 		case 2:
-			return z;
+			return heading;
 		default: 
 			return 0;
 		}

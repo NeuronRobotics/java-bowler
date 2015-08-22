@@ -201,19 +201,19 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		    	setZframeToGlobalTransform(new TransformNR(	Double.parseDouble(XmlFactory.getTagValue("x",eElement)),
 							    			Double.parseDouble(XmlFactory.getTagValue("y",eElement)),
 							    			Double.parseDouble(XmlFactory.getTagValue("z",eElement)), 
-							    			new RotationNR(	Double.parseDouble(XmlFactory.getTagValue("rotw",eElement)),
+							    			new RotationNR(new double[]{	Double.parseDouble(XmlFactory.getTagValue("rotw",eElement)),
 							    							Double.parseDouble(XmlFactory.getTagValue("rotx",eElement)),
 							    							Double.parseDouble(XmlFactory.getTagValue("roty",eElement)),
-							    							Double.parseDouble(XmlFactory.getTagValue("rotz",eElement)))));	
+							    							Double.parseDouble(XmlFactory.getTagValue("rotz",eElement))})));	
 		    }else if (linkNode.getNodeType() == Node.ELEMENT_NODE && linkNode.getNodeName().contentEquals("baseToZframe")) {
 		    	Element eElement = (Element)linkNode;	    	    
 		    	setBaseToZframeTransform(new TransformNR(	Double.parseDouble(XmlFactory.getTagValue("x",eElement)),
 							    			Double.parseDouble(XmlFactory.getTagValue("y",eElement)),
 							    			Double.parseDouble(XmlFactory.getTagValue("z",eElement)), 
-							    			new RotationNR(	Double.parseDouble(XmlFactory.getTagValue("rotw",eElement)),
+							    			new RotationNR(new double[]{	Double.parseDouble(XmlFactory.getTagValue("rotw",eElement)),
 							    							Double.parseDouble(XmlFactory.getTagValue("rotx",eElement)),
 							    							Double.parseDouble(XmlFactory.getTagValue("roty",eElement)),
-							    							Double.parseDouble(XmlFactory.getTagValue("rotz",eElement)))));	 
+							    							Double.parseDouble(XmlFactory.getTagValue("rotz",eElement))})));	 
 		    }
 		}
 
