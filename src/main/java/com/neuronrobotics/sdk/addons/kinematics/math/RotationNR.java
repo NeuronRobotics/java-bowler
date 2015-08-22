@@ -385,17 +385,33 @@ public class RotationNR {
 		
 	}
 	
-	public double getRotationX() {
+	public double getRotationBank() {
 
 		return getRotAngle(0) ;
 
 	}
 
-	public double getRotationY() {
+	public double getRotationAttitude() {
 		
 		return getRotAngle(1);
 	}
 
+	public double getRotationHeading() {
+		
+		return getRotAngle(2) ;
+	}
+	@Deprecated //use  getRotationBank()
+	public double getRotationX() {
+
+		return getRotAngle(0) ;
+
+	}
+	@Deprecated //use  getRotationAttitude()
+	public double getRotationY() {
+		
+		return getRotAngle(1);
+	}
+	@Deprecated //use  getRotationHeading()
 	public double getRotationZ() {
 		
 		return getRotAngle(2) ;
