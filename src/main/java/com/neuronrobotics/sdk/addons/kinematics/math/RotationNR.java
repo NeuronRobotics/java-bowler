@@ -324,7 +324,7 @@ public class RotationNR {
 	    return n >= low && n <= high;
 	}
 	// create a new object with the given simplified rotations
-	public RotationNR( double bank, double attitude, double heading) {
+	public RotationNR( double bank,  double heading,double attitude) {
 		double c1,c2,c3,s1,s2,s3,w,x,y,z;
 		
 		c1 = Math.cos(Math.toRadians(heading) / 2);
@@ -393,12 +393,12 @@ public class RotationNR {
 
 	public double getRotationAttitude() {
 		
-		return getRotAngle(1);
+		return getRotAngle(2);
 	}
 
 	public double getRotationHeading() {
 		
-		return getRotAngle(2) ;
+		return getRotAngle(1) ;
 	}
 	@Deprecated //use  getRotationBank()
 	public double getRotationX() {
@@ -409,12 +409,12 @@ public class RotationNR {
 	@Deprecated //use  getRotationAttitude()
 	public double getRotationY() {
 		
-		return getRotAngle(1);
+		return getRotAngle(2);
 	}
 	@Deprecated //use  getRotationHeading()
 	public double getRotationZ() {
 		
-		return getRotAngle(2) ;
+		return getRotAngle(1) ;
 	}
 
 	public double getRotationMatrix2QuaturnionW() {
