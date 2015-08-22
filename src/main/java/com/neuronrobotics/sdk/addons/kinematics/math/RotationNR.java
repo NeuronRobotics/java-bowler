@@ -320,7 +320,7 @@ public class RotationNR {
 		return ret;
 	}
 	
-	private  boolean bound(double low, double high, double n) {
+	public static  boolean bound(double low, double high, double n) {
 	    return n >= low && n <= high;
 	}
 	// create a new object with the given simplified rotations
@@ -348,37 +348,61 @@ public class RotationNR {
 		quaternion2RotationMatrix(w, x, y, z);
 	}
 	private double getRotAngle(int index){
-		double w,x,y,z,heading,attitude,bank;
+		double w,x,y,z,Attitude,Heading,bank;
 		w=getRotationMatrix2QuaturnionW();
 		x=getRotationMatrix2QuaturnionX();
 		y=getRotationMatrix2QuaturnionY();
 		z=getRotationMatrix2QuaturnionZ();
+	    double sqw = w*w;
+	    double sqx = x*x;
+	    double sqy = y*y;
+	    double sqz = z*z;
+		double unit = sqx + sqy + sqz + sqw; // if normalised is one, otherwise is correction factor
 		double test = x*y + z*w;
-		if (test > 0.499) { // singularity at north pole
-			heading = 2 * Math.atan2(x,w);
-			attitude = Math.PI/2;
+		if (test > 0.499*unit) { // singularity at north pole
+			Attitude = 2 *  Math.atan2(x,w);
+			Heading = Math.PI/2;
 			bank = 0;
+		
 		}else
-		if (test < -0.499) { // singularity at south pole
-			heading = -2 * Math.atan2(x,w);
-			attitude = - Math.PI/2;
+		if (test < -0.499*unit) { // singularity at south pole
+			Attitude = -2 *  Math.atan2(x,w);
+			Heading = -Math.PI/2;
 			bank = 0;
+			
 		}else{
-		    double sqx = x*x;
-		    double sqy = y*y;
-		    double sqz = z*z;
-		    heading = Math.atan2(2*y*w-2*x*z , 1 - 2*sqy - 2*sqz);
-			attitude = Math.asin(2*test);
-			bank = Math.atan2(2*x*w-2*y*z , 1 - 2*sqx - 2*sqz);
+		    Attitude =  Math.atan2(2*y*w-2*x*z , sqx - sqy - sqz + sqw);
+			Heading =  Math.asin(2*test/unit);
+			bank =  Math.atan2(2*x*w-2*y*z , -sqx + sqy - sqz + sqw);
+		}
+		if(		bound(-180.01, -179.99, Math.toDegrees(Attitude))||
+				bound(-180.01, -179.99, Math.toDegrees(Heading))||
+				bound(-180.01, -179.99, Math.toDegrees(bank))
+				){
+			bank = -Math.PI +bank;
+			Attitude = Math.PI +Attitude;
+			Heading = -(Math.PI +Heading);
+//			heading = -Math.PI +heading;
+//			attitude = -Math.PI +attitude;
+//			bank = -Math.PI +bank;
+		}
+		if(bound(359.99,360.01,Math.abs(Math.toDegrees(Attitude)))){
+			Attitude=0;
+		}
+		if(bound(359.99,360.01,Math.abs(Math.toDegrees(Heading)))){
+			Heading=0;
+		}
+		if(bound(359.99,360.01,Math.abs(Math.toDegrees(bank)))){
+			bank=0;
 		}
 		
 		switch(index){
 		case 0:
 			return bank;
 		case 1:
-			return attitude;
+			return Heading;
 		case 2:
-			return heading;
+			return Attitude;
 		default: 
 			return 0;
 		}
