@@ -400,6 +400,22 @@ public class RotationNR {
 		
 		return getRotAngle(1) ;
 	}
+	
+	public double getRotationTilt() {
+
+		return getRotationBank() ;
+
+	}
+
+	public double getRotationElevation() {
+		
+		return getRotationAttitude();
+	}
+
+	public double getRotationAzimuth() {
+		
+		return getRotationHeading() ;
+	}
 	@Deprecated //use  getRotationBank()
 	public double getRotationX() {
 
