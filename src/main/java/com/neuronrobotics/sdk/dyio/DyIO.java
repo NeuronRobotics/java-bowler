@@ -294,7 +294,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	 * This static method can be called before connection a DyIO object to enable the firmware verification step
 	 */
 	public static void enableFWCheck() {
-		checkFirmware=true;
+		//checkFirmware=true;
 	}
 	
 	/**
@@ -425,6 +425,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 //			}
 			
 		}catch (Exception e){
+			e.printStackTrace();
 			checkFirmwareRev();
 		}
 		

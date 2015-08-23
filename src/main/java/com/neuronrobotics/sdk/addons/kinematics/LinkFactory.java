@@ -208,10 +208,16 @@ public class LinkFactory {
 	}
 	public void flush(final double seconds){
 		long time = System.currentTimeMillis();
-		
-		for(AbstractLink l:links){
-			if(l.getLinkConfiguration().getDeviceScriptingName()!=null)
-				l.flush(seconds);
+		if(dyio!=null){
+			dyio.flushCache(seconds);
+		}
+		if(pid!=null){
+			pid.flushPIDChannels(seconds);
+		}else{	
+			for(AbstractLink l:links){
+				if(l.getLinkConfiguration().getDeviceScriptingName()!=null)
+					l.flush(seconds);
+			}
 		}
 		//System.out.println("Flush Took "+(System.currentTimeMillis()-time)+"ms");
 	}

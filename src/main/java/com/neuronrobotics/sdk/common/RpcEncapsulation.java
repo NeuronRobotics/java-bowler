@@ -99,10 +99,18 @@ public class RpcEncapsulation {
 					command.getCallingDataStorage().addAs32(Integer.parseInt(doswnstreamData[i].toString()));
 					break;
 				case I32STR:
-					Integer [] data32 = (Integer [])doswnstreamData[i];
-					command.getCallingDataStorage().add(data32.length);
-					for(int i1=0;i1<data32.length;i1++){
-						command.getCallingDataStorage().addAs32(data32[i1]);
+					try{
+						Integer [] data32 = (Integer [])doswnstreamData[i];
+						command.getCallingDataStorage().add(data32.length);
+						for(int i1=0;i1<data32.length;i1++){
+							command.getCallingDataStorage().addAs32(data32[i1]);
+						}
+					}catch (ClassCastException ex){
+						int [] data32 = (int [])doswnstreamData[i];
+						command.getCallingDataStorage().add(data32.length);
+						for(int i1=0;i1<data32.length;i1++){
+							command.getCallingDataStorage().addAs32(data32[i1]);
+						}
 					}
 					break;
 				case FIXED1k_STR:
@@ -115,10 +123,26 @@ public class RpcEncapsulation {
 				case INVALID:
 					break;
 				case STR:
-					ByteList data = (ByteList )doswnstreamData[i];
-					command.getCallingDataStorage().add(data.size());
-					for(int i1=0;i1<data.size();i1++){
-						command.getCallingDataStorage().add(data.get(i1));
+					try{
+						ByteList data = (ByteList )doswnstreamData[i];
+						command.getCallingDataStorage().add(data.size());
+						for(int i1=0;i1<data.size();i1++){
+							command.getCallingDataStorage().add(data.get(i1));
+						}
+					}catch (ClassCastException ex){
+						try{
+							Integer [] data32 = (Integer [])doswnstreamData[i];
+							command.getCallingDataStorage().add(data32.length);
+							for(int i1=0;i1<data32.length;i1++){
+								command.getCallingDataStorage().addAs32(data32[i1]);
+							}
+						}catch (ClassCastException ex1){
+							int [] data32 = (int [])doswnstreamData[i];
+							command.getCallingDataStorage().add(data32.length);
+							for(int i1=0;i1<data32.length;i1++){
+								command.getCallingDataStorage().addAs32(data32[i1]);
+							}
+						}
 					}
 					break;
 				default:
