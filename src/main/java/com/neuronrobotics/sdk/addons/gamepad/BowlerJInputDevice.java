@@ -52,7 +52,7 @@ public class BowlerJInputDevice extends NonBowlerDevice {
 			               if(comp.isAnalog()) {
 			                  buffer.append(value);
 			               } else {
-			                  if(value==1.0f) {
+			                  if(value>0) {
 			                     buffer.append("On");
 			                  } else {
 			                     buffer.append("Off");
@@ -61,7 +61,11 @@ public class BowlerJInputDevice extends NonBowlerDevice {
 			               Log.info(buffer.toString());
 			               for(int i=0;i<listeners.size();i++){
 			            	   IJInputEventListener l = listeners.get(i);
-			            	   l.onEvent(comp, event, value, buffer.toString());
+			            	   try{
+			            		   l.onEvent(comp, event, value, buffer.toString());
+			            	   }catch(Exception ex){
+			            		   ex.printStackTrace();
+			            	   }
 			               }
 			        }
 					ThreadUtil.wait(10);
