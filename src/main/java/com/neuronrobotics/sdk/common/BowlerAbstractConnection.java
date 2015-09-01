@@ -1189,7 +1189,7 @@ public abstract class BowlerAbstractConnection {
 			//throw new RuntimeException();
 		}
 		
-		private boolean runPacketUpdate() {
+		private synchronized boolean  runPacketUpdate() {
 			try {
 				BowlerDatagram bd = loadPacketFromPhy(bytesToPacketBuffer);
 				if(bd!=null){
@@ -1244,7 +1244,7 @@ public abstract class BowlerAbstractConnection {
 		this.beater = beater;
 	}
 	
-	public BowlerDatagram loadPacketFromPhy(ByteList bytesToPacketBuffer) throws NullPointerException, IOException{
+	public  BowlerDatagram loadPacketFromPhy(ByteList bytesToPacketBuffer) throws NullPointerException, IOException{
 		BowlerDatagram bd=BowlerDatagramFactory.build(bytesToPacketBuffer);
 		if(dataIns!=null){	
 			int have = getDataIns().available();

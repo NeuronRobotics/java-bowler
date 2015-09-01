@@ -381,7 +381,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 * @return The joint space vector is returned for target arrival referance
 	 * @throws Exception If there is a workspace error
 	 */
-	public double[] setDesiredTaskSpaceTransform(TransformNR taskSpaceTransform, double seconds) throws Exception{
+	public double[]  setDesiredTaskSpaceTransform(TransformNR taskSpaceTransform, double seconds) throws Exception{
 		Log.info("Setting target pose: "+taskSpaceTransform);
 		setCurrentPoseTarget(taskSpaceTransform);
 		taskSpaceTransform = inverseOffset(taskSpaceTransform);
@@ -423,7 +423,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 * @return The joint space vector is returned for target arrival referance
 	 * @throws Exception If there is a workspace error
 	 */
-	public double[] setDesiredJointSpaceVector(double[] jointSpaceVect, double seconds) throws Exception{
+	public synchronized double[] setDesiredJointSpaceVector(double[] jointSpaceVect, double seconds) throws Exception{
 		if(jointSpaceVect.length != getNumberOfLinks()){
 			throw new IndexOutOfBoundsException("Vector must be "+getNumberOfLinks()+" links, actual number of links = "+jointSpaceVect.length); 
 		}

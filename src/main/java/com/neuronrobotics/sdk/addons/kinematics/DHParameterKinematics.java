@@ -29,7 +29,7 @@ import com.neuronrobotics.sdk.pid.GenericPIDDevice;
 import com.neuronrobotics.sdk.pid.VirtualGenericPIDDevice;
 
 
-public class DHParameterKinematics extends AbstractKinematicsNR implements ITaskSpaceUpdateListenerNR{
+public class DHParameterKinematics extends AbstractKinematicsNR implements ITaskSpaceUpdateListenerNR, IJointSpaceUpdateListenerNR{
 	
 	private DHChain chain=null;
 
@@ -153,6 +153,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 			}
 		}
 		addPoseUpdateListener(this);
+		addJointSpaceListener(this);
 		try {
 			currentJointSpacePositions=null;
 			currentJointSpaceTarget=null;
@@ -200,6 +201,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 	public void disconnectDevice() {
 		// TODO Auto-generated method stub
 		removePoseUpdateListener(this);
+		removeJointSpaceUpdateListener(this);
 	}
 
 	@Override
@@ -217,7 +219,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 	public void onTargetTaskSpaceUpdate(AbstractKinematicsNR source,
 			TransformNR pose) {
 		// TODO Auto-generated method stub
-		TransformFactory.getTransform(pose, getCurrentTargetAffine());
+		//TransformFactory.getTransform(pose, getCurrentTargetAffine());
 	}
 
 	public DhInverseSolver getInverseSolver() {
@@ -256,6 +258,38 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 		setChain(chain);
 		//once the new link configuration is set up, re add the listener
 		factory.addLinkListener(this);
+	}
+
+	@Override
+	public void onJointSpaceUpdate(AbstractKinematicsNR source, final double[] joints) {
+		// TODO Auto-generated method stub
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				ArrayList<TransformNR> linkPos= getChain().getCachedChain();
+				for(int i=0;i<linkPos.size();i++) {
+					try{
+						TransformFactory.getTransform(linkPos.get(i), getChain().getLinks().get(i).getListener());
+					}catch(Exception ex){
+						ex.printStackTrace();
+					}
+				}
+			}
+		});
+	}
+
+	@Override
+	public void onJointSpaceTargetUpdate(AbstractKinematicsNR source,
+			double[] joints) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onJointSpaceLimit(AbstractKinematicsNR source, int axis,
+			JointLimit event) {
+		// TODO Auto-generated method stub
+		
 	}
 
 

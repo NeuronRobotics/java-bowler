@@ -91,7 +91,7 @@ public  class DHChain {
 	}
 
 	public TransformNR forwardKinematics(double[] jointSpaceVector) {
-		return forwardKinematics(jointSpaceVector, false);
+		return forwardKinematics(jointSpaceVector, true);
 	}
 	
 	public TransformNR forwardKinematics(double[] jointSpaceVector, boolean store) {
@@ -181,16 +181,15 @@ public  class DHChain {
 			final Matrix update=current.copy();
 			final int index=i;
 			final TransformNR pose =forwardOffset(new TransformNR(update));
-			getLinks().get(index).fireOnLinkGlobalPositionChange(pose);	
-			Platform.runLater(new Runnable() {
-				@Override
-				public void run() {
-					TransformFactory.getTransform(pose, getLinks().get(index).getListener());
-				}
-			});
+			//getLinks().get(index).fireOnLinkGlobalPositionChange(pose);	
+
 			if(store){
 				intChain.add(new TransformNR(step));
-				chain.add(new TransformNR(current));
+				if(chain.size()<=i)
+					chain.add(pose);
+				else{
+					chain.set(i, pose);
+				}
 			}
 		}
 		//Log.info( "Final:\n"+current);
@@ -209,7 +208,9 @@ public  class DHChain {
 		forwardKinematics(jointSpaceVector,true);
 		return chain;
 	}
-	
+	public ArrayList<TransformNR> getCachedChain() {
+		return chain;
+	}
 	public double[] getUpperLimits() {
 		// TODO Auto-generated method stub
 		return upperLimits;
