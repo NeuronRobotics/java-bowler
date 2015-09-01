@@ -10,17 +10,27 @@ public class RotationNRTest {
 
 	@Test
 	public void test() {
-		double rotx= Math.toRadians(-31);
-		double roty= Math.toRadians(0);
-		double rotz=Math.toRadians(-125);
-		RotationNR rotTest = new RotationNR( Math.toDegrees(rotx),Math.toDegrees(roty), Math.toDegrees(rotz));
-		if(!RotationNR.bound(rotx-.001, rotx+.001, rotTest.getRotationBank()))
-			fail("Rotation Bank is not consistant. expected "+ Math.toDegrees(rotx)+" got " +Math.toDegrees(rotTest.getRotationBank()));
-		if(!RotationNR.bound(roty-.001, roty+.001, rotTest.getRotationAttitude()))
-			fail("Rotation Attitude is not consistant. expected "+ Math.toDegrees(roty)+" got " +Math.toDegrees(rotTest.getRotationAttitude()));
-		if(!RotationNR.bound(rotz-.001, rotz+.001, rotTest.getRotationHeading()))
-			fail("Rotation Heading is not consistant. expected "+Math.toDegrees( rotz)+" got " +Math.toDegrees(rotTest.getRotationHeading()));
+		double tilt= Math.toRadians(-31);
+		double elevation= Math.toRadians(0);
+		double azumus=Math.toRadians(-125);
+		RotationNR rotTest = new RotationNR( Math.toDegrees(tilt),Math.toDegrees(elevation), Math.toDegrees(azumus));
+		if(!RotationNR.bound(tilt-.001, tilt+.001, rotTest.getRotationTilt()))
+			fail("Rotation Tilt is not consistant. expected "+ Math.toDegrees(tilt)+" got " +Math.toDegrees(rotTest.getRotationTilt()));
+		if(!RotationNR.bound(elevation-.001, elevation+.001, rotTest.getRotationElevation()))
+			fail("Rotation Elevation is not consistant. expected "+ Math.toDegrees(elevation)+" got " +Math.toDegrees(rotTest.getRotationElevation()));
+		if(!RotationNR.bound(azumus-.001, azumus+.001, rotTest.getRotationAzimuth()))
+			fail("Rotation Tilt is not consistant. expected "+Math.toDegrees( azumus)+" got " +Math.toDegrees(rotTest.getRotationAzimuth()));
 		
+		tilt= Math.toRadians(-31);
+		elevation= Math.toRadians(0);
+		azumus=Math.toRadians(125);
+		rotTest = new RotationNR( Math.toDegrees(tilt),Math.toDegrees(elevation), Math.toDegrees(azumus));
+		if(!RotationNR.bound(tilt-.001, tilt+.001, rotTest.getRotationTilt()))
+			fail("Rotation Tilt is not consistant. expected "+ Math.toDegrees(tilt)+" got " +Math.toDegrees(rotTest.getRotationTilt()));
+		if(!RotationNR.bound(elevation-.001, elevation+.001, rotTest.getRotationElevation()))
+			fail("Rotation Elevation is not consistant. expected "+ Math.toDegrees(elevation)+" got " +Math.toDegrees(rotTest.getRotationElevation()));
+		if(!RotationNR.bound(azumus-.001, azumus+.001, rotTest.getRotationAzimuth()))
+			fail("Rotation Tilt is not consistant. expected "+Math.toDegrees( azumus)+" got " +Math.toDegrees(rotTest.getRotationAzimuth()));
 		
 		
 	}

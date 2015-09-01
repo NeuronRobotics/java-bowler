@@ -324,31 +324,28 @@ public class RotationNR {
 	    return n >= low && n <= high;
 	}
 	// create a new object with the given simplified rotations
-	public RotationNR( double bank,  double heading,double attitude) {
-		double c1,c2,c3,s1,s2,s3,w,x,y,z;
+	public RotationNR( double Tilt,  double Elevation,double Azimuth) {
 		
-		c1 = Math.cos(Math.toRadians(heading) / 2);
-		c2 = Math.cos(Math.toRadians(attitude) / 2);
-		if ((int)attitude == 90) 
-			c2 = 0.7071; 
-		if ((int)attitude == -90)
-			c2 =  0.7071;
-		c3 = Math.cos(Math.toRadians(bank) / 2);
-		s1 = Math.sin(Math.toRadians(heading) / 2);
-		s2 = Math.sin(Math.toRadians(attitude) / 2);
-		if ((int)attitude == 90)
-			s2 = 0.7071 ;
-		if ((int)attitude == -90)
-			s2 = -0.7071;
-		s3 = Math.sin(Math.toRadians(bank) / 2);
-		w = c1*c2* c3 - s1* s2 *s3;
-		x = s1 *s2 *c3 +c1* c2 *s3;
-		y = s1* c2* c3 + c1* s2 *s3;
-		z = c1* s2 *c3 - s1* c2 *s3;
+		double attitude = Math.toRadians(Elevation);
+		double heading= Math.toRadians(Azimuth);
+		double bank = Math.toRadians(Tilt) ;
+		double w,x,y,z;
+	    // Assuming the angles are in radians.
+	    double c1 = Math.cos(heading);
+	    double s1 = Math.sin(heading);
+	    double c2 = Math.cos(attitude);
+	    double s2 = Math.sin(attitude);
+	    double c3 = Math.cos(bank);
+	    double s3 = Math.sin(bank);
+	    w = Math.sqrt(1.0 + c1 * c2 + c1*c3 - s1 * s2 * s3 + c2*c3) / 2.0;
+	    double w4 = (4.0 * w);
+	    x = (c2 * s3 + c1 * s3 + s1 * s2 * c3) / w4 ;
+	    y = (s1 * c2 + s1 * c3 + c1 * s2 * s3) / w4 ;
+	    z = (-s1 * s3 + c1 * s2 * c3 +s2) / w4 ;
 		quaternion2RotationMatrix(w, x, y, z);
 	}
 	private double getRotAngle(int index){
-		double w,x,y,z,Attitude,Heading,bank;
+		double w,x,y,z,el,ax,til;
 		w=getRotationMatrix2QuaturnionW();
 		x=getRotationMatrix2QuaturnionX();
 		y=getRotationMatrix2QuaturnionY();
@@ -360,85 +357,85 @@ public class RotationNR {
 		double unit = sqx + sqy + sqz + sqw; // if normalised is one, otherwise is correction factor
 		double test = x*y + z*w;
 		if (test > 0.499*unit) { // singularity at north pole
-			Attitude = 2 *  Math.atan2(x,w);
-			Heading = Math.PI/2;
-			bank = 0;
+			el = 2 *  Math.atan2(x,w);
+			ax = Math.PI/2;
+			til = 0;
 		
 		}else
 		if (test < -0.499*unit) { // singularity at south pole
-			Attitude = -2 *  Math.atan2(x,w);
-			Heading = -Math.PI/2;
-			bank = 0;
+			el = -2 *  Math.atan2(x,w);
+			ax = -Math.PI/2;
+			til = 0;
 			
 		}else{
-		    Attitude =  Math.atan2(2*y*w-2*x*z , sqx - sqy - sqz + sqw);
-			Heading =  Math.asin(2*test/unit);
-			bank =  Math.atan2(2*x*w-2*y*z , -sqx + sqy - sqz + sqw);
+		    el =  Math.atan2(2*y*w-2*x*z , sqx - sqy - sqz + sqw);
+			ax =  Math.asin(2*test/unit);
+			til =  Math.atan2(2*x*w-2*y*z , -sqx + sqy - sqz + sqw);
 		}
-		if(		bound(-180.01, -179.99, Math.toDegrees(Attitude))||
-				bound(-180.01, -179.99, Math.toDegrees(Heading))||
-				bound(-180.01, -179.99, Math.toDegrees(bank))
-				){
-			bank = -Math.PI +bank;
-			Attitude = Math.PI +Attitude;
-			Heading = -(Math.PI +Heading);
-//			heading = -Math.PI +heading;
-//			attitude = -Math.PI +attitude;
+//		if(		bound(-180.01, -179.99, Math.toDegrees(Attitude))||
+//				bound(-180.01, -179.99, Math.toDegrees(Heading))||
+//				bound(-180.01, -179.99, Math.toDegrees(bank))
+//				){
 //			bank = -Math.PI +bank;
-		}
-		if(bound(359.99,360.01,Math.abs(Math.toDegrees(Attitude)))){
-			Attitude=0;
-		}
-		if(bound(359.99,360.01,Math.abs(Math.toDegrees(Heading)))){
-			Heading=0;
-		}
-		if(bound(359.99,360.01,Math.abs(Math.toDegrees(bank)))){
-			bank=0;
-		}
+//			Attitude = Math.PI +Attitude;
+//			Heading = -(Math.PI +Heading);
+////			heading = -Math.PI +heading;
+////			attitude = -Math.PI +attitude;
+////			bank = -Math.PI +bank;
+//		}
+//		if(bound(359.99,360.01,Math.abs(Math.toDegrees(Attitude)))){
+//			Attitude=0;
+//		}
+//		if(bound(359.99,360.01,Math.abs(Math.toDegrees(Heading)))){
+//			Heading=0;
+//		}
+//		if(bound(359.99,360.01,Math.abs(Math.toDegrees(bank)))){
+//			bank=0;
+//		}
 		
 		switch(index){
 		case 0:
-			return bank;
+			return til;
 		case 1:
-			return Heading;
+			return ax;
 		case 2:
-			return Attitude;
+			return el;
 		default: 
 			return 0;
 		}
 		
 	}
 	
-	public double getRotationBank() {
+//	public double getRotationBank() {
+//
+//		return getRotAngle(0) ;
+//
+//	}
 
-		return getRotAngle(0) ;
-
-	}
-
-	public double getRotationAttitude() {
-		
-		return getRotAngle(2);
-	}
-
-	public double getRotationHeading() {
-		
-		return getRotAngle(1) ;
-	}
+//	public double getRotationAttitude() {
+//		
+//		return getRotAngle(2);
+//	}
+//
+//	public double getRotationHeading() {
+//		
+//		return getRotAngle(1) ;
+//	}
 	
 	public double getRotationTilt() {
 
-		return getRotationBank() ;
+		return  getRotAngle(0) ;
 
 	}
 
 	public double getRotationElevation() {
 		
-		return getRotationAttitude();
+		return  getRotAngle(1);
 	}
 
 	public double getRotationAzimuth() {
 		
-		return getRotationHeading() ;
+		return getRotAngle(2);
 	}
 	@Deprecated //use  getRotationBank()
 	public double getRotationX() {
