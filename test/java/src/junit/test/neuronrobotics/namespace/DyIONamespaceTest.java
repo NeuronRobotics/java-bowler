@@ -4,6 +4,8 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,7 +18,6 @@ import com.neuronrobotics.sdk.dyio.peripherals.DigitalInputChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 import com.neuronrobotics.sdk.pid.PIDConfiguration;
 import com.neuronrobotics.sdk.serial.SerialConnection;
-
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 
@@ -24,7 +25,7 @@ public class DyIONamespaceTest {
 	
 	private static DyIO harness=null;
 	private static DyIO testDevice=null;
-	private boolean useHarness = true;
+	private boolean useHarness = false;
 	
 	private static int msTimeout = 3000;
 	private static int testLoop =5;
@@ -56,9 +57,9 @@ public class DyIONamespaceTest {
 				}
 			}
 			//Change this MAC address to match your tester/testee mapping
-			SerialConnection targetConection = SerialConnection.getConnectionByMacAddress(new MACAddress("74:F7:26:00:00:00"));
+			//SerialConnection targetConection = SerialConnection.getConnectionByMacAddress(new MACAddress("74:F7:26:00:00:00"));
 			
-			//SerialConnection targetConection =  new SerialConnection("/dev/DyIO0");
+			SerialConnection targetConection =  new SerialConnection("/dev/DyIO0");
 			assertTrue(targetConection!=null);
 			targetConection.setSynchronusPacketTimeoutTime(10000);
 			testDevice = new DyIO(targetConection);
@@ -88,6 +89,16 @@ public class DyIONamespaceTest {
 			Log.debug("Devices Set Up");
 
 		}
+	}
+	
+	@After
+	public void teardown(){
+		if(harness != null)
+			harness.disconnect();
+		if(testDevice != null)
+			testDevice.disconnect();
+		harness=null;
+		testDevice=null;
 	}
 	
 	@Test public void DyIOConfigurationSave(){
@@ -336,7 +347,70 @@ public class DyIONamespaceTest {
 		
 	}
 	
+	@Test public void DyIOServoTest(){
+		if(!testDevice.isAvailable())
+			fail();
+		int numPins = testDevice.getDyIOChannelCount();
+		testDevice.setServoPowerSafeMode(false);// make sure the servos can be enabled
+		//test device as output
+		for(int i=0;i<numPins;i++){
+			ServoChannel sc = new ServoChannel(testDevice, i);
+			
+			boolean state=false;
+			int pinState = state?200:20;
+			for(int j=0;j<testLoop;j++){
+				long startTime = System.currentTimeMillis();
+				sc.SetPosition(pinState, 1.0);
+				do{		
+					ThreadUtil.wait(1);
+					if((System.currentTimeMillis()-startTime)> msTimeout){
+						//System.err.println("Pin test failed "+i);
+						fail("Servo Test Pin:"+i+" Tester:"+i+" setting to: "+pinState+" got:"+sc.getValue());
+					}
+				}while(sc.getValue()!=pinState );
+				integral+=(System.currentTimeMillis()-startTime);
+				state = !state;
+			}
+		}
+		
+	}
 	
+	@Test public void DyIOServoCoordinatedMotionTest(){
+		if(!testDevice.isAvailable())
+			fail();
+		int numPins = testDevice.getDyIOChannelCount();
+		testDevice.setServoPowerSafeMode(false);// make sure the servos can be enabled
+		//test device as output
+		ArrayList<ServoChannel> srvs = new ArrayList<ServoChannel>();
+		for(int i=0;i<numPins;i++){
+			ServoChannel s = new ServoChannel(testDevice, i);
+			
+			srvs.add(s);
+		}
+		testDevice.setCachedMode(true);
+		boolean state=false;
+		for(int j=0;j<testLoop;j++){
+			int pinState = state?200:20;
+			for(int i=0;i<numPins;i++){
+				srvs.get(i).SetPosition(pinState, 1.0);
+			}
+			testDevice.flushCache(1.0);
+			boolean done = false;
+			long startTime = System.currentTimeMillis();
+			do{		
+				ThreadUtil.wait(1);
+				if(!done){
+					done=true;
+					for(int i=0;i<numPins;i++){
+						if(done)
+						if(testDevice.getValue(i) != pinState){
+							done=false;
+						}
+					}
+				}
+			}while(!done && (System.currentTimeMillis()-startTime)< msTimeout);
+		}
+	}
 
 	@Test
 	public void dyioNamespaceTest() {

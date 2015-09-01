@@ -9,7 +9,14 @@ File buildDir = file(".");
 
 Properties props = new Properties()
 props.load(new FileInputStream(buildDir.getAbsolutePath()+"/src/main/resources/com/neuronrobotics/sdk/config/build.properties"))
-
+sourceSets {
+	
+	test {
+		java {
+			srcDirs = ["test/java/src"]  // Note @Peter's comment below
+		}
+	}
+}
 manifest {
     attributes(	
     			"Manifest-Version": "1.0",
@@ -43,6 +50,7 @@ repositories {
 dependencies {
 	//TODO change as many of these as possible to Maven repositories
     compile fileTree (dir: 'libs', includes: ['*.jar'])
+	testCompile "junit:junit:4.11"  // Or whatever version
 }
 
 // create a fat-jar (class files plus dependencies
