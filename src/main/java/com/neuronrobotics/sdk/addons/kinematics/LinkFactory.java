@@ -209,17 +209,17 @@ public class LinkFactory {
 	public void flush(final double seconds){
 		long time = System.currentTimeMillis();
 		//TODO this feature needs to be made to work, it should also check to see if all the links are on the same device
-//		if(dyio!=null){
-//			dyio.flushCache(seconds);
-//		}
-//		if(pid!=null){
-//			pid.flushPIDChannels(seconds);
-//		}else{	
+		if(dyio!=null){
+			dyio.flushCache(seconds);
+		}
+		if(pid!=null){
+			pid.flushPIDChannels(seconds);
+		}else{	
 			for(AbstractLink l:links){
 				if(l.getLinkConfiguration().getDeviceScriptingName()!=null)
 					l.flush(seconds);
 			}
-//		}
+		}
 		//System.out.println("Flush Took "+(System.currentTimeMillis()-time)+"ms");
 	}
 	public IPidControlNamespace getPid() {
