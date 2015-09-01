@@ -19,6 +19,28 @@ public class RotationNR {
 	 */
 	public RotationNR() {
 	}
+	
+	// create a new object with the given simplified rotations
+	public RotationNR( double Azimuth, double Tilt  ,  double Elevation   ) {
+		
+		double attitude = Math.toRadians(Elevation);
+		double heading= Math.toRadians(Azimuth);
+		double bank = Math.toRadians(Tilt) ;
+		double w,x,y,z;
+	    // Assuming the angles are in radians.
+	    double c1 = Math.cos(heading);
+	    double s1 = Math.sin(heading);
+	    double c2 = Math.cos(attitude);
+	    double s2 = Math.sin(attitude);
+	    double c3 = Math.cos(bank);
+	    double s3 = Math.sin(bank);
+	    w = Math.sqrt(1.0 + c1 * c2 + c1*c3 - s1 * s2 * s3 + c2*c3) / 2.0;
+	    double w4 = (4.0 * w);
+	    x = (c2 * s3 + c1 * s3 + s1 * s2 * c3) / w4 ;
+	    y = (s1 * c2 + s1 * c3 + c1 * s2 * s3) / w4 ;
+	    z = (-s1 * s3 + c1 * s2 * c3 +s2) / w4 ;
+		quaternion2RotationMatrix(w, x, y, z);
+	}
 
 	public RotationNR(double[][] rotationMatrix) {
 		loadRotations(rotationMatrix);
@@ -323,29 +345,9 @@ public class RotationNR {
 	public static  boolean bound(double low, double high, double n) {
 	    return n >= low && n <= high;
 	}
-	// create a new object with the given simplified rotations
-	public RotationNR( double Tilt,  double Elevation,double Azimuth) {
-		
-		double attitude = Math.toRadians(Elevation);
-		double heading= Math.toRadians(Azimuth);
-		double bank = Math.toRadians(Tilt) ;
-		double w,x,y,z;
-	    // Assuming the angles are in radians.
-	    double c1 = Math.cos(heading);
-	    double s1 = Math.sin(heading);
-	    double c2 = Math.cos(attitude);
-	    double s2 = Math.sin(attitude);
-	    double c3 = Math.cos(bank);
-	    double s3 = Math.sin(bank);
-	    w = Math.sqrt(1.0 + c1 * c2 + c1*c3 - s1 * s2 * s3 + c2*c3) / 2.0;
-	    double w4 = (4.0 * w);
-	    x = (c2 * s3 + c1 * s3 + s1 * s2 * c3) / w4 ;
-	    y = (s1 * c2 + s1 * c3 + c1 * s2 * s3) / w4 ;
-	    z = (-s1 * s3 + c1 * s2 * c3 +s2) / w4 ;
-		quaternion2RotationMatrix(w, x, y, z);
-	}
+
 	private double getRotAngle(int index){
-		double w,x,y,z,el,ax,til;
+		double w,x,y,z,tilt,azumiuth,elevation;
 		w=getRotationMatrix2QuaturnionW();
 		x=getRotationMatrix2QuaturnionX();
 		y=getRotationMatrix2QuaturnionY();
@@ -357,49 +359,44 @@ public class RotationNR {
 		double unit = sqx + sqy + sqz + sqw; // if normalised is one, otherwise is correction factor
 		double test = x*y + z*w;
 		if (test > 0.499*unit) { // singularity at north pole
-			el = 2 *  Math.atan2(x,w);
-			ax = Math.PI/2;
-			til = 0;
+			tilt = 2 *  Math.atan2(x,w);
+			azumiuth = Math.PI/2;
+			elevation = 0;
 		
 		}else
 		if (test < -0.499*unit) { // singularity at south pole
-			el = -2 *  Math.atan2(x,w);
-			ax = -Math.PI/2;
-			til = 0;
+			tilt = -2 *  Math.atan2(x,w);
+			azumiuth = -Math.PI/2;
+			elevation = 0;
 			
 		}else{
-		    el =  Math.atan2(2*y*w-2*x*z , sqx - sqy - sqz + sqw);
-			ax =  Math.asin(2*test/unit);
-			til =  Math.atan2(2*x*w-2*y*z , -sqx + sqy - sqz + sqw);
+		    tilt =  Math.atan2(2*y*w-2*x*z , sqx - sqy - sqz + sqw);
+			azumiuth =  Math.asin(2*test/unit);
+			elevation =  Math.atan2(2*x*w-2*y*z , -sqx + sqy - sqz + sqw);
 		}
-//		if(		bound(-180.01, -179.99, Math.toDegrees(Attitude))||
-//				bound(-180.01, -179.99, Math.toDegrees(Heading))||
-//				bound(-180.01, -179.99, Math.toDegrees(bank))
-//				){
-//			bank = -Math.PI +bank;
-//			Attitude = Math.PI +Attitude;
-//			Heading = -(Math.PI +Heading);
-////			heading = -Math.PI +heading;
-////			attitude = -Math.PI +attitude;
-////			bank = -Math.PI +bank;
-//		}
-//		if(bound(359.99,360.01,Math.abs(Math.toDegrees(Attitude)))){
-//			Attitude=0;
-//		}
-//		if(bound(359.99,360.01,Math.abs(Math.toDegrees(Heading)))){
-//			Heading=0;
-//		}
-//		if(bound(359.99,360.01,Math.abs(Math.toDegrees(bank)))){
-//			bank=0;
-//		}
+		if(		bound(-180.01, -179.99, Math.toDegrees(tilt))
+				){
+			elevation = -Math.PI +elevation;
+			tilt = Math.PI +tilt;
+			azumiuth = -(Math.PI +azumiuth);
+		}
+		if(bound(359.99,360.01,Math.abs(Math.toDegrees(tilt)))){
+			tilt=0;
+		}
+		if(bound(359.99,360.01,Math.abs(Math.toDegrees(azumiuth)))){
+			azumiuth=0;
+		}
+		if(bound(359.99,360.01,Math.abs(Math.toDegrees(elevation)))){
+			elevation=0;
+		}
 		
 		switch(index){
 		case 0:
-			return til;
+			return elevation;
 		case 1:
-			return ax;
+			return azumiuth;
 		case 2:
-			return el;
+			return tilt;
 		default: 
 			return 0;
 		}
@@ -424,18 +421,18 @@ public class RotationNR {
 	
 	public double getRotationTilt() {
 
-		return  getRotAngle(0) ;
+		return  getRotAngle(2) ;
 
 	}
 
 	public double getRotationElevation() {
 		
-		return  getRotAngle(1);
+		return  getRotAngle(0);
 	}
 
 	public double getRotationAzimuth() {
 		
-		return getRotAngle(2);
+		return getRotAngle(1);
 	}
 	@Deprecated //use  getRotationBank()
 	public double getRotationX() {
