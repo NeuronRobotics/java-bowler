@@ -18,6 +18,9 @@ public class DeviceManager {
 	private static final ArrayList<IDeviceAddedListener> deviceAddedListener = new ArrayList<IDeviceAddedListener>();
 	
 	public static void addConnection(final BowlerAbstractDevice newDevice, String name){
+		if(!newDevice.isAvailable()){
+			throw new BowlerRuntimeException("Device is not availible");
+		}
 		if(devices.contains(newDevice)){
 			Log.warning("Device is already added " +newDevice.getScriptingName());
 		}
@@ -111,8 +114,15 @@ public class DeviceManager {
 	public static void addConnection() {
 		new Thread() {
 			public void run() {
-				BowlerDatagram.setUseBowlerV4(true);
-				addConnection(ConnectionDialog.promptConnection());
+				setName("Connection Dialog displayer thread");
+				try{
+					BowlerDatagram.setUseBowlerV4(true);
+					addConnection(ConnectionDialog.promptConnection());
+				}catch(BowlerRuntimeException ex){
+					// try one more time is it fails to connect
+					BowlerDatagram.setUseBowlerV4(true);
+					addConnection(ConnectionDialog.promptConnection());
+				}
 			}
 		}.start();
 	}

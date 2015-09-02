@@ -682,6 +682,8 @@ public abstract class BowlerAbstractConnection {
 			BowlerDatagram dg =  send(command,addr,retry);
 			if(dg!=null){
 				addr.setValues(dg.getAddress());
+			}else{
+				throw new BowlerRuntimeException("Device failed to respond");
 			}
 			Object [] en =parseResponse(namespace, method, rpcString,dg);//parse and return
 			BowlerDatagramFactory.freePacket(dg);
@@ -949,8 +951,6 @@ public abstract class BowlerAbstractConnection {
 					//if(!ret.getRPC().contains("_err"))
 					
 					return ret;
-				}else{
-					 throw new InvalidResponseException("No response from device");
 				}
 			}catch(MalformattedDatagram e){
 				Log.error("Sending Synchronus packet and there was a failure, will retry "+(retry-i-1)+" more times");
@@ -1189,7 +1189,7 @@ public abstract class BowlerAbstractConnection {
 			//throw new RuntimeException();
 		}
 		
-		private synchronized boolean  runPacketUpdate() {
+		private boolean  runPacketUpdate() {
 			try {
 				BowlerDatagram bd = loadPacketFromPhy(bytesToPacketBuffer);
 				if(bd!=null){
@@ -1197,7 +1197,7 @@ public abstract class BowlerAbstractConnection {
 					onDataReceived(bd);
 					bytesToPacketBuffer=new ByteList();
 				}
-			} catch (IOException e) {
+			} catch (Exception e) {
 				//e.printStackTrace();
 				if(isConnected()){
 					Log.error("Data read failed "+e.getMessage());
@@ -1244,42 +1244,50 @@ public abstract class BowlerAbstractConnection {
 		this.beater = beater;
 	}
 	
-	public  BowlerDatagram loadPacketFromPhy(ByteList bytesToPacketBuffer) throws NullPointerException, IOException{
+	public BowlerDatagram  loadPacketFromPhy(ByteList bytesToPacketBuffer) throws NullPointerException, IOException{
 		BowlerDatagram bd=BowlerDatagramFactory.build(bytesToPacketBuffer);
 		if(dataIns!=null){	
-			int have = getDataIns().available();
-			if(have==0)
-				return null;
-			int b,ret =0;
-			
+			int have,b,ret =0;
 			try{
-				for(b=0;b<have;b++){
-					if(bd!=null)
-						Log.error("Adding "+(have-b-1)+" after packet found");
-					ret = getDataIns().read();
-					if(ret<0){
-						Log.error("Stream is broken - unexpected: claimed to have "+getDataIns().available()+" bytes, read in "+b);
-						//reconnect();
-						//something went wrong
-						new RuntimeException(" Buffer attempted to read "+have+" got "+b).printStackTrace();
-						return null;
-					}else{
-						bytesToPacketBuffer.add(ret);
-						if(bd==null)
-							bd = BowlerDatagramFactory.build(bytesToPacketBuffer);
-						if(bd!=null)
-							return bd;
-
-					}
-				
+				synchronized (dataIns) {
+					have = getDataIns().available();
 				}
-			}catch(Exception e){
-				e.printStackTrace();
+				if(have==0)
+					return null;
+			}catch (IOException e){
+				//Log.enableErrorPrint();
+				Log.error("IO Error "+e.getMessage());
+				throw e;
 			}
+		
+			for(b=0;b<have;b++){
+				if(bd!=null)
+					Log.error("Adding "+(have-b-1)+" after packet found");
+				synchronized (dataIns) {
+					ret = getDataIns().read();
+				}
+				
+				if(ret<0){
+					Log.error("Stream is broken - unexpected: claimed to have "+have+" bytes, read in "+b);
+					//reconnect();
+					//something went wrong
+					new RuntimeException(" Buffer attempted to read "+have+" got "+b).printStackTrace();
+					return null;
+				}else{
+					bytesToPacketBuffer.add(ret);
+					if(bd==null)
+						bd = BowlerDatagramFactory.build(bytesToPacketBuffer);
+					if(bd!=null)
+						return bd;
+
+				}
+			
+			}
+
 			//ThreadUtil.wait(1);
 			
 		}else{
-			Log.error("Data In is null");
+			Log.error("Input stream is null");
 		}
 		return bd;
 	}

@@ -157,7 +157,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 		try {
 			currentJointSpacePositions=null;
 			currentJointSpaceTarget=null;
-			setDesiredJointSpaceVector(getCurrentJointSpaceVector(), 0);
+			//setDesiredJointSpaceVector(getCurrentJointSpaceVector(), 0);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

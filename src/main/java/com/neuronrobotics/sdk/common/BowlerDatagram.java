@@ -224,7 +224,7 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 
 		// Validate the CRC
 		if(!CheckCRC(raw,true) ) {
-				throw new MalformattedDatagram("CRC does not match");
+				throw new MalformattedDatagram("CRC does not match: "+raw);
 		}else{
 			setCrc(getCRC(raw));
 			setDataCrc(raw.getByte(raw.size()-1));
