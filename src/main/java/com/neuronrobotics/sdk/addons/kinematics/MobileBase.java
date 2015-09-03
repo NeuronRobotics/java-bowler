@@ -25,7 +25,10 @@ public class MobileBase extends AbstractKinematicsNR{
 	
 	private IDriveEngine walkingDriveEngine = new WalkingDriveEngine();
 	private IDriveEngine wheeledDriveEngine = new WheeledDriveEngine();
-
+	
+	private String [] cadEngine =new String[]{"bcb4760a449190206170","ThreeDPrintCad.groovy"};  
+	private String [] walkingEngine =new String[]{"bcb4760a449190206170","WalkingDriveEngine.groovy"}; 
+	
 	public MobileBase(){}// used for building new bases live
 	
 	public MobileBase(InputStream configFile){
@@ -210,6 +213,17 @@ public class MobileBase extends AbstractKinematicsNR{
 		setGlobalToFiducialTransform(new TransformNR());
 		String xml = "<mobilebase>\n";
 		xml+="\n<driveType>"+getDriveType()+"</driveType>\n";
+		
+		xml+="\n<cadEngine>";
+		xml+="\n\n<gist>"+getCadEngine()[0]+"</gist>\n";
+		xml+="\n\n<file>"+getCadEngine()[1]+"</file>\n";
+		xml+="</cadEngine>\n";
+		
+		xml+="\n<walkingEngine>";
+		xml+="\n\n<gist>"+getWalkingEngine()[0]+"</gist>\n";
+		xml+="\n\n<file>"+getWalkingEngine()[1]+"</file>\n";
+		xml+="</walkingEngine>\n";
+		
 		xml+="\n<name>"+getScriptingName()+"</name>\n";
 		for(DHParameterKinematics l:legs){
 			xml+="<leg>\n";
@@ -348,6 +362,22 @@ public class MobileBase extends AbstractKinematicsNR{
 			//System.out.println(m.getXml());
 		}catch(Exception e){e.printStackTrace();}
 		System.exit(0);
+	}
+
+	public String [] getCadEngine() {
+		return cadEngine;
+	}
+
+	public void setCadEngine(String [] cadEngine) {
+		this.cadEngine = cadEngine;
+	}
+
+	public String [] getWalkingEngine() {
+		return walkingEngine;
+	}
+
+	public void setWalkingEngine(String [] walkingEngine) {
+		this.walkingEngine = walkingEngine;
 	}
 
 }

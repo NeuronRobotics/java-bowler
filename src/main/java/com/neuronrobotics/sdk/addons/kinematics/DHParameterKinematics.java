@@ -36,6 +36,8 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 	private ArrayList<Affine> linksListeners = new ArrayList<Affine>();
 	private Affine currentTarget = new Affine();
 	boolean disconnecting=false;
+	private String [] dhEngine =new String[]{"bcb4760a449190206170","DefaultDhSolver.groovy"}; 
+	private String [] cadEngine =new String[]{"bcb4760a449190206170","ThreeDPrintCad.groovy"};  
 
 	IDeviceConnectionEventListener l = new IDeviceConnectionEventListener() {
 		@Override public void onDisconnect(BowlerAbstractDevice source) {
@@ -179,7 +181,20 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 	 * Generate the xml configuration to generate an XML of this robot. 
 	 */
 	public String getEmbedableXml(){
+		
+		
 		String xml = "";
+		
+		xml+="\n<cadEngine>";
+		xml+="\n\n<gist>"+getCadEngine()[0]+"</gist>\n";
+		xml+="\n\n<file>"+getCadEngine()[1]+"</file>\n";
+		xml+="</cadEngine>\n";
+		
+		xml+="\n<kinematics>";
+		xml+="\n\n<gist>"+getDhEngine()[0]+"</gist>\n";
+		xml+="\n\n<file>"+getDhEngine()[1]+"</file>\n";
+		xml+="</kinematics>\n";
+		
 		ArrayList<DHLink> dhLinks = chain.getLinks();
 		for(int i=0;i<dhLinks.size();i++){
 			xml+="<link>\n";
@@ -261,13 +276,19 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 	}
 
 	@Override
-	public void onJointSpaceUpdate(AbstractKinematicsNR source, final double[] joints) {
+	public void onJointSpaceUpdate(final AbstractKinematicsNR source, final double[] joints) {
 		// TODO Auto-generated method stub
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				ArrayList<TransformNR> linkPos= getChain().getCachedChain();
+				ArrayList<TransformNR> linkPos;
+				if(getChain().getCachedChain().size()==0 ){
+					linkPos= getChain().getChain(joints);
+				}else
+					linkPos= getChain().getCachedChain();
+				//System.out.println("Updating "+source.getScriptingName()+" links # "+linkPos.size());
 				for(int i=0;i<linkPos.size();i++) {
+					
 					try{
 						TransformFactory.getTransform(linkPos.get(i), getChain().getLinks().get(i).getListener());
 					}catch(Exception ex){
@@ -290,6 +311,22 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 			JointLimit event) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public String [] getDhEngine() {
+		return dhEngine;
+	}
+
+	public void setDhEngine(String [] dhEngine) {
+		this.dhEngine = dhEngine;
+	}
+
+	public String [] getCadEngine() {
+		return cadEngine;
+	}
+
+	public void setCadEngine(String [] cadEngine) {
+		this.cadEngine = cadEngine;
 	}
 
 
