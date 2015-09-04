@@ -25,10 +25,9 @@ public class MobileBase extends AbstractKinematicsNR{
 	
 	private IDriveEngine walkingDriveEngine = new WalkingDriveEngine();
 	private IDriveEngine wheeledDriveEngine = new WheeledDriveEngine();
-	
-	private String [] cadEngine =new String[]{"bcb4760a449190206170","ThreeDPrintCad.groovy"};  
 	private String [] walkingEngine =new String[]{"bcb4760a449190206170","WalkingDriveEngine.groovy"}; 
 	
+	private String [] selfSource =new String[2];
 	public MobileBase(){}// used for building new bases live
 	
 	public MobileBase(InputStream configFile){
@@ -63,6 +62,9 @@ public class MobileBase extends AbstractKinematicsNR{
 	
 	private void loadConfigs(Element doc){
 		setScriptingName(XmlFactory.getTagValue("name",doc));
+		
+		setCadEngine(getGistCodes( doc,"cadEngine"));
+		setWalkingEngine(getGistCodes( doc,"driveEngine"));
 		loadLimb(doc,"leg",legs);
 		loadLimb(doc,"drivable",drivable);
 		loadLimb(doc,"steerable",steerable);
@@ -72,7 +74,6 @@ public class MobileBase extends AbstractKinematicsNR{
 		}catch(Exception ex ){
 			setDriveType(DrivingType.NONE);
 		}
-		
 	}
 	private String getname(Element e,String tag){
 		try{
@@ -89,6 +90,7 @@ public class MobileBase extends AbstractKinematicsNR{
 		}
 		return tag;
 	}
+	
 	
 	private void loadLimb(Element doc,String tag, ArrayList<DHParameterKinematics> list){
 		NodeList nodListofLinks = doc.getChildNodes();
@@ -214,15 +216,15 @@ public class MobileBase extends AbstractKinematicsNR{
 		String xml = "<mobilebase>\n";
 		xml+="\n<driveType>"+getDriveType()+"</driveType>\n";
 		
-		xml+="\n<cadEngine>";
-		xml+="\n\n<gist>"+getCadEngine()[0]+"</gist>\n";
-		xml+="\n\n<file>"+getCadEngine()[1]+"</file>\n";
-		xml+="</cadEngine>\n";
+		xml+="\t<cadEngine>\n";
+		xml+="\t\t<gist>"+getCadEngine()[0]+"</gist>\n";
+		xml+="\t\t<file>"+getCadEngine()[1]+"</file>\n";
+		xml+="\t</cadEngine>\n";
 		
-		xml+="\n<walkingEngine>";
-		xml+="\n\n<gist>"+getWalkingEngine()[0]+"</gist>\n";
-		xml+="\n\n<file>"+getWalkingEngine()[1]+"</file>\n";
-		xml+="</walkingEngine>\n";
+		xml+="\t<driveEngine>\n";
+		xml+="\t\t<gist>"+getWalkingEngine()[0]+"</gist>\n";
+		xml+="\t\t<file>"+getWalkingEngine()[1]+"</file>\n";
+		xml+="\t</driveEngine>\n";
 		
 		xml+="\n<name>"+getScriptingName()+"</name>\n";
 		for(DHParameterKinematics l:legs){
@@ -355,29 +357,23 @@ public class MobileBase extends AbstractKinematicsNR{
 			break;
 		}
 	}
-	
-	public static void main(String[] args){
-		try{
-			MobileBase m = new MobileBase(XmlFactory.getDefaultConfigurationStream("WalkingMobileBase.xml"));
-			//System.out.println(m.getXml());
-		}catch(Exception e){e.printStackTrace();}
-		System.exit(0);
-	}
 
-	public String [] getCadEngine() {
-		return cadEngine;
-	}
-
-	public void setCadEngine(String [] cadEngine) {
-		this.cadEngine = cadEngine;
-	}
 
 	public String [] getWalkingEngine() {
 		return walkingEngine;
 	}
 
 	public void setWalkingEngine(String [] walkingEngine) {
-		this.walkingEngine = walkingEngine;
+		if(walkingEngine!=null && walkingEngine[0]!=null &&walkingEngine[1]!=null)
+			this.walkingEngine = walkingEngine;
+	}
+
+	public String [] getSelfSource() {
+		return selfSource;
+	}
+
+	public void setSelfSource(String [] selfSource) {
+		this.selfSource = selfSource;
 	}
 
 }

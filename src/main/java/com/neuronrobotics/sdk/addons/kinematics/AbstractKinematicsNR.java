@@ -46,6 +46,10 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	protected ArrayList<IJointSpaceUpdateListenerNR> jointSpaceUpdateListeners = new ArrayList<IJointSpaceUpdateListenerNR>();
 	private ArrayList<IRegistrationListenerNR> regListeners= new ArrayList<IRegistrationListenerNR>();
 	private ArrayList<MobileBase> mobileBases = new ArrayList<MobileBase>();
+	
+	private String [] dhEngine =new String[]{"bcb4760a449190206170","DefaultDhSolver.groovy"}; 
+	private String [] cadEngine =new String[]{"bcb4760a449190206170","ThreeDPrintCad.groovy"};  
+
 
 	/*This is in RAW joint level ticks*/
 	protected double[] currentJointSpacePositions=null;
@@ -158,9 +162,11 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		
 		
 		NodeList nodListofLinks = doc.getChildNodes();
-		
+		setCadEngine(getGistCodes( doc,"cadEngine"));
+		setDhEngine(getGistCodes( doc,"kinematics"));
 		for (int i = 0; i < nodListofLinks .getLength(); i++) {			
 		    Node linkNode = nodListofLinks.item(i);
+		    
 		    if (linkNode.getNodeType() == Node.ELEMENT_NODE && linkNode.getNodeName().contentEquals("link")) {
 		    	localConfigsFromXml.add(new LinkConfiguration((Element) linkNode));
 		    	
@@ -858,4 +864,58 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	public void setDhParametersChain(DHChain dhParametersChain) {
 		this.dhParametersChain = dhParametersChain;
 	}
+	
+	public String [] getDhEngine() {
+		return dhEngine;
+	}
+
+	public void setDhEngine(String [] dhEngine) {
+		if(dhEngine!=null && dhEngine[0]!=null &&dhEngine[1]!=null)
+			this.dhEngine = dhEngine;
+	}
+
+	public String [] getCadEngine() {
+		return cadEngine;
+	}
+
+	public void setCadEngine(String [] cadEngine) {
+		if(cadEngine!=null&& cadEngine[0]!=null &&cadEngine[1]!=null)
+		this.cadEngine = cadEngine;
+	}
+	
+	protected String getCode(Element e,String tag){
+		try{
+			NodeList nodListofLinks = e.getChildNodes();
+			
+			for (int i = 0; i < nodListofLinks .getLength(); i++) {			
+			    Node linkNode = nodListofLinks.item(i);
+			   if (linkNode.getNodeType() == Node.ELEMENT_NODE && linkNode.getNodeName().contentEquals(tag)) {
+			    	return XmlFactory.getTagValue(tag,e);
+			    }
+			}
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+		throw new RuntimeException("No tag "+tag+" found");
+	}
+	
+	protected String [] getGistCodes(Element doc,String tag){
+		String [] content =new String[2];
+		try{
+			NodeList nodListofLinks = doc.getChildNodes();
+			for (int i = 0; i < nodListofLinks.getLength(); i++) {			
+			    Node linkNode = nodListofLinks.item(i);
+			    if (linkNode.getNodeType() == Node.ELEMENT_NODE&& linkNode.getNodeName().contentEquals(tag)) {
+			    	Element e = (Element) linkNode;
+			    	content[0]=getCode( e,"gist");
+			    	content[1]=getCode( e,"file");
+			    }
+			}
+			return content;
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 }

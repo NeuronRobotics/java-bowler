@@ -21,11 +21,11 @@ public class RotationNR {
 	}
 	
 	// create a new object with the given simplified rotations
-	public RotationNR( double Azimuth, double Tilt  ,  double Elevation   ) {
+	public RotationNR( double tilt, double elevation  ,  double azumeth   ) {
 		
-		double attitude = Math.toRadians(Elevation);
-		double heading= Math.toRadians(Azimuth);
-		double bank = Math.toRadians(Tilt) ;
+		double attitude = Math.toRadians(azumeth);
+		double heading= Math.toRadians(tilt);
+		double bank = Math.toRadians(elevation) ;
 		double w,x,y,z;
 	    // Assuming the angles are in radians.
 	    double c1 = Math.cos(heading);

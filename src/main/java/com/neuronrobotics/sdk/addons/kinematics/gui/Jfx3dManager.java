@@ -104,7 +104,7 @@ public class Jfx3dManager extends JFXPanel {
 	final Xform cameraXform = new Xform();
 	final Xform cameraXform2 = new Xform();
 	final Xform cameraXform3 = new Xform();
-	final double cameraDistance = 1000;
+	final double cameraDistance = 3000;
 	final Xform moleculeGroup = new Xform();
 	private Timeline timeline;
 	boolean timelinePlaying = false;
@@ -362,8 +362,8 @@ public class Jfx3dManager extends JFXPanel {
 		cameraXform3.getChildren().add(camera);
 		cameraXform3.setRotateZ(180.0);
 
-		camera.setNearClip(0.1);
-		camera.setFarClip(10000.0);
+		camera.setNearClip(.1);
+		camera.setFarClip(100000.0);
 		camera.setTranslateZ(-cameraDistance);
 		camera.getTransforms().add(getCameraVR());
 		cameraXform.ry.setAngle(320.0);

@@ -36,8 +36,6 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 	private ArrayList<Affine> linksListeners = new ArrayList<Affine>();
 	private Affine currentTarget = new Affine();
 	boolean disconnecting=false;
-	private String [] dhEngine =new String[]{"bcb4760a449190206170","DefaultDhSolver.groovy"}; 
-	private String [] cadEngine =new String[]{"bcb4760a449190206170","ThreeDPrintCad.groovy"};  
 
 	IDeviceConnectionEventListener l = new IDeviceConnectionEventListener() {
 		@Override public void onDisconnect(BowlerAbstractDevice source) {
@@ -185,15 +183,15 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 		
 		String xml = "";
 		
-		xml+="\n<cadEngine>";
-		xml+="\n\n<gist>"+getCadEngine()[0]+"</gist>\n";
-		xml+="\n\n<file>"+getCadEngine()[1]+"</file>\n";
-		xml+="</cadEngine>\n";
+		xml+="\t<cadEngine>\n";
+		xml+="\t\t<gist>"+getCadEngine()[0]+"</gist>\n";
+		xml+="\t\t<file>"+getCadEngine()[1]+"</file>\n";
+		xml+="\t</cadEngine>\n";
 		
-		xml+="\n<kinematics>";
-		xml+="\n\n<gist>"+getDhEngine()[0]+"</gist>\n";
-		xml+="\n\n<file>"+getDhEngine()[1]+"</file>\n";
-		xml+="</kinematics>\n";
+		xml+="\t<kinematics>\n";
+		xml+="\t\t<gist>"+getDhEngine()[0]+"</gist>\n";
+		xml+="\t\t<file>"+getDhEngine()[1]+"</file>\n";
+		xml+="\t</kinematics>\n";
 		
 		ArrayList<DHLink> dhLinks = chain.getLinks();
 		for(int i=0;i<dhLinks.size();i++){
@@ -313,21 +311,6 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 		
 	}
 
-	public String [] getDhEngine() {
-		return dhEngine;
-	}
-
-	public void setDhEngine(String [] dhEngine) {
-		this.dhEngine = dhEngine;
-	}
-
-	public String [] getCadEngine() {
-		return cadEngine;
-	}
-
-	public void setCadEngine(String [] cadEngine) {
-		this.cadEngine = cadEngine;
-	}
 
 
 
