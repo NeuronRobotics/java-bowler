@@ -171,7 +171,7 @@ public class Jfx3dManager extends JFXPanel {
 		a.getTransforms().addAll(current.getTransforms());
 		og.getChildren().add(a);
 		lookGroup.getChildren().add(og);
-		Log.warning("Adding new axis");
+		//Log.warning("Adding new axis");
 		return current;
 	}
 
