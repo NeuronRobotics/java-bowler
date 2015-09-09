@@ -199,7 +199,17 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	public boolean setValue(int channel, ByteList value) {
 		return getChannel(channel).setValue(value);
 	}
-
+	/**
+	 * This method is a simple value set for a DyIO channel. This method is unit-less and will clip data to fit the 
+	 * channel modes requirements. 
+	 * 
+	 * @param channel integer representing the index of the channel
+	 * @param value   Unit-less value to set to the DyIO's channel
+	 * @return  true for success
+	 */
+	public boolean setValue(int channel, java.math.BigDecimal value) {
+		return setValue(channel,value.intValue());
+	}
 	/**
 	 * This method is used to get the value of a given channel. The data units will be determined by 
 	 * DyIO channel mode, and so should be treated by this method as unit-less.
