@@ -25,13 +25,12 @@ public class MACAddress implements ISendable {
 	public static final String BROADCAST = "00:00:00:00:00:00";
 	
 	/** The address. */
-	private byte [] address = new byte[6];
+	private byte [] address = new byte[]{0,0,0,0,0,0};
 	
 	/**
 	 * Instantiates a new mAC address.
 	 */
 	public MACAddress(){
-		init(BROADCAST);
 	}
 	/**
 	 * Construct a new MAC address object with a given MAC address represented as a string of 6 bytes in hex deliminated by semicolons.
