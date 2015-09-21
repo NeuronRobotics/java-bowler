@@ -27,7 +27,7 @@ public class DeviceManager {
 		int numOfThisDeviceType=0;
 		
 		for (int i = 0; i < devices.size(); i++) {
-			if(newDevice.getClass().isInstance(devices.get(i)))
+			if(newDevice.getClass().isInstance(devices.get(i) ) && devices.get(i).getScriptingName().contentEquals(name))
 				numOfThisDeviceType++;
 		}
 		if(numOfThisDeviceType>0)
