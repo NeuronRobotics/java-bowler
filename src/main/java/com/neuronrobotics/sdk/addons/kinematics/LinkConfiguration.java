@@ -34,7 +34,7 @@ public class LinkConfiguration {
 	
 	public LinkConfiguration(Element eElement){
     	setName(XmlFactory.getTagValue("name",eElement));
-    	setIndex(Integer.parseInt(XmlFactory.getTagValue("index",eElement)));
+    	setHardwareIndex(Integer.parseInt(XmlFactory.getTagValue("index",eElement)));
     	setScale(Double.parseDouble(XmlFactory.getTagValue("scale",eElement)));
     	setUpperLimit(Double.parseDouble(XmlFactory.getTagValue("upperLimit",eElement)));
     	setLowerLimit(Double.parseDouble(XmlFactory.getTagValue("lowerLimit",eElement)));
@@ -79,7 +79,7 @@ public class LinkConfiguration {
 	}
 	public LinkConfiguration(Object[] args) {
 		setName((String)args[6]);
-    	setIndex((Integer)args[0]);
+		setHardwareIndex((Integer)args[0]);
     	setScale((Double)args[5]);
     	setUpperLimit((Integer)args[4]);
     	setLowerLimit((Integer)args[3]);
@@ -140,9 +140,17 @@ public class LinkConfiguration {
 	public String getName() {
 		return name;
 	}
-	public void setIndex(int index) {
+	/**
+	 * sets the hardware index for maping this kinematics link to its assocaited hardware index
+	 * @param index
+	 */
+	public void setHardwareIndex(int index) {
 		this.index = index;
 	}
+	/**
+	 * gets the hardware index for maping this kinematics link to its assocaited hardware index
+	 * @param index
+	 */
 	public int getHardwareIndex() {
 		return index;
 	}
@@ -235,9 +243,17 @@ public class LinkConfiguration {
 	public double getLowerVelocity() {
 		return lowerVelocity;
 	}
+	/**
+	 * THis is the index of this link in its kinematics chain
+	 * @return
+	 */
 	public int getLinkIndex() {
 		return linkIndex;
 	}
+	/**
+	 * This sets the index of the link in itts kinematic chain
+	 * @param linkIndex
+	 */
 	public void setLinkIndex(int linkIndex) {
 		this.linkIndex = linkIndex;
 	}
