@@ -17,10 +17,10 @@ import com.neuronrobotics.sdk.dyio.DyIO;
 
 public class MobileBase extends AbstractKinematicsNR{
 	
-	private ArrayList<DHParameterKinematics> legs=new ArrayList<DHParameterKinematics>();
-	private ArrayList<DHParameterKinematics> appendages=new ArrayList<DHParameterKinematics>();
-	private ArrayList<DHParameterKinematics> steerable=new ArrayList<DHParameterKinematics>();
-	private ArrayList<DHParameterKinematics> drivable=new ArrayList<DHParameterKinematics>();
+	private final ArrayList<DHParameterKinematics> legs=new ArrayList<DHParameterKinematics>();
+	private final ArrayList<DHParameterKinematics> appendages=new ArrayList<DHParameterKinematics>();
+	private final ArrayList<DHParameterKinematics> steerable=new ArrayList<DHParameterKinematics>();
+	private final ArrayList<DHParameterKinematics> drivable=new ArrayList<DHParameterKinematics>();
 	private DrivingType driveType = DrivingType.NONE;
 	
 	private IDriveEngine walkingDriveEngine = new WalkingDriveEngine();
@@ -51,7 +51,24 @@ public class MobileBase extends AbstractKinematicsNR{
 		    }
 	    }
 	
-		
+    	addRegistrationListener(new IRegistrationListenerNR() {
+			@Override
+			public void onFiducialToGlobalUpdate(AbstractKinematicsNR source,
+					TransformNR regestration) {
+				
+				for(DHParameterKinematics kin:getAllDHChains()){
+					//Log.debug("Motion of mobile base event ");
+					//this represents motion of the mobile base
+					kin.setGlobalToFiducialTransform(regestration);
+				}
+
+			}
+			
+			@Override
+			public void onBaseToFiducialUpdate(AbstractKinematicsNR source,
+					TransformNR regestration) {
+			}
+		});
 	}
 	
 	public MobileBase(Element doc) {
@@ -100,9 +117,7 @@ public class MobileBase extends AbstractKinematicsNR{
 		    	Element e = (Element) linkNode;
 		    	final String name =  getname( e,tag);
 		    	
-		    	DHParameterKinematics kin=null;
-		    	if(kin==null)
-		    		kin=(DHParameterKinematics) DeviceManager.getSpecificDevice(DHParameterKinematics.class, name);
+		    	DHParameterKinematics kin=(DHParameterKinematics) DeviceManager.getSpecificDevice(DHParameterKinematics.class, name);
 		    	if(kin==null){
 		    		kin= new DHParameterKinematics(e);
 		    		
@@ -110,26 +125,7 @@ public class MobileBase extends AbstractKinematicsNR{
 		    	}
 		    	kin.setScriptingName(name);
 		    	list.add(kin);
-		    	addRegistrationListener(new IRegistrationListenerNR() {
-					@Override
-					public void onFiducialToGlobalUpdate(AbstractKinematicsNR source,
-							TransformNR regestration) {
-						DHParameterKinematics kin=(DHParameterKinematics) DeviceManager.getSpecificDevice(DHParameterKinematics.class, name);
-						//Log.debug("Motion of mobile base event ");
-						//this represents motion of the mobile base
-						if(kin!=null)kin.setGlobalToFiducialTransform(regestration);
-						if(kin!=null)kin.getCurrentTaskSpaceTransform();
-					}
-					
-					@Override
-					public void onBaseToFiducialUpdate(AbstractKinematicsNR source,
-							TransformNR regestration) {
-						DHParameterKinematics kin=(DHParameterKinematics) DeviceManager.getSpecificDevice(DHParameterKinematics.class, name);
-						// update the joints on the motion
-						if(kin!=null)
-						kin.getCurrentTaskSpaceTransform();
-					}
-				});
+
 		    }
 		}
 	}
@@ -138,8 +134,9 @@ public class MobileBase extends AbstractKinematicsNR{
 
 	@Override
 	public void disconnectDevice() {
-		// TODO Auto-generated method stub
-
+		for(DHParameterKinematics kin:getAllDHChains()){
+			kin.disconnect();
+		}
 	}
 	
 	
@@ -167,17 +164,10 @@ public class MobileBase extends AbstractKinematicsNR{
 		return legs;
 	}
 
-	public void setLegs(ArrayList<DHParameterKinematics> legs) {
-		this.legs = legs;
-	}
-
 	public ArrayList<DHParameterKinematics> getAppendages() {
 		return appendages;
 	}
 
-	public void setAppendages(ArrayList<DHParameterKinematics> appendages) {
-		this.appendages = appendages;
-	}
 	
 	public ArrayList<DHParameterKinematics> getAllDHChains() {
 		ArrayList<DHParameterKinematics> copy = new ArrayList<DHParameterKinematics>();
@@ -269,19 +259,12 @@ public class MobileBase extends AbstractKinematicsNR{
 		return steerable;
 	}
 
-	public void setSteerable(ArrayList<DHParameterKinematics> steerable) {
-		this.steerable = steerable;
-	}
-
 	public ArrayList<DHParameterKinematics> getDrivable() {
 		return drivable;
 	}
 
-	public void setDrivable(ArrayList<DHParameterKinematics> drivable) {
-		this.drivable = drivable;
-	}
 
-	public IDriveEngine getWalkingDriveEngine() {
+	private IDriveEngine getWalkingDriveEngine() {
 		return walkingDriveEngine;
 	}
 
@@ -289,7 +272,7 @@ public class MobileBase extends AbstractKinematicsNR{
 		this.walkingDriveEngine = walkingDriveEngine;
 	}
 
-	public IDriveEngine getWheeledDriveEngine() {
+	private IDriveEngine getWheeledDriveEngine() {
 		return wheeledDriveEngine;
 	}
 
@@ -326,6 +309,7 @@ public class MobileBase extends AbstractKinematicsNR{
 			getWalkingDriveEngine().DriveArc(this,newPose, seconds);
 			break;
 		}
+		updatePositions();
 	}
 
 	
@@ -341,6 +325,7 @@ public class MobileBase extends AbstractKinematicsNR{
 			getWalkingDriveEngine().DriveVelocityStraight(this,cmPerSecond);
 			break;
 		}
+		updatePositions();
 	}
 
 	
@@ -356,6 +341,23 @@ public class MobileBase extends AbstractKinematicsNR{
 			getWalkingDriveEngine().DriveVelocityArc(this,degreesPerSecond, cmRadius);
 			break;
 		}
+		updatePositions();
+	}
+	
+	public void updatePositions(){
+		for(DHParameterKinematics kin:getAppendages()){
+			System.err.println("Updating arm: "+kin.getScriptingName());
+			kin.updateCadLocations();
+		}
+		for(DHParameterKinematics kin:getDrivable()){
+			System.err.println("Updating getDrivable: "+kin.getScriptingName());
+			kin.updateCadLocations();
+		}
+		for(DHParameterKinematics kin:getSteerable()){
+			System.err.println("Updating getSteerable: "+kin.getScriptingName());
+			kin.updateCadLocations();
+		}
+
 	}
 
 

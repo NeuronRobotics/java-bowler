@@ -274,31 +274,34 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 	}
 	
 	public void updateCadLocations(){
+		double[] joints =getCurrentJointSpaceVector();
+		getChain().getChain(joints);
 		onJointSpaceUpdate(this, getCurrentJointSpaceVector());
 	}
 
 	@Override
 	public void onJointSpaceUpdate(final AbstractKinematicsNR source, final double[] joints) {
-		// TODO Auto-generated method stub
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				ArrayList<TransformNR> linkPos;
+				ArrayList<TransformNR> ll;
 				if(getChain().getCachedChain().size()==0 ){
-					linkPos= getChain().getChain(joints);
+					ll= getChain().getChain(joints);
 				}else
-					linkPos= getChain().getCachedChain();
+					ll= getChain().getCachedChain();
 				//System.out.println("Updating "+source.getScriptingName()+" links # "+linkPos.size());
-				for(int i=0;i<linkPos.size();i++) {
-					
-					try{
-						TransformFactory.getTransform(linkPos.get(i), getChain().getLinks().get(i).getListener());
-					}catch(Exception ex){
-						ex.printStackTrace();
-					}
+				for(int i=0;i<ll.size();i++) {
+					final ArrayList<TransformNR> linkPos = ll;
+					final int index=i;
+					Platform.runLater(new Runnable() {
+						@Override
+						public void run() {
+							try{
+								TransformFactory.getTransform(linkPos.get(index), getChain().getLinks().get(index).getListener());
+							}catch(Exception ex){
+								ex.printStackTrace();
+							}
+						}
+					});
 				}
-			}
-		});
+	
 	}
 
 	@Override
