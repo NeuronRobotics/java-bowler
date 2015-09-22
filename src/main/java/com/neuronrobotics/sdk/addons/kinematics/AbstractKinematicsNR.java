@@ -220,6 +220,9 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 							    							Double.parseDouble(XmlFactory.getTagValue("rotx",eElement)),
 							    							Double.parseDouble(XmlFactory.getTagValue("roty",eElement)),
 							    							Double.parseDouble(XmlFactory.getTagValue("rotz",eElement))})));	 
+		    }else{
+		    	System.err.println(linkNode.getNodeName());
+		    	Log.error("Node not known: "+linkNode.getNodeName());
 		    }
 		}
 

@@ -272,6 +272,10 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 		//once the new link configuration is set up, re add the listener
 		factory.addLinkListener(this);
 	}
+	
+	public void updateCadLocations(){
+		onJointSpaceUpdate(this, getCurrentJointSpaceVector());
+	}
 
 	@Override
 	public void onJointSpaceUpdate(final AbstractKinematicsNR source, final double[] joints) {
