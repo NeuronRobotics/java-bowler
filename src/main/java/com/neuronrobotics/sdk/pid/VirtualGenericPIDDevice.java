@@ -195,7 +195,11 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 				long time = System.currentTimeMillis();
 				for(DriveThread dr : driveThreads){
 					if(dr.update()){
-						firePIDEvent(new PIDEvent(dr.getChan(), (int)dr.ticks, time,0));
+						try{
+							firePIDEvent(new PIDEvent(dr.getChan(), (int)dr.ticks, time,0));
+						}catch (Exception ex){
+							ex.printStackTrace();
+						}
 					}
 				}
 			}
