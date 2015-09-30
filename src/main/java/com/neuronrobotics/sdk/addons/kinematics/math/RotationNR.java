@@ -21,7 +21,7 @@ public class RotationNR {
 	}
 	
 	// create a new object with the given simplified rotations
-	public RotationNR( double tilt, double elevation  ,  double azumeth   ) {
+	public RotationNR( double elevation  , double tilt,  double azumeth   ) {
 		
 		double attitude = Math.toRadians(azumeth);
 		double heading= Math.toRadians(tilt);
@@ -421,13 +421,13 @@ public class RotationNR {
 	
 	public double getRotationTilt() {
 
-		return  getRotAngle(2) ;
+		return  getRotAngle(0) ;
 
 	}
 
 	public double getRotationElevation() {
 		
-		return  getRotAngle(0);
+		return  getRotAngle(2);
 	}
 
 	public double getRotationAzimuth() {
