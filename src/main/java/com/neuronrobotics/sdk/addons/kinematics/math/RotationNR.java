@@ -28,17 +28,18 @@ public class RotationNR {
 		double bank = Math.toRadians(elevation) ;
 		double w,x,y,z;
 	    // Assuming the angles are in radians.
-	    double c1 = Math.cos(heading);
-	    double s1 = Math.sin(heading);
-	    double c2 = Math.cos(attitude);
-	    double s2 = Math.sin(attitude);
-	    double c3 = Math.cos(bank);
-	    double s3 = Math.sin(bank);
-	    w = Math.sqrt(1.0 + c1 * c2 + c1*c3 - s1 * s2 * s3 + c2*c3) / 2.0;
-	    double w4 = (4.0 * w);
-	    x = (c2 * s3 + c1 * s3 + s1 * s2 * c3) / w4 ;
-	    y = (s1 * c2 + s1 * c3 + c1 * s2 * s3) / w4 ;
-	    z = (-s1 * s3 + c1 * s2 * c3 +s2) / w4 ;
+		double c1 = Math.cos(heading / 2);
+		double s1 = Math.sin(heading / 2);
+		double c2 = Math.cos(attitude / 2);
+		double s2 = Math.sin(attitude / 2);
+		double c3 = Math.cos(bank / 2);
+		double s3 = Math.sin(bank / 2);
+		double c1c2 = c1 * c2;
+		double s1s2 = s1 * s2;
+		w = c1c2 * c3 - s1s2 * s3;
+		x = c1c2 * s3 + s1s2 * c3;
+		y = s1 * c2 * c3 + c1 * s2 * s3;
+		z = c1 * s2 * c3 - s1 * c2 * s3;
 		quaternion2RotationMatrix(w, x, y, z);
 	}
 
@@ -352,27 +353,27 @@ public class RotationNR {
 		x=getRotationMatrix2QuaturnionX();
 		y=getRotationMatrix2QuaturnionY();
 		z=getRotationMatrix2QuaturnionZ();
-	    double sqw = w*w;
-	    double sqx = x*x;
-	    double sqy = y*y;
-	    double sqz = z*z;
-		double unit = sqx + sqy + sqz + sqw; // if normalised is one, otherwise is correction factor
-		double test = x*y + z*w;
-		if (test > 0.499*unit) { // singularity at north pole
-			tilt = 2 *  Math.atan2(x,w);
-			azumiuth = Math.PI/2;
-			elevation = 0;
-		
-		}else
-		if (test < -0.499*unit) { // singularity at south pole
-			tilt = -2 *  Math.atan2(x,w);
-			azumiuth = -Math.PI/2;
-			elevation = 0;
-			
-		}else{
-		    tilt =  Math.atan2(2*y*w-2*x*z , sqx - sqy - sqz + sqw);
-			azumiuth =  Math.asin(2*test/unit);
-			elevation =  Math.atan2(2*x*w-2*y*z , -sqx + sqy - sqz + sqw);
+		double sqw = w * w;
+		double sqx = x * x;
+		double sqy = y * y;
+		double sqz = z * z;
+		double unit = sqx + sqy + sqz + sqw; // if normalised is one, otherwise
+												// is correction factor
+		double test = x * y + z * w;
+		if (test > 0.499 * unit) { // singularity at north pole
+			azumiuth = 2 * Math.atan2(x, w);
+			elevation = Math.PI / 2;
+			tilt = 0;
+
+		} else if (test < -0.499 * unit) { // singularity at south pole
+			azumiuth = -2 * Math.atan2(x, w);
+			elevation = -Math.PI / 2;
+			tilt = 0;
+
+		} else {
+			azumiuth = Math.atan2(2 * y * w - 2 * x * z, sqx - sqy - sqz + sqw);
+			elevation = Math.asin(2 * test / unit);
+			tilt = Math.atan2(2 * x * w - 2 * y * z, -sqx + sqy - sqz + sqw);
 		}
 		if(		bound(-180.01, -179.99, Math.toDegrees(tilt))
 				){
@@ -392,11 +393,11 @@ public class RotationNR {
 		
 		switch(index){
 		case 0:
-			return elevation;
-		case 1:
-			return azumiuth;
-		case 2:
 			return tilt;
+		case 1:
+			return elevation ;
+		case 2:
+			return azumiuth;
 		default: 
 			return 0;
 		}
