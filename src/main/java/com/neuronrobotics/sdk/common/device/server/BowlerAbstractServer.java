@@ -233,7 +233,7 @@ public abstract class BowlerAbstractServer implements
 				rpcl);
 		BowlerDatagram cmd = BowlerDatagramFactory.build(new MACAddress(),
 				command);
-		Log.info("Async>>" + cmd);
+		Log.debug("Async>>" + cmd);
 		pushAsyncPacket(cmd);
 	}
 
