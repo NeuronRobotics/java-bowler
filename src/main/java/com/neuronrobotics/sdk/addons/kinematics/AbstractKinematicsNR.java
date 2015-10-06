@@ -221,7 +221,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 							    							Double.parseDouble(XmlFactory.getTagValue("roty",eElement)),
 							    							Double.parseDouble(XmlFactory.getTagValue("rotz",eElement))})));	 
 		    }else{
-		    	System.err.println(linkNode.getNodeName());
+		    	//System.err.println(linkNode.getNodeName());
 		    	Log.error("Node not known: "+linkNode.getNodeName());
 		    }
 		}
@@ -311,7 +311,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 					//Send configuration for ONE axis
 					device.ConfigurePIDController(tmpConf);		
 				}catch(Exception ex){				
-					System.err.println("Configuration #"+i+" failed!!");
+					Log.error("Configuration #"+i+" failed!!");
 					ex.printStackTrace();
 				}
 				device.addPIDEventListener(this);
