@@ -57,11 +57,10 @@ public class ThreadedTimeout {
 	}
 	
 	public void initialize(long sleepTime,IthreadedTimoutListener listener) {
-		//stop();
 		setStartTime(System.currentTimeMillis());
 		this.time = (sleepTime);
 		setTimeoutListener(listener);
-		//timerThread.addTimer(this);
+		timerThread.addTimer(this);
 	}
 
 	public long getAmountOfTimeForTimerToRun() {
@@ -82,12 +81,12 @@ public class ThreadedTimeout {
 		public void run(){
 			setName("Bowler Platform Threaded timeout");
 			while(true){
-				if(getTimers().size()>0){
+				if(timers.size()>0){
 					toRemove.clear();
 					
-					for(int i=0;i<getTimers().size();i++){
+					for(int i=0;i<timers.size();i++){
 						try{
-							ThreadedTimeout t = getTimers().get(i);
+							ThreadedTimeout t = timers.get(i);
 							if(t!=null){
 								if(t.isTimedOut()){
 									if(t.listener!=null){
@@ -106,28 +105,29 @@ public class ThreadedTimeout {
 						removeTimer(toRemove.get(i));
 					}
 				}
-				ThreadUtil.wait(0,10);
+				ThreadUtil.wait(1);
 			}
 		}
 		public void addTimer(ThreadedTimeout time){
 			try{
-				if(!getTimers().contains(time))
-					getTimers().add(time);
+				synchronized(timers){
+					if(!timers.contains(time))
+						timers.add(time);
+				}
 			}catch (Exception e){
 				e.printStackTrace();
 			}
 		}
 		public void removeTimer(ThreadedTimeout time){
 			try{
-				if(getTimers().contains(time))
-					getTimers().remove(time);
+				synchronized(timers){
+					if(timers.contains(time))
+						timers.remove(time);
+				}
 			}catch (Exception e){
 				e.printStackTrace();
 			}
 			
-		}
-		public ArrayList<ThreadedTimeout> getTimers() {
-			return timers;
 		}
 	}
 
