@@ -197,6 +197,8 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 					if(dr.update()){
 						try{
 							firePIDEvent(new PIDEvent(dr.getChan(), (int)dr.ticks, time,0));
+						}catch (NullPointerException ex){
+							//initialization issue, let it work itself out
 						}catch (Exception ex){
 							ex.printStackTrace();
 						}

@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import com.neuronrobotics.sdk.addons.kinematics.DHLink;
+import com.neuronrobotics.sdk.common.Log;
 
 import Jama.Matrix;
 
@@ -93,6 +94,9 @@ public class TransformNR {
 	}
 	
 	public static String getMatrixString(Matrix matrix){
+		if(!Log.isPrinting()){
+			return "no print transform, enable Log.enableSystemPrint(true)";
+		}
 		String s = "{\n";
 		double [][] m = matrix.getArray();
 		

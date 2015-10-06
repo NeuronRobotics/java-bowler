@@ -13,7 +13,7 @@ sourceSets {
 	
 	test {
 		java {
-			srcDirs = ["test/java/src"]  // Note @Peter's comment below
+			srcDirs = ["test/java/src","examples/java/src" ]  // Note @Peter's comment below
 		}
 	}
 }

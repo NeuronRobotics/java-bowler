@@ -296,7 +296,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 							try{
 								TransformFactory.getTransform(linkPos.get(index), getChain().getLinks().get(index).getListener());
 							}catch(Exception ex){
-								ex.printStackTrace();
+								//ex.printStackTrace();
 							}
 						}
 					});
