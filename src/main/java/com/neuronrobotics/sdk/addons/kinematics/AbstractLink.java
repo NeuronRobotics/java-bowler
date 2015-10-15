@@ -144,7 +144,7 @@ public abstract class AbstractLink {
 		//}
 		cacheTargetValue();
 	}
-	private boolean useLimits=false;
+	private boolean useLimits=true;
 	protected void setTargetValue(int val) {
 		Log.info("Setting cached value :"+val);
 		this.targetValue = val;

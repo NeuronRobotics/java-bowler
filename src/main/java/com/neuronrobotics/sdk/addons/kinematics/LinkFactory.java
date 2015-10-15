@@ -92,32 +92,33 @@ public class LinkFactory {
 			if(dyio!=null){
 				tmp = new AnalogPrismaticLink(	new AnalogInputChannel(dyio.getChannel(c.getHardwareIndex())), 
 											c);
-			tmp.setUseLimits(false);}
+				tmp.setUseLimits(false);
+			}
 			break;
 		case ANALOG_ROTORY:
 			if(dyio!=null){
 				tmp = new AnalogRotoryLink(	new AnalogInputChannel(dyio.getChannel(c.getHardwareIndex())), 
 											c);
-			tmp.setUseLimits(false);}
+				tmp.setUseLimits(false);
+			}
 			break;
 		case PID_TOOL:
 		case PID:
 			if(pid!=null){
 				tmp=new PidRotoryLink(	pid.getPIDChannel(c.getHardwareIndex()),
 										c);
-			tmp.setUseLimits(true);}
+			}
 			break;
 		case PID_PRISMATIC:
 			if(pid!=null){
 				tmp=new PidPrismaticLink(	pid.getPIDChannel(c.getHardwareIndex()),
 										c);
-			tmp.setUseLimits(true);}
+			}
 			break;
 		case SERVO_PRISMATIC:
 			if(dyio!=null){
 				tmp = new ServoPrismaticLink(	new ServoChannel(dyio.getChannel(c.getHardwareIndex())), 
 											c);
-				tmp.setUseLimits(true);
 				
 			}
 			break;
@@ -126,25 +127,20 @@ public class LinkFactory {
 			if(dyio!=null){
 				tmp = new ServoRotoryLink(	new ServoChannel(dyio.getChannel(c.getHardwareIndex())), 
 											c);
-				tmp.setUseLimits(true);
 				
 			}
 			break;
 		case STEPPER_PRISMATIC:
 			if(dyio!=null){
 				tmp = new StepperPrismaticLink(	new CounterOutputChannel(dyio.getChannel(c.getHardwareIndex())), 
-											c);
-				tmp.setUseLimits(true);
-				
+											c);				
 			}
 			break;
 		case STEPPER_TOOL:
 		case STEPPER_ROTORY:
 			if(dyio!=null){
 				tmp = new StepperRotoryLink(	new CounterOutputChannel(dyio.getChannel(c.getHardwareIndex())), 
-											c);
-				tmp.setUseLimits(true);
-				
+											c);				
 			}
 			break;
 		case DUMMY:
@@ -157,7 +153,6 @@ public class LinkFactory {
 			}
 			tmp=new PidRotoryLink(	virtual.getPIDChannel(c.getHardwareIndex()),
 					c);
-			tmp.setUseLimits(false);
 			break;
 		}
 		
@@ -171,11 +166,9 @@ public class LinkFactory {
 			if(!c.getType().isPrismatic()){
 				tmp=new PidRotoryLink(	virtual.getPIDChannel(c.getHardwareIndex()),
 						c);
-				//tmp.setUseLimits(false);
 			}else{
 				tmp=new PidPrismaticLink(virtual.getPIDChannel(c.getHardwareIndex()),
 						c);
-				//tmp.setUseLimits(false);
 			}
 		}
 		tmp.setLinkConfiguration(c);
