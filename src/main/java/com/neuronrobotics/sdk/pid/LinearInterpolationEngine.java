@@ -16,7 +16,7 @@ public class LinearInterpolationEngine {
 	private PIDConfiguration configs;
 	public LinearInterpolationEngine(int index,PIDConfiguration configs ){
 		setChan(index);
-		this.configs=configs;
+		this.setConfigs(configs);
 	}
 	public void SetVelocity(double unitsPerSecond) {
 		//System.out.println("Setting velocity to "+unitsPerSecond+"ticks/second");
@@ -35,7 +35,7 @@ public class LinearInterpolationEngine {
 	
 	
 	public synchronized  void SetPIDSetPoint(int setpoint,double seconds){
-		configs.setEnabled(true);
+		getConfigs().setEnabled(true);
 		velocityRun=false;
 		setPause(true);
 		//ThreadUtil.wait((int)(threadTime*2));
@@ -54,7 +54,7 @@ public class LinearInterpolationEngine {
 		//System.out.println("Setting Setpoint Ticks to: "+setPoint);
 	}
 	public boolean update(){
-		if(configs.isEnabled())
+		if(getConfigs().isEnabled())
 			interpolate();
 		if((getTicks()!=lastTick) && !isPause()) {
 			lastTick=getTicks();
@@ -64,7 +64,7 @@ public class LinearInterpolationEngine {
 	}
 
 	public synchronized  void ResetEncoder(int value) {
-		System.out.println("Resetting channel "+getChan());
+		//System.out.println("Resetting channel "+getChan());
 		velocityRun=false;
 		setPause(true);
 		//ThreadUtil.wait((int)(threadTime*2));
@@ -110,7 +110,7 @@ public class LinearInterpolationEngine {
 		if(velocityRun){
 			double ms = (double) (System.currentTimeMillis()-lastInterpolationTime);
 			back=(getTicks()+unitsPerMs*ms);
-			System.out.println("Time Diff="+ms+" \n\ttick difference="+unitsPerMs*ms+" \n\tticksPerMs="+unitsPerMs +" \n\tCurrent value="+back );
+			//System.out.println("Time Diff="+ms+" \n\ttick difference="+unitsPerMs*ms+" \n\tticksPerMs="+unitsPerMs +" \n\tCurrent value="+back );
 		}
 		setTicks(back);
 		lastInterpolationTime=System.currentTimeMillis();
@@ -126,5 +126,11 @@ public class LinearInterpolationEngine {
 	}
 	public void setTicks(double ticks) {
 		this.ticks = ticks;
+	}
+	public PIDConfiguration getConfigs() {
+		return configs;
+	}
+	public void setConfigs(PIDConfiguration configs) {
+		this.configs = configs;
 	}
 }

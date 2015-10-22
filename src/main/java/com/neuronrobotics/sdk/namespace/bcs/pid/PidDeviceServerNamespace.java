@@ -54,7 +54,7 @@ public class PidDeviceServerNamespace extends BowlerAbstractDeviceServerNamespac
 					@Override
 					public Object[] process(Object[] data) {
 						//anythign
-						return new Object[]{new Integer(GetPIDPosition((Integer) data[0]))};
+						return new Object[]{data[0],new Integer(GetPIDPosition((Integer) data[0]))};
 					}
 				}));//Name
 		
@@ -159,7 +159,7 @@ public class PidDeviceServerNamespace extends BowlerAbstractDeviceServerNamespac
 								(Integer)data[1], 
 								(Integer)data[2]);
 						
-						return new Object[]{new Integer(66),new Integer(5)};
+						return new Object[]{data[0],new Integer(5)};
 					}
 				}));//Name
 		rpc.add(new RpcEncapsulation(getNamespaceIndex(), 
@@ -184,10 +184,10 @@ public class PidDeviceServerNamespace extends BowlerAbstractDeviceServerNamespac
 						} catch (PIDCommandException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
-							return new Object[]{new Integer(55),new Integer(66)};
+							return new Object[]{data[0],new Integer(66)};
 						}
 						
-						return new Object[]{new Integer(66),new Integer(4)};
+						return new Object[]{data[0],new Integer(4)};
 					}
 				}));//Name
 		rpc.add(new RpcEncapsulation(getNamespaceIndex(), 
@@ -205,7 +205,7 @@ public class PidDeviceServerNamespace extends BowlerAbstractDeviceServerNamespac
 					@Override
 					public Object[] process(Object[] data) {
 						ResetPIDChannel((Integer)data[0], (Integer)data[1]);
-						return new Object[]{new Integer(66),new Integer(6)};
+						return new Object[]{data[0],new Integer(6)};
 					}
 				}));//Name
 		rpc.add(new RpcEncapsulation(getNamespaceIndex(), 
@@ -252,7 +252,7 @@ public class PidDeviceServerNamespace extends BowlerAbstractDeviceServerNamespac
 						PIDConfiguration conf = new PIDConfiguration(data);
 						ConfigurePIDController(conf);
 						Log.info("PID setting "+conf);
-						return new Object[]{new Integer(66),new Integer(1)};
+						return new Object[]{data[0],new Integer(1)};
 					}
 				}));//Name
 		rpc.add(new RpcEncapsulation(getNamespaceIndex(), 
@@ -273,7 +273,7 @@ public class PidDeviceServerNamespace extends BowlerAbstractDeviceServerNamespac
 						PDVelocityConfiguration conf = new PDVelocityConfiguration(data);
 						ConfigurePDVelovityController(conf);
 						Log.info("VPD setting "+conf);
-						return new Object[]{new Integer(66),new Integer(2)};
+						return new Object[]{data[0],new Integer(2)};
 					}
 				}));//Name
 //		rpc.add(new RpcEncapsulation(getNamespaceIndex(), 
