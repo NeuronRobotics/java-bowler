@@ -189,6 +189,7 @@ public abstract class BowlerAbstractConnection {
 		
 		if (getLastSyncronousResponse() == null){
 			Log.error("No response from device, no response in "+(System.currentTimeMillis()-startOfReciveTime)+" ms");
+			new RuntimeException().printStackTrace();
 			if(switchParser){
 				if( BowlerDatagram.isUseBowlerV4()){
 					//If the ping fails to get a response, try the older bowler format
@@ -203,7 +204,7 @@ public abstract class BowlerAbstractConnection {
 		}
 		BowlerDatagram b = getLastSyncronousResponse();
 		clearLastSyncronousResponse();
-		//executingLock.unlock();
+
 		return b;
 	}
 	
@@ -389,7 +390,7 @@ public abstract class BowlerAbstractConnection {
 	 *
 	 * @param data the data
 	 */
-	protected void onDataReceived(BowlerDatagram data) {
+	public void onDataReceived(BowlerDatagram data) {
 		if(data.isSyncronous()) {
 			
 			if(syncListen!=null){
