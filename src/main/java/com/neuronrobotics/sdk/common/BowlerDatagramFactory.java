@@ -54,7 +54,7 @@ public class BowlerDatagramFactory {
 		throw new RuntimeException("Invalid factory generation of packet. Use BowlerDatagramFactory.getNextPacket()");
 	}
 	
-	private static synchronized BowlerDatagram getNextPacket(){
+	private static BowlerDatagram getNextPacket(){
 		BowlerDatagram ref = new BowlerDatagram(instance);
 		
 		//Find the most recent free packet from the pool
@@ -213,14 +213,14 @@ public class BowlerDatagramFactory {
 		if (buffer.size()>=(totalLen)){
 			failed=0;
 			ByteList rawContent = new ByteList(buffer.popList(totalLen));	
-			staticMemory.parse(rawContent);
-			if(BowlerDatagram.CheckCRC(rawContent,true)){
-				return  staticMemory;
-			}else{
+			try{
+				staticMemory.parse(rawContent);
+				return staticMemory;
+			}catch(MalformattedDatagram m){
 				Log.error("Data CRC check Fail  "+staticMemory);
 				failed = rawContent.size();
-			}
-			
+				throw m;
+			}		
 		}
 //		if(failed>0)
 //			Log.error("Failed out "+failed+" bytes");
