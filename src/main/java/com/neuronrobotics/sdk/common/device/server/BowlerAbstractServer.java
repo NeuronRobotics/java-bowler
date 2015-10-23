@@ -110,17 +110,18 @@ public abstract class BowlerAbstractServer implements
 
 	ServerSocket serverSocket;
 
-	public void startNetworkServer(int port) throws IOException {
+	public void startNetworkServer(final int port) throws IOException {
 		udpServer = new BowlerUDPServer(port);
-		addServer(udpServer);
 		serverSocket = new ServerSocket(port + 1);
 		new Thread() {
 			public void run() {
 				setName("Bowler Platform Network Server");
+				addServer(udpServer);
 				while (true) {
 					Socket s;
 					try {
-						Log.warning("\n\nWaiting for connection...");
+						//ex.printStackTrace();
+						Log.warning("\n\nWaiting for TCP connection on port "+(port+1)+"...");
 						s = serverSocket.accept();
 						addServer(new BowlerTCPServer(s));
 						Log.warning("Got a connection!");

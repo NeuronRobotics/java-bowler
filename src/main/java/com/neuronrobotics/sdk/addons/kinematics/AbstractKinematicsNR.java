@@ -622,9 +622,10 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		Matrix ftb = getFiducialToGlobalTransform().getMatrixTransform();
 		Matrix current = t.getMatrixTransform();
 		Matrix mForward = ftb.times(btt).times(current);
-		
 		return new TransformNR( mForward);
 	}
+	
+	
 	
 	public void addJointSpaceListener(IJointSpaceUpdateListenerNR l){
 		if(jointSpaceUpdateListeners.contains(l) || l==null)

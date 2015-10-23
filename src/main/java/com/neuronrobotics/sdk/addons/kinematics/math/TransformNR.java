@@ -1,5 +1,6 @@
 package com.neuronrobotics.sdk.addons.kinematics.math;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -165,7 +166,12 @@ public class TransformNR {
 	public TransformNR inverse() {
 		return new TransformNR(getMatrixTransform().inverse());	
 	}
-
+	public TransformNR scale(BigDecimal scale) {
+		return scale(scale.doubleValue());
+	}
+	public TransformNR scale(double scale) {
+		return new TransformNR(getMatrixTransform().times(Matrix.identity(4, 4).times(scale)));	
+	}
 	public TransformNR copy() {
 		return new TransformNR(getMatrixTransform());
 	}
