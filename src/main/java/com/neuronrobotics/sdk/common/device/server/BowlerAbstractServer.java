@@ -121,6 +121,7 @@ public abstract class BowlerAbstractServer implements
 					Socket s;
 					try {
 						//ex.printStackTrace();
+						Log.warning("\n\nWaiting for UDP connection on port "+(port)+"...");
 						Log.warning("\n\nWaiting for TCP connection on port "+(port+1)+"...");
 						s = serverSocket.accept();
 						addServer(new BowlerTCPServer(s));

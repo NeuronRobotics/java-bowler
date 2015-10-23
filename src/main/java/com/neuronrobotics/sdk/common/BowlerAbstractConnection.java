@@ -323,7 +323,7 @@ public abstract class BowlerAbstractConnection {
 				@Override
 				public void run() {
 					if(isConnected()){
-						System.out.println("WARNING: Bowler devices should be shut down before exit");
+						//System.out.println("WARNING: Bowler devices should be shut down before exit");
 						disconnect();
 					}
 				}

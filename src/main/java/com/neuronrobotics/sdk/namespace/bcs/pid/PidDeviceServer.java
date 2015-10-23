@@ -23,7 +23,7 @@ public class PidDeviceServer extends BowlerAbstractServer implements IPIDEventLi
 		device.addPIDEventListener(this);
 		Log.info("Starting UDP");
 		try {
-			startNetworkServer();
+			startNetworkServer(1865);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
