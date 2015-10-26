@@ -1,6 +1,7 @@
 package com.neuronrobotics.sdk.addons.walker;
 
 
+import com.neuronrobotics.sdk.addons.kinematics.LinkConfiguration;
 import com.neuronrobotics.sdk.addons.kinematics.ServoRotoryLink;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 
@@ -8,8 +9,8 @@ public class WalkerServoLink extends ServoRotoryLink {
 	private double linkLen;
 	private String type;
 	
-	public WalkerServoLink(ServoChannel srv,int home,int lowerLimit,int upperLimit,double scale,double linkLen, String type){
-		super(srv,home,lowerLimit,upperLimit,scale);
+	public WalkerServoLink(ServoChannel srv,LinkConfiguration conf, double linkLen, String type) {
+		super(srv,conf);
 		setLinkLen(linkLen);
 		setType(type);
 	}
@@ -52,5 +53,7 @@ public class WalkerServoLink extends ServoRotoryLink {
 	public void flush(double time) {
 		super.flush(time);
 	}
+
+
 
 }

@@ -13,7 +13,7 @@ public class CartesianNamespacePidKinematics extends AbstractKinematicsNR{
 		super();
 		this.connection = connection;
 		factory = new LinkFactory(connection,device);
-		setDevice(factory);
+		setDevice(factory,factory.getLinkConfigurations());
 		
 	}
 	

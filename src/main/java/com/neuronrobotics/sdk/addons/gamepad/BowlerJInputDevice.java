@@ -29,45 +29,53 @@ public class BowlerJInputDevice extends NonBowlerDevice {
 	@Override
 	public void disconnectDeviceImp() {
 		listeners.clear();
+		poller = null;
 		run=false;
 	}
 
 	@Override
 	public boolean connectDeviceImp() {
-		poller = new Thread(){
-			public void run(){
-				setName("Game Controller Poll thread");
-				Log.warning("Starting game Pad Poller");
-				while(run){
-					controller.poll();
-					EventQueue queue = controller.getEventQueue();
-					Event event = new Event();
-					while(queue.getNextEvent(event) && run) {
-			               StringBuffer buffer = new StringBuffer(controller.getName());
-			               buffer.append(" at ");
-			               buffer.append(event.getNanos()).append(", ");
-			               Component comp = event.getComponent();
-			               buffer.append(comp.getName()).append(" changed to ");
-			               float value = event.getValue(); 
-			               if(comp.isAnalog()) {
-			                  buffer.append(value);
-			               } else {
-			                  if(value==1.0f) {
-			                     buffer.append("On");
-			                  } else {
-			                     buffer.append("Off");
-			                  }
-			               }
-			               Log.warning(buffer.toString());
-			               for(IJInputEventListener l:listeners){
-			            	   l.onEvent(comp, event, value, buffer.toString());
-			               }
-			        }
-					ThreadUtil.wait(10);
+		if(poller == null){
+			poller = new Thread(){
+				public void run(){
+					setName("Game Controller Poll thread");
+					Log.warning("Starting game Pad Poller");
+					while(run){
+						controller.poll();
+						EventQueue queue = controller.getEventQueue();
+						Event event = new Event();
+						while(queue.getNextEvent(event) && run) {
+				               StringBuffer buffer = new StringBuffer(controller.getName());
+				               buffer.append(" at ");
+				               buffer.append(event.getNanos()).append(", ");
+				               Component comp = event.getComponent();
+				               buffer.append(comp.getName()).append(" changed to ");
+				               float value = event.getValue(); 
+				               if(comp.isAnalog()) {
+				                  buffer.append(value);
+				               } else {
+				                  if(value>0) {
+				                     buffer.append("On");
+				                  } else {
+				                     buffer.append("Off");
+				                  }
+				               }
+				               Log.info(buffer.toString());
+				               for(int i=0;i<listeners.size();i++){
+				            	   IJInputEventListener l = listeners.get(i);
+				            	   try{
+				            		   l.onEvent(comp, event, value, buffer.toString());
+				            	   }catch(Exception ex){
+				            		   ex.printStackTrace();
+				            	   }
+				               }
+				        }
+						ThreadUtil.wait(10);
+					}
 				}
-			}
-		};
-		poller.start();
+			};
+			poller.start();
+		}
 		return true;
 	}
 

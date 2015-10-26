@@ -8,7 +8,7 @@ public class PIDConfiguration {
 	private boolean enabled=false;
 	private boolean inverted=false;
 	private boolean async=false;
-	private double KP=1;
+	private double KP=.1;
 	private double KI=0;
 	private double KD=0;
 	private int latch=0;

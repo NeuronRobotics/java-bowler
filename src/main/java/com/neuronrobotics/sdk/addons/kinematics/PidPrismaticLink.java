@@ -7,8 +7,8 @@ import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 
 public class PidPrismaticLink extends AbstractPrismaticLink{
 	private PIDChannel channel;
-	public PidPrismaticLink(PIDChannel c,int home, int lowerLimit, int upperLimit, double scale) {
-		super(home, lowerLimit, upperLimit, scale);
+	public PidPrismaticLink(PIDChannel c,LinkConfiguration conf) {
+		super(conf);
 		setPIDChannel(c);
 	}
 

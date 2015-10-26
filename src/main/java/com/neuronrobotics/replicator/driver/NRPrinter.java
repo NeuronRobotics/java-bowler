@@ -184,7 +184,7 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 		
 	}
 	public int setDesiredPrintLocetion(TransformNR taskSpaceTransform,double extrusionLegnth, double seconds) throws Exception{
-		System.out.println("Telling printer to go to extrusion len "+extrusionLegnth);
+		//System.out.println("Telling printer to go to extrusion len "+extrusionLegnth);
 		return getDeltaDevice().sendLinearSection(taskSpaceTransform, extrusionLegnth, (int) (seconds*1000));
 	}
 	
@@ -274,9 +274,9 @@ public class NRPrinter extends CartesianNamespacePidKinematics implements Printe
 	
 	public void zeroExtrusion(double extrusionPosition){
 		//extruder.
-		System.out.println("Extrusion was: "+extruder.getCurrentEngineeringUnits());
+		//System.out.println("Extrusion was: "+extruder.getCurrentEngineeringUnits());
 		getDeltaDevice().ResetPIDChannel(extruder.getLinkConfiguration().getHardwareIndex(), (int) extrusionPosition);
-		System.out.println("Extrusion now: "+extruder.getCurrentEngineeringUnits());
+		///System.out.println("Extrusion now: "+extruder.getCurrentEngineeringUnits());
 	}
 
 	public void reloadSlic3rSettings() {

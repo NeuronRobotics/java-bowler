@@ -1,12 +1,19 @@
 package com.neuronrobotics.sdk.addons.kinematics.math;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+
+import com.neuronrobotics.sdk.addons.kinematics.DHLink;
+import com.neuronrobotics.sdk.common.Log;
 
 import Jama.Matrix;
 
 public class TransformNR {
-	private final double x,y,z;
-	private final RotationNR rotation;
+	private double x;
+	private double y;
+	private double z;
+	private  RotationNR rotation;
 	
 	
 	
@@ -14,46 +21,46 @@ public class TransformNR {
 		this.x=m.get(0, 3);
 		this.y=m.get(1, 3);
 		this.z=m.get(2, 3);
-		this.rotation = new RotationNR(m);
+		this.setRotation(new RotationNR(m));
 	}
 	
 	public TransformNR(double x, double y, double z, double w, double rotx, double roty, double rotz){
 		this.x=x;
 		this.y=y;
 		this.z=z;
-		this.rotation = new RotationNR(w,rotx,roty,rotz);
+		this.setRotation(new RotationNR(new double[]{w,rotx,roty,rotz}));
 	}
 	public TransformNR(double[] cartesianSpaceVector, double[][] rotationMatrix) {
 		this.x=cartesianSpaceVector[0];
 		this.y=cartesianSpaceVector[1];
 		this.z=cartesianSpaceVector[2];
-		this.rotation = new RotationNR(rotationMatrix);
+		this.setRotation(new RotationNR(rotationMatrix));
 	}
 	public TransformNR(double[] cartesianSpaceVector, double[] quaternionVector) {
 		this.x=cartesianSpaceVector[0];
 		this.y=cartesianSpaceVector[1];
 		this.z=cartesianSpaceVector[2];
-		this.rotation = new RotationNR(quaternionVector);
+		this.setRotation(new RotationNR(quaternionVector));
 	}
 	
 	public TransformNR(double x, double y, double z, RotationNR q){
 		this.x=x;
 		this.y=y;
 		this.z=z;
-		this.rotation = q;
+		this.setRotation(q);
 	}
 	
 	public TransformNR(double[] cartesianSpaceVector, RotationNR q) {
 		this.x=cartesianSpaceVector[0];
 		this.y=cartesianSpaceVector[1];
 		this.z=cartesianSpaceVector[2];
-		this.rotation = q;
+		this.setRotation(q);
 	}
 	public TransformNR() {
 		this.x=0;
 		this.y=0;
 		this.z=0;
-		this.rotation = new RotationNR();
+		this.setRotation(new RotationNR());
 	}
 	public double getX() {
 		return x;
@@ -65,15 +72,15 @@ public class TransformNR {
 		return z;
 	}
 	public double [][] getRotationMatrixArray(){
-		return rotation.getRotationMatrix();
+		return getRotation().getRotationMatrix();
 	}
 
 	public RotationNR getRotationMatrix() {
-		return rotation;
+		return getRotation();
 	}
 
 	public double getRotationValue(int i,int j) {
-		return rotation.getRotationMatrix()[i][j];
+		return getRotation().getRotationMatrix()[i][j];
 	}
 	public RotationNR getRotation() {
 
@@ -88,6 +95,9 @@ public class TransformNR {
 	}
 	
 	public static String getMatrixString(Matrix matrix){
+		if(!Log.isPrinting()){
+			return "no print transform, enable Log.enableSystemPrint(true)";
+		}
 		String s = "{\n";
 		double [][] m = matrix.getArray();
 		
@@ -156,10 +166,56 @@ public class TransformNR {
 	public TransformNR inverse() {
 		return new TransformNR(getMatrixTransform().inverse());	
 	}
-
+	public TransformNR scale(BigDecimal scale) {
+		return scale(scale.doubleValue());
+	}
+	public TransformNR scale(double scale) {
+		return new TransformNR(getMatrixTransform().times(Matrix.identity(4, 4).times(scale)));	
+	}
 	public TransformNR copy() {
 		return new TransformNR(getMatrixTransform());
 	}
+	
+	public void translateX(double translation){
+		x+=translation;
+	}
+	public void translateY(double translation){
+		y+=translation;
+	}
+	public void translateZ(double translation){
+		z+=translation;
+	}
+	
+	public void setX(double translation){
+		x=translation;
+	}
+	public void setY(double translation){
+		y=translation;
+	}
+	public void setZ(double translation){
+		z=translation;
+	}
+	
+	/*
+	 * 
+	 * Generate the xml configuration to generate an XML of this robot. 
+	 */
+	public String getXml(){
+		String xml = 	"\t<x>"+x+"</x>\n"+
+						"\t<y>"+y+"</y>\n"+
+						"\t<z>"+z+"</z>\n"+
+						"\t<rotw>"+getRotation().getRotationMatrix2QuaturnionW()+"</rotw>\n"+
+						"\t<rotx>"+getRotation().getRotationMatrix2QuaturnionX()+"</rotx>\n"+
+						"\t<roty>"+getRotation().getRotationMatrix2QuaturnionY()+"</roty>\n"+
+						"\t<rotz>"+getRotation().getRotationMatrix2QuaturnionZ()+"</rotz>";
+
+		return xml;
+	}
+
+	public void setRotation(RotationNR rotation) {
+		this.rotation = rotation;
+	}
+
 	
 
 }

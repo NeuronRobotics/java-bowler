@@ -54,10 +54,4 @@ public class BowlerDeviceReServerNamespace extends BowlerAbstractDeviceServerNam
 		return bd;
 	}
 
-	@Override
-	public Object[] process(Object[] data, String rpc, BowlerMethod method) {
-		// TODO Ignore, will intercept the datagram
-		return null;
-	}
-
 }

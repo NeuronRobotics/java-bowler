@@ -8,7 +8,7 @@ import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIOChannelEvent;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
-import com.neuronrobotics.sdk.dyio.DyIORegestry;
+import com.neuronrobotics.sdk.common.DeviceManager;
 import com.neuronrobotics.sdk.dyio.IChannelEventListener;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 /**
@@ -23,7 +23,7 @@ public class SPIChannel implements IChannelEventListener{
 	 * Default constructor, assumes the DyIO regestry is being used
 	 */
 	public SPIChannel () {
-		this(DyIORegestry.get());
+		this(((DyIO) DeviceManager.getSpecificDevice(DyIO.class, null)));
 	}
 	/**
 	 * Constructor for an SPI channel

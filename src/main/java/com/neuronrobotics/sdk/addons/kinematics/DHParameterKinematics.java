@@ -4,7 +4,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.net.URL;
+//import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+
+import org.w3c.dom.Element;
 
 import javafx.application.Platform;
 import javafx.scene.transform.Affine;
@@ -15,61 +21,80 @@ import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
+import com.neuronrobotics.sdk.common.DeviceManager;
 import com.neuronrobotics.sdk.common.IConnectionEventListener;
+import com.neuronrobotics.sdk.common.IDeviceConnectionEventListener;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.pid.GenericPIDDevice;
+import com.neuronrobotics.sdk.pid.VirtualGenericPIDDevice;
 
 
-public class DHParameterKinematics extends AbstractKinematicsNR implements ITaskSpaceUpdateListenerNR{
+public class DHParameterKinematics extends AbstractKinematicsNR implements ITaskSpaceUpdateListenerNR, IJointSpaceUpdateListenerNR{
 	
 	private DHChain chain=null;
 
 	private ArrayList<Affine> linksListeners = new ArrayList<Affine>();
+	private Affine currentTarget = new Affine();
 	boolean disconnecting=false;
-	IConnectionEventListener l = new IConnectionEventListener() {
-		@Override public void onDisconnect(BowlerAbstractConnection source) {
+
+	IDeviceConnectionEventListener l = new IDeviceConnectionEventListener() {
+		@Override public void onDisconnect(BowlerAbstractDevice source) {
 			if(!disconnecting){
 				disconnecting=true;
 				disconnect();
 			}
 			
 		}
-		@Override public void onConnect(BowlerAbstractConnection source) {}
+		@Override public void onConnect(BowlerAbstractDevice source) {}
 	} ;
 	
-	public DHParameterKinematics() {
-		this((DyIO)null,"TrobotLinks.xml");
+	public DHParameterKinematics( BowlerAbstractDevice bad, Element  linkStream ){
+		super(linkStream,new LinkFactory(bad));
+		setChain(getDhParametersChain());
+		if(getFactory().getDyio()!=null)
+			getFactory().getDyio().addConnectionEventListener(l);
 	}
 	
-	public DHParameterKinematics( DyIO dev) {
-		this(dev,"TrobotLinks.xml");
-
+	public DHParameterKinematics( BowlerAbstractDevice bad, InputStream  linkStream ){
+		super(linkStream,new LinkFactory(bad));
+		setChain(getDhParametersChain());
+		if(getFactory().getDyio()!=null)
+			getFactory().getDyio().addConnectionEventListener(l);
 	}
-	public DHParameterKinematics( DyIO dev, String file) {
-		this(dev,XmlFactory.getDefaultConfigurationStream(file),XmlFactory.getDefaultConfigurationStream(file));
-		
+	@Deprecated
+	public DHParameterKinematics( BowlerAbstractDevice bad, InputStream linkStream ,InputStream depricated ){
+		this(bad, linkStream);
 	}
-	public DHParameterKinematics( GenericPIDDevice dev) {
-		this(dev,"TrobotLinks.xml");
-
-	}
-	public DHParameterKinematics( GenericPIDDevice dev, String file) {
-		this(dev,XmlFactory.getDefaultConfigurationStream(file),XmlFactory.getDefaultConfigurationStream(file));
-		
-	}
-	public DHParameterKinematics( BowlerAbstractDevice dev, InputStream linkStream, InputStream dhStream) {
-		super(linkStream,new LinkFactory( dev));
-		setChain(new DHChain(dhStream,getFactory()));
-		dev.addConnectionEventListener(l);
-	}
-	public DHParameterKinematics( BowlerAbstractDevice dev, File configFile) throws FileNotFoundException {
-		this(dev,new FileInputStream(configFile),new FileInputStream(configFile));
+	
+	public DHParameterKinematics(BowlerAbstractDevice bad) {
+		this(bad,XmlFactory.getDefaultConfigurationStream("TrobotLinks.xml"));
 	}
 
-	public DHParameterKinematics(InputStream linkStream, InputStream dhStream) {
-		super(linkStream,new LinkFactory());
-		setChain(new DHChain(dhStream,getFactory()));
+	public DHParameterKinematics(BowlerAbstractDevice bad, String file) {
+		this(bad,XmlFactory.getDefaultConfigurationStream(file));
 	}
+
+	public DHParameterKinematics(BowlerAbstractDevice bad,  File configFile) throws FileNotFoundException {
+		this(bad,new FileInputStream(configFile));
+	}
+	
+	public DHParameterKinematics() {
+		this(null,XmlFactory.getDefaultConfigurationStream("TrobotLinks.xml"));
+	}
+	
+
+	public DHParameterKinematics( String file) {
+		this(null,XmlFactory.getDefaultConfigurationStream(file));
+	}
+
+	public DHParameterKinematics( Element linkStream) {
+		this(null,linkStream);
+	}
+	
+	public DHParameterKinematics( File configFile) throws FileNotFoundException {
+		this(null,new FileInputStream(configFile));
+	}
+
 
 	@Override
 	public double[] inverseKinematics(TransformNR taskSpaceTransform)throws Exception {
@@ -115,19 +140,81 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 
 	public void setChain(DHChain chain) {
 		this.chain = chain;
-		
-		for(DHLink dh:chain.getLinks()){
-			Affine a = new Affine();
-			dh.setListener(a);
-			linksListeners.add(a);
+		ArrayList<DHLink> dhLinks = chain.getLinks();
+		for(int i=linksListeners.size();i<dhLinks.size();i++){
+			linksListeners.add(new Affine());
+		}
+
+		for(int i=0;i<dhLinks.size();i++){
+			dhLinks.get(i).setListener(linksListeners.get(i));
+			dhLinks.get(i).setRootListener(getRootListener());
+			if(getLinkConfiguration(i).getType().isTool()){
+				dhLinks.get(i).setDegenerate(true);
+			}
 		}
 		addPoseUpdateListener(this);
+		addJointSpaceListener(this);
+		try {
+			currentJointSpacePositions=null;
+			currentJointSpaceTarget=null;
+			//setDesiredJointSpaceVector(getCurrentJointSpaceVector(), 0);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/*
+	 * 
+	 * Generate the xml configuration to generate an XML of this robot. 
+	 */
+	public String getXml(){
+		String xml = "<root>\n";
+		xml+=getEmbedableXml();
+		xml+="\n</root>";
+		return xml;
+	}
+	/*
+	 * 
+	 * Generate the xml configuration to generate an XML of this robot. 
+	 */
+	public String getEmbedableXml(){
+		
+		
+		String xml = "";
+		
+		xml+="\t<cadEngine>\n";
+		xml+="\t\t<gist>"+getCadEngine()[0]+"</gist>\n";
+		xml+="\t\t<file>"+getCadEngine()[1]+"</file>\n";
+		xml+="\t</cadEngine>\n";
+		
+		xml+="\t<kinematics>\n";
+		xml+="\t\t<gist>"+getDhEngine()[0]+"</gist>\n";
+		xml+="\t\t<file>"+getDhEngine()[1]+"</file>\n";
+		xml+="\t</kinematics>\n";
+		
+		ArrayList<DHLink> dhLinks = chain.getLinks();
+		for(int i=0;i<dhLinks.size();i++){
+			xml+="<link>\n";
+			xml+=getLinkConfiguration(i).getXml();
+			xml+=dhLinks.get(i).getXml();
+			xml+="\n</link>\n";
+		}
+		xml+="\n<ZframeToRAS\n>";
+		xml+=getFiducialToGlobalTransform().getXml();
+		xml+="\n</ZframeToRAS>\n";
+		
+		xml+="\n<baseToZframe>\n";
+		xml+=getRobotToFiducialTransform().getXml();
+		xml+="\n</baseToZframe>\n";
+		return xml;
 	}
 
 	@Override
 	public void disconnectDevice() {
 		// TODO Auto-generated method stub
 		removePoseUpdateListener(this);
+		removeJointSpaceUpdateListener(this);
 	}
 
 	@Override
@@ -138,24 +225,14 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 
 	@Override
 	public void onTaskSpaceUpdate(AbstractKinematicsNR source, TransformNR pose) {
-		//System.err.println("Liny updating to "+pose);
-		final ArrayList<TransformNR> joints = getChainTransformations();
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				for(int i=0;i<joints.size();i++)		{
-					//System.err.println("Liny updating to "+joints.get(i));
-					TransformFactory.getTransform(joints.get(i), linksListeners.get(i));
-				}
-			}
-		});
+		
 	}
 
 	@Override
 	public void onTargetTaskSpaceUpdate(AbstractKinematicsNR source,
 			TransformNR pose) {
 		// TODO Auto-generated method stub
-		
+		//TransformFactory.getTransform(pose, getCurrentTargetAffine());
 	}
 
 	public DhInverseSolver getInverseSolver() {
@@ -165,6 +242,85 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 	public void setInverseSolver(DhInverseSolver inverseSolver) {
 		chain.setInverseSolver(inverseSolver);
 	}
+
+	public Affine getCurrentTargetAffine() {
+		return currentTarget;
+	}
+
+	public void addNewLink(LinkConfiguration newLink, DHLink dhLink) {
+		LinkFactory factory  =getFactory();
+		//remove the link listener while the number of links could chnage
+		factory.removeLinkListener(this);
+		factory.getLink(newLink);// adds new link internally
+		DHChain chain =  getDhChain() ;
+		chain.addLink(dhLink);
+		//set the modified kinematics chain
+		setChain(chain);
+		//once the new link configuration is set up, re add the listener
+		factory.addLinkListener(this);
+	}
+
+	public void removeLink(int index) {
+		LinkFactory factory  =getFactory();
+		//remove the link listener while the number of links could chnage
+		factory.removeLinkListener(this);
+		DHChain chain = getDhChain() ;
+		chain.getLinks().remove(index);
+		factory.deleteLink(index);
+		//set the modified kinematics chain
+		setChain(chain);
+		//once the new link configuration is set up, re add the listener
+		factory.addLinkListener(this);
+	}
+	
+	public void updateCadLocations(){
+		double[] joints =getCurrentJointSpaceVector();
+		getChain().getChain(joints);
+		onJointSpaceUpdate(this, getCurrentJointSpaceVector());
+	}
+
+	@Override
+	public void onJointSpaceUpdate(final AbstractKinematicsNR source, final double[] joints) {
+				ArrayList<TransformNR> ll;
+				if(getChain().getCachedChain().size()==0 ){
+					ll= getChain().getChain(joints);
+				}else
+					ll= getChain().getCachedChain();
+				//System.out.println("Updating "+source.getScriptingName()+" links # "+linkPos.size());
+				for(int i=0;i<ll.size();i++) {
+					final ArrayList<TransformNR> linkPos = ll;
+					final int index=i;
+					Platform.runLater(new Runnable() {
+						@Override
+						public void run() {
+							try{
+								TransformFactory.getTransform(linkPos.get(index), getChain().getLinks().get(index).getListener());
+							}catch(Exception ex){
+								//ex.printStackTrace();
+							}
+						}
+					});
+				}
+	
+	}
+
+	@Override
+	public void onJointSpaceTargetUpdate(AbstractKinematicsNR source,
+			double[] joints) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onJointSpaceLimit(AbstractKinematicsNR source, int axis,
+			JointLimit event) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+
 
 
 

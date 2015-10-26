@@ -2,128 +2,179 @@ package com.neuronrobotics.sdk.addons.kinematics;
 import java.util.ArrayList;
 
 import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
+import com.neuronrobotics.sdk.common.DeviceManager;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.peripherals.AnalogInputChannel;
+import com.neuronrobotics.sdk.dyio.peripherals.CounterOutputChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 import com.neuronrobotics.sdk.namespace.bcs.pid.IExtendedPIDControl;
 import com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace;
 import com.neuronrobotics.sdk.pid.GenericPIDDevice;
 import com.neuronrobotics.sdk.pid.ILinkFactoryProvider;
+import com.neuronrobotics.sdk.pid.VirtualGenericPIDDevice;
 
 public class LinkFactory {
-	private IPidControlNamespace pid=null;
-	private DyIO dyio=null;
-	//private VirtualGenericPIDDevice virtual = new VirtualGenericPIDDevice(1000000);
-	private boolean hasPid=false;
-	private boolean hasServo=false;
-	private boolean hasStepper=false;
-	private boolean forceVirtual = false;
+	private VirtualGenericPIDDevice virtual=null; 
 	private ArrayList<AbstractLink> links = new ArrayList<AbstractLink>();
 	private ArrayList<LinkConfiguration> linkConfigurations=null ;
-	public LinkFactory (){
-		hasPid=false;
-		hasServo=false;
-		hasStepper=false;
-		forceVirtual=true;
-	}
+	private DyIO dyio;
+	private IPidControlNamespace pid;
 	
-	public LinkFactory (BowlerAbstractDevice d){
-		if(d==null){
-			forceVirtual=true;
-			return;
-		}
-		if(DyIO.class.isInstance(d)){
-			dyio=(DyIO)d;
-			hasServo=true;
-			hasStepper=true;
-		}
-		if(IExtendedPIDControl.class.isInstance(d)){
-			pid=(IExtendedPIDControl)d;
-			hasPid=true;
-		}
+	public LinkFactory(){
+		this(null);
+	}
+	public LinkFactory(BowlerAbstractDevice bad){
+		if(bad!=null)
+			DeviceManager.addConnection(bad, bad.getScriptingName());
 	}
 	
 	public LinkFactory(ILinkFactoryProvider connection,IExtendedPIDControl d) {
-		pid=d;
-		hasPid=true;
+		this(null);
 		//Log.enableInfoPrint();
 		//TODO fill in the auto link configuration
 		LinkConfiguration first = connection.requestLinkConfiguration(0);
-		first.setPidConfiguration( pid);
+		first.setPidConfiguration( d);
 		getLink(first);
 		
 		for (int i=1;i<first.getTotlaNumberOfLinks();i++){
 			LinkConfiguration tmp = connection.requestLinkConfiguration(i);
-			tmp.setPidConfiguration(pid);
+			tmp.setPidConfiguration(d);
 			getLink(tmp);
 		}
+
 		
 	}
 	
-	
-
 	public AbstractLink getLink(String name) {
 		for(AbstractLink l:links){
 			if(l.getLinkConfiguration().getName().equalsIgnoreCase(name))
 				return l;
 		}
-		String data = "No linke of name '"+name+"' exists";
+		String data = "No link of name '"+name+"' exists";
 		for(AbstractLink l:links){
 			data +="\n"+l.getLinkConfiguration().getName();
 		}
 		throw new RuntimeException(data);
 	}
-	
 	public AbstractLink getLink(LinkConfiguration c){
 		for(AbstractLink l:links){
 			if(l.getLinkConfiguration() == c)
 				return l;
 		}
+		return getLinkLocal( c);
+	}
+	
+	public void refreshHardwareLayer(LinkConfiguration c){
+		//retreive the old link
+		AbstractLink oldLink = getLink( c);
+		links.remove(oldLink);
+		AbstractLink newLink = getLinkLocal( c);
+		for(ILinkListener l:oldLink.getLinks()){
+			newLink.addLinkListener(l);
+		}
+		oldLink.removeAllLinkListener();
+		
+	}
+	
+	private AbstractLink getLinkLocal(LinkConfiguration c){
+
+		if(dyio==null)
+			dyio=(DyIO) DeviceManager.getSpecificDevice(DyIO.class, c.getDeviceScriptingName());
+		if(pid==null)
+			pid=(IPidControlNamespace) DeviceManager.getSpecificDevice(IPidControlNamespace.class, c.getDeviceScriptingName());
+		
 		AbstractLink tmp=null;
-		if(!forceVirtual){
-			if(c.getType().equals("servo-rotory")){
-				
-				tmp = new ServoRotoryLink(	new ServoChannel(dyio.getChannel(c.getHardwareIndex())), 
-											(int)c.getIndexLatch(),
-											(int)c.getLowerLimit(),
-											(int)c.getUpperLimit(),
-											c.getScale());
-			}else if(c.getType().equals("analog-rotory")){
-				
-				tmp = new AnalogRotoryLink(	new AnalogInputChannel(dyio.getChannel(c.getHardwareIndex())), 
-											(int)c.getIndexLatch(),
-											(int)c.getLowerLimit(),
-											(int)c.getUpperLimit(),
-											c.getScale());
-			} else if (c.getType().equals("dummy")|| c.getType().equals("virtual")){
-//				tmp=new PidRotoryLink(	virtual.getPIDChannel(c.getHardwareIndex()),
-//						(int)0,
-//						(int)c.getLowerLimit(),
-//						(int)c.getUpperLimit(),
-//						c.getScale());
+		Log.info("Loading link: "+c.getName()+" type = "+c.getType()+" device= "+c.getDeviceScriptingName());
+		switch(c.getType()){
+
+		case ANALOG_PRISMATIC:
+			if(dyio!=null){
+				tmp = new AnalogPrismaticLink(	new AnalogInputChannel(dyio.getChannel(c.getHardwareIndex())), 
+											c);
 				tmp.setUseLimits(false);
-			}else{
-				tmp=new PidRotoryLink(	pid.getPIDChannel(c.getHardwareIndex()),
-										(int)0,
-										(int)c.getLowerLimit(),
-										(int)c.getUpperLimit(),
-										c.getScale());
 			}
-		}else{
-			
-			int home=0;
-//			if(c.getType().equals("servo-rotory"))
-//				home = c.getIndexLatch();
-//			tmp=new PidRotoryLink(	virtual.getPIDChannel(c.getHardwareIndex()),
-//					(int)home,
-//					(int)c.getLowerLimit(),
-//					(int)c.getUpperLimit(),
-//					c.getScale());
-			//tmp.setUseLimits(false);
+			break;
+		case ANALOG_ROTORY:
+			if(dyio!=null){
+				tmp = new AnalogRotoryLink(	new AnalogInputChannel(dyio.getChannel(c.getHardwareIndex())), 
+											c);
+				tmp.setUseLimits(false);
+			}
+			break;
+		case PID_TOOL:
+		case PID:
+			if(pid!=null){
+				tmp=new PidRotoryLink(	pid.getPIDChannel(c.getHardwareIndex()),
+										c);
+			}
+			break;
+		case PID_PRISMATIC:
+			if(pid!=null){
+				tmp=new PidPrismaticLink(	pid.getPIDChannel(c.getHardwareIndex()),
+										c);
+			}
+			break;
+		case SERVO_PRISMATIC:
+			if(dyio!=null){
+				tmp = new ServoPrismaticLink(	new ServoChannel(dyio.getChannel(c.getHardwareIndex())), 
+											c);
+				
+			}
+			break;
+		case SERVO_ROTORY:
+		case SERVO_TOOL:
+			if(dyio!=null){
+				tmp = new ServoRotoryLink(	new ServoChannel(dyio.getChannel(c.getHardwareIndex())), 
+											c);
+				
+			}
+			break;
+		case STEPPER_PRISMATIC:
+			if(dyio!=null){
+				tmp = new StepperPrismaticLink(	new CounterOutputChannel(dyio.getChannel(c.getHardwareIndex())), 
+											c);				
+			}
+			break;
+		case STEPPER_TOOL:
+		case STEPPER_ROTORY:
+			if(dyio!=null){
+				tmp = new StepperRotoryLink(	new CounterOutputChannel(dyio.getChannel(c.getHardwareIndex())), 
+											c);				
+			}
+			break;
+		case DUMMY:
+		case VIRTUAL:
+			String myVirtualDevName=c.getDeviceScriptingName();
+			virtual = (VirtualGenericPIDDevice)DeviceManager.getSpecificDevice(VirtualGenericPIDDevice.class, myVirtualDevName);
+			if(virtual==null){
+				virtual=new VirtualGenericPIDDevice();
+				DeviceManager.addConnection(virtual, myVirtualDevName);
+			}
+			tmp=new PidRotoryLink(	virtual.getPIDChannel(c.getHardwareIndex()),
+					c);
+			break;
+		}
+		
+		if(tmp==null){
+			String myVirtualDevName="virtual_"+c.getDeviceScriptingName();
+			virtual = (VirtualGenericPIDDevice)DeviceManager.getSpecificDevice(VirtualGenericPIDDevice.class, myVirtualDevName);
+			if(virtual==null){
+				virtual=new VirtualGenericPIDDevice();
+				DeviceManager.addConnection(virtual, myVirtualDevName);
+			}
+			if(!c.getType().isPrismatic()){
+				tmp=new PidRotoryLink(	virtual.getPIDChannel(c.getHardwareIndex()),
+						c);
+			}else{
+				tmp=new PidPrismaticLink(virtual.getPIDChannel(c.getHardwareIndex()),
+						c);
+			}
 		}
 		tmp.setLinkConfiguration(c);
 		links.add(tmp);
+		if(!getLinkConfigurations().contains(c))
+			getLinkConfigurations().add(c);
 		return tmp;
 	}
 	
@@ -150,15 +201,18 @@ public class LinkFactory {
 	}
 	public void flush(final double seconds){
 		long time = System.currentTimeMillis();
-		if(hasServo){
+		//TODO this feature needs to be made to work, it should also check to see if all the links are on the same device
+		if(dyio!=null){
 			dyio.flushCache(seconds);
-			Log.info("Flushing DyIO");
 		}
-		if(hasPid){
+		if(pid!=null){
 			pid.flushPIDChannels(seconds);
-			Log.info("Flushing PID");
+		}else{	
+			for(AbstractLink l:links){
+				if(l.getLinkConfiguration().getDeviceScriptingName()!=null)
+					l.flush(seconds);
+			}
 		}
-
 		//System.out.println("Flush Took "+(System.currentTimeMillis()-time)+"ms");
 	}
 	public IPidControlNamespace getPid() {
@@ -182,10 +236,10 @@ public class LinkFactory {
 	}
 
 	public boolean isConnected() {
-		if(hasPid){
+		if(pid!=null){
 			return pid.isAvailable();
 		}
-		if(hasServo){
+		if(dyio!=null){
 			return dyio.isAvailable();
 		}
 		return true;
@@ -194,9 +248,6 @@ public class LinkFactory {
 	public ArrayList<LinkConfiguration> getLinkConfigurations() {
 		if(linkConfigurations== null){
 			linkConfigurations=new ArrayList<LinkConfiguration>();
-			for(AbstractLink l:links){
-				linkConfigurations.add(l.getLinkConfiguration());
-			}
 		}
 		return linkConfigurations;
 	}
@@ -206,5 +257,10 @@ public class LinkFactory {
 		for(AbstractLink lin:links){
 			lin.removeLinkListener(l);
 		}
+	}
+
+	public void deleteLink(int i) {
+		links.remove(i);
+		getLinkConfigurations().remove(i);
 	}
 }

@@ -2,8 +2,8 @@ package com.neuronrobotics.sdk.addons.kinematics;
 
 public class MockRotoryLink extends AbstractRotoryLink {
 	int val=0;
-	public MockRotoryLink(int home, int lowerLimit, int upperLimit, double scale) {
-		super(home, lowerLimit, upperLimit, scale);
+	public MockRotoryLink(LinkConfiguration conf) {
+		super(conf);
 		setHome(0);
 		setLowerLimit(-355);
 		setUpperLimit(355);

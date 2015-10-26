@@ -7,10 +7,7 @@ import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 
 // Kevin Shouldn't the Link's channel be kept in this level of Abstraction? The way I designg AbstractCartesianPositonDevice  Requires this
 public abstract class AbstractLink {
-	private double scale;
-	private int upperLimit;
-	private int lowerLimit;
-	private int home;
+
 	private int targetValue=0;
 	
 	private double targetEngineeringUnits=0;
@@ -18,11 +15,8 @@ public abstract class AbstractLink {
 	private ArrayList<ILinkListener> links = new ArrayList<ILinkListener>();
 	private LinkConfiguration conf =null;
 	
-	public AbstractLink(int home,int lowerLimit,int upperLimit,double scale){
-		setScale(scale);
-		setUpperLimit(upperLimit);
-		setLowerLimit(lowerLimit);
-		setHome(home);
+	public AbstractLink(LinkConfiguration conf){
+		this.conf=conf;
 	}
 	
 	/**
@@ -59,14 +53,14 @@ public abstract class AbstractLink {
 	
 	public void addLinkListener(ILinkListener l){
 		//Log.info("Adding link listener: "+l);
-		if(links.contains(l))
+		if(getLinks().contains(l))
 			return;
-		links.add(l);
+		getLinks().add(l);
 	}
 	public void removeLinkListener(ILinkListener l){
 		//Log.info("Removing link listener: "+l);
-		if(links.contains(l))
-			links.remove(l);
+		if(getLinks().contains(l))
+			getLinks().remove(l);
 		//throw new RuntimeException();
 	}
 	/**
@@ -75,7 +69,7 @@ public abstract class AbstractLink {
 	 * @param value in un-scaled link units. This method converts to an angle then sends to listeners. 
 	 */
 	public void fireLinkListener(int linkUnitsValue){
-		for(ILinkListener l:links){
+		for(ILinkListener l:getLinks()){
 			//Log.info("Link Event, RAW="+linkUnitsValue);
 			l.onLinkPositionUpdate(this,toEngineeringUnits(linkUnitsValue));
 		}
@@ -86,7 +80,7 @@ public abstract class AbstractLink {
 	 * @param e
 	 */
 	public void fireLinkLimitEvent(PIDLimitEvent e){
-		for(ILinkListener l:links){
+		for(ILinkListener l:getLinks()){
 			//Log.info("Link Event, RAW="+linkUnitsValue);
 			l.onLinkLimit(this, e);
 		}
@@ -108,7 +102,7 @@ public abstract class AbstractLink {
 	public void setCurrentEngineeringUnits(double angle) {
 		double current = (double)(getCurrentPosition()-getHome());
 		if(current != 0)
-			setScale(angle/current);
+			conf.setScale(angle/current);
 	}
 	public double getCurrentEngineeringUnits(){
 		int link = getCurrentPosition();
@@ -120,10 +114,16 @@ public abstract class AbstractLink {
 		return toEngineeringUnits(getTargetValue());
 	}
 	public double getMaxEngineeringUnits() {
-		return toEngineeringUnits(getUpperLimit());
+		if(conf.getScale()>0)
+			return toEngineeringUnits(getUpperLimit());
+		else
+			return toEngineeringUnits(getLowerLimit());
 	}
 	public double getMinEngineeringUnits() {
-		return toEngineeringUnits(getLowerLimit());
+		if(conf.getScale()>0)
+			return toEngineeringUnits(getLowerLimit());
+		else
+			return toEngineeringUnits(getUpperLimit());
 	}
 	public boolean isMaxEngineeringUnits() {
 		if(getTargetValue() == getUpperLimit()) {
@@ -168,50 +168,51 @@ public abstract class AbstractLink {
 			Log.info("Abstract Link: limits disabled");
 		}
 	}
+
 	public int getTargetValue() {
 		return targetValue;
 	}
-
-	public void setScale(double scale) {
-		this.scale = scale;
-	}
-	public double getScale() {
-		return scale;
-	}	
+	
 	public void setUpperLimit(int upperLimit) {
-		this.upperLimit = upperLimit;
-	}
-	public int getUpperLimit() {
-		return upperLimit;
+		conf.setUpperLimit(upperLimit);
 	}
 	public void setLowerLimit(int lowerLimit) {
-		this.lowerLimit = lowerLimit;
-	}
-	public int getLowerLimit() {
-		return lowerLimit;
+		conf.setLowerLimit(lowerLimit);
 	}
 	public void setHome(int home) {
-		this.home = home;
+		conf.setStaticOffset(home);
 	}
+
+	public void setScale(double d) {
+		conf.setScale(d);
+	}
+
+	public double getScale() {
+		return conf.getScale();
+	}	
+
+	public int getUpperLimit() {
+		return (int) conf.getUpperLimit();
+	}
+
+	public int getLowerLimit() {
+		return (int) conf.getLowerLimit();
+	}
+
 	public int getHome() {
-		return home;
+		return (int) conf.getStaticOffset();
 	}
 	
 	public void setCurrentAsUpperLimit() {
-		setUpperLimit(getCurrentPosition());
+		conf.setUpperLimit(getCurrentPosition());
 	}
 	
 	public void setCurrentAsLowerLimit() {
-		setLowerLimit(getCurrentPosition());
+		conf.setLowerLimit(getCurrentPosition());
 	}
 
 	public void setUseLimits(boolean useLimits) {
 		this.useLimits = useLimits;
-		try{
-			throw new RuntimeException();
-		}catch(Exception e){
-			e.printStackTrace();
-		}
 	}
 
 	public boolean isUseLimits() {
@@ -224,6 +225,18 @@ public abstract class AbstractLink {
 
 	public LinkConfiguration getLinkConfiguration() {
 		return conf;
+	}
+
+	public ArrayList<ILinkListener> getLinks() {
+		return links;
+	}
+
+	public void setLinks(ArrayList<ILinkListener> links) {
+		this.links = links;
+	}
+
+	public void removeAllLinkListener() {
+		links.clear();
 	}
 	
 	

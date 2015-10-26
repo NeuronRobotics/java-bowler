@@ -88,9 +88,13 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 		try {
 			MyDeviceString=getUniqueID(device);
 			
-		} catch (UnsupportedEncodingException | 
-				UsbDisconnectedException
-				| UsbException e) {
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UsbDisconnectedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UsbException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -456,9 +460,13 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 			Device kDev=null;
 			try {
 				kDev = findDevice(mDevice.getSerialNumberString());
-			} catch (UnsupportedEncodingException | 
-					UsbDisconnectedException
-					| UsbException e) {
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (UsbDisconnectedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (UsbException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -490,22 +498,24 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 			if(camOutpipe!=null)
 				camOutpipe.close();
 			camOutpipe=null;
-		} catch (UsbNotActiveException | UsbNotOpenException
-				| UsbDisconnectedException | UsbException e1) {
+		}  catch (UsbDisconnectedException e) {
 			// TODO Auto-generated catch block
-			//e1.printStackTrace();
+			e.printStackTrace();
+		} catch (UsbException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-
 		if(dataInterface!=null){
 			if (dataInterface.isClaimed()){
 				try {
 					dataInterface.release();
 					dataInterface=null;
-				} catch (UsbNotActiveException | 
-						UsbDisconnectedException
-						| UsbException e) {
+				}  catch (UsbDisconnectedException e) {
 					// TODO Auto-generated catch block
-					//e.printStackTrace();
+					e.printStackTrace();
+				} catch (UsbException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			}
 		}
@@ -625,13 +635,22 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 				usbReadState = usbControlState.submitted;
 	
 			} catch ( IllegalArgumentException 
-					| UsbNotActiveException 
-					| UsbNotOpenException
-					| UsbDisconnectedException 
-					| UsbException e) {
+					e) {
 				//e.printStackTrace();
 				disconnect();
 				return null;
+			} catch (UsbNotActiveException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (UsbNotOpenException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (UsbDisconnectedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (UsbException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			break;
 		case submitted:

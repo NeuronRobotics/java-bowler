@@ -25,7 +25,7 @@ public class DataConvertion {
 			}
 			return data;
 		} else {
-			System.err.println("Wrong legnth byte array");
+			//System.err.println("Wrong legnth byte array");
 			return new byte[len];
 		}
 	}

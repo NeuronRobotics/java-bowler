@@ -6,22 +6,30 @@ import com.neuronrobotics.sdk.common.MACAddress;
 import com.neuronrobotics.sdk.common.RpcEncapsulation;
 import com.neuronrobotics.sdk.common.device.server.BowlerAbstractDeviceServerNamespace;
 import com.neuronrobotics.sdk.common.device.server.BowlerAbstractServer;
+import com.neuronrobotics.sdk.common.device.server.IBowlerCommandProcessor;
 
 public class BcsCoreNamespaceImp extends BowlerAbstractDeviceServerNamespace{
 
 	
 	private BowlerAbstractServer server;
 
-	public BcsCoreNamespaceImp(BowlerAbstractServer server, MACAddress mac){
+	public BcsCoreNamespaceImp(final BowlerAbstractServer s, MACAddress mac){
 		super( mac ,"bcs.core.*;;");
-		this.server = server;
+		this.server = s;
 		rpc.add(new RpcEncapsulation(0, 
 				getNamespace() , 
 				"_png", 
 				BowlerMethod.GET, 
 				new BowlerDataType[]{}, 
 				BowlerMethod.POST, 
-				new BowlerDataType[]{}));
+				new BowlerDataType[]{},
+				new IBowlerCommandProcessor() {
+					@Override
+					public Object[] process(Object[] data) {
+						Object[] back = new Object[0];
+						return back;
+					}
+				}));
 		
 		rpc.add(new RpcEncapsulation(0, 
 				getNamespace() , 
@@ -29,30 +37,20 @@ public class BcsCoreNamespaceImp extends BowlerAbstractDeviceServerNamespace{
 				BowlerMethod.GET, 
 				new BowlerDataType[]{BowlerDataType.I08}, 
 				BowlerMethod.POST, 
-				new BowlerDataType[]{BowlerDataType.ASCII,BowlerDataType.I08}));
+				new BowlerDataType[]{BowlerDataType.ASCII,BowlerDataType.I08},
+				new IBowlerCommandProcessor() {
+					@Override
+					public Object[] process(Object[] data) {
+						int nsIndex = 	(Integer) data[0];
+						Object[] back = new Object[2];
+						
+						back[0] = server.getNamespaces().get(nsIndex).getNamespace();
+						back[1] = new Integer(server.getNamespaces().size());
+		
+						return back;
+					}
+				}));
 	}
-	/**
-	 * This is the Core namespace processor
-	 */
 
-	@Override
-	public Object[] process(Object[] data, String rpc, BowlerMethod method) {
-		//System.out.println("Rx >> "+data);
-		if(data== null)
-			return new Object[0];
-		if(rpc.contains("_png")){
-			Object[] back = new Object[0];
-			return back;
-		}if(rpc.contains("_nms")){
-			int nsIndex = 	(Integer) data[0];
-			Object[] back = new Object[2];
-			
-			back[0] = server.getNamespaces().get(nsIndex).getNamespace();
-			back[1] = new Integer(server.getNamespaces().size());
-
-			return back;
-		}
-		return new Object[0];
-	}
 
 }

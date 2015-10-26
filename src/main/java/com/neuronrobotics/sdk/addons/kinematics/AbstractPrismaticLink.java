@@ -2,8 +2,8 @@ package com.neuronrobotics.sdk.addons.kinematics;
 
 public abstract class AbstractPrismaticLink extends AbstractLink {
 
-	public AbstractPrismaticLink(int home, int lowerLimit, int upperLimit,double scale) {
-		super(home, lowerLimit, upperLimit, scale);
+	public AbstractPrismaticLink(LinkConfiguration conf) {
+		super(conf);
 		// TODO Auto-generated constructor stub
 	}
 	public void incrementDisplacment(double inc){

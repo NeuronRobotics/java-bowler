@@ -8,10 +8,11 @@ import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.common.BowlerMethod;
 import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.Log;
+import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIOChannel;
 import com.neuronrobotics.sdk.dyio.DyIOChannelEvent;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
-import com.neuronrobotics.sdk.dyio.DyIORegestry;
+import com.neuronrobotics.sdk.common.DeviceManager;
 import com.neuronrobotics.sdk.dyio.IChannelEventListener;
 
 /**
@@ -30,7 +31,7 @@ public class PPMReaderChannel  extends DyIOAbstractPeripheral implements IChanne
 	 * Void constructor assumes you are suing the DyIORegestry and channel 23
 	 */
 	public PPMReaderChannel() {
-		this(DyIORegestry.get().getChannel(23));
+		this(((DyIO) DeviceManager.getSpecificDevice(DyIO.class, null)).getChannel(23));
 	}
 	/**
 	 * Takes a DyIO channel which must be channel 23

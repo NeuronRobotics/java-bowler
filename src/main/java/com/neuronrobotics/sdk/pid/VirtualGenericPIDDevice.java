@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.neuronrobotics.sdk.common.BowlerAbstractCommand;
 import com.neuronrobotics.sdk.common.BowlerDatagram;
+import com.neuronrobotics.sdk.common.InvalidConnectionException;
 import com.neuronrobotics.sdk.common.InvalidResponseException;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.NoConnectionAvailableException;
@@ -13,14 +14,17 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 	
 	private static final long threadTime=10;
 	
-	private ArrayList<DriveThread>  driveThreads = new  ArrayList<DriveThread>();
+	private ArrayList<LinearInterpolationEngine>  driveThreads = new  ArrayList<LinearInterpolationEngine>();
 	private ArrayList<PIDConfiguration>  configs = new  ArrayList<PIDConfiguration>();
 	private ArrayList<PDVelocityConfiguration>  PDconfigs = new  ArrayList<PDVelocityConfiguration>();
 	SyncThread sync = new SyncThread ();
 	private double maxTicksPerSecond;
 	
-	private int numChannels = 16;
+	private int numChannels = 24;
 	
+	public  VirtualGenericPIDDevice( ) {
+		this(1000000);
+	}
 	public  VirtualGenericPIDDevice( double maxTicksPerSecond) {
 		this.setMaxTicksPerSecond(maxTicksPerSecond);
 		getImplementation().setChannelCount(new Integer(numChannels));
@@ -156,9 +160,10 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 			PIDChannel c =new PIDChannel(this,i);
 			c.setCachedTargetValue(back[i]);
 			getChannels().add(c);
-			DriveThread d = new DriveThread(i);
+			PIDConfiguration conf =new PIDConfiguration();
+			LinearInterpolationEngine d = new LinearInterpolationEngine(i,conf);
 			driveThreads.add(d);
-			configs.add(new PIDConfiguration());
+			configs.add(conf);
 		}
 		return back;
 	}
@@ -189,9 +194,15 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 					ThreadUtil.wait(10);
 				}
 				long time = System.currentTimeMillis();
-				for(DriveThread dr : driveThreads){
+				for(LinearInterpolationEngine dr : driveThreads){
 					if(dr.update()){
-						firePIDEvent(new PIDEvent(dr.getChan(), (int)dr.ticks, time,0));
+						try{
+							firePIDEvent(new PIDEvent(dr.getChan(), (int)dr.getTicks(), time,0));
+						}catch (NullPointerException ex){
+							//initialization issue, let it work itself out
+						}catch (Exception ex){
+							ex.printStackTrace();
+						}
 					}
 				}
 			}
@@ -206,126 +217,20 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 			this.pause = pause;
 		}
 	}
-	
-	private class DriveThread {
-		
-		private double ticks=0;
-		private double lastTick=ticks;
-		private double lastInterpolationTime;
-		private double setPoint;
-		private double duration;
-		private double startTime;
-		private double startPoint;
-		private boolean pause = false;
-		private boolean velocityRun=false;
-		private double unitsPerMs;
-		private int chan;
-		public DriveThread(int index){
-			setChan(index);
-		}
-		public void SetVelocity(double unitsPerSecond) {
-			//System.out.println("Setting velocity to "+unitsPerSecond+"ticks/second");
-			setPause(true);
-			
-			this.unitsPerMs=unitsPerSecond/1000;
-			lastInterpolationTime=System.currentTimeMillis();
-			velocityRun=true;
-			
-			setPause(false);
-		}
-		public int getPosition() {
-			return (int) ticks;
-		}
-		
-		
-		
-		public synchronized  void SetPIDSetPoint(int setpoint,double seconds){
-			configs.get(getChan()).setEnabled(true);
-			velocityRun=false;
-			setPause(true);
-			//ThreadUtil.wait((int)(threadTime*2));
-			double TPS = (double)setpoint/seconds;
-			//Models motor saturation
-			if(TPS >  getMaxTicksPerSecond()){
-				seconds = (double)setpoint/ getMaxTicksPerSecond();
-				//throw new RuntimeException("Saturated PID on channel: "+chan+" Attempted Ticks Per Second: "+TPS+", when max is"+getMaxTicksPerSecond()+" set: "+setpoint+" sec: "+seconds);
-			}
-			duration = (long) (seconds*1000);
-			startTime=System.currentTimeMillis();
-			setPoint=setpoint;
-			startPoint = ticks;
-			
-			setPause(false);
-			//System.out.println("Setting Setpoint Ticks to: "+setPoint);
-		}
-		private boolean update(){
-			if(configs.get(getChan()).isEnabled())
-				interpolate();
-			if((ticks!=lastTick) && !isPause()) {
-				lastTick=ticks;
-				return true;
-			}	
-			return false;
-		}
 
-		public synchronized  void ResetEncoder(int value) {
-			System.out.println("Resetting channel "+getChan());
-			velocityRun=false;
-			setPause(true);
-			//ThreadUtil.wait((int)(threadTime*2));
-			ticks=value;
-			lastTick=value;
-			setPoint=value;
-			duration=0;
-			startTime=System.currentTimeMillis();
-			startPoint=value;
-			setPause(false);	
-		}
-		private void setChan(int chan) {
-			this.chan = chan;
-		}
-		public int getChan() {
-			return chan;
-		}
-		private void interpolate() {
-			double back;
-			double diffTime;
-			if(duration > 0 ){
-				diffTime = System.currentTimeMillis()-startTime;
-				if((diffTime < duration) && (diffTime>0) ){
-					double elapsed = 1-((duration-diffTime)/duration);
-					double tmp=((float)startPoint+(float)(setPoint-startPoint)*elapsed);
-					if(setPoint>startPoint){
-						if((tmp>setPoint)||(tmp<startPoint))
-							tmp=setPoint;
-					}else{
-						if((tmp<setPoint) || (tmp>startPoint))
-							tmp=setPoint;
-					}
-					back=tmp;
-				}else{
-					// Fixes the overflow case and the timeout case
-					duration=0;
-					back=setPoint;
-				}
-			}else{
-				back=setPoint;
-				duration = 0;
-			}
-			if(velocityRun){
-				double ms = (double) (System.currentTimeMillis()-lastInterpolationTime);
-				back=(ticks+unitsPerMs*ms);
-				System.out.println("Time Diff="+ms+" \n\ttick difference="+unitsPerMs*ms+" \n\tticksPerMs="+unitsPerMs +" \n\tCurrent value="+back );
-			}
-			ticks = back;
-			lastInterpolationTime=System.currentTimeMillis();
-		}
-		public boolean isPause() {
-			return pause;
-		}
-		private void setPause(boolean pause) {
-			this.pause = pause;
-		}
+	@Override
+	public boolean connect(){
+		fireConnectEvent();
+		return true;
+	}
+	
+	/**
+	 * This method tells the connection object to disconnect its pipes and close out the connection. Once this is called, it is safe to remove your device.
+	 */
+	@Override
+	public void disconnect(){
+		fireDisconnectEvent();
+		
 	}
 	
 }

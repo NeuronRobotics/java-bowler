@@ -1,5 +1,7 @@
 package com.neuronrobotics.addons.driving;
 
+import java.util.ArrayList;
+
 import com.neuronrobotics.sdk.pid.PIDChannel;
 import com.neuronrobotics.sdk.pid.PIDCommandException;
 import com.neuronrobotics.sdk.pid.PIDEvent;
@@ -97,6 +99,25 @@ public class PuckBot extends AbstractRobotDrive{
 
 	public IPuckBotKinematics getPuckBotKinematics() {
 		return pk;
+	}
+
+	@Override
+	public void disconnectDeviceImp() {
+		// TODO Auto-generated method stub
+		left.removePIDEventListener(this);
+		right.removePIDEventListener(this);
+	}
+
+	@Override
+	public boolean connectDeviceImp() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public ArrayList<String> getNamespacesImp() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

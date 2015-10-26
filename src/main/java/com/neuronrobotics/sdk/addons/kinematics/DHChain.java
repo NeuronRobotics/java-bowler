@@ -3,6 +3,8 @@ package com.neuronrobotics.sdk.addons.kinematics;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
 import javafx.scene.transform.Affine;
 
 import org.w3c.dom.Element;
@@ -11,8 +13,10 @@ import org.w3c.dom.NodeList;
 
 import Jama.Matrix;
 
+import com.neuronrobotics.sdk.addons.kinematics.gui.TransformFactory;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
+import com.neuronrobotics.sdk.common.Log;
 public  class DHChain {
 	private ArrayList<DHLink> links = new ArrayList<DHLink>();
 	private ArrayList<TransformNR> chain = new ArrayList<TransformNR>();
@@ -21,19 +25,29 @@ public  class DHChain {
 	private double[] lowerLimits;
 	private boolean debug=false;
 	private DhInverseSolver is;
-	
-	public DHChain(InputStream configFile,LinkFactory f){
-		NodeList nList = XmlFactory.getAllNodesFromTag("DHParameters", configFile);
-		for (int i = 0; i < nList.getLength(); i++) {			
-		    Node nNode = nList.item(i);
-		    if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-		    	getLinks().add(new DHLink((Element)	nNode));//0->1
-		    	
-		    }
-		}
-		upperLimits = f.getUpperLimits();
-		lowerLimits = f.getLowerLimits();
+	private AbstractKinematicsNR kin;
+	private LinkFactory factory;
+	static{
+		new JFXPanel(); // initializes JavaFX environment
 	}
+	
+	public DHChain( AbstractKinematicsNR kin){
+		this.kin = kin;
+
+	}
+	
+	public void addLink(DHLink link){
+		if(!getLinks().contains(link)){
+			getLinks().add(link);
+		}
+	}
+	
+	public void removeLink(DHLink link){
+		if(getLinks().contains(link)){
+			getLinks().remove(link);
+		}
+	}
+	
 	
 //	public DHChain(double [] upperLimits,double [] lowerLimits, boolean debugViewer ) {
 //		this(upperLimits, lowerLimits);
@@ -67,17 +81,17 @@ public  class DHChain {
 		if(getInverseSolver() == null)
 			setInverseSolver(new ComputedGeometricModel(this,debug));
 		
-		double [] inv = getInverseSolver().inverseKinematics(target, jointSpaceVector);	
+		double [] inv = getInverseSolver().inverseKinematics(target, jointSpaceVector,this);	
 		if(debug){
 			//getViewer().updatePoseDisplay(getChain(jointSpaceVector));
 		}
 		
-		//System.out.println("Inverse Kinematics took "+(System.currentTimeMillis()-start)+"ms");
+		//Log.info( "Inverse Kinematics took "+(System.currentTimeMillis()-start)+"ms");
 		return inv;
 	}
 
 	public TransformNR forwardKinematics(double[] jointSpaceVector) {
-		return forwardKinematics(jointSpaceVector, false);
+		return forwardKinematics(jointSpaceVector, true);
 	}
 	
 	public TransformNR forwardKinematics(double[] jointSpaceVector, boolean store) {
@@ -102,9 +116,9 @@ public  class DHChain {
 				zVect[2]=1;
 			}else{
 				//Get the rz vector from matrix
-				zVect[0]=chain.get(i-1).getRotationMatrix().getRotationMatrix()[0][2];
-				zVect[1]=chain.get(i-1).getRotationMatrix().getRotationMatrix()[1][2];
-				zVect[2]=chain.get(i-1).getRotationMatrix().getRotationMatrix()[2][2];
+				zVect[0]=intChain.get(i-1).getRotationMatrix().getRotationMatrix()[0][2];
+				zVect[1]=intChain.get(i-1).getRotationMatrix().getRotationMatrix()[1][2];
+				zVect[2]=intChain.get(i-1).getRotationMatrix().getRotationMatrix()[2][2];
 			}
 			//Assume all rotational joints
 			//Set to zero if prismatic
@@ -116,7 +130,7 @@ public  class DHChain {
 			Matrix current = new TransformNR().getMatrixTransform();
 			for(int j=i;j<getLinks().size();j++) {
 				Matrix step = getLinks().get(j).DhStepRotory(Math.toRadians(jointSpaceVector[j]));
-				//System.out.println("Current:\n"+current+"Step:\n"+step);
+				//Log.info( "Current:\n"+current+"Step:\n"+step);
 				current = current.times(step);
 			}
 			double []rVect = new double [3];
@@ -156,16 +170,38 @@ public  class DHChain {
 		if(store)
 			setChain(new ArrayList<TransformNR>());
 		for(int i=0;i<getLinks().size();i++) {
-			Matrix step = getLinks().get(i).DhStepRotory(Math.toRadians(jointSpaceVector[i]));
-			//System.out.println("Current:\n"+current+"Step:\n"+step);
+			LinkConfiguration conf= getFactory().getLinkConfigurations().get(i);
+			Matrix step;
+			if(conf.getType().isPrismatic())
+				step= getLinks().get(i).DhStepPrismatic(jointSpaceVector[i]);
+			else
+				step= getLinks().get(i).DhStepRotory(Math.toRadians(jointSpaceVector[i]));
+			//Log.info( "Current:\n"+current+"Step:\n"+step);
 			current = current.times(step);
+			final Matrix update=current.copy();
+			final int index=i;
+			final TransformNR pose =forwardOffset(new TransformNR(update));
+			//getLinks().get(index).fireOnLinkGlobalPositionChange(pose);	
+
 			if(store){
-				intChain.add(new TransformNR(step));
-				chain.add(new TransformNR(current));
+				if(intChain.size()<=i)
+					intChain.add(new TransformNR(step));
+				else{
+					intChain.set(i, new TransformNR(step));
+				}
+				if(chain.size()<=i)
+					chain.add(pose);
+				else{
+					chain.set(i, pose);
+				}
 			}
 		}
-		//System.out.println("Final:\n"+current);
+		//Log.info( "Final:\n"+current);
 		return current;
+	}
+	
+	private TransformNR forwardOffset(TransformNR transformNR) {
+		return kin.forwardOffset(transformNR);
 	}
 
 	public void setChain(ArrayList<TransformNR> chain) {
@@ -176,7 +212,10 @@ public  class DHChain {
 		forwardKinematics(jointSpaceVector,true);
 		return chain;
 	}
-	
+	public ArrayList<TransformNR> getCachedChain() {
+		
+		return chain;
+	}
 	public double[] getUpperLimits() {
 		// TODO Auto-generated method stub
 		return upperLimits;
@@ -205,11 +244,126 @@ public  class DHChain {
 	}
 
 	public DhInverseSolver getInverseSolver() {
+		if(is==null){
+			is=new DhInverseSolver() {
+				
+				@Override
+				public double[] inverseKinematics(TransformNR target,
+						double[] jointSpaceVector, DHChain chain ) {
+					int linkNum = jointSpaceVector.length;
+					double [] inv = new double[linkNum];
+					// this is an ad-hock kinematic model for d-h parameters and only works for specific configurations
+
+					double dx = links.get(1).getD()-
+							links.get(2).getD();
+					double dy = links.get(0).getR();
+					
+					double xSet = target.getX();
+					double ySet = target.getY();
+					
+					double polarR = Math.sqrt(xSet*xSet+ySet*ySet);
+					double polarTheta = Math.asin(ySet/polarR);
+					
+					
+					double adjustedR = Math.sqrt((polarR*polarR)+(dx*dx))-dy;
+					double adjustedTheta =Math.asin(dx/polarR);
+					
+					
+					xSet = adjustedR*Math.sin(polarTheta-adjustedTheta);
+					ySet = adjustedR*Math.cos(polarTheta-adjustedTheta);
+				
+					
+					double orentation = polarTheta-adjustedTheta;
+					
+					double zSet = target.getZ()
+							-links.get(0).getD();
+					if(links.size()>4){
+						zSet+=links.get(4).getD();
+					}
+					// Actual target for anylitical solution is above the target minus the z offset
+					TransformNR overGripper = new TransformNR(
+							xSet,
+							ySet,
+							zSet,
+							target.getRotation());
+
+
+					double l1 = links.get(1).getR();// First link length
+					double l2 = links.get(2).getR();
+
+					double vect = Math.sqrt(xSet*xSet+ySet*ySet+zSet*zSet);
+					Log.info( "TO: "+overGripper);
+					Log.info( "polarR: "+polarR);
+					Log.info( "polarTheta: "+Math.toDegrees(polarTheta));
+					Log.info( "adjustedTheta: "+Math.toDegrees(adjustedTheta));
+					Log.info( "adjustedR: "+adjustedR);
+					
+					Log.info( "x Correction: "+xSet);
+					Log.info( "y Correction: "+ySet);
+					
+					Log.info( "Orentation: "+Math.toDegrees(orentation));
+					Log.info( "z: "+zSet);
+
+					
+
+					if (vect > l1+l2) {
+						throw new RuntimeException("Hypotenus too long: "+vect+" longer then "+l1+l2);
+					}
+					//from https://www.mathsisfun.com/algebra/trig-solving-sss-triangles.html
+					double a=l2;
+					double b=l1;
+					double c=vect;
+					double A =Math.acos((Math.pow(b,2)+ Math.pow(c,2) - Math.pow(a,2)) / (2*b*c));
+					double B =Math.acos((Math.pow(c,2)+ Math.pow(a,2) - Math.pow(b,2)) / (2*a*c));
+					double C =Math.PI-A-B;//Rule of triangles
+					double elevation = Math.asin(zSet/vect);
+
+
+					Log.info( "vect: "+vect);
+					Log.info( "A: "+Math.toDegrees(A));
+					Log.info( "elevation: "+Math.toDegrees(elevation));
+					Log.info( "l1 from x/y plane: "+Math.toDegrees(A+elevation));
+					Log.info( "l2 from l1: "+Math.toDegrees(C));
+					inv[0] = Math.toDegrees(orentation);
+					inv[1] = -Math.toDegrees((A+elevation+links.get(1).getTheta()));
+					inv[2] = (Math.toDegrees(C))+//interior angle of the triangle, map to external angle
+							Math.toDegrees(links.get(2).getTheta());// offset for kinematics
+					if(links.size()>3)
+						inv[3] =(inv[1] -inv[2]);// keep it parallell
+						// We know the wrist twist will always be 0 for this model
+					if(links.size()>4)
+						inv[4] = inv[0];//keep the camera orentation paralell from the base
+					
+					for(int i=0;i<inv.length;i++){
+						Log.info( "Link#"+i+" is set to "+inv[i]);
+					}
+					int i=3;
+					if(links.size()>3)
+						i=5;
+					//copy over remaining links so they do not move
+					for(;i<inv.length && i<jointSpaceVector.length ;i++){
+						inv[i]=jointSpaceVector[i];
+					}
+
+					return inv;
+				}
+			};
+		}
 		return is;
 	}
 
 	public void setInverseSolver(DhInverseSolver is) {
 		this.is = is;
+	}
+
+	public LinkFactory getFactory() {
+		return factory;
+	}
+
+	public void setFactory(LinkFactory factory) {
+		upperLimits = factory.getUpperLimits();
+		lowerLimits = factory.getLowerLimits();
+		this.factory = factory;
 	}
 
 }

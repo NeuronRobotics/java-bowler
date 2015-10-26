@@ -1,18 +1,24 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
 	
-sourceCompatibility = '1.7'
-targetCompatibility = '1.7'
+sourceCompatibility = '1.6'
+targetCompatibility = '1.6'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 File buildDir = file(".");
 
 Properties props = new Properties()
 props.load(new FileInputStream(buildDir.getAbsolutePath()+"/src/main/resources/com/neuronrobotics/sdk/config/build.properties"))
-
+sourceSets {
+	
+	test {
+		java {
+			srcDirs = ["test/java/src","examples/java/src" ]  // Note @Peter's comment below
+		}
+	}
+}
 manifest {
     attributes(	
-    			//"Main-Class": "com.dcx.epep.Start",
     			"Manifest-Version": "1.0",
     			"Created-By": "Neuron Robotics Cooperative",
     			"Specification-Title": props."app.name",
@@ -44,6 +50,7 @@ repositories {
 dependencies {
 	//TODO change as many of these as possible to Maven repositories
     compile fileTree (dir: 'libs', includes: ['*.jar'])
+	testCompile "junit:junit:4.11"  // Or whatever version
 }
 
 // create a fat-jar (class files plus dependencies
@@ -64,8 +71,6 @@ jar {
 	    }
 	}
 	
-
-
     // project class files compiled from source
     from files(sourceSets.main.output.classesDir)
 

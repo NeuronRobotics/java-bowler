@@ -1,5 +1,7 @@
 package com.neuronrobotics.sdk.ui;
 
+import gnu.io.NativeResource;
+
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -111,9 +113,11 @@ public class ConnectionDialog extends JDialog {
 	private void loadDefaultConnections() {
 		try{
 			try{
-				addConnectionPanel(new UsbConnectionPanel(this));
-				addConnectionPanel(new BluetoothConnectionPanel(this));
+//				if(OsInfoUtil.isLinux())
+//					addConnectionPanel(new UsbConnectionPanel(this));
 				addConnectionPanel(new SerialConnectionPanel(this));
+				addConnectionPanel(new BluetoothConnectionPanel(this));
+				//addConnectionPanel(new SerialConnectionPanel(this));
 			}catch(Exception ex){
 				addConnectionPanel(new SerialConnectionPanel(this));
 				addConnectionPanel(new BluetoothConnectionPanel(this));

@@ -45,7 +45,9 @@ import com.neuronrobotics.sdk.addons.kinematics.DHParameterKinematics;
 import com.neuronrobotics.sdk.addons.kinematics.ITaskSpaceUpdateListenerNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
+import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
 import com.neuronrobotics.sdk.common.IConnectionEventListener;
+import com.neuronrobotics.sdk.common.IDeviceConnectionEventListener;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.dypid.DyPIDConfiguration;
@@ -61,6 +63,9 @@ import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.SubScene;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
 import javafx.stage.Stage;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.paint.PhongMaterial;
@@ -99,7 +104,7 @@ public class Jfx3dManager extends JFXPanel {
 	final Xform cameraXform = new Xform();
 	final Xform cameraXform2 = new Xform();
 	final Xform cameraXform3 = new Xform();
-	final double cameraDistance = 1000;
+	final double cameraDistance = 3000;
 	final Xform moleculeGroup = new Xform();
 	private Timeline timeline;
 	boolean timelinePlaying = false;
@@ -130,6 +135,7 @@ public class Jfx3dManager extends JFXPanel {
 	private Affine selsectedAffine = new Affine();
 	private Affine robotBase = new Affine();
 	private Affine cameraVR = new Affine();
+	private Group ground;
 
 	public Jfx3dManager() {
 		buildScene();
@@ -137,7 +143,9 @@ public class Jfx3dManager extends JFXPanel {
 		buildAxes();
 
 		setSubScene(new SubScene(getRoot(), 1024, 1024, true, null));
-		getSubScene().setFill(Color.GREY);
+		Stop[] stops = null;
+		getSubScene().setFill(new LinearGradient(125, 0, 225, 0, false, CycleMethod.NO_CYCLE, stops));
+		
 		handleKeyboard(getSubScene(), world);
 		handleMouse(getSubScene(), world);
 		getSubScene().setCamera(camera);
@@ -157,8 +165,13 @@ public class Jfx3dManager extends JFXPanel {
 	}
 
 	public MeshView addObject(MeshView current) {
-
-		lookGroup.getChildren().add(current);
+		Group og = new Group();
+		og.getChildren().add(current);
+		Axis a = new Axis();
+		a.getTransforms().addAll(current.getTransforms());
+		og.getChildren().add(a);
+		lookGroup.getChildren().add(og);
+		//Log.warning("Adding new axis");
 		return current;
 	}
 
@@ -272,12 +285,20 @@ public class Jfx3dManager extends JFXPanel {
 					a.getTransforms().add(dh.getListener());
 					manipulator.getChildren().add(a);
 					if(master!=null)
-						master.addConnectionEventListener(new IConnectionEventListener() {
-							@Override public void onDisconnect(BowlerAbstractConnection source) {
+						master.addConnectionEventListener(new IDeviceConnectionEventListener() {
+							
+							@Override
+							public void onDisconnect(BowlerAbstractDevice source) {
+								// TODO Auto-generated method stub
 								manipulator.getChildren().remove(a);
 								a.getTransforms().clear();
 							}
-							@Override public void onConnect(BowlerAbstractConnection source) {}
+							
+							@Override
+							public void onConnect(BowlerAbstractDevice source) {
+								// TODO Auto-generated method stub
+								
+							}
 						});
 				}
 				//get the affine of the tip of the chain
@@ -341,8 +362,8 @@ public class Jfx3dManager extends JFXPanel {
 		cameraXform3.getChildren().add(camera);
 		cameraXform3.setRotateZ(180.0);
 
-		camera.setNearClip(0.1);
-		camera.setFarClip(10000.0);
+		camera.setNearClip(.1);
+		camera.setFarClip(100000.0);
 		camera.setTranslateZ(-cameraDistance);
 		camera.getTransforms().add(getCameraVR());
 		cameraXform.ry.setAngle(320.0);
@@ -355,10 +376,33 @@ public class Jfx3dManager extends JFXPanel {
 	}
 
 	private void buildAxes() {
+		
+		int gridSize=1000;
+		int gridDensity=gridSize/10;
+		ground = new Group();
+		Affine groundPlacment=new Affine();
+		for(int i=-gridSize;i<gridSize;i++){
+			for(int j=-gridSize;j<gridSize;j++){
+				if(i%gridDensity==0 &&j%gridDensity==0){
+					Sphere s = new Sphere(3);
+					Affine sp=new Affine();
+					sp.setTy(i);
+					sp.setTx(j);
+					//System.err.println("Placing sphere at "+i+" , "+j);
+					s.getTransforms().add(sp);
+					ground.getChildren().add(s);
+				}
+			}
+		}
 
-		axisGroup.getChildren().addAll(new Axis());
+		groundPlacment.setTz(-1);
+		//ground.setOpacity(.5);
+		ground.getTransforms().add(groundPlacment);
+		axisGroup.getChildren().addAll(new Axis(),ground);
 		world.getChildren().addAll(axisGroup, lookGroup);
 	}
+	
+	
 
 	private void handleMouse(SubScene scene, final Node root) {
 		scene.setOnMousePressed(new EventHandler<MouseEvent>() {

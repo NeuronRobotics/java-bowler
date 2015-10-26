@@ -145,7 +145,7 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	 * @return the byte
 	 */
 	public  static byte genDataCrc(ByteList data){
-		return genCRC(BowlerDatagram.HEADER_SIZE, data.getByte(9), data);
+		return genCRC(BowlerDatagram.HEADER_SIZE, data.getUnsigned(9), data);
 	}
 	
 	/**
@@ -154,7 +154,7 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	 * @return the byte holding the header crc
 	 */
 	private  static byte getDataCrc(ByteList data){
-		return data.getByte((BowlerDatagram.HEADER_SIZE)+data.getByte(9));
+		return data.getByte((BowlerDatagram.HEADER_SIZE)+data.getUnsigned(9));
 	}
 	
 	private byte getDataCrc() {
@@ -224,7 +224,7 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 
 		// Validate the CRC
 		if(!CheckCRC(raw,true) ) {
-				throw new MalformattedDatagram("CRC does not match");
+				throw new MalformattedDatagram("CRC does not match: "+raw);
 		}else{
 			setCrc(getCRC(raw));
 			setDataCrc(raw.getByte(raw.size()-1));
@@ -456,7 +456,7 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 				}
 			}
 		}catch(Exception ex){
-			if(InterruptedException.class.isInstance(ex))throw ex;
+			if(InterruptedException.class.isInstance(ex))throw new RuntimeException(ex);
 			ex.printStackTrace();
 			return false;
 		}

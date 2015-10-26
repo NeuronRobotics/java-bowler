@@ -1,7 +1,10 @@
 package com.neuronrobotics.sdk.addons.kinematics;
 
+import java.util.ArrayList;
+
 import javax.xml.transform.TransformerFactory;
 
+import javafx.application.Platform;
 import javafx.scene.transform.Affine;
 
 import org.w3c.dom.Element;
@@ -16,7 +19,7 @@ public class DHLink {
 	
 	private double d;
 	private double theta;
-	private double r;
+	private double radius;
 	private double alpha;
 	private Matrix transX;
 	private Matrix rotX;
@@ -28,24 +31,58 @@ public class DHLink {
 	private Matrix transZ_J;
 	private Matrix rotZ_J;
 	private Affine listener=null;
+	private Affine root=null;
+	private boolean degenerate = false;
+	
+	private ArrayList<IDhLinkPositionListener> dhlisteners = new ArrayList<IDhLinkPositionListener>();
+	private MobileBase embedableXml=null;
+	
 	
 	public DHLink(double d, double theta,double r, double alpha) {
-		this.d = d;
-		this.theta = theta;
-		this.r = r;
-		this.alpha = alpha;
+		this.setDelta(d);
+		this.setTheta(theta);
+		this.setRadius(r);
+		this.setAlpha(alpha);
 		
 	}
 
 	public DHLink(Element nNode) {
-		d		=				XmlFactory.getTagValueDouble("Delta", nNode);
-		theta	=Math.toRadians(XmlFactory.getTagValueDouble("Theta", nNode));
-		r		=				XmlFactory.getTagValueDouble("Radius", nNode);
-		alpha	=Math.toRadians(XmlFactory.getTagValueDouble("Alpha", nNode));
+		setDelta(XmlFactory.getTagValueDouble("Delta", nNode));
+		setTheta(Math.toRadians(XmlFactory.getTagValueDouble("Theta", nNode)));
+		setRadius(XmlFactory.getTagValueDouble("Radius", nNode));
+		setAlpha(Math.toRadians(XmlFactory.getTagValueDouble("Alpha", nNode)));
 	}
-
+	
+	public void fireOnLinkGlobalPositionChange(TransformNR newPose){
+		for(IDhLinkPositionListener l:dhlisteners){
+			l.onLinkGlobalPositionChange(newPose);
+		}
+	}
+	
+	public void addDhLinkPositionListener(IDhLinkPositionListener l){
+		if(!dhlisteners.contains(l))
+			dhlisteners.add(l);
+	}
+	public void removeDhLinkPositionListener(IDhLinkPositionListener l){
+		if(dhlisteners.contains(l))
+			dhlisteners.remove(l);
+	}
+	/*
+	 * 
+	 * Generate the xml configuration to generate a link of this configuration. 
+	 */
+	public String getXml(){
+		String mb = embedableXml==null?"":"\n\t\t"+embedableXml+"\n";
+		return "\n\t<DHParameters>\n"+
+		    "\t\t<Delta>"+d+"</Delta>\n"+
+		    "\t\t<Theta>"+Math.toDegrees(theta)+"</Theta>\n"+
+		   "\t\t<Radius>"+radius+"</Radius>\n"+
+		   "\t\t<Alpha>"+Math.toDegrees(alpha)+"</Alpha>\n"+
+		   mb+
+		"\t</DHParameters>\n";
+	}
 	public double getD() {
-		return d;
+		return getDelta();
 	}
 
 	public double getTheta() {
@@ -53,22 +90,30 @@ public class DHLink {
 	}
 
 	public double getR() {
-		return r;
+		return getRadius();
 	}
 
 	public double getAlpha() {
 		return alpha;
 	}
 	public Matrix DhStepInverseRotory(Matrix end, double jointValue) {	
+		if(degenerate)
+			jointValue=0;
 		return  DhStepInverse(end,jointValue,0);
 	}
 	public Matrix DhStepInversePrismatic(Matrix end, double jointValue) {	
+		if(degenerate)
+			jointValue=0;
 		return  DhStepInverse(end,0,jointValue);
 	}
 	public Matrix DhStepRotory(double jointValue) {	
+		if(degenerate)
+			jointValue=0;
 		return DhStep(jointValue,0);
 	}
 	public Matrix DhStepPrismatic(double jointValue) {
+		if(degenerate)
+			jointValue=0;
 		
 		return DhStep(0,jointValue);
 	}
@@ -81,6 +126,7 @@ public class DHLink {
 		step = step.times(getRotZ());
 		step = step.times(getTransX());
 		step = step.times(getRotX());
+		
 
 		return step;
 	}
@@ -217,10 +263,10 @@ public class DHLink {
 	@Override 
 	public String toString(){
 		String s="";
-		s+=" Delta = "+d;
-		s+=" Theta = "+Math.toDegrees(theta)+" deg";
-		s+=" Radius = "+r;
-		s+=" Alpha = "+Math.toDegrees(alpha)+" deg";
+		s+=" Delta = "+getDelta();
+		s+=" Theta = "+Math.toDegrees(getTheta())+" deg";
+		s+=" Radius = "+getRadius();
+		s+=" Alpha = "+Math.toDegrees(getAlpha())+" deg";
 		return s;
 	}
 
@@ -230,6 +276,52 @@ public class DHLink {
 
 	void setListener(Affine listener) {
 		this.listener = listener;
+	}
+	public Affine getRootListener() {
+		return root;
+	}
+
+	void setRootListener(Affine listener) {
+		this.root = listener;
+	}
+	public double getDelta() {
+		return d;
+	}
+
+	public void setDelta(double d) {
+		this.d = d;
+	}
+
+	public double getRadius() {
+		return radius;
+	}
+
+	public void setRadius(double radius) {
+		this.radius = radius;
+		transX_J=null;
+		transX=null;
+	}
+
+	public void setTheta(double theta) {
+		this.theta = theta;
+	}
+
+	public void setAlpha(double alpha) {
+		this.alpha = alpha;
+		rotX=null;
+		rotX_J=null;
+	}
+
+	public boolean isDegenerate() {
+		return degenerate;
+	}
+
+	public void setDegenerate(boolean degenerate) {
+		this.degenerate = degenerate;
+	}
+
+	public void setMobileBaseXml(MobileBase embedableXml) {
+		this.embedableXml = embedableXml;
 	}
 
 }

@@ -362,7 +362,7 @@ public class DyIOChannel implements IDyIOChannel {
 		}
 		this.current = e;
 		for(int i=0;i<modeListeners.size();i++) {
-			Log.debug("Notifying: "+modeListeners.get(i).getClass());
+			//Log.debug("Notifying: "+modeListeners.get(i).getClass());
 			modeListeners.get(i).onModeChange(e);
 		}
 	}

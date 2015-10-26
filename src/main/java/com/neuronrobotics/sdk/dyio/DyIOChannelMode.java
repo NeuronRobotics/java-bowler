@@ -93,6 +93,20 @@ public enum DyIOChannelMode implements ISendable {
     	return lookup.get(code);
     }
     
+    /**
+   	 * 
+   	 * 
+   	 * @param code
+   	 * @return
+   	 */
+	public static DyIOChannelMode getFromSlug(String slug) {
+		for (DyIOChannelMode cm : EnumSet.allOf(DyIOChannelMode.class)) {
+			if(cm.toSlug().toLowerCase().contentEquals(slug.toLowerCase()))
+				return cm;
+		}
+		throw new RuntimeException("No mode availible for slug: "+slug);
+	}
+    
     /* (non-Javadoc)
      * @see java.lang.Enum#toString()
      */

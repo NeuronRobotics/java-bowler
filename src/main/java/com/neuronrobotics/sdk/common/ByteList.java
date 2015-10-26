@@ -16,6 +16,7 @@
 
 import java.nio.ByteBuffer;
 import java.nio.LongBuffer;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -28,24 +29,24 @@ import com.neuronrobotics.sdk.config.SDKBuildInfo;
 /**
  * The Class ByteList.
  */
-public class ByteList implements ISendable, List<Byte> {
+public class ByteList implements ISendable,Iterable<Byte> {
 	
-	private static boolean useStaticBuffer = true;
+	private static final boolean useStaticBuffer = true;
 	private int staticBufferSize = BowlerDatagram.MAX_PACKET_SIZE;
 	private byte [] staticBuffer = new byte[staticBufferSize];
 	private int staticBufferReadPointer = 0;
 	private int staticBufferWritePointer = 0;
 	
 	/** The store. */
-	private List<Byte> store = new Vector<Byte>();
+	private List<Byte> store = new ArrayList<Byte>();
 
 	/**
 	 * Default constructor.
 	 * Constructs a ByteList that has no data.
 	 */
 	public ByteList() {
-		if (SDKBuildInfo.isLinux() && SDKBuildInfo.isARM())
-			useStaticBuffer = true;
+//		if (SDKBuildInfo.isLinux() && SDKBuildInfo.isARM())
+//			useStaticBuffer = true;
 		if(isUseStaticBuffer()){
 			//Log.debug("Starting Static ByteList");
 			setStaticBufferSize(staticBufferSize);
@@ -691,7 +692,11 @@ public class ByteList implements ISendable, List<Byte> {
 	public List<Byte> subList(int fromIndex, int toIndex) {
 		if(isUseStaticBuffer()){
 			byte [] content = getBytes(fromIndex, toIndex-fromIndex);
-			return new ByteList(content);
+			ArrayList<Byte> back = new ArrayList<Byte>();
+			for(int i=0;i<content.length;i++){
+				back.add(content[i]);
+			}
+			return back;
 		}
 		return store.subList(fromIndex, toIndex);
 	}
@@ -944,7 +949,7 @@ public class ByteList implements ISendable, List<Byte> {
 	}
 
 	public static void setUseStaticBuffer(boolean useStaticBuffer) {
-		ByteList.useStaticBuffer =true;
+		//ByteList.useStaticBuffer =true;
 	}
 
 	public int getStaticBufferSize() {

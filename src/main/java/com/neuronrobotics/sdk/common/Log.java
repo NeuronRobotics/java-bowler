@@ -194,6 +194,16 @@ public class Log {
 	 * @param debugprint the debugprint
 	 */
 	
+	public static void enableDebugPrint(boolean flag) {
+		Log.enableSystemPrint(flag);
+		Log.setMinimumPrintLevel(DEBUG);
+	}
+	/**
+	 * Enable printing of debug output.
+	 *
+	 * @param debugprint the debugprint
+	 */
+	
 	public static void enableInfoPrint() {
 		Log.enableSystemPrint(true);
 		Log.setMinimumPrintLevel(INFO);

@@ -4,6 +4,11 @@ import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
+import javafx.application.Platform;
+import javafx.scene.transform.Affine;
+
+import javax.management.RuntimeErrorException;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -11,6 +16,7 @@ import org.w3c.dom.NodeList;
 
 import Jama.Matrix;
 
+import com.neuronrobotics.sdk.addons.kinematics.gui.TransformFactory;
 import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
@@ -38,8 +44,13 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 
 	private ArrayList<ITaskSpaceUpdateListenerNR> taskSpaceUpdateListeners = new ArrayList<ITaskSpaceUpdateListenerNR>();
 	protected ArrayList<IJointSpaceUpdateListenerNR> jointSpaceUpdateListeners = new ArrayList<IJointSpaceUpdateListenerNR>();
-	private ArrayList<IRegistrationListenerNR> regListeners= new ArrayList<IRegistrationListenerNR>();	
-	private ArrayList<LinkConfiguration> localConfigsFromXml=new ArrayList<LinkConfiguration>();
+	private ArrayList<IRegistrationListenerNR> regListeners= new ArrayList<IRegistrationListenerNR>();
+	private ArrayList<MobileBase> mobileBases = new ArrayList<MobileBase>();
+	
+	private String [] dhEngine =new String[]{"bcb4760a449190206170","DefaultDhSolver.groovy"}; 
+	private String [] cadEngine =new String[]{"bcb4760a449190206170","ThreeDPrintCad.groovy"};  
+
+
 	/*This is in RAW joint level ticks*/
 	protected double[] currentJointSpacePositions=null;
 	protected double [] currentJointSpaceTarget;
@@ -49,6 +60,24 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	
 	private boolean noFlush = false;
 	private boolean noXmlConfig=true;
+	private DHChain dhParametersChain=null;
+	
+	private Affine root = new Affine();
+	
+	/* The device */
+	//private IPIDControl device =null;
+	private LinkFactory factory=null;
+	
+	private int retryNumberBeforeFail = 5;
+	
+	
+	public Affine getRootListener() {
+		return root;
+	}
+
+	void setRootListener(Affine listener) {
+		this.root = listener;
+	}
 	
 	/**
 	 * This method tells the connection object to disconnect its pipes and close out the connection. Once this is called, it is safe to remove your device.
@@ -78,11 +107,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		return connectDevice();
 	}
 		
-	/* The device */
-	//private IPIDControl device =null;
-	private LinkFactory factory=null;
-	
-	private int retryNumberBeforeFail = 5;
+
 	public AbstractKinematicsNR(){
 //		File l = new File("RobotLog_"+getDate()+"_"+System.currentTimeMillis()+".txt");
 //		//File e = new File("RobotError_"+getDate()+"_"+System.currentTimeMillis()+".txt");
@@ -93,16 +118,37 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 //		} catch (FileNotFoundException e1) {
 //			e1.printStackTrace();
 //		}
+		setDhParametersChain(new DHChain( this));
 	}
 	public AbstractKinematicsNR(InputStream configFile,LinkFactory f){
 		this();
-		noXmlConfig=false;
-		if(configFile!=null && f!=null){
-			loadConfig(configFile);
-			setDevice(f);
+		Document doc =XmlFactory.getAllNodesDocument(configFile);
+		NodeList nodListofLinks = doc.getElementsByTagName("appendage");
+		for (int i = 0; i < 1; i++) {			
+		    Node linkNode = nodListofLinks.item(i);
+		    if (linkNode.getNodeType() == Node.ELEMENT_NODE) {
+				noXmlConfig=false;
+				if(configFile!=null && f!=null){
+					setDevice(f,loadConfig((Element) linkNode));
+				}
+		    }else{
+		    	Log.info("Not Element Node");
+		    }
 		}
+
 		
 	}
+	
+	public AbstractKinematicsNR(Element doc,LinkFactory f){
+		this();
+		noXmlConfig=false;
+		if(doc!=null && f!=null){
+			setDevice(f,loadConfig(doc));
+		}
+
+		
+	}
+	
 	private String getDate(){
 		Timestamp t = new Timestamp(System.currentTimeMillis());
 		return t.toString().split("\\ ")[0];
@@ -111,74 +157,113 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 * Load XML configuration file, 
 	 * then store in LinkConfiguration (ArrayList type)
 	 */
-	protected void loadConfig(InputStream config){
-
-		Document doc =XmlFactory.getAllNodesDocument(config);
-		NodeList nList = doc.getElementsByTagName("link");
-		NodeList zf = 	 doc.getElementsByTagName("ZframeToRAS");
-		NodeList bf = 	 doc.getElementsByTagName("baseToZframe");
+	protected ArrayList<LinkConfiguration> loadConfig(Element doc){
+		ArrayList<LinkConfiguration> localConfigsFromXml=new ArrayList<LinkConfiguration>();
 		
-		for (int i = 0; i < nList.getLength(); i++) {			
-		    Node nNode = nList.item(i);
-		    if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-		    	getLinkConfigurations().add(new LinkConfiguration((Element) nNode));
-		    }else{
-		    	Log.info("Not Element Node");
+		
+		NodeList nodListofLinks = doc.getChildNodes();
+		setCadEngine(getGistCodes( doc,"cadEngine"));
+		setDhEngine(getGistCodes( doc,"kinematics"));
+		for (int i = 0; i < nodListofLinks .getLength(); i++) {			
+		    Node linkNode = nodListofLinks.item(i);
+		    
+		    if (linkNode.getNodeType() == Node.ELEMENT_NODE && linkNode.getNodeName().contentEquals("link")) {
+		    	localConfigsFromXml.add(new LinkConfiguration((Element) linkNode));
+		    	
+		    	NodeList dHParameters =linkNode.getChildNodes();
+				for (int x = 0; x < dHParameters .getLength(); x++) {			
+				    Node nNode = dHParameters.item(x);
+				    if (nNode.getNodeType() == Node.ELEMENT_NODE && nNode.getNodeName().contentEquals("DHParameters")) {
+				    	Element dhNode =(Element)	nNode;
+				    	DHLink newLink = new DHLink(dhNode);
+				    	getDhParametersChain().addLink(newLink);//0->1
+				    	NodeList mobileBasesNodeList = dhNode.getChildNodes();
+						for (int j = 0; j < mobileBasesNodeList.getLength(); j++) {			
+						    Node mb = mobileBasesNodeList.item(j);
+						    if (mb.getNodeType() == Node.ELEMENT_NODE && mb.getNodeName().contentEquals("mobilebase")) {
+						    	final MobileBase newMobileBase = new MobileBase((Element)mb);
+						    	mobileBases.add(newMobileBase);
+						    	newLink.setMobileBaseXml(newMobileBase);
+						    	newLink.addDhLinkPositionListener(new IDhLinkPositionListener() {
+									@Override
+									public void onLinkGlobalPositionChange(TransformNR newPose) {
+										Log.debug("Motion in the D-H link has caused this mobile base to move");
+										newMobileBase.setGlobalToFiducialTransform(newPose);
+									}
+								});
+						    }
+						}
+				    }
+				}
+		    }else if (linkNode.getNodeType() == Node.ELEMENT_NODE && linkNode.getNodeName().contentEquals("name")) {
+		    	try{
+		    		setScriptingName(XmlFactory.getTagValue("name",doc));
+		    	}catch(Exception E){
+		    		E.printStackTrace();
+		    	}
 		    }
-		}
-		
-		try{
-			Node zframeToRASConfig = zf.item(0);
-			if(zframeToRASConfig!=null)
-		    if (zframeToRASConfig.getNodeType() == Node.ELEMENT_NODE) {
-		    	Element eElement = (Element)zframeToRASConfig;	    		    
+		    else if (linkNode.getNodeType() == Node.ELEMENT_NODE && linkNode.getNodeName().contentEquals("ZframeToRAS")) {
+		    	Element eElement = (Element)linkNode;	    		    
 		    	setZframeToGlobalTransform(new TransformNR(	Double.parseDouble(XmlFactory.getTagValue("x",eElement)),
 							    			Double.parseDouble(XmlFactory.getTagValue("y",eElement)),
 							    			Double.parseDouble(XmlFactory.getTagValue("z",eElement)), 
-							    			new RotationNR(	Double.parseDouble(XmlFactory.getTagValue("rotw",eElement)),
+							    			new RotationNR(new double[]{	Double.parseDouble(XmlFactory.getTagValue("rotw",eElement)),
 							    							Double.parseDouble(XmlFactory.getTagValue("rotx",eElement)),
 							    							Double.parseDouble(XmlFactory.getTagValue("roty",eElement)),
-							    							Double.parseDouble(XmlFactory.getTagValue("rotz",eElement)))));	    	
-		    }else{
-		    	throw new RuntimeException("No Z frame to RAS transform defined");
-		    }
-		}catch (Exception ex){
-			ex.printStackTrace();
-			Log.warning("No Z frame to RAS transform defined");
-		}
-		
-		try{
-			
-		    Node baseToZframeConfig = bf.item(0);
-		    if(baseToZframeConfig!=null)
-		    if (baseToZframeConfig.getNodeType() == Node.ELEMENT_NODE) {
-		    	Element eElement = (Element)baseToZframeConfig;	    	    
+							    							Double.parseDouble(XmlFactory.getTagValue("rotz",eElement))})));	
+		    }else if (linkNode.getNodeType() == Node.ELEMENT_NODE && linkNode.getNodeName().contentEquals("baseToZframe")) {
+		    	Element eElement = (Element)linkNode;	    	    
 		    	setBaseToZframeTransform(new TransformNR(	Double.parseDouble(XmlFactory.getTagValue("x",eElement)),
 							    			Double.parseDouble(XmlFactory.getTagValue("y",eElement)),
 							    			Double.parseDouble(XmlFactory.getTagValue("z",eElement)), 
-							    			new RotationNR(	Double.parseDouble(XmlFactory.getTagValue("rotw",eElement)),
+							    			new RotationNR(new double[]{	Double.parseDouble(XmlFactory.getTagValue("rotw",eElement)),
 							    							Double.parseDouble(XmlFactory.getTagValue("rotx",eElement)),
 							    							Double.parseDouble(XmlFactory.getTagValue("roty",eElement)),
-							    							Double.parseDouble(XmlFactory.getTagValue("rotz",eElement)))));	    	
+							    							Double.parseDouble(XmlFactory.getTagValue("rotz",eElement))})));	 
 		    }else{
-		    	throw new RuntimeException("No base to Z frame transform defined");
+		    	//System.err.println(linkNode.getNodeName());
+		    	Log.error("Node not known: "+linkNode.getNodeName());
 		    }
-		}catch (Exception ex){
-			ex.printStackTrace();
-			Log.warning("No base to Z frame transform defined");
 		}
+
 		
+		return localConfigsFromXml;
 	}
+	
+	/*
+	 * 
+	 * Generate the xml configuration to generate an XML of this robot. 
+	 */
+	public String getXml(){
+		String xml = "<root>\n";
+		xml+="\n<appendage>";
+		xml+="\n<name>"+getScriptingName()+"</name>\n";
+		for(int i=0;i<getLinkConfigurations().size();i++){
+			xml+="<link>\n";
+			xml+=getLinkConfiguration(i).getXml();
+			xml+="\n</link>\n";
+		}
+		xml+="\n<ZframeToRAS>\n";
+		xml+=getFiducialToGlobalTransform().getXml();
+		xml+="\n</ZframeToRAS>\n";
+		
+		xml+="\n<baseToZframe>\n";
+		xml+=getRobotToFiducialTransform().getXml();
+		xml+="\n</baseToZframe>\n";
+		xml+="\n</appendage>";
+		xml+="\n</root>";
+		return xml;
+	}
+
 
 	public LinkConfiguration getLinkConfiguration(int linkIndex){
 		return getLinkConfigurations().get(linkIndex);
 	}
 	
 	public ArrayList<LinkConfiguration> getLinkConfigurations() {
-		if(noXmlConfig){
-			return getFactory().getLinkConfigurations();
-		}
-		return localConfigsFromXml;
+
+		return getFactory().getLinkConfigurations();
+	
 	}
 
 	
@@ -192,17 +277,19 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	protected LinkFactory getDevice(){
 		return getFactory();
 	}
-	
-	protected void setDevice(LinkFactory f){
+	public AbstractLink getAbstractLink(int index){
+		return getFactory().getLink(getLinkConfiguration(index));
+	}
+	protected void setDevice(LinkFactory f, ArrayList<LinkConfiguration> linkConfigs){
 		Log.info("Loading device: "+f.getClass()+" "+f);
 		setFactory(f);
 		//Log.enableDebugPrint(true);
-		for(int i=0;i<getLinkConfigurations().size();i++){
-			LinkConfiguration c = getLinkConfigurations().get(i);
+		for(int i=0;i<linkConfigs.size();i++){
+			LinkConfiguration c = linkConfigs.get(i);
 			c.setLinkIndex(i);
 			getFactory().getLink(c);
 			Log.info("\nAxis #"+i+" Configuration:\n"+c);
-			if(c.getType().contains("pid")){
+			if(c.getType()==LinkType.PID){
 				IPidControlNamespace device = getFactory().getPid();
 				try{
 					PIDConfiguration tmpConf = device.getPIDConfiguration(c.getHardwareIndex());
@@ -224,7 +311,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 					//Send configuration for ONE axis
 					device.ConfigurePIDController(tmpConf);		
 				}catch(Exception ex){				
-					System.err.println("Configuration #"+i+" failed!!");
+					Log.error("Configuration #"+i+" failed!!");
 					ex.printStackTrace();
 				}
 				device.addPIDEventListener(this);
@@ -232,6 +319,15 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		}
 		getCurrentTaskSpaceTransform();
 		getFactory().addLinkListener(this);
+		getDhParametersChain().setFactory(getFactory());
+		
+		
+		
+
+		//filling up the d-h parameters so the chain sizes match
+		while(getDhParametersChain().getLinks().size() < linkConfigs.size()){
+			getDhParametersChain().addLink(new DHLink(0,0,0,0));
+		}
 	}
 	/**
 	 * Gets the number of links defined in the configuration file
@@ -248,6 +344,8 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 */
 	public TransformNR getCurrentTaskSpaceTransform() {
 		TransformNR fwd  = forwardKinematics(getCurrentJointSpaceVector());
+		if(fwd==null)
+			throw new RuntimeException("Implementations of the kinematics need to return a transform not null");
 		//Log.info("Getting robot task space "+fwd);
 		TransformNR taskSpaceTransform=forwardOffset(fwd);
 		//Log.info("Getting global task space "+taskSpaceTransform);
@@ -292,13 +390,39 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 * @return The joint space vector is returned for target arrival referance
 	 * @throws Exception If there is a workspace error
 	 */
-	public double[] setDesiredTaskSpaceTransform(TransformNR taskSpaceTransform, double seconds) throws Exception{
+	public double[]  setDesiredTaskSpaceTransform(TransformNR taskSpaceTransform, double seconds) throws Exception{
 		Log.info("Setting target pose: "+taskSpaceTransform);
 		setCurrentPoseTarget(taskSpaceTransform);
 		taskSpaceTransform = inverseOffset(taskSpaceTransform);
 		double [] jointSpaceVect = inverseKinematics(taskSpaceTransform);
+		if(jointSpaceVect==null)
+			throw new RuntimeException("The kinematics model muts return and array, not null");
 		setDesiredJointSpaceVector(jointSpaceVect,  seconds);
 		return jointSpaceVect;
+	}
+	
+	/**
+	 * Checks the desired pose for ability for the IK to calculate a valid pose
+	 * @param taskSpaceTransform
+	 * @return True if pose is reachable, false if it is not
+	 */
+	public boolean checkTaskSpaceTransform(TransformNR taskSpaceTransform) {
+		try{
+			Log.info("Checking target pose: "+taskSpaceTransform);
+			taskSpaceTransform = inverseOffset(taskSpaceTransform);
+			double [] jointSpaceVect = inverseKinematics(taskSpaceTransform);
+			double[] uLim=factory.getUpperLimits();
+			double[] lLim=factory.getLowerLimits();
+			for(int i=0;i<jointSpaceVect.length;i++){
+				if(jointSpaceVect[i]>uLim[i])
+					return false;
+				if(jointSpaceVect[i]<lLim[i])
+					return false;
+			}
+		}catch(Exception ex){
+			return false;
+		}
+		return true;
 	}
 	
 	/**
@@ -308,7 +432,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 * @return The joint space vector is returned for target arrival referance
 	 * @throws Exception If there is a workspace error
 	 */
-	public double[] setDesiredJointSpaceVector(double[] jointSpaceVect, double seconds) throws Exception{
+	public synchronized double[] setDesiredJointSpaceVector(double[] jointSpaceVect, double seconds) throws Exception{
 		if(jointSpaceVect.length != getNumberOfLinks()){
 			throw new IndexOutOfBoundsException("Vector must be "+getNumberOfLinks()+" links, actual number of links = "+jointSpaceVect.length); 
 		}
@@ -350,6 +474,16 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		return jointSpaceVect;
 	}
 	
+	public TransformNR calcForward(double[] jointSpaceVect){
+		return forwardOffset(forwardKinematics(jointSpaceVect));
+	}
+	public TransformNR calcHome(){
+		double homevect[] = new double[getNumberOfLinks()];
+		for(int i=0;i<homevect.length;i++){
+			homevect[i]=0;
+		}
+		return forwardOffset(forwardKinematics(homevect));
+	}
 	/**
 	 * Sets an individual target joint position 
 	 * @param axis the joint index to set
@@ -432,12 +566,19 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		return fiducial2RAS;
 	}
 
-	private void setBaseToZframeTransform(TransformNR baseToFiducial) {
+	public void setBaseToZframeTransform(TransformNR baseToFiducial) {
 		Log.info("Setting Fiducial To base Transform "+baseToFiducial);
 		this.base2Fiducial = baseToFiducial;
 		for(IRegistrationListenerNR r: regListeners){
 			r.onBaseToFiducialUpdate(this, baseToFiducial);
 		}
+		Platform.runLater(new Runnable() {
+			
+			@Override
+			public void run() {
+				TransformFactory.getTransform(forwardOffset(new TransformNR()), root);
+			}
+		});
 	}
 	
 	private void setZframeToGlobalTransform(TransformNR fiducialToRAS) {
@@ -452,9 +593,17 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	public void setGlobalToFiducialTransform(TransformNR frameToBase) {
 		Log.info("Setting Global To Fiducial Transform "+frameToBase);
 		this.fiducial2RAS = frameToBase;
+	
 		for(IRegistrationListenerNR r: regListeners){
 			r.onFiducialToGlobalUpdate(this, frameToBase);
 		}
+		Platform.runLater(new Runnable() {
+			
+			@Override
+			public void run() {
+				TransformFactory.getTransform(forwardOffset(new TransformNR()), root);
+			}
+		});
 	}
 	
 	protected TransformNR inverseOffset(TransformNR t){
@@ -464,7 +613,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		Matrix ztr = getRobotToFiducialTransform().getMatrixTransform().inverse();
 
 		Matrix current = t.getMatrixTransform();
-		Matrix mForward = rtz.times(ztr).times(current);
+		Matrix mForward = ztr.times(rtz).times(current);
 		
 		return new TransformNR( mForward);
 	}
@@ -473,9 +622,10 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		Matrix ftb = getFiducialToGlobalTransform().getMatrixTransform();
 		Matrix current = t.getMatrixTransform();
 		Matrix mForward = ftb.times(btt).times(current);
-		
 		return new TransformNR( mForward);
 	}
+	
+	
 	
 	public void addJointSpaceListener(IJointSpaceUpdateListenerNR l){
 		if(jointSpaceUpdateListeners.contains(l) || l==null)
@@ -500,7 +650,6 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	
 	public void addPoseUpdateListener(ITaskSpaceUpdateListenerNR l){
 		if(taskSpaceUpdateListeners.contains(l) || l==null){
-			new RuntimeException("not adding "+l.getClass().getName()).printStackTrace();
 			return;
 		}
 		//new RuntimeException("adding "+l.getClass().getName()).printStackTrace();
@@ -563,6 +712,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 * @param link The link to be homed
 	 */
 	private long homeTime;
+
 	private void runHome(PIDChannel joint, int tps){
 		IPIDEventListener listen = new IPIDEventListener() {
 			
@@ -595,7 +745,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 			throw new IndexOutOfBoundsException("There are only "+getNumberOfLinks()+" known links, requested:"+link);
 		}
 		LinkConfiguration conf = getLinkConfiguration(link);
-		if(conf.getType().contains("pid")){
+		if(conf.getType() == LinkType.PID){
 			getFactory().getPid().removePIDEventListener(this);
 			//Range is in encoder units
 			double range = Math.abs(conf.getUpperLimit()-conf.getLowerLimit())*2;
@@ -682,6 +832,8 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		this.factory = factory;
 	}
 	public LinkFactory getFactory() {
+		if(factory==null)
+			factory=new LinkFactory();
 		return factory;
 	}
 	public void setNoFlush(boolean noFlush) {
@@ -703,6 +855,71 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 			if(getLinkConfiguration(i).getHardwareIndex() == arg0.getLinkConfiguration().getHardwareIndex())
 				fireJointSpaceLimitUpdate(i,new JointLimit(i, arg1, arg0.getLinkConfiguration()));
 		}
+	}
+
+	public void setRobotToFiducialTransform(TransformNR newTrans) {
+		setBaseToZframeTransform(newTrans);
+	}
+
+	public DHChain getDhParametersChain() {
+		return dhParametersChain;
+	}
+
+	public void setDhParametersChain(DHChain dhParametersChain) {
+		this.dhParametersChain = dhParametersChain;
+	}
+	
+	public String [] getDhEngine() {
+		return dhEngine;
+	}
+
+	public void setDhEngine(String [] dhEngine) {
+		if(dhEngine!=null && dhEngine[0]!=null &&dhEngine[1]!=null)
+			this.dhEngine = dhEngine;
+	}
+
+	public String [] getCadEngine() {
+		return cadEngine;
+	}
+
+	public void setCadEngine(String [] cadEngine) {
+		if(cadEngine!=null&& cadEngine[0]!=null &&cadEngine[1]!=null)
+		this.cadEngine = cadEngine;
+	}
+	
+	protected String getCode(Element e,String tag){
+		try{
+			NodeList nodListofLinks = e.getChildNodes();
+			
+			for (int i = 0; i < nodListofLinks .getLength(); i++) {			
+			    Node linkNode = nodListofLinks.item(i);
+			   if (linkNode.getNodeType() == Node.ELEMENT_NODE && linkNode.getNodeName().contentEquals(tag)) {
+			    	return XmlFactory.getTagValue(tag,e);
+			    }
+			}
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+		throw new RuntimeException("No tag "+tag+" found");
+	}
+	
+	protected String [] getGistCodes(Element doc,String tag){
+		String [] content =new String[2];
+		try{
+			NodeList nodListofLinks = doc.getChildNodes();
+			for (int i = 0; i < nodListofLinks.getLength(); i++) {			
+			    Node linkNode = nodListofLinks.item(i);
+			    if (linkNode.getNodeType() == Node.ELEMENT_NODE&& linkNode.getNodeName().contentEquals(tag)) {
+			    	Element e = (Element) linkNode;
+			    	content[0]=getCode( e,"gist");
+			    	content[1]=getCode( e,"file");
+			    }
+			}
+			return content;
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 }

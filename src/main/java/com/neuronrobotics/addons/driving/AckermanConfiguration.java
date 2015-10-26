@@ -10,7 +10,21 @@ public class AckermanConfiguration {
 	private double maxTicksPerSeconds = 200;
 	private double wheelbase = 16.5*2.54;//cm
 	private double servoToSteerAngle=1;
-
+	
+	public AckermanConfiguration(){
+		//use defaults
+	}
+	public AckermanConfiguration(	double ticksPerRevolution,
+									double wheelDiameter,
+									double maxTicksPerSeconds ,
+									double wheelbase,
+									double scale){
+		this.ticksPerRevolution=ticksPerRevolution;
+		this.wheelDiameter = wheelDiameter;
+		this.maxTicksPerSeconds =maxTicksPerSeconds ;
+		this.wheelbase = wheelbase;
+		this.servoToSteerAngle = scale;
+	}
 	public void setMaxTicksPerSeconds(double maxTicksPerSeconds) {
 		this.maxTicksPerSeconds = maxTicksPerSeconds;
 	}

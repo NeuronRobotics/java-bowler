@@ -5,12 +5,14 @@ import com.neuronrobotics.sdk.pid.PIDEvent;
 public class AckermanDefaultKinematics implements IAckermanBotKinematics{
 	private int currentDriveTicks=0;
 	
-	protected final AckermanConfiguration config = new AckermanConfiguration();
+	protected AckermanConfiguration config = new AckermanConfiguration();
 	
 	public AckermanDefaultKinematics(){
 
 	}
-	
+	public AckermanDefaultKinematics(AckermanConfiguration config ){
+		this.config =  config; 
+	}
 	public AckermanBotDriveData DriveStraight(double cm, double seconds) {
 		return new AckermanBotDriveData(0, config.convertToTicks(cm), seconds);
 	}

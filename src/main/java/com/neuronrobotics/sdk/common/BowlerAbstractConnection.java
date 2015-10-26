@@ -56,7 +56,7 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
 public abstract class BowlerAbstractConnection {
 	
 	//private boolean threadedUpstreamPackets=false;
-	private static boolean useThreadedStack=true;
+	private boolean useThreadedStack=true;
 	
 	/** The sleep time. */
 	private int sleepTime = 1000;
@@ -189,6 +189,7 @@ public abstract class BowlerAbstractConnection {
 		
 		if (getLastSyncronousResponse() == null){
 			Log.error("No response from device, no response in "+(System.currentTimeMillis()-startOfReciveTime)+" ms");
+			new RuntimeException().printStackTrace();
 			if(switchParser){
 				if( BowlerDatagram.isUseBowlerV4()){
 					//If the ping fails to get a response, try the older bowler format
@@ -203,7 +204,7 @@ public abstract class BowlerAbstractConnection {
 		}
 		BowlerDatagram b = getLastSyncronousResponse();
 		clearLastSyncronousResponse();
-		//executingLock.unlock();
+
 		return b;
 	}
 	
@@ -322,7 +323,7 @@ public abstract class BowlerAbstractConnection {
 				@Override
 				public void run() {
 					if(isConnected()){
-						System.out.println("WARNING: Bowler devices should be shut down before exit");
+						//System.out.println("WARNING: Bowler devices should be shut down before exit");
 						disconnect();
 					}
 				}
@@ -389,7 +390,7 @@ public abstract class BowlerAbstractConnection {
 	 *
 	 * @param data the data
 	 */
-	protected void onDataReceived(BowlerDatagram data) {
+	public void onDataReceived(BowlerDatagram data) {
 		if(data.isSyncronous()) {
 			
 			if(syncListen!=null){
@@ -646,8 +647,8 @@ public abstract class BowlerAbstractConnection {
 		return null;
 	}
 	
-	public BowlerAbstractCommand getCommand(String namespace,BowlerMethod method, String rpcString, Object[] arguments){
-		RpcEncapsulation rpc =  locateRpc(namespace, method, rpcString);
+	public static  BowlerAbstractCommand getCommand(String namespace,BowlerMethod method, String rpcString, Object[] arguments,RpcEncapsulation rpc){
+		
 		if(rpc != null)
 			return rpc.getCommand(arguments);
 		
@@ -675,12 +676,15 @@ public abstract class BowlerAbstractConnection {
 		if(namespaceList == null){
 			getNamespaces(addr);
 		}
-		BowlerAbstractCommand command = getCommand(namespace, method, rpcString,arguments);
+		RpcEncapsulation rpc =  locateRpc(namespace, method, rpcString);
+		BowlerAbstractCommand command = getCommand(namespace, method, rpcString,arguments,rpc);
 		
 		if(command != null){
 			BowlerDatagram dg =  send(command,addr,retry);
 			if(dg!=null){
 				addr.setValues(dg.getAddress());
+			}else{
+				throw new BowlerRuntimeException("Device failed to respond");
 			}
 			Object [] en =parseResponse(namespace, method, rpcString,dg);//parse and return
 			BowlerDatagramFactory.freePacket(dg);
@@ -948,14 +952,20 @@ public abstract class BowlerAbstractConnection {
 					//if(!ret.getRPC().contains("_err"))
 					
 					return ret;
-				}else{
-					 throw new InvalidResponseException("No response from device");
 				}
-			}catch(MalformattedDatagram |InvalidResponseException | NullPointerException e){
+			}catch(MalformattedDatagram e){
 				Log.error("Sending Synchronus packet and there was a failure, will retry "+(retry-i-1)+" more times");
 				ThreadUtil.wait(150*i);	
 
+			} catch (InvalidResponseException e) {
+				Log.error("Sending Synchronus packet and there was a failure, will retry "+(retry-i-1)+" more times");
+				ThreadUtil.wait(150*i);
+			} catch (NullPointerException e) {
+				Log.error("Sending Synchronus packet and there was a failure, will retry "+(retry-i-1)+" more times");
+				ThreadUtil.wait(150*i);
 			}
+			// Toggle chackeing for different protocol versions while fail checking
+			//BowlerDatagram.setUseBowlerV4(i%2==0);
 
 		}
 		return null;
@@ -1034,6 +1044,7 @@ public abstract class BowlerAbstractConnection {
 			BowlerDatagram bd = send(new PingCommand(),mac,5,switchParser);
 			if(bd !=null){
 				BowlerDatagramFactory.freePacket(bd);
+				startHeartBeat();
 				return true;
 			}
 		} catch (InvalidResponseException e) {
@@ -1071,7 +1082,7 @@ public abstract class BowlerAbstractConnection {
 				}
 			}catch(Exception e){
 				Log.debug("Ping failed, disconnecting");
-
+				disconnect();
 			}
 		}
 	}
@@ -1179,7 +1190,7 @@ public abstract class BowlerAbstractConnection {
 			//throw new RuntimeException();
 		}
 		
-		private boolean runPacketUpdate() {
+		private boolean  runPacketUpdate() {
 			try {
 				BowlerDatagram bd = loadPacketFromPhy(bytesToPacketBuffer);
 				if(bd!=null){
@@ -1187,12 +1198,13 @@ public abstract class BowlerAbstractConnection {
 					onDataReceived(bd);
 					bytesToPacketBuffer=new ByteList();
 				}
-			} catch (IOException e) {
+			} catch (Exception e) {
 				//e.printStackTrace();
 				if(isConnected()){
 					Log.error("Data read failed "+e.getMessage());
 					e.printStackTrace();
 					disconnect();
+					//connect();
 				}
 			}
 			return false;
@@ -1217,12 +1229,12 @@ public abstract class BowlerAbstractConnection {
 		}
 	}
 	
-	public static boolean isUseThreadedStack() {
+	public boolean isUseThreadedStack() {
 		return useThreadedStack;
 	}
 
-	public static void setUseThreadedStack(boolean useThreadedStack) {
-		BowlerAbstractConnection.useThreadedStack = useThreadedStack;
+	public  void setUseThreadedStack(boolean useThreadedStack) {
+		this.useThreadedStack = useThreadedStack;
 	}
 
 	public boolean isBeater() {
@@ -1233,42 +1245,50 @@ public abstract class BowlerAbstractConnection {
 		this.beater = beater;
 	}
 	
-	public BowlerDatagram loadPacketFromPhy(ByteList bytesToPacketBuffer) throws NullPointerException, IOException{
+	public BowlerDatagram  loadPacketFromPhy(ByteList bytesToPacketBuffer) throws NullPointerException, IOException{
 		BowlerDatagram bd=BowlerDatagramFactory.build(bytesToPacketBuffer);
 		if(dataIns!=null){	
-			int have = getDataIns().available();
-			if(have==0)
-				return null;
-			int b,ret =0;
-			
+			int have,b,ret =0;
 			try{
-				for(b=0;b<have;b++){
-					if(bd!=null)
-						Log.error("Adding "+(have-b-1)+" after packet found");
-					ret = getDataIns().read();
-					if(ret<0){
-						Log.error("Stream is broken - unexpected: claimed to have "+getDataIns().available()+" bytes, read in "+b);
-						//reconnect();
-						//something went wrong
-						new RuntimeException(" Buffer attempted to read "+have+" got "+b).printStackTrace();
-						return null;
-					}else{
-						bytesToPacketBuffer.add(ret);
-						if(bd==null)
-							bd = BowlerDatagramFactory.build(bytesToPacketBuffer);
-						if(bd!=null)
-							return bd;
-
-					}
-				
+				synchronized (dataIns) {
+					have = getDataIns().available();
 				}
-			}catch(Exception e){
-				e.printStackTrace();
+				if(have==0)
+					return null;
+			}catch (IOException e){
+				//Log.enableErrorPrint();
+				Log.error("IO Error "+e.getMessage());
+				throw e;
 			}
+		
+			for(b=0;b<have;b++){
+				if(bd!=null)
+					Log.error("Adding "+(have-b-1)+" after packet found");
+				synchronized (dataIns) {
+					ret = getDataIns().read();
+				}
+				
+				if(ret<0){
+					Log.error("Stream is broken - unexpected: claimed to have "+have+" bytes, read in "+b);
+					//reconnect();
+					//something went wrong
+					new RuntimeException(" Buffer attempted to read "+have+" got "+b).printStackTrace();
+					return null;
+				}else{
+					bytesToPacketBuffer.add(ret);
+					if(bd==null)
+						bd = BowlerDatagramFactory.build(bytesToPacketBuffer);
+					if(bd!=null)
+						return bd;
+
+				}
+			
+			}
+
 			//ThreadUtil.wait(1);
 			
 		}else{
-			Log.error("Data In is null");
+			Log.error("Input stream is null");
 		}
 		return bd;
 	}

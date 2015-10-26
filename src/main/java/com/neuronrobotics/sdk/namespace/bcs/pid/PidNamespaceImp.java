@@ -11,7 +11,7 @@ import com.neuronrobotics.sdk.pid.PIDConfiguration;
 import com.neuronrobotics.sdk.pid.PIDEvent;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 
-public class PidNamespaceImp extends GenericPidNamespaceImp implements IExtendedPIDControl  {
+public class PidNamespaceImp extends AbstractPidNamespaceImp implements IExtendedPIDControl  {
 	private final String ns = "bcs.pid.*";
 	
 	

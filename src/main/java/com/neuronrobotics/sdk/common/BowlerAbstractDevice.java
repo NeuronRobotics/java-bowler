@@ -46,7 +46,7 @@ import com.neuronrobotics.sdk.commands.neuronrobotics.dyio.InfoFirmwareRevisionC
  */
 public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	private boolean keepAlive = true;
-	
+	private boolean disconnecting = false;
 	
 	private long lastPacketTime=0;
 	
@@ -54,10 +54,10 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	private BowlerAbstractConnection connection=null;
 	/** The address. */
 	private MACAddress address = new MACAddress(MACAddress.BROADCAST);
-	private static ArrayList<IConnectionEventListener> disconnectListeners = new ArrayList<IConnectionEventListener> ();
+	private static ArrayList<IDeviceConnectionEventListener> disconnectListeners = new ArrayList<IDeviceConnectionEventListener> ();
 	
 	private String scriptingName = "device";
-
+	
 	
 	/**
 	 * Determines if the device is available.
@@ -66,7 +66,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	 * @throws InvalidConnectionException the invalid connection exception
 	 */
 	public boolean isAvailable() throws InvalidConnectionException{
-		return getConnection().isConnected();
+		return getConnection().isConnected()&&disconnecting==false;
 	}
 
 	
@@ -76,36 +76,65 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	 * @param connection the new connection
 	 */
 	protected void fireDisconnectEvent() {
-		for(IConnectionEventListener l:disconnectListeners) {
-			l.onDisconnect(connection);
+		for(IDeviceConnectionEventListener l:getDisconnectListeners()) {
+			l.onDisconnect(getDevice());
 		}
 	}
 	protected void fireConnectEvent() {
-		for(IConnectionEventListener l:disconnectListeners) {
-			l.onConnect(connection);
+		for(IDeviceConnectionEventListener l:getDisconnectListeners()) {
+			l.onConnect(getDevice());
 		}
 	}
 	
-	public void addConnectionEventListener(IConnectionEventListener l ) {
-		if(!disconnectListeners.contains(l)) {
-			disconnectListeners.add(l);
+	public void addConnectionEventListener(final IDeviceConnectionEventListener l ) {
+		if(!getDisconnectListeners().contains(l)) {
+			getDisconnectListeners().add(l);
 		}
 		if(connection !=null)
-		connection.addConnectionEventListener(l);
+		connection.addConnectionEventListener(new IConnectionEventListener() {
+			
+			@Override
+			public void onDisconnect(BowlerAbstractConnection source) {
+				
+				l.onDisconnect(getDevice());
+			}
+			
+			@Override
+			public void onConnect(BowlerAbstractConnection source) {
+				// TODO Auto-generated method stub
+				l.onConnect(getDevice());
+			}
+		});
 	}
-	public void removeConnectionEventListener(IConnectionEventListener l ) {
-		if(disconnectListeners.contains(l)) {
-			disconnectListeners.remove(l);
+	public void removeConnectionEventListener(IDeviceConnectionEventListener l ) {
+		if(getDisconnectListeners().contains(l)) {
+			getDisconnectListeners().remove(l);
 		}
-		if(connection !=null)connection.removeConnectionEventListener(l);
+
+	}
+	private BowlerAbstractDevice getDevice(){
+		return this;
 	}
 	public void setConnection(BowlerAbstractConnection connection) {
 		setThreadedUpstreamPackets(false);
 		if(connection == null) {
 			throw new NullPointerException("Can not use a NULL connection.");
 		}
-		for(IConnectionEventListener i:disconnectListeners) {
-			connection.addConnectionEventListener(i);
+		for(int i=0;i<getDisconnectListeners().size();i++) {
+			final int index = i;
+			connection.addConnectionEventListener(new IConnectionEventListener() {
+				
+				@Override
+				public void onDisconnect(BowlerAbstractConnection source) {
+					getDisconnectListeners().get(index).onDisconnect(getDevice());
+				}
+				
+				@Override
+				public void onConnect(BowlerAbstractConnection source) {
+					// TODO Auto-generated method stub
+					getDisconnectListeners().get(index).onConnect(getDevice());
+				}
+			});
 		}
 		this.connection = connection;
 		connection.addDatagramListener(this);
@@ -130,7 +159,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 				//startHeartBeat();
 			}
 		}
-		startHeartBeat();
+		
 		return this.isAvailable();
 	}
 	
@@ -138,7 +167,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	 * This method tells the connection object to disconnect its pipes and close out the connection. Once this is called, it is safe to remove your device.
 	 */
 	public void disconnect() {
-		
+		disconnecting=true;
 		if (connection != null) {
 			if(connection.isConnected()){
 				Log.info("Disconnecting Bowler Device");
@@ -373,6 +402,16 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 
 	public void setScriptingName(String scriptingName) {
 		this.scriptingName = scriptingName;
+	}
+
+
+	public static ArrayList<IDeviceConnectionEventListener> getDisconnectListeners() {
+		return disconnectListeners;
+	}
+
+
+	public static void setDisconnectListeners(ArrayList<IDeviceConnectionEventListener> disconnectListeners) {
+		BowlerAbstractDevice.disconnectListeners = disconnectListeners;
 	}
 	
 }

@@ -7,7 +7,7 @@ import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
 import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.MACAddress;
-import com.neuronrobotics.sdk.namespace.bcs.pid.GenericPidNamespaceImp;
+import com.neuronrobotics.sdk.namespace.bcs.pid.AbstractPidNamespaceImp;
 import com.neuronrobotics.sdk.namespace.bcs.pid.IExtendedPIDControl;
 import com.neuronrobotics.sdk.namespace.bcs.pid.LegacyPidNamespaceImp;
 import com.neuronrobotics.sdk.namespace.bcs.pid.PidNamespaceImp;
@@ -20,7 +20,7 @@ import com.neuronrobotics.sdk.namespace.bcs.pid.PidNamespaceImp;
  */
 public class GenericPIDDevice extends BowlerAbstractDevice implements IExtendedPIDControl {
 	private boolean isInit=false;
-	private GenericPidNamespaceImp implementation;
+	private AbstractPidNamespaceImp implementation;
 	
 	public GenericPIDDevice() {
 		setAddress(new MACAddress(MACAddress.BROADCAST));
@@ -85,7 +85,11 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IExtendedP
 	public int getPIDChannelCount() {
 		return getImplementation().getNumberOfChannels();
 	}
-
+	
+	//This is added for backward compatibility
+	public int getNumberOfChannels(){
+		return getPIDChannelCount();
+	}
 	@Override
 	public boolean SetPIDSetPoint(int group, int setpoint, double seconds) {
 		return getImplementation().SetPIDSetPoint(group, setpoint, seconds);
@@ -160,11 +164,11 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IExtendedP
 	public void setChannels(ArrayList<PIDChannel> channels) {
 		getImplementation().setChannels(channels);
 	}
-	public GenericPidNamespaceImp getImplementation() {
+	public AbstractPidNamespaceImp getImplementation() {
 		
 
 		if(implementation==null){
-			if(this.getClass() == VirtualGenericPIDDevice.class){
+			if(this instanceof VirtualGenericPIDDevice){
 				setImplementation(new LegacyPidNamespaceImp(this));
 				return implementation;
 			}else{
@@ -180,7 +184,7 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IExtendedP
 		}
 		return implementation;
 	}
-	public void setImplementation(GenericPidNamespaceImp implementation) {
+	public void setImplementation(AbstractPidNamespaceImp implementation) {
 		this.implementation = implementation;
 	}
 	@Override

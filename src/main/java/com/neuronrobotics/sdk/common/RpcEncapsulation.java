@@ -1,5 +1,7 @@
 package com.neuronrobotics.sdk.common;
 
+import com.neuronrobotics.sdk.common.device.server.IBowlerCommandProcessor;
+
 public class RpcEncapsulation {
 
 	private String namespace;
@@ -9,7 +11,7 @@ public class RpcEncapsulation {
 	private BowlerDataType[] upstreamArguments;
 	private BowlerMethod upStreamMethod;
 	private int namespaceIndex;
-
+	private IBowlerCommandProcessor processor;
 	/**
 	 * This is an encapsulation object for a given RPC
 	 * 
@@ -23,6 +25,23 @@ public class RpcEncapsulation {
 	public RpcEncapsulation(int namespaceIndex,String namespace, String rpc, 
 			BowlerMethod downStreamMethod,BowlerDataType[] downstreamArguments, 
 			BowlerMethod upStreamMethod,BowlerDataType[] upstreamArguments){
+		this(namespaceIndex, namespace, rpc, downStreamMethod, downstreamArguments, upStreamMethod, upstreamArguments, null);
+	}
+	
+	/**
+	 * This is an encapsulation object for a given RPC
+	 * 
+	 * @param namespace 			The corosponding Namespace
+	 * @param rpc					The 4 byte RPC code
+	 * @param downStreamMethod		The method for sending messages
+	 * @param downstreamArguments	The array of data types for a downstream message
+	 * @param upStreamMethod		The return method type
+	 * @param upstreamArguments 	THe return method arguments
+	 */
+	public RpcEncapsulation(int namespaceIndex,String namespace, String rpc, 
+			BowlerMethod downStreamMethod,BowlerDataType[] downstreamArguments, 
+			BowlerMethod upStreamMethod,BowlerDataType[] upstreamArguments, IBowlerCommandProcessor processor){
+		this.setProcessor(processor);
 		this.setNamespaceIndex(namespaceIndex);
 		this.setNamespace(namespace);
 		this.setRpc(rpc);
@@ -80,10 +99,18 @@ public class RpcEncapsulation {
 					command.getCallingDataStorage().addAs32(Integer.parseInt(doswnstreamData[i].toString()));
 					break;
 				case I32STR:
-					int [] data32 = (int [])doswnstreamData[i];
-					command.getCallingDataStorage().add(data32.length);
-					for(int i1=0;i1<data32.length;i1++){
-						command.getCallingDataStorage().addAs32(data32[i1]);
+					try{
+						Integer [] data32 = (Integer [])doswnstreamData[i];
+						command.getCallingDataStorage().add(data32.length);
+						for(int i1=0;i1<data32.length;i1++){
+							command.getCallingDataStorage().addAs32(data32[i1]);
+						}
+					}catch (ClassCastException ex){
+						int [] data32 = (int [])doswnstreamData[i];
+						command.getCallingDataStorage().add(data32.length);
+						for(int i1=0;i1<data32.length;i1++){
+							command.getCallingDataStorage().addAs32(data32[i1]);
+						}
 					}
 					break;
 				case FIXED1k_STR:
@@ -96,10 +123,26 @@ public class RpcEncapsulation {
 				case INVALID:
 					break;
 				case STR:
-					ByteList data = (ByteList )doswnstreamData[i];
-					command.getCallingDataStorage().add(data.size());
-					for(int i1=0;i1<data.size();i1++){
-						command.getCallingDataStorage().add(data.get(i1));
+					try{
+						ByteList data = (ByteList )doswnstreamData[i];
+						command.getCallingDataStorage().add(data.size());
+						for(int i1=0;i1<data.size();i1++){
+							command.getCallingDataStorage().add(data.get(i1));
+						}
+					}catch (ClassCastException ex){
+						try{
+							Integer [] data32 = (Integer [])doswnstreamData[i];
+							command.getCallingDataStorage().add(data32.length);
+							for(int i1=0;i1<data32.length;i1++){
+								command.getCallingDataStorage().addAs32(data32[i1]);
+							}
+						}catch (ClassCastException ex1){
+							int [] data32 = (int [])doswnstreamData[i];
+							command.getCallingDataStorage().add(data32.length);
+							for(int i1=0;i1<data32.length;i1++){
+								command.getCallingDataStorage().addAs32(data32[i1]);
+							}
+						}
 					}
 					break;
 				default:
@@ -267,6 +310,8 @@ public class RpcEncapsulation {
 	}
 
 	public void setUpstreamArguments(BowlerDataType[] upstreamArguments) {
+		if(upstreamArguments== null)
+			return;// asynchronus packets have no upstream
 		for(int i=0;i<upstreamArguments.length;i++){
 			if(upstreamArguments[i] == null){
 				throw new RuntimeException("RPC argument can not be null");
@@ -308,6 +353,14 @@ public class RpcEncapsulation {
 
 	public void setNamespaceIndex(int namespaceIndex) {
 		this.namespaceIndex = namespaceIndex;
+	}
+
+	public IBowlerCommandProcessor getProcessor() {
+		return processor;
+	}
+
+	public void setProcessor(IBowlerCommandProcessor processor) {
+		this.processor = processor;
 	}
 
 }

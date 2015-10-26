@@ -199,7 +199,17 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	public boolean setValue(int channel, ByteList value) {
 		return getChannel(channel).setValue(value);
 	}
-
+	/**
+	 * This method is a simple value set for a DyIO channel. This method is unit-less and will clip data to fit the 
+	 * channel modes requirements. 
+	 * 
+	 * @param channel integer representing the index of the channel
+	 * @param value   Unit-less value to set to the DyIO's channel
+	 * @return  true for success
+	 */
+	public boolean setValue(int channel, java.math.BigDecimal value) {
+		return setValue(channel,value.intValue());
+	}
 	/**
 	 * This method is used to get the value of a given channel. The data units will be determined by 
 	 * DyIO channel mode, and so should be treated by this method as unit-less.
@@ -294,7 +304,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	 * This static method can be called before connection a DyIO object to enable the firmware verification step
 	 */
 	public static void enableFWCheck() {
-		checkFirmware=true;
+		//checkFirmware=true;
 	}
 	
 	/**
@@ -425,6 +435,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 //			}
 			
 		}catch (Exception e){
+			e.printStackTrace();
 			checkFirmwareRev();
 		}
 		
@@ -592,11 +603,11 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	 */
 	public void flushCache(double seconds) {
 		//System.out.println("Updating all channels");
-		int [] values = new int[getInternalChannels().size()];
+		Integer [] values = new Integer[getInternalChannels().size()];
 		int i=0;
 		for(DyIOChannel d:getInternalChannels()) {
 			values[i++]=d.getCachedValue();
-			//d.flush();
+			//System.out.println("Flushing chan "+d+" to "+d.getCachedValue());
 		}
 		if(isLegacyParser()){
 			for(int j=0;j<5;j++) {

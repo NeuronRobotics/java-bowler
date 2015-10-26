@@ -43,14 +43,16 @@ package com.neuronrobotics.sdk.addons.kinematics.gui;
  */
 
 import javafx.scene.Group;
+import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Sphere;
+import javafx.scene.transform.Affine;
 
 public class Axis extends Group {
 	public Axis() {
-		this(240);
+		this(50);
 	}
 	// //////////////////////////////////////////
 	//
@@ -69,15 +71,35 @@ public class Axis extends Group {
 		blueMaterial.setDiffuseColor(Color.DARKBLUE);
 		blueMaterial.setSpecularColor(Color.BLUE);
 
-		final Box xAxis = new Box(i, 1, 1);
-		final Box yAxis = new Box(1, i, 1);
-		final Box zAxis = new Box(1, 1, i);
-
+		final Box xAxis = new Box(i, 2, 2);
+		final Box yAxis = new Box(2, i, 2);
+		final Box zAxis = new Box(2, 2, i);
+		
+		
+		Affine xp = new Affine();
+		xp.setTx(i/2);
+		xAxis.getTransforms().add(xp);
+		Label xText = new Label("+X");
+		xText.getTransforms().add(xp);
+		
+		Affine yp = new Affine();
+		yp.setTy(i/2);
+		yAxis.getTransforms().add(yp);
+		Label yText = new Label("+Y");
+		yText.getTransforms().add(yp);
+		
+		Affine zp = new Affine();
+		zp.setTz(i/2);
+		zAxis.getTransforms().add(zp);
+		Label zText = new Label("+Z");
+		zText.getTransforms().add(zp);
+		
+		
 		xAxis.setMaterial(redMaterial);
 		yAxis.setMaterial(greenMaterial);
 		zAxis.setMaterial(blueMaterial);
 		
-		getChildren().addAll(xAxis,yAxis,zAxis);
+		getChildren().addAll(xAxis,yAxis,zAxis,xText,yText,zText);
 	}
 
 } // end of class Axis

@@ -21,6 +21,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
@@ -43,7 +44,7 @@ public class UDPBowlerConnection extends BowlerAbstractConnection{
 	
 	private InetAddress IPAddressSet=null;
 	private ArrayList<InetAddress>  addrs=null;
-	private ByteList internalReceiveBuffer= new ByteList();
+	//private ByteList internalReceiveBuffer= new ByteList();
 	private DatagramSocket udpSock = null;
 	
 	/**
@@ -119,22 +120,30 @@ public class UDPBowlerConnection extends BowlerAbstractConnection{
 		udpSock.send(sendPacket);
 		
 	}
+	byte[] receiveData=new byte[4096];
 	
+	DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
 	@Override
 	public BowlerDatagram loadPacketFromPhy(ByteList bytesToPacketBuffer) throws NullPointerException, IOException{
-		byte[] receiveData=new byte[4096];
 		
-		DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
-		//Log.info("Waiting for UDP packet");
+		long start = System.currentTimeMillis();
+		Log.info("Waiting for UDP packet");
 		udpSock.setSoTimeout(1);// Timeout the socket after 1 ms
+		//System.err.println("Timeout set "+(System.currentTimeMillis()-start));
+		start = System.currentTimeMillis();
 		try{
 			udpSock.receive(receivePacket);
+			
+		}catch(SocketTimeoutException ste){
+			return null;
 		}catch(Exception ex){
 			// disconnect called
 			//Log. warning("Receive bailed out because of close");
+			ex.printStackTrace();
 			return null;
 		}
-		
+		//System.err.println("Recv "+(System.currentTimeMillis()-start));
+		start = System.currentTimeMillis();
 		Log.info("Got UDP packet");
 		if(addrs== null)
 			addrs=new ArrayList<InetAddress>();
@@ -143,18 +152,12 @@ public class UDPBowlerConnection extends BowlerAbstractConnection{
 		byte [] data = receivePacket.getData();
 		
 		for (int i=0;i<receivePacket.getLength();i++){
-			internalReceiveBuffer.add(data[i]);
+			bytesToPacketBuffer.add(data[i]);
 		}
-		
-		BowlerDatagram bd =null;
-		
-		while(internalReceiveBuffer.size()>0){
-			bytesToPacketBuffer.add(internalReceiveBuffer.pop());
-			if (bd==null) {
-				bd = BowlerDatagramFactory.build(bytesToPacketBuffer);
-			}
-		}
-	
+		//System.err.println("copy "+(System.currentTimeMillis()-start));
+		start = System.currentTimeMillis();
+		BowlerDatagram bd= BowlerDatagramFactory.build(bytesToPacketBuffer);
+		//System.err.println("build "+(System.currentTimeMillis()-start));
 		return bd;
 	}
 	
