@@ -18,6 +18,8 @@ public class DeviceManager {
 	private static final ArrayList<IDeviceAddedListener> deviceAddedListener = new ArrayList<IDeviceAddedListener>();
 	
 	public static void addConnection(final BowlerAbstractDevice newDevice, String name){
+		if(!newDevice.isAvailable())
+			newDevice.connect();
 		if(!newDevice.isAvailable()){
 			throw new BowlerRuntimeException("Device is not availible");
 		}
