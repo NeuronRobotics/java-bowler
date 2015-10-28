@@ -39,7 +39,7 @@ jar.archiveName = "nrsdk-"+props."app.version"+"-jar-with-dependencies.jar"
 //repairHeaders.licenseHeaderText = new File(projectDir,'./license-template.txt')
 
 task wrapper(type: Wrapper, description: 'Creates and deploys the Gradle wrapper to the current directory.') {
-    gradleVersion = '2.1'
+    gradleVersion = '2.7'
 }
 
 repositories {
@@ -106,9 +106,31 @@ signing {
 	sign configurations.archives
 }
 artifacts {
-	archives javadocJar, sourcesJar, jar
+	archives javadocJar
+	archives  sourcesJar
+	archives  jar
 }
-
+//import org.gradle.plugins.signing.Sign
+//
+//gradle.taskGraph.whenReady { taskGraph ->
+//	if (taskGraph.allTasks.any { it instanceof Sign }) {
+//		// Use Java 6's console to read from the console (no good for
+//		// a CI environment)
+//		Console console = System.console()
+//		console.printf "\n\nWe have to sign some things in this build." +
+//					   "\n\nPlease enter your signing details.\n\n"
+//
+//		def id = console.readLine("PGP Key Id: ")
+//		def file = console.readLine("PGP Secret Key Ring File (absolute path): ")
+//		def password = console.readPassword("PGP Private Key Password: ")
+//
+//		allprojects { ext."signing.keyId" = id }
+//		allprojects { ext."signing.secretKeyRingFile" = file }
+//		allprojects { ext."signing.password" = password }
+//
+//		console.printf "\nThanks.\n\n"
+//	}
+//}
 
 uploadArchives {
 	repositories {
@@ -124,16 +146,16 @@ uploadArchives {
 		}
   
 		pom.project {
-		  name 'Bowler Scripting Kernel'
+		  name 'Java Bowler'
 		  packaging 'jar'
 		  // optionally artifactId can be defined here
-		  description 'A command line utility for accsing the bowler framework.'
+		  description 'A command line utility for accesing the bowler framework.'
 		  url 'http://neuronrobotics.com'
   
 		  scm {
-			connection 			'scm:git:https://github.com/NeuronRobotics/bowler-script-kernel.git'
-			developerConnection 'scm:git:git@github.com:NeuronRobotics/bowler-script-kernel.git'
-			url 'https://github.com/NeuronRobotics/bowler-script-kernel'
+			connection 			'scm:git:https://github.com/NeuronRobotics/java-bowler.git'
+			developerConnection 'scm:git:git@github.com:NeuronRobotics/java-bowler.git'
+			url 'https://github.com/NeuronRobotics/java-bowler'
 		  }
   
 		  licenses {

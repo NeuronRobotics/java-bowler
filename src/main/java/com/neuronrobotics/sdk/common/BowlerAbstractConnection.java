@@ -204,7 +204,7 @@ public abstract class BowlerAbstractConnection {
 		
 		if (getLastSyncronousResponse() == null){
 			Log.error("No response from device, no response in "+(System.currentTimeMillis()-startOfReciveTime)+" ms");
-			new RuntimeException().printStackTrace();
+			//new RuntimeException().printStackTrace();
 			if(switchParser){
 				if( BowlerDatagram.isUseBowlerV4()){
 					//If the ping fails to get a response, try the older bowler format
