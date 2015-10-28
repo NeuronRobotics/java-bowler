@@ -14,7 +14,18 @@ import com.neuronrobotics.sdk.network.BowlerTCPClient;
 import com.neuronrobotics.sdk.network.UDPBowlerConnection;
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ConfigManager.
+ */
 public class ConfigManager {
+	
+	/**
+	 * Load default connection.
+	 *
+	 * @param filename the filename
+	 * @return the bowler abstract connection
+	 */
 	public static BowlerAbstractConnection loadDefaultConnection(String filename) {
 		try {
 			
@@ -59,6 +70,14 @@ public class ConfigManager {
 		return null;
 	}
 	
+	/**
+	 * Gets the element value.
+	 *
+	 * @param e the e
+	 * @param key the key
+	 * @param dval the dval
+	 * @return the element value
+	 */
 	private static String getElementValue(Element e, String key, String dval) {
 		NodeList elmntLst = e.getElementsByTagName(key);
 		if(elmntLst.getLength() > 0) {

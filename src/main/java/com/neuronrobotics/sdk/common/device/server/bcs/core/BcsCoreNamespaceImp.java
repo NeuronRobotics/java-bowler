@@ -8,11 +8,22 @@ import com.neuronrobotics.sdk.common.device.server.BowlerAbstractDeviceServerNam
 import com.neuronrobotics.sdk.common.device.server.BowlerAbstractServer;
 import com.neuronrobotics.sdk.common.device.server.IBowlerCommandProcessor;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class BcsCoreNamespaceImp.
+ */
 public class BcsCoreNamespaceImp extends BowlerAbstractDeviceServerNamespace{
 
 	
+	/** The server. */
 	private BowlerAbstractServer server;
 
+	/**
+	 * Instantiates a new bcs core namespace imp.
+	 *
+	 * @param s the s
+	 * @param mac the mac
+	 */
 	public BcsCoreNamespaceImp(final BowlerAbstractServer s, MACAddress mac){
 		super( mac ,"bcs.core.*;;");
 		this.server = s;

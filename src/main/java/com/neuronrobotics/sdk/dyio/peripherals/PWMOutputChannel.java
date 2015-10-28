@@ -20,8 +20,9 @@ import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.common.DeviceManager;
 
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class PWMOutputChannel.
  */
 public class PWMOutputChannel extends DyIOAbstractPeripheral {
 	
@@ -38,7 +39,8 @@ public class PWMOutputChannel extends DyIOAbstractPeripheral {
 	/**
 	 * Constructor.
 	 * Creates an counter input input channel that is syncronous only by default.
-	 * 
+	 *
+	 * @param dyio the dyio
 	 * @param channel - the channel object requested from the DyIO
 	 */
 	public PWMOutputChannel(DyIO dyio,int channel){
@@ -63,7 +65,8 @@ public class PWMOutputChannel extends DyIOAbstractPeripheral {
 	/**
 	 * This takes in a duty cycle in percent time on
 	 * 100 is 100% on and 0 is 0% on. 
-	 * @param duty
+	 *
+	 * @param duty the duty
 	 */
 	public void SetDutyPercent(float duty){
 		
@@ -78,6 +81,9 @@ public class PWMOutputChannel extends DyIOAbstractPeripheral {
 		setValue((int)((duty / 100) * 255));
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.dyio.peripherals.DyIOAbstractPeripheral#hasAsync()
+	 */
 	@Override
 	public boolean hasAsync() {
 		return false;

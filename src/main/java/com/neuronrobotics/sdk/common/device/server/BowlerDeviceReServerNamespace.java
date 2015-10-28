@@ -10,11 +10,28 @@ import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.RpcEncapsulation;
 import com.neuronrobotics.sdk.genericdevice.GenericDevice;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class BowlerDeviceReServerNamespace.
+ */
 public class BowlerDeviceReServerNamespace extends BowlerAbstractDeviceServerNamespace{
 	
+	/** The device. */
 	private BowlerAbstractConnection device;
+	
+	/** The server. */
 	private BowlerAbstractServer server;
 
+	/**
+	 * Instantiates a new bowler device re server namespace.
+	 *
+	 * @param device the device
+	 * @param server the server
+	 * @param useAsync the use async
+	 * @param namespaceIndex the namespace index
+	 * @param namespaceString the namespace string
+	 * @param gen the gen
+	 */
 	public BowlerDeviceReServerNamespace(	BowlerAbstractConnection device,
 											BowlerAbstractServer server, 
 											boolean useAsync, 
@@ -40,14 +57,27 @@ public class BowlerDeviceReServerNamespace extends BowlerAbstractDeviceServerNam
 		
 	}
 	
+	/**
+	 * Gets the server.
+	 *
+	 * @return the server
+	 */
 	public BowlerAbstractServer getServer() {
 		return server;
 	}
 
+	/**
+	 * Sets the server.
+	 *
+	 * @param server the new server
+	 */
 	public void setServer(BowlerAbstractServer server) {
 		this.server = server;
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.common.device.server.BowlerAbstractDeviceServerNamespace#process(com.neuronrobotics.sdk.common.BowlerDatagram)
+	 */
 	@Override
 	public BowlerDatagram process(BowlerDatagram data){
 		BowlerDatagram bd = device.sendSynchronusly(data);

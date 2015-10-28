@@ -16,11 +16,23 @@ import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.pid.VirtualGenericPIDDevice;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class SimpleDHTest.
+ */
 public class SimpleDHTest {
+	
+	/** The model. */
 	DHParameterKinematics model = new DHParameterKinematics(new VirtualGenericPIDDevice(100000),
 			SimpleDHTest.class.getResourceAsStream("SimpleDH.xml"),
 			SimpleDHTest.class.getResourceAsStream("SimpleDH.xml"));
+	
+	/** The start vect. */
 	double [] startVect = new double [] { 0,0,0,0};
+	
+	/**
+	 * Instantiates a new simple dh test.
+	 */
 	public SimpleDHTest(){
 		final SampleGuiNR gui = new SampleGuiNR();
 		final JFrame frame = new JFrame();
@@ -66,6 +78,9 @@ public class SimpleDHTest {
 		
 	}
 	
+	/**
+	 * Zero.
+	 */
 	private void zero(){
 		try {
 			model.setDesiredJointSpaceVector(startVect, 2);
@@ -74,8 +89,11 @@ public class SimpleDHTest {
 			e.printStackTrace();
 		}
 	}
+	
 	/**
-	 * @param args
+	 * The main method.
+	 *
+	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
 		new SimpleDHTest();

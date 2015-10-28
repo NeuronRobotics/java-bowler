@@ -4,10 +4,16 @@ import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.wireless.bluetooth.BlueCoveManager;
 import com.neuronrobotics.sdk.wireless.bluetooth.BluetoothSerialConnection;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class BluetoothConector.
+ */
 public class BluetoothConector {
 
 	/**
-	 * @param args
+	 * The main method.
+	 *
+	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
 		DyIO dyio;

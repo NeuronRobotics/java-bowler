@@ -6,7 +6,17 @@ import com.neuronrobotics.sdk.dyio.peripherals.PPMReaderChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PPMReaderTest.
+ */
 public class PPMReaderTest implements IPPMReaderListener{
+	
+	/**
+	 * Instantiates a new PPM reader test.
+	 *
+	 * @throws InterruptedException the interrupted exception
+	 */
 	public PPMReaderTest() throws InterruptedException{
 		DyIO dyio=new DyIO();
 		if (!ConnectionDialog.getBowlerDevice(dyio)){
@@ -31,8 +41,9 @@ public class PPMReaderTest implements IPPMReaderListener{
 	}
 
 	/**
-	 * @param args
-	 * @throws InterruptedException 
+	 * The main method.
+	 *
+	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
 	
@@ -42,6 +53,10 @@ public class PPMReaderTest implements IPPMReaderListener{
 			e.printStackTrace();
 		}
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.dyio.peripherals.IPPMReaderListener#onPPMPacket(int[])
+	 */
 	@Override
 	public void onPPMPacket(int[] values) {
 		String s="PPM event: [";

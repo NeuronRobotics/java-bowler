@@ -15,21 +15,49 @@ import com.neuronrobotics.sdk.common.DeviceManager;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class MobileBase.
+ */
 public class MobileBase extends AbstractKinematicsNR{
 	
+	/** The legs. */
 	private final ArrayList<DHParameterKinematics> legs=new ArrayList<DHParameterKinematics>();
+	
+	/** The appendages. */
 	private final ArrayList<DHParameterKinematics> appendages=new ArrayList<DHParameterKinematics>();
+	
+	/** The steerable. */
 	private final ArrayList<DHParameterKinematics> steerable=new ArrayList<DHParameterKinematics>();
+	
+	/** The drivable. */
 	private final ArrayList<DHParameterKinematics> drivable=new ArrayList<DHParameterKinematics>();
+	
+	/** The drive type. */
 	private DrivingType driveType = DrivingType.NONE;
 	
+	/** The walking drive engine. */
 	private IDriveEngine walkingDriveEngine = new WalkingDriveEngine();
+	
+	/** The wheeled drive engine. */
 	private IDriveEngine wheeledDriveEngine = new WheeledDriveEngine();
+	
+	/** The walking engine. */
 	private String [] walkingEngine =new String[]{"bcb4760a449190206170","WalkingDriveEngine.groovy"}; 
 	
+	/** The self source. */
 	private String [] selfSource =new String[2];
+	
+	/**
+	 * Instantiates a new mobile base.
+	 */
 	public MobileBase(){}// used for building new bases live
 	
+	/**
+	 * Instantiates a new mobile base.
+	 *
+	 * @param configFile the config file
+	 */
 	public MobileBase(InputStream configFile){
 		this();
 		Document doc =XmlFactory.getAllNodesDocument(configFile);
@@ -71,12 +99,22 @@ public class MobileBase extends AbstractKinematicsNR{
 		});
 	}
 	
+	/**
+	 * Instantiates a new mobile base.
+	 *
+	 * @param doc the doc
+	 */
 	public MobileBase(Element doc) {
 		
 		loadConfigs( doc);
 		
 	}
 	
+	/**
+	 * Load configs.
+	 *
+	 * @param doc the doc
+	 */
 	private void loadConfigs(Element doc){
 		setScriptingName(XmlFactory.getTagValue("name",doc));
 		
@@ -92,6 +130,14 @@ public class MobileBase extends AbstractKinematicsNR{
 			setDriveType(DrivingType.NONE);
 		}
 	}
+	
+	/**
+	 * Gets the name.
+	 *
+	 * @param e the e
+	 * @param tag the tag
+	 * @return the name
+	 */
 	private String getname(Element e,String tag){
 		try{
 			NodeList nodListofLinks = e.getChildNodes();
@@ -109,6 +155,13 @@ public class MobileBase extends AbstractKinematicsNR{
 	}
 	
 	
+	/**
+	 * Load limb.
+	 *
+	 * @param doc the doc
+	 * @param tag the tag
+	 * @param list the list
+	 */
 	private void loadLimb(Element doc,String tag, ArrayList<DHParameterKinematics> list){
 		NodeList nodListofLinks = doc.getChildNodes();
 		for (int i = 0; i < nodListofLinks.getLength(); i++) {			
@@ -132,6 +185,9 @@ public class MobileBase extends AbstractKinematicsNR{
 
 
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR#disconnectDevice()
+	 */
 	@Override
 	public void disconnectDevice() {
 		for(DHParameterKinematics kin:getAllDHChains()){
@@ -141,12 +197,18 @@ public class MobileBase extends AbstractKinematicsNR{
 	
 	
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR#connectDevice()
+	 */
 	@Override
 	public boolean connectDevice() {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR#inverseKinematics(com.neuronrobotics.sdk.addons.kinematics.math.TransformNR)
+	 */
 	@Override
 	public double[] inverseKinematics(TransformNR taskSpaceTransform)
 			throws Exception {
@@ -154,21 +216,39 @@ public class MobileBase extends AbstractKinematicsNR{
 		return new double[ getNumberOfLinks()];
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR#forwardKinematics(double[])
+	 */
 	@Override
 	public TransformNR forwardKinematics(double[] jointSpaceVector) {
 		// TODO Auto-generated method stub
 		return new TransformNR();
 	}
 
+	/**
+	 * Gets the legs.
+	 *
+	 * @return the legs
+	 */
 	public ArrayList<DHParameterKinematics> getLegs() {
 		return legs;
 	}
 
+	/**
+	 * Gets the appendages.
+	 *
+	 * @return the appendages
+	 */
 	public ArrayList<DHParameterKinematics> getAppendages() {
 		return appendages;
 	}
 
 	
+	/**
+	 * Gets the all dh chains.
+	 *
+	 * @return the all dh chains
+	 */
 	public ArrayList<DHParameterKinematics> getAllDHChains() {
 		ArrayList<DHParameterKinematics> copy = new ArrayList<DHParameterKinematics>();
 		for(DHParameterKinematics l:legs){
@@ -186,6 +266,9 @@ public class MobileBase extends AbstractKinematicsNR{
 		return copy;
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR#getXml()
+	 */
 	/*
 	 * 
 	 * Generate the xml configuration to generate an XML of this robot. 
@@ -196,6 +279,12 @@ public class MobileBase extends AbstractKinematicsNR{
 		xml+="\n</root>";
 		return xml;
 	}
+	
+	/**
+	 * Gets the embedable xml.
+	 *
+	 * @return the embedable xml
+	 */
 	/*
 	 * 
 	 * Generate the xml configuration to generate an XML of this robot. 
@@ -255,39 +344,85 @@ public class MobileBase extends AbstractKinematicsNR{
 		return xml;
 	}
 
+	/**
+	 * Gets the steerable.
+	 *
+	 * @return the steerable
+	 */
 	public ArrayList<DHParameterKinematics> getSteerable() {
 		return steerable;
 	}
 
+	/**
+	 * Gets the drivable.
+	 *
+	 * @return the drivable
+	 */
 	public ArrayList<DHParameterKinematics> getDrivable() {
 		return drivable;
 	}
 
 
+	/**
+	 * Gets the walking drive engine.
+	 *
+	 * @return the walking drive engine
+	 */
 	private IDriveEngine getWalkingDriveEngine() {
 		return walkingDriveEngine;
 	}
 
+	/**
+	 * Sets the walking drive engine.
+	 *
+	 * @param walkingDriveEngine the new walking drive engine
+	 */
 	public void setWalkingDriveEngine(IDriveEngine walkingDriveEngine) {
 		this.walkingDriveEngine = walkingDriveEngine;
 	}
 
+	/**
+	 * Gets the wheeled drive engine.
+	 *
+	 * @return the wheeled drive engine
+	 */
 	private IDriveEngine getWheeledDriveEngine() {
 		return wheeledDriveEngine;
 	}
 
+	/**
+	 * Sets the wheeled drive engine.
+	 *
+	 * @param wheeledDriveEngine the new wheeled drive engine
+	 */
 	public void setWheeledDriveEngine(IDriveEngine wheeledDriveEngine) {
 		this.wheeledDriveEngine = wheeledDriveEngine;
 	}
 
+	/**
+	 * Gets the drive type.
+	 *
+	 * @return the drive type
+	 */
 	public DrivingType getDriveType() {
 		return driveType;
 	}
 
+	/**
+	 * Sets the drive type.
+	 *
+	 * @param driveType the new drive type
+	 */
 	public void setDriveType(DrivingType driveType) {
 		this.driveType = driveType;
 	}
 	
+	/**
+	 * Drive arc.
+	 *
+	 * @param newPose the new pose
+	 * @param seconds the seconds
+	 */
 	public void DriveArc( TransformNR newPose, double seconds) {
 		// TODO Auto-generated method stub
 		switch(driveType){
@@ -313,6 +448,11 @@ public class MobileBase extends AbstractKinematicsNR{
 	}
 
 	
+	/**
+	 * Drive velocity straight.
+	 *
+	 * @param cmPerSecond the cm per second
+	 */
 	public void DriveVelocityStraight(double cmPerSecond) {
 		// TODO Auto-generated method stub
 		switch(driveType){
@@ -329,6 +469,12 @@ public class MobileBase extends AbstractKinematicsNR{
 	}
 
 	
+	/**
+	 * Drive velocity arc.
+	 *
+	 * @param degreesPerSecond the degrees per second
+	 * @param cmRadius the cm radius
+	 */
 	public void DriveVelocityArc(double degreesPerSecond, double cmRadius) {
 		// TODO Auto-generated method stub
 		switch(driveType){
@@ -344,6 +490,9 @@ public class MobileBase extends AbstractKinematicsNR{
 		updatePositions();
 	}
 	
+	/**
+	 * Update positions.
+	 */
 	public void updatePositions(){
 		for(DHParameterKinematics kin:getAppendages()){
 			//System.err.println("Updating arm: "+kin.getScriptingName());
@@ -361,19 +510,39 @@ public class MobileBase extends AbstractKinematicsNR{
 	}
 
 
+	/**
+	 * Gets the walking engine.
+	 *
+	 * @return the walking engine
+	 */
 	public String [] getWalkingEngine() {
 		return walkingEngine;
 	}
 
+	/**
+	 * Sets the walking engine.
+	 *
+	 * @param walkingEngine the new walking engine
+	 */
 	public void setWalkingEngine(String [] walkingEngine) {
 		if(walkingEngine!=null && walkingEngine[0]!=null &&walkingEngine[1]!=null)
 			this.walkingEngine = walkingEngine;
 	}
 
+	/**
+	 * Gets the self source.
+	 *
+	 * @return the self source
+	 */
 	public String [] getSelfSource() {
 		return selfSource;
 	}
 
+	/**
+	 * Sets the self source.
+	 *
+	 * @param selfSource the new self source
+	 */
 	public void setSelfSource(String [] selfSource) {
 		this.selfSource = selfSource;
 	}

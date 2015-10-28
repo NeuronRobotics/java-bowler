@@ -24,20 +24,27 @@ import com.neuronrobotics.sdk.dyio.DyIOChannel;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.dyio.IDyIOChannel;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class DyIOAbstractPeripheral.
  */
 public abstract class DyIOAbstractPeripheral implements IDyIOChannel {
+	
+	/** The channel. */
 	private DyIOChannel channel;
+	
+	/** The enabled. */
 	private boolean enabled = false;
+	
+	/** The configuration. */
 	private int configuration=0;
+	
 	/**
 	 * DyIOAbstractPeripheral.
-	 * 
-	 * @param channel
-	 *            The channel object to set up as whatever peripheral is needed
-	 * @param async 
-	 * @throws Exception 
+	 *
+	 * @param channel            The channel object to set up as whatever peripheral is needed
+	 * @param myMode the my mode
+	 * @param async the async
 	 */
 	public DyIOAbstractPeripheral(DyIOChannel channel, DyIOChannelMode myMode, boolean async) {
 		this.channel = channel;
@@ -49,6 +56,12 @@ public abstract class DyIOAbstractPeripheral implements IDyIOChannel {
 		//Always notify any listeners of mode changes
 			//channel.removeAllChannelModeChangeListener();
 	}
+	
+	/**
+	 * Gets the configuration from device.
+	 *
+	 * @return the configuration from device
+	 */
 	private int getConfigurationFromDevice() {
 		if(getChannel().getDevice().isLegacyParser()){
 			if(channel.getMode() == DyIOChannelMode.SERVO_OUT)
@@ -67,9 +80,11 @@ public abstract class DyIOAbstractPeripheral implements IDyIOChannel {
 		}
 		
 	}
+	
 	/**
-	 * This method retrieves the channel mode of this peripheral
-	 * @return
+	 * This method retrieves the channel mode of this peripheral.
+	 *
+	 * @return the class mode
 	 */
 	public  DyIOChannelMode getClassMode() {
 		return channel.getMode();
@@ -85,36 +100,31 @@ public abstract class DyIOAbstractPeripheral implements IDyIOChannel {
 	}
 	
 	/**
-	 * This sets the mode of this peripheral
-	 * 
-	 * @param mode the DyIO mode to set the channel to
+	 * This sets the mode of this peripheral.
+	 *
 	 * @return if the set worked. Not all channels have all peripherals
-	 * @throws Exception 
 	 */
 	public boolean setMode(){
 		return channel.setMode(getClassMode());
 	}
 	
 	/**
-	 * This method sets the current mode of this peripheral
-	 * 
-	 * @param mode the DyIO mode to set the channel to
+	 * This method sets the current mode of this peripheral.
+	 *
 	 * @param async If the channel should be set into async mode
 	 * @return if the set worked. Not all channels have all peripherals
-	 * @throws Exception 
 	 */
 	public boolean setMode( boolean async) {
 		return channel.setMode(getClassMode(), async);
 	}
 	
 	/**
-	 * This method sets the current mode of this peripheral
-	 * 
+	 * This method sets the current mode of this peripheral.
+	 *
 	 * @param mode the DyIO mode to set the channel to
 	 * @param async If the channel should be set into async mode
 	 * @return if the set worked. Not all channels have all peripherals
-	 * @throws Exception 
-	 * @throws InvalidResponseException
+	 * @throws InvalidResponseException the invalid response exception
 	 */
 	public boolean setMode(DyIOChannelMode mode, boolean async) {
 		if(mode != getClassMode())
@@ -123,8 +133,8 @@ public abstract class DyIOAbstractPeripheral implements IDyIOChannel {
 	}
 	
 	/**
-	 * Returns the channel object used by the peripheral
-	 * 
+	 * Returns the channel object used by the peripheral.
+	 *
 	 * @return returns the channel object
 	 */
 	 
@@ -133,8 +143,8 @@ public abstract class DyIOAbstractPeripheral implements IDyIOChannel {
 	}
 	
 	/**
-	 * This method gets the current mode of this peripheral
-	 * 
+	 * This method gets the current mode of this peripheral.
+	 *
 	 * @return returns the mode of this channel
 	 */
 	 
@@ -143,11 +153,11 @@ public abstract class DyIOAbstractPeripheral implements IDyIOChannel {
 	}
 	
 	/**
-	 * This method sets the value of the output of the giver peripheral
-	 * 
+	 * This method sets the value of the output of the giver peripheral.
+	 *
 	 * @param value Sets this value to the channel
 	 * @return if the set worked
-	 * @throws InvalidResponseException
+	 * @throws InvalidResponseException the invalid response exception
 	 */
 	 
 	public boolean setValue(int value) throws InvalidResponseException {
@@ -155,11 +165,11 @@ public abstract class DyIOAbstractPeripheral implements IDyIOChannel {
 	}
 	
 	/**
-	 * This method sets the value of the output of the giver peripheral
-	 * 
+	 * This method sets the value of the output of the giver peripheral.
+	 *
 	 * @param value Sets this value to the channel
 	 * @return if the set worked
-	 * @throws InvalidResponseException
+	 * @throws InvalidResponseException the invalid response exception
 	 */
 	 
 	public boolean setValue(ByteList value)throws InvalidResponseException {
@@ -167,10 +177,10 @@ public abstract class DyIOAbstractPeripheral implements IDyIOChannel {
 	}
 	
 	/**
-	 * This method gets the value of the given peripheral
-	 * 
+	 * This method gets the value of the given peripheral.
+	 *
 	 * @return the value of the channel on the DyIO
-	 * @throws InvalidResponseException
+	 * @throws InvalidResponseException the invalid response exception
 	 */
 	 
 	public int getValue()throws InvalidResponseException {
@@ -236,18 +246,22 @@ public abstract class DyIOAbstractPeripheral implements IDyIOChannel {
 	public boolean configAdvancedAsyncNotEqual(){
 		return getChannel().configAdvancedAsyncNotEqual(100);
 	}
+	
 	/**
 	 * This method configures the advanced async mode for a given DyIO channel to trigger on any event where the values are outside a deadband
-	 * This sets the sample time to 100 ms
+	 * This sets the sample time to 100 ms.
+	 *
 	 * @param deadbandSize the size in sensor units of the deadband
 	 * @return true if success
 	 */
 	public boolean configAdvancedAsyncDeadBand(int deadbandSize){
 		return  getChannel().configAdvancedAsyncDeadBand(100,deadbandSize);
 	}
+	
 	/**
 	 * This method configures the advanced async mode for a given DyIO channel to trigger on any event where the value crosses a threshhold
-	 * This sets the sample time to 100 ms
+	 * This sets the sample time to 100 ms.
+	 *
 	 * @param threshholdValue a value setpoint that triggers an even when it is crossed
 	 * @param edgeType Rising, Falling, or both
 	 * @return true if success
@@ -255,10 +269,12 @@ public abstract class DyIOAbstractPeripheral implements IDyIOChannel {
 	public boolean configAdvancedAsyncTreshhold(int threshholdValue,AsyncThreshholdEdgeType edgeType){
 		return  getChannel().configAdvancedAsyncTreshhold(100, threshholdValue, edgeType);
 	}
+	
 	/**
 	 * This method configures the advanced async mode for a given DyIO channel to trigger on any event where the value is sampled on a real-time 
 	 * This sets the sample time to 100 ms
-	 * clock and sent as async regardless of value change
+	 * clock and sent as async regardless of value change.
+	 *
 	 * @return true if success
 	 */
 	public boolean configAdvancedAsyncAutoSample(){
@@ -272,8 +288,10 @@ public abstract class DyIOAbstractPeripheral implements IDyIOChannel {
 	public boolean configAdvancedAsyncNotEqual(int msTime){
 		return getChannel().configAdvancedAsyncNotEqual(msTime);
 	}
+	
 	/**
-	 * This method configures the advanced async mode for a given DyIO channel to trigger on any event where the values are outside a deadband
+	 * This method configures the advanced async mode for a given DyIO channel to trigger on any event where the values are outside a deadband.
+	 *
 	 * @param msTime the sample time in MiliSeconds
 	 * @param deadbandSize the size in sensor units of the deadband
 	 * @return true if success
@@ -281,8 +299,10 @@ public abstract class DyIOAbstractPeripheral implements IDyIOChannel {
 	public boolean configAdvancedAsyncDeadBand(int msTime,int deadbandSize){
 		return  getChannel().configAdvancedAsyncDeadBand(msTime,deadbandSize);
 	}
+	
 	/**
-	 * This method configures the advanced async mode for a given DyIO channel to trigger on any event where the value crosses a threshhold
+	 * This method configures the advanced async mode for a given DyIO channel to trigger on any event where the value crosses a threshhold.
+	 *
 	 * @param msTime the sample time in MiliSeconds
 	 * @param threshholdValue a value setpoint that triggers an even when it is crossed
 	 * @param edgeType Rising, Falling, or both
@@ -291,9 +311,11 @@ public abstract class DyIOAbstractPeripheral implements IDyIOChannel {
 	public boolean configAdvancedAsyncTreshhold(int msTime,int threshholdValue, AsyncThreshholdEdgeType edgeType){
 		return  getChannel().configAdvancedAsyncTreshhold(msTime, threshholdValue, edgeType);
 	}
+	
 	/**
 	 * This method configures the advanced async mode for a given DyIO channel to trigger on any event where the value is sampled on a real-time 
-	 * clock and sent as async regardless of value change
+	 * clock and sent as async regardless of value change.
+	 *
 	 * @param msTime the sample time in MiliSeconds
 	 * @return true if success
 	 */
@@ -302,22 +324,37 @@ public abstract class DyIOAbstractPeripheral implements IDyIOChannel {
 	}
 	
 	/**
-	 * THis method performs a cache flush on the channel wrapped by this object
+	 * THis method performs a cache flush on the channel wrapped by this object.
+	 *
 	 * @return true if success
 	 */
 	public boolean flush() {
 		return getChannel().flush();
 	}
+	
 	/**
-	 * This method sets the async mode for this peripheral 
+	 * This method sets the async mode for this peripheral .
+	 *
 	 * @param b if it should be async or not
 	 */
 	public void setAsync(boolean b) {
 		channel.setMode(getClassMode(), b);
 	}
+	
+	/**
+	 * Gets the configuration.
+	 *
+	 * @return the configuration
+	 */
 	public int getConfiguration() {
 		return configuration;
 	}
+	
+	/**
+	 * Sets the configuration.
+	 *
+	 * @param configuration the new configuration
+	 */
 	private void setConfiguration(int configuration) {
 		this.configuration = configuration;
 	}

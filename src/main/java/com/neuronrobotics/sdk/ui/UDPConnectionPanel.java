@@ -33,22 +33,35 @@ import com.neuronrobotics.sdk.util.IMonitorable;
 import com.neuronrobotics.sdk.util.IProgressMonitorListener;
 import com.neuronrobotics.sdk.util.ProcessMonitor;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class UDPConnectionPanel.
  */
 public class UDPConnectionPanel extends AbstractConnectionPanel {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
+	
+	/** The Constant defaultPortNum. */
 	private static final int defaultPortNum = 1865;
+	
+	/** The connection cbo. */
 	private JComboBox connectionCbo = null;
+	
+	/** The refresh. */
 	private JButton refresh;
+	
+	/** The port. */
 	private JTextField port = new JTextField(8);
+	
+	/** The clnt. */
 	UDPBowlerConnection clnt=null;
 	
 	
 	/**
-	 * @param connectionDialog 
-	 * 
+	 * Instantiates a new UDP connection panel.
+	 *
+	 * @param connectionDialog the connection dialog
 	 */
 	public UDPConnectionPanel(ConnectionDialog connectionDialog) {
 		super("UDP",ConnectionImageIconFactory.getIcon("images/ethernet-icon.png"),connectionDialog);
@@ -82,6 +95,9 @@ public class UDPConnectionPanel extends AbstractConnectionPanel {
 	}
 
 	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.ui.AbstractConnectionPanel#getConnection()
+	 */
 	public BowlerAbstractConnection getConnection() {
 		try {
 			int baud = Integer.parseInt(port.getText());
@@ -103,6 +119,9 @@ public class UDPConnectionPanel extends AbstractConnectionPanel {
 	}
 
 	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.ui.AbstractConnectionPanel#refresh()
+	 */
 	public void refresh() {
 		connectionCbo.removeAllItems();
 		connectionCbo.addItem("Searching...");
@@ -136,8 +155,17 @@ public class UDPConnectionPanel extends AbstractConnectionPanel {
 		getConnectionDialog().pack();
 	}
 	
+	/**
+	 * The Class NetworkSearchProcess.
+	 */
 	private class NetworkSearchProcess extends Thread implements IMonitorable {
+		
+		/** The is running. */
 		private boolean isRunning = false;
+		
+		/* (non-Javadoc)
+		 * @see java.lang.Thread#run()
+		 */
 		public void run() {
 			setName("Bowler Platform UDP searcher");
 			isRunning = true;
@@ -163,10 +191,16 @@ public class UDPConnectionPanel extends AbstractConnectionPanel {
 			isRunning = false;
 		}
 		
+		/* (non-Javadoc)
+		 * @see com.neuronrobotics.sdk.util.IMonitorable#getPercentage()
+		 */
 		public double getPercentage() {
 			return 0;
 		}
 		
+		/* (non-Javadoc)
+		 * @see com.neuronrobotics.sdk.util.IMonitorable#isComplete()
+		 */
 		public boolean isComplete() {
 			return !isRunning;
 		}

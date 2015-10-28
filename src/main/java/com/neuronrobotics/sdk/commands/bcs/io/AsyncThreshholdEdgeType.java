@@ -6,12 +6,13 @@ import java.util.Map;
 
 import com.neuronrobotics.sdk.common.ISendable;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Enum AsyncThreshholdEdgeType.
+ */
 public enum AsyncThreshholdEdgeType implements ISendable{
-	/**
-#define		ASYN_BOTH 		0
-#define		ASYN_RISING 	1
-#define		ASYN_FALLING 	2
-	 */
+	
+	/** #define		ASYN_BOTH 		0 #define		ASYN_RISING 	1 #define		ASYN_FALLING 	2. */
 	/** The STATUS. */
 	BOTH(0x00),
 	

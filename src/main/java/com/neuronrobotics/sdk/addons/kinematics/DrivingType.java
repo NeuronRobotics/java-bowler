@@ -4,14 +4,26 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Enum DrivingType.
+ */
 public enum DrivingType {
+	
+	/** The none. */
 	NONE("none"),
+	
+	/** The walking. */
 	WALKING("walking"), 
+	
+	/** The driving. */
 	DRIVING("driving");
 	
-	 private final String name;
+	 /** The name. */
+ 	private final String name;
 	 
-	 private static final Map<String, DrivingType> map =
+	 /** The Constant map. */
+ 	private static final Map<String, DrivingType> map =
 	                             new HashMap<String, DrivingType>();
 	 
 	 static {
@@ -20,15 +32,31 @@ public enum DrivingType {
 	   }
 	 }
 	 
-	 private DrivingType(String name) {
+	 /**
+ 	 * Instantiates a new driving type.
+ 	 *
+ 	 * @param name the name
+ 	 */
+ 	private DrivingType(String name) {
 	   this.name = name;
 	 }
 	 
-	 public String getName() {
+	 /**
+ 	 * Gets the name.
+ 	 *
+ 	 * @return the name
+ 	 */
+ 	public String getName() {
 	   return name;
 	 }
 	 
-	 public static DrivingType fromString(String name) {
+	 /**
+ 	 * From string.
+ 	 *
+ 	 * @param name the name
+ 	 * @return the driving type
+ 	 */
+ 	public static DrivingType fromString(String name) {
 	   if (map.containsKey(name)) {
 	     return map.get(name);
 	   }
@@ -36,7 +64,10 @@ public enum DrivingType {
 	 }
 	 
 	 
-	 @Override
+	 /* (non-Javadoc)
+ 	 * @see java.lang.Enum#toString()
+ 	 */
+ 	@Override
 	 public String toString(){
 		 return name;
 	 }

@@ -19,10 +19,24 @@ import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class KinematicsDeveopmentMain.
+ */
 public class KinematicsDeveopmentMain implements ITaskSpaceUpdateListenerNR {
+	
+	/** The start vect. */
 	double [] startVect = new double [] { 0,0,0,0,0,0};
+	
+	/** The master. */
 	private DHParameterKinematics master;
+	
+	/** The slave. */
 	DHParameterKinematics slave = new DHParameterKinematics(); 
+	
+	/**
+	 * Instantiates a new kinematics deveopment main.
+	 */
 	private KinematicsDeveopmentMain(){
 		
 		try{
@@ -86,6 +100,9 @@ public class KinematicsDeveopmentMain implements ITaskSpaceUpdateListenerNR {
 		
 	}
 	
+	/**
+	 * Zero.
+	 */
 	private void zero(){
 		try {
 			getMaster().setDesiredJointSpaceVector(startVect, 2);
@@ -96,21 +113,36 @@ public class KinematicsDeveopmentMain implements ITaskSpaceUpdateListenerNR {
 	}
 
 	/**
-	 * @param args
+	 * The main method.
+	 *
+	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
 		new KinematicsDeveopmentMain();
 	}
 
+	/**
+	 * Gets the master.
+	 *
+	 * @return the master
+	 */
 	public DHParameterKinematics getMaster() {
 		return master;
 	}
 
+	/**
+	 * Sets the master.
+	 *
+	 * @param master the new master
+	 */
 	public void setMaster(DHParameterKinematics master) {
 		this.master = master;
 		master.addPoseUpdateListener(this);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.ITaskSpaceUpdateListenerNR#onTaskSpaceUpdate(com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR, com.neuronrobotics.sdk.addons.kinematics.math.TransformNR)
+	 */
 	@Override
 	public void onTaskSpaceUpdate(AbstractKinematicsNR source, TransformNR pose) {
 		try {
@@ -121,6 +153,9 @@ public class KinematicsDeveopmentMain implements ITaskSpaceUpdateListenerNR {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.ITaskSpaceUpdateListenerNR#onTargetTaskSpaceUpdate(com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR, com.neuronrobotics.sdk.addons.kinematics.math.TransformNR)
+	 */
 	@Override
 	public void onTargetTaskSpaceUpdate(AbstractKinematicsNR source,TransformNR pose) {
 		// TODO Auto-generated method stub

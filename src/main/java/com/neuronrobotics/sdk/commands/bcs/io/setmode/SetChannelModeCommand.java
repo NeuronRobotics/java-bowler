@@ -20,17 +20,18 @@ import com.neuronrobotics.sdk.common.BowlerMethod;
 import com.neuronrobotics.sdk.common.InvalidResponseException;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class SetChannelModeCommand.
  */
 public class SetChannelModeCommand extends BowlerAbstractCommand {
 
 	
 	/**
-	 * 
-	 * 
-	 * @param channel
-	 * @param mode
+	 * Instantiates a new sets the channel mode command.
+	 *
+	 * @param channel the channel
+	 * @param mode the mode
 	 */
 	public SetChannelModeCommand(int channel, DyIOChannelMode mode) {
 		setOpCode("schm");
@@ -41,11 +42,11 @@ public class SetChannelModeCommand extends BowlerAbstractCommand {
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @param channel
-	 * @param mode
-	 * @param isAsync
+	 * Instantiates a new sets the channel mode command.
+	 *
+	 * @param channel the channel
+	 * @param mode the mode
+	 * @param isAsync the is async
 	 */
 	public SetChannelModeCommand(int channel, DyIOChannelMode mode,boolean isAsync) {
 		setOpCode("schm");

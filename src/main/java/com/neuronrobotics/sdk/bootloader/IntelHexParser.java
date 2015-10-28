@@ -8,22 +8,46 @@ import java.util.ArrayList;
 
 import com.neuronrobotics.sdk.common.ByteList;
 
+// TODO: Auto-generated Javadoc
 /**
- * @author hephaestus
+ * The Class IntelHexParser.
  *
+ * @author hephaestus
  */
 public class IntelHexParser {
+	
+	/** The high address. */
 	private long highAddress=0;
+	
+	/** The packet list. */
 	ArrayList<ByteData> packetList = new ArrayList<ByteData>();
+	
+	/** The data index. */
 	private long dataIndex=0; 
+	
+	/** The base. */
 	private long base = 0x1D00A000L;
+	
+	/** The head. */
 	private long head =  0x1D01FFFFL;
 	
+	/**
+	 * Hex.
+	 *
+	 * @param n the n
+	 * @return the string
+	 */
 	public static String hex(long n) {
 	    // call toUpperCase() if that's required
 	    return String.format("0x%8s", Long.toHexString(n)).replace(' ', '0');
 	}
 	
+	/**
+	 * Check address validity.
+	 *
+	 * @param currentAddress the current address
+	 * @param type the type
+	 */
 	private void checkAddressValidity(long currentAddress, NRBootCoreType type){
 		if(type==NRBootCoreType.PIC32){
 			if(currentAddress>head ){
@@ -36,6 +60,13 @@ public class IntelHexParser {
 		
 	}
 	
+	/**
+	 * Instantiates a new intel hex parser.
+	 *
+	 * @param lines the lines
+	 * @param type the type
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public IntelHexParser(ArrayList<hexLine> lines, NRBootCoreType type) throws IOException{
 	     ByteData tmp=null;
 	     hexLine  previousLine=null;
@@ -90,9 +121,21 @@ public class IntelHexParser {
 	     }
 	    
 	}
+	
+	/**
+	 * Size.
+	 *
+	 * @return the int
+	 */
 	public int size(){
 		return packetList.size();
 	}
+	
+	/**
+	 * Gets the next.
+	 *
+	 * @return the next
+	 */
 	public ByteData getNext(){
 		if (dataIndex < packetList.size()){
 			return packetList.get((int) dataIndex++);

@@ -18,28 +18,55 @@ import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.peripherals.DyIOPeripheralException;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class CreateArm.
  */
 public class CreateArm {
+	
+	/** The links. */
 	ServoChannel [] links;
+	
+	/** The Constant l1. */
 	private static final double l1 = 6.0;
+	
+	/** The Constant l2. */
 	private static final double l2 = 3.93;
+	
+	/** The Constant l3. */
 	private static final double l3 = 4.75;
+	
+	/** The Constant M_PI. */
 	//private static final double l3 = .0001;
 	private static final double M_PI = Math.PI; 
+	
+	/** The scale. */
 	private double scale[]={1.55,1.50,-1.76};
+	
+	/** The positions. */
 	private double [] positions=new double[4];
+	
+	/** The angles. */
 	private double [] angles=new double[3];
+	
+	/** The pose. */
 	private double [] pose=new double[3];
+	
+	/** The centers. */
 	private double [] centers={134,136,128,48};
+	
+	/** The blocking. */
 	private boolean blocking = false;
 	
+	/** The xy thresh hold. */
 	private double xyThreshHold = .1;
+	
+	/** The orent thresh hold. */
 	private double orentThreshHold = 1;
 	
 	/**
-	 * 
+	 * Instantiates a new creates the arm.
+	 *
 	 * @param links this is an array of servo channel links.
 	 * 0th element is shoulder
 	 * 1th element is elbow
@@ -53,7 +80,7 @@ public class CreateArm {
 	}
 	
 	/**
-	 * 
+	 * Home.
 	 */
 	public void home(){
 		setAngles(90,-90,0);
@@ -62,7 +89,7 @@ public class CreateArm {
 	}
 	
 	/**
-	 * 
+	 * Rest.
 	 */
 	public void rest(){
 		setAngles(110,-110,0);
@@ -71,7 +98,7 @@ public class CreateArm {
 	}
 	
 	/**
-	 * 
+	 * Grip close.
 	 */
 	public void gripClose(){
 		links[3].SetPosition((int) centers[3]+75,(float).5);
@@ -85,7 +112,7 @@ public class CreateArm {
 	}
 	
 	/**
-	 * 
+	 * Grip open.
 	 */
 	public void gripOpen(){
 		links[3].SetPosition((int) centers[3],(float) .5);
@@ -97,6 +124,12 @@ public class CreateArm {
 			}
 		}
 	}
+	
+	/**
+	 * Check.
+	 *
+	 * @param links the links
+	 */
 	private void check(ServoChannel [] links){
 		if(links.length != 4){
 			throw new DyIOPeripheralException("This perpheral needs 4 links.");
@@ -110,8 +143,10 @@ public class CreateArm {
 		}
 		this.links = links;
 	}
+	
 	/**
-	 * 
+	 * Sets the shouler.
+	 *
 	 * @param angle set just the shoulder angle
 	 */
 	public void setShouler(double angle){
@@ -119,7 +154,8 @@ public class CreateArm {
 	}
 	
 	/**
-	 * 
+	 * Sets the elbow.
+	 *
 	 * @param angle set just the elbow angle
 	 */
 	public void setElbow(double angle){
@@ -127,7 +163,8 @@ public class CreateArm {
 	}
 	
 	/**
-	 * 
+	 * Sets the wrist.
+	 *
 	 * @param angle set just the wrist angle
 	 */
 	public void setWrist(double angle){
@@ -137,10 +174,10 @@ public class CreateArm {
 	/**
 	 * This takes angles in degrees and converts them to servo positions; Note:
 	 * All zeros would be the arm completely horizontal, all links pointing out.
-	 * 
-	 * @param shoulder
-	 * @param elbow
-	 * @param wrist
+	 *
+	 * @param shoulder the shoulder
+	 * @param elbow the elbow
+	 * @param wrist the wrist
 	 */
 	public void setAngles(double shoulder, double elbow, double wrist){
 		setAngles(shoulder, elbow, wrist,(float) 1.0);
@@ -149,12 +186,11 @@ public class CreateArm {
 	/**
 	 * This takes angles in degrees and converts them to servo positions; Note:
 	 * All zeros would be the arm completely horizontal, all links pointing out.
-	 * 
-	 * @param shoulder
-	 * @param elbow
-	 * @param wrist
-	 * @param time
-	 *            the time it should take for the transition to take
+	 *
+	 * @param shoulder the shoulder
+	 * @param elbow the elbow
+	 * @param wrist the wrist
+	 * @param time            the time it should take for the transition to take
 	 */
 	public void setAngles(double shoulder, double elbow, double wrist,float time) {
 		angles[0]=shoulder;
@@ -208,8 +244,10 @@ public class CreateArm {
 		}
 		
 	}
+	
 	/**
-	 * 
+	 * Gets the angles.
+	 *
 	 * @return an array of angles in degrees. This should correspond to pose of the arm.
 	 */
 	public double [] getAngles(){
@@ -221,8 +259,10 @@ public class CreateArm {
 		a[1]-=90;
 		return a;
 	}
+	
 	/**
-	 * 
+	 * Gets the cartesian pose.
+	 *
 	 * @return pose vector, X,Y,Orentation
 	 */
 	public double [] getCartesianPose(){
@@ -239,9 +279,9 @@ public class CreateArm {
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @return
+	 * Gets the cartesian pose string.
+	 *
+	 * @return the cartesian pose string
 	 */
 	public String getCartesianPoseString(){
 		getCartesianPose();
@@ -255,42 +295,42 @@ public class CreateArm {
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @param p
+	 * Sets the cartesian pose.
+	 *
+	 * @param p the new cartesian pose
 	 */
 	public void setCartesianPose(double [] p){
 		setCartesianPose(p,(float) 1.0);
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @param p
-	 * @param time
+	 * Sets the cartesian pose.
+	 *
+	 * @param p the p
+	 * @param time the time
 	 */
 	public void setCartesianPose(double [] p, float time){
 		setCartesianPose(p[0],p[1], p[2],time);
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @param x
-	 * @param y
-	 * @param orentation
+	 * Sets the cartesian pose.
+	 *
+	 * @param x the x
+	 * @param y the y
+	 * @param orentation the orentation
 	 */
 	public void setCartesianPose(double x, double y, double orentation){
 		setCartesianPose(x,y, orentation,(float).2);
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @param x
-	 * @param y
-	 * @param orentation
-	 * @param time
+	 * Sets the cartesian pose.
+	 *
+	 * @param x the x
+	 * @param y the y
+	 * @param orentation the orentation
+	 * @param time the time
 	 */
 	public void setCartesianPose(double x, double y, double orentation, float time){
 		if(orentation<-35)
@@ -327,6 +367,14 @@ public class CreateArm {
 		
 	}
 	
+	/**
+	 * Update cartesian.
+	 *
+	 * @param x the x
+	 * @param y the y
+	 * @param orentation the orentation
+	 * @return true, if successful
+	 */
 	private boolean updateCartesian(double x, double y, double orentation) {
 		if(((x>(pose[0]+xyThreshHold))) || (x<(pose[0]-xyThreshHold))){
 			Log.info("X changed");
@@ -349,56 +397,99 @@ public class CreateArm {
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @param x
+	 * Sets the cartesian x.
+	 *
+	 * @param x the new cartesian x
 	 */
 	public void setCartesianX(double x){
 		setCartesianPose(x, pose[1], pose[2]);
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @param y
+	 * Sets the cartesian y.
+	 *
+	 * @param y the new cartesian y
 	 */
 	public void setCartesianY(double y){
 		setCartesianPose(pose[0], y, pose[2]);
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @param o
+	 * Sets the cartesian orentation.
+	 *
+	 * @param o the new cartesian orentation
 	 */
 	public void setCartesianOrentation(double o){
 		setCartesianPose(pose[0], pose[1], o);
 	}
 	
+	/**
+	 * Sqrt.
+	 *
+	 * @param d the d
+	 * @return the double
+	 */
 	/*
 	 * Math wrappers for direct compatibility with C code
 	 */
 	private double sqrt(double d) {
 		return Math.sqrt(d);
 	}
+	
+	/**
+	 * Atan2.
+	 *
+	 * @param y the y
+	 * @param x the x
+	 * @return the double
+	 */
 	private double atan2(double y, double x) {
 		return Math.atan2(y, x);
 	}
+	
+	/**
+	 * Acos.
+	 *
+	 * @param d the d
+	 * @return the double
+	 */
 	private double acos(double d) {
 		return Math.acos(d);
 	}
+	
+	/**
+	 * Sin.
+	 *
+	 * @param angle the angle
+	 * @return the double
+	 */
 	private double sin(double angle) {
 		return Math.sin(angle);
 	}
+	
+	/**
+	 * Cos.
+	 *
+	 * @param angle the angle
+	 * @return the double
+	 */
 	private double cos(double angle) {
 		return Math.cos(angle);
 	}
+	
+	/**
+	 * To radians.
+	 *
+	 * @param degrees the degrees
+	 * @return the double
+	 */
 	private double ToRadians(double degrees){
 		return degrees*M_PI/180.0;
 	}
 	
 	/**
-	 * 
+	 * Gets the orentation.
+	 *
 	 * @return the current approach orientation of the wrist
 	 */
 	public double GetOrentation() {
@@ -407,54 +498,54 @@ public class CreateArm {
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @param centers
+	 * Sets the centers.
+	 *
+	 * @param centers the new centers
 	 */
 	public void setCenters(double [] centers) {
 		this.centers = centers;
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @return
+	 * Gets the centers.
+	 *
+	 * @return the centers
 	 */
 	public double [] getCenters() {
 		return centers;
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @param blocking
+	 * Sets the blocking.
+	 *
+	 * @param blocking the new blocking
 	 */
 	public void setBlocking(boolean blocking) {
 		this.blocking = blocking;
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @return
+	 * Checks if is blocking.
+	 *
+	 * @return true, if is blocking
 	 */
 	public boolean isBlocking() {
 		return blocking;
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @param scale
+	 * Sets the scale.
+	 *
+	 * @param scale the new scale
 	 */
 	public void setScale(double scale[]) {
 		this.scale = scale;
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @return
+	 * Gets the scale.
+	 *
+	 * @return the scale
 	 */
 	public double[] getScale() {
 		return scale;

@@ -24,10 +24,13 @@ import com.neuronrobotics.sdk.dyio.DyIOChannelEvent;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.dyio.IChannelEventListener;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class CounterInputChannel.
  */
 public class CounterInputChannel extends DyIOAbstractPeripheral implements IChannelEventListener {
+	
+	/** The listeners. */
 	private ArrayList<ICounterInputListener> listeners = new ArrayList<ICounterInputListener>();
 	
 	/**
@@ -43,7 +46,8 @@ public class CounterInputChannel extends DyIOAbstractPeripheral implements IChan
 	/**
 	 * Constructor.
 	 * Creates an counter input input channel that is syncronous only by default.
-	 * 
+	 *
+	 * @param dyio the dyio
 	 * @param channel - the channel object requested from the DyIO
 	 */
 	public CounterInputChannel(DyIO dyio,int channel){
@@ -61,16 +65,22 @@ public class CounterInputChannel extends DyIOAbstractPeripheral implements IChan
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @param channel
-	 * @param isAsync
+	 * Instantiates a new counter input channel.
+	 *
+	 * @param channel the channel
+	 * @param isAsync the is async
 	 */
 	public CounterInputChannel(DyIOChannel channel,boolean isAsync) {
 		super(channel,DyIOChannelMode.COUNT_IN_INT,isAsync);
 		init(channel,isAsync);
 	}
 	
+	/**
+	 * Inits the.
+	 *
+	 * @param channel the channel
+	 * @param isAsync the is async
+	 */
 	private void init(DyIOChannel channel,boolean isAsync){
 		DyIOChannelMode mode = DyIOChannelMode.COUNT_IN_INT;
 		channel.addChannelEventListener(this);
@@ -109,16 +119,16 @@ public class CounterInputChannel extends DyIOAbstractPeripheral implements IChan
 	}
 	
 	/**
-	 * 
+	 * Removes the all counter input listeners.
 	 */
 	public void removeAllCounterInputListeners() {
 		listeners.clear();
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @param value
+	 * Fire on counter input.
+	 *
+	 * @param value the value
 	 */
 	protected void fireOnCounterInput(int value) {
 		for(ICounterInputListener l : listeners) {
@@ -128,8 +138,8 @@ public class CounterInputChannel extends DyIOAbstractPeripheral implements IChan
 	
 	/**
 	 * onChannelEvent Send the counter value to all the listening objects.
-	 * 
-	 * @param e
+	 *
+	 * @param e the e
 	 */
 	 
 	public void onChannelEvent(DyIOChannelEvent e) {
@@ -137,9 +147,9 @@ public class CounterInputChannel extends DyIOAbstractPeripheral implements IChan
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @param isAsync
+	 * Sets the async.
+	 *
+	 * @param isAsync the new async
 	 */
 	public void setAsync(boolean isAsync) {
 		setMode(DyIOChannelMode.COUNT_IN_INT, isAsync);
@@ -156,6 +166,9 @@ public class CounterInputChannel extends DyIOAbstractPeripheral implements IChan
 	}
 
 	 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.dyio.peripherals.DyIOAbstractPeripheral#hasAsync()
+	 */
 	public boolean hasAsync() {
 		return true;
 	}

@@ -29,14 +29,25 @@ import com.neuronrobotics.sdk.pid.GenericPIDDevice;
 import com.neuronrobotics.sdk.pid.VirtualGenericPIDDevice;
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DHParameterKinematics.
+ */
 public class DHParameterKinematics extends AbstractKinematicsNR implements ITaskSpaceUpdateListenerNR, IJointSpaceUpdateListenerNR{
 	
+	/** The chain. */
 	private DHChain chain=null;
 
+	/** The links listeners. */
 	private ArrayList<Affine> linksListeners = new ArrayList<Affine>();
+	
+	/** The current target. */
 	private Affine currentTarget = new Affine();
+	
+	/** The disconnecting. */
 	boolean disconnecting=false;
 
+	/** The l. */
 	IDeviceConnectionEventListener l = new IDeviceConnectionEventListener() {
 		@Override public void onDisconnect(BowlerAbstractDevice source) {
 			if(!disconnecting){
@@ -48,6 +59,12 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 		@Override public void onConnect(BowlerAbstractDevice source) {}
 	} ;
 	
+	/**
+	 * Instantiates a new DH parameter kinematics.
+	 *
+	 * @param bad the bad
+	 * @param linkStream the link stream
+	 */
 	public DHParameterKinematics( BowlerAbstractDevice bad, Element  linkStream ){
 		super(linkStream,new LinkFactory(bad));
 		setChain(getDhParametersChain());
@@ -55,52 +72,109 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 			getFactory().getDyio().addConnectionEventListener(l);
 	}
 	
+	/**
+	 * Instantiates a new DH parameter kinematics.
+	 *
+	 * @param bad the bad
+	 * @param linkStream the link stream
+	 */
 	public DHParameterKinematics( BowlerAbstractDevice bad, InputStream  linkStream ){
 		super(linkStream,new LinkFactory(bad));
 		setChain(getDhParametersChain());
 		if(getFactory().getDyio()!=null)
 			getFactory().getDyio().addConnectionEventListener(l);
 	}
+	
+	/**
+	 * Instantiates a new DH parameter kinematics.
+	 *
+	 * @param bad the bad
+	 * @param linkStream the link stream
+	 * @param depricated the depricated
+	 */
 	@Deprecated
 	public DHParameterKinematics( BowlerAbstractDevice bad, InputStream linkStream ,InputStream depricated ){
 		this(bad, linkStream);
 	}
 	
+	/**
+	 * Instantiates a new DH parameter kinematics.
+	 *
+	 * @param bad the bad
+	 */
 	public DHParameterKinematics(BowlerAbstractDevice bad) {
 		this(bad,XmlFactory.getDefaultConfigurationStream("TrobotLinks.xml"));
 	}
 
+	/**
+	 * Instantiates a new DH parameter kinematics.
+	 *
+	 * @param bad the bad
+	 * @param file the file
+	 */
 	public DHParameterKinematics(BowlerAbstractDevice bad, String file) {
 		this(bad,XmlFactory.getDefaultConfigurationStream(file));
 	}
 
+	/**
+	 * Instantiates a new DH parameter kinematics.
+	 *
+	 * @param bad the bad
+	 * @param configFile the config file
+	 * @throws FileNotFoundException the file not found exception
+	 */
 	public DHParameterKinematics(BowlerAbstractDevice bad,  File configFile) throws FileNotFoundException {
 		this(bad,new FileInputStream(configFile));
 	}
 	
+	/**
+	 * Instantiates a new DH parameter kinematics.
+	 */
 	public DHParameterKinematics() {
 		this(null,XmlFactory.getDefaultConfigurationStream("TrobotLinks.xml"));
 	}
 	
 
+	/**
+	 * Instantiates a new DH parameter kinematics.
+	 *
+	 * @param file the file
+	 */
 	public DHParameterKinematics( String file) {
 		this(null,XmlFactory.getDefaultConfigurationStream(file));
 	}
 
+	/**
+	 * Instantiates a new DH parameter kinematics.
+	 *
+	 * @param linkStream the link stream
+	 */
 	public DHParameterKinematics( Element linkStream) {
 		this(null,linkStream);
 	}
 	
+	/**
+	 * Instantiates a new DH parameter kinematics.
+	 *
+	 * @param configFile the config file
+	 * @throws FileNotFoundException the file not found exception
+	 */
 	public DHParameterKinematics( File configFile) throws FileNotFoundException {
 		this(null,new FileInputStream(configFile));
 	}
 
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR#inverseKinematics(com.neuronrobotics.sdk.addons.kinematics.math.TransformNR)
+	 */
 	@Override
 	public double[] inverseKinematics(TransformNR taskSpaceTransform)throws Exception {
 		return getDhChain().inverseKinematics(taskSpaceTransform, getCurrentJointSpaceVector());
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR#forwardKinematics(double[])
+	 */
 	@Override
 	public TransformNR forwardKinematics(double[] jointSpaceVector) {
 		if(jointSpaceVector == null || getDhChain() == null)
@@ -112,7 +186,8 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 	
 	
 	/**
-	 * Gets the Jacobian matrix
+	 * Gets the Jacobian matrix.
+	 *
 	 * @return a matrix representing the Jacobian for the current configuration
 	 */
 	public Matrix getJacobian(){
@@ -122,22 +197,47 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 		return m;
 	}
 	
+	/**
+	 * Gets the chain transformations.
+	 *
+	 * @return the chain transformations
+	 */
 	public ArrayList<TransformNR> getChainTransformations(){
 		return getChain().getChain(getCurrentJointSpaceVector());
 	}
 
+	/**
+	 * Sets the dh chain.
+	 *
+	 * @param chain the new dh chain
+	 */
 	public void setDhChain(DHChain chain) {
 		this.setChain(chain);
 	}
 
+	/**
+	 * Gets the dh chain.
+	 *
+	 * @return the dh chain
+	 */
 	public DHChain getDhChain() {
 		return getChain();
 	}
 
+	/**
+	 * Gets the chain.
+	 *
+	 * @return the chain
+	 */
 	public DHChain getChain() {
 		return chain;
 	}
 
+	/**
+	 * Sets the chain.
+	 *
+	 * @param chain the new chain
+	 */
 	public void setChain(DHChain chain) {
 		this.chain = chain;
 		ArrayList<DHLink> dhLinks = chain.getLinks();
@@ -164,6 +264,9 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR#getXml()
+	 */
 	/*
 	 * 
 	 * Generate the xml configuration to generate an XML of this robot. 
@@ -174,6 +277,12 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 		xml+="\n</root>";
 		return xml;
 	}
+	
+	/**
+	 * Gets the embedable xml.
+	 *
+	 * @return the embedable xml
+	 */
 	/*
 	 * 
 	 * Generate the xml configuration to generate an XML of this robot. 
@@ -210,6 +319,9 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 		return xml;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR#disconnectDevice()
+	 */
 	@Override
 	public void disconnectDevice() {
 		// TODO Auto-generated method stub
@@ -217,17 +329,26 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 		removeJointSpaceUpdateListener(this);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR#connectDevice()
+	 */
 	@Override
 	public boolean connectDevice() {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.ITaskSpaceUpdateListenerNR#onTaskSpaceUpdate(com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR, com.neuronrobotics.sdk.addons.kinematics.math.TransformNR)
+	 */
 	@Override
 	public void onTaskSpaceUpdate(AbstractKinematicsNR source, TransformNR pose) {
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.ITaskSpaceUpdateListenerNR#onTargetTaskSpaceUpdate(com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR, com.neuronrobotics.sdk.addons.kinematics.math.TransformNR)
+	 */
 	@Override
 	public void onTargetTaskSpaceUpdate(AbstractKinematicsNR source,
 			TransformNR pose) {
@@ -235,18 +356,39 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 		//TransformFactory.getTransform(pose, getCurrentTargetAffine());
 	}
 
+	/**
+	 * Gets the inverse solver.
+	 *
+	 * @return the inverse solver
+	 */
 	public DhInverseSolver getInverseSolver() {
 		return chain.getInverseSolver();
 	}
 
+	/**
+	 * Sets the inverse solver.
+	 *
+	 * @param inverseSolver the new inverse solver
+	 */
 	public void setInverseSolver(DhInverseSolver inverseSolver) {
 		chain.setInverseSolver(inverseSolver);
 	}
 
+	/**
+	 * Gets the current target affine.
+	 *
+	 * @return the current target affine
+	 */
 	public Affine getCurrentTargetAffine() {
 		return currentTarget;
 	}
 
+	/**
+	 * Adds the new link.
+	 *
+	 * @param newLink the new link
+	 * @param dhLink the dh link
+	 */
 	public void addNewLink(LinkConfiguration newLink, DHLink dhLink) {
 		LinkFactory factory  =getFactory();
 		//remove the link listener while the number of links could chnage
@@ -260,6 +402,11 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 		factory.addLinkListener(this);
 	}
 
+	/**
+	 * Removes the link.
+	 *
+	 * @param index the index
+	 */
 	public void removeLink(int index) {
 		LinkFactory factory  =getFactory();
 		//remove the link listener while the number of links could chnage
@@ -273,12 +420,18 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 		factory.addLinkListener(this);
 	}
 	
+	/**
+	 * Update cad locations.
+	 */
 	public void updateCadLocations(){
 		double[] joints =getCurrentJointSpaceVector();
 		getChain().getChain(joints);
 		onJointSpaceUpdate(this, getCurrentJointSpaceVector());
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.IJointSpaceUpdateListenerNR#onJointSpaceUpdate(com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR, double[])
+	 */
 	@Override
 	public void onJointSpaceUpdate(final AbstractKinematicsNR source, final double[] joints) {
 				ArrayList<TransformNR> ll;
@@ -304,6 +457,9 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 	
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.IJointSpaceUpdateListenerNR#onJointSpaceTargetUpdate(com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR, double[])
+	 */
 	@Override
 	public void onJointSpaceTargetUpdate(AbstractKinematicsNR source,
 			double[] joints) {
@@ -311,6 +467,9 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.IJointSpaceUpdateListenerNR#onJointSpaceLimit(com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR, int, com.neuronrobotics.sdk.addons.kinematics.JointLimit)
+	 */
 	@Override
 	public void onJointSpaceLimit(AbstractKinematicsNR source, int axis,
 			JointLimit event) {

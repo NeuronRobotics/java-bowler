@@ -15,7 +15,7 @@
 package com.neuronrobotics.sdk.network;
 
 /**
- * 
+ * The Class BowlerUDPClient.
  */
 @Deprecated
 public class BowlerUDPClient extends UDPBowlerConnection{

@@ -27,20 +27,27 @@ import com.neuronrobotics.sdk.common.Log;
 
 
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class BowlerTCPServer.
  */
 public class BowlerTCPServer extends BowlerAbstractConnection{
+	
+	/** The sleep time. */
 	private int sleepTime = 5000;
 
+	/** The out. */
 	private PrintWriter out;
 
+	/** The socket. */
 	private Socket socket;
 
 	
 	/**
-	 * @throws IOException 
-	 * 
+	 * Instantiates a new bowler tcp server.
+	 *
+	 * @param socket the socket
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public BowlerTCPServer(Socket socket) throws IOException{
 		this.socket = socket;
@@ -128,6 +135,11 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 		return false;
 	}
 
+	/**
+	 * Checks if is client connected.
+	 *
+	 * @return true, if is client connected
+	 */
 	public boolean isClientConnected() {
 		if(out==null)
 			return true;

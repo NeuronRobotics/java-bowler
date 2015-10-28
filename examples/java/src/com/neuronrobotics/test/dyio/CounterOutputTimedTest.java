@@ -5,10 +5,16 @@ import com.neuronrobotics.sdk.dyio.peripherals.CounterOutputChannel;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class CounterOutputTimedTest.
+ */
 public class CounterOutputTimedTest {
 
 	/**
-	 * @param args
+	 * The main method.
+	 *
+	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
 		DyIO dyio=new DyIO();

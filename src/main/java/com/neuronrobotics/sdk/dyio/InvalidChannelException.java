@@ -14,23 +14,26 @@
  ******************************************************************************/
 package com.neuronrobotics.sdk.dyio;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class InvalidChannelException.
  */
 public class InvalidChannelException extends RuntimeException {
+	
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * 
+	 * Instantiates a new invalid channel exception.
 	 */
 	public InvalidChannelException() {
 		super("The channel is invalid.");
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @param message
+	 * Instantiates a new invalid channel exception.
+	 *
+	 * @param message the message
 	 */
 	public InvalidChannelException(String message) {
 		super(message);

@@ -3,10 +3,16 @@ package com.neuronrobotics.sdk.addons.kinematics;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Interface IRegistrationListenerNR.
+ */
 public interface IRegistrationListenerNR {
+	
 	/**
 	 * The fiducial to robot 0 
-	 * This is called when the configuration of the robot is set up
+	 * This is called when the configuration of the robot is set up.
+	 *
 	 * @param source The AbstractKinematics object that the update was called from
 	 * @param regestration the current regestration
 	 */
@@ -14,7 +20,8 @@ public interface IRegistrationListenerNR {
 	
 	/**
 	 * The global to fiducial transform
-	 * This is called when the robot is regestered in global coordinantes
+	 * This is called when the robot is regestered in global coordinantes.
+	 *
 	 * @param source The AbstractKinematics object that the update was called from
 	 * @param regestration the current regestration in global space
 	 */

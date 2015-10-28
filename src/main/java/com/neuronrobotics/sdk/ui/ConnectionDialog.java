@@ -25,19 +25,42 @@ import com.neuronrobotics.sdk.dyio.DyIOCommunicationException;
 import com.neuronrobotics.sdk.serial.SerialConnection;
 import com.neuronrobotics.sdk.util.OsInfoUtil;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ConnectionDialog.
+ */
 public class ConnectionDialog extends JDialog {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 	
+	/** The connection. */
 	private SerialConnection connection = null;
+	
+	/** The is cancled. */
 	private boolean isCancled = true;
+	
+	/** The panel. */
 	private JPanel panel;
+	
+	/** The connect btn. */
 	private JButton connectBtn;
+	
+	/** The refresh. */
 	private JButton refresh;
+	
+	/** The cancel btn. */
 	private JButton cancelBtn;
+	
+	/** The connection panels. */
 	private JTabbedPane connectionPanels;
 
+	/** The laf. */
 	private  LookAndFeel laf;
+	
+	/**
+	 * Instantiates a new connection dialog.
+	 */
 	public ConnectionDialog() {
 		setIconImage( ConnectionImageIconFactory.getIcon("images/hat.png").getImage());
 	       
@@ -110,6 +133,9 @@ public class ConnectionDialog extends JDialog {
 		
 	}
 	
+	/**
+	 * Load default connections.
+	 */
 	private void loadDefaultConnections() {
 		try{
 			try{
@@ -131,6 +157,11 @@ public class ConnectionDialog extends JDialog {
 		
 	}
 
+	/**
+	 * Adds the connection panel.
+	 *
+	 * @param panel the panel
+	 */
 	public void addConnectionPanel(AbstractConnectionPanel panel) {
 		connectionPanels.addTab(panel.getTitle(), panel.getIcon(), panel, panel.getToolTipText());
 		connectionPanels.invalidate();
@@ -151,9 +182,9 @@ public class ConnectionDialog extends JDialog {
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @return
+	 * Gets the connection.
+	 *
+	 * @return the connection
 	 */
 	public BowlerAbstractConnection getConnection() {
 		
@@ -165,14 +196,21 @@ public class ConnectionDialog extends JDialog {
 		return c;
 	}
 	
+	/**
+	 * Gets the bowler device.
+	 *
+	 * @param dev the dev
+	 * @return the bowler device
+	 */
 	public static boolean getBowlerDevice(BowlerAbstractDevice dev) {
 		return getBowlerDevice(dev, null);
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @param dev
+	 * Gets the bowler device.
+	 *
+	 * @param dev the dev
+	 * @param panel the panel
 	 * @return Returns if the device has been found
 	 */
 	public static boolean getBowlerDevice(BowlerAbstractDevice dev, AbstractConnectionPanel panel){
@@ -215,8 +253,8 @@ public class ConnectionDialog extends JDialog {
 
 	
 	/**
-	 * Displays a serial connection dialog to the user and returns the connection or null
-	 * 
+	 * Displays a serial connection dialog to the user and returns the connection or null.
+	 *
 	 * @return the connection if one is selected, null if canceled or no connection is selected.
 	 */
 	public static BowlerAbstractConnection promptConnection() {
@@ -232,13 +270,20 @@ public class ConnectionDialog extends JDialog {
 		return getHeadlessConnection(System.getProperty("nrdk.config.file"));
 	}
 	
+	/**
+	 * Gets the headless connection.
+	 *
+	 * @param config the config
+	 * @return the headless connection
+	 */
 	public static BowlerAbstractConnection getHeadlessConnection(String config){
 		return ConfigManager.loadDefaultConnection(config);
 	}
 	
 	/**
-	 * Displays a serial connection dialog to the user and returns the connection or null
-	 * 
+	 * Displays a serial connection dialog to the user and returns the connection or null.
+	 *
+	 * @param panel the panel
 	 * @return the connection if one is selected, null if canceled or no connection is selected.
 	 */
 	public static BowlerAbstractConnection promptConnection(AbstractConnectionPanel panel) {

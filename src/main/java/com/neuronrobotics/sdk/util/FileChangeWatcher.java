@@ -42,15 +42,36 @@ import java.nio.file.attribute.*;
 import java.io.*;
 import java.util.*;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class FileChangeWatcher.
+ */
 public class FileChangeWatcher extends Thread {
 
+	/** The file to watch. */
 	private File fileToWatch;
+	
+	/** The run. */
 	private boolean run = true;
+	
+	/** The watcher. */
 	private final WatchService watcher;
+	
+	/** The keys. */
 	private final Map<WatchKey, Path> keys;
+	
+	/** The recursive. */
 	private final boolean recursive=false;
+	
+	/** The listeners. */
 	private ArrayList<IFileChangeListener> listeners = new ArrayList<IFileChangeListener>();
 	
+	/**
+	 * Instantiates a new file change watcher.
+	 *
+	 * @param fileToWatch the file to watch
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public FileChangeWatcher(File fileToWatch) throws IOException {
 		this.setFileToWatch(fileToWatch);
 		setName("File Watcher Thread for " + fileToWatch.getAbsolutePath());
@@ -66,25 +87,45 @@ public class FileChangeWatcher extends Thread {
 		}
 	}
 	
+	/**
+	 * Adds the i file change listener.
+	 *
+	 * @param l the l
+	 */
 	public void addIFileChangeListener(IFileChangeListener l){
 		if(!listeners.contains(l)){
 			listeners.add(l);
 		}
 	}
 	
+	/**
+	 * Removes the i file change listener.
+	 *
+	 * @param l the l
+	 */
 	public void removeIFileChangeListener(IFileChangeListener l){
 		if(listeners.contains(l)){
 			listeners.remove(l);
 		}
 	}
 
+	/**
+	 * Cast.
+	 *
+	 * @param <T> the generic type
+	 * @param event the event
+	 * @return the watch event
+	 */
 	@SuppressWarnings("unchecked")
 	static <T> WatchEvent<T> cast(WatchEvent<?> event) {
 		return (WatchEvent<T>) event;
 	}
 
 	/**
-	 * Register the given directory with the WatchService
+	 * Register the given directory with the WatchService.
+	 *
+	 * @param dir the dir
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	private void register(Path dir) throws IOException {
 		WatchKey key = dir.register(watcher, ENTRY_CREATE, ENTRY_DELETE,ENTRY_MODIFY);
@@ -104,6 +145,9 @@ public class FileChangeWatcher extends Thread {
 	/**
 	 * Register the given directory, and all its sub-directories, with the
 	 * WatchService.
+	 *
+	 * @param start the start
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	private void registerAll(final Path start) throws IOException {
 		// register directory and sub-directories
@@ -117,6 +161,9 @@ public class FileChangeWatcher extends Thread {
 		});
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Thread#run()
+	 */
 	@Override
 	public void run() {
 		while (run) {
@@ -185,18 +232,36 @@ public class FileChangeWatcher extends Thread {
 		}
 	}
 
+	/**
+	 * Gets the file to watch.
+	 *
+	 * @return the file to watch
+	 */
 	public File getFileToWatch() {
 		return fileToWatch;
 	}
 
+	/**
+	 * Sets the file to watch.
+	 *
+	 * @param fileToWatch the new file to watch
+	 */
 	public void setFileToWatch(File fileToWatch) {
 		this.fileToWatch = fileToWatch;
 	}
 
+	/**
+	 * Checks if is run.
+	 *
+	 * @return true, if is run
+	 */
 	public boolean isRun() {
 		return run;
 	}
 
+	/**
+	 * Close.
+	 */
 	public void close() {
 		this.run = false;
 

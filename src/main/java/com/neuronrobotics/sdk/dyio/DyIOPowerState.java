@@ -1,10 +1,27 @@
 package com.neuronrobotics.sdk.dyio;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Enum DyIOPowerState.
+ */
 public enum DyIOPowerState {
+	
+	/** The regulated. */
 	REGULATED,
+	
+	/** The battery unpowered. */
 	BATTERY_UNPOWERED,
+	
+	/** The battery powered. */
 	BATTERY_POWERED;
 	
+	/**
+	 * Value of.
+	 *
+	 * @param code the code
+	 * @param batteryVoltage the battery voltage
+	 * @return the dy io power state
+	 */
 	public static DyIOPowerState valueOf(int code, double batteryVoltage) {
 		switch(code) {
 		case 1:
@@ -16,6 +33,10 @@ public enum DyIOPowerState {
 			return DyIOPowerState.BATTERY_POWERED;
 		}
 	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Enum#toString()
+	 */
 	@Override
 	public String toString(){
 		String s="";

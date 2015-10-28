@@ -15,6 +15,7 @@
 package com.neuronrobotics.sdk.dyio;
 
 import com.neuronrobotics.sdk.common.BowlerDatagram;
+// TODO: Auto-generated Javadoc
 /**
  * An asyncrono event.
  * @author rbreznak
@@ -22,6 +23,7 @@ import com.neuronrobotics.sdk.common.BowlerDatagram;
  */
 public class DyIOAsyncEvent implements IDyIOEvent {
 	
+	/** The datagram. */
 	private BowlerDatagram datagram;
 	
 	/**

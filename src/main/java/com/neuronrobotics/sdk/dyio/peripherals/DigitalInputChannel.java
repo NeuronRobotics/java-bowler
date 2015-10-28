@@ -23,11 +23,13 @@ import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.common.DeviceManager;
 import com.neuronrobotics.sdk.dyio.IChannelEventListener;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class DigitalInputChannel.
  */
 public class DigitalInputChannel extends DyIOAbstractPeripheral implements IChannelEventListener {
 	
+	/** The listeners. */
 	private ArrayList<IDigitalInputListener> listeners = new ArrayList<IDigitalInputListener>();
 	
 	/**
@@ -59,7 +61,8 @@ public class DigitalInputChannel extends DyIOAbstractPeripheral implements IChan
 	/**
 	 * Constructor.
 	 * Creates an counter input input channel that is syncronous only by default.
-	 * 
+	 *
+	 * @param dyio the dyio
 	 * @param channel - the channel object requested from the DyIO
 	 */
 	public  DigitalInputChannel(DyIO dyio,int channel){
@@ -129,6 +132,11 @@ public class DigitalInputChannel extends DyIOAbstractPeripheral implements IChan
 		listeners.add(l);
 	}
 	
+	/**
+	 * Fire value changed.
+	 *
+	 * @param value the value
+	 */
 	private void fireValueChanged(boolean value) {
 		for(IDigitalInputListener l : listeners) {
 			l.onDigitalValueChange(this, value);
@@ -144,6 +152,9 @@ public class DigitalInputChannel extends DyIOAbstractPeripheral implements IChan
 	}
 
 	 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.dyio.peripherals.DyIOAbstractPeripheral#hasAsync()
+	 */
 	public boolean hasAsync() {
 		return true;
 	}

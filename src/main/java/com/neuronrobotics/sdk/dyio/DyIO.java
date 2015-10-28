@@ -49,6 +49,7 @@ import com.neuronrobotics.sdk.pid.PIDCommandException;
 import com.neuronrobotics.sdk.pid.PIDConfiguration;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
+// TODO: Auto-generated Javadoc
 /**
  * The DyIO class is an encapsulation of all of the functionality of the DyIO module into one object. This 
  * object has one connection to one DyIO module and wraps all of the commands in an accessible API. 
@@ -56,26 +57,52 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
  */
 public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,IConnectionEventListener {
 
+	/** The Constant NEURONROBOTICS_DYIO_1_0. */
 	private static final String NEURONROBOTICS_DYIO_1_0 = "neuronrobotics.dyio.*;1.0";
+	
+	/** The listeners. */
 	private ArrayList<IDyIOEventListener> listeners = new ArrayList<IDyIOEventListener>();
+	
+	/** The channels. */
 	private ArrayList<DyIOChannel> channels = new ArrayList<DyIOChannel>();
 	
+	/** The firmware. */
 	private byte [] firmware = {0, 0, 0};
+	
+	/** The info. */
 	private String info = "DyIO";
 	
+	/** The bank a state. */
 	private DyIOPowerState bankAState;
+	
+	/** The bank b state. */
 	private DyIOPowerState bankBState;
+	
+	/** The battery voltage. */
 	private double batteryVoltage = 0;
 	
+	/** The cached mode. */
 	private boolean cachedMode=false;
+	
+	/** The mute resync on mode change. */
 	private boolean muteResyncOnModeChange=false;
+	
+	/** The check firmware. */
 	private static boolean checkFirmware=false;
+	
+	/** The resyncing. */
 	private boolean resyncing = false;
+	
+	/** The have been synced. */
 	private boolean haveBeenSynced =false;
 	
+	/** The legacy parser. */
 	private boolean legacyParser = false;
+	
+	/** The enable brown out. */
 	private Boolean enableBrownOut=null;
 	
+	/** The pid. */
 	private GenericPIDDevice pid = new GenericPIDDevice();
 	/**
 	 * Default Constructor.
@@ -88,7 +115,8 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 
 	/**
 	 * Builds a DyIO that has the given address and no default connection.
-	 * @param address
+	 *
+	 * @param address the address
 	 */
 	public DyIO(MACAddress address) {
 		setAddress(address);
@@ -97,7 +125,8 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	
 	/**
 	 * Builds a DyIO with the given connection and the broadcast address.
-	 * @param connection
+	 *
+	 * @param connection the connection
 	 */
 	public DyIO(BowlerAbstractConnection connection) {
 		setAddress(new MACAddress(MACAddress.BROADCAST));
@@ -108,8 +137,9 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 
 	/**
 	 * Builds a DyIO with the given address and connection.
-	 * @param address
-	 * @param connection
+	 *
+	 * @param address the address
+	 * @param connection the connection
 	 */
 	public DyIO(MACAddress address, BowlerAbstractConnection connection) {
 		setAddress(address);
@@ -120,16 +150,19 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 
 	/**
 	 * Returns the DyIO channel associated with a channel number.
-	 * 
+	 *
 	 * @param channel  integer representing the index of the channel
 	 *            - a channel number
-	 * @return
+	 * @return the channel
 	 */
 	public DyIOChannel getChannel(int channel) {
 		validateChannel(channel);
 		return getInternalChannels().get(channel);
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.common.BowlerAbstractDevice#send(java.lang.String, com.neuronrobotics.sdk.common.BowlerMethod, java.lang.String, java.lang.Object[])
+	 */
 	public Object[] send(String NS,BowlerMethod method, String rpcString, Object[] arguments){
 		return send(NS,method,rpcString,arguments,2);
 	}
@@ -166,8 +199,8 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	}
 	
 	/**
-	 * THis method returns the state of the given channels I/O mode
-	 * 
+	 * THis method returns the state of the given channels I/O mode.
+	 *
 	 * @param channel integer representing the index of the channel
 	 * @return the current mode
 	 */
@@ -284,8 +317,8 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	
 	/**
 	 * This method synchronizes the DyIO channel mode from the DyIO module with this DyIO channel object
-	 * This will actively query the DyIO for this information
-	 * 
+	 * This will actively query the DyIO for this information.
+	 *
 	 * @param channel  integer representing the index of the channel
 	 */
 	public void resync(int channel) {
@@ -301,7 +334,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	}
 	
 	/**
-	 * This static method can be called before connection a DyIO object to enable the firmware verification step
+	 * This static method can be called before connection a DyIO object to enable the firmware verification step.
 	 */
 	public static void enableFWCheck() {
 		//checkFirmware=true;
@@ -312,6 +345,8 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	 * This method will query the device for its firmware revision and its info string. 
 	 * The default opperation will be to throw a DyIOFirmwareOutOfDateException is the firmware version does not match
 	 * the NRDK build version. This can be overridden if DyIO.disableFWCheck() is called BEFORE connection.
+	 *
+	 * @throws DyIOFirmwareOutOfDateException the dy io firmware out of date exception
 	 */
 	public void checkFirmwareRev()throws DyIOFirmwareOutOfDateException{
 		if(checkFirmware) {
@@ -332,6 +367,11 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 		}
 	}
 	
+	/**
+	 * Gets the all channel modes.
+	 *
+	 * @return the all channel modes
+	 */
 	public ArrayList<DyIOChannelMode> getAllChannelModes(){
 		ArrayList<DyIOChannelMode> modes = new ArrayList<DyIOChannelMode>();
 		BowlerDatagram response;
@@ -476,7 +516,8 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	}
 	
 	/**
-	 * Check to see if the firmware has been checked yet
+	 * Check to see if the firmware has been checked yet.
+	 *
 	 * @return true if already checked
 	 */
 	private boolean haveFirmware() {
@@ -494,9 +535,8 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	 * This is how to access the Power events:
 	 * DyIO power switch change events
 	 * DyIO external power voltage change events
-	 * 
-	 * 
-	 * @param l
+	 *
+	 * @param l the l
 	 */
 	public void addDyIOEventListener(IDyIOEventListener l) {
 		if(listeners.contains(l)) {
@@ -509,8 +549,8 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	/**
 	 * Removes an IDyIOEventListener from being contacted on each new
 	 * IDyIOEvent.
-	 * 
-	 * @param l
+	 *
+	 * @param l the l
 	 */
 	public void removeDyIOEventListener(IDyIOEventListener l) {
 		if(!listeners.contains(l)) {
@@ -595,11 +635,13 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 				}
 		}
 	}
+	
 	/**
 	 * This method will flush the DyIO cache for all channels. All channel values as stored by setting the value from code, or the value 
 	 * stored at the time that the cache/flush mode was enabled. THis method will flush all 24 channel values in one packet allowing for 
 	 * co-ordinated motion.
-	 * @param time in seconds
+	 *
+	 * @param seconds the seconds
 	 */
 	public void flushCache(double seconds) {
 		//System.out.println("Updating all channels");
@@ -652,16 +694,19 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 //	}
 //	
 	/**
-	 * This method returns the bank switch state of bank A (0-11)
-	 * This state is updated asynchronously by the DyIOEventListener
-	 * @return the current state
-	 */
+ * This method returns the bank switch state of bank A (0-11)
+ * This state is updated asynchronously by the DyIOEventListener.
+ *
+ * @return the current state
+ */
 	public DyIOPowerState getBankAState() {
 		return bankAState;
 	}
+	
 	/**
 	 * This method returns the bank switch state of bank B (12-23)
-	 * This state is updated asynchronously by the DyIOEventListener
+	 * This state is updated asynchronously by the DyIOEventListener.
+	 *
 	 * @return the current state
 	 */
 	public DyIOPowerState getBankBState() {
@@ -680,9 +725,11 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 		}
 		return batteryVoltage;
 	}
+	
 	/**
-	 * Parses a datagram into the power event data
-	 * @param data
+	 * Parses a datagram into the power event data.
+	 *
+	 * @param data the data
 	 */
 	private void powerEvent(BowlerDatagram data) {
 		
@@ -780,17 +827,20 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	/**
 	 * This method sends a packet to the DyIO module to set up the linking between a DyIO input channel and a DyIO output channel to a PID controller
 	 * Inputs are read as the input to the PID calculation
-	 * Outputs are set as a result of the PID calculation
+	 * Outputs are set as a result of the PID calculation.
+	 *
 	 * @param config the configuration data object
 	 * @return true if success
 	 */
 	public boolean ConfigureDynamicPIDChannels(DyPIDConfiguration config){
 		return send(new ConfigureDynamicPIDCommand(config))!=null;
 	}
+	
 	/**
-	 * This method gets the current state of the DyIO channel configuration of a given PID group
+	 * This method gets the current state of the DyIO channel configuration of a given PID group.
+	 *
 	 * @param group the index of the PID group to get information about
-	 * @return
+	 * @return the dy pid configuration
 	 */
 	public DyPIDConfiguration getDyPIDConfiguration(int group){
 		BowlerDatagram conf = send(new ConfigureDynamicPIDCommand( group) );
@@ -805,6 +855,13 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	public boolean ResetPIDChannel(int group, int valueToSetCurrentTo) {
 		return getPid().ResetPIDChannel(group, valueToSetCurrentTo);
 	}
+	
+	/**
+	 * Reset pid channel.
+	 *
+	 * @param group the group
+	 * @return true, if successful
+	 */
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.pid.IPIDControl#ResetPIDChannel
 	 */
@@ -909,9 +966,11 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	public boolean configAdvancedAsyncNotEqual(int pin){
 		return configAdvancedAsyncNotEqual(pin,100);
 	}
+	
 	/**
 	 * This method configures the advanced async mode for a given DyIO channel to trigger on any event where the values are outside a deadband
-	 * This sets the sample time to 100 ms
+	 * This sets the sample time to 100 ms.
+	 *
 	 * @param pin the DyIO channel to configure
 	 * @param deadbandSize the size in sensor units of the deadband
 	 * @return true if success
@@ -919,9 +978,11 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	public boolean configAdvancedAsyncDeadBand(int pin,int deadbandSize){
 		return  configAdvancedAsyncDeadBand(pin,100,deadbandSize);
 	}
+	
 	/**
 	 * This method configures the advanced async mode for a given DyIO channel to trigger on any event where the value crosses a threshhold
-	 * This sets the sample time to 100 ms
+	 * This sets the sample time to 100 ms.
+	 *
 	 * @param pin the DyIO channel to configure
 	 * @param threshholdValue a value setpoint that triggers an even when it is crossed
 	 * @param edgeType Rising, Falling, or both
@@ -930,10 +991,12 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	public boolean configAdvancedAsyncTreshhold(int pin,int threshholdValue, AsyncThreshholdEdgeType edgeType){
 		return  configAdvancedAsyncTreshhold(pin,100, threshholdValue, edgeType);
 	}
+	
 	/**
 	 * This method configures the advanced async mode for a given DyIO channel to trigger on any event where the value is sampled on a real-time 
 	 * This sets the sample time to 100 ms
-	 * clock and sent as async regardless of value change
+	 * clock and sent as async regardless of value change.
+	 *
 	 * @param pin  the DyIO channel to configure
 	 * @return true if success
 	 */
@@ -950,8 +1013,10 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	public boolean configAdvancedAsyncNotEqual(int pin,int time){
 		return send(new ConfigAsyncCommand(pin,time,AsyncMode.NOTEQUAL)) == null;
 	}
+	
 	/**
-	 * This method configures the advanced async mode for a given DyIO channel to trigger on any event where the values are outside a deadband
+	 * This method configures the advanced async mode for a given DyIO channel to trigger on any event where the values are outside a deadband.
+	 *
 	 * @param pin the DyIO channel to configure
 	 * @param time the sample time in MiliSeconds
 	 * @param deadbandSize the size in sensor units of the deadband
@@ -960,8 +1025,10 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	public boolean configAdvancedAsyncDeadBand(int pin,int time,int deadbandSize){
 		return send(new ConfigAsyncCommand(pin,time,deadbandSize)) == null;
 	}
+	
 	/**
-	 * This method configures the advanced async mode for a given DyIO channel to trigger on any event where the value crosses a threshhold
+	 * This method configures the advanced async mode for a given DyIO channel to trigger on any event where the value crosses a threshhold.
+	 *
 	 * @param pin the DyIO channel to configure
 	 * @param time the sample time in MiliSeconds
 	 * @param threshholdValue a value setpoint that triggers an even when it is crossed
@@ -971,9 +1038,11 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	public boolean configAdvancedAsyncTreshhold(int pin,int time,int threshholdValue, AsyncThreshholdEdgeType edgeType){
 		return send(new ConfigAsyncCommand(pin,time,threshholdValue,edgeType)) == null;
 	}
+	
 	/**
 	 * This method configures the advanced async mode for a given DyIO channel to trigger on any event where the value is sampled on a real-time 
-	 * clock and sent as async regardless of value change
+	 * clock and sent as async regardless of value change.
+	 *
 	 * @param pin  the DyIO channel to configure
 	 * @param time the sample time in MiliSeconds
 	 * @return true if success
@@ -984,6 +1053,9 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	
 	
 	 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.common.BowlerAbstractDevice#connect()
+	 */
 	public boolean connect(){
 		if(getConnection()!=null) {
 			getConnection().addConnectionEventListener(this);
@@ -1006,6 +1078,8 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	 * communication fails to send in the given time, then the device should go into its "safe state". 
 	 * This will also set up a thread to ping the device periodically if it has been too long since the last 
 	 * user generated synchronous packet.
+	 *
+	 * @param msHeartBeatTime the ms heart beat time
 	 */
 	public void startHeartBeat(long msHeartBeatTime){
 		super.startHeartBeat(msHeartBeatTime);
@@ -1019,6 +1093,11 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 		}
 	}
 	
+	/**
+	 * Gets the heart beat time.
+	 *
+	 * @return the heart beat time
+	 */
 	public int getHeartBeatTime(){
 		BowlerDatagram b = send(new SafeModeCommand());
 		if(b==null)
@@ -1071,9 +1150,11 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 		powerEvent(send(new PowerCommand(!enableBrownOut)));
 		return  true;
 	}
+	
 	/**
-	 * Tells the application whether or not to use the brownout detect
-	 * @return
+	 * Tells the application whether or not to use the brownout detect.
+	 *
+	 * @return the boolean
 	 */
 	public Boolean isServoPowerSafeMode() {
 		if(enableBrownOut== null){
@@ -1083,8 +1164,9 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	}
 	
 	/**
-	 * Getter for channels
-	 * @return
+	 * Getter for channels.
+	 *
+	 * @return the internal channels
 	 */
 	private ArrayList<DyIOChannel> getInternalChannels() {
 		return channels;
@@ -1097,14 +1179,19 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	public void setMuteResyncOnModeChange(boolean muteResyncOnModeChange) {
 		this.muteResyncOnModeChange = muteResyncOnModeChange;
 	}
+	
 	/**
-	 * This will check if the device is in the muted mode change mode
+	 * This will check if the device is in the muted mode change mode.
+	 *
 	 * @return true if in muted mode
 	 */
 	public boolean isMuteResyncOnModeChange() {
 		return muteResyncOnModeChange;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.common.IConnectionEventListener#onDisconnect(com.neuronrobotics.sdk.common.BowlerAbstractConnection)
+	 */
 	@Override
 	public void onDisconnect(BowlerAbstractConnection source) {
 		firmware[0]=0;
@@ -1112,20 +1199,27 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 		firmware[2]=0;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.common.IConnectionEventListener#onConnect(com.neuronrobotics.sdk.common.BowlerAbstractConnection)
+	 */
 	@Override
 	public void onConnect(BowlerAbstractConnection source) {
 
 	}
+	
 	/**
-	 * Sets the flag to represent if the DyIO is currently re-syncing itself with the device
-	 * @param resyncing
+	 * Sets the flag to represent if the DyIO is currently re-syncing itself with the device.
+	 *
+	 * @param resyncing the new resyncing
 	 */
 	public void setResyncing(boolean resyncing) {
 		this.resyncing = resyncing;
 	}
+	
 	/**
 	 * Checks to see if the DyIO is currently re-syncing its internal staate. 
-	 * @param resyncing
+	 *
+	 * @return true, if is resyncing
 	 */
 	public boolean isResyncing() {
 		return resyncing;
@@ -1156,9 +1250,11 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 		
 		return s;
 	}
+	
 	/**
-	 * Gets the values of all channels as an array
-	 * @return the values of all non stream arrays. 
+	 * Gets the values of all channels as an array.
+	 *
+	 * @return the values of all non stream arrays.
 	 */
 	public int[] getAllChannelValues() {
 		int [] back = new int[getInternalChannels().size()];
@@ -1201,25 +1297,41 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 		return back;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#ConfigurePDVelovityController(com.neuronrobotics.sdk.pid.PDVelocityConfiguration)
+	 */
 	@Override
 	public boolean ConfigurePDVelovityController(PDVelocityConfiguration config) {
 		// TODO Auto-generated method stub
 		return getPid().ConfigurePDVelovityController(config);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#getPDVelocityConfiguration(int)
+	 */
 	@Override
 	public PDVelocityConfiguration getPDVelocityConfiguration(int group) {
 		// TODO Auto-generated method stub
 		return getPid().getPDVelocityConfiguration(group);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#getPIDChannelCount()
+	 */
 	@Override
 	public int getPIDChannelCount() {
 		// TODO Auto-generated method stub
 		return getPid().getPIDChannelCount();
 	}
 	
+	/** The dyio chan count. */
 	private Integer dyioChanCount = null;
+	
+	/**
+	 * Gets the dy io channel count.
+	 *
+	 * @return the dy io channel count
+	 */
 	public Integer getDyIOChannelCount(){
 		
 		if(dyioChanCount == null){
@@ -1241,6 +1353,12 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 		return dyioChanCount;
 	}
 	
+	/**
+	 * Gets the availible channel modes.
+	 *
+	 * @param channel the channel
+	 * @return the availible channel modes
+	 */
 	public ArrayList<DyIOChannelMode> getAvailibleChannelModes(int channel){
 		ArrayList<DyIOChannelMode> modes = new ArrayList<DyIOChannelMode>();
 		ByteList m;
@@ -1271,14 +1389,29 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 		return modes;
 	}
 
+	/**
+	 * Gets the pid.
+	 *
+	 * @return the pid
+	 */
 	public GenericPIDDevice getPid() {
 		return pid;
 	}
 
+	/**
+	 * Checks if is legacy parser.
+	 *
+	 * @return true, if is legacy parser
+	 */
 	public boolean isLegacyParser() {
 		return legacyParser;
 	}
 
+	/**
+	 * Sets the legacy parser.
+	 *
+	 * @param legacyParser the new legacy parser
+	 */
 	public void setLegacyParser(boolean legacyParser) {
 		this.legacyParser = legacyParser;
 	}

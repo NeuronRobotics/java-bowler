@@ -3,10 +3,16 @@ package com.neuronrobotics.test.nrdk;
 import com.neuronrobotics.sdk.genericdevice.GenericDevice;
 import com.neuronrobotics.sdk.serial.SerialConnection;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class SimpleConnection.
+ */
 public class SimpleConnection {
 
 	/**
-	 * @param args
+	 * The main method.
+	 *
+	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
 		SerialConnection s = null;

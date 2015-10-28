@@ -6,6 +6,10 @@ import com.neuronrobotics.sdk.pid.PIDChannel;
 import com.neuronrobotics.sdk.pid.PIDCommandException;
 import com.neuronrobotics.sdk.pid.PIDConfiguration;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Interface IPidControlNamespace.
+ */
 public interface IPidControlNamespace {
 	/**
 	 * This method calls a reset of the PID group. This will set the current value of the controllers input to the given value (if possible)
@@ -46,8 +50,9 @@ public interface IPidControlNamespace {
 	public PDVelocityConfiguration getPDVelocityConfiguration(int group);
 	
 	/**
-	 * Requests the current number of PID channels
-	 * @return
+	 * Requests the current number of PID channels.
+	 *
+	 * @return the PID channel count
 	 */
 	public int getPIDChannelCount();
 	/**
@@ -78,23 +83,29 @@ public interface IPidControlNamespace {
 	 * @return and array of values representing the current state of the given cntrollers input
 	 */
 	public int [] GetAllPIDPosition();
+	
 	/**
 	 * Allows a user to attach a listener to the device to listen for PID events
 	 * Events include: 
 	 * PID reset, where the user is notified if the controllers input is reset from software 
 	 * PID limit, if the device generates a Home, Upper limit, or Lower limit event from a hardware event
-	 * PID position, if the current position of the PID controllers sensor input changes
-	 * @param l
+	 * PID position, if the current position of the PID controllers sensor input changes.
+	 *
+	 * @param l the l
 	 */
 	public void addPIDEventListener(IPIDEventListener l);
+	
 	/**
-	 * Removes a specific IPIDEventListener
-	 * @param l
+	 * Removes a specific IPIDEventListener.
+	 *
+	 * @param l the l
 	 */
 	public void removePIDEventListener(IPIDEventListener l);
+	
 	/**
-	 * This method will read all of the cached or current setpoints for all PID controllers and calls SetAllPIDSetPoint with its internal data
-	 * @param time
+	 * This method will read all of the cached or current setpoints for all PID controllers and calls SetAllPIDSetPoint with its internal data.
+	 *
+	 * @param time the time
 	 */
 	public void flushPIDChannels(double time);
 	/**
@@ -107,13 +118,15 @@ public interface IPidControlNamespace {
 	 * @throws PIDCommandException If the values are out of range with the given data
 	 */
 	public boolean SetPIDInterpolatedVelocity(int group,int unitsPerSecond,double seconds) throws PIDCommandException;
+	
 	/**
 	 * This method will use the internal PD velocity controller to run a PID controller at a constant velocity. Since this is not using the linear interpolation, 
 	 * it can run forever by giving Zero as the 'seconds' parameter. 
-	 * @param group the index of the PID group 
+	 *
+	 * @param group the index of the PID group
 	 * @param unitsPerSecond  a velocity in raw units per second
 	 * @param seconds the amount of time to run at this velocity, or Zero to run forever
-	 * @return
+	 * @return true, if successful
 	 * @throws PIDCommandException If the values are out of range with the given data
 	 */
 	public boolean SetPDVelocity(int group,int unitsPerSecond,double seconds) throws PIDCommandException;
@@ -124,14 +137,18 @@ public interface IPidControlNamespace {
 	 * @return a PIDChannel encapsulation object
 	 */
 	public PIDChannel getPIDChannel(int group);
+	
 	/**
 	 * Sends a single packet to stop all PID groups at once.
-	 * @return
+	 *
+	 * @return true, if successful
 	 */
 	public boolean killAllPidGroups();
+	
 	/**
 	 * Checks to see if the PID controller object is connected with its device.
-	 * @return
+	 *
+	 * @return true, if is available
 	 */
 	public boolean isAvailable();
 }

@@ -5,10 +5,24 @@ import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.pid.GenericPIDDevice;
 import com.neuronrobotics.sdk.pid.ILinkFactoryProvider;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class CartesianNamespacePidKinematics.
+ */
 public class CartesianNamespacePidKinematics extends AbstractKinematicsNR{
+	
+	/** The factory. */
 	private LinkFactory factory;
+	
+	/** The connection. */
 	private ILinkFactoryProvider connection;
 	
+	/**
+	 * Instantiates a new cartesian namespace pid kinematics.
+	 *
+	 * @param device the device
+	 * @param connection the connection
+	 */
 	public CartesianNamespacePidKinematics(GenericPIDDevice device,ILinkFactoryProvider connection){
 		super();
 		this.connection = connection;
@@ -18,8 +32,9 @@ public class CartesianNamespacePidKinematics extends AbstractKinematicsNR{
 	}
 	
 	/**
-	 * This calculates the target pose 
-	 * @param taskSpaceTransform
+	 * This calculates the target pose .
+	 *
+	 * @param taskSpaceTransform the task space transform
 	 * @param seconds the time for the transition to take from current position to target, unit seconds
 	 * @return The joint space vector is returned for target arrival referance
 	 * @throws Exception If there is a workspace error
@@ -41,7 +56,8 @@ public class CartesianNamespacePidKinematics extends AbstractKinematicsNR{
 	
 	/**
 	 * This takes a reading of the robots position and converts it to a joint space vector
-	 * This vector is converted to task space and returned 
+	 * This vector is converted to task space and returned .
+	 *
 	 * @return taskSpaceVector in mm,radians [x,y,z,rotx,rotY,rotZ]
 	 */
 	@Override
@@ -58,8 +74,9 @@ public class CartesianNamespacePidKinematics extends AbstractKinematicsNR{
 	
 	
 	/**
-	 * This calculates the target pose 
-	 * @param JointSpaceVector the target joint space vector
+	 * This calculates the target pose .
+	 *
+	 * @param jointSpaceVect the joint space vect
 	 * @param seconds the time for the transition to take from current position to target, unit seconds
 	 * @return The joint space vector is returned for target arrival referance
 	 * @throws Exception If there is a workspace error
@@ -79,7 +96,8 @@ public class CartesianNamespacePidKinematics extends AbstractKinematicsNR{
 	}
 	
 	/**
-	 * Sets an individual target joint position 
+	 * Sets an individual target joint position .
+	 *
 	 * @param axis the joint index to set
 	 * @param value the value to set it to
 	 * @param seconds the time for the transition to take from current position to target, unit seconds
@@ -120,23 +138,35 @@ public class CartesianNamespacePidKinematics extends AbstractKinematicsNR{
 	
 	
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR#inverseKinematics(com.neuronrobotics.sdk.addons.kinematics.math.TransformNR)
+	 */
 	@Override
 	public double[] inverseKinematics(TransformNR taskSpaceTransform)
 			throws Exception {
 		throw new RuntimeException("This method is unavailible on cartesian devices");
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR#forwardKinematics(double[])
+	 */
 	@Override
 	public TransformNR forwardKinematics(double[] jointSpaceVector) {
 		
 		throw new RuntimeException("This method is unavailible on cartesian devices");
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR#disconnectDevice()
+	 */
 	@Override
 	public void disconnectDevice() {
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR#connectDevice()
+	 */
 	@Override
 	public boolean connectDevice() {
 		// TODO Auto-generated method stub

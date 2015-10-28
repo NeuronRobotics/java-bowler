@@ -30,33 +30,42 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
 
 
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class BowlerTCPClient.
  */
 public class BowlerTCPClient extends BowlerAbstractConnection{
+	
+	/** The sleep time. */
 	private int sleepTime = 5000;
 	
+	/** The reconnect retry. */
 	private int reconnectRetry = 5;
+	
+	/** The tcp sock. */
 	private Socket tcpSock = null;
+	
+	/** The tcp addr. */
 	private InetAddress tcpAddr=null;
 
 
+	/** The port. */
 	private int port;
 	
 	
 	/**
-	 * 
+	 * Instantiates a new bowler tcp client.
 	 */
 	public BowlerTCPClient(){
 		setSynchronusPacketTimeoutTime(sleepTime);
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @param addr
-	 * @param port
-	 * @throws IOException 
+	 * Instantiates a new bowler tcp client.
+	 *
+	 * @param addr the addr
+	 * @param port the port
+	 * @throws Exception the exception
 	 */
 	public BowlerTCPClient(String addr,int port) throws Exception{
 		this.port = port;
@@ -80,30 +89,30 @@ public class BowlerTCPClient extends BowlerAbstractConnection{
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @param addr
-	 * @param port
-	 * @throws IOException 
+	 * Instantiates a new bowler tcp client.
+	 *
+	 * @param addr the addr
+	 * @param port the port
+	 * @throws Exception the exception
 	 */
 	public BowlerTCPClient(InetAddress addr,int port) throws Exception {
 		this(addr.getHostName(),port);
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @param addr
+	 * Sets the TCP address.
+	 *
+	 * @param addr the new TCP address
 	 */
 	public void setTCPAddress(InetAddress addr){
 		tcpAddr=addr;
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @param port
-	 * @throws IOException
+	 * Sets the TCP port.
+	 *
+	 * @param port the new TCP port
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public void setTCPPort(int port) throws IOException{
 		if(isConnected())
@@ -114,9 +123,9 @@ public class BowlerTCPClient extends BowlerAbstractConnection{
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @param sock
+	 * Sets the TCP socket.
+	 *
+	 * @param sock the new TCP socket
 	 */
 	public void setTCPSocket(Socket sock){
 		if(isConnected())
@@ -201,6 +210,11 @@ public class BowlerTCPClient extends BowlerAbstractConnection{
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.common.BowlerAbstractConnection#reconnect()
 	 */
+	/**
+	 * Reconnect.
+	 *
+	 * @return true, if successful
+	 */
 	//@Override
 	public boolean reconnect() {
 		Log.warning("Reconnecting TCP Socket..");
@@ -224,16 +238,29 @@ public class BowlerTCPClient extends BowlerAbstractConnection{
 		return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.common.BowlerAbstractConnection#waitingForConnection()
+	 */
 	@Override
 	public boolean waitingForConnection() {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
+	/**
+	 * Gets the reconnect retry.
+	 *
+	 * @return the reconnect retry
+	 */
 	public int getReconnectRetry() {
 		return reconnectRetry;
 	}
 
+	/**
+	 * Sets the reconnect retry.
+	 *
+	 * @param reconnectRetry the new reconnect retry
+	 */
 	public void setReconnectRetry(int reconnectRetry) {
 		this.reconnectRetry = reconnectRetry;
 	}

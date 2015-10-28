@@ -20,16 +20,17 @@ import com.neuronrobotics.sdk.common.BowlerMethod;
 import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.InvalidResponseException;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class SetUARTBaudrateCommand.
  */
 public class SetUARTBaudrateCommand extends BowlerAbstractCommand {
 	
 	/**
-	 * 
-	 * 
-	 * @param channel
-	 * @param baudrate
+	 * Instantiates a new sets the uart baudrate command.
+	 *
+	 * @param channel the channel
+	 * @param baudrate the baudrate
 	 */
 	public SetUARTBaudrateCommand(int channel, int baudrate) {
 		setMethod(BowlerMethod.CRITICAL);

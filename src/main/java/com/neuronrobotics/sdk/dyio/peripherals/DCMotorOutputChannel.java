@@ -20,8 +20,9 @@ import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.common.DeviceManager;
 
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class DCMotorOutputChannel.
  */
 public class DCMotorOutputChannel extends DyIOAbstractPeripheral {
 	
@@ -38,7 +39,8 @@ public class DCMotorOutputChannel extends DyIOAbstractPeripheral {
 	/**
 	 * Constructor.
 	 * Creates an counter input input channel that is syncronous only by default.
-	 * 
+	 *
+	 * @param dyio the dyio
 	 * @param channel - the channel object requested from the DyIO
 	 */
 	public DCMotorOutputChannel(DyIO dyio,int channel){
@@ -62,8 +64,9 @@ public class DCMotorOutputChannel extends DyIOAbstractPeripheral {
 	
 	/**
 	 * This takes in a velocity from 100 to -100
-	 * 100 is full on forward, -100 is full on backward and 0 is stop
-	 * @param velocity
+	 * 100 is full on forward, -100 is full on backward and 0 is stop.
+	 *
+	 * @param velocity the velocity
 	 */
 	public void SetVelocity(float velocity){
 		
@@ -78,6 +81,9 @@ public class DCMotorOutputChannel extends DyIOAbstractPeripheral {
 		setValue((int)((velocity / 100) * 128)+128);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.dyio.peripherals.DyIOAbstractPeripheral#hasAsync()
+	 */
 	@Override
 	public boolean hasAsync() {
 		return false;

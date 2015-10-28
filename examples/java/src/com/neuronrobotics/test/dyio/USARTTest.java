@@ -7,8 +7,18 @@ import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.peripherals.UARTChannel;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class USARTTest.
+ */
 public class USARTTest{
 	
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 * @throws InterruptedException the interrupted exception
+	 */
 	public static void main(String [] args) throws InterruptedException {
 		DyIO dyio=new DyIO();
 		if (!ConnectionDialog.getBowlerDevice(dyio)){

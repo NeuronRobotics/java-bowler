@@ -30,20 +30,39 @@ import com.neuronrobotics.sdk.network.BowlerTCPServer;
 import com.neuronrobotics.sdk.network.BowlerUDPServer;
 import com.neuronrobotics.sdk.network.UDPBowlerConnection;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class BowlerAbstractServer.
+ */
 public abstract class BowlerAbstractServer implements
 		ISynchronousDatagramListener {
 
+	/** The servers. */
 	private ArrayList<BowlerAbstractConnection> servers = new ArrayList<BowlerAbstractConnection>();
+	
+	/** The local servers. */
 	private ArrayList<BowlerAbstractConnection> localServers = new ArrayList<BowlerAbstractConnection>();
 
+	/** The namespaces. */
 	private ArrayList<BowlerAbstractDeviceServerNamespace> namespaces = new ArrayList<BowlerAbstractDeviceServerNamespace>();
 
+	/** The bcs core. */
 	private BcsCoreNamespaceImp bcsCore;
+	
+	/** The bcs rpc. */
 	private BcsRpcNamespaceImp bcsRpc;
+	
+	/** The udp server. */
 	private BowlerUDPServer udpServer;
 
+	/** The mac address. */
 	private MACAddress macAddress;
 
+	/**
+	 * Instantiates a new bowler abstract server.
+	 *
+	 * @param mac the mac
+	 */
 	public BowlerAbstractServer(MACAddress mac) {
 		this.setMacAddress(mac);
 		bcsCore = new BcsCoreNamespaceImp(this, mac);
@@ -51,6 +70,9 @@ public abstract class BowlerAbstractServer implements
 		setup();
 	}
 
+	/**
+	 * Setup.
+	 */
 	private void setup() {
 		if (!getNamespaces().contains(bcsCore)) {
 			getNamespaces().add(bcsCore);
@@ -62,6 +84,11 @@ public abstract class BowlerAbstractServer implements
 		}
 	}
 
+	/**
+	 * Adds the bowler device server namespace.
+	 *
+	 * @param ns the ns
+	 */
 	public void addBowlerDeviceServerNamespace(
 			BowlerAbstractDeviceServerNamespace ns) {
 		setup();
@@ -78,6 +105,11 @@ public abstract class BowlerAbstractServer implements
 		}
 	}
 
+	/**
+	 * Removes the bowler device server namespace.
+	 *
+	 * @param ns the ns
+	 */
 	public void removeBowlerDeviceServerNamespace(
 			BowlerAbstractDeviceServerNamespace ns) {
 		setup();
@@ -85,6 +117,12 @@ public abstract class BowlerAbstractServer implements
 			getNamespaces().remove(ns);
 	}
 
+	/**
+	 * Process local.
+	 *
+	 * @param data the data
+	 * @return the bowler datagram
+	 */
 	private BowlerDatagram processLocal(BowlerDatagram data) {
 		setup();
 		if (getNamespaces().size() == 0) {
@@ -104,12 +142,24 @@ public abstract class BowlerAbstractServer implements
 		return null;
 	}
 
+	/**
+	 * Gets the servers.
+	 *
+	 * @return the servers
+	 */
 	public ArrayList<BowlerAbstractConnection> getServers() {
 		return servers;
 	}
 
+	/** The server socket. */
 	ServerSocket serverSocket;
 
+	/**
+	 * Start network server.
+	 *
+	 * @param port the port
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public void startNetworkServer(final int port) throws IOException {
 		udpServer = new BowlerUDPServer(port);
 		serverSocket = new ServerSocket(port + 1);
@@ -136,11 +186,21 @@ public abstract class BowlerAbstractServer implements
 
 	}
 
+	/**
+	 * Start network server.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public void startNetworkServer() throws IOException {
 		startNetworkServer(1865);
 
 	}
 
+	/**
+	 * Adds the server.
+	 *
+	 * @param srv the srv
+	 */
 	public void addServer(BowlerAbstractConnection srv) {
 		if (!servers.contains(srv)) {
 			srv.addConnectionEventListener(new IConnectionEventListener() {
@@ -161,6 +221,9 @@ public abstract class BowlerAbstractServer implements
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.common.ISynchronousDatagramListener#onSyncReceive(com.neuronrobotics.sdk.common.BowlerDatagram)
+	 */
 	@Override
 	public BowlerDatagram onSyncReceive(BowlerDatagram data) {
 		if (data.isUpstream()) {
@@ -187,6 +250,11 @@ public abstract class BowlerAbstractServer implements
 		return null;
 	}
 
+	/**
+	 * Removes the server.
+	 *
+	 * @param b the b
+	 */
 	private void removeServer(BowlerAbstractConnection b) {
 		if (b == udpServer) {
 			try {
@@ -208,16 +276,14 @@ public abstract class BowlerAbstractServer implements
 	 * describe a namespace, rpc, and array or arguments to be paced into the
 	 * packet based on the data types of the argument. The response in likewise
 	 * unpacked into an array of objects.
-	 * 
-	 * @param namespace
-	 *            The string of the desired namespace
-	 * @param rpcString
-	 *            The string of the desired RPC
-	 * @param arguments
-	 *            An array of objects corresponding to the data to be stuffed
+	 *
+	 * @param namespaceIndex the namespace index
+	 * @param namespace            The string of the desired namespace
+	 * @param rpcString            The string of the desired RPC
+	 * @param arguments            An array of objects corresponding to the data to be stuffed
 	 *            into the packet.
-	 * @throws DeviceConnectionException
-	 *             If the desired RPC's are not available then this will be
+	 * @param asyncArguments the async arguments
+	 * @throws DeviceConnectionException             If the desired RPC's are not available then this will be
 	 *             thrown
 	 */
 	public void pushAsyncPacket(int namespaceIndex, String namespace,
@@ -239,6 +305,11 @@ public abstract class BowlerAbstractServer implements
 		pushAsyncPacket(cmd);
 	}
 
+	/**
+	 * Push async packet.
+	 *
+	 * @param data the data
+	 */
 	public synchronized void pushAsyncPacket(BowlerDatagram data) {
 		localServers.clear();
 		for (int i = 0; i < servers.size(); i++) {
@@ -290,19 +361,39 @@ public abstract class BowlerAbstractServer implements
 		localServers.clear();
 	}
 
+	/**
+	 * Gets the namespaces.
+	 *
+	 * @return the namespaces
+	 */
 	public ArrayList<BowlerAbstractDeviceServerNamespace> getNamespaces() {
 		return namespaces;
 	}
 
+	/**
+	 * Sets the namespaces.
+	 *
+	 * @param namespaces the new namespaces
+	 */
 	public void setNamespaces(
 			ArrayList<BowlerAbstractDeviceServerNamespace> namespaces) {
 		this.namespaces = namespaces;
 	}
 
+	/**
+	 * Gets the mac address.
+	 *
+	 * @return the mac address
+	 */
 	public MACAddress getMacAddress() {
 		return macAddress;
 	}
 
+	/**
+	 * Sets the mac address.
+	 *
+	 * @param macAddress the new mac address
+	 */
 	public void setMacAddress(MACAddress macAddress) {
 		this.macAddress = macAddress;
 	}

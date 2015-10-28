@@ -1,5 +1,9 @@
 package com.neuronrobotics.sdk.common;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class MissingNativeLibraryException.
+ */
 public class MissingNativeLibraryException extends RuntimeException {
 	
 	/** The Constant serialVersionUID. */

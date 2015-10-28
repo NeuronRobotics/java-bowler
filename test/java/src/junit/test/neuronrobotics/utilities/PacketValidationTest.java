@@ -11,8 +11,15 @@ import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.MACAddress;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PacketValidationTest.
+ */
 public class PacketValidationTest {
 
+	/**
+	 * Packet test.
+	 */
 	@Test
 	public void packetTest() {
 		Log.enableInfoPrint();

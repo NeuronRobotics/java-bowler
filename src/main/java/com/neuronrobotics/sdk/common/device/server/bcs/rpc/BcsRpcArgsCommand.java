@@ -4,8 +4,22 @@ import com.neuronrobotics.sdk.common.BowlerAbstractCommand;
 import com.neuronrobotics.sdk.common.BowlerDataType;
 import com.neuronrobotics.sdk.common.BowlerMethod;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class BcsRpcArgsCommand.
+ */
 public class BcsRpcArgsCommand extends BowlerAbstractCommand {
 
+	/**
+	 * Instantiates a new bcs rpc args command.
+	 *
+	 * @param ns the ns
+	 * @param rpc the rpc
+	 * @param downstreamMethod the downstream method
+	 * @param downstreamArguments the downstream arguments
+	 * @param upStreamMethod the up stream method
+	 * @param upstreamArguments the upstream arguments
+	 */
 	public BcsRpcArgsCommand(int ns, int rpc, BowlerMethod downstreamMethod,
 			BowlerDataType[] downstreamArguments, BowlerMethod upStreamMethod,
 			BowlerDataType[] upstreamArguments) {

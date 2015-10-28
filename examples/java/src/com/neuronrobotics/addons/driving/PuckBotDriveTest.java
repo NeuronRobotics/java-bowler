@@ -2,8 +2,16 @@ package com.neuronrobotics.addons.driving;
 
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PuckBotDriveTest.
+ */
 @SuppressWarnings("unused")
 public class PuckBotDriveTest implements IRobotDriveEventListener {
+	
+	/**
+	 * Instantiates a new puck bot drive test.
+	 */
 	public PuckBotDriveTest(){
 		
 		PuckBot bot = new Rbe3002Robot();	
@@ -33,12 +41,17 @@ public class PuckBotDriveTest implements IRobotDriveEventListener {
 	}
 	
 	/**
-	 * @param args
+	 * The main method.
+	 *
+	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
 		new PuckBotDriveTest();
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.addons.driving.IRobotDriveEventListener#onDriveEvent(com.neuronrobotics.addons.driving.AbstractRobotDrive, double, double, double)
+	 */
 	@Override
 	public void onDriveEvent(AbstractRobotDrive source, double x, double y,double orentation) {
 		//System.out.println("Drive Event x="+x+" y="+y+" orentation="+Math.toDegrees(orentation));

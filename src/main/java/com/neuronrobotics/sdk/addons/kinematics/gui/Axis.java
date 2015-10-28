@@ -50,13 +50,26 @@ import javafx.scene.shape.Box;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Affine;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Axis.
+ */
 public class Axis extends Group {
+	
+	/**
+	 * Instantiates a new axis.
+	 */
 	public Axis() {
 		this(50);
 	}
 	// //////////////////////////////////////////
 	//
 	// create axis visual object
+	/**
+	 * Instantiates a new axis.
+	 *
+	 * @param i the i
+	 */
 	//
 	public Axis(int i) {
 		final PhongMaterial redMaterial = new PhongMaterial();

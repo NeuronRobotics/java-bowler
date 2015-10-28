@@ -36,29 +36,48 @@ import com.neuronrobotics.sdk.common.MissingNativeLibraryException;
 
 
 
+// TODO: Auto-generated Javadoc
 //import com.intel.bluetooth.test.SimpleClient.CancelThread;
 
 /**
- * 
+ * The Class BlueCoveManager.
  */
 public class BlueCoveManager implements DiscoveryListener {
+	
+	/** The records. */
 	ArrayList<ServiceRecord> records= new ArrayList<ServiceRecord>();
+	
+	/** The device list. */
 	ArrayList<RemoteDevice> deviceList = new ArrayList<RemoteDevice>();
+	
+	/** The Constant uuid. */
 	static final UUID uuid = com.intel.bluetooth.BluetoothConsts.RFCOMM_PROTOCOL_UUID;
+	
+	/** The selected. */
 	private String selected = null;
+	
+	/** The ins. */
 	private DataInputStream ins;
+	
+	/** The outs. */
 	private DataOutputStream outs;
+	
+	/** The conn. */
 	private StreamConnection conn;
+	
+	/** The search id. */
 	private int searchId=0xffff;
 
 	/**
-	 * 
+	 * Instantiates a new blue cove manager.
 	 */
 	public BlueCoveManager(){
 	}
 	
 	/**
-	 * 
+	 * Find.
+	 *
+	 * @throws MissingNativeLibraryException the missing native library exception
 	 */
 	public synchronized void find() throws MissingNativeLibraryException {
 		for (RemoteDevice d:deviceList) {
@@ -121,10 +140,10 @@ public class BlueCoveManager implements DiscoveryListener {
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @param refresh
-	 * @return
+	 * Gets the available serial devices.
+	 *
+	 * @param refresh the refresh
+	 * @return the available serial devices
 	 */
 	public String [] getAvailableSerialDevices(boolean refresh) {
 		if(refresh){
@@ -148,10 +167,10 @@ public class BlueCoveManager implements DiscoveryListener {
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @param name
-	 * @return
+	 * Gets the device.
+	 *
+	 * @param name the name
+	 * @return the device
 	 */
 	public synchronized RemoteDevice getDevice(String name){
 		String addr = name.substring(name.indexOf('_')+1);
@@ -174,7 +193,7 @@ public class BlueCoveManager implements DiscoveryListener {
 	}
 	
 	/**
-	 * 
+	 * Disconnect.
 	 */
 	public synchronized void disconnect() {
 		Log.info("Disconnecting: "+selected);
@@ -205,9 +224,9 @@ public class BlueCoveManager implements DiscoveryListener {
 	}
 	*/
 	/**
-	 * 
-	 * 
-	 * @param devAddress
+	 * Connect.
+	 *
+	 * @param devAddress the dev address
 	 */
 	public synchronized void connect(String devAddress){
 		RemoteDevice d = getDevice(devAddress);
@@ -220,6 +239,12 @@ public class BlueCoveManager implements DiscoveryListener {
 		}
 		connect();
 	}
+	
+	/**
+	 * Connect.
+	 *
+	 * @return true, if successful
+	 */
 	private synchronized boolean connect(){
 		try{
 			if(ins!= null)
@@ -276,9 +301,9 @@ public class BlueCoveManager implements DiscoveryListener {
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @return
+	 * Gets the data ins.
+	 *
+	 * @return the data ins
 	 */
 	public synchronized DataInputStream getDataIns() {
 		if (selected == null || ins==null)
@@ -287,9 +312,9 @@ public class BlueCoveManager implements DiscoveryListener {
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @return
+	 * Gets the data outs.
+	 *
+	 * @return the data outs
 	 */
 	public synchronized DataOutputStream getDataOuts() {
 		if (selected == null || outs==null )

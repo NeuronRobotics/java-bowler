@@ -4,20 +4,51 @@ import java.util.ArrayList;
 
 import com.neuronrobotics.sdk.common.ByteList;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class URG2Packet.
+ */
 public class URG2Packet {
+	
+	/** The cmd. */
 	private String cmd;
+	
+	/** The junk. */
 	String junk;
+	
+	/** The status. */
 	String status;
+	
+	/** The timestamp. */
 	int timestamp=0;
+	
+	/** The data lines. */
 	ByteList dataLines=new ByteList();
+	
+	/** The center. */
 	private final int center = 384;
+	
+	/** The degrees per angle unit. */
 	private final double degreesPerAngleUnit = 0.352422908;
+	
+	/** The start. */
 	private int start;
+	
+	/** The end. */
 	private int end;
+	
+	/** The steps per data point. */
 	private int stepsPerDataPoint;
+	
+	/** The data. */
 	private ArrayList<DataPoint> data=new ArrayList<DataPoint>();
 	
 	
+	/**
+	 * Instantiates a new UR g2 packet.
+	 *
+	 * @param line the line
+	 */
 	public URG2Packet(String line){
 		String [] sections = line.split("\\n");//This removes the \n from the data
 		setCmd(sections[0]);
@@ -55,6 +86,13 @@ public class URG2Packet {
 			throw new RuntimeException("Unknown packet: "+line);
 		}
 	}
+	
+	/**
+	 * Decode urg.
+	 *
+	 * @param bs the bs
+	 * @return the int
+	 */
 	public static int decodeURG(byte[] bs){
 		if(bs.length!=3){
 			System.err.println("URG fail: "+bs.length);
@@ -71,10 +109,21 @@ public class URG2Packet {
 		}
 		return back;
 	}
+	
+	/**
+	 * Decode urg.
+	 *
+	 * @param data the data
+	 * @return the int
+	 */
 	public static int decodeURG(String data){
 		System.out.println("Decoding string="+data);
 		return decodeURG(data.getBytes());
 	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString(){
 		String s="Command: "+getCmd();
@@ -106,12 +155,29 @@ public class URG2Packet {
 		return tmp;
 	}
 
+	/**
+	 * Gets the data.
+	 *
+	 * @return the data
+	 */
 	public ArrayList<DataPoint> getData() {
 		return data;
 	}
+	
+	/**
+	 * Gets the cmd.
+	 *
+	 * @return the cmd
+	 */
 	public String getCmd() {
 		return cmd;
 	}
+	
+	/**
+	 * Sets the cmd.
+	 *
+	 * @param cmd the new cmd
+	 */
 	public void setCmd(String cmd) {
 		this.cmd = cmd;
 	}

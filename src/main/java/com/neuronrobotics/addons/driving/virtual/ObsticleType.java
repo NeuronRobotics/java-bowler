@@ -5,22 +5,40 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Enum ObsticleType.
+ */
 public enum ObsticleType {
 
+	/** The line. */
 	LINE(Color.black),
 
+	/** The wall. */
 	WALL(Color.blue),
 	
+	/** The fire. */
 	FIRE(Color.magenta),
 	
+	/** The pinkball. */
 	PINKBALL(Color.pink),
+	
+	/** The hockypuck. */
 	HOCKYPUCK(Color.red),
+	
+	/** The hooksample. */
 	HOOKSAMPLE(Color.white),
+	
+	/** The orangerod. */
 	ORANGEROD(Color.orange),
+	
+	/** The basestation. */
 	BASESTATION(Color.yellow),
 	
+	/** The userdefined. */
 	USERDEFINED(Color.green),
 	
+	/** The none. */
 	NONE(Color.lightGray);
 	
 	/** The Constant lookup. */
@@ -38,7 +56,7 @@ public enum ObsticleType {
 	/**
 	 * Instantiates a new bowler method.
 	 *
-	 * @param val the val
+	 * @param c the c
 	 */
 	private ObsticleType(Color c) {
 		value = c;
@@ -56,7 +74,7 @@ public enum ObsticleType {
     /**
      * Gets the.
      *
-     * @param code the code
+     * @param c the c
      * @return the bowler method
      */
     public static ObsticleType get(Color c) { 

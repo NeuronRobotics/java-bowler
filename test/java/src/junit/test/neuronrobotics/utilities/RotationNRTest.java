@@ -6,8 +6,15 @@ import org.junit.Test;
 
 import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RotationNRTest.
+ */
 public class RotationNRTest {
 
+	/**
+	 * Test.
+	 */
 	@Test
 	public void test() {
 		int failCount = 0;

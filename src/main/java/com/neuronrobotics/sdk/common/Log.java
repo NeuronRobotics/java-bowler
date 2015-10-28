@@ -70,6 +70,7 @@ public class Log {
 	/** The err stream. */
 	private static PrintStream errStream = System.err;
 	
+	/** The use colored prints. */
 	private boolean useColoredPrints=false;
 	
 
@@ -179,8 +180,6 @@ public class Log {
 	
 	/**
 	 * Enable printing of debug output.
-	 *
-	 * @param debugprint the debugprint
 	 */
 	
 	public static void enableDebugPrint() {
@@ -191,17 +190,16 @@ public class Log {
 	/**
 	 * Enable printing of debug output.
 	 *
-	 * @param debugprint the debugprint
+	 * @param flag the flag
 	 */
 	
 	public static void enableDebugPrint(boolean flag) {
 		Log.enableSystemPrint(flag);
 		Log.setMinimumPrintLevel(DEBUG);
 	}
+	
 	/**
 	 * Enable printing of debug output.
-	 *
-	 * @param debugprint the debugprint
 	 */
 	
 	public static void enableInfoPrint() {
@@ -211,8 +209,6 @@ public class Log {
 	
 	/**
 	 * Enable printing of debug output.
-	 *
-	 * @param debugprint the debugprint
 	 */
 	
 	public static void enableWarningPrint() {
@@ -222,8 +218,6 @@ public class Log {
 	
 	/**
 	 * Enable printing of debug output.
-	 *
-	 * @param debugprint the debugprint
 	 */
 	
 	public static void enableErrorPrint() {
@@ -244,7 +238,8 @@ public class Log {
 	/**
 	 * Set the minimum level of importance to dsplay.
 	 * Messages below this wont be displayed.
-	 * @param level	The minimu importance level
+	 *
+	 * @return the minimum print level
 	 */
 	public static int getMinimumPrintLevel() {
 		return Log.instance().minprintlevel;
@@ -360,6 +355,7 @@ public class Log {
 		/** The datetime. */
 		private Date datetime;
 		
+		/** The calling class. */
 		private String callingClass;
 
 		/**
@@ -372,6 +368,12 @@ public class Log {
 			init(message, importance);
 		}
 		
+		/**
+		 * Inits the.
+		 *
+		 * @param message the message
+		 * @param importance the importance
+		 */
 		public void init(String message, int importance){
 			this.message = message;
 			this.importance = importance;
@@ -395,19 +397,40 @@ public class Log {
 		}
 	}
 	
+	/**
+	 * Gets the color normalization code.
+	 *
+	 * @return the color normalization code
+	 */
 	private String getColorNormalizationCode(){
 		if(isUseColoredPrints())
 			return "\033[39m";
 		return "";
 	}
+	
+	/**
+	 * Checks if is use colored prints.
+	 *
+	 * @return true, if is use colored prints
+	 */
 	public static  boolean isUseColoredPrints() {
 		return instance().useColoredPrints;
 	}
 	
+	/**
+	 * Sets the use colored prints.
+	 *
+	 * @param useColoredPrints the new use colored prints
+	 */
 	public static void setUseColoredPrints(boolean useColoredPrints) {
 		instance().useColoredPrints = useColoredPrints;
 	}
 
+	/**
+	 * Checks if is printing.
+	 *
+	 * @return true, if is printing
+	 */
 	public static boolean isPrinting() {
 		// TODO Auto-generated method stub
 		return instance().systemprint;

@@ -13,9 +13,23 @@ import com.neuronrobotics.sdk.pid.PIDConfiguration;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class KeepDistance.
+ */
 public class KeepDistance implements IRobotDriveEventListener,IAnalogInputListener{
+	
+	/** The ack. */
 	private AckermanBot ack;
+	
+	/** The ana val. */
 	private int anaVal=175;
+	
+	/**
+	 * Instantiates a new keep distance.
+	 *
+	 * @param dyio the dyio
+	 */
 	public KeepDistance(final DyIO dyio){
 		System.out.println("Starting Keep Distance application");
 		DyPIDConfiguration dypid = new DyPIDConfiguration(	0,//PID group 0
@@ -68,16 +82,28 @@ public class KeepDistance implements IRobotDriveEventListener,IAnalogInputListen
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.dyio.peripherals.IAnalogInputListener#onAnalogValueChange(com.neuronrobotics.sdk.dyio.peripherals.AnalogInputChannel, double)
+	 */
 	@Override
 	public void onAnalogValueChange(AnalogInputChannel chan, double value) {
 		anaVal=(int) value;
 		//System.out.println("Analog value="+value);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.addons.driving.IRobotDriveEventListener#onDriveEvent(com.neuronrobotics.addons.driving.AbstractRobotDrive, double, double, double)
+	 */
 	@Override
 	public void onDriveEvent(AbstractRobotDrive source, double x, double y,double orentation) {
 		//System.out.println("Robot pos: x="+x+" y="+y);
 	}
+	
+	/**
+	 * The main method.
+	 *
+	 * @param a the arguments
+	 */
 	public static void main(String [] a) {
 		DyIO d = new DyIO();
 		ConnectionDialog.getBowlerDevice(d);

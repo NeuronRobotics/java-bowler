@@ -17,13 +17,14 @@ package com.neuronrobotics.sdk.commands.neuronrobotics.dyio;
 import com.neuronrobotics.sdk.common.BowlerAbstractCommand;
 import com.neuronrobotics.sdk.common.BowlerMethod;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class InfoFirmwareRevisionCommand.
  */
 public class InfoFirmwareRevisionCommand extends BowlerAbstractCommand {
 	
 	/**
-	 * 
+	 * Instantiates a new info firmware revision command.
 	 */
 	public InfoFirmwareRevisionCommand(){
 		setOpCode("_rev");

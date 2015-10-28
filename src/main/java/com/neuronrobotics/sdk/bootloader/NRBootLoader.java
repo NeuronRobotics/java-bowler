@@ -15,12 +15,19 @@ import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.common.BowlerDatagramFactory;
 import com.neuronrobotics.sdk.common.ByteList;
 
+// TODO: Auto-generated Javadoc
 /**
- * @author hephaestus
+ * The Class NRBootLoader.
  *
+ * @author hephaestus
  */
 public class NRBootLoader extends BowlerAbstractDevice {
 	
+	/**
+	 * Instantiates a new NR boot loader.
+	 *
+	 * @param serialConnection the serial connection
+	 */
 	public NRBootLoader(BowlerAbstractConnection serialConnection) {
 		setConnection(serialConnection);
 		
@@ -30,6 +37,10 @@ public class NRBootLoader extends BowlerAbstractDevice {
 		//Log.enableDebugPrint(true);
 		//Log.enableSystemPrint(true);
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.common.BowlerAbstractDevice#connect()
+	 */
 	@Override
 	public boolean connect() {
 		if(super.connect()) {
@@ -46,6 +57,12 @@ public class NRBootLoader extends BowlerAbstractDevice {
 		//Log.enableDebugPrint(true);
 		//Log.enableSystemPrint(true);
 	}
+	
+	/**
+	 * Gets the bootloader id.
+	 *
+	 * @return the bootloader id
+	 */
 	public String getBootloaderID(){
 		BowlerDatagram back = send(new BootloaderIDCommand());
 		if (back==null)
@@ -57,6 +74,13 @@ public class NRBootLoader extends BowlerAbstractDevice {
 		return s;
 	}
 	
+	/**
+	 * Write.
+	 *
+	 * @param core the core
+	 * @param flashData the flash data
+	 * @return true, if successful
+	 */
 	public boolean write(int core, ByteData flashData){
 		BowlerDatagram b=null;
 		for (int i=0;i<10;i++){
@@ -74,9 +98,20 @@ public class NRBootLoader extends BowlerAbstractDevice {
 		System.err.println("\nFailed to send 10 times!\n");
 		return false;
 	}
+	
+	/**
+	 * Erase.
+	 *
+	 * @param core the core
+	 * @return true, if successful
+	 */
 	public boolean erase(int core){
 		return send(new EraseFlashCommand(core)) != null;
 	}
+	
+	/**
+	 * Reset.
+	 */
 	public void reset(){
 		//We expect this to fail the connection.
 		//No response is expected

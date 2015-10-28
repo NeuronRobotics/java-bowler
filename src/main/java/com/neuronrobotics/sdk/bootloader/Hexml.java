@@ -15,9 +15,26 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
  
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Hexml.
+ */
 public class Hexml {
+	
+	/** The cores. */
 	ArrayList<Core> cores = new ArrayList<Core>();
+	
+	/** The revision. */
 	private String revision="";
+	
+	/**
+	 * Instantiates a new hexml.
+	 *
+	 * @param hexml the hexml
+	 * @throws ParserConfigurationException the parser configuration exception
+	 * @throws SAXException the SAX exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public Hexml(File hexml) throws ParserConfigurationException, SAXException, IOException{
 		/**
 		 * sample code from
@@ -67,6 +84,12 @@ public class Hexml {
 
 
 	}
+	
+	/**
+	 * Load revision.
+	 *
+	 * @param doc the doc
+	 */
 	private void loadRevision(Document doc) {
 		try{
 				NodeList nlList= doc.getElementsByTagName("revision").item(0).getChildNodes();
@@ -76,15 +99,34 @@ public class Hexml {
 			revision = "0.0.0";
 		}
 	}
+	
+	/**
+	 * Gets the tag value.
+	 *
+	 * @param sTag the s tag
+	 * @param eElement the e element
+	 * @return the tag value
+	 */
 	private static String getTagValue(String sTag, Element eElement){
 	    NodeList nlList= eElement.getElementsByTagName(sTag).item(0).getChildNodes();
 	    Node nValue = (Node) nlList.item(0); 
 	    return nValue.getNodeValue();    
 	}
 
+	/**
+	 * Gets the cores.
+	 *
+	 * @return the cores
+	 */
 	public ArrayList<Core> getCores(){
 		return cores;
 	}
+	
+	/**
+	 * Gets the revision.
+	 *
+	 * @return the revision
+	 */
 	public String getRevision() {
 		return revision;
 	}

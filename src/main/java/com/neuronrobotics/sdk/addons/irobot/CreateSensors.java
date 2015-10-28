@@ -16,34 +16,70 @@ package com.neuronrobotics.sdk.addons.irobot;
 
 import com.neuronrobotics.sdk.common.ByteList;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class CreateSensors.
  */
 public class CreateSensors {
+	
+	/** The right bump. */
 	public boolean rightBump=false;
+	
+	/** The left bump. */
 	public boolean leftBump=false;
+	
+	/** The right drop. */
 	public boolean rightDrop=false;
+	
+	/** The left drop. */
 	public boolean leftDrop=false;
+	
+	/** The center drop. */
 	public boolean centerDrop=false;
+	
+	/** The wall. */
 	public boolean wall=false;
+	
+	/** The clif front left. */
 	public boolean clifFrontLeft=false;
+	
+	/** The clif front right. */
 	public boolean clifFrontRight=false;
+	
+	/** The clif left. */
 	public boolean clifLeft=false;
+	
+	/** The clif right. */
 	public boolean clifRight=false;
+	
+	/** The vitrual wall. */
 	public boolean vitrualWall=false;
 	
+	/** The distance. */
 	public short distance=0;
+	
+	/** The angle. */
 	public short angle=0;
+	
+	/** The tempreture. */
 	public int tempreture=0;
+	
+	/** The charge. */
 	public int charge=0;
+	
+	/** The capacity. */
 	public int capacity=0;
+	
+	/** The voltage. */
 	public float voltage=0;
+	
+	/** The data. */
 	byte [] data;
 	
 	/**
-	 * 
-	 * 
-	 * @param packet
+	 * Instantiates a new creates the sensors.
+	 *
+	 * @param packet the packet
 	 */
 	public CreateSensors(byte [] packet){
 		data=packet;
@@ -60,6 +96,12 @@ public class CreateSensors {
 		charge = (int) ((((int)data[22])<<8)+data[23]);
 		capacity = (int) ((((int)data[24])<<8)+data[25]);
 	}
+	
+	/**
+	 * Bumps.
+	 *
+	 * @param data the data
+	 */
 	private void bumps(byte data){
 		rightBump=(data&0x01)>0;
 		leftBump=(data&0x02)>0;

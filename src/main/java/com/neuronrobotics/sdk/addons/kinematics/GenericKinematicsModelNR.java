@@ -11,12 +11,23 @@ import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.namespace.bcs.pid.IExtendedPIDControl;
 import com.neuronrobotics.sdk.pid.GenericPIDDevice;
 import com.neuronrobotics.sdk.pid.VirtualGenericPIDDevice;
+// TODO: Auto-generated Javadoc
 //import com.neuronrobotics.sdk.pid.IPIDControl;
 
+/**
+ * The Class GenericKinematicsModelNR.
+ */
 public class GenericKinematicsModelNR extends AbstractKinematicsNR {
 	
+	/** The deg2rad. */
 	double deg2rad=Math.PI/180;
 	
+	/**
+	 * Instantiates a new generic kinematics model nr.
+	 *
+	 * @param configFile the config file
+	 * @param device the device
+	 */
 	public GenericKinematicsModelNR(InputStream configFile,GenericPIDDevice device ){
 		super(configFile,new LinkFactory( device));
 	}
@@ -24,10 +35,16 @@ public class GenericKinematicsModelNR extends AbstractKinematicsNR {
 //		super(XmlFactory.getDefaultConfigurationStream("GenericKinematics.xml"),new LinkFactory( dev));
 //	}
 
-	public GenericKinematicsModelNR() {
+	/**
+ * Instantiates a new generic kinematics model nr.
+ */
+public GenericKinematicsModelNR() {
 		super(XmlFactory.getDefaultConfigurationStream("GenericKinematics.xml"),new LinkFactory( new VirtualGenericPIDDevice(1000000)));
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR#forwardKinematics(double[])
+	 */
 	@Override
 	public TransformNR forwardKinematics(double[] jointSpaceVector) {
 		double x  =  jointSpaceVector[0];
@@ -48,6 +65,9 @@ public class GenericKinematicsModelNR extends AbstractKinematicsNR {
 		return back;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR#inverseKinematics(com.neuronrobotics.sdk.addons.kinematics.math.TransformNR)
+	 */
 	@Override
 	public double[] inverseKinematics(TransformNR cartesianSpaceVector)throws Exception {
 		double [] inv = new double[getNumberOfLinks()];		
@@ -66,11 +86,19 @@ public class GenericKinematicsModelNR extends AbstractKinematicsNR {
 		inv[5]=Math.atan2(-rotationMatrixArray.get(0, 1), rotationMatrixArray.get(0, 0))*180/Math.PI;
 		return inv;
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR#disconnectDevice()
+	 */
 	@Override
 	public void disconnectDevice() {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR#connectDevice()
+	 */
 	@Override
 	public boolean connectDevice() {
 		// TODO Auto-generated method stub

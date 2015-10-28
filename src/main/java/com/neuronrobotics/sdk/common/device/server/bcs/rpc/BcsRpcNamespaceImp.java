@@ -9,10 +9,21 @@ import com.neuronrobotics.sdk.common.device.server.BowlerAbstractDeviceServerNam
 import com.neuronrobotics.sdk.common.device.server.BowlerAbstractServer;
 import com.neuronrobotics.sdk.common.device.server.IBowlerCommandProcessor;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class BcsRpcNamespaceImp.
+ */
 public class BcsRpcNamespaceImp extends BowlerAbstractDeviceServerNamespace{
 	
+	/** The server. */
 	private BowlerAbstractServer server;
 	
+	/**
+	 * Instantiates a new bcs rpc namespace imp.
+	 *
+	 * @param s the s
+	 * @param mac the mac
+	 */
 	public BcsRpcNamespaceImp(BowlerAbstractServer s,MACAddress mac){
 		super( mac,"bcs.rpc.*;;");
 		this.server = s;

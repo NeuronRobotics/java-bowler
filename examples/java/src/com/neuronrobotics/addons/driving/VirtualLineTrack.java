@@ -5,9 +5,16 @@ import com.neuronrobotics.addons.driving.virtual.VirtualPuckBot;
 import com.neuronrobotics.addons.driving.virtual.VirtualWorld;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class VirtualLineTrack.
+ */
 public class VirtualLineTrack {
+	
 	/**
-	 * @param args
+	 * The main method.
+	 *
+	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
 		new Thread() {

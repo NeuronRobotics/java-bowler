@@ -2,24 +2,45 @@ package com.neuronrobotics.sdk.common;
 
 import com.neuronrobotics.sdk.common.device.server.IBowlerCommandProcessor;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RpcEncapsulation.
+ */
 public class RpcEncapsulation {
 
+	/** The namespace. */
 	private String namespace;
+	
+	/** The rpc. */
 	private String rpc;
+	
+	/** The method. */
 	private BowlerMethod method;
+	
+	/** The downstream arguments. */
 	private BowlerDataType[] downstreamArguments;
+	
+	/** The upstream arguments. */
 	private BowlerDataType[] upstreamArguments;
+	
+	/** The up stream method. */
 	private BowlerMethod upStreamMethod;
+	
+	/** The namespace index. */
 	private int namespaceIndex;
+	
+	/** The processor. */
 	private IBowlerCommandProcessor processor;
+	
 	/**
-	 * This is an encapsulation object for a given RPC
-	 * 
+	 * This is an encapsulation object for a given RPC.
+	 *
+	 * @param namespaceIndex the namespace index
 	 * @param namespace 			The corosponding Namespace
-	 * @param rpc					The 4 byte RPC code
-	 * @param downStreamMethod		The method for sending messages
-	 * @param downstreamArguments	The array of data types for a downstream message
-	 * @param upStreamMethod		The return method type
+	 * @param rpc 				The 4 byte RPC code
+	 * @param downStreamMethod 	The method for sending messages
+	 * @param downstreamArguments The array of data types for a downstream message
+	 * @param upStreamMethod 	The return method type
 	 * @param upstreamArguments 	THe return method arguments
 	 */
 	public RpcEncapsulation(int namespaceIndex,String namespace, String rpc, 
@@ -29,14 +50,16 @@ public class RpcEncapsulation {
 	}
 	
 	/**
-	 * This is an encapsulation object for a given RPC
-	 * 
+	 * This is an encapsulation object for a given RPC.
+	 *
+	 * @param namespaceIndex the namespace index
 	 * @param namespace 			The corosponding Namespace
-	 * @param rpc					The 4 byte RPC code
-	 * @param downStreamMethod		The method for sending messages
-	 * @param downstreamArguments	The array of data types for a downstream message
-	 * @param upStreamMethod		The return method type
+	 * @param rpc 				The 4 byte RPC code
+	 * @param downStreamMethod 	The method for sending messages
+	 * @param downstreamArguments The array of data types for a downstream message
+	 * @param upStreamMethod 	The return method type
 	 * @param upstreamArguments 	THe return method arguments
+	 * @param processor the processor
 	 */
 	public RpcEncapsulation(int namespaceIndex,String namespace, String rpc, 
 			BowlerMethod downStreamMethod,BowlerDataType[] downstreamArguments, 
@@ -48,6 +71,14 @@ public class RpcEncapsulation {
 		setArguments( downStreamMethod,downstreamArguments, upStreamMethod, upstreamArguments);
 	}
 	
+	/**
+	 * Sets the arguments.
+	 *
+	 * @param downStreamMethod the down stream method
+	 * @param downstreamArguments the downstream arguments
+	 * @param upStreamMethod the up stream method
+	 * @param upstreamArguments the upstream arguments
+	 */
 	public void setArguments(BowlerMethod downStreamMethod,BowlerDataType[] downstreamArguments, BowlerMethod upStreamMethod,BowlerDataType[] upstreamArguments){
 		this.setUpStreamMethod(upStreamMethod);
 		this.setDownstreamArguments(downstreamArguments);
@@ -55,15 +86,34 @@ public class RpcEncapsulation {
 		this.setDownStreamMethod(downStreamMethod);
 	}
 	
+	/**
+	 * Gets the command.
+	 *
+	 * @param doswnstreamData the doswnstream data
+	 * @return the command
+	 */
 	public BowlerAbstractCommand getCommand(Object [] doswnstreamData){
 		return getCommand(doswnstreamData, downstreamArguments);
 	}
 	
+	/**
+	 * Gets the command upstream.
+	 *
+	 * @param doswnstreamData the doswnstream data
+	 * @return the command upstream
+	 */
 	public BowlerAbstractCommand getCommandUpstream(Object [] doswnstreamData){
 		return getCommand(doswnstreamData, upstreamArguments);
 	}
 	
 	
+	/**
+	 * Gets the command.
+	 *
+	 * @param doswnstreamData the doswnstream data
+	 * @param arguments the arguments
+	 * @return the command
+	 */
 	public BowlerAbstractCommand getCommand(Object [] doswnstreamData, BowlerDataType [] arguments){
 		BowlerAbstractCommand command = new BowlerAbstractCommand() {};
 		
@@ -166,14 +216,33 @@ public class RpcEncapsulation {
 		return command;
 	}
 	
+	/**
+	 * Parses the response.
+	 *
+	 * @param datagram the datagram
+	 * @return the object[]
+	 */
 	public Object [] parseResponse(BowlerDatagram datagram){
 		return parseResponse(datagram, upstreamArguments);
 	}
 	
+	/**
+	 * Parses the response downstream.
+	 *
+	 * @param datagram the datagram
+	 * @return the object[]
+	 */
 	public Object [] parseResponseDownstream(BowlerDatagram datagram){
 		return parseResponse(datagram, downstreamArguments);
 	}
 	
+	/**
+	 * Parses the response.
+	 *
+	 * @param datagram the datagram
+	 * @param arguments the arguments
+	 * @return the object[]
+	 */
 	public Object [] parseResponse(BowlerDatagram datagram, BowlerDataType [] arguments){
 		Object [] response = new Object[arguments.length];
 		int i=0;
@@ -267,35 +336,75 @@ public class RpcEncapsulation {
 		return response;
 	}
 
+	/**
+	 * Gets the namespace.
+	 *
+	 * @return the namespace
+	 */
 	public String getNamespace() {
 		return namespace;
 	}
 
+	/**
+	 * Sets the namespace.
+	 *
+	 * @param namespace the new namespace
+	 */
 	public void setNamespace(String namespace) {
 		this.namespace = namespace;
 	}
 
+	/**
+	 * Gets the rpc.
+	 *
+	 * @return the rpc
+	 */
 	public String getRpc() {
 		return rpc;
 	}
 
+	/**
+	 * Sets the rpc.
+	 *
+	 * @param rpc the new rpc
+	 */
 	public void setRpc(String rpc) {
 		this.rpc = rpc;
 	}
 
+	/**
+	 * Gets the downstream method.
+	 *
+	 * @return the downstream method
+	 */
 	public BowlerMethod getDownstreamMethod() {
 		return method;
 	}
 
+	/**
+	 * Sets the down stream method.
+	 *
+	 * @param method the new down stream method
+	 */
 	public void setDownStreamMethod(BowlerMethod method) {
 		this.method = method;
 	}
 
+	/**
+	 * Gets the downstream arguments.
+	 *
+	 * @return the downstream arguments
+	 */
 	public BowlerDataType[] getDownstreamArguments() {
 		return downstreamArguments;
 	}
 	
 
+	/**
+	 * Sets the downstream arguments.
+	 *
+	 * @param downstreamArguments the new downstream arguments
+	 */
 	public void setDownstreamArguments(BowlerDataType[] downstreamArguments) {
 		for(int i=0;i<downstreamArguments.length;i++){
 			if(downstreamArguments[i] == null){
@@ -305,10 +414,20 @@ public class RpcEncapsulation {
 		this.downstreamArguments = downstreamArguments;
 	}
 
+	/**
+	 * Gets the upstream arguments.
+	 *
+	 * @return the upstream arguments
+	 */
 	public BowlerDataType[] getUpstreamArguments() {
 		return upstreamArguments;
 	}
 
+	/**
+	 * Sets the upstream arguments.
+	 *
+	 * @param upstreamArguments the new upstream arguments
+	 */
 	public void setUpstreamArguments(BowlerDataType[] upstreamArguments) {
 		if(upstreamArguments== null)
 			return;// asynchronus packets have no upstream
@@ -320,14 +439,27 @@ public class RpcEncapsulation {
 		this.upstreamArguments = upstreamArguments;
 	}
 
+	/**
+	 * Gets the up stream method.
+	 *
+	 * @return the up stream method
+	 */
 	public BowlerMethod getUpStreamMethod() {
 		return upStreamMethod;
 	}
 
+	/**
+	 * Sets the up stream method.
+	 *
+	 * @param upStreamMethod the new up stream method
+	 */
 	public void setUpStreamMethod(BowlerMethod upStreamMethod) {
 		this.upStreamMethod = upStreamMethod;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString(){
 		String s=getNamespace()+" "+getRpc()+" "+getDownstreamMethod();
@@ -347,18 +479,38 @@ public class RpcEncapsulation {
 		return s;	
 	}
 
+	/**
+	 * Gets the namespace index.
+	 *
+	 * @return the namespace index
+	 */
 	public int getNamespaceIndex() {
 		return namespaceIndex;
 	}
 
+	/**
+	 * Sets the namespace index.
+	 *
+	 * @param namespaceIndex the new namespace index
+	 */
 	public void setNamespaceIndex(int namespaceIndex) {
 		this.namespaceIndex = namespaceIndex;
 	}
 
+	/**
+	 * Gets the processor.
+	 *
+	 * @return the processor
+	 */
 	public IBowlerCommandProcessor getProcessor() {
 		return processor;
 	}
 
+	/**
+	 * Sets the processor.
+	 *
+	 * @param processor the new processor
+	 */
 	public void setProcessor(IBowlerCommandProcessor processor) {
 		this.processor = processor;
 	}

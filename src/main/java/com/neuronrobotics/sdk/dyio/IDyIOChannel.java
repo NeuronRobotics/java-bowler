@@ -16,8 +16,9 @@ package com.neuronrobotics.sdk.dyio;
 
 import com.neuronrobotics.sdk.common.ByteList;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Interface IDyIOChannel.
  */
 public interface IDyIOChannel {
 	
@@ -44,11 +45,10 @@ public interface IDyIOChannel {
 	
 	/**
 	 * Set the mode of a channel.
-	 * 
-	 * @param mode the mode to set the channel to 
+	 *
+	 * @param mode the mode to set the channel to
 	 * @param async if it should be async or not
 	 * @return if the action was successful
-	 * @throws Exception if there is a communication error
 	 */
 	public boolean setMode(DyIOChannelMode mode, boolean async);
 	
@@ -64,8 +64,8 @@ public interface IDyIOChannel {
 	/**
 	 * Set the value of a channel. Channels may not be able to be set to certain or potentially any values
 	 * depending on the mode that a channel is in. 
-	 * 
-	 * @param value
+	 *
+	 * @param value the value
 	 * @return true if successful
 	 */
 	public boolean setValue(ByteList value);

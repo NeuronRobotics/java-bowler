@@ -4,10 +4,19 @@ import com.neuronrobotics.sdk.dyio.peripherals.AnalogInputChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.IAnalogInputListener;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class AnalogInputTestsAsync.
+ */
 public class AnalogInputTestsAsync implements IAnalogInputListener{
+	
+	/** The ana. */
 	//The analog channel is a property of the class
 	private AnalogInputChannel ana;
 
+	/**
+	 * Instantiates a new analog input tests async.
+	 */
 	public AnalogInputTestsAsync(){
 		//Start the dyio with serial dialog
 		DyIO dyio=new DyIO();
@@ -30,12 +39,19 @@ public class AnalogInputTestsAsync implements IAnalogInputListener{
 		}
 	
 	}
+	
 	/**
-	 * @param args
+	 * The main method.
+	 *
+	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
 		new AnalogInputTestsAsync();
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.dyio.peripherals.IAnalogInputListener#onAnalogValueChange(com.neuronrobotics.sdk.dyio.peripherals.AnalogInputChannel, double)
+	 */
 	@Override
 	public void onAnalogValueChange(AnalogInputChannel channel,double value) {
 		//Check the source of the event

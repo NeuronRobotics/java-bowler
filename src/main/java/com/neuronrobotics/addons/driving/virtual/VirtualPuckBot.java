@@ -7,16 +7,45 @@ import com.neuronrobotics.sdk.pid.PIDEvent;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 import com.neuronrobotics.sdk.pid.VirtualGenericPIDDevice;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class VirtualPuckBot.
+ */
 public class VirtualPuckBot extends PuckBot{
+	
+	/** The world. */
 	private VirtualWorld world;
 
+	/** The controller. */
 	VirtualGenericPIDDevice controller;
+	
+	/**
+	 * Instantiates a new virtual puck bot.
+	 *
+	 * @param w the w
+	 * @param botStartX the bot start x
+	 * @param botStartY the bot start y
+	 */
 	public VirtualPuckBot(VirtualWorld w,int botStartX ,int botStartY){
 		init(w,botStartX,botStartY);
 	}
+	
+	/**
+	 * Instantiates a new virtual puck bot.
+	 *
+	 * @param w the w
+	 */
 	public VirtualPuckBot(VirtualWorld w){
 		init(w,300,300);
 	}
+	
+	/**
+	 * Inits the.
+	 *
+	 * @param w the w
+	 * @param botStartX the bot start x
+	 * @param botStartY the bot start y
+	 */
 	private void init(VirtualWorld w ,int botStartX ,int botStartY){
 		world=w;
 		world.addRobot(this,botStartX , botStartY);
@@ -32,6 +61,10 @@ public class VirtualPuckBot extends PuckBot{
 		setPIDChanels(controller.getPIDChannel(0),controller.getPIDChannel(1));
 		
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.addons.driving.PuckBot#setPuckBotKinematics(com.neuronrobotics.addons.driving.IPuckBotKinematics)
+	 */
 	@Override
 	public void setPuckBotKinematics(IPuckBotKinematics pk) {
 		super.setPuckBotKinematics(pk);

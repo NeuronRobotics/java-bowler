@@ -8,10 +8,21 @@ import com.neuronrobotics.sdk.dyio.peripherals.IAnalogInputListener;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ConcurrencyTest.
+ */
 public class ConcurrencyTest implements IAnalogInputListener{
+	
+	/** The doc. */
 	private DigitalOutputChannel doc;
+	
+	/** The ana. */
 	private AnalogInputChannel ana;
 
+	/**
+	 * Instantiates a new concurrency test.
+	 */
 	public ConcurrencyTest() {
 		DyIO dyio=new DyIO();
 		if (!ConnectionDialog.getBowlerDevice(dyio)){
@@ -26,6 +37,12 @@ public class ConcurrencyTest implements IAnalogInputListener{
 		}
 
 	}
+	
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args){
 		try{
 			new ConcurrencyTest();
@@ -33,6 +50,10 @@ public class ConcurrencyTest implements IAnalogInputListener{
 			System.exit(0);
 		}
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.dyio.peripherals.IAnalogInputListener#onAnalogValueChange(com.neuronrobotics.sdk.dyio.peripherals.AnalogInputChannel, double)
+	 */
 	@Override
 	public void onAnalogValueChange(AnalogInputChannel chan, double value) {
 		// TODO Auto-generated method stub

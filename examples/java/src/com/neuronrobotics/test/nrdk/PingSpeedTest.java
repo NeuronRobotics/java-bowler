@@ -7,11 +7,17 @@ import com.neuronrobotics.sdk.genericdevice.GenericDevice;
 import com.neuronrobotics.sdk.network.UDPBowlerConnection;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PingSpeedTest.
+ */
 @SuppressWarnings("unused")
 public class PingSpeedTest {
 
 	/**
-	 * @param args
+	 * The main method.
+	 *
+	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
 //		BowlerAbstractConnection c =  new SerialConnection("/dev/DyIO0");

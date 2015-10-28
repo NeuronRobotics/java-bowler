@@ -7,7 +7,15 @@ import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class HexapodSimple.
+ */
 public class HexapodSimple {
+	
+	/**
+	 * Instantiates a new hexapod simple.
+	 */
 	public HexapodSimple() {
 		DyIO dyio=new DyIO();
 		if (!ConnectionDialog.getBowlerDevice(dyio)){
@@ -25,8 +33,11 @@ public class HexapodSimple {
 		System.exit(0);
 		
 	}
+	
 	/**
-	 * @param args
+	 * The main method.
+	 *
+	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
 		new HexapodSimple();

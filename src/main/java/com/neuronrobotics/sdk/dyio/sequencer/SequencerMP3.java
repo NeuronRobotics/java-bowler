@@ -29,12 +29,27 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class SequencerMP3.
+ */
 public class SequencerMP3 {
     
+    /** The fn. */
     private String fn="";
+    
+    /** The player. */
     // constructor that takes the name of an MP3 file
     private MediaPlayer player;
+    
+    /** The track length. */
     private int trackLength = 37;
+    
+    /**
+     * Instantiates a new sequencer m p3.
+     *
+     * @param filename the filename
+     */
     public SequencerMP3(String filename) {
     	fn = filename;
         try {
@@ -58,34 +73,64 @@ public class SequencerMP3 {
         }
     }
     
+    /**
+     * Pause.
+     */
     public void pause(){
     	player.pause();
     }
 
+    /**
+     * Close.
+     */
     public void close() { 
     	if (player != null) 
     		player.stop(); 
     }
 
+    /**
+     * Checks if is playing.
+     *
+     * @return true, if is playing
+     */
     public boolean isPlaying() {
 		if(player!=null)
 			return (player.getCurrentTime().toMillis()<getTrackLength());
 		return false;
 	}
+	
+	/**
+	 * Gets the current time.
+	 *
+	 * @return the current time
+	 */
 	public int getCurrentTime() {
 		return (int) player.getCurrentTime().toMillis();
 	}
+	
+	/**
+	 * Sets the current time.
+	 *
+	 * @param time the new current time
+	 */
 	public void setCurrentTime(int time) {
 		player.seek(new Duration(time));
 	}
+	
 	/**
-	 * 
+	 * Gets the track length.
+	 *
 	 * @return length in Ms
 	 */
 	public int getTrackLength(){
 		return trackLength;
 	}
 	
+	/**
+	 * Gets the percent.
+	 *
+	 * @return the percent
+	 */
 	private double getPercent() {
 		if(player.getCurrentTime().toMillis()<=0){
 			return 0;
@@ -97,6 +142,9 @@ public class SequencerMP3 {
 	}
 
 	
+	/**
+	 * Play step.
+	 */
 	public void playStep(){
 //		player.setStartTime(player.getCurrentTime());
 //		player.setStopTime(new Duration(player.getCurrentTime().toMillis()+getMsStepDuration()));
@@ -104,6 +152,9 @@ public class SequencerMP3 {
 		
 	}
 
+    /**
+     * Play.
+     */
     // play the MP3 file to the sound card
     public void play() {
 
@@ -113,6 +164,11 @@ public class SequencerMP3 {
     }
 
 
+    /**
+     * The main method.
+     *
+     * @param args the arguments
+     */
     // test client
     public static void main(String[] args) {
     	SequencerMP3 mp3 = new SequencerMP3("track.mp3");

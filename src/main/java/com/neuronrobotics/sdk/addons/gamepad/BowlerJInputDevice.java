@@ -11,14 +11,29 @@ import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.NonBowlerDevice;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class BowlerJInputDevice.
+ */
 public class BowlerJInputDevice extends NonBowlerDevice {
 	
+	/** The controller. */
 	private Controller controller;
+	
+	/** The listeners. */
 	private ArrayList<IJInputEventListener>  listeners  = new ArrayList<IJInputEventListener>(); 
 	
+	/** The run. */
 	boolean run=true;
+	
+	/** The poller. */
 	private Thread poller;
 
+	/**
+	 * Instantiates a new bowler j input device.
+	 *
+	 * @param controller the controller
+	 */
 	public BowlerJInputDevice(Controller controller){
 		if(controller!=null)
 			this.setController(controller);
@@ -26,6 +41,9 @@ public class BowlerJInputDevice extends NonBowlerDevice {
 			throw new RuntimeException("Contoller must not be null");
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.common.NonBowlerDevice#disconnectDeviceImp()
+	 */
 	@Override
 	public void disconnectDeviceImp() {
 		listeners.clear();
@@ -33,6 +51,9 @@ public class BowlerJInputDevice extends NonBowlerDevice {
 		run=false;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.common.NonBowlerDevice#connectDeviceImp()
+	 */
 	@Override
 	public boolean connectDeviceImp() {
 		if(poller == null){
@@ -79,26 +100,49 @@ public class BowlerJInputDevice extends NonBowlerDevice {
 		return true;
 	}
 
+	/**
+	 * Gets the controller.
+	 *
+	 * @return the controller
+	 */
 	public Controller getController() {
 		return controller;
 	}
 
+	/**
+	 * Sets the controller.
+	 *
+	 * @param controller the new controller
+	 */
 	public void setController(Controller controller) {
 		this.controller = controller;
 	}
 	
 	
 
+	/**
+	 * Removes the listeners.
+	 *
+	 * @param l the l
+	 */
 	public void removeListeners(IJInputEventListener l) {
 		if(listeners.contains(l))
 			this.listeners.remove(l);
 	}
 
+	/**
+	 * Adds the listeners.
+	 *
+	 * @param l the l
+	 */
 	public void addListeners(IJInputEventListener l) {
 		if(!listeners.contains(l))
 			this.listeners.add(l);
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.common.NonBowlerDevice#getNamespacesImp()
+	 */
 	@Override
 	public ArrayList<String> getNamespacesImp() {
 		// TODO Auto-generated method stub

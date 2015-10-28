@@ -19,13 +19,14 @@ import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.common.BowlerMethod;
 import com.neuronrobotics.sdk.common.InvalidResponseException;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class NamespaceCommand.
  */
 public class NamespaceCommand extends BowlerAbstractCommand {
 	
 	/**
-	 * 
+	 * Instantiates a new namespace command.
 	 */
 	public NamespaceCommand() {
 		setOpCode("_nms");
@@ -33,20 +34,21 @@ public class NamespaceCommand extends BowlerAbstractCommand {
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @param name
+	 * Instantiates a new namespace command.
+	 *
+	 * @param name the name
 	 */
 	public NamespaceCommand(int name) {
 		setOpCode("_nms");
 		setMethod(BowlerMethod.GET);
 		getCallingDataStorage().add(name);
 	}
+	
 	/**
-	 * 
-	 * Jan 7, 2011
+	 * Jan 7, 2011.
+	 *
 	 * @param name the number of namespaces
-	 * @param upstream
+	 * @param upstream the upstream
 	 */
 	public NamespaceCommand(int name,boolean upstream) {
 		setOpCode("_nms");
@@ -57,6 +59,12 @@ public class NamespaceCommand extends BowlerAbstractCommand {
 		getCallingDataStorage().add(name);
 	}
 	
+	/**
+	 * Instantiates a new namespace command.
+	 *
+	 * @param index the index
+	 * @param name the name
+	 */
 	public NamespaceCommand(int index,String name) {
 		setOpCode("_nms");
 		setMethod(BowlerMethod.POST);
@@ -64,13 +72,14 @@ public class NamespaceCommand extends BowlerAbstractCommand {
 		getCallingDataStorage().add(0);// null terminate the string
 		getCallingDataStorage().add(index);// set the size of the list of namespaces
 	}
+	
 	/**
 	 * Determine if the return response was successful; throw an InvalidResponseExpection otherwise. Commands
 	 * with more complicated validation should override this method and provide more specific checking. 
-	 * 
-	 * @param data
+	 *
+	 * @param data the data
 	 * @return the incoming response
-	 * @throws InvalidResponseException
+	 * @throws InvalidResponseException the invalid response exception
 	 */
 	@Override
 	public BowlerDatagram validate(BowlerDatagram data) throws InvalidResponseException {

@@ -44,22 +44,29 @@ import com.neuronrobotics.sdk.javaxusb.IUsbDeviceEventListener;
 import com.neuronrobotics.sdk.javaxusb.UsbCDCSerialConnection;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class UsbConnectionPanel.
  */
 public class UsbConnectionPanel extends AbstractConnectionPanel implements IUsbDeviceEventListener{
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 	
 
+	/** The connection cbo. */
 	private JComboBox connectionCbo = null;
+	
+	/** The refresh. */
 	private JButton refresh;
 	
+	/** The connection. */
 	private UsbCDCSerialConnection connection = null;
 
 	/**
-	 * @param connectionDialog 
-	 * 
+	 * Instantiates a new usb connection panel.
+	 *
+	 * @param connectionDialog the connection dialog
 	 */
 	public UsbConnectionPanel(ConnectionDialog connectionDialog) {
 		super("USB", ConnectionImageIconFactory.getIcon("images/usb-icon.png"),connectionDialog);
@@ -93,6 +100,9 @@ public class UsbConnectionPanel extends AbstractConnectionPanel implements IUsbD
 	}
 
 	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.ui.AbstractConnectionPanel#getConnection()
+	 */
 	public BowlerAbstractConnection getConnection() {
 
 		String port =connectionCbo.getSelectedItem().toString();
@@ -107,6 +117,9 @@ public class UsbConnectionPanel extends AbstractConnectionPanel implements IUsbD
 	}
 
 	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.ui.AbstractConnectionPanel#refresh()
+	 */
 	public void refresh() {	
 		//System.err.println("Refreshing USB");
 		connectionCbo.removeAllItems();
@@ -141,6 +154,9 @@ public class UsbConnectionPanel extends AbstractConnectionPanel implements IUsbD
 			getConnectionDialog().pack();
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.javaxusb.IUsbDeviceEventListener#onDeviceEvent(javax.usb.UsbDevice)
+	 */
 	@Override
 	public void onDeviceEvent(UsbDevice device) {
 		SwingUtilities.invokeLater(new Runnable() {

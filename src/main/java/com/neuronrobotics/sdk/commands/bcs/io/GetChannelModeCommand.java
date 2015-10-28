@@ -20,12 +20,14 @@ import com.neuronrobotics.sdk.common.BowlerMethod;
 import com.neuronrobotics.sdk.common.InvalidResponseException;
 import com.neuronrobotics.sdk.common.Log;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class GetChannelModeCommand.
  */
 public class GetChannelModeCommand extends BowlerAbstractCommand {
+	
 	/**
-	 * 
+	 * Instantiates a new gets the channel mode command.
 	 */
 	public GetChannelModeCommand() {
 		setOpCode("gacm");
@@ -33,9 +35,9 @@ public class GetChannelModeCommand extends BowlerAbstractCommand {
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @param channel
+	 * Instantiates a new gets the channel mode command.
+	 *
+	 * @param channel the channel
 	 */
 	public GetChannelModeCommand(int channel) {
 		setOpCode("gchm");

@@ -17,35 +17,56 @@ package com.neuronrobotics.sdk.addons.irobot;
 import java.util.HashMap;
 import java.util.Map;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Enum CreateSensorRequest.
  */
 public enum CreateSensorRequest {
+	
+	/** The all. */
 	ALL(0x00),
+	
+	/** The io. */
 	IO(0x01),
+	
+	/** The drive. */
 	DRIVE(0x02),
+	
+	/** The battery. */
 	BATTERY(0x03),
+	
+	/** The none. */
 	NONE(0xFF);
+	
+	/** The value. */
 	private byte value;
+	
+	/** The Constant lookup. */
 	private static final Map<Byte,CreateSensorRequest> lookup = new HashMap<Byte,CreateSensorRequest>();
+	
+	/**
+	 * Instantiates a new creates the sensor request.
+	 *
+	 * @param val the val
+	 */
 	private CreateSensorRequest(int val) {
 		value = (byte) val;
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @return
+	 * Gets the value.
+	 *
+	 * @return the value
 	 */
 	public byte getValue() {
 		return value; 
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @param code
-	 * @return
+	 * Gets the.
+	 *
+	 * @param code the code
+	 * @return the creates the sensor request
 	 */
 	public static CreateSensorRequest get(byte code) { 
     	return lookup.get(code); 

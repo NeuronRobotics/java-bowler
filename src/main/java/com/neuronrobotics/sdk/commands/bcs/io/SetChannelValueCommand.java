@@ -22,16 +22,18 @@ import com.neuronrobotics.sdk.common.InvalidResponseException;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.dyio.InvalidChannelOperationException;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class SetChannelValueCommand.
  */
 public class SetChannelValueCommand extends BowlerAbstractCommand {	
+	
 	/**
-	 * 
-	 * 
-	 * @param channel
-	 * @param value
-	 * @param mode
+	 * Instantiates a new sets the channel value command.
+	 *
+	 * @param channel the channel
+	 * @param value the value
+	 * @param mode the mode
 	 */
 	public SetChannelValueCommand(int channel, int value, DyIOChannelMode mode) {
 		setMethod(BowlerMethod.POST);
@@ -90,10 +92,10 @@ public class SetChannelValueCommand extends BowlerAbstractCommand {
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @param channel
-	 * @param data
+	 * Instantiates a new sets the channel value command.
+	 *
+	 * @param channel the channel
+	 * @param data the data
 	 */
 	public SetChannelValueCommand(int channel, ISendable data) {
 		setMethod(BowlerMethod.POST);
@@ -132,18 +134,13 @@ public class SetChannelValueCommand extends BowlerAbstractCommand {
 			throw new InvalidChannelOperationException();
 		}
 	}
+	
 	/**
 	 * SetChannelValueCommand.
-	 * 
-	 * @param channel
-	 *            the DyIO pin to use
-	 * @param value
-	 *            the value to set the pin to
-	 * @param mode
-	 *            the mode the channel is in
-	 * @param saveTheValue
-	 *            if true, the value is saved as the starting position for the
-	 *            channel
+	 *
+	 * @param channel            the DyIO pin to use
+	 * @param value            the value to set the pin to
+	 * @param mode            the mode the channel is in
 	 */
 	public SetChannelValueCommand(int channel, int [] value, DyIOChannelMode mode) {
 		switch(mode) {

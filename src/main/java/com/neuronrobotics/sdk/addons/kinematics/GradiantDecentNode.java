@@ -3,31 +3,80 @@ package com.neuronrobotics.sdk.addons.kinematics;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class GradiantDecentNode.
+ */
 public class GradiantDecentNode{
+	
+	/** The target. */
 	TransformNR target;
+	
+	/** The index. */
 	private int index;
+	
+	/** The offset. */
 	double offset;
 
+	/** The my start. */
 	double myStart=0;
+	
+	/** The joint space vector. */
 	double[] jointSpaceVector;
+	
+	/** The upper. */
 	double upper;
+	
+	/** The lower. */
 	double lower;
+	
+	/** The chain. */
 	private final DHChain chain;
+	
+	/** The inc vect. */
 	double incVect;
+	
+	/** The inc orent. */
 	double incOrent;
 	
+	/** The integral size. */
 	//integral
 	int integralSize = 100;
+	
+	/** The integral index vect. */
 	int integralIndexVect = 0;
+	
+	/** The integral index orent. */
 	int integralIndexOrent = 0;
+	
+	/** The integral total vect. */
 	double integralTotalVect = 0;
+	
+	/** The integral total orent. */
 	double integralTotalOrent = 0;
+	
+	/** The int vect. */
 	double intVect[] = new double[integralSize]; 
+	
+	/** The int orent. */
 	double intOrent[] = new double[integralSize]; 
 	
+	/** The Kp. */
 	double Kp = 1;
+	
+	/** The Ki. */
 	double Ki = 1;
 	
+	/**
+	 * Instantiates a new gradiant decent node.
+	 *
+	 * @param chain the chain
+	 * @param index the index
+	 * @param jointSpaceVector the joint space vector
+	 * @param cartesianSpace the cartesian space
+	 * @param u the u
+	 * @param l the l
+	 */
 	public GradiantDecentNode(DHChain chain,int index,double[] jointSpaceVector,TransformNR cartesianSpace, double u, double l){
 		this.chain = chain;
 		this.offset=0;
@@ -42,6 +91,12 @@ public class GradiantDecentNode{
 			intOrent[i]=0;
 		}
 	}
+	
+	/**
+	 * Step orent.
+	 *
+	 * @return true, if successful
+	 */
 	public boolean stepOrent(){
 		double none =  myStart+offset;
 		double start = offset;
@@ -96,6 +151,12 @@ public class GradiantDecentNode{
 			return true;
 		return false;
 	}
+	
+	/**
+	 * Step lin.
+	 *
+	 * @return true, if successful
+	 */
 	public boolean stepLin(){
 		double none =  myStart+offset;
 		double start = offset;
@@ -151,10 +212,19 @@ public class GradiantDecentNode{
 		return false;
 	}
 	
+	/**
+	 * Step.
+	 *
+	 * @return true, if successful
+	 */
 	public boolean step() {
 		boolean back = stepOrent()||stepLin();
 		return back;
 	}
+	
+	/**
+	 * Jitter.
+	 */
 	public void jitter(){
 		double jitterAmmount = 10;
 		double jitter=(Math.random()*jitterAmmount)-(jitterAmmount /2) ;
@@ -162,6 +232,13 @@ public class GradiantDecentNode{
 		offset += jitter;
 		jointSpaceVector[getIndex()] = myStart+offset;
 	}
+	
+	/**
+	 * Bound.
+	 *
+	 * @param in the in
+	 * @return the double
+	 */
 	double bound(double in){
 		if(in>upper){
 			offset = 0;// Attempt to reset a link on error case
@@ -173,9 +250,21 @@ public class GradiantDecentNode{
 		}
 		return in;
 	}
+	
+	/**
+	 * Sets the index.
+	 *
+	 * @param index the new index
+	 */
 	public void setIndex(int index) {
 		this.index = index;
 	}
+	
+	/**
+	 * Gets the index.
+	 *
+	 * @return the index
+	 */
 	public int getIndex() {
 		return index;
 	}

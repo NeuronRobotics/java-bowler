@@ -5,8 +5,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class BasicWalkerConfig.
+ */
 public class BasicWalkerConfig {
 	
+	/**
+	 * Gets the default configuration.
+	 *
+	 * @return the default configuration
+	 */
 	public static String getDefaultConfiguration() {
 		String s="";
 		InputStream is = getDefaultConfigurationStream();
@@ -20,6 +29,12 @@ public class BasicWalkerConfig {
 		}
 		return s;
 	}
+	
+	/**
+	 * Gets the default configuration stream.
+	 *
+	 * @return the default configuration stream
+	 */
 	public static InputStream getDefaultConfigurationStream() {
 		return BasicWalkerConfig.class.getResourceAsStream("miniHexapod.xml");
 	}

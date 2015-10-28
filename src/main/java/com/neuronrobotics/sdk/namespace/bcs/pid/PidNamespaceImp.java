@@ -11,19 +11,41 @@ import com.neuronrobotics.sdk.pid.PIDConfiguration;
 import com.neuronrobotics.sdk.pid.PIDEvent;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PidNamespaceImp.
+ */
 public class PidNamespaceImp extends AbstractPidNamespaceImp implements IExtendedPIDControl  {
+	
+	/** The ns. */
 	private final String ns = "bcs.pid.*";
 	
 	
 	
+	/**
+	 * Instantiates a new pid namespace imp.
+	 *
+	 * @param device the device
+	 */
 	public PidNamespaceImp(BowlerAbstractDevice device) {
 		super(device);
 	}
 	
+	/**
+	 * Send.
+	 *
+	 * @param method the method
+	 * @param rpcString the rpc string
+	 * @param arguments the arguments
+	 * @return the object[]
+	 */
 	private Object[] send(BowlerMethod method, String rpcString, Object[] arguments){
 		return getDevice().send(ns,method,rpcString,arguments,2);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#ResetPIDChannel(int, int)
+	 */
 	@Override
 	public boolean ResetPIDChannel(int group, int valueToSetCurrentTo) throws DeviceConnectionException {
 		Object[] args = new Object[]{group,valueToSetCurrentTo};
@@ -33,6 +55,9 @@ public class PidNamespaceImp extends AbstractPidNamespaceImp implements IExtende
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#ConfigurePIDController(com.neuronrobotics.sdk.pid.PIDConfiguration)
+	 */
 	@Override
 	public boolean ConfigurePIDController(PIDConfiguration config) {		
 		send(BowlerMethod.CRITICAL,
@@ -41,6 +66,9 @@ public class PidNamespaceImp extends AbstractPidNamespaceImp implements IExtende
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#getPIDConfiguration(int)
+	 */
 	@Override
 	public PIDConfiguration getPIDConfiguration(int group) {
 		
@@ -49,6 +77,9 @@ public class PidNamespaceImp extends AbstractPidNamespaceImp implements IExtende
 				new Object[]{group}));
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#ConfigurePDVelovityController(com.neuronrobotics.sdk.pid.PDVelocityConfiguration)
+	 */
 	@Override
 	public boolean ConfigurePDVelovityController(PDVelocityConfiguration config) {
 		send(BowlerMethod.CRITICAL,
@@ -57,6 +88,9 @@ public class PidNamespaceImp extends AbstractPidNamespaceImp implements IExtende
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#getPDVelocityConfiguration(int)
+	 */
 	@Override
 	public PDVelocityConfiguration getPDVelocityConfiguration(int group) {
 		Object [] args = send(BowlerMethod.GET,
@@ -65,7 +99,12 @@ public class PidNamespaceImp extends AbstractPidNamespaceImp implements IExtende
 		return new PDVelocityConfiguration(args);
 	}
 
+	/** The channel count. */
 	private Integer channelCount =null;
+	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#getPIDChannelCount()
+	 */
 	@Override
 	public int getPIDChannelCount() {
 		if(channelCount == null){
@@ -77,6 +116,9 @@ public class PidNamespaceImp extends AbstractPidNamespaceImp implements IExtende
 		return channelCount.intValue();
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#SetPIDSetPoint(int, int, double)
+	 */
 	@Override
 	public boolean SetPIDSetPoint(int group, int setpoint, double seconds) {
 		send(BowlerMethod.POST,
@@ -87,6 +129,9 @@ public class PidNamespaceImp extends AbstractPidNamespaceImp implements IExtende
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#SetAllPIDSetPoint(int[], double)
+	 */
 	@Override
 	public boolean SetAllPIDSetPoint(int[] setpoints, double seconds) {
 		send(BowlerMethod.POST,
@@ -96,6 +141,9 @@ public class PidNamespaceImp extends AbstractPidNamespaceImp implements IExtende
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#GetPIDPosition(int)
+	 */
 	@Override
 	public int GetPIDPosition(int group) {
 		Object [] args = send(BowlerMethod.GET,
@@ -107,6 +155,9 @@ public class PidNamespaceImp extends AbstractPidNamespaceImp implements IExtende
 		return (Integer)args[1];
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#GetAllPIDPosition()
+	 */
 	@Override
 	public int[] GetAllPIDPosition() {
 		Object [] args = send(BowlerMethod.GET,
@@ -120,6 +171,9 @@ public class PidNamespaceImp extends AbstractPidNamespaceImp implements IExtende
 		return data;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#SetPDVelocity(int, int, double)
+	 */
 	@Override
 	public boolean SetPDVelocity(int group, int unitsPerSecond, double seconds)throws PIDCommandException {
 		send(BowlerMethod.POST,
@@ -130,6 +184,9 @@ public class PidNamespaceImp extends AbstractPidNamespaceImp implements IExtende
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#killAllPidGroups()
+	 */
 	@Override
 	public boolean killAllPidGroups() {
 		send(BowlerMethod.CRITICAL,
@@ -138,6 +195,9 @@ public class PidNamespaceImp extends AbstractPidNamespaceImp implements IExtende
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.AbstractPidNamespaceImp#onAsyncResponse(com.neuronrobotics.sdk.common.BowlerDatagram)
+	 */
 	@Override
 	public void onAsyncResponse(BowlerDatagram data) {
 		//Log.debug("\nPID ASYNC<<"+data);
@@ -160,6 +220,9 @@ public class PidNamespaceImp extends AbstractPidNamespaceImp implements IExtende
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IExtendedPIDControl#runOutputHysteresisCalibration(int)
+	 */
 	@Override
 	public boolean runOutputHysteresisCalibration(int group) {
 		send(BowlerMethod.POST,

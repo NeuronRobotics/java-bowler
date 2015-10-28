@@ -3,18 +3,45 @@ package com.neuronrobotics.sdk.bootloader;
 //import java.util.Queue;
 import java.util.ArrayList;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class hexLine.
+ */
 public class hexLine {
+	
+	/** The data bytes. */
 	private ArrayList<Byte> dataBytes = new ArrayList<Byte>();
+	
+	/** The address. */
 	private int address;
+	
+	/** The byte count. */
 	private int byteCount;
+	
+	/** The record type. */
 	private int recordType;
+	
+	/** The check sum. */
 	private int checkSum;
+	
+	/** The has set high address. */
 	private boolean hasSetHighAddress=false;
 	
+	/**
+	 * Gets the check sum.
+	 *
+	 * @return the check sum
+	 */
 	public int getCheckSum() {
 		return checkSum;
 	}
 
+	/**
+	 * Instantiates a new hex line.
+	 *
+	 * @param s the s
+	 * @throws Exception the exception
+	 */
 	public hexLine(String s) throws Exception{
 		char data[] = s.toCharArray();
 		if ((data.length<11)||data[0]!=':')
@@ -40,14 +67,29 @@ public class hexLine {
 		
 	}
 
+	/**
+	 * Gets the start address.
+	 *
+	 * @return the start address
+	 */
 	public int getStartAddress() {
 		return address;
 	}
 	
+	/**
+	 * Gets the end address.
+	 *
+	 * @return the end address
+	 */
 	public int getEndAddress() {
 		return address+dataBytes.size();
 	}
 	
+	/**
+	 * Sets the high address.
+	 *
+	 * @param highAddress the new high address
+	 */
 	public void setHighAddress(long highAddress){
 		if(!hasSetHighAddress){
 			hasSetHighAddress=true;
@@ -55,25 +97,51 @@ public class hexLine {
 		}
 	}
 
+	/**
+	 * Gets the byte count.
+	 *
+	 * @return the byte count
+	 */
 	public int getByteCount() {
 		return byteCount;
 	}
 
+	/**
+	 * Gets the record type.
+	 *
+	 * @return the record type
+	 */
 	public int getRecordType() {
 		return recordType;
 	}
 	
+	/**
+	 * Gets the data bytes.
+	 *
+	 * @return the data bytes
+	 */
 	public byte[] getDataBytes() { 
 		if (dataBytes.size()==0) 
 			return null;
 		return dataToArray(dataBytes);
 	}
 	
+	/**
+	 * Checks for data.
+	 *
+	 * @return the boolean
+	 */
 	public Boolean hasData(){
 		if (dataBytes==null) return false;
 		return true;
 	}
 	
+	/**
+	 * Data to array.
+	 *
+	 * @param bl the bl
+	 * @return the byte[]
+	 */
 	private byte [] dataToArray( ArrayList<Byte> bl){
 		byte [] b = new byte[bl.size()];
 		int i=0;
@@ -83,6 +151,9 @@ public class hexLine {
 		return b;
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	public String toString(){
 		String s="";
 		if (getRecordType()==0){

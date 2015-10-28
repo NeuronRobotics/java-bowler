@@ -4,6 +4,10 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Enum BowlerBoardKinematicModel.
+ */
 public enum BowlerBoardKinematicModel {
 	/** The STATUS. */
 	Delta(0x00),

@@ -11,6 +11,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import com.neuronrobotics.sdk.common.Log;
 
+// TODO: Auto-generated Javadoc
 /**
  * An extensible G-code interpreter. Parses a stream containing G-code commands,
  * stores register values, and executes handlers. The default handler set
@@ -21,7 +22,7 @@ import com.neuronrobotics.sdk.common.Log;
  * {@link GCodeInterpreter#addDefaultHandlers}
  * 
  * To use, bind handlers to at least G00 and G01, and feed in a stream of
- * G-code. An example can be found in {@link GenericKinematicsGCodeInterpreter}.
+ * G-code. An example can be found in 
  * 
  * @author Jonathan D.K. Gibbons
  * @version 1
@@ -45,7 +46,8 @@ public class GCodeInterpreter {
 															// are allowed to
 															// modify the line.
 	
-	private CodeHandler errorHandler=null;
+	/** The error handler. */
+															private CodeHandler errorHandler=null;
 	/**
 	 * The list of handlers for G codes. gHandlers[0] is the list of handlers
 	 * for G0. The handlers must be called from last to first, to preserve
@@ -101,7 +103,10 @@ public class GCodeInterpreter {
 
 	Thread interpretingThread;
 
+	/** The executing lock. */
 	ReentrantLock executingLock;
+	
+	/** The line number. */
 	private int lineNumber=0;
 	/**
 	 * Default Constructor. This builds an interpreter and adds the default set
@@ -123,6 +128,12 @@ public class GCodeInterpreter {
 	}
 	
 	
+	/**
+	 * Process single gcode line.
+	 *
+	 * @param line the line
+	 * @throws Exception the exception
+	 */
 	public void processSingleGCODELine(String line) throws Exception{
 		String delims;
 		String[] tokens;
@@ -156,6 +167,12 @@ public class GCodeInterpreter {
 		executeLine(line);
 	}
 
+	/**
+	 * Parses the line.
+	 *
+	 * @param r the r
+	 * @throws Exception the exception
+	 */
 	private void parseLine(InputStream r) throws Exception { 
 		BufferedReader br = new BufferedReader(new InputStreamReader(r));
 		String line;
@@ -220,8 +237,9 @@ public class GCodeInterpreter {
 
 	/**
 	 * Execute the action(s) specified by the already built-up line of G-code.
-	 * 
-	 * @throws Exception
+	 *
+	 * @param rawLine the raw line
+	 * @throws Exception the exception
 	 */
 	private void executeLine(String rawLine) throws Exception {
 		
@@ -263,9 +281,9 @@ public class GCodeInterpreter {
 	/**
 	 * Main entry point; take an InputStream of G code and run the sequence of
 	 * actions it describes.
-	 * 
-	 * @param in
-	 * @throws Exception
+	 *
+	 * @param in the in
+	 * @throws Exception the exception
 	 */
 	public void interpretStream(InputStream in) throws Exception {
 		executingLock.lock();
@@ -281,6 +299,9 @@ public class GCodeInterpreter {
 
 	/**
 	 * Nonblocking version of interpretStream(); fails rather than waiting.
+	 *
+	 * @param in the in
+	 * @throws Exception the exception
 	 */
 
 	public void tryInterpretStream(InputStream in) throws Exception {
@@ -298,6 +319,8 @@ public class GCodeInterpreter {
 	/**
 	 * Cancel a run of a G-code stream. This interrupts the thread that is
 	 * currently parsing a G-code stream, canceling its execution.
+	 *
+	 * @return true, if successful
 	 */
 	public boolean cancel() {
 		if (interpretingThread != null) {
@@ -565,20 +588,29 @@ public class GCodeInterpreter {
 	/**
 	 * Default executable; runs as a pipe, parsing standard input with the
 	 * default handlers.
-	 * 
-	 * @param String
-	 *            args[]
-	 * @throws Exception
+	 *
+	 * @param args the arguments
+	 * @throws Exception the exception
 	 */
 	public static void main(String args[]) throws Exception {
 		GCodeInterpreter interp = new GCodeInterpreter();
 		interp.interpretStream(System.in);
 	}
 
+	/**
+	 * Gets the error handler.
+	 *
+	 * @return the error handler
+	 */
 	public CodeHandler getErrorHandler() {
 		return errorHandler;
 	}
 
+	/**
+	 * Sets the error handler.
+	 *
+	 * @param errorHandler the new error handler
+	 */
 	public void setErrorHandler(CodeHandler errorHandler) {
 		this.errorHandler = errorHandler;
 	}

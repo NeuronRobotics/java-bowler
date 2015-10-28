@@ -19,13 +19,25 @@ import com.neuronrobotics.sdk.pid.PIDConfiguration;
 import com.neuronrobotics.sdk.pid.PIDEvent;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class LegacyPidNamespaceImp.
+ */
 public class LegacyPidNamespaceImp extends AbstractPidNamespaceImp {
 
 	
+	/**
+	 * Instantiates a new legacy pid namespace imp.
+	 *
+	 * @param device the device
+	 */
 	public LegacyPidNamespaceImp(BowlerAbstractDevice device) {
 		super(device);
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.AbstractPidNamespaceImp#onAsyncResponse(com.neuronrobotics.sdk.common.BowlerDatagram)
+	 */
 	public void onAsyncResponse(BowlerDatagram data) {
 		//Log.debug("\nPID ASYNC<<"+data);
 		if(data.getRPC().contains("_pid")){
@@ -81,17 +93,26 @@ public class LegacyPidNamespaceImp extends AbstractPidNamespaceImp {
 		return back;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#ConfigurePDVelovityController(com.neuronrobotics.sdk.pid.PDVelocityConfiguration)
+	 */
 	@Override
 	public boolean ConfigurePDVelovityController(PDVelocityConfiguration config) {
 		return getDevice().send(new ConfigurePDVelocityCommand(config))!=null;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#getPDVelocityConfiguration(int)
+	 */
 	@Override
 	public PDVelocityConfiguration getPDVelocityConfiguration(int group) {
 		// TODO Auto-generated method stub
 		return new PDVelocityConfiguration(getDevice().send(new ConfigurePDVelocityCommand(group)));
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#getPIDChannelCount()
+	 */
 	@Override
 	public int getPIDChannelCount() {
 		if(getChannelCount()==null){
@@ -194,6 +215,9 @@ public class LegacyPidNamespaceImp extends AbstractPidNamespaceImp {
 		return getDevice().send(new KillAllPIDCommand())==null;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IExtendedPIDControl#runOutputHysteresisCalibration(int)
+	 */
 	@Override
 	public boolean runOutputHysteresisCalibration(int group) {
 		throw new RuntimeException("This method is not implemented in this version of the namespace");

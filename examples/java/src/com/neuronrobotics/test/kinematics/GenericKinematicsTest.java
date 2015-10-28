@@ -8,7 +8,15 @@ import com.neuronrobotics.sdk.addons.kinematics.ITaskSpaceUpdateListenerNR;
 import com.neuronrobotics.sdk.addons.kinematics.JointLimit;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class GenericKinematicsTest.
+ */
 public class GenericKinematicsTest implements IJointSpaceUpdateListenerNR, ITaskSpaceUpdateListenerNR, IRegistrationListenerNR {
+	
+	/**
+	 * Instantiates a new generic kinematics test.
+	 */
 	private GenericKinematicsTest(){
 		//Create the kinematics object
 		AbstractKinematicsNR kin = new GenericKinematicsModelNR();
@@ -35,18 +43,26 @@ public class GenericKinematicsTest implements IJointSpaceUpdateListenerNR, ITask
 	}
 
 	/**
-	 * @param args
+	 * The main method.
+	 *
+	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
 		new GenericKinematicsTest();
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.IJointSpaceUpdateListenerNR#onJointSpaceUpdate(com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR, double[])
+	 */
 	@Override
 	public void onJointSpaceUpdate(AbstractKinematicsNR source, double[] joints) {
 		// TODO Auto-generated method stub
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.IJointSpaceUpdateListenerNR#onJointSpaceTargetUpdate(com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR, double[])
+	 */
 	@Override
 	public void onJointSpaceTargetUpdate(AbstractKinematicsNR source,
 			double[] joints) {
@@ -54,6 +70,9 @@ public class GenericKinematicsTest implements IJointSpaceUpdateListenerNR, ITask
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.IJointSpaceUpdateListenerNR#onJointSpaceLimit(com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR, int, com.neuronrobotics.sdk.addons.kinematics.JointLimit)
+	 */
 	@Override
 	public void onJointSpaceLimit(AbstractKinematicsNR source, int axis,
 			JointLimit event) {
@@ -61,6 +80,9 @@ public class GenericKinematicsTest implements IJointSpaceUpdateListenerNR, ITask
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.IRegistrationListenerNR#onBaseToFiducialUpdate(com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR, com.neuronrobotics.sdk.addons.kinematics.math.TransformNR)
+	 */
 	@Override
 	public void onBaseToFiducialUpdate(AbstractKinematicsNR source,
 			TransformNR regestration) {
@@ -68,18 +90,27 @@ public class GenericKinematicsTest implements IJointSpaceUpdateListenerNR, ITask
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.IRegistrationListenerNR#onFiducialToGlobalUpdate(com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR, com.neuronrobotics.sdk.addons.kinematics.math.TransformNR)
+	 */
 	@Override
 	public void onFiducialToGlobalUpdate(AbstractKinematicsNR source,TransformNR regestration) {
 		// TODO Auto-generated method stub
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.ITaskSpaceUpdateListenerNR#onTaskSpaceUpdate(com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR, com.neuronrobotics.sdk.addons.kinematics.math.TransformNR)
+	 */
 	@Override
 	public void onTaskSpaceUpdate(AbstractKinematicsNR source, TransformNR pose) {
 		// TODO Auto-generated method stub
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.ITaskSpaceUpdateListenerNR#onTargetTaskSpaceUpdate(com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR, com.neuronrobotics.sdk.addons.kinematics.math.TransformNR)
+	 */
 	@Override
 	public void onTargetTaskSpaceUpdate(AbstractKinematicsNR source,
 			TransformNR pose) {

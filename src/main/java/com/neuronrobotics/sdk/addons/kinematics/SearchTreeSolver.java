@@ -4,13 +4,36 @@ import java.util.ArrayList;
 
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class SearchTreeSolver.
+ */
 public class SearchTreeSolver implements DhInverseSolver {
+	
+	/** The dh chain. */
 	private DHChain dhChain;
+	
+	/** The upper. */
 	private double [] upper;
+	
+	/** The lower. */
 	private double [] lower;
+	
+	/** The debug. */
 	private boolean debug;
+	
+	/** The starting increment. */
 	double startingIncrement = 1.5;//degrees
+	
+	/** The target. */
 	private TransformNR target;
+	
+	/**
+	 * Instantiates a new search tree solver.
+	 *
+	 * @param dhChain the dh chain
+	 * @param debug the debug
+	 */
 	public SearchTreeSolver(DHChain dhChain, boolean debug) {
 		this.setDhChain(dhChain);
 		this.debug = debug;
@@ -18,6 +41,9 @@ public class SearchTreeSolver implements DhInverseSolver {
 		lower = dhChain.getlowerLimits();
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.DhInverseSolver#inverseKinematics(com.neuronrobotics.sdk.addons.kinematics.math.TransformNR, double[], com.neuronrobotics.sdk.addons.kinematics.DHChain)
+	 */
 	@Override
 	public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector, 
 			 DHChain chain ) {
@@ -50,29 +76,67 @@ public class SearchTreeSolver implements DhInverseSolver {
 		return conf.getJoints();
 	}
 	
+	/**
+	 * Gets the target.
+	 *
+	 * @return the target
+	 */
 	public TransformNR getTarget() {
 		return target;
 	}
 
+	/**
+	 * Sets the target.
+	 *
+	 * @param target the new target
+	 */
 	public void setTarget(TransformNR target) {
 		this.target = target;
 	}
 
+	/**
+	 * Gets the dh chain.
+	 *
+	 * @return the dh chain
+	 */
 	public DHChain getDhChain() {
 		return dhChain;
 	}
 
+	/**
+	 * Sets the dh chain.
+	 *
+	 * @param dhChain the new dh chain
+	 */
 	public void setDhChain(DHChain dhChain) {
 		this.dhChain = dhChain;
 	}
+	
+	/**
+	 * Fk.
+	 *
+	 * @param jointSpaceVector the joint space vector
+	 * @return the transform nr
+	 */
 	public TransformNR fk(double[] jointSpaceVector){
 		return getDhChain().forwardKinematics(jointSpaceVector);
 	}
 
+	/**
+	 * The Class searchTree.
+	 */
 	private class searchTree{
+		
+		/** The nodes. */
 		//double[] start;
 		searchNode [] nodes;
 		
+		/**
+		 * Instantiates a new search tree.
+		 *
+		 * @param jointSpaceVector the joint space vector
+		 * @param startingIncrement the starting increment
+		 */
 		public searchTree(double[] jointSpaceVector,double startingIncrement){
 			nodes = new searchNode [jointSpaceVector.length];
 			for(int i=0;i<jointSpaceVector.length;i++){
@@ -80,6 +144,13 @@ public class SearchTreeSolver implements DhInverseSolver {
 			}
 			
 		}
+		
+		/**
+		 * Gets the best.
+		 *
+		 * @param jointSpaceVector the joint space vector
+		 * @return the best
+		 */
 		public configuration getBest(double[] jointSpaceVector){
 			ArrayList<configuration> configurations = new ArrayList<configuration> ();
 			for(int i=0;i<jointSpaceVector.length;i++){
@@ -146,17 +217,43 @@ public class SearchTreeSolver implements DhInverseSolver {
 			return configurations.get(best);
 		}
 	}
+	
+	/**
+	 * The Class configuration.
+	 */
 	private class configuration{
+		
+		/** The joints. */
 		private final double[] joints;
+		
+		/** The transform. */
 		private TransformNR transform;
+		
+		/** The target. */
 		private final TransformNR target;
+		
+		/** The o. */
 		double o;
+		
+		/** The v. */
 		double v;
 
+		/**
+		 * Instantiates a new configuration.
+		 *
+		 * @param joints the joints
+		 * @param t the t
+		 */
 		public configuration(double [] joints, TransformNR t){
 			this.joints = joints.clone();
 			target = t;
 		}
+		
+		/**
+		 * Gets the transform.
+		 *
+		 * @return the transform
+		 */
 		public TransformNR getTransform() {
 			if(transform == null){
 				transform = fk(getJoints());
@@ -165,17 +262,42 @@ public class SearchTreeSolver implements DhInverseSolver {
 			}
 			return transform;
 		}
+		
+		/**
+		 * Gets the joints.
+		 *
+		 * @return the joints
+		 */
 		public double[] getJoints() {
 			return joints;
 		}
+		
+		/**
+		 * Gets the offset orentation magnitude.
+		 *
+		 * @return the offset orentation magnitude
+		 */
 		public double getOffsetOrentationMagnitude(){
 			getTransform();
 			return o;
 		}
+		
+		/**
+		 * Gets the offset vector magnitude.
+		 *
+		 * @return the offset vector magnitude
+		 */
 		public double getOffsetVectorMagnitude(){
 			getTransform();
 			return v;
 		}
+		
+		/**
+		 * Same.
+		 *
+		 * @param c the c
+		 * @return true, if successful
+		 */
 		public boolean same(configuration c){
 			for(int i=0;i<6;i++){
 				if(		c.getJoints()[i]>getJoints()[i]+.1 ||
@@ -185,16 +307,38 @@ public class SearchTreeSolver implements DhInverseSolver {
 			}
 			return true;
 		}
+		
+		/* (non-Javadoc)
+		 * @see java.lang.Object#toString()
+		 */
 		public String toString(){
 			getTransform();
 			String s="\tTarget = "+target.toString()+"\n\tVector = "+v+"\n\tOrent "+o+"\n\tCurrent = "+getTransform().toString();	
 			return s;
 		}
 	}
+	
+	/**
+	 * The Class searchNode.
+	 */
 	private class searchNode{
+		
+		/** The start. */
 		private double start;
+		
+		/** The starting increment. */
 		private final double startingIncrement;
+		
+		/** The link. */
 		private final int link;
+		
+		/**
+		 * Instantiates a new search node.
+		 *
+		 * @param link the link
+		 * @param start the start
+		 * @param inc the inc
+		 */
 		public searchNode(int link,double start, double inc){
 			this.link = link;
 			this.start = start;
@@ -202,9 +346,21 @@ public class SearchTreeSolver implements DhInverseSolver {
 			if (inc<0)
 				throw new RuntimeException("Increment must be positive");
 		}
+		
+		/**
+		 * Sets the current.
+		 *
+		 * @param d the new current
+		 */
 		public void setCurrent(double d) {
 			start=d;
 		}
+		
+		/**
+		 * Gets the upper.
+		 *
+		 * @return the upper
+		 */
 		double getUpper(){
 			double b = start+startingIncrement;
 			if(		b>getDhChain().getUpperLimits()[link] ||
@@ -214,6 +370,12 @@ public class SearchTreeSolver implements DhInverseSolver {
 			}
 			return b;
 		}
+		
+		/**
+		 * Gets the lower.
+		 *
+		 * @return the lower
+		 */
 		double getLower(){
 			double b=  start-startingIncrement;
 			if(		b>getDhChain().getUpperLimits()[link] ||
@@ -224,9 +386,22 @@ public class SearchTreeSolver implements DhInverseSolver {
 			}
 			return b;
 		}
+		
+		/**
+		 * Gets the none.
+		 *
+		 * @return the none
+		 */
 		double getNone(){
 			return start;
 		}
+		
+		/**
+		 * Gets the.
+		 *
+		 * @param index the index
+		 * @return the double
+		 */
 		double get(int index){
 			switch(index){
 			case 0:

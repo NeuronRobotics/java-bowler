@@ -16,27 +16,53 @@ import com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR;
 import com.neuronrobotics.sdk.addons.kinematics.IJointSpaceUpdateListenerNR;
 import com.neuronrobotics.sdk.addons.kinematics.JointLimit;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class SampleGuiAxisWidgetNR.
+ */
 public class SampleGuiAxisWidgetNR extends JPanel implements IJointSpaceUpdateListenerNR{
 
-	/**
-	 * 
-	 */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1025603501934236961L;
+	
+	/** The axis. */
 	private int axis;
+	
+	/** The model. */
 	private AbstractKinematicsNR model;
+	
+	/** The my joint value. */
 	private double myJointValue = 0;
+	
+	/** The value. */
 	private JTextField value = new JTextField(7);
+	
+	/** The new target. */
 	private JTextField newTarget = new JTextField(7);
+	
+	/** The target. */
 	private JTextField target = new JTextField(7);
+	
+	/** The set. */
 	private JButton set = new JButton("Set Target");
+	
+	/** The jogp. */
 	private JButton jogp = new JButton("Jog+");
+	
+	/** The jogm. */
 	private JButton jogm = new JButton("Jog-");
+	
+	/** The home. */
 	private JButton home = new JButton("Home");
+	
+	/** The jog inc. */
 	private JTextField jogInc = new JTextField(7);
+	
 	/**
-	 * 
+	 * Instantiates a new sample gui axis widget nr.
+	 *
 	 * @param i which axis this is to represent
-	 * @param model
+	 * @param m the m
 	 */
 	public SampleGuiAxisWidgetNR(int i, AbstractKinematicsNR m) {
 		setLayout(new MigLayout());
@@ -130,6 +156,12 @@ public class SampleGuiAxisWidgetNR extends JPanel implements IJointSpaceUpdateLi
 		myJointValue = model.getCurrentJointSpaceVector()[getAxis()];
 		updateAxisUI();
 	}
+	
+	/**
+	 * Gets the new target.
+	 *
+	 * @return the new target
+	 */
 	private double getNewTarget(){
 		try{
 			return Double.parseDouble(newTarget.getText());
@@ -137,6 +169,12 @@ public class SampleGuiAxisWidgetNR extends JPanel implements IJointSpaceUpdateLi
 			return 0;
 		}
 	}
+	
+	/**
+	 * Gets the current target.
+	 *
+	 * @return the current target
+	 */
 	private double getCurrentTarget(){
 		try{
 			return Double.parseDouble(target.getText());
@@ -144,6 +182,12 @@ public class SampleGuiAxisWidgetNR extends JPanel implements IJointSpaceUpdateLi
 			return 0;
 		}
 	}
+	
+	/**
+	 * Gets the jog increment.
+	 *
+	 * @return the jog increment
+	 */
 	private double getJogIncrement(){
 		try{
 			return Double.parseDouble(jogInc.getText());
@@ -151,18 +195,35 @@ public class SampleGuiAxisWidgetNR extends JPanel implements IJointSpaceUpdateLi
 			return 0;
 		}
 	}
+	
+	/**
+	 * Gets the model.
+	 *
+	 * @return the model
+	 */
 	private AbstractKinematicsNR getModel() {
 		return model;
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.IJointSpaceUpdateListenerNR#onJointSpaceUpdate(com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR, double[])
+	 */
 	@Override
 	public void onJointSpaceUpdate(AbstractKinematicsNR source, double[] joints) {
 		myJointValue = joints[getAxis()];
 		updateAxisUI();
 	}
 
+	/**
+	 * Update axis ui.
+	 */
 	private void updateAxisUI() {
 		value.setText(new DecimalFormat("000.000").format(myJointValue));
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.IJointSpaceUpdateListenerNR#onJointSpaceTargetUpdate(com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR, double[])
+	 */
 	@Override
 	public void onJointSpaceTargetUpdate(AbstractKinematicsNR source,double[] joints) {
 		String txt = new DecimalFormat("000.000").format(joints[getAxis()]);
@@ -170,6 +231,11 @@ public class SampleGuiAxisWidgetNR extends JPanel implements IJointSpaceUpdateLi
 		target.setText(txt);
 	}
 	
+	/**
+	 * Sets the button enabled.
+	 *
+	 * @param b the new button enabled
+	 */
 	public void setButtonEnabled(boolean b){
 		if(b){
 			home.setText("Homed");
@@ -181,13 +247,29 @@ public class SampleGuiAxisWidgetNR extends JPanel implements IJointSpaceUpdateLi
 		jogp.setEnabled(b);
 		jogm.setEnabled(b);
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.IJointSpaceUpdateListenerNR#onJointSpaceLimit(com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR, int, com.neuronrobotics.sdk.addons.kinematics.JointLimit)
+	 */
 	@Override
 	public void onJointSpaceLimit(AbstractKinematicsNR source, int axis,
 			JointLimit event) {		
 	}
+	
+	/**
+	 * Sets the axis.
+	 *
+	 * @param axis the new axis
+	 */
 	public void setAxis(int axis) {
 		this.axis = axis;
 	}
+	
+	/**
+	 * Gets the axis.
+	 *
+	 * @return the axis
+	 */
 	public int getAxis() {
 		return axis;
 	}

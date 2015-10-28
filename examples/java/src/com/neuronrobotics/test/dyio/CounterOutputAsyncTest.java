@@ -6,8 +6,18 @@ import com.neuronrobotics.sdk.dyio.peripherals.ICounterOutputListener;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class CounterOutputAsyncTest.
+ */
 public class CounterOutputAsyncTest implements ICounterOutputListener {
+	
+	/** The stepper. */
 	CounterOutputChannel stepper;
+	
+	/**
+	 * Instantiates a new counter output async test.
+	 */
 	public CounterOutputAsyncTest () {
 		DyIO dyio=new DyIO();
 		if (!ConnectionDialog.getBowlerDevice(dyio)){
@@ -23,12 +33,19 @@ public class CounterOutputAsyncTest implements ICounterOutputListener {
         dyio.disconnect();
         System.exit(0);
 	}
+	
 	/**
-	 * @param args
+	 * The main method.
+	 *
+	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
 		new CounterOutputAsyncTest ();
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.dyio.peripherals.ICounterOutputListener#onCounterValueChange(com.neuronrobotics.sdk.dyio.peripherals.CounterOutputChannel, int)
+	 */
 	@Override
 	public void onCounterValueChange(CounterOutputChannel source, int value) {
 		if(source == stepper) {

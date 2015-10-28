@@ -18,10 +18,21 @@ import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class TrobotGuiMain.
+ */
 public class TrobotGuiMain {
+	
+	/** The start vect. */
 	double [] startVect = new double [] { 0,0,0,0,0,0};
+	
+	/** The model. */
 	DHParameterKinematics model;
 	
+	/**
+	 * Instantiates a new trobot gui main.
+	 */
 	private TrobotGuiMain(){
 		
 		try{
@@ -105,6 +116,9 @@ public class TrobotGuiMain {
 		
 	}
 	
+	/**
+	 * Zero.
+	 */
 	private void zero(){
 		try {
 			model.setDesiredJointSpaceVector(startVect, 2);
@@ -115,7 +129,9 @@ public class TrobotGuiMain {
 	}
 
 	/**
-	 * @param args
+	 * The main method.
+	 *
+	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
 		new TrobotGuiMain();

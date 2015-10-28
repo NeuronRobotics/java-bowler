@@ -12,15 +12,25 @@ import com.neuronrobotics.addons.driving.AbstractRobotDrive;
 import com.neuronrobotics.addons.driving.NrMap;
 import com.neuronrobotics.sdk.ui.ConnectionImageIconFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class VirtualWorld.
+ */
 public class VirtualWorld extends NrMap{
-	/**
-	 * long 
-	 */
+	
+	/** long. */
 	
 	private static final long serialVersionUID = 3437012102714959690L;
+	
+	/** The bots. */
 	private ArrayList<DrivingRobotUI> bots = new ArrayList<DrivingRobotUI>();
+	
+	/** The frame. */
 	private JFrame frame;
 
+	/**
+	 * Instantiates a new virtual world.
+	 */
 	public VirtualWorld() {
 		System.out.println("Starting new Virtual World");
 		BufferedImage d = new BufferedImage(getWidth(), getHeight(),BufferedImage.TYPE_INT_RGB);
@@ -70,12 +80,21 @@ public class VirtualWorld extends NrMap{
 		setDisplay(d);
 		initGui();
 	}
+	
+	/**
+	 * Instantiates a new virtual world.
+	 *
+	 * @param b the b
+	 */
 	public VirtualWorld(BufferedImage b) {
 		super(b);
 		setDisplay(b);
 		initGui();
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.addons.driving.NrMap#initGui()
+	 */
 	public void initGui(){
 		super.initGui();
 		
@@ -91,6 +110,9 @@ public class VirtualWorld extends NrMap{
         //frame.addMouseMotionListener(this);
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.addons.driving.NrMap#updateMap()
+	 */
 	public void updateMap() {
 		//System.out.println("Updating Map");
 		BufferedImage display = getMap();
@@ -106,12 +128,27 @@ public class VirtualWorld extends NrMap{
 		getFrame().repaint();
 	}
 	
+	/**
+	 * Adds the robot.
+	 *
+	 * @param robot the robot
+	 * @param botStartX the bot start x
+	 * @param botStartY the bot start y
+	 */
 	public void addRobot(AbstractRobotDrive robot,int botStartX ,int botStartY) {
 		if(!bots.contains(robot))
 			bots.add(new DrivingRobotUI(this,robot,botStartX ,botStartY));
 		updateMap();
 	}
 	
+	/**
+	 * Adds the sensor display dot.
+	 *
+	 * @param platform the platform
+	 * @param deltLateral the delt lateral
+	 * @param deltForward the delt forward
+	 * @param c the c
+	 */
 	public synchronized void addSensorDisplayDot(AbstractRobotDrive platform, double deltLateral, double deltForward, Color c){
 		for( int i=0;i<bots.size();i++){
 			DrivingRobotUI b = bots.get(i);
@@ -121,6 +158,14 @@ public class VirtualWorld extends NrMap{
 		}
 	}
 
+	/**
+	 * Gets the obsticle.
+	 *
+	 * @param platform the platform
+	 * @param deltLateral the delt lateral
+	 * @param deltForward the delt forward
+	 * @return the obsticle
+	 */
 	public ObsticleType getObsticle(AbstractRobotDrive platform, double deltLateral, double deltForward) {
 		for( int i=0;i<bots.size();i++){
 			DrivingRobotUI b = bots.get(i);
@@ -131,11 +176,14 @@ public class VirtualWorld extends NrMap{
 		}
 		return null;
 	}
+	
 	/**
-	 * 
-	 * @param robot 
+	 * Gets the range data.
+	 *
+	 * @param robot the robot
 	 * @param direction in radians
 	 * @param pixelMaxRange in pixels
+	 * @param type the type
 	 * @return distance in mm
 	 */
 	public double getRangeData(AbstractRobotDrive robot, double direction,int pixelMaxRange, ObsticleType type) {
@@ -171,6 +219,11 @@ public class VirtualWorld extends NrMap{
 		return pixelMaxRange;
 	}
 
+	/**
+	 * Gets the frame.
+	 *
+	 * @return the frame
+	 */
 	public JFrame getFrame() {
 		if(frame == null)
 			frame = new JFrame("Virtual World");
