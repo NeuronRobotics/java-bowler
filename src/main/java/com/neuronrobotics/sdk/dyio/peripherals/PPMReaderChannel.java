@@ -15,6 +15,7 @@ import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.common.DeviceManager;
 import com.neuronrobotics.sdk.dyio.IChannelEventListener;
 
+// TODO: Auto-generated Javadoc
 /**
  * This class is a wrapper for the DyIO PPM signal reader.
  * This manages taking Channel 23 and using it to read values from the VEX rc controller (others might be supported as well)
@@ -22,20 +23,30 @@ import com.neuronrobotics.sdk.dyio.IChannelEventListener;
  *
  */
 public class PPMReaderChannel  extends DyIOAbstractPeripheral implements IChannelEventListener{
+	
+	/** The Constant myMode. */
 	private static final DyIOChannelMode myMode = DyIOChannelMode.PPM_IN;
 
+	/** The cross links. */
 	private int [] crossLinks =null;
+	
+	/** The values. */
 	int [] values=null;
+	
+	/** The Constant NO_CROSSLINK. */
 	public static final int NO_CROSSLINK = 0xff;
+	
 	/**
-	 * Void constructor assumes you are suing the DyIORegestry and channel 23
+	 * Void constructor assumes you are suing the DyIORegestry and channel 23.
 	 */
 	public PPMReaderChannel() {
 		this(((DyIO) DeviceManager.getSpecificDevice(DyIO.class, null)).getChannel(23));
 	}
+	
 	/**
-	 * Takes a DyIO channel which must be channel 23
-	 * @param channel
+	 * Takes a DyIO channel which must be channel 23.
+	 *
+	 * @param channel the channel
 	 */
 	public PPMReaderChannel(DyIOChannel channel) {
 		super(channel,myMode,true);
@@ -47,8 +58,9 @@ public class PPMReaderChannel  extends DyIOAbstractPeripheral implements IChanne
 		}
 		getChannel().addChannelEventListener(this);
 	}
+	
 	/**
-	 * Shut down the internal corss link system
+	 * Shut down the internal corss link system.
 	 */
 	public void stopAllCrossLinks(){
 		if(crossLinks == null)
@@ -85,8 +97,10 @@ public class PPMReaderChannel  extends DyIOAbstractPeripheral implements IChanne
 					new Object[]{23,data});
 		}
 	}
+	
 	/**
-	 * Request the cross link map
+	 * Request the cross link map.
+	 *
 	 * @return an array of integers corosponding to the cross linking for the DyIO outputs
 	 */
 	public int [] getCrossLink(){
@@ -100,8 +114,10 @@ public class PPMReaderChannel  extends DyIOAbstractPeripheral implements IChanne
 //		System.out.print("]");
 		return crossLinks;
 	}
+	
 	/**
-	 * Get the current state of the PPM reader
+	 * Get the current state of the PPM reader.
+	 *
 	 * @return the values of the current state of the PPM channels
 	 */
 	public int [] getValues(){
@@ -111,6 +127,9 @@ public class PPMReaderChannel  extends DyIOAbstractPeripheral implements IChanne
 		return values;
 	}
 	
+	/**
+	 * Update values.
+	 */
 	private void updateValues() {
 		if(getChannel().getDevice().isLegacyParser()){
 			BowlerDatagram b=null;
@@ -148,9 +167,12 @@ public class PPMReaderChannel  extends DyIOAbstractPeripheral implements IChanne
 		}
 	}
 	
+	/** The listeners. */
 	ArrayList<IPPMReaderListener> listeners = new 	ArrayList<IPPMReaderListener> ();
+	
 	/**
-	 * Add a PPM reader listener
+	 * Add a PPM reader listener.
+	 *
 	 * @param l the IPPMReaderListener to add
 	 */
 	public void addPPMReaderListener(IPPMReaderListener l) {
@@ -158,6 +180,9 @@ public class PPMReaderChannel  extends DyIOAbstractPeripheral implements IChanne
 			listeners.add(l);
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.dyio.IChannelEventListener#onChannelEvent(com.neuronrobotics.sdk.dyio.DyIOChannelEvent)
+	 */
 	public void onChannelEvent(DyIOChannelEvent e) {
 		getValues();
 		if(crossLinks == null){
@@ -177,6 +202,9 @@ public class PPMReaderChannel  extends DyIOAbstractPeripheral implements IChanne
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.dyio.peripherals.DyIOAbstractPeripheral#hasAsync()
+	 */
 	public boolean hasAsync() {
 		return true;
 	}

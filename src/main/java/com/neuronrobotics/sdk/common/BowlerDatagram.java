@@ -31,6 +31,7 @@
  */
 package com.neuronrobotics.sdk.common;
 
+// TODO: Auto-generated Javadoc
 /**
  * Formats data into a Bowler packet. 
  * 
@@ -48,6 +49,7 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	/** The Constant CRC_INDEX. */
 	public static final int CRC_INDEX = 10;
 
+	/** The Constant MAX_PACKET_SIZE. */
 	public static final int MAX_PACKET_SIZE = HEADER_SIZE+255;
 	
 	/** The address. */
@@ -71,19 +73,23 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	/** The data. */
 	private ByteList data = new ByteList();
 	
-	/** time of instantiation **/
+	/**  time of instantiation *. */
 	
 	//private long timestamp;
 	
 	private boolean isPackedAvailibleForLoading = true;
 	
+	/** The timeout. */
 	private ThreadedTimeout timeout=new ThreadedTimeout();
 	
+	/** The use bowler v4. */
 	private static boolean useBowlerV4 =true;
 	
 	
 	/**
 	 * Default constructor.
+	 *
+	 * @param factory the factory
 	 */
 	public BowlerDatagram(BowlerDatagramFactory factory) {
 		validate(factory);
@@ -95,6 +101,7 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	 *
 	 * @param index Start o the section
 	 * @param len LEngth of the section
+	 * @param data the data
 	 * @return The Calculated CRC
 	 */
 	private  static byte genCRC(int index, int len, ByteList data) {
@@ -112,6 +119,7 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	/**
 	 * Assumes that the packet starts at byte 0.
 	 *
+	 * @param data the data
 	 * @return the byte
 	 */
 	private static byte genCrc(ByteList data){
@@ -121,18 +129,29 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	/**
 	 * Assumes the packet starts at byte 0.
 	 *
+	 * @param data the data
 	 * @return the byte holding the header crc
 	 */
 	private  static byte getCRC(ByteList data){
 		return data.getByte(BowlerDatagram.CRC_INDEX);
 	}
 	
+	/**
+	 * Gets the crc.
+	 *
+	 * @return the crc
+	 */
 	private byte getCrc() {
 		checkValidPacket();
 		return crc;
 	}
 
 
+	/**
+	 * Sets the crc.
+	 *
+	 * @param crc the new crc
+	 */
 	private void setCrc(byte crc) {
 		checkValidPacket();
 		this.crc = crc;
@@ -142,6 +161,7 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	/**
 	 * Assumes that the packet starts at byte 0.
 	 *
+	 * @param data the data
 	 * @return the byte
 	 */
 	public  static byte genDataCrc(ByteList data){
@@ -151,18 +171,29 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	/**
 	 * Assumes the packet starts at byte 0.
 	 *
+	 * @param data the data
 	 * @return the byte holding the header crc
 	 */
 	private  static byte getDataCrc(ByteList data){
 		return data.getByte((BowlerDatagram.HEADER_SIZE)+data.getUnsigned(9));
 	}
 	
+	/**
+	 * Gets the data crc.
+	 *
+	 * @return the data crc
+	 */
 	private byte getDataCrc() {
 		checkValidPacket();
 		return dataCrc;
 	}
 
 
+	/**
+	 * Sets the data crc.
+	 *
+	 * @param crc the new data crc
+	 */
 	private void setDataCrc(byte crc) {
 		checkValidPacket();
 		this.dataCrc = crc;
@@ -173,12 +204,18 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	 * Data must be at least the size of a standard Bowler packet header (11 bytes long)
 	 *
 	 * @param data the data
+	 * @param factory the factory
 	 */
 	public BowlerDatagram(ByteList data,BowlerDatagramFactory factory) {
 		validate(factory);
 		parse(data);
 	}
 	
+	/**
+	 * Validate.
+	 *
+	 * @param factory the factory
+	 */
 	private void validate(BowlerDatagramFactory factory){
 		if(!isFree()){
 			throw new RuntimeException("Packet is in use, be sure to use the factory");
@@ -232,6 +269,11 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 		setFree(false);
 	}
 	
+	/**
+	 * Sets the data.
+	 *
+	 * @param bs the new data
+	 */
 	public void setData(byte[] bs){
 		checkValidPacket();
 		data.clear();
@@ -435,6 +477,7 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	 * Check crc.
 	 *
 	 * @param buffer the buffer
+	 * @param checkData the check data
 	 * @return true, if successful
 	 */
 	static boolean CheckCRC(ByteList buffer, boolean checkData) {
@@ -463,11 +506,21 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 		return true;
 	}
 
+	/**
+	 * Gets the timestamp.
+	 *
+	 * @return the timestamp
+	 */
 	public long getTimestamp() {
 		checkValidPacket();
 		return timeout.getStartTime();
 	}
 
+	/**
+	 * Sets the as async.
+	 *
+	 * @param id the new as async
+	 */
 	public void setAsAsync(int id) {
 		setNamespaceResolutionID((byte) id);
 		setMethod(BowlerMethod.ASYNCHRONOUS);
@@ -475,29 +528,52 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	}
 
 
+	/**
+	 * Clear.
+	 */
 	public void clear() {
 		data.clear();
 	}
 
 
+	/**
+	 * Sets the address.
+	 *
+	 * @param address the new address
+	 */
 	public void setAddress(MACAddress address) {
 		checkValidPacket();
 		this.address = address;
 	}
 
 
+	/**
+	 * Sets the method.
+	 *
+	 * @param method the new method
+	 */
 	public void setMethod(BowlerMethod method) {
 		checkValidPacket();
 		this.method = method;
 	}
 
 
+	/**
+	 * Sets the namespace resolution id.
+	 *
+	 * @param namespaceResolutionID the new namespace resolution id
+	 */
 	public void setNamespaceResolutionID(byte namespaceResolutionID) {
 		checkValidPacket();
 		this.namespaceResolutionID = namespaceResolutionID;
 	}
 
 
+	/**
+	 * Sets the upstream.
+	 *
+	 * @param upstream the new upstream
+	 */
 	public void setUpstream(boolean upstream) {
 		checkValidPacket();
 		this.upstream = upstream;
@@ -507,6 +583,9 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 
 
 	
+	/**
+	 * Check valid packet.
+	 */
 	private void checkValidPacket(){
 		if(isFree() && timeout.isTimedOut()){
 			throw new RuntimeException("This packet has timed out and the data has been cleared marked="+isFree());
@@ -516,24 +595,47 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	}
 
 
+	/**
+	 * Checks if is free.
+	 *
+	 * @return true, if is free
+	 */
 	public boolean isFree() {
 		return isPackedAvailibleForLoading;
 	}
 
 
+	/**
+	 * Sets the free.
+	 *
+	 * @param isFree the is free
+	 * @param factory the factory
+	 */
 	public void setFree(boolean isFree, BowlerDatagramFactory factory) {
 		BowlerDatagramFactory.validateFactory(factory);
 		setFree(isFree);
 	}
 
+	/**
+	 * Sets the not free.
+	 */
 	private void setNotFree(){
 		clear();
 		timeout.stop();
 	}
 	
+	/**
+	 * Sets the to free.
+	 */
 	private void setToFree(){
 		timeout.initialize(BowlerDatagramFactory.getPacketTimeout(), this);
 	}
+	
+	/**
+	 * Sets the free.
+	 *
+	 * @param isFree the new free
+	 */
 	void setFree(boolean isFree) {
 		if(isFree== true){
 			setNotFree();
@@ -543,6 +645,9 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 		this.isPackedAvailibleForLoading = isFree;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.common.IthreadedTimoutListener#onTimeout(java.lang.String)
+	 */
 	@Override
 	public void onTimeout(String message) {
 		if(!isFree() ){
@@ -557,21 +662,39 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	}
 
 
+	/**
+	 * Calc crc.
+	 */
 	public void calcCRC() {
 		checkValidPacket();
 		getBytes();
 	}
 
 
+	/**
+	 * Sets the rpc.
+	 *
+	 * @param opCode the new rpc
+	 */
 	public void setRpc(String opCode) {
 		// TODO Auto-generated method stub
 		
 	}
 
+	/**
+	 * Checks if is use bowler v4.
+	 *
+	 * @return true, if is use bowler v4
+	 */
 	public static boolean isUseBowlerV4() {
 		return useBowlerV4;
 	}
 
+	/**
+	 * Sets the use bowler v4.
+	 *
+	 * @param useBowlerV4 the new use bowler v4
+	 */
 	public static void setUseBowlerV4(boolean useBowlerV4) {
 		Log.warning("Setting V4 mode = "+useBowlerV4);
 		//new Exception().printStackTrace();

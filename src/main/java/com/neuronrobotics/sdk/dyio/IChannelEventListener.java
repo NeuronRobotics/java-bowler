@@ -14,15 +14,24 @@
  ******************************************************************************/
 package com.neuronrobotics.sdk.dyio;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The listener interface for receiving IChannelEvent events.
+ * The class that is interested in processing a IChannelEvent
+ * event implements this interface, and the object created
+ * with that class is registered with a component using the
+ * component's  addIChannelEventListener  method. When
+ * the IChannelEvent event occurs, that object's appropriate
+ * method is invoked.
+ *
+ * @see DyIOChannelEvent
  */
 public interface IChannelEventListener {
 	
 	/**
-	 * 
-	 * 
-	 * @param e
+	 * On channel event.
+	 *
+	 * @param e the e
 	 */
 	public void onChannelEvent(DyIOChannelEvent e);
 }

@@ -16,13 +16,30 @@ import com.neuronrobotics.sdk.common.DeviceManager;
 import com.neuronrobotics.sdk.dyio.IChannelEventListener;
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DyIOConversation.
+ */
 public class DyIOConversation implements IConversation, MessageListener, IChannelEventListener {
+	
+	/** The listeners. */
 	private ArrayList<ChatAsyncListener> listeners = new ArrayList<ChatAsyncListener>();
+	
+	/** The log. */
 	private IChatLog log;
+	
+	/**
+	 * Instantiates a new dy io conversation.
+	 *
+	 * @param log the log
+	 */
 	public DyIOConversation(IChatLog log) {
 		this.log=log;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.jivesoftware.smack.MessageListener#processMessage(org.jivesoftware.smack.Chat, org.jivesoftware.smack.packet.Message)
+	 */
 	public void processMessage(Chat chat, Message message) {
 		Message msg = new Message(message.getFrom(), Message.Type.chat);
 	    if(message.getType().equals(Message.Type.chat) && message.getBody() != null) {
@@ -47,6 +64,9 @@ public class DyIOConversation implements IConversation, MessageListener, IChanne
 	    }
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.application.xmpp.IConversation#onMessage(java.lang.String, org.jivesoftware.smack.Chat, java.lang.String)
+	 */
 	@Override
 	public String onMessage(String input,Chat chat,String from) {
 		String [] packet = input.split("\\ ");
@@ -114,6 +134,13 @@ public class DyIOConversation implements IConversation, MessageListener, IChanne
 		}
 	}
 	
+	/**
+	 * Gets the listener.
+	 *
+	 * @param c the c
+	 * @param from the from
+	 * @return the listener
+	 */
 	private ChatAsyncListener getListener(Chat c,String from){
 		ChatAsyncListener back=null;
 		for(ChatAsyncListener l:listeners ){
@@ -130,16 +157,47 @@ public class DyIOConversation implements IConversation, MessageListener, IChanne
 		return back;
 	}
 	
+	/**
+	 * The listener interface for receiving chatAsync events.
+	 * The class that is interested in processing a chatAsync
+	 * event implements this interface, and the object created
+	 * with that class is registered with a component using the
+	 * component's  addChatAsyncListener  method. When
+	 * the chatAsync event occurs, that object's appropriate
+	 * method is invoked.
+	 *
+	 */
 	private class ChatAsyncListener implements IChannelEventListener{
+		
+		/** The chat. */
 		private Chat chat;
+		
+		/** The from. */
 		private String from;
+		
+		/**
+		 * Instantiates a new chat async listener.
+		 *
+		 * @param c the c
+		 * @param from the from
+		 */
 		public ChatAsyncListener(Chat c,String from){
 			setChat(c);
 			this.setFrom(from);
 		}
+		
+		/**
+		 * Gets the chat.
+		 *
+		 * @return the chat
+		 */
 		public Chat getChat() {
 			return chat;
 		}
+		
+		/* (non-Javadoc)
+		 * @see com.neuronrobotics.sdk.dyio.IChannelEventListener#onChannelEvent(com.neuronrobotics.sdk.dyio.DyIOChannelEvent)
+		 */
 		@Override
 		public void onChannelEvent(DyIOChannelEvent e) {
 			Message msg = new Message(getFrom(), Message.Type.chat);
@@ -153,17 +211,40 @@ public class DyIOConversation implements IConversation, MessageListener, IChanne
 				e1.printStackTrace();
 			}
 		}
+		
+		/**
+		 * Sets the chat.
+		 *
+		 * @param chat the new chat
+		 */
 		public void setChat(Chat chat) {
 			this.chat = chat;
 		}
+		
+		/**
+		 * Sets the from.
+		 *
+		 * @param from the new from
+		 */
 		public void setFrom(String from) {
 			this.from = from;
 		}
+		
+		/**
+		 * Gets the from.
+		 *
+		 * @return the from
+		 */
 		public String getFrom() {
 			return from;
 		}
 	}
 	
+	/**
+	 * Help.
+	 *
+	 * @return the string
+	 */
 	private String help(){
 		String s="This is a REPL loop for talking to the DyIO\n" +
 				"Commands use a command name, which DyIO port your connected to, and a value\n" +
@@ -182,6 +263,9 @@ public class DyIOConversation implements IConversation, MessageListener, IChanne
 		return s;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.dyio.IChannelEventListener#onChannelEvent(com.neuronrobotics.sdk.dyio.DyIOChannelEvent)
+	 */
 	@Override
 	public void onChannelEvent(DyIOChannelEvent e) {
 		// TODO Auto-generated method stub

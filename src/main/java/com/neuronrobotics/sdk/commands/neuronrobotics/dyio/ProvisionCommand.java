@@ -18,15 +18,16 @@ import com.neuronrobotics.sdk.common.BowlerAbstractCommand;
 import com.neuronrobotics.sdk.common.BowlerMethod;
 import com.neuronrobotics.sdk.common.MACAddress;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class ProvisionCommand.
  */
 public class ProvisionCommand extends BowlerAbstractCommand {
 	
 	/**
-	 * 
-	 * 
-	 * @param mac
+	 * Instantiates a new provision command.
+	 *
+	 * @param mac the mac
 	 */
 	public ProvisionCommand(MACAddress mac) {
 		setMethod(BowlerMethod.CRITICAL);

@@ -12,9 +12,19 @@ import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 import com.neuronrobotics.sdk.util.ThreadUtil;
+// TODO: Auto-generated Javadoc
+
+/**
+ * The Class TrobotDisplayOnly.
+ */
 public class TrobotDisplayOnly implements ITaskSpaceUpdateListenerNR {
+	
+	/** The model. */
 	DHParameterKinematics model;
 
+	/**
+	 * Instantiates a new trobot display only.
+	 */
 	public TrobotDisplayOnly() {
 		DyIO.disableFWCheck();
 		//Log.enableInfoPrint();
@@ -45,12 +55,25 @@ public class TrobotDisplayOnly implements ITaskSpaceUpdateListenerNR {
 		}
 	}
 	
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 		new TrobotDisplayOnly();
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.ITaskSpaceUpdateListenerNR#onTaskSpaceUpdate(com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR, com.neuronrobotics.sdk.addons.kinematics.math.TransformNR)
+	 */
 	public void onTaskSpaceUpdate(AbstractKinematicsNR source, TransformNR pose) {
 		//System.err.println("Got:"+pose);
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.ITaskSpaceUpdateListenerNR#onTargetTaskSpaceUpdate(com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR, com.neuronrobotics.sdk.addons.kinematics.math.TransformNR)
+	 */
 	public void onTargetTaskSpaceUpdate(AbstractKinematicsNR source,TransformNR pose) {}
 
 }

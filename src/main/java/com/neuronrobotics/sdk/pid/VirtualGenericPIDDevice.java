@@ -10,21 +10,45 @@ import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.NoConnectionAvailableException;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class VirtualGenericPIDDevice.
+ */
 public class VirtualGenericPIDDevice extends GenericPIDDevice{
 	
+	/** The Constant threadTime. */
 	private static final long threadTime=10;
 	
+	/** The drive threads. */
 	private ArrayList<LinearInterpolationEngine>  driveThreads = new  ArrayList<LinearInterpolationEngine>();
+	
+	/** The configs. */
 	private ArrayList<PIDConfiguration>  configs = new  ArrayList<PIDConfiguration>();
+	
+	/** The P dconfigs. */
 	private ArrayList<PDVelocityConfiguration>  PDconfigs = new  ArrayList<PDVelocityConfiguration>();
+	
+	/** The sync. */
 	SyncThread sync = new SyncThread ();
+	
+	/** The max ticks per second. */
 	private double maxTicksPerSecond;
 	
+	/** The num channels. */
 	private int numChannels = 24;
 	
+	/**
+	 * Instantiates a new virtual generic pid device.
+	 */
 	public  VirtualGenericPIDDevice( ) {
 		this(1000000);
 	}
+	
+	/**
+	 * Instantiates a new virtual generic pid device.
+	 *
+	 * @param maxTicksPerSecond the max ticks per second
+	 */
 	public  VirtualGenericPIDDevice( double maxTicksPerSecond) {
 		this.setMaxTicksPerSecond(maxTicksPerSecond);
 		getImplementation().setChannelCount(new Integer(numChannels));
@@ -38,6 +62,9 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 		
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.pid.GenericPIDDevice#ConfigurePDVelovityController(com.neuronrobotics.sdk.pid.PDVelocityConfiguration)
+	 */
 	@Override
 	public boolean ConfigurePDVelovityController(PDVelocityConfiguration config) {
 		PDconfigs.set(config.getGroup(), config);
@@ -45,21 +72,34 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.pid.GenericPIDDevice#getPDVelocityConfiguration(int)
+	 */
 	@Override
 	public PDVelocityConfiguration getPDVelocityConfiguration(int group) {
 		return PDconfigs.get(group);
 	}
 	
 	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.pid.GenericPIDDevice#ConfigurePIDController(com.neuronrobotics.sdk.pid.PIDConfiguration)
+	 */
 	public boolean ConfigurePIDController(PIDConfiguration config) { 
 		configs.set(config.getGroup(), config);
 		
 		return true;
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.pid.GenericPIDDevice#getPIDConfiguration(int)
+	 */
 	public PIDConfiguration getPIDConfiguration(int group) {
 		return configs.get(group);
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.common.BowlerAbstractDevice#getNamespaces()
+	 */
 	@Override 
 	public ArrayList<String> getNamespaces(){
 		ArrayList<String> s = new ArrayList<String>();
@@ -67,6 +107,9 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 		return s;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.pid.GenericPIDDevice#killAllPidGroups()
+	 */
 	@Override
 	public boolean killAllPidGroups() {
 		for(PIDConfiguration c:configs)
@@ -76,8 +119,12 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 	
 
 	/**
-	 * since there is no connection, this is an easy to nip off com functionality
+	 * since there is no connection, this is an easy to nip off com functionality.
 	 *
+	 * @param command the command
+	 * @return the bowler datagram
+	 * @throws NoConnectionAvailableException the no connection available exception
+	 * @throws InvalidResponseException the invalid response exception
 	 */
 	@Override
 	public BowlerDatagram send(BowlerAbstractCommand command) throws NoConnectionAvailableException, InvalidResponseException {	
@@ -85,6 +132,10 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 		r.printStackTrace();
 		throw r;
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.pid.GenericPIDDevice#ResetPIDChannel(int, int)
+	 */
 	@Override
 	public boolean ResetPIDChannel(int group, int valueToSetCurrentTo) {
 		driveThreads.get(group).ResetEncoder(valueToSetCurrentTo);
@@ -94,12 +145,19 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 	}
 
 	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.pid.GenericPIDDevice#SetPIDSetPoint(int, int, double)
+	 */
 	@Override
 	public boolean SetPIDSetPoint(int group, int setpoint, double seconds) {
 		Log.info("Virtual setpoint, group="+group+" setpoint="+setpoint);
 		driveThreads.get(group).SetPIDSetPoint(setpoint, seconds);
 		return true;
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.pid.GenericPIDDevice#SetPDVelocity(int, int, double)
+	 */
 	@Override
 	public boolean SetPDVelocity(int group, int unitsPerSecond, double seconds)throws PIDCommandException {
 		if(unitsPerSecond>getMaxTicksPerSecond())
@@ -130,6 +188,9 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 	}
 	
 	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.pid.GenericPIDDevice#SetAllPIDSetPoint(int[], double)
+	 */
 	@Override
 	public boolean SetAllPIDSetPoint(int[] setpoints, double seconds) {
 		sync.setPause(true);
@@ -139,15 +200,27 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 		sync.setPause(false);
 		return true;
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.pid.GenericPIDDevice#GetPIDPosition(int)
+	 */
 	@Override
 	public int GetPIDPosition(int group) {
 		// TODO Auto-generated method stub
 		return driveThreads.get(group).getPosition();
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.common.BowlerAbstractDevice#isAvailable()
+	 */
 	@Override
 	public boolean isAvailable(){
 		return true;
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.pid.GenericPIDDevice#GetAllPIDPosition()
+	 */
 	@Override
 	public int[] GetAllPIDPosition() {
 		//This is the trigger to populate the number of PID channels
@@ -169,9 +242,20 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 	}
 	
 	
+	/**
+	 * Sets the max ticks per second.
+	 *
+	 * @param maxTicksPerSecond the new max ticks per second
+	 */
 	public void setMaxTicksPerSecond(double maxTicksPerSecond) {
 		this.maxTicksPerSecond = maxTicksPerSecond;
 	}
+	
+	/**
+	 * Gets the max ticks per second.
+	 *
+	 * @return the max ticks per second
+	 */
 	public double getMaxTicksPerSecond() {
 		return maxTicksPerSecond;
 	}
@@ -179,13 +263,18 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 
 
 	/**
-	 * This class is designed to simulate a wheel driveing with a perfect controller
-	 * @author hephaestus
+	 * This class is designed to simulate a wheel driveing with a perfect controller.
 	 *
+	 * @author hephaestus
 	 */
 	private class SyncThread extends Thread{
 		
+		/** The pause. */
 		private boolean pause =false;
+		
+		/* (non-Javadoc)
+		 * @see java.lang.Thread#run()
+		 */
 		public void run() {
 			setName("Bowler Platform Virtual PID sync thread");
 			while(true) {
@@ -208,9 +297,20 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 			}
 		}
 	
+		/**
+		 * Checks if is pause.
+		 *
+		 * @return true, if is pause
+		 */
 		public boolean isPause() {
 			return pause;
 		}
+		
+		/**
+		 * Sets the pause.
+		 *
+		 * @param pause the new pause
+		 */
 		public void setPause(boolean pause) {
 			if(pause)
 				try {Thread.sleep(threadTime*2);} catch (InterruptedException e) {}
@@ -218,6 +318,9 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.pid.GenericPIDDevice#connect()
+	 */
 	@Override
 	public boolean connect(){
 		fireConnectEvent();

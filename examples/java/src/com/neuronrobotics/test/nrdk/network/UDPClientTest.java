@@ -11,8 +11,18 @@ import com.neuronrobotics.sdk.common.Log;
 //import com.neuronrobotics.sdk.network.BowlerTCPServer;
 import com.neuronrobotics.sdk.network.UDPBowlerConnection;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class UDPClientTest.
+ */
 public class UDPClientTest extends BowlerAbstractDevice implements IBowlerDatagramListener{
+	
+	/** The clnt. */
 	UDPBowlerConnection clnt;
+	
+	/**
+	 * Instantiates a new UDP client test.
+	 */
 	public UDPClientTest(){
 		Log.enableInfoPrint();
 		clnt=new UDPBowlerConnection();
@@ -44,17 +54,29 @@ public class UDPClientTest extends BowlerAbstractDevice implements IBowlerDatagr
 		System.exit(0);
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.common.BowlerAbstractDevice#onAllResponse(com.neuronrobotics.sdk.common.BowlerDatagram)
+	 */
 	@Override
 	public void onAllResponse(BowlerDatagram data) {
 		// TODO Auto-generated method stub
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.common.IBowlerDatagramListener#onAsyncResponse(com.neuronrobotics.sdk.common.BowlerDatagram)
+	 */
 	@Override
 	public void onAsyncResponse(BowlerDatagram data) {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String [] args){
 		try{
 			new UDPClientTest();
@@ -65,6 +87,9 @@ public class UDPClientTest extends BowlerAbstractDevice implements IBowlerDatagr
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.common.BowlerAbstractDevice#isAvailable()
+	 */
 	@Override
 	public boolean isAvailable() throws InvalidConnectionException {
 		// TODO Auto-generated method stub

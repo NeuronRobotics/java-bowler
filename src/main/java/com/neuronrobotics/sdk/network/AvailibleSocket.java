@@ -16,44 +16,49 @@ package com.neuronrobotics.sdk.network;
 
 import java.net.InetAddress;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class AvailibleSocket.
  */
 public class AvailibleSocket {
+	
+	/** The tcp addr. */
 	private InetAddress tcpAddr=null;
+	
+	/** The port. */
 	private int port=0;
 	
 	/**
-	 * 
-	 * 
-	 * @param tcpAddr
+	 * Sets the tcp addr.
+	 *
+	 * @param tcpAddr the new tcp addr
 	 */
 	public void setTcpAddr(InetAddress tcpAddr) {
 		this.tcpAddr = tcpAddr;
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @return
+	 * Gets the tcp addr.
+	 *
+	 * @return the tcp addr
 	 */
 	public InetAddress getTcpAddr() {
 		return tcpAddr;
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @param port
+	 * Sets the port.
+	 *
+	 * @param port the new port
 	 */
 	public void setPort(int port) {
 		this.port = port;
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @return
+	 * Gets the port.
+	 *
+	 * @return the port
 	 */
 	public int getPort() {
 		return port;

@@ -11,14 +11,32 @@ import com.neuronrobotics.sdk.pid.PIDCommandException;
 import com.neuronrobotics.sdk.pid.PIDEvent;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class AbstractPidNamespaceImp.
+ */
 public abstract class AbstractPidNamespaceImp implements IExtendedPIDControl {
 
+	/** The PID event listeners. */
 	private ArrayList<IPIDEventListener> PIDEventListeners = new ArrayList<IPIDEventListener>();
+	
+	/** The channels. */
 	protected ArrayList<PIDChannel> channels = null;
+	
+	/** The last packet time. */
 	protected long [] lastPacketTime = null;
+	
+	/** The device. */
 	private BowlerAbstractDevice device;
+	
+	/** The channel count. */
 	private Integer channelCount=null;
 	
+	/**
+	 * Instantiates a new abstract pid namespace imp.
+	 *
+	 * @param device the device
+	 */
 	public AbstractPidNamespaceImp(BowlerAbstractDevice device){
 		this.setDevice(device);
 		addPIDEventListener(new IPIDEventListener() {
@@ -31,10 +49,22 @@ public abstract class AbstractPidNamespaceImp implements IExtendedPIDControl {
 	}
 
 
+	/**
+	 * Gets the cached position.
+	 *
+	 * @param group the group
+	 * @return the int
+	 */
 	public int GetCachedPosition(int group) {
 		return getPIDChannel(group).getCurrentCachedPosition();
 	}
 
+	/**
+	 * Sets the cached position.
+	 *
+	 * @param group the group
+	 * @param value the value
+	 */
 	public void SetCachedPosition(int group, int value) {
 
 		getPIDChannel(group).setCurrentCachedPosition(value);
@@ -69,7 +99,8 @@ public abstract class AbstractPidNamespaceImp implements IExtendedPIDControl {
 	/**
 	 * Gets the number of PID channels availible to the system. It is determined by how many PID channels the device reports
 	 * back after a calling GetAllPIDPosition();
-	 * @return
+	 *
+	 * @return the number of channels
 	 */
 	public int getNumberOfChannels(){
 		return getChannels().size();
@@ -94,6 +125,12 @@ public abstract class AbstractPidNamespaceImp implements IExtendedPIDControl {
 				PIDEventListeners.remove(l);
 		}
 	}
+	
+	/**
+	 * Fire pid limit event.
+	 *
+	 * @param e the e
+	 */
 	public void firePIDLimitEvent(PIDLimitEvent e){
 		synchronized(PIDEventListeners){
 			for(IPIDEventListener l: PIDEventListeners)
@@ -101,6 +138,12 @@ public abstract class AbstractPidNamespaceImp implements IExtendedPIDControl {
 		}
 		//channels.get(e.getGroup()).firePIDLimitEvent(e);
 	}
+	
+	/**
+	 * Fire pid event.
+	 *
+	 * @param e the e
+	 */
 	public void firePIDEvent(PIDEvent e){
 		if(lastPacketTime != null){
 			if(lastPacketTime[e.getGroup()]>e.getTimeStamp()){
@@ -119,6 +162,13 @@ public abstract class AbstractPidNamespaceImp implements IExtendedPIDControl {
 		}
 		//channels.get(e.getGroup()).firePIDEvent(e);
 	}
+	
+	/**
+	 * Fire pid reset event.
+	 *
+	 * @param group the group
+	 * @param value the value
+	 */
 	public void firePIDResetEvent(int group,int value){
 		SetCachedPosition(group, value);
 		for(IPIDEventListener l: PIDEventListeners)
@@ -126,10 +176,20 @@ public abstract class AbstractPidNamespaceImp implements IExtendedPIDControl {
 		//channels.get(group).firePIDResetEvent(group, value);
 	}
 
+	/**
+	 * Gets the device.
+	 *
+	 * @return the device
+	 */
 	public BowlerAbstractDevice getDevice() {
 		return device;
 	}
 
+	/**
+	 * Sets the device.
+	 *
+	 * @param device the new device
+	 */
 	public void setDevice(BowlerAbstractDevice device) {
 		this.device = device;
 	}
@@ -147,14 +207,28 @@ public abstract class AbstractPidNamespaceImp implements IExtendedPIDControl {
 		}
 		return getChannels().get(group);
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#isAvailable()
+	 */
 	@Override
 	public boolean isAvailable() {
 		return device.isAvailable();
 	}
 
+	/**
+	 * On async response.
+	 *
+	 * @param data the data
+	 */
 	public abstract void onAsyncResponse(BowlerDatagram data);
 
 
+	/**
+	 * Gets the channels.
+	 *
+	 * @return the channels
+	 */
 	public ArrayList<PIDChannel> getChannels() {
 		if(channels==null){
 			channels=new ArrayList<PIDChannel>();
@@ -166,16 +240,31 @@ public abstract class AbstractPidNamespaceImp implements IExtendedPIDControl {
 	}
 
 
+	/**
+	 * Sets the channels.
+	 *
+	 * @param channels the new channels
+	 */
 	public void setChannels(ArrayList<PIDChannel> channels) {
 		this.channels = channels;
 	}
 
 
+	/**
+	 * Gets the channel count.
+	 *
+	 * @return the channel count
+	 */
 	public Integer getChannelCount() {
 		return channelCount;
 	}
 
 
+	/**
+	 * Sets the channel count.
+	 *
+	 * @param channelCount the new channel count
+	 */
 	public void setChannelCount(Integer channelCount) {
 		if(channelCount == null)
 			throw new RuntimeException("Must be set to a real value");

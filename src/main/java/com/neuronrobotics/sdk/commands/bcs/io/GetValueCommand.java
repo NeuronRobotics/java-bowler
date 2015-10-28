@@ -20,16 +20,19 @@ import com.neuronrobotics.sdk.common.BowlerMethod;
 import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.InvalidResponseException;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class GetValueCommand.
  */
 public class GetValueCommand extends BowlerAbstractCommand {
+	
+	/** The channel. */
 	private int channel;
 	
 	/**
-	 * 
-	 * 
-	 * @param channel
+	 * Instantiates a new gets the value command.
+	 *
+	 * @param channel the channel
 	 */
 	public GetValueCommand(int channel) {
 		this.channel = channel;

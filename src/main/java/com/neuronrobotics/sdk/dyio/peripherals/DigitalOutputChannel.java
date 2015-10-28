@@ -19,8 +19,9 @@ import com.neuronrobotics.sdk.dyio.DyIOChannel;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.common.DeviceManager;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class DigitalOutputChannel.
  */
 public class DigitalOutputChannel extends DyIOAbstractPeripheral {
 	/**
@@ -36,7 +37,8 @@ public class DigitalOutputChannel extends DyIOAbstractPeripheral {
 	/**
 	 * Constructor.
 	 * Creates an counter input input channel that is syncronous only by default.
-	 * 
+	 *
+	 * @param dyio the dyio
 	 * @param channel - the channel object requested from the DyIO
 	 */
 	public DigitalOutputChannel(DyIO dyio,int channel){
@@ -78,6 +80,9 @@ public class DigitalOutputChannel extends DyIOAbstractPeripheral {
 		return getValue() != 0;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.dyio.peripherals.DyIOAbstractPeripheral#hasAsync()
+	 */
 	@Override
 	public boolean hasAsync() {
 		return false;

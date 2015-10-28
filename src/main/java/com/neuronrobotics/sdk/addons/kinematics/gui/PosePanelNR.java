@@ -20,18 +20,44 @@ import com.neuronrobotics.sdk.addons.kinematics.ITaskSpaceUpdateListenerNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.common.Log;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PosePanelNR.
+ */
 public class PosePanelNR extends JPanel implements ITaskSpaceUpdateListenerNR, IRegistrationListenerNR {
-	/**
-	 * 
-	 */
+	
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -7089803986840024349L;
+	
+	/** The set. */
 	private JButton set = new JButton("Set");
+	
+	/** The update target. */
 	private JCheckBox updateTarget = new JCheckBox("Update Target");
+	
+	/** The time. */
 	private JTextField time = new JTextField(5);
+	
+	/** The model. */
 	private AbstractKinematicsNR model;
+	
+	/** The input. */
 	private boolean input;
+	
+	/** The display only. */
 	private boolean displayOnly;
+	
+	/** The matrix. */
 	private MatrixDisplayNR matrix;
+	
+	/**
+	 * Instantiates a new pose panel nr.
+	 *
+	 * @param m the m
+	 * @param isSetTargetinput the is set targetinput
+	 * @param displayOnly the display only
+	 * @param text the text
+	 */
 	public PosePanelNR(AbstractKinematicsNR m, boolean isSetTargetinput, boolean displayOnly, String text) {
 		setModel(m,isSetTargetinput);
 		//pose = getModel().getCurrentPose();
@@ -77,6 +103,10 @@ public class PosePanelNR extends JPanel implements ITaskSpaceUpdateListenerNR, I
 		add(matrix);
 
 	}
+	
+	/**
+	 * Sets the pose.
+	 */
 	public void setPose(){
 		if(!input){
 			double t = Double.parseDouble(time.getText());
@@ -91,14 +121,30 @@ public class PosePanelNR extends JPanel implements ITaskSpaceUpdateListenerNR, I
 		}
 	}
 	
+	/**
+	 * Sets the model.
+	 *
+	 * @param model the model
+	 * @param usePoseListener the use pose listener
+	 */
 	private void setModel(AbstractKinematicsNR model, boolean usePoseListener) {
 		this.model = model;
 		this.model.addPoseUpdateListener(this);	
 		this.model.addRegistrationListener(this);
 	}
+	
+	/**
+	 * Gets the model.
+	 *
+	 * @return the model
+	 */
 	public AbstractKinematicsNR getModel() {
 		return model;
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.ITaskSpaceUpdateListenerNR#onTargetTaskSpaceUpdate(com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR, com.neuronrobotics.sdk.addons.kinematics.math.TransformNR)
+	 */
 	@Override
 	public void onTargetTaskSpaceUpdate(AbstractKinematicsNR source, TransformNR pose) {
 		if((!input) && (displayOnly || updateTarget.isSelected()) ){
@@ -106,6 +152,10 @@ public class PosePanelNR extends JPanel implements ITaskSpaceUpdateListenerNR, I
 			matrix.setTransform(pose);	
 		}
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.ITaskSpaceUpdateListenerNR#onTaskSpaceUpdate(com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR, com.neuronrobotics.sdk.addons.kinematics.math.TransformNR)
+	 */
 	@Override
 	public void onTaskSpaceUpdate(AbstractKinematicsNR source, TransformNR pose) {
 		if (matrix == null)
@@ -115,14 +165,27 @@ public class PosePanelNR extends JPanel implements ITaskSpaceUpdateListenerNR, I
 		}
 	}
 
+	/**
+	 * Sets the button enabled.
+	 *
+	 * @param b the new button enabled
+	 */
 	public void setButtonEnabled(boolean b){
 		set.setEnabled(b);
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.IRegistrationListenerNR#onBaseToFiducialUpdate(com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR, com.neuronrobotics.sdk.addons.kinematics.math.TransformNR)
+	 */
 	@Override
 	public void onBaseToFiducialUpdate(AbstractKinematicsNR source,TransformNR regestration) {
 		if(displayOnly)
 			matrix.setTransform(source.getCurrentTaskSpaceTransform());
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.IRegistrationListenerNR#onFiducialToGlobalUpdate(com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR, com.neuronrobotics.sdk.addons.kinematics.math.TransformNR)
+	 */
 	@Override
 	public void onFiducialToGlobalUpdate(AbstractKinematicsNR source,TransformNR regestration) {
 		if(displayOnly)

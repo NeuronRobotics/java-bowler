@@ -11,23 +11,32 @@ import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.common.DeviceManager;
 import com.neuronrobotics.sdk.dyio.IChannelEventListener;
 import com.neuronrobotics.sdk.util.ThreadUtil;
+// TODO: Auto-generated Javadoc
+
 /**
- * This class wraps ports 0,1, and 2 as an SPI interface
- * @author Kevin Harrington
+ * This class wraps ports 0,1, and 2 as an SPI interface.
  *
+ * @author Kevin Harrington
  */
 public class SPIChannel implements IChannelEventListener{
+	
+	/** The dyio. */
 	DyIO dyio;
+	
+	/** The rx. */
 	byte [] rx=null;
+	
 	/**
-	 * Default constructor, assumes the DyIO regestry is being used
+	 * Default constructor, assumes the DyIO regestry is being used.
 	 */
 	public SPIChannel () {
 		this(((DyIO) DeviceManager.getSpecificDevice(DyIO.class, null)));
 	}
+	
 	/**
-	 * Constructor for an SPI channel
-	 * @param d
+	 * Constructor for an SPI channel.
+	 *
+	 * @param d the d
 	 */
 	public SPIChannel (DyIO d) {
 		d.setMode(0, DyIOChannelMode.SPI_CLOCK);
@@ -92,6 +101,10 @@ public class SPIChannel implements IChannelEventListener{
 			return new byte [0];
 		}
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.dyio.IChannelEventListener#onChannelEvent(com.neuronrobotics.sdk.dyio.DyIOChannelEvent)
+	 */
 	@Override
 	public void onChannelEvent(DyIOChannelEvent e) {
 		//Log.error("SPI"+e);

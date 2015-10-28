@@ -19,27 +19,31 @@ import java.io.InputStream;
 
 import com.neuronrobotics.sdk.common.ByteList;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class DyIOInputStream.
  */
 public class DyIOInputStream extends InputStream {
 
+	/** The buffer. */
 	private ByteList buffer = new ByteList();
+	
+	/** The chan. */
 	DyIOChannel chan;
 	
 	/**
-	 * 
-	 * 
-	 * @param channel
+	 * Instantiates a new dy io input stream.
+	 *
+	 * @param channel the channel
 	 */
 	public DyIOInputStream(DyIOChannel channel) {
 		chan = channel;
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @param data
+	 * Write.
+	 *
+	 * @param data the data
 	 */
 	public void write(ByteList data) {
 		synchronized (buffer) {

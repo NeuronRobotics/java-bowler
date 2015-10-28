@@ -14,8 +14,17 @@
  ******************************************************************************/
 package com.neuronrobotics.sdk.dyio.peripherals;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The listener interface for receiving IDigitalInput events.
+ * The class that is interested in processing a IDigitalInput
+ * event implements this interface, and the object created
+ * with that class is registered with a component using the
+ * component's  addIDigitalInputListener  method. When
+ * the IDigitalInput event occurs, that object's appropriate
+ * method is invoked.
+ *
+ * @see DigitalInputChannel
  */
 public interface IDigitalInputListener {
 	

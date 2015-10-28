@@ -17,7 +17,14 @@ package com.neuronrobotics.sdk.dyio.peripherals;
 import com.neuronrobotics.sdk.dyio.IChannelEventListener;
 
 /**
- * 
+ * The listener interface for receiving IUARTStream events.
+ * The class that is interested in processing a IUARTStream
+ * event implements this interface, and the object created
+ * with that class is registered with a component using the
+ * component's  addIUARTStreamListener  method. When
+ * the IUARTStream event occurs, that object's appropriate
+ * method is invoked.
+ *
  */
 public interface IUARTStreamListener extends IChannelEventListener{
 

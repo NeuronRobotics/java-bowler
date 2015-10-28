@@ -19,23 +19,26 @@ import java.io.OutputStream;
 
 import com.neuronrobotics.sdk.common.ByteList;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class DyIOOutputStream.
  */
 public class DyIOOutputStream extends OutputStream {
+	
+	/** The chan. */
 	DyIOChannel chan;
 	
 	/**
-	 * 
-	 * 
-	 * @param channel
+	 * Instantiates a new dy io output stream.
+	 *
+	 * @param channel the channel
 	 */
 	public DyIOOutputStream(DyIOChannel channel) {
 		chan = channel;
 	}
 	
 	/**
-	 * Writes <code>bl</code> to this output stream as a single packet verses
+	 * Writes  bl  to this output stream as a single packet verses
 	 * individual writes for each byte.
 	 * 
 	 * @param bl

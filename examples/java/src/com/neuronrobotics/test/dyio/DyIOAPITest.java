@@ -6,10 +6,16 @@ import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DyIOAPITest.
+ */
 public class DyIOAPITest {
 
 	/**
-	 * @param args
+	 * The main method.
+	 *
+	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
 		DyIO dyio=new DyIO();

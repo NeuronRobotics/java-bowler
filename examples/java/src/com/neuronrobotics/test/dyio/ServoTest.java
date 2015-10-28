@@ -4,8 +4,15 @@ import com.neuronrobotics.sdk.dyio.peripherals.IServoPositionUpdateListener;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ServoTest.
+ */
 public class ServoTest implements IServoPositionUpdateListener{
 	
+	/**
+	 * Instantiates a new servo test.
+	 */
 	private ServoTest(){
 		DyIO.disableFWCheck();
 		DyIO dyio=new DyIO();
@@ -48,7 +55,9 @@ public class ServoTest implements IServoPositionUpdateListener{
 	}
 
 	/**
-	 * @param args
+	 * The main method.
+	 *
+	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
 
@@ -56,6 +65,9 @@ public class ServoTest implements IServoPositionUpdateListener{
 
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.dyio.peripherals.IServoPositionUpdateListener#onServoPositionUpdate(com.neuronrobotics.sdk.dyio.peripherals.ServoChannel, int, double)
+	 */
 	@Override
 	public void onServoPositionUpdate(ServoChannel srv, int position,double time) {
 		System.out.println("Servo Position update = "+ position+ " time= "+time );

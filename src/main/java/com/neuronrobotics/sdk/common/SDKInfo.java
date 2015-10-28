@@ -17,7 +17,8 @@ package com.neuronrobotics.sdk.common;
 // TODO: Auto-generated Javadoc
 
 /**
- * This class has been replaced by SDKBuildInfo
+ * This class has been replaced by SDKBuildInfo.
+ *
  * @author rbreznak
  */
 @Deprecated

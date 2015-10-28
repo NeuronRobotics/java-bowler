@@ -2,6 +2,10 @@ package com.neuronrobotics.addons.driving;
 
 import com.neuronrobotics.sdk.pid.PIDEvent;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Interface IAckermanBotKinematics.
+ */
 public interface IAckermanBotKinematics {
 
 	/**
@@ -33,23 +37,29 @@ public interface IAckermanBotKinematics {
 	 * @return Velocity data in encoder ticks
 	 */
 	public AckermanBotVelocityData DriveVelocityArc(double degreesPerSecond, double cmRadius) ;
+	
 	/**
-	 * The delta robots current location in cartesian space
-	 * @param e the most recent encoder packet 
+	 * The delta robots current location in cartesian space.
+	 *
+	 * @param e the most recent encoder packet
 	 * @param steerAngle the current angle of the steering wheel
-	 * @return 	the Deta of the cartesian position. This is the offset that resulted from the encoder event. 
+	 * @return 	the Deta of the cartesian position. This is the offset that resulted from the encoder event.
 	 * 			If the robot did not move based on this encoder packet, the position of 0,0,0 should be 
 	 * 			returned.
 	 */
 	public RobotLocationData onPIDEvent(PIDEvent e, double steerAngle) ;
+	
 	/**
-	 * Get the maximum ticks per second of the robot
-	 * @return
+	 * Get the maximum ticks per second of the robot.
+	 *
+	 * @return the max ticks per seconds
 	 */
 	public double getMaxTicksPerSeconds();
+	
 	/**
-	 * Reset the Left encoder to a value
-	 * @param currentValue
+	 * Reset the Left encoder to a value.
+	 *
+	 * @param currentValue the current value
 	 */
 	public void onPIDReset( int currentValue);
 

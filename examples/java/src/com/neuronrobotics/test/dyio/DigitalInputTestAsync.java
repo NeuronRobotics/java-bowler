@@ -5,10 +5,21 @@ import com.neuronrobotics.sdk.dyio.peripherals.DigitalInputChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.IDigitalInputListener;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DigitalInputTestAsync.
+ */
 public class DigitalInputTestAsync implements IDigitalInputListener{
+	
+	/** The dip. */
 	//The digital channel is a property of the class
 	private DigitalInputChannel dip;
 
+	/**
+	 * Instantiates a new digital input test async.
+	 *
+	 * @throws InterruptedException the interrupted exception
+	 */
 	public DigitalInputTestAsync() throws InterruptedException{
 		//Start the dyio with serial dialog
 		DyIO dyio=new DyIO();
@@ -29,9 +40,11 @@ public class DigitalInputTestAsync implements IDigitalInputListener{
 		}
 		//dyio.disconnect();
 	}
+	
 	/**
-	 * @param args
-	 * @throws InterruptedException 
+	 * The main method.
+	 *
+	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -43,6 +56,10 @@ public class DigitalInputTestAsync implements IDigitalInputListener{
 			System.exit(1);
 		}
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.dyio.peripherals.IDigitalInputListener#onDigitalValueChange(com.neuronrobotics.sdk.dyio.peripherals.DigitalInputChannel, boolean)
+	 */
 	@Override
 	public void onDigitalValueChange(DigitalInputChannel source, boolean isHigh) {
 		//Check the source of the event

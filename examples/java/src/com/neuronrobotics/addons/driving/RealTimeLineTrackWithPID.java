@@ -10,10 +10,23 @@ import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RealTimeLineTrackWithPID.
+ */
 public class RealTimeLineTrackWithPID implements IPIDEventListener {
 	
+	/** The l val. */
 	int lVal=0;
+	
+	/** The r val. */
 	int rVal=0;
+	
+	/**
+	 * Instantiates a new real time line track with pid.
+	 *
+	 * @param dyio the dyio
+	 */
 	public RealTimeLineTrackWithPID(DyIO dyio){
 
 		
@@ -90,7 +103,9 @@ public class RealTimeLineTrackWithPID implements IPIDEventListener {
 	}
 
 	/**
-	 * @param args
+	 * The main method.
+	 *
+	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
 		try{
@@ -107,6 +122,9 @@ public class RealTimeLineTrackWithPID implements IPIDEventListener {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.pid.IPIDEventListener#onPIDEvent(com.neuronrobotics.sdk.pid.PIDEvent)
+	 */
 	@Override
 	public void onPIDEvent(PIDEvent e) {
 		if(e.getGroup()==0){
@@ -118,12 +136,18 @@ public class RealTimeLineTrackWithPID implements IPIDEventListener {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.pid.IPIDEventListener#onPIDLimitEvent(com.neuronrobotics.sdk.pid.PIDLimitEvent)
+	 */
 	@Override
 	public void onPIDLimitEvent(PIDLimitEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.pid.IPIDEventListener#onPIDReset(int, int)
+	 */
 	@Override
 	public void onPIDReset(int group, int currentValue) {
 		// TODO Auto-generated method stub

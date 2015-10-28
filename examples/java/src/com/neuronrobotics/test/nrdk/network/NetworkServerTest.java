@@ -8,8 +8,20 @@ import com.neuronrobotics.sdk.common.device.server.BowlerAbstractServer;
 import com.neuronrobotics.sdk.network.BowlerUDPServer;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class NetworkServerTest.
+ */
 public class NetworkServerTest extends BowlerAbstractServer {
+	
+	/** The srv. */
 	BowlerUDPServer srv;
+	
+	/**
+	 * Instantiates a new network server test.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public NetworkServerTest() throws IOException{
 		super(new MACAddress());
 		Log.enableInfoPrint();
@@ -21,6 +33,11 @@ public class NetworkServerTest extends BowlerAbstractServer {
 	}
 	
 	
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String [] args){
 		try{
 			new NetworkServerTest();

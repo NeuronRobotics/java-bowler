@@ -6,13 +6,13 @@ import java.util.Map;
 
 import com.neuronrobotics.sdk.common.ISendable;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Enum AsyncMode.
+ */
 public enum AsyncMode implements ISendable{
-	/**
-	 * 	#define		NOTEQUAL 		0
-		#define		DEADBAND 		1
-		#define		THRESHHOLD 		2
-		#define		AUTOSAMP 		3
-	 */
+	
+	/** 	#define		NOTEQUAL 		0 		#define		DEADBAND 		1 		#define		THRESHHOLD 		2 		#define		AUTOSAMP 		3. */
 	/** The STATUS. */
 	NOTEQUAL(0x00),
 	

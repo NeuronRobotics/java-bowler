@@ -15,7 +15,7 @@
 package com.neuronrobotics.sdk.dyio;
 
 /**
- * 
+ * The Interface IDyIOEvent.
  */
 public interface IDyIOEvent {
 	

@@ -17,31 +17,69 @@ import com.neuronrobotics.sdk.addons.kinematics.gui.TransformFactory;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
 import com.neuronrobotics.sdk.common.Log;
+// TODO: Auto-generated Javadoc
+
+/**
+ * The Class DHChain.
+ */
 public  class DHChain {
+	
+	/** The links. */
 	private ArrayList<DHLink> links = new ArrayList<DHLink>();
+	
+	/** The chain. */
 	private ArrayList<TransformNR> chain = new ArrayList<TransformNR>();
+	
+	/** The int chain. */
 	private ArrayList<TransformNR> intChain = new ArrayList<TransformNR>();
+	
+	/** The upper limits. */
 	private double[] upperLimits;
+	
+	/** The lower limits. */
 	private double[] lowerLimits;
+	
+	/** The debug. */
 	private boolean debug=false;
+	
+	/** The is. */
 	private DhInverseSolver is;
+	
+	/** The kin. */
 	private AbstractKinematicsNR kin;
+	
+	/** The factory. */
 	private LinkFactory factory;
 	static{
 		new JFXPanel(); // initializes JavaFX environment
 	}
 	
+	/**
+	 * Instantiates a new DH chain.
+	 *
+	 * @param kin the kin
+	 */
 	public DHChain( AbstractKinematicsNR kin){
 		this.kin = kin;
 
 	}
 	
+	/**
+	 * Adds the link.
+	 *
+	 * @param link the link
+	 */
 	public void addLink(DHLink link){
 		if(!getLinks().contains(link)){
 			getLinks().add(link);
 		}
 	}
 	
+	/**
+	 * Removes the link.
+	 *
+	 * @param link the link
+	 */
 	public void removeLink(DHLink link){
 		if(getLinks().contains(link)){
 			getLinks().remove(link);
@@ -69,7 +107,15 @@ public  class DHChain {
 //		forwardKinematics(new  double [] {0,0,0,0,0,0});
 //	}
 
-	public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector )throws Exception {
+	/**
+ * Inverse kinematics.
+ *
+ * @param target the target
+ * @param jointSpaceVector the joint space vector
+ * @return the double[]
+ * @throws Exception the exception
+ */
+public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector )throws Exception {
 		
 		if(getLinks() == null)
 			return null;
@@ -90,17 +136,31 @@ public  class DHChain {
 		return inv;
 	}
 
+	/**
+	 * Forward kinematics.
+	 *
+	 * @param jointSpaceVector the joint space vector
+	 * @return the transform nr
+	 */
 	public TransformNR forwardKinematics(double[] jointSpaceVector) {
 		return forwardKinematics(jointSpaceVector, true);
 	}
 	
+	/**
+	 * Forward kinematics.
+	 *
+	 * @param jointSpaceVector the joint space vector
+	 * @param store the store
+	 * @return the transform nr
+	 */
 	public TransformNR forwardKinematics(double[] jointSpaceVector, boolean store) {
 		return new TransformNR(forwardKinematicsMatrix(jointSpaceVector, store) );
 	}
 	
 	/**
-	 * Gets the Jacobian matrix
-	 * 
+	 * Gets the Jacobian matrix.
+	 *
+	 * @param jointSpaceVector the joint space vector
 	 * @return a matrix representing the Jacobian for the current configuration
 	 */
 	public Matrix getJacobian(double[] jointSpaceVector){
@@ -151,6 +211,13 @@ public  class DHChain {
 		return new Matrix(data);
 	}
 	
+	/**
+	 * Cross product.
+	 *
+	 * @param a the a
+	 * @param b the b
+	 * @return the double[]
+	 */
 	private double [] crossProduct(double[] a, double[] b){
 		double [] xProd = new double [3];
 		
@@ -161,6 +228,13 @@ public  class DHChain {
 		return xProd;
 	}
 	
+	/**
+	 * Forward kinematics matrix.
+	 *
+	 * @param jointSpaceVector the joint space vector
+	 * @param store the store
+	 * @return the matrix
+	 */
 	public Matrix forwardKinematicsMatrix(double[] jointSpaceVector, boolean store) {
 		if(getLinks() == null)
 			return new TransformNR().getMatrixTransform();
@@ -200,40 +274,87 @@ public  class DHChain {
 		return current;
 	}
 	
+	/**
+	 * Forward offset.
+	 *
+	 * @param transformNR the transform nr
+	 * @return the transform nr
+	 */
 	private TransformNR forwardOffset(TransformNR transformNR) {
 		return kin.forwardOffset(transformNR);
 	}
 
+	/**
+	 * Sets the chain.
+	 *
+	 * @param chain the new chain
+	 */
 	public void setChain(ArrayList<TransformNR> chain) {
 		this.chain = chain;
 	}
 
+	/**
+	 * Gets the chain.
+	 *
+	 * @param jointSpaceVector the joint space vector
+	 * @return the chain
+	 */
 	public ArrayList<TransformNR> getChain(double[] jointSpaceVector) {
 		forwardKinematics(jointSpaceVector,true);
 		return chain;
 	}
+	
+	/**
+	 * Gets the cached chain.
+	 *
+	 * @return the cached chain
+	 */
 	public ArrayList<TransformNR> getCachedChain() {
 		
 		return chain;
 	}
+	
+	/**
+	 * Gets the upper limits.
+	 *
+	 * @return the upper limits
+	 */
 	public double[] getUpperLimits() {
 		// TODO Auto-generated method stub
 		return upperLimits;
 	}
 
+	/**
+	 * Gets the lower limits.
+	 *
+	 * @return the lower limits
+	 */
 	public double[] getlowerLimits() {
 		// TODO Auto-generated method stub
 		return lowerLimits;
 	}
 
+	/**
+	 * Sets the links.
+	 *
+	 * @param links the new links
+	 */
 	public void setLinks(ArrayList<DHLink> links) {
 		this.links = links;
 	}
 
+	/**
+	 * Gets the links.
+	 *
+	 * @return the links
+	 */
 	public ArrayList<DHLink> getLinks() {
 		return links;
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	public String toString(){
 		String s="";
 		for(DHLink l:getLinks()){
@@ -243,6 +364,11 @@ public  class DHChain {
 				
 	}
 
+	/**
+	 * Gets the inverse solver.
+	 *
+	 * @return the inverse solver
+	 */
 	public DhInverseSolver getInverseSolver() {
 		if(is==null){
 			is=new DhInverseSolver() {
@@ -352,14 +478,29 @@ public  class DHChain {
 		return is;
 	}
 
+	/**
+	 * Sets the inverse solver.
+	 *
+	 * @param is the new inverse solver
+	 */
 	public void setInverseSolver(DhInverseSolver is) {
 		this.is = is;
 	}
 
+	/**
+	 * Gets the factory.
+	 *
+	 * @return the factory
+	 */
 	public LinkFactory getFactory() {
 		return factory;
 	}
 
+	/**
+	 * Sets the factory.
+	 *
+	 * @param factory the new factory
+	 */
 	public void setFactory(LinkFactory factory) {
 		upperLimits = factory.getUpperLimits();
 		lowerLimits = factory.getLowerLimits();

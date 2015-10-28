@@ -20,12 +20,28 @@ import com.neuronrobotics.sdk.pid.PIDChannel;
 import com.neuronrobotics.sdk.pid.PIDConfiguration;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DrivingTest.
+ */
 @SuppressWarnings("unused")
 public class DrivingTest implements IRobotDriveEventListener,ISensorListener{
+	
+	/** The main robot. */
 	AbstractRobotDrive mainRobot;
+	
+	/** The line. */
 	AbstractSensor line=null;
+	
+	/** The range. */
 	AbstractSensor range=null;
+	
+	/** The flame. */
 	AbstractSensor flame=null;
+	
+	/**
+	 * Instantiates a new driving test.
+	 */
 	private DrivingTest(){
 		setupVirtualRobot();
 		//setupRealRobot();
@@ -33,6 +49,9 @@ public class DrivingTest implements IRobotDriveEventListener,ISensorListener{
 		runDriveSample();
 	}
 	
+	/**
+	 * Run drive sample.
+	 */
 	private void runDriveSample() {
 		double driveTime=5;
 		mainRobot.addIRobotDriveEventListener(this);
@@ -54,6 +73,10 @@ public class DrivingTest implements IRobotDriveEventListener,ISensorListener{
 		if (range != null)
 			range.StartSweep(-90, 90, 10);
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.addons.driving.ISensorListener#onRangeSensorEvent(com.neuronrobotics.addons.driving.AbstractSensor, java.util.ArrayList, long)
+	 */
 	@Override
 	public void onRangeSensorEvent(AbstractSensor source,ArrayList<DataPoint> data, long timeStamp) {
 		if(source == range){
@@ -64,6 +87,9 @@ public class DrivingTest implements IRobotDriveEventListener,ISensorListener{
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.addons.driving.ISensorListener#onLineSensorEvent(com.neuronrobotics.addons.driving.AbstractSensor, java.lang.Integer, java.lang.Integer, java.lang.Integer, long)
+	 */
 	@Override
 	public void onLineSensorEvent(AbstractSensor source, Integer left,Integer middle, Integer right, long timeStamp) {
 		if(source==line){
@@ -71,20 +97,31 @@ public class DrivingTest implements IRobotDriveEventListener,ISensorListener{
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.addons.driving.IRobotDriveEventListener#onDriveEvent(com.neuronrobotics.addons.driving.AbstractRobotDrive, double, double, double)
+	 */
 	@Override
 	public void onDriveEvent(AbstractRobotDrive source, double x, double y,double orentation) {
 		if(source==mainRobot){
 			System.out.println("Drive Event x="+x+" y="+y+" orentation="+Math.toDegrees(orentation));
 		}
 	}
+	
 	/**
-	 * @param args
+	 * The main method.
+	 *
+	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
 		new DrivingTest();
 	}
 	
 	
+	/**
+	 * Sets the up real robot.
+	 *
+	 * @param dyio the new up real robot
+	 */
 	private void setupRealRobot(DyIO dyio) {
 		DyPIDConfiguration dypid = new DyPIDConfiguration(	0,//PID group 0
 															23,//Input channel number
@@ -123,6 +160,10 @@ public class DrivingTest implements IRobotDriveEventListener,ISensorListener{
 		
 		mainRobot = a;
 	}
+	
+	/**
+	 * Setup virtual robot.
+	 */
 	private void setupVirtualRobot() {
 		VirtualWorld w = new VirtualWorld();
 		VirtualAckermanBot a = new VirtualAckermanBot(w); 

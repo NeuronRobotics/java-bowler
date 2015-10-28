@@ -16,27 +16,40 @@ package com.neuronrobotics.sdk.dyio;
 
 import com.neuronrobotics.sdk.common.ByteList;
 
+// TODO: Auto-generated Javadoc
 /**
  * a DyIO Channel Event.
  * 
  * @author rbreznak
  */
 public class DyIOChannelEvent {
+	
+	/** The data. */
 	private ByteList data;
+	
+	/** The channel. */
 	private DyIOChannel channel;
+	
+	/** The integer. */
 	private Integer integer;
 	
 	/**
-	 * 
-	 * 
-	 * @param channel
-	 * @param data
+	 * Instantiates a new dy io channel event.
+	 *
+	 * @param channel the channel
+	 * @param data the data
 	 */
 	public DyIOChannelEvent(DyIOChannel channel, ByteList data) {
 		this.channel = channel;
 		this.data = data;
 	}
 	
+	/**
+	 * Instantiates a new dy io channel event.
+	 *
+	 * @param c the c
+	 * @param integer the integer
+	 */
 	public DyIOChannelEvent(DyIOChannel c, Integer integer) {
 		// TODO Auto-generated constructor stub
 		this.channel =c;
@@ -45,23 +58,28 @@ public class DyIOChannelEvent {
 	}
 
 	/**
-	 * 
-	 * 
-	 * @return
+	 * Gets the channel.
+	 *
+	 * @return the channel
 	 */
 	public DyIOChannel getChannel() {
 		return channel;
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @return
+	 * Gets the data.
+	 *
+	 * @return the data
 	 */
 	public ByteList getData() {
 		return data;
 	}
 
+	/**
+	 * Gets the value.
+	 *
+	 * @return the value
+	 */
 	public int getValue() {
 		if(integer!=null)
 			return integer;
@@ -83,12 +101,22 @@ public class DyIOChannelEvent {
 		return value;
 	}
 	
+	/**
+	 * Gets the unsigned value.
+	 *
+	 * @return the unsigned value
+	 */
 	public int getUnsignedValue() {
 		if(integer!=null)
 			return integer;
 		return ByteList.convertToInt(getData().getBytes(),false);
 	}
 	
+	/**
+	 * Gets the signed value.
+	 *
+	 * @return the signed value
+	 */
 	public int getSignedValue() {
 		if(integer!=null)
 			return integer;

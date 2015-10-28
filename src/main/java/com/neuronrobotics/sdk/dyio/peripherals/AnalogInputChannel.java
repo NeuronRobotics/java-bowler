@@ -23,14 +23,19 @@ import com.neuronrobotics.sdk.dyio.DyIOChannelEvent;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.dyio.IChannelEventListener;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class AnalogInputChannel.
  */
 public class AnalogInputChannel extends DyIOAbstractPeripheral implements IChannelEventListener {
 	
+	/** The Constant ADCRESOLUTION. */
 	public static final int ADCRESOLUTION = 1024;
+	
+	/** The Constant ADCVOLTAGE. */
 	public static final int ADCVOLTAGE = 5;
 	
+	/** The listeners. */
 	private ArrayList<IAnalogInputListener> listeners = new ArrayList<IAnalogInputListener>();
 	
 	/**
@@ -46,7 +51,8 @@ public class AnalogInputChannel extends DyIOAbstractPeripheral implements IChann
 	/**
 	 * Constructor.
 	 * Creates an analog input channel that is syncronous only by default.
-	 * 
+	 *
+	 * @param dyio the dyio
 	 * @param channel - the channel object requested from the DyIO
 	 */
 	public AnalogInputChannel(DyIO dyio,int channel){
@@ -101,8 +107,8 @@ public class AnalogInputChannel extends DyIOAbstractPeripheral implements IChann
 	
 	/**
 	 * Set the channel to be asyncronous or syncronous.
-	 * 
-	 * @param isAsync
+	 *
+	 * @param isAsync the new async
 	 */
 	public void setAsync(boolean isAsync) {
 		setMode(DyIOChannelMode.ANALOG_IN, isAsync);
@@ -143,6 +149,11 @@ public class AnalogInputChannel extends DyIOAbstractPeripheral implements IChann
 		listeners.add(l);
 	}
 	
+	/**
+	 * Fire value changed.
+	 *
+	 * @param value the value
+	 */
 	private void fireValueChanged(double value) {
 		try{
 			for(IAnalogInputListener l : listeners) {
@@ -153,6 +164,12 @@ public class AnalogInputChannel extends DyIOAbstractPeripheral implements IChann
 		}
 	}
 	
+	/**
+	 * Scale value.
+	 *
+	 * @param value the value
+	 * @return the double
+	 */
 	private static double scaleValue(int value) {
 		return (((double) value)/ADCRESOLUTION);
 	}
@@ -166,6 +183,9 @@ public class AnalogInputChannel extends DyIOAbstractPeripheral implements IChann
 	}
 	
 	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.dyio.peripherals.DyIOAbstractPeripheral#hasAsync()
+	 */
 	public boolean hasAsync() {
 		return true;
 	}

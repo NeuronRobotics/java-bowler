@@ -26,22 +26,35 @@ import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.network.BowlerTCPClient;
 
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class TCPConnectionPanel.
  */
 public class TCPConnectionPanel extends AbstractConnectionPanel {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
+	
+	/** The default port num. */
 	private static int defaultPortNum = 1866;
+	
+	/** The default server. */
 	private static String defaultServer = "localhost";
+	
+	/** The connection cbo. */
 	private JComboBox connectionCbo = null;
+	
+	/** The port. */
 	private JTextField port = new JTextField(8);
+	
+	/** The clnt. */
 	BowlerTCPClient clnt=null;
 	
 	
 	/**
-	 * @param connectionDialog 
-	 * 
+	 * Instantiates a new TCP connection panel.
+	 *
+	 * @param connectionDialog the connection dialog
 	 */
 	public TCPConnectionPanel(ConnectionDialog connectionDialog) {
 		super("TCP", ConnectionImageIconFactory.getIcon("images/ethernet-icon.png"),connectionDialog);
@@ -79,10 +92,18 @@ public class TCPConnectionPanel extends AbstractConnectionPanel {
 		
 	}
 	
+	/**
+	 * Sets the default server.
+	 *
+	 * @param server the new default server
+	 */
 	public static void setDefaultServer(String server){
 		defaultServer = server;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.ui.AbstractConnectionPanel#getConnection()
+	 */
 	@Override
 	public BowlerAbstractConnection getConnection() {
 		if(clnt == null){
@@ -112,6 +133,9 @@ public class TCPConnectionPanel extends AbstractConnectionPanel {
 		return clnt;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.ui.AbstractConnectionPanel#refresh()
+	 */
 	@Override
 	public void refresh() {
 		getConnectionDialog().pack();

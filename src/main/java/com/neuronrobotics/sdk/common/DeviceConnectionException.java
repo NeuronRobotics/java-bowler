@@ -20,6 +20,11 @@ package com.neuronrobotics.sdk.common;
  */
 public class DeviceConnectionException extends RuntimeException {
 
+	/**
+	 * Instantiates a new device connection exception.
+	 *
+	 * @param string the string
+	 */
 	public DeviceConnectionException(String string) {
 		super(string);
 	}

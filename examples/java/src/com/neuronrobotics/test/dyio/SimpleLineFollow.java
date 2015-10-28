@@ -7,22 +7,47 @@ import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class SimpleLineFollow.
+ */
 public class SimpleLineFollow implements IAnalogInputListener {
+	
+	/** The dyio. */
 	DyIO dyio;
+	
+	/** The left sensor. */
 	AnalogInputChannel leftSensor;
+	
+	/** The right sensor. */
 	AnalogInputChannel rightSensor;
+	
+	/** The left servo. */
 	ServoChannel leftServo;
+	
+	/** The right servo. */
 	ServoChannel rightServo;
+	
+	/** The left value. */
 	double leftValue = 0;
+	
+	/** The right value. */
 	double rightValue = 0;
 	
+	/** The lastr m value. */
 	int lastrMValue =127;
+	
+	/** The lastl m value. */
 	int lastlMValue =127;
+	
+	/** The r m value. */
 	int rMValue =127;
+	
+	/** The l m value. */
 	int lMValue =127;
 	
 	/**
-	 * 
+	 * Instantiates a new simple line follow.
 	 */
 	public SimpleLineFollow(){
 		dyio = new DyIO();
@@ -64,7 +89,9 @@ public class SimpleLineFollow implements IAnalogInputListener {
 	}
 
 	/**
-	 * @param args
+	 * The main method.
+	 *
+	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
 		try{
@@ -76,6 +103,9 @@ public class SimpleLineFollow implements IAnalogInputListener {
 		System.exit(0);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.dyio.peripherals.IAnalogInputListener#onAnalogValueChange(com.neuronrobotics.sdk.dyio.peripherals.AnalogInputChannel, double)
+	 */
 	@Override
 	public void onAnalogValueChange(AnalogInputChannel chan, double value) {
 		if (value>1024)
@@ -88,7 +118,15 @@ public class SimpleLineFollow implements IAnalogInputListener {
 		//System.out.println( "Setting velocity left="+leftValue+" right="+rightValue);
 	}
 	
+	/** The scale. */
 	double scale=20;
+	
+	/**
+	 * Sets the velocity.
+	 *
+	 * @param l the l
+	 * @param r the r
+	 */
 	private void setVelocity(double l, double r){
 		r*=-1;
 		

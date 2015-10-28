@@ -1,16 +1,22 @@
 package com.neuronrobotics.replicator.driver;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DataConvertion.
+ */
 public class DataConvertion {
+	
 	/**
-	 *** Encodes a <code>double</code> value into bytes
-	 *** 
-	 *** @param len
+	 * ** Encodes a  double  value into bytes
+	 * ** 
+	 * ** @param len
 	 *            The number of bytes to encode the value to
-	 *** @param val
+	 * ** @param val
 	 *            The value to encode
-	 *** 
+	 * ** .
+	 *
 	 * @return the bytes array created from the value
-	 **/
+	 */
 	public static byte[] encodeDouble(int len, double val) {
 		// 'len' must be at least 4
 		if (len >= 4) {
@@ -33,15 +39,15 @@ public class DataConvertion {
 	// ------------------------------------------------------------------------
 
 	/**
-	 *** Decodes a <code>double</code> value from bytes, using IEEE 754 format
-	 *** 
-	 * @param data
-	 *            The byte array from which to decode the <code>double</code>
+	 * ** Decodes a  double  value from bytes, using IEEE 754 format
+	 * ** .
+	 *
+	 * @param data            The byte array from which to decode the  double 
 	 *            value
-	 *** @param ofs
-	 *            The offset into <code>data</code> to start decoding
-	 *** @return The decoded value, or 0L
-	 **/
+	 * ** @param ofs
+	 *            The offset into  data  to start decoding
+	 * ** @return The decoded value, or 0L
+	 */
 	public static double decodeDouble(byte data[], int ofs) {
 		// 'len' must be at lest 4
 		if ((data != null) && (data.length >= 4)) {

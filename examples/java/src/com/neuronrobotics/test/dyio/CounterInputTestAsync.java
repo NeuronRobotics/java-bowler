@@ -4,10 +4,19 @@ import com.neuronrobotics.sdk.dyio.peripherals.CounterInputChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.ICounterInputListener;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class CounterInputTestAsync.
+ */
 public class CounterInputTestAsync implements ICounterInputListener{
+	
+	/** The dip. */
 	//The Counter channel is a property of the class
 	private CounterInputChannel dip;
 
+	/**
+	 * Instantiates a new counter input test async.
+	 */
 	public CounterInputTestAsync(){
 		//Start the dyio with serial dialog
 		DyIO dyio=new DyIO();
@@ -29,6 +38,10 @@ public class CounterInputTestAsync implements ICounterInputListener{
 		}
 
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.dyio.peripherals.ICounterInputListener#onCounterValueChange(com.neuronrobotics.sdk.dyio.peripherals.CounterInputChannel, int)
+	 */
 	@Override
 	public void onCounterValueChange(CounterInputChannel source, int value) {
 		//Check the source of the event
@@ -36,6 +49,12 @@ public class CounterInputTestAsync implements ICounterInputListener{
 			System.out.println("Counter event:"+value);
 	}
 
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 * @throws InterruptedException the interrupted exception
+	 */
 	public static void main(String[] args) throws InterruptedException {
 		//Start the tester class
 		new CounterInputTestAsync();

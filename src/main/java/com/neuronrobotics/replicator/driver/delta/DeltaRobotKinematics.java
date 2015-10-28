@@ -3,34 +3,57 @@ package com.neuronrobotics.replicator.driver.delta;
 import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DeltaRobotKinematics.
+ */
 public class DeltaRobotKinematics {
 	//Sample code from http://forums.trossenrobotics.com/tutorials/introduction-129/delta-robot-kinematics-3276/
 	 // robot geometry
-	 // (look at pics above for explanation)
+	 /** The configuration. */
+	// (look at pics above for explanation)
 	DeltaRobotConfig configuration;
-	 /**
-	  * All units in milimeters
-	  * @param e
-	  * @param f
-	  * @param re
-	  * @param rf
-	  */
+	 
+ 	/**
+ 	 * All units in milimeters.
+ 	 *
+ 	 * @param config the config
+ 	 */
 	 public DeltaRobotKinematics(DeltaRobotConfig config){
 		 configuration=new DeltaRobotConfig(config);
 	 }
 	 
 	 
-	 // trigonometric private ants
+	 /** The sqrt3. */
+ 	// trigonometric private ants
 	 private  double sqrt3 = Math.sqrt(3.0);
-	 private  double pi = Math.PI;    // PI
-	 private  double sin120 = sqrt3/2.0;   
-	 private  double cos120 = -0.5;        
-	 private  double tan60 = sqrt3;
-	 private  double sin30 = 0.5;
-	 private  double tan30 = 1/sqrt3;
+	 
+ 	/** The pi. */
+ 	private  double pi = Math.PI;    // PI
+	 
+ 	/** The sin120. */
+ 	private  double sin120 = sqrt3/2.0;   
+	 
+ 	/** The cos120. */
+ 	private  double cos120 = -0.5;        
+	 
+ 	/** The tan60. */
+ 	private  double tan60 = sqrt3;
+	 
+ 	/** The sin30. */
+ 	private  double sin30 = 0.5;
+	 
+ 	/** The tan30. */
+ 	private  double tan30 = 1/sqrt3;
 	 
 	 // forward kinematics: (theta1, theta2, theta3) -> (x0, y0, z0)
-	 // returned status:  CartesianCoordinante=OK, null=non-existing position
+	 /**
+ 	 * Delta_calc forward.
+ 	 *
+ 	 * @param input the input
+ 	 * @return the transform nr
+ 	 */
+ 	// returned status:  CartesianCoordinante=OK, null=non-existing position
 	 public TransformNR delta_calcForward(double [] input) {
 		 double x0, y0, z0;
 		 for(int i=0;i<3;i++){
@@ -83,7 +106,15 @@ public class DeltaRobotKinematics {
 	 }
 	 
 	 // inverse kinematics
-	 // helper functions, calculates angle theta1 (for YZ-pane)
+	 /**
+ 	 * Delta_calc angle yz.
+ 	 *
+ 	 * @param x0 the x0
+ 	 * @param y0 the y0
+ 	 * @param z0 the z0
+ 	 * @return the double
+ 	 */
+ 	// helper functions, calculates angle theta1 (for YZ-pane)
 	 private double delta_calcAngleYZ(double x0, double y0, double z0 ) {
 		 double theta;
 //		 if(z0<=0)
@@ -104,7 +135,13 @@ public class DeltaRobotKinematics {
 	 }
 	 
 	 // inverse kinematics: (x0, y0, z0) -> (theta1, theta2, theta3)
-	 // returned status: 0=OK, -1=non-existing position
+	 /**
+ 	 * Delta_calc inverse.
+ 	 *
+ 	 * @param input the input
+ 	 * @return the double[]
+ 	 */
+ 	// returned status: 0=OK, -1=non-existing position
 	 public double [] delta_calcInverse(TransformNR input ) {
 		 double theta1, theta2,  theta3;
 		 double x0 = input.getX();
@@ -120,18 +157,38 @@ public class DeltaRobotKinematics {
 	     return new double[] {Math.toDegrees(theta1),Math.toDegrees(theta2),Math.toDegrees(theta3)};
 	 }
 
+	/**
+	 * Gets the e.
+	 *
+	 * @return the e
+	 */
 	public double getE() {
 		return configuration.getE();
 	}
 
+	/**
+	 * Gets the f.
+	 *
+	 * @return the f
+	 */
 	public double getF() {
 		return configuration.getF();
 	}
 
+	/**
+	 * Gets the re.
+	 *
+	 * @return the re
+	 */
 	public double getRe() {
 		return configuration.getRe();
 	}
 
+	/**
+	 * Gets the rf.
+	 *
+	 * @return the rf
+	 */
 	public double getRf() {
 		return configuration.getRf();
 	}

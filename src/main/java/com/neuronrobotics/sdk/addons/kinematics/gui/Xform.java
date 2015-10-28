@@ -37,28 +37,68 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Xform.
+ */
 public class Xform extends Group {
 
+    /**
+     * The Enum RotateOrder.
+     */
     public enum RotateOrder {
-        XYZ, XZY, YXZ, YZX, ZXY, ZYX
+        
+        /** The xyz. */
+        XYZ, 
+ /** The xzy. */
+ XZY, 
+ /** The yxz. */
+ YXZ, 
+ /** The yzx. */
+ YZX, 
+ /** The zxy. */
+ ZXY, 
+ /** The zyx. */
+ ZYX
     }
 
+    /** The t. */
     public Translate t  = new Translate(); 
+    
+    /** The p. */
     public Translate p  = new Translate(); 
+    
+    /** The ip. */
     public Translate ip = new Translate(); 
+    
+    /** The rx. */
     public Rotate rx = new Rotate();
     { rx.setAxis(Rotate.X_AXIS); }
+    
+    /** The ry. */
     public Rotate ry = new Rotate();
     { ry.setAxis(Rotate.Y_AXIS); }
+    
+    /** The rz. */
     public Rotate rz = new Rotate();
     { rz.setAxis(Rotate.Z_AXIS); }
+    
+    /** The s. */
     public Scale s = new Scale();
 
+    /**
+     * Instantiates a new xform.
+     */
     public Xform() { 
         super(); 
         getTransforms().addAll(t, rz, ry, rx, s); 
     }
 
+    /**
+     * Instantiates a new xform.
+     *
+     * @param rotateOrder the rotate order
+     */
     public Xform(RotateOrder rotateOrder) { 
         super(); 
         // choose the order of rotations based on the rotateOrder
@@ -84,12 +124,25 @@ public class Xform extends Group {
         }
     }
 
+    /**
+     * Sets the translate.
+     *
+     * @param x the x
+     * @param y the y
+     * @param z the z
+     */
     public void setTranslate(double x, double y, double z) {
         t.setX(x);
         t.setY(y);
         t.setZ(z);
     }
 
+    /**
+     * Sets the translate.
+     *
+     * @param x the x
+     * @param y the y
+     */
     public void setTranslate(double x, double y) {
         t.setX(x);
         t.setY(y);
@@ -99,30 +152,101 @@ public class Xform extends Group {
     // public void setTranslateX(double x) { t.setX(x); }
     // public void setTranslateY(double y) { t.setY(y); }
     // public void setTranslateZ(double z) { t.setZ(z); }
+    /**
+     * Sets the tx.
+     *
+     * @param x the new tx
+     */
     // Use these methods instead:
     public void setTx(double x) { t.setX(x); }
+    
+    /**
+     * Sets the ty.
+     *
+     * @param y the new ty
+     */
     public void setTy(double y) { t.setY(y); }
+    
+    /**
+     * Sets the tz.
+     *
+     * @param z the new tz
+     */
     public void setTz(double z) { t.setZ(z); }
 
+    /**
+     * Sets the rotate.
+     *
+     * @param x the x
+     * @param y the y
+     * @param z the z
+     */
     public void setRotate(double x, double y, double z) {
         rx.setAngle(x);
         ry.setAngle(y);
         rz.setAngle(z);
     }
 
+    /**
+     * Sets the rotate x.
+     *
+     * @param x the new rotate x
+     */
     public void setRotateX(double x) { rx.setAngle(x); }
+    
+    /**
+     * Sets the rotate y.
+     *
+     * @param y the new rotate y
+     */
     public void setRotateY(double y) { ry.setAngle(y); }
+    
+    /**
+     * Sets the rotate z.
+     *
+     * @param z the new rotate z
+     */
     public void setRotateZ(double z) { rz.setAngle(z); }
+    
+    /**
+     * Sets the rx.
+     *
+     * @param x the new rx
+     */
     public void setRx(double x) { rx.setAngle(x); }
+    
+    /**
+     * Sets the ry.
+     *
+     * @param y the new ry
+     */
     public void setRy(double y) { ry.setAngle(y); }
+    
+    /**
+     * Sets the rz.
+     *
+     * @param z the new rz
+     */
     public void setRz(double z) { rz.setAngle(z); }
 
+    /**
+     * Sets the scale.
+     *
+     * @param scaleFactor the new scale
+     */
     public void setScale(double scaleFactor) {
         s.setX(scaleFactor);
         s.setY(scaleFactor);
         s.setZ(scaleFactor);
     }
 
+    /**
+     * Sets the scale.
+     *
+     * @param x the x
+     * @param y the y
+     * @param z the z
+     */
     public void setScale(double x, double y, double z) {
         s.setX(x);
         s.setY(y);
@@ -133,11 +257,35 @@ public class Xform extends Group {
     // public void setScaleX(double x) { s.setX(x); }
     // public void setScaleY(double y) { s.setY(y); }
     // public void setScaleZ(double z) { s.setZ(z); }
+    /**
+     * Sets the sx.
+     *
+     * @param x the new sx
+     */
     // Use these methods instead:
     public void setSx(double x) { s.setX(x); }
+    
+    /**
+     * Sets the sy.
+     *
+     * @param y the new sy
+     */
     public void setSy(double y) { s.setY(y); }
+    
+    /**
+     * Sets the sz.
+     *
+     * @param z the new sz
+     */
     public void setSz(double z) { s.setZ(z); }
 
+    /**
+     * Sets the pivot.
+     *
+     * @param x the x
+     * @param y the y
+     * @param z the z
+     */
     public void setPivot(double x, double y, double z) {
         p.setX(x);
         p.setY(y);
@@ -147,6 +295,9 @@ public class Xform extends Group {
         ip.setZ(-z);
     }
 
+    /**
+     * Reset.
+     */
     public void reset() {
         t.setX(0.0);
         t.setY(0.0);
@@ -165,6 +316,9 @@ public class Xform extends Group {
         ip.setZ(0.0);
     }
 
+    /**
+     * Reset tsp.
+     */
     public void resetTSP() {
         t.setX(0.0);
         t.setY(0.0);

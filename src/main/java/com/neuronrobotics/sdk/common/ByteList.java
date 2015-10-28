@@ -31,10 +31,19 @@ import com.neuronrobotics.sdk.config.SDKBuildInfo;
  */
 public class ByteList implements ISendable,Iterable<Byte> {
 	
+	/** The Constant useStaticBuffer. */
 	private static final boolean useStaticBuffer = true;
+	
+	/** The static buffer size. */
 	private int staticBufferSize = BowlerDatagram.MAX_PACKET_SIZE;
+	
+	/** The static buffer. */
 	private byte [] staticBuffer = new byte[staticBufferSize];
+	
+	/** The static buffer read pointer. */
 	private int staticBufferReadPointer = 0;
+	
+	/** The static buffer write pointer. */
 	private int staticBufferWritePointer = 0;
 	
 	/** The store. */
@@ -92,18 +101,33 @@ public class ByteList implements ISendable,Iterable<Byte> {
 		add(data);
 	}
 
+	/**
+	 * Instantiates a new byte list.
+	 *
+	 * @param data the data
+	 */
 	public ByteList(int[] data) {
 		for(int i=0;i<data.length;i++){
 			add(data[i]);
 		}
 	}
 	
+	/**
+	 * Instantiates a new byte list.
+	 *
+	 * @param arguments the arguments
+	 */
 	public ByteList(BowlerDataType[] arguments) {
 		for(int i=0;i<arguments.length;i++){
 			add(arguments[i].getValue());
 		}
 	}
 
+	/**
+	 * Gets the static buffer byte count.
+	 *
+	 * @return the static buffer byte count
+	 */
 	private int getStaticBufferByteCount(){
 		int w =staticBufferWritePointer;
 		int r = staticBufferReadPointer;
@@ -164,6 +188,12 @@ public class ByteList implements ISendable,Iterable<Byte> {
 	 * @see java.util.List#add(java.lang.Object)
 	 */
 	 
+	/**
+	 * Adds the.
+	 *
+	 * @param b the b
+	 * @return true, if successful
+	 */
 	public boolean add(Byte b) {
 		return add(b.byteValue());
 	}
@@ -307,6 +337,12 @@ public class ByteList implements ISendable,Iterable<Byte> {
 	 * @see java.util.List#addAll(java.util.Collection)
 	 */
 	 
+	/**
+	 * Adds the all.
+	 *
+	 * @param c the c
+	 * @return true, if successful
+	 */
 	public boolean addAll(Collection<? extends Byte> c) {
 		Byte b[] = new Byte[c.size()];
 		return add(c.toArray(b));
@@ -316,6 +352,13 @@ public class ByteList implements ISendable,Iterable<Byte> {
 	 * @see java.util.List#addAll(int, java.util.Collection)
 	 */
 	 
+	/**
+	 * Adds the all.
+	 *
+	 * @param index the index
+	 * @param c the c
+	 * @return true, if successful
+	 */
 	public boolean addAll(int index, Collection<? extends Byte> c) {
 		// TODO Auto-generated method stub
 		return false;
@@ -520,6 +563,9 @@ public class ByteList implements ISendable,Iterable<Byte> {
 	 * @see java.util.List#clear()
 	 */
 	 
+	/**
+	 * Clear.
+	 */
 	public void clear() {
 		if(isUseStaticBuffer()){
 			setStaticBufferSize(staticBufferSize);
@@ -532,6 +578,13 @@ public class ByteList implements ISendable,Iterable<Byte> {
 	 * @see java.util.List#toArray(T[])
 	 */
 	 
+	/**
+	 * To array.
+	 *
+	 * @param <T> the generic type
+	 * @param a the a
+	 * @return the t[]
+	 */
 	public <T> T[] toArray(T[] a) {
 		if(isUseStaticBuffer()){
 			throw new UnsupportedOperationException();
@@ -543,6 +596,12 @@ public class ByteList implements ISendable,Iterable<Byte> {
 	 * @see java.util.List#contains(java.lang.Object)
 	 */
 	 
+	/**
+	 * Contains.
+	 *
+	 * @param o the o
+	 * @return true, if successful
+	 */
 	public boolean contains(Object o) {
 		if(isUseStaticBuffer()){
 			throw new UnsupportedOperationException();
@@ -554,6 +613,12 @@ public class ByteList implements ISendable,Iterable<Byte> {
 	 * @see java.util.List#containsAll(java.util.Collection)
 	 */
 	 
+	/**
+	 * Contains all.
+	 *
+	 * @param c the c
+	 * @return true, if successful
+	 */
 	public boolean containsAll(Collection<?> c) {
 		if(isUseStaticBuffer()){
 			throw new UnsupportedOperationException();
@@ -565,12 +630,25 @@ public class ByteList implements ISendable,Iterable<Byte> {
 	 * @see java.util.List#get(int)
 	 */
 	 
+	/**
+	 * Gets the.
+	 *
+	 * @param index the index
+	 * @return the byte
+	 */
 	public Byte get(int index) {
 		if(size()>0)	
 			return getByte(index);
 		Log.error("Requesting data out of an empty ByteList");
 		throw new RuntimeException("Requesting data out of an empty ByteList");
 	}
+	
+	/**
+	 * Gets the unsigned.
+	 *
+	 * @param index the index
+	 * @return the unsigned
+	 */
 	/* (non-Javadoc)
 	 * @see java.util.List#get(int)
 	 */
@@ -588,6 +666,12 @@ public class ByteList implements ISendable,Iterable<Byte> {
 	 * @see java.util.List#indexOf(java.lang.Object)
 	 */
 	 
+	/**
+	 * Index of.
+	 *
+	 * @param o the o
+	 * @return the int
+	 */
 	public int indexOf(Object o) {
 		if(isUseStaticBuffer()){
 			throw new UnsupportedOperationException();
@@ -629,6 +713,12 @@ public class ByteList implements ISendable,Iterable<Byte> {
 	 * @see java.util.List#lastIndexOf(java.lang.Object)
 	 */
 	 
+	/**
+	 * Last index of.
+	 *
+	 * @param o the o
+	 * @return the int
+	 */
 	public int lastIndexOf(Object o) {
 		if(isUseStaticBuffer()){
 			throw new UnsupportedOperationException();
@@ -640,6 +730,11 @@ public class ByteList implements ISendable,Iterable<Byte> {
 	 * @see java.util.List#listIterator()
 	 */
 	 
+	/**
+	 * List iterator.
+	 *
+	 * @return the list iterator
+	 */
 	public ListIterator<Byte> listIterator() {
 		if(isUseStaticBuffer()){
 			throw new UnsupportedOperationException();
@@ -651,6 +746,12 @@ public class ByteList implements ISendable,Iterable<Byte> {
 	 * @see java.util.List#listIterator(int)
 	 */
 	 
+	/**
+	 * List iterator.
+	 *
+	 * @param index the index
+	 * @return the list iterator
+	 */
 	public ListIterator<Byte> listIterator(int index) {
 		if(isUseStaticBuffer()){
 			throw new UnsupportedOperationException();
@@ -662,6 +763,12 @@ public class ByteList implements ISendable,Iterable<Byte> {
 	 * @see java.util.List#remove(java.lang.Object)
 	 */
 	 
+	/**
+	 * Removes the.
+	 *
+	 * @param o the o
+	 * @return true, if successful
+	 */
 	public boolean remove(Object o) {
 		if(isUseStaticBuffer()){
 			throw new UnsupportedOperationException();
@@ -673,6 +780,12 @@ public class ByteList implements ISendable,Iterable<Byte> {
 	 * @see java.util.List#remove(int)
 	 */
 	 
+	/**
+	 * Removes the.
+	 *
+	 * @param index the index
+	 * @return the byte
+	 */
 	public synchronized Byte remove(int index) {
 		if(isUseStaticBuffer()){
 			Byte b = staticBuffer[staticBufferReadPointer++];
@@ -689,6 +802,13 @@ public class ByteList implements ISendable,Iterable<Byte> {
 	 * @see java.util.List#subList(int, int)
 	 */
 	 
+	/**
+	 * Sub list.
+	 *
+	 * @param fromIndex the from index
+	 * @param toIndex the to index
+	 * @return the list
+	 */
 	public List<Byte> subList(int fromIndex, int toIndex) {
 		if(isUseStaticBuffer()){
 			byte [] content = getBytes(fromIndex, toIndex-fromIndex);
@@ -705,6 +825,11 @@ public class ByteList implements ISendable,Iterable<Byte> {
 	 * @see java.util.List#toArray()
 	 */
 	 
+	/**
+	 * To array.
+	 *
+	 * @return the object[]
+	 */
 	public Object[] toArray() {
 		if(isUseStaticBuffer()){
 			throw new UnsupportedOperationException();
@@ -864,6 +989,12 @@ public class ByteList implements ISendable,Iterable<Byte> {
 	 * @see java.util.List#add(int, java.lang.Object)
 	 */
 	 
+	/**
+	 * Adds the.
+	 *
+	 * @param arg0 the arg0
+	 * @param arg1 the arg1
+	 */
 	public void add(int arg0, Byte arg1) {
 		throw new UnsupportedOperationException();
 	}
@@ -872,6 +1003,12 @@ public class ByteList implements ISendable,Iterable<Byte> {
 	 * @see java.util.List#removeAll(java.util.Collection)
 	 */
 	 
+	/**
+	 * Removes the all.
+	 *
+	 * @param c the c
+	 * @return true, if successful
+	 */
 	public boolean removeAll(Collection<?> c) {
 		throw new UnsupportedOperationException();
 	}
@@ -880,6 +1017,12 @@ public class ByteList implements ISendable,Iterable<Byte> {
 	 * @see java.util.List#retainAll(java.util.Collection)
 	 */
 	 
+	/**
+	 * Retain all.
+	 *
+	 * @param c the c
+	 * @return true, if successful
+	 */
 	public boolean retainAll(Collection<?> c) {
 		throw new UnsupportedOperationException();
 	}
@@ -888,6 +1031,13 @@ public class ByteList implements ISendable,Iterable<Byte> {
 	 * @see java.util.List#set(int, java.lang.Object)
 	 */
 	 
+	/**
+	 * Sets the.
+	 *
+	 * @param arg0 the arg0
+	 * @param arg1 the arg1
+	 * @return the byte
+	 */
 	public Byte set(int arg0, Byte arg1) {
 		throw new UnsupportedOperationException();
 	}
@@ -927,11 +1077,13 @@ public class ByteList implements ISendable,Iterable<Byte> {
 		}
 		return tmp;
 	}
+	
 	/**
-	 * 
+	 * Pop list.
+	 *
 	 * @param off the offset from which to start
 	 * @param len the number of bytes to pop
-	 * @return
+	 * @return the byte[]
 	 */
 	public byte[] popList(int off, int len) {
 		if (size() >= off+len) {
@@ -944,18 +1096,38 @@ public class ByteList implements ISendable,Iterable<Byte> {
 		throw new IndexOutOfBoundsException();
 	}
 
+	/**
+	 * Checks if is use static buffer.
+	 *
+	 * @return true, if is use static buffer
+	 */
 	public static boolean isUseStaticBuffer() {
 		return useStaticBuffer;
 	}
 
+	/**
+	 * Sets the use static buffer.
+	 *
+	 * @param useStaticBuffer the new use static buffer
+	 */
 	public static void setUseStaticBuffer(boolean useStaticBuffer) {
 		//ByteList.useStaticBuffer =true;
 	}
 
+	/**
+	 * Gets the static buffer size.
+	 *
+	 * @return the static buffer size
+	 */
 	public int getStaticBufferSize() {
 		return staticBufferSize;
 	}
 
+	/**
+	 * Sets the static buffer size.
+	 *
+	 * @param staticBufferSize the new static buffer size
+	 */
 	public void setStaticBufferSize(int staticBufferSize) {
 		this.staticBufferSize = staticBufferSize;
 		staticBuffer = new byte[getStaticBufferSize()];

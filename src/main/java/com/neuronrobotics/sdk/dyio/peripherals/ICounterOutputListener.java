@@ -14,8 +14,17 @@
  ******************************************************************************/
 package com.neuronrobotics.sdk.dyio.peripherals;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The listener interface for receiving ICounterOutput events.
+ * The class that is interested in processing a ICounterOutput
+ * event implements this interface, and the object created
+ * with that class is registered with a component using the
+ * component's  addICounterOutputListener  method. When
+ * the ICounterOutput event occurs, that object's appropriate
+ * method is invoked.
+ *
+ * @see CounterOutputChannel
  */
 public interface ICounterOutputListener {
 	

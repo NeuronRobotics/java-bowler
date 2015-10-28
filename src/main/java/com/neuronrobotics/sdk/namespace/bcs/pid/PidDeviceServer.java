@@ -11,10 +11,21 @@ import com.neuronrobotics.sdk.pid.PIDEvent;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 import com.neuronrobotics.sdk.pid.VirtualGenericPIDDevice;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PidDeviceServer.
+ */
 public class PidDeviceServer extends BowlerAbstractServer implements IPIDEventListener {
 
+	/** The pid server. */
 	private PidDeviceServerNamespace pidServer;
 
+	/**
+	 * Instantiates a new pid device server.
+	 *
+	 * @param mac the mac
+	 * @param device the device
+	 */
 	public PidDeviceServer(MACAddress mac,IPidControlNamespace device) {
 		super(mac);
 		pidServer = new PidDeviceServerNamespace(mac, device);
@@ -31,6 +42,9 @@ public class PidDeviceServer extends BowlerAbstractServer implements IPIDEventLi
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.pid.IPIDEventListener#onPIDEvent(com.neuronrobotics.sdk.pid.PIDEvent)
+	 */
 	@Override
 	public void onPIDEvent(PIDEvent e) {
 		Log.info("Pushing "+e);
@@ -51,6 +65,9 @@ public class PidDeviceServer extends BowlerAbstractServer implements IPIDEventLi
 				} );
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.pid.IPIDEventListener#onPIDLimitEvent(com.neuronrobotics.sdk.pid.PIDLimitEvent)
+	 */
 	@Override
 	public void onPIDLimitEvent(PIDLimitEvent e) {
 		pushAsyncPacket(2,//0 is core, 1 is rpc 
@@ -70,10 +87,18 @@ public class PidDeviceServer extends BowlerAbstractServer implements IPIDEventLi
 				} );
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.pid.IPIDEventListener#onPIDReset(int, int)
+	 */
 	@Override
 	public void onPIDReset(int group, int currentValue) {}//used for object state not commands
 
 	
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String [] args){
 		Log.enableInfoPrint();
 		PidDeviceServer srv = new PidDeviceServer(new MACAddress(), new VirtualGenericPIDDevice(10000) );

@@ -5,11 +5,17 @@ import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.peripherals.DigitalInputChannel;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DigitalInputTestSync.
+ */
 public class DigitalInputTestSync {
 
 	/**
-	 * @param args
-	 * @throws InterruptedException 
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 * @throws InterruptedException the interrupted exception
 	 */
 	public static void main(String[] args) throws InterruptedException {
 		DyIO dyio=new DyIO();

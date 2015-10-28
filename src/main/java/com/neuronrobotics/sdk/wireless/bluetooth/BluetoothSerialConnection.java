@@ -22,31 +22,44 @@ import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.MissingNativeLibraryException;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class BluetoothSerialConnection.
  */
 public class BluetoothSerialConnection extends BowlerAbstractConnection{
+		
+		/** The sleep time. */
 		private int sleepTime = 800;
+		
+		/** The poll timeout time. */
 		private int pollTimeoutTime = 5;
 		
 		
+		/** The bluetooth address. */
 		private String bluetoothAddress=null;
+		
+		/** The baud. */
 		private final int baud = 115200;
 		
+		/** The blue. */
 		private BlueCoveManager blue = null;
+		
+		/** The connecting. */
 		private boolean connecting=false;
+		
+		/** The recon ok. */
 		private boolean reconOk = false;
 		
 		/**
 		 * Default Constructor.
-		 * <p>
+		 *  
 		 * Using this constructor will require that at least the port be set
 		 * later on.
 		 * 
 		 * The baudrate will default to 115200bps.
-		 * 
-		 * @param blue
-		 * @param deviceAddress
+		 *
+		 * @param blue the blue
+		 * @param deviceAddress the device address
 		 */
 		public BluetoothSerialConnection(BlueCoveManager blue,String deviceAddress) {
 			this.blue = blue;
@@ -66,15 +79,18 @@ public class BluetoothSerialConnection extends BowlerAbstractConnection{
 			init();
 		}
 		
+		/**
+		 * Inits the.
+		 */
 		private void init(){
 			setSynchronusPacketTimeoutTime(sleepTime);
 			//
 		}
 		
 		/**
-		 * 
-		 * 
-		 * @return
+		 * Gets the port.
+		 *
+		 * @return the port
 		 */
 		public String getPort() {
 			return bluetoothAddress;
@@ -137,18 +153,18 @@ public class BluetoothSerialConnection extends BowlerAbstractConnection{
 
 
 		/**
-		 * 
-		 * 
-		 * @return
+		 * Gets the baud.
+		 *
+		 * @return the baud
 		 */
 		public int getBaud() {
 			return this.baud;
 		}
 
 		/**
-		 * 
-		 * 
-		 * @return
+		 * Gets the blue manager.
+		 *
+		 * @return the blue manager
 		 */
 		public BlueCoveManager getBlueManager() {
 			return blue;
@@ -157,6 +173,11 @@ public class BluetoothSerialConnection extends BowlerAbstractConnection{
 		/* (non-Javadoc)
 		 * @see com.neuronrobotics.sdk.common.BowlerAbstractConnection#reconnect()
 		 */
+		/**
+		 * Reconnect.
+		 *
+		 * @return true, if successful
+		 */
 		//@Override
 		public  boolean reconnect() {
 			//return true;
@@ -164,6 +185,11 @@ public class BluetoothSerialConnection extends BowlerAbstractConnection{
 			return recon();
 		}
 		
+		/**
+		 * Recon.
+		 *
+		 * @return true, if successful
+		 */
 		private synchronized boolean recon() {
 			if(!isConnected()||reconOk==true)
 				return reconOk;

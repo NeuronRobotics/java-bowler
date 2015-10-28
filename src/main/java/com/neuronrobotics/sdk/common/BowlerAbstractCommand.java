@@ -46,8 +46,11 @@ public abstract class BowlerAbstractCommand implements ISendable {
 	
 	/** The method. */
 	private BowlerMethod method;
+	
+	/** The data. */
 	private ByteList data = new ByteList();
 
+	/** The namespace index. */
 	private int namespaceIndex=0;//default used when no conflicts are expected
 	
 	/**
@@ -189,6 +192,12 @@ public abstract class BowlerAbstractCommand implements ISendable {
 		return data;
 	}
 	
+	/**
+	 * Parses the.
+	 *
+	 * @param data the data
+	 * @return the bowler abstract command
+	 */
 	public static BowlerAbstractCommand parse(BowlerDatagram data) {
 		return new BowlerAbstractCommand() {};
 	}
@@ -218,17 +227,38 @@ public abstract class BowlerAbstractCommand implements ISendable {
 		return rtn.toUpperCase();
 	}
 
+	/**
+	 * Sets the data.
+	 *
+	 * @param data the new data
+	 */
 	public void setData(ByteList data) {
 		this.data = data;
 	}
 
+	/**
+	 * Gets the calling data storage.
+	 *
+	 * @return the calling data storage
+	 */
 	public ByteList getCallingDataStorage() {
 		return data;
 	}
 
+	/**
+	 * Sets the namespace index.
+	 *
+	 * @param namespaceIndex the new namespace index
+	 */
 	public void setNamespaceIndex(int namespaceIndex){
 		this.namespaceIndex = namespaceIndex;		
 	}
+	
+	/**
+	 * Gets the namespace index.
+	 *
+	 * @return the namespace index
+	 */
 	public int getNamespaceIndex(){
 		return this.namespaceIndex;		
 	}

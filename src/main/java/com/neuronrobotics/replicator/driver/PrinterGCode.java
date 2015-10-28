@@ -1,6 +1,10 @@
 package com.neuronrobotics.replicator.driver;
 
 
+/**
+ * @author hephaestus
+ *
+ */
 class PrinterGCodeInterpreter {
 /*	GCodeInterpreter interp;
 	DeltaRobotPrinterPrototype controller;

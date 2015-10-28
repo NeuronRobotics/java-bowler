@@ -14,21 +14,50 @@ import com.neuronrobotics.sdk.pid.GenericPIDDevice;
 import com.neuronrobotics.sdk.pid.ILinkFactoryProvider;
 import com.neuronrobotics.sdk.pid.VirtualGenericPIDDevice;
 
+// TODO: Auto-generated Javadoc
+/**
+ * A factory for creating Link objects.
+ */
 public class LinkFactory {
+	
+	/** The virtual. */
 	private VirtualGenericPIDDevice virtual=null; 
+	
+	/** The links. */
 	private ArrayList<AbstractLink> links = new ArrayList<AbstractLink>();
+	
+	/** The link configurations. */
 	private ArrayList<LinkConfiguration> linkConfigurations=null ;
+	
+	/** The dyio. */
 	private DyIO dyio;
+	
+	/** The pid. */
 	private IPidControlNamespace pid;
 	
+	/**
+	 * Instantiates a new link factory.
+	 */
 	public LinkFactory(){
 		this(null);
 	}
+	
+	/**
+	 * Instantiates a new link factory.
+	 *
+	 * @param bad the bad
+	 */
 	public LinkFactory(BowlerAbstractDevice bad){
 		if(bad!=null)
 			DeviceManager.addConnection(bad, bad.getScriptingName());
 	}
 	
+	/**
+	 * Instantiates a new link factory.
+	 *
+	 * @param connection the connection
+	 * @param d the d
+	 */
 	public LinkFactory(ILinkFactoryProvider connection,IExtendedPIDControl d) {
 		this(null);
 		//Log.enableInfoPrint();
@@ -46,6 +75,12 @@ public class LinkFactory {
 		
 	}
 	
+	/**
+	 * Gets the link.
+	 *
+	 * @param name the name
+	 * @return the link
+	 */
 	public AbstractLink getLink(String name) {
 		for(AbstractLink l:links){
 			if(l.getLinkConfiguration().getName().equalsIgnoreCase(name))
@@ -57,6 +92,13 @@ public class LinkFactory {
 		}
 		throw new RuntimeException(data);
 	}
+	
+	/**
+	 * Gets the link.
+	 *
+	 * @param c the c
+	 * @return the link
+	 */
 	public AbstractLink getLink(LinkConfiguration c){
 		for(AbstractLink l:links){
 			if(l.getLinkConfiguration() == c)
@@ -65,6 +107,11 @@ public class LinkFactory {
 		return getLinkLocal( c);
 	}
 	
+	/**
+	 * Refresh hardware layer.
+	 *
+	 * @param c the c
+	 */
 	public void refreshHardwareLayer(LinkConfiguration c){
 		//retreive the old link
 		AbstractLink oldLink = getLink( c);
@@ -77,6 +124,12 @@ public class LinkFactory {
 		
 	}
 	
+	/**
+	 * Gets the link local.
+	 *
+	 * @param c the c
+	 * @return the link local
+	 */
 	private AbstractLink getLinkLocal(LinkConfiguration c){
 
 		if(dyio==null)
@@ -178,6 +231,11 @@ public class LinkFactory {
 		return tmp;
 	}
 	
+	/**
+	 * Gets the lower limits.
+	 *
+	 * @return the lower limits
+	 */
 	public double [] getLowerLimits(){
 		double [] up = new double [links.size()];
 		for(int i=0;i< up.length;i++){
@@ -186,6 +244,11 @@ public class LinkFactory {
 		return up;
 	}
 	
+	/**
+	 * Gets the upper limits.
+	 *
+	 * @return the upper limits
+	 */
 	public double [] getUpperLimits(){
 		double [] up = new double [links.size()];
 		for(int i=0;i< up.length;i++){
@@ -194,11 +257,22 @@ public class LinkFactory {
 		return up;
 	}
 	
+	/**
+	 * Adds the link listener.
+	 *
+	 * @param l the l
+	 */
 	public void addLinkListener(ILinkListener l){
 		for(AbstractLink lin:links){
 			lin.addLinkListener(l);
 		}
 	}
+	
+	/**
+	 * Flush.
+	 *
+	 * @param seconds the seconds
+	 */
 	public void flush(final double seconds){
 		long time = System.currentTimeMillis();
 		//TODO this feature needs to be made to work, it should also check to see if all the links are on the same device
@@ -215,12 +289,30 @@ public class LinkFactory {
 		}
 		//System.out.println("Flush Took "+(System.currentTimeMillis()-time)+"ms");
 	}
+	
+	/**
+	 * Gets the pid.
+	 *
+	 * @return the pid
+	 */
 	public IPidControlNamespace getPid() {
 		return pid;
 	}
+	
+	/**
+	 * Gets the dyio.
+	 *
+	 * @return the dyio
+	 */
 	public DyIO getDyio(){
 		return dyio;
 	}
+	
+	/**
+	 * Sets the cached targets.
+	 *
+	 * @param jointSpaceVect the new cached targets
+	 */
 	public void setCachedTargets(double[] jointSpaceVect) {
 		if(jointSpaceVect.length!=links.size())
 			throw new IndexOutOfBoundsException("Expected "+links.size()+" links, got "+jointSpaceVect.length);
@@ -235,6 +327,11 @@ public class LinkFactory {
 		}
 	}
 
+	/**
+	 * Checks if is connected.
+	 *
+	 * @return true, if is connected
+	 */
 	public boolean isConnected() {
 		if(pid!=null){
 			return pid.isAvailable();
@@ -245,6 +342,11 @@ public class LinkFactory {
 		return true;
 	}
 
+	/**
+	 * Gets the link configurations.
+	 *
+	 * @return the link configurations
+	 */
 	public ArrayList<LinkConfiguration> getLinkConfigurations() {
 		if(linkConfigurations== null){
 			linkConfigurations=new ArrayList<LinkConfiguration>();
@@ -252,6 +354,11 @@ public class LinkFactory {
 		return linkConfigurations;
 	}
 
+	/**
+	 * Removes the link listener.
+	 *
+	 * @param l the l
+	 */
 	public void removeLinkListener(AbstractKinematicsNR l) {
 		// TODO Auto-generated method stub
 		for(AbstractLink lin:links){
@@ -259,6 +366,11 @@ public class LinkFactory {
 		}
 	}
 
+	/**
+	 * Delete link.
+	 *
+	 * @param i the i
+	 */
 	public void deleteLink(int i) {
 		links.remove(i);
 		getLinkConfigurations().remove(i);

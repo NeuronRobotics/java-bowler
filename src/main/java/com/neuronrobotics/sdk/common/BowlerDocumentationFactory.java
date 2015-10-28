@@ -13,6 +13,7 @@ import com.neuronrobotics.sdk.dyio.peripherals.SPIChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.UARTChannel;
 
+// TODO: Auto-generated Javadoc
 /**
  * Factory used to centralize references to web pages (specifically
  * documentation). Any documentation for an object type defined in the NRSDK
@@ -24,6 +25,12 @@ import com.neuronrobotics.sdk.dyio.peripherals.UARTChannel;
  */
 public class BowlerDocumentationFactory {
 
+	/**
+	 * Gets the documentation url.
+	 *
+	 * @param input the input
+	 * @return the documentation url
+	 */
 	public static URI getDocumentationURL(Object input) {
 		String basURL = "http://neuronrobotics.github.io/Java-Code-Library/";
 		if (input instanceof DigitalInputChannel) {

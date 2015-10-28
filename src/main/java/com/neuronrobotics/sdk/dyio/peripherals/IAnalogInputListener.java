@@ -14,17 +14,25 @@
  ******************************************************************************/
 package com.neuronrobotics.sdk.dyio.peripherals;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The listener interface for receiving IAnalogInput events.
+ * The class that is interested in processing a IAnalogInput
+ * event implements this interface, and the object created
+ * with that class is registered with a component using the
+ * component's  addIAnalogInputListener  method. When
+ * the IAnalogInput event occurs, that object's appropriate
+ * method is invoked.
+ *
+ * @see AnalogInputChannel
  */
 public interface IAnalogInputListener {
 	
 	/**
 	 * IAnalogInputListener.
-	 * 
-	 * @param chan
-	 * @param value
-	 *            The value of the analog channel is sent to listeners
+	 *
+	 * @param chan the chan
+	 * @param value            The value of the analog channel is sent to listeners
 	 */
 	public void onAnalogValueChange(AnalogInputChannel chan,double value);
 }

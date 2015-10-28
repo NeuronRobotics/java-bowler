@@ -45,17 +45,25 @@ import com.neuronrobotics.sdk.commands.neuronrobotics.dyio.InfoFirmwareRevisionC
  *
  */
 public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
+	
+	/** The keep alive. */
 	private boolean keepAlive = true;
+	
+	/** The disconnecting. */
 	private boolean disconnecting = false;
 	
+	/** The last packet time. */
 	private long lastPacketTime=0;
 	
 	/** The connection. */
 	private BowlerAbstractConnection connection=null;
 	/** The address. */
 	private MACAddress address = new MACAddress(MACAddress.BROADCAST);
+	
+	/** The disconnect listeners. */
 	private static ArrayList<IDeviceConnectionEventListener> disconnectListeners = new ArrayList<IDeviceConnectionEventListener> ();
 	
+	/** The scripting name. */
 	private String scriptingName = "device";
 	
 	
@@ -72,20 +80,27 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	
 	/**
 	 * Set the connection to use when communicating commands with a device.
-	 *
-	 * @param connection the new connection
 	 */
 	protected void fireDisconnectEvent() {
 		for(IDeviceConnectionEventListener l:getDisconnectListeners()) {
 			l.onDisconnect(getDevice());
 		}
 	}
+	
+	/**
+	 * Fire connect event.
+	 */
 	protected void fireConnectEvent() {
 		for(IDeviceConnectionEventListener l:getDisconnectListeners()) {
 			l.onConnect(getDevice());
 		}
 	}
 	
+	/**
+	 * Adds the connection event listener.
+	 *
+	 * @param l the l
+	 */
 	public void addConnectionEventListener(final IDeviceConnectionEventListener l ) {
 		if(!getDisconnectListeners().contains(l)) {
 			getDisconnectListeners().add(l);
@@ -106,15 +121,33 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 			}
 		});
 	}
+	
+	/**
+	 * Removes the connection event listener.
+	 *
+	 * @param l the l
+	 */
 	public void removeConnectionEventListener(IDeviceConnectionEventListener l ) {
 		if(getDisconnectListeners().contains(l)) {
 			getDisconnectListeners().remove(l);
 		}
 
 	}
+	
+	/**
+	 * Gets the device.
+	 *
+	 * @return the device
+	 */
 	private BowlerAbstractDevice getDevice(){
 		return this;
 	}
+	
+	/**
+	 * Sets the connection.
+	 *
+	 * @param connection the new connection
+	 */
 	public void setConnection(BowlerAbstractConnection connection) {
 		setThreadedUpstreamPackets(false);
 		if(connection == null) {
@@ -235,6 +268,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	 * Send a command to the connection.
 	 *
 	 * @param command the command
+	 * @param retry the retry
 	 * @return the syncronous response
 	 * @throws NoConnectionAvailableException the no connection available exception
 	 * @throws InvalidResponseException the invalid response exception
@@ -243,13 +277,17 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 		
 		return connection.send(command,getAddress(), retry);
 	}
+	
 	/**
 	 * THis is the scripting interface to Bowler devices. THis allows a user to describe a namespace, rpc, and array or 
 	 * arguments to be paced into the packet based on the data types of the argument. The response in likewise unpacked 
 	 * into an array of objects.
+	 *
 	 * @param namespace The string of the desired namespace
+	 * @param method the method
 	 * @param rpcString The string of the desired RPC
 	 * @param arguments An array of objects corresponding to the data to be stuffed into the packet.
+	 * @param retry the retry
 	 * @return The return arguments parsed and packet into an array of arguments
 	 * @throws DeviceConnectionException If the desired RPC's are not available then this will be thrown
 	 */
@@ -261,7 +299,9 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	 * THis is the scripting interface to Bowler devices. THis allows a user to describe a namespace, rpc, and array or 
 	 * arguments to be paced into the packet based on the data types of the argument. The response in likewise unpacked 
 	 * into an array of objects.
+	 *
 	 * @param namespace The string of the desired namespace
+	 * @param method the method
 	 * @param rpcString The string of the desired RPC
 	 * @param arguments An array of objects corresponding to the data to be stuffed into the packet.
 	 * @return The return arguments parsed and packet into an array of arguments
@@ -280,10 +320,12 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	public boolean ping() {
 		return ping(false);
 	}
+	
 	/**
 	 * Implementation of the Bowler ping ("_png") command
 	 * Sends a ping to the device returns the device's MAC address.
 	 *
+	 * @param switchParser the switch parser
 	 * @return the device's address
 	 */
 	public boolean ping(boolean switchParser) {
@@ -319,21 +361,36 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	public ArrayList<String>  getNamespaces(){
 		return connection.getNamespaces(getAddress());	
 	}
+	
 	/**
-	 * Check the device to see if it has the requested namespace
-	 * @param string
-	 * @return
+	 * Check the device to see if it has the requested namespace.
+	 *
+	 * @param string the string
+	 * @return true, if successful
 	 */
 	public boolean hasNamespace(String string) {
 		return connection.hasNamespace(string,getAddress());
 	}
 	
+	/**
+	 * Start heart beat.
+	 */
 	public void startHeartBeat(){
 		getConnection().startHeartBeat();
 	}
+	
+	/**
+	 * Start heart beat.
+	 *
+	 * @param msHeartBeatTime the ms heart beat time
+	 */
 	public void startHeartBeat(long msHeartBeatTime){
 		getConnection().startHeartBeat(msHeartBeatTime);
 	}
+	
+	/**
+	 * Stop heart beat.
+	 */
 	public void stopHeartBeat(){
 		getConnection().stopHeartBeat();
 	}
@@ -341,24 +398,27 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	
 	/**
 	 * Tells the connection to use asynchronous packets as threads or not. 
-	 * @param up
+	 *
+	 * @param up the new threaded upstream packets
 	 */
 	public void setThreadedUpstreamPackets(boolean up){
 		if(connection != null){
 			connection.setThreadedUpstreamPackets(up);
 		}
 	}
+	
 	/**
-	 * Requests all of the RPC's from a namespace
-	 * @param s
-	 * @return
+	 * Requests all of the RPC's from a namespace.
+	 *
+	 * @param namespace the namespace
+	 * @return the rpc list
 	 */
 	public ArrayList<RpcEncapsulation> getRpcList(String namespace) {
 		return connection.getRpcList(namespace,getAddress());
 	}
 	
 	/**
-	 * Loads all the Requests for the RPC's from all namespaces
+	 * Loads all the Requests for the RPC's from all namespaces.
 	 */
 	public void loadRpcList() {
 		 ArrayList<String> names = getNamespaces();
@@ -377,39 +437,81 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	public void onAllResponse(BowlerDatagram data){
 		// this is here to prevent the breaking of an interface, 
 	}
+	
+	/**
+	 * Checks if is keep alive.
+	 *
+	 * @return true, if is keep alive
+	 */
 	public boolean isKeepAlive() {
 		return keepAlive;
 	}
+	
+	/**
+	 * Sets the keep alive.
+	 *
+	 * @param keepAlive the new keep alive
+	 */
 	public void setKeepAlive(boolean keepAlive) {
 		this.keepAlive = keepAlive;
 	}
 
 
+	/**
+	 * Gets the last packet time.
+	 *
+	 * @return the last packet time
+	 */
 	public long getLastPacketTime() {
 		return lastPacketTime;
 	}
 
 
+	/**
+	 * Sets the last packet time.
+	 *
+	 * @param lastPacketTime the new last packet time
+	 */
 	public void setLastPacketTime(long lastPacketTime) {
 		this.lastPacketTime = lastPacketTime;
 	}
 
 
+	/**
+	 * Gets the scripting name.
+	 *
+	 * @return the scripting name
+	 */
 	public String getScriptingName() {
 		return scriptingName;
 	}
 
 
+	/**
+	 * Sets the scripting name.
+	 *
+	 * @param scriptingName the new scripting name
+	 */
 	public void setScriptingName(String scriptingName) {
 		this.scriptingName = scriptingName;
 	}
 
 
+	/**
+	 * Gets the disconnect listeners.
+	 *
+	 * @return the disconnect listeners
+	 */
 	public static ArrayList<IDeviceConnectionEventListener> getDisconnectListeners() {
 		return disconnectListeners;
 	}
 
 
+	/**
+	 * Sets the disconnect listeners.
+	 *
+	 * @param disconnectListeners the new disconnect listeners
+	 */
 	public static void setDisconnectListeners(ArrayList<IDeviceConnectionEventListener> disconnectListeners) {
 		BowlerAbstractDevice.disconnectListeners = disconnectListeners;
 	}

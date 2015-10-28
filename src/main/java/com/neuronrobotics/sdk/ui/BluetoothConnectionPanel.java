@@ -33,25 +33,40 @@ import com.neuronrobotics.sdk.util.ProcessMonitor;
 import com.neuronrobotics.sdk.wireless.bluetooth.BlueCoveManager;
 import com.neuronrobotics.sdk.wireless.bluetooth.BluetoothSerialConnection;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class BluetoothConnectionPanel.
  */
 public class BluetoothConnectionPanel extends AbstractConnectionPanel {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
+	/** The connection. */
 	private BluetoothSerialConnection connection;
+	
+	/** The blue. */
 	private BlueCoveManager blue = null;
+	
+	/** The display warning. */
 	private boolean displayWarning = false;
 	
+	/** The connection cbo. */
 	private JComboBox connectionCbo;
+	
+	/** The search. */
 	private JButton search;
+	
+	/** The progress. */
 	private JProgressBar progress = new JProgressBar();
+	
+	/** The message. */
 	private JLabel message = new JLabel();
 	
 	/**
-	 * @param connectionDialog 
-	 * 
+	 * Instantiates a new bluetooth connection panel.
+	 *
+	 * @param connectionDialog the connection dialog
 	 */
 	public BluetoothConnectionPanel(ConnectionDialog connectionDialog) {
 		super("Bluetooth", ConnectionImageIconFactory.getIcon("images/bluetooth-icon.png"),connectionDialog);
@@ -85,6 +100,9 @@ public class BluetoothConnectionPanel extends AbstractConnectionPanel {
 	
 
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.ui.AbstractConnectionPanel#getConnection()
+	 */
 	public BluetoothSerialConnection getConnection() {
 		try {
 			String port = connectionCbo.getSelectedItem().toString();
@@ -98,6 +116,9 @@ public class BluetoothConnectionPanel extends AbstractConnectionPanel {
 	}
 	
 	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.ui.AbstractConnectionPanel#refresh()
+	 */
 	public void refresh() {
 		Log.info("Searching for devices over bluetooth...");
 		
@@ -133,8 +154,17 @@ public class BluetoothConnectionPanel extends AbstractConnectionPanel {
 		getConnectionDialog().pack();
 	}
 	
+	/**
+	 * The Class BluetoothSearchProcess.
+	 */
 	private class BluetoothSearchProcess extends Thread implements IMonitorable {
+		
+		/** The is running. */
 		private boolean isRunning = false;
+		
+		/* (non-Javadoc)
+		 * @see java.lang.Thread#run()
+		 */
 		public void run() {
 			setName("Bowler Platform Bluetooth connection thread");
 			isRunning = true;
@@ -176,11 +206,17 @@ public class BluetoothConnectionPanel extends AbstractConnectionPanel {
 		}
 		
 		
+		/* (non-Javadoc)
+		 * @see com.neuronrobotics.sdk.util.IMonitorable#getPercentage()
+		 */
 		public double getPercentage() {
 			return 0;
 		}
 
 		
+		/* (non-Javadoc)
+		 * @see com.neuronrobotics.sdk.util.IMonitorable#isComplete()
+		 */
 		public boolean isComplete() {
 			return !isRunning;
 		}

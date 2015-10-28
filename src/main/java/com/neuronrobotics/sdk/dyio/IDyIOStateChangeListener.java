@@ -14,16 +14,25 @@
  ******************************************************************************/
 package com.neuronrobotics.sdk.dyio;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The listener interface for receiving IDyIOStateChange events.
+ * The class that is interested in processing a IDyIOStateChange
+ * event implements this interface, and the object created
+ * with that class is registered with a component using the
+ * component's  addIDyIOStateChangeListener  method. When
+ * the IDyIOStateChange event occurs, that object's appropriate
+ * method is invoked.
+ *
+ * @see IDyIOEvent
  */
 public interface IDyIOStateChangeListener {
 	
 	/**
-	 * 
-	 * 
-	 * @param channel
-	 * @param mode
+	 * On state change.
+	 *
+	 * @param channel the channel
+	 * @param mode the mode
 	 */
 	public void onStateChange(int channel, DyIOChannelMode mode);
 }

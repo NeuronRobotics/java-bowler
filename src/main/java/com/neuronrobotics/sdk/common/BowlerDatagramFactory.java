@@ -24,12 +24,22 @@ package com.neuronrobotics.sdk.common;
 
 public class BowlerDatagramFactory {
 	
+	/** The instance. */
 	private static BowlerDatagramFactory instance;
 	
+	/** The pool. */
 	private static BowlerDatagram pool [];
+	
+	/** The failed. */
 	private static int failed=0;
+	
+	/** The last index. */
 	private static int lastIndex = 0;
+	
+	/** The pool default size. */
 	private static int poolDefaultSize = 1000;
+	
+	/** The packet timeout. */
 	private static long packetTimeout = 5000;
 	
 	static{
@@ -43,10 +53,21 @@ public class BowlerDatagramFactory {
 		}
 	}
 	
+	/**
+	 * Gets the current pool size.
+	 *
+	 * @return the current pool size
+	 */
 	public static int getCurrentPoolSize(){
 		return pool.length;
 	}
 	
+	/**
+	 * Validate factory.
+	 *
+	 * @param test the test
+	 * @return true, if successful
+	 */
 	public static boolean validateFactory(BowlerDatagramFactory test){
 		if(test == instance){
 			return true;
@@ -54,6 +75,11 @@ public class BowlerDatagramFactory {
 		throw new RuntimeException("Invalid factory generation of packet. Use BowlerDatagramFactory.getNextPacket()");
 	}
 	
+	/**
+	 * Gets the next packet.
+	 *
+	 * @return the next packet
+	 */
 	private static BowlerDatagram getNextPacket(){
 		BowlerDatagram ref = new BowlerDatagram(instance);
 		
@@ -92,11 +118,22 @@ public class BowlerDatagramFactory {
 		return ref;
 	}
 	
+	/**
+	 * Free packet.
+	 *
+	 * @param bd the bd
+	 */
 	public static void freePacket(BowlerDatagram bd){
 		bd.setFree(true, instance);
 	}
 
-	/** The Constant REVISION. */
+	/**
+	 *  The Constant REVISION.
+	 *
+	 * @param addr the addr
+	 * @param cmd the cmd
+	 * @return the bowler datagram
+	 */
 	//public static final byte REVISION = BowlerDatagram.REVISION;
 	
 	/**
@@ -128,6 +165,12 @@ public class BowlerDatagramFactory {
 		return bd;
 	}
 	
+	/**
+	 * Builds the.
+	 *
+	 * @param buffer the buffer
+	 * @return the bowler datagram
+	 */
 	public static BowlerDatagram build(ByteList buffer ){
 		BowlerDatagram buff= getNextPacket();
 		buff.setFree(false,instance);
@@ -137,6 +180,13 @@ public class BowlerDatagramFactory {
 		return ret;
 	}
 	
+	/**
+	 * Builds the.
+	 *
+	 * @param buffer the buffer
+	 * @param staticMemory the static memory
+	 * @return the bowler datagram
+	 */
 	private static BowlerDatagram build(ByteList buffer, BowlerDatagram staticMemory){
 		if((buffer.size()==0))
 			return null;
@@ -227,18 +277,38 @@ public class BowlerDatagramFactory {
 		return null;
 	}
 
+	/**
+	 * Gets the default pool size.
+	 *
+	 * @return the default pool size
+	 */
 	public static int getDefaultPoolSize() {
 		return poolDefaultSize;
 	}
 
+	/**
+	 * Sets the pool size.
+	 *
+	 * @param poolSize the new pool size
+	 */
 	public static void setPoolSize(int poolSize) {
 		BowlerDatagramFactory.poolDefaultSize = poolSize;
 	}
 
+	/**
+	 * Gets the packet timeout.
+	 *
+	 * @return the packet timeout
+	 */
 	public static long getPacketTimeout() {
 		return packetTimeout;
 	}
 
+	/**
+	 * Sets the packet timeout.
+	 *
+	 * @param packetTimeout the new packet timeout
+	 */
 	public static void setPacketTimeout(int packetTimeout) {
 		BowlerDatagramFactory.packetTimeout = packetTimeout;
 	}

@@ -28,6 +28,7 @@ import com.neuronrobotics.sdk.common.MissingNativeLibraryException;
 import com.neuronrobotics.sdk.genericdevice.GenericDevice;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
+// TODO: Auto-generated Javadoc
 /**
  * SerialConnection manages a connection to a serial port on the host system. This class is responsible for
  * abstracting all of the aspects of a serial connection including:
@@ -36,26 +37,34 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
  * <li>setting the baudrate</li>
  * <li>sending data and reading data both syncronously and asyncronously</li>
  * </ul>
- * <p>
+ *  
  * SerialConnection extends SerialPortEventListener to use the RXTX framework for receiving serial 
  * communications efficiently. Remember to disconnect whenever reading and writing to the connection is not
  * necessary as a this class will continue to run a thread to wait for incoming data.
- * <p>
+ *  
  *  
  */
 public class SerialConnection extends BowlerAbstractConnection {
+	
+	/** The sleep time. */
 	private int sleepTime = 1000;
+	
+	/** The poll timeout time. */
 	private int pollTimeoutTime = 5;
 	
 	
+	/** The port. */
 	private String port=null;
+	
+	/** The baud. */
 	private int baud = 115200;
 	
+	/** The serial. */
 	private NRSerialPort serial;
 	
 	/**
 	 * Default Constructor.
-	 * <p>
+	 *  
 	 * Using this constructor will require that at least the port be set later on. 
 	 * 
 	 * The baudrate will default to 115200bps.
@@ -99,8 +108,8 @@ public class SerialConnection extends BowlerAbstractConnection {
 	
 	/**
 	 * Get the port to use (i.e. COM6 or /dev/ttyUSB0)
-	 * 
-	 * @return
+	 *
+	 * @return the port
 	 */
 	public String getPort() {
 		return port;
@@ -127,8 +136,8 @@ public class SerialConnection extends BowlerAbstractConnection {
 	 * <li>57600</li>
 	 * <li>115200</li>
 	 * </ul>
-	 * 
-	 * @param baud 
+	 *
+	 * @param baud the new baud
 	 */
 	public void setBaud(int baud) {
 		this.baud = baud;
@@ -199,6 +208,12 @@ public class SerialConnection extends BowlerAbstractConnection {
 		return port;
 	}
 	
+	/**
+	 * Gets the connection by mac address.
+	 *
+	 * @param mac the mac
+	 * @return the connection by mac address
+	 */
 	public static SerialConnection getConnectionByMacAddress(MACAddress mac){
 		
 		List <String> ports = SerialConnection.getAvailableSerialPorts();
@@ -232,6 +247,11 @@ public class SerialConnection extends BowlerAbstractConnection {
 		return null;
 	}
 	
+	/**
+	 * Gets the available serial ports.
+	 *
+	 * @return the available serial ports
+	 */
 	public static List<String> getAvailableSerialPorts() {
 		ArrayList<String> back = new  ArrayList<String>();
 		for(String s:NRSerialPort.getAvailableSerialPorts()){

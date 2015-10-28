@@ -14,23 +14,26 @@
  ******************************************************************************/
 package com.neuronrobotics.sdk.dyio;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class DyIOCommunicationException.
  */
 public class DyIOCommunicationException extends RuntimeException {
+	
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * 
+	 * Instantiates a new dy io communication exception.
 	 */
 	public DyIOCommunicationException() {
 		super("The DyIO is not communicating properly");
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @param message
+	 * Instantiates a new dy io communication exception.
+	 *
+	 * @param message the message
 	 */
 	public DyIOCommunicationException(String message) {
 		super(message);

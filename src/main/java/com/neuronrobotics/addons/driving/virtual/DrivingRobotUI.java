@@ -7,18 +7,42 @@ import java.util.ArrayList;
 
 import com.neuronrobotics.addons.driving.AbstractRobotDrive;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DrivingRobotUI.
+ */
 public class DrivingRobotUI {
+	
+	/** The startx. */
 	//These represent where the robots base frame is in pixel-space. This is passed in at instantiation.
 	private double startx;
+	
+	/** The starty. */
 	private double starty;
 
+	/** The robot. */
 	private AbstractRobotDrive robot;
 	
+	/** The robot diameter. */
 	private int robotDiameter = 60;
 
+	/** The world. */
 	private VirtualWorld world;
+	
+	/** The dots. */
 	private ArrayList<SensorDot> dots= new ArrayList<SensorDot> ();
+	
+	/** The range. */
 	int [] range = null;
+	
+	/**
+	 * Instantiates a new driving robot ui.
+	 *
+	 * @param w the w
+	 * @param robot the robot
+	 * @param botstartx the botstartx
+	 * @param botstarty the botstarty
+	 */
 	public DrivingRobotUI(VirtualWorld w ,AbstractRobotDrive robot, double botstartx, double botstarty) {
 		setRobot(robot);
 		startx=botstartx;
@@ -27,15 +51,31 @@ public class DrivingRobotUI {
 	}
 	
 
+	/**
+	 * Gets the robot x to pixel.
+	 *
+	 * @return the robot x to pixel
+	 */
 	public int getRobotXToPixel(){
 		//This converts from robot coordinantes to pixel space, note that X and Y seem swapped, this is correct
 		return (int)(world.getCmToPixel(getRobot().getCurrentY())+startx);
 	}
+	
+	/**
+	 * Gets the robot y to pixel.
+	 *
+	 * @return the robot y to pixel
+	 */
 	public int getRobotYToPixel(){
 		//This converts from robot coordinantes to pixel space, note that X and Y seem swapped, this is correct
 		return (int)(world.getCmToPixel(getRobot().getCurrentX())+starty);
 	}
 	
+	/**
+	 * Draw robot.
+	 *
+	 * @param g the g
+	 */
 	public void drawRobot(Graphics2D g) {
 		//System.out.println("Drawing robot on map");
 		g.setColor(Color.CYAN);
@@ -73,14 +113,31 @@ public class DrivingRobotUI {
 	}
 
 
+	/**
+	 * Sets the robot.
+	 *
+	 * @param robot the new robot
+	 */
 	public void setRobot(AbstractRobotDrive robot) {
 		this.robot = robot;
 	}
 
+	/**
+	 * Gets the robot.
+	 *
+	 * @return the robot
+	 */
 	public AbstractRobotDrive getRobot() {
 		return robot;
 	}
 
+	/**
+	 * Gets the sensor pixel location.
+	 *
+	 * @param deltLateral the delt lateral
+	 * @param deltForward the delt forward
+	 * @return the sensor pixel location
+	 */
 	public int[] getSensorPixelLocation(double deltLateral, double deltForward) {
 		int [] back = new int[2];
 		
@@ -92,23 +149,58 @@ public class DrivingRobotUI {
 		return back;
 	}
 
+	/**
+	 * Adds the sensor display dot.
+	 *
+	 * @param deltLateral the delt lateral
+	 * @param deltForward the delt forward
+	 * @param c the c
+	 */
 	public void addSensorDisplayDot(double deltLateral, double deltForward, Color c) {
 		dots.add(new SensorDot(deltLateral, deltForward, c));
 	}
 	
+	/**
+	 * The Class SensorDot.
+	 */
 	private class SensorDot{
+		
+		/** The delt lateral. */
 		public double deltLateral; 
+		
+		/** The delt forward. */
 		public double deltForward; 
+		
+		/** The color. */
 		public Color color;
+		
+		/**
+		 * Instantiates a new sensor dot.
+		 *
+		 * @param l the l
+		 * @param f the f
+		 * @param c the c
+		 */
 		public SensorDot(double l, double f, Color c){
 			deltForward=f;
 			deltLateral=l;
 			color=c;
 		}
 	}
+	
+	/**
+	 * Clear range vector.
+	 */
 	public void clearRangeVector() {
 		range=null;
 	}
+	
+	/**
+	 * Sets the range vector.
+	 *
+	 * @param x the x
+	 * @param y the y
+	 */
 	public void setRangeVector(int x, int y) {
 		range = new int[2];
 		range[0]=x;

@@ -25,10 +25,13 @@ import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.common.DeviceManager;
 import com.neuronrobotics.sdk.dyio.IChannelEventListener;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class ServoChannel.
  */
 public class ServoChannel extends DyIOAbstractPeripheral implements IChannelEventListener {
+	
+	/** The listeners. */
 	private ArrayList<IServoPositionUpdateListener >listeners = new ArrayList<IServoPositionUpdateListener >();
 	
 	/**
@@ -44,7 +47,8 @@ public class ServoChannel extends DyIOAbstractPeripheral implements IChannelEven
 	/**
 	 * Constructor.
 	 * Creates an counter input input channel that is syncronous only by default.
-	 * 
+	 *
+	 * @param dyio the dyio
 	 * @param channel - the channel object requested from the DyIO
 	 */
 	public ServoChannel(DyIO dyio,int channel){
@@ -52,9 +56,9 @@ public class ServoChannel extends DyIOAbstractPeripheral implements IChannelEven
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @param channel
+	 * Instantiates a new servo channel.
+	 *
+	 * @param channel the channel
 	 */
 	public ServoChannel(DyIOChannel channel){
 		super(channel,DyIOChannelMode.SERVO_OUT,false);
@@ -67,8 +71,8 @@ public class ServoChannel extends DyIOAbstractPeripheral implements IChannelEven
 	
 	/**
 	 * Set the servo to a given position.
-	 * 
-	 * @param pos
+	 *
+	 * @param pos the pos
 	 * @return if the action was successful
 	 */
 	public boolean SetPosition(int pos){
@@ -110,6 +114,11 @@ public class ServoChannel extends DyIOAbstractPeripheral implements IChannelEven
 	}
 	
 	
+	/**
+	 * Validate.
+	 *
+	 * @return true, if successful
+	 */
 	private boolean validate() {
 		if(!isEnabled()) {
 			//return false;
@@ -117,48 +126,72 @@ public class ServoChannel extends DyIOAbstractPeripheral implements IChannelEven
 		return getMode() == DyIOChannelMode.SERVO_OUT;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.dyio.peripherals.DyIOAbstractPeripheral#hasAsync()
+	 */
 	@Override
 	public boolean hasAsync() {
 		return false;
 	}
 	
+	/**
+	 * Fire position update.
+	 *
+	 * @param pos the pos
+	 * @param time the time
+	 */
 	private void firePositionUpdate(int pos,double time){
 		for(IServoPositionUpdateListener s:listeners){
 			s.onServoPositionUpdate(this, pos,time);
 		}
 	}
+	
 	/**
 	 * THis method allows you to listen to servo setpoint changes. 
-	 * @param l
+	 *
+	 * @param l the l
 	 */
 	public void addIServoPositionUpdateListener(IServoPositionUpdateListener l) {
 		if(listeners.contains(l))
 			return;
 		listeners.add(l);
 	}
+	
 	/**
-	 * removes a specified listener
-	 * @param l
+	 * removes a specified listener.
+	 *
+	 * @param l the l
 	 */
 	public void removeIServoPositionUpdateListener(IServoPositionUpdateListener l) {
 		if(listeners.contains(l))
 			listeners.remove(l);
 	}
+	
 	/**
 	 * This method allows you to override the servo voltage lock-out
-	 * it is enabled by default
+	 * it is enabled by default.
 	 */
 	public void enablePowerOverride(){
 		getChannel().getDevice().send(new powerOverridePacket(true) );
 	}
+	
 	/**
-	 * This method allows you to re enable the lock-out
+	 * This method allows you to re enable the lock-out.
 	 */
 	public void disablePowerOverride(){
 		getChannel().getDevice().send(new powerOverridePacket(false) );
 	}
 	
+	/**
+	 * The Class powerOverridePacket.
+	 */
 	private class powerOverridePacket extends BowlerAbstractCommand{
+		
+		/**
+		 * Instantiates a new power override packet.
+		 *
+		 * @param ovr the ovr
+		 */
 		public powerOverridePacket(boolean ovr){
 			setMethod(BowlerMethod.CRITICAL);
 			setOpCode("povr");
@@ -166,6 +199,9 @@ public class ServoChannel extends DyIOAbstractPeripheral implements IChannelEven
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.dyio.IChannelEventListener#onChannelEvent(com.neuronrobotics.sdk.dyio.DyIOChannelEvent)
+	 */
 	@Override
 	public void onChannelEvent(DyIOChannelEvent e) {
 		firePositionUpdate(e.getUnsignedValue(), System.currentTimeMillis());

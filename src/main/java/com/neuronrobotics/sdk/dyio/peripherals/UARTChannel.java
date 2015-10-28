@@ -33,25 +33,41 @@ import com.neuronrobotics.sdk.dyio.IChannelEventListener;
 import com.neuronrobotics.sdk.dyio.InvalidChannelOperationException;
 
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class UARTChannel.
  */
 public class UARTChannel implements ISendable {
+	
+	/** The listeners. */
 	private ArrayList<IUARTStreamListener> listeners = new ArrayList<IUARTStreamListener>();
+	
+	/** The Constant UART_IN. */
 	public static final int UART_IN = 17;
+	
+	/** The Constant UART_OUT. */
 	public static final int UART_OUT = 16;
+	
+	/** The device. */
 	DyIO device;
+	
+	/** The tx. */
 	UARTTxChannel tx;
+	
+	/** The rx. */
 	UARTRxChannel rx;
 	
+	/**
+	 * Instantiates a new UART channel.
+	 */
 	public UARTChannel() {
 		this(((DyIO) DeviceManager.getSpecificDevice(DyIO.class, null)));
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @param d
+	 * Instantiates a new UART channel.
+	 *
+	 * @param d the d
 	 */
 	public UARTChannel(DyIO d){
 		device = d;
@@ -68,10 +84,10 @@ public class UARTChannel implements ISendable {
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @param size
-	 * @return
+	 * Gets the bytes.
+	 *
+	 * @param size the size
+	 * @return the bytes
 	 */
 	public byte[] getBytes(int size) {
 		return rx.getBytes(size);
@@ -79,11 +95,11 @@ public class UARTChannel implements ISendable {
 	
 	
 	/**
-	 * 
-	 * 
-	 * @param stream
-	 * @return
-	 * @throws IOException
+	 * Send bytes.
+	 *
+	 * @param stream the stream
+	 * @return true, if successful
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public boolean sendBytes(ByteList stream) throws IOException{
 		return tx.putStream(stream);
@@ -91,28 +107,28 @@ public class UARTChannel implements ISendable {
 	
 	
 	/**
-	 * 
-	 * 
-	 * @return
+	 * Gets the in stream size.
+	 *
+	 * @return the in stream size
 	 */
 	public int getInStreamSize(){
 		return rx.getInStreamSize();
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @return
+	 * In stream data ready.
+	 *
+	 * @return true, if successful
 	 */
 	public boolean inStreamDataReady(){
 		return (getInStreamSize()>0);
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @param baudrate
-	 * @return
+	 * Sets the uart baudrate.
+	 *
+	 * @param baudrate the baudrate
+	 * @return true, if successful
 	 */
 	public boolean setUARTBaudrate(int baudrate) {
 		switch(baudrate){
@@ -149,18 +165,18 @@ public class UARTChannel implements ISendable {
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @return
+	 * Gets the out stream.
+	 *
+	 * @return the out stream
 	 */
 	public DyIOOutputStream getOutStream(){
 		return tx.getOutStream();
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @return
+	 * Gets the input stream.
+	 *
+	 * @return the input stream
 	 */
 	public DyIOInputStream getInputStream(){
 		return rx.getInputStream();
@@ -200,9 +216,9 @@ public class UARTChannel implements ISendable {
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @param e
+	 * Fire channel event.
+	 *
+	 * @param e the e
 	 */
 	protected void fireChannelEvent(DyIOChannelEvent e) {
 		for(IUARTStreamListener l : listeners) {
@@ -210,8 +226,19 @@ public class UARTChannel implements ISendable {
 		}
 	}
 	
+	/**
+	 * The Class UARTTxChannel.
+	 */
 	private class UARTTxChannel extends DyIOAbstractPeripheral {
+		
+		/** The out. */
 		DyIOOutputStream out;
+		
+		/**
+		 * Instantiates a new UART tx channel.
+		 *
+		 * @param channel the channel
+		 */
 		public UARTTxChannel(DyIOChannel channel) {
 			super(channel,DyIOChannelMode.USART_TX,true);
 			if(!setMode()) {
@@ -219,14 +246,31 @@ public class UARTChannel implements ISendable {
 			}
 			out = new DyIOOutputStream(channel);
 		}
+		
+		/**
+		 * Put stream.
+		 *
+		 * @param stream the stream
+		 * @return true, if successful
+		 * @throws IOException Signals that an I/O exception has occurred.
+		 */
 		public boolean putStream(ByteList stream) throws IOException {
 			out.write(stream);
 			return false;
 		}
+		
+		/**
+		 * Gets the out stream.
+		 *
+		 * @return the out stream
+		 */
 		public DyIOOutputStream getOutStream(){
 			return out;
 		}
 		
+		/* (non-Javadoc)
+		 * @see com.neuronrobotics.sdk.dyio.peripherals.DyIOAbstractPeripheral#hasAsync()
+		 */
 		public boolean hasAsync() {
 			// TODO Auto-generated method stub
 			return true;
@@ -234,8 +278,19 @@ public class UARTChannel implements ISendable {
 		
 	}
 	
+	/**
+	 * The Class UARTRxChannel.
+	 */
 	private class UARTRxChannel extends DyIOAbstractPeripheral implements IChannelEventListener {
+		
+		/** The in. */
 		DyIOInputStream in;
+		
+		/**
+		 * Instantiates a new UART rx channel.
+		 *
+		 * @param channel the channel
+		 */
 		public UARTRxChannel(DyIOChannel channel) {
 			super(channel,DyIOChannelMode.USART_RX,true);
 			channel.addChannelEventListener(this);
@@ -246,14 +301,29 @@ public class UARTChannel implements ISendable {
 		}
 
 		
+		/* (non-Javadoc)
+		 * @see com.neuronrobotics.sdk.dyio.IChannelEventListener#onChannelEvent(com.neuronrobotics.sdk.dyio.DyIOChannelEvent)
+		 */
 		public void onChannelEvent(DyIOChannelEvent e) {
 			in.write(e.getData());
 			fireChannelEvent(e);
 		}
+		
+		/**
+		 * Gets the in stream size.
+		 *
+		 * @return the in stream size
+		 */
 		public int getInStreamSize(){
 			return in.available();
 		}
 
+		/**
+		 * Gets the bytes.
+		 *
+		 * @param inStreamSize the in stream size
+		 * @return the bytes
+		 */
 		public byte[] getBytes(int inStreamSize) {
 			if (inStreamSize > getInStreamSize())
 				throw new IndexOutOfBoundsException();
@@ -269,11 +339,20 @@ public class UARTChannel implements ISendable {
 			
 			return b;
 		}
+		
+		/**
+		 * Gets the input stream.
+		 *
+		 * @return the input stream
+		 */
 		public DyIOInputStream getInputStream(){
 			return in;
 		}
 
 		
+		/* (non-Javadoc)
+		 * @see com.neuronrobotics.sdk.dyio.peripherals.DyIOAbstractPeripheral#hasAsync()
+		 */
 		public boolean hasAsync() {
 			// TODO Auto-generated method stub
 			return true;

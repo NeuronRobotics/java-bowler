@@ -20,15 +20,22 @@ import java.util.Map;
 
 // TODO: Auto-generated Javadoc
 
+/**
+ * The Enum PIDLimitEventType.
+ */
 public enum PIDLimitEventType {
 	
 
+	/** The lowerlimit. */
 	LOWERLIMIT(0x00),
 	
+	/** The indexevent. */
 	INDEXEVENT(0x01),
 	
+	/** The upperlimit. */
 	UPPERLIMIT(0x02),
 	
+	/** The overcurrent. */
 	OVERCURRENT(0x03);
 	
 	/** The Constant lookup. */
@@ -71,6 +78,11 @@ public enum PIDLimitEventType {
     	return lookup.get(code); 
     }
 
+	/**
+	 * Gets the bytes.
+	 *
+	 * @return the bytes
+	 */
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.common.ISendable#getBytes()
 	 */

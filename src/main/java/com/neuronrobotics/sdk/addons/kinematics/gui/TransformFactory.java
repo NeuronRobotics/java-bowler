@@ -8,17 +8,42 @@ import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * A factory for creating Transform objects.
+ */
 public class TransformFactory {
 	
+	/**
+	 * Gets the transform.
+	 *
+	 * @param x the x
+	 * @param y the y
+	 * @param z the z
+	 * @return the transform
+	 */
 	public static Affine getTransform(double x, double y, double z){
 		return getTransform(new TransformNR(x, y, z, new RotationNR()));
 	}
 	
+	/**
+	 * Gets the transform.
+	 *
+	 * @param input the input
+	 * @return the transform
+	 */
 	public static Affine getTransform(TransformNR input){
 		Affine rotations =new Affine();
 		return getTransform( input , rotations);
 	}
 	
+	/**
+	 * Gets the transform.
+	 *
+	 * @param input the input
+	 * @param rotations the rotations
+	 * @return the transform
+	 */
 	public static Affine getTransform(TransformNR input ,Affine rotations){
 		double[][] poseRot = input
 				.getRotationMatrixArray();
@@ -38,6 +63,14 @@ public class TransformFactory {
 		return rotations;
 	}
 	
+	/**
+	 * Gets the labled axis.
+	 *
+	 * @param trans the trans
+	 * @param text the text
+	 * @param color the color
+	 * @return the labled axis
+	 */
 	public static Group getLabledAxis(Affine trans, String text,Color color){
 		Group back = new Group();
 		back.getChildren().add(new Axis());
@@ -45,6 +78,15 @@ public class TransformFactory {
 		
 		return back;
 	}
+	
+	/**
+	 * Gets the labled axis.
+	 *
+	 * @param input the input
+	 * @param text the text
+	 * @param color the color
+	 * @return the labled axis
+	 */
 	public static Group getLabledAxis(TransformNR input, String text,Color color){
 		Affine trans = getTransform(input);
 		return getLabledAxis(trans, text,color);

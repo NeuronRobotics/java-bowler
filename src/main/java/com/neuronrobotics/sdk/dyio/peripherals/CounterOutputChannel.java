@@ -27,10 +27,13 @@ import com.neuronrobotics.sdk.common.DeviceManager;
 import com.neuronrobotics.sdk.dyio.IChannelEventListener;
 
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class CounterOutputChannel.
  */
 public class CounterOutputChannel extends DyIOAbstractPeripheral implements IChannelEventListener{
+	
+	/** The listeners. */
 	private ArrayList<ICounterOutputListener> listeners = new ArrayList<ICounterOutputListener>();
 	
 	/**
@@ -46,7 +49,8 @@ public class CounterOutputChannel extends DyIOAbstractPeripheral implements ICha
 	/**
 	 * Constructor.
 	 * Creates an counter input input channel that is syncronous only by default.
-	 * 
+	 *
+	 * @param dyio the dyio
 	 * @param channel - the channel object requested from the DyIO
 	 */
 	public CounterOutputChannel(DyIO dyio,int channel){
@@ -63,10 +67,23 @@ public class CounterOutputChannel extends DyIOAbstractPeripheral implements ICha
 		this(channel,true);	
 	}
 
+	/**
+	 * Instantiates a new counter output channel.
+	 *
+	 * @param channel the channel
+	 * @param isAsync the is async
+	 */
 	public CounterOutputChannel(DyIOChannel channel,boolean isAsync) {
 		super(channel,DyIOChannelMode.COUNT_OUT_INT,isAsync);
 		init(channel,isAsync);
 	}
+	
+	/**
+	 * Inits the.
+	 *
+	 * @param channel the channel
+	 * @param isAsync the is async
+	 */
 	private void init(DyIOChannel channel,boolean isAsync){
 		DyIOChannelMode mode = DyIOChannelMode.COUNT_OUT_INT;
 		channel.addChannelEventListener(this);
@@ -78,8 +95,8 @@ public class CounterOutputChannel extends DyIOAbstractPeripheral implements ICha
 	
 	/**
 	 * Set the Counter to a given position.
-	 * 
-	 * @param pos
+	 *
+	 * @param pos the pos
 	 * @return if the action was successful
 	 */
 	public boolean SetPosition(int pos){
@@ -135,16 +152,16 @@ public class CounterOutputChannel extends DyIOAbstractPeripheral implements ICha
 	}
 	
 	/**
-	 * 
+	 * Removes the all counter output listeners.
 	 */
 	public void removeAllCounterOutputListeners() {
 		listeners.clear();
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @param value
+	 * Fire on counter output.
+	 *
+	 * @param value the value
 	 */
 	protected void fireOnCounterOutput(int value) {
 		for(ICounterOutputListener l : listeners) {
@@ -162,27 +179,38 @@ public class CounterOutputChannel extends DyIOAbstractPeripheral implements ICha
 		b.addAs32(value);
 		return setValue(b);
 	}
+	
 	/**
 	 * onChannelEvent Send the counter value to all the listening objects.
-	 * 
-	 * @param e
+	 *
+	 * @param e the e
 	 */
 	 
 	public void onChannelEvent(DyIOChannelEvent e) {
 		fireOnCounterOutput(e.getSignedValue());
 	}
 	 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.dyio.peripherals.DyIOAbstractPeripheral#hasAsync()
+	 */
 	public boolean hasAsync() {
 		return true;
 	}
+	
 	/**
-	 * 
-	 * 
-	 * @param isAsync
+	 * Sets the async.
+	 *
+	 * @param isAsync the new async
 	 */
 	public void setAsync(boolean isAsync) {
 		setMode(DyIOChannelMode.COUNT_OUT_INT, isAsync);
 	}
+	
+	/**
+	 * Validate.
+	 *
+	 * @return true, if successful
+	 */
 	private boolean validate() {
 		if(!isEnabled()) {
 			//return false;

@@ -16,23 +16,26 @@ package com.neuronrobotics.sdk.dyio;
 
 import com.neuronrobotics.sdk.common.BowlerRuntimeException;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class InvalidChannelOperationException.
  */
 public class InvalidChannelOperationException extends BowlerRuntimeException {
+	
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * 
+	 * Instantiates a new invalid channel operation exception.
 	 */
 	public InvalidChannelOperationException() {
 		super("The channel can not preform the requested action.");
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @param message
+	 * Instantiates a new invalid channel operation exception.
+	 *
+	 * @param message the message
 	 */
 	public InvalidChannelOperationException(String message) {
 		super(message);

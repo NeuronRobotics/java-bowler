@@ -14,20 +14,41 @@ import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.pid.GenericPIDDevice;
 import com.neuronrobotics.sdk.pid.ILinkFactoryProvider;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class BowlerBoardDevice.
+ */
 public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryProvider {
 	
+	/** The status listeners. */
 	private ArrayList<PrinterStatusListener> statusListeners = new ArrayList<PrinterStatusListener>();
 	
+	/**
+	 * Adds the printer status listener.
+	 *
+	 * @param l the l
+	 */
 	public void addPrinterStatusListener(PrinterStatusListener l){
 		if(statusListeners.contains(l) || l==null)
 			return;
 		statusListeners.add(l);
 	}
+	
+	/**
+	 * Removes the printer status listener.
+	 *
+	 * @param l the l
+	 */
 	public void removePrinterStatusListener(PrinterStatusListener l){
 		if(statusListeners.contains(l))
 			statusListeners.remove(l);
 	}
 	
+	/**
+	 * Fire print status.
+	 *
+	 * @param stat the stat
+	 */
 	private void firePrintStatus(PrinterStatus stat){
 		for(int i=0;i<statusListeners.size();i++ ){
 			
@@ -35,6 +56,9 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.pid.GenericPIDDevice#connect()
+	 */
 	@Override
 	public boolean connect(){
 		super.connect();
@@ -48,13 +72,16 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 		return true;
 	}
 	
+	/** The num spaces remaining. */
 	private int numSpacesRemaining = 1;
+	
+	/** The size of buffer. */
 	private int sizeOfBuffer = 1;
+	
 	/**
-	 * This function will set up a multi-dimentional send for position and interpolation
-	 * @param x new x position
-	 * @param y new y position
-	 * @param z new z position
+	 * This function will set up a multi-dimentional send for position and interpolation.
+	 *
+	 * @param taskSpaceTransform the task space transform
 	 * @param mmOfFiliment new target for mm of filiment
 	 * @param ms time in MS
 	 * @return number of spaces in the buffer
@@ -62,13 +89,14 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 	public int sendLinearSection(TransformNR taskSpaceTransform, double mmOfFiliment, int ms) {
 		return sendLinearSection(taskSpaceTransform, mmOfFiliment, ms, ms==0);
 	}
+	
 	/**
-	 * This function will set up a multi-dimentional send for position and interpolation
-	 * @param x new x position
-	 * @param y new y position
-	 * @param z new z position
+	 * This function will set up a multi-dimentional send for position and interpolation.
+	 *
+	 * @param taskSpaceTransform the task space transform
 	 * @param mmOfFiliment new target for mm of filiment
 	 * @param ms time in MS
+	 * @param forceNoBuffer the force no buffer
 	 * @return number of spaces in the buffer
 	 */
 	public int sendLinearSection(TransformNR taskSpaceTransform, double mmOfFiliment, int ms, boolean forceNoBuffer) {
@@ -99,6 +127,9 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 		}
 	}
 	
+	/**
+	 * Cancel running print.
+	 */
 	public void cancelRunningPrint() {
 		send(	"bcs.cartesian.*",
 				BowlerMethod.POST,
@@ -107,6 +138,9 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.pid.GenericPIDDevice#onAsyncResponse(com.neuronrobotics.sdk.common.BowlerDatagram)
+	 */
 	@Override
 	public void onAsyncResponse(BowlerDatagram data) {
 		super.onAsyncResponse(data);
@@ -137,15 +171,28 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 		//System.out.println("Remaining = "+numSpacesRemaining);
 	}
 	
+	/**
+	 * Gets the number of packets waiting.
+	 *
+	 * @return the number of packets waiting
+	 */
 	public int getNumberOfPacketsWaiting() {
 		return sizeOfBuffer-numSpacesRemaining-1;
 	}
 	
 
+	/**
+	 * Gets the number of spaces in buffer.
+	 *
+	 * @return the number of spaces in buffer
+	 */
 	public int getNumberOfSpacesInBuffer() {
 		return numSpacesRemaining;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.pid.ILinkFactoryProvider#requestLinkConfiguration(int)
+	 */
 	public LinkConfiguration requestLinkConfiguration(int index) {
 		Object [] args = send("bcs.cartesian.*",
 								BowlerMethod.GET,
@@ -155,6 +202,12 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 		return new LinkConfiguration(args);
 	}
 	
+	/**
+	 * Sets the link configuration.
+	 *
+	 * @param index the index
+	 * @param conf the conf
+	 */
 	public void setLinkConfiguration(int index,LinkConfiguration conf) {
 		send("bcs.cartesian.*",
 								BowlerMethod.POST,
@@ -171,12 +224,23 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 		
 	}
 	
+	/**
+	 * Sets the slic3r configuration.
+	 *
+	 * @param conf the new slic3r configuration
+	 */
 	public void setSlic3rConfiguration(Slic3r conf){
 		send("bcs.cartesian.*",
 				BowlerMethod.POST,
 		"slcr",
 		new Object[]{conf.getPacketArguments()}, 5);
 	}
+	
+	/**
+	 * Gets the slic3r configuration.
+	 *
+	 * @return the slic3r configuration
+	 */
 	public Slic3r getSlic3rConfiguration(){
 		int l = Log.getMinimumPrintLevel();
 		//Log.enableInfoPrint();
@@ -189,6 +253,9 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 		
 	}
 	
+	/**
+	 * Home robot.
+	 */
 	public void homeRobot(){
 		send(	"bcs.cartesian.*",
 				BowlerMethod.POST,
@@ -196,6 +263,11 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 				new Object[]{}, 5);
 	}
 	
+	/**
+	 * Sets the pause print state.
+	 *
+	 * @param pause the new pause print state
+	 */
 	public void setPausePrintState(boolean pause){
 		send(	"bcs.cartesian.*",
 				BowlerMethod.POST,
@@ -203,6 +275,11 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 				new Object[]{pause}, 5);
 	}
 	
+	/**
+	 * Gets the pause print state.
+	 *
+	 * @return the pause print state
+	 */
 	public boolean getPausePrintState(){
 		Object [] args = send(	"bcs.cartesian.*",
 				BowlerMethod.POST,
@@ -210,6 +287,12 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 				new Object[]{}, 5);
 		return (Boolean)args[0];
 	}
+	
+	/**
+	 * Gets the state based controller configuration.
+	 *
+	 * @return the state based controller configuration
+	 */
 	public StateBasedControllerConfiguration getStateBasedControllerConfiguration(){
 		return new StateBasedControllerConfiguration(send(
 				"bcs.cartesian.*",
@@ -218,6 +301,11 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 				new Object[]{}, 5));
 	}
 	
+	/**
+	 * Sets the state based controller configuration.
+	 *
+	 * @param conf the new state based controller configuration
+	 */
 	public void setStateBasedControllerConfiguration(StateBasedControllerConfiguration conf){
 			send(
 				"bcs.cartesian.*",
@@ -228,6 +316,11 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 	
 	
 	
+	/**
+	 * Run kinematics engine.
+	 *
+	 * @param index the index
+	 */
 	public void runKinematicsEngine(boolean index) {
 		 send("bcs.cartesian.*",
 				BowlerMethod.POST,
@@ -237,6 +330,11 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 		return;
 	}
 	
+	/**
+	 * Sets the kinematics model.
+	 *
+	 * @param index the new kinematics model
+	 */
 	public void setKinematicsModel(BowlerBoardKinematicModel index) {
 		 send("bcs.cartesian.*",
 				BowlerMethod.POST,
@@ -246,6 +344,11 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 		return;
 	}
 	
+	/**
+	 * Gets the kinematics model.
+	 *
+	 * @return the kinematics model
+	 */
 	public BowlerBoardKinematicModel getKinematicsModel() {
 		Object [] args = send("bcs.cartesian.*",
 				BowlerMethod.POST,
@@ -257,6 +360,9 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 	
 	
 	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.pid.ILinkFactoryProvider#setDesiredTaskSpaceTransform(com.neuronrobotics.sdk.addons.kinematics.math.TransformNR, double)
+	 */
 	@Override
 	public double[] setDesiredTaskSpaceTransform(TransformNR taskSpaceTransform, double seconds) {
 		
@@ -277,6 +383,10 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 		double [] jointAngles = (double[]) args[0];
 		return jointAngles;
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.pid.ILinkFactoryProvider#getCurrentTaskSpaceTransform()
+	 */
 	@Override
 	public TransformNR getCurrentTaskSpaceTransform() {
 		Object [] args = send(	"bcs.cartesian.*",
@@ -296,6 +406,10 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 										
 								);
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.pid.ILinkFactoryProvider#setDesiredJointSpaceVector(double[], double)
+	 */
 	@Override
 	public TransformNR setDesiredJointSpaceVector(double[] jointSpaceVect, double seconds) {
 		
@@ -315,6 +429,10 @@ public class BowlerBoardDevice extends GenericPIDDevice implements ILinkFactoryP
 								(Double)args[6]
 								);
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.pid.ILinkFactoryProvider#setDesiredJointAxisValue(int, double, double)
+	 */
 	@Override
 	public void setDesiredJointAxisValue(int axis, double value, double seconds) {
 		// TODO Auto-generated method stub

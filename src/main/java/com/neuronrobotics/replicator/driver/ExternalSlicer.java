@@ -9,18 +9,35 @@ import java.util.List;
 
 import com.neuronrobotics.replicator.driver.SliceStatusData.SlicerState;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ExternalSlicer.
+ */
 public class ExternalSlicer extends StlSlicer {
+	
+	/** The cmdline. */
 	List<String> cmdline;
 
+	/**
+	 * Instantiates a new external slicer.
+	 */
 	public ExternalSlicer() {
 		super(new MaterialData());
 	}
 
+	/**
+	 * Instantiates a new external slicer.
+	 *
+	 * @param data the data
+	 */
 	public ExternalSlicer(MaterialData data) {
 		super(data);
 		// Ignore the data for now.
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.replicator.driver.StlSlicer#slice(java.io.File, java.io.File)
+	 */
 	public boolean slice(File input, File gcode) {
 
 		ProcessBuilder builder = new ProcessBuilder();
@@ -61,14 +78,31 @@ public class ExternalSlicer extends StlSlicer {
 	// }
 }
 
+/**
+ * @author hephaestus
+ *
+ */
 class StreamDump implements Runnable {
 
+	/**
+	 * 
+	 */
 	private ExternalSlicer externalSlicer;
 
+	/**
+	 * 
+	 */
 	String line = "";
 
+	/**
+	 * 
+	 */
 	private BufferedReader br;
 
+	/**
+	 * @param externalSlicer instantiated object to implement slicing
+	 * @param br reader containing the file handle
+	 */
 	StreamDump(ExternalSlicer externalSlicer, BufferedReader br) {
 		this.externalSlicer = externalSlicer;
 		this.br = br;

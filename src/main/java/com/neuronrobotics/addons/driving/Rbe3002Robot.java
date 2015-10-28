@@ -7,12 +7,24 @@ import com.neuronrobotics.sdk.pid.PIDChannel;
 import com.neuronrobotics.sdk.pid.PIDConfiguration;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Rbe3002Robot.
+ */
 public class Rbe3002Robot extends PuckBot {
 	
+	/** The kp. */
 	private final double KP = 1;
+	
+	/** The ki. */
 	private final double KI = 0;
+	
+	/** The kd. */
 	private final double KD = 0;
 	
+	/**
+	 * Instantiates a new rbe3002 robot.
+	 */
 	public Rbe3002Robot() {
 		DyIO dyio = new DyIO();
 		if(!ConnectionDialog.getBowlerDevice(dyio)){

@@ -34,47 +34,88 @@ import com.neuronrobotics.sdk.pid.PIDConfiguration;
 import com.neuronrobotics.sdk.pid.PIDEvent;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 import com.neuronrobotics.sdk.util.ThreadUtil;
+// TODO: Auto-generated Javadoc
 //import javax.swing.JFrame;
 //import javax.swing.JOptionPane;
 
+/**
+ * The Class AbstractKinematicsNR.
+ */
 public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IPIDEventListener, ILinkListener {
 	
 	/** The configurations. */
 	private ArrayList<PIDConfiguration> pidConfigurations= new ArrayList<PIDConfiguration>();
 
+	/** The task space update listeners. */
 	private ArrayList<ITaskSpaceUpdateListenerNR> taskSpaceUpdateListeners = new ArrayList<ITaskSpaceUpdateListenerNR>();
+	
+	/** The joint space update listeners. */
 	protected ArrayList<IJointSpaceUpdateListenerNR> jointSpaceUpdateListeners = new ArrayList<IJointSpaceUpdateListenerNR>();
+	
+	/** The reg listeners. */
 	private ArrayList<IRegistrationListenerNR> regListeners= new ArrayList<IRegistrationListenerNR>();
+	
+	/** The mobile bases. */
 	private ArrayList<MobileBase> mobileBases = new ArrayList<MobileBase>();
 	
+	/** The dh engine. */
 	private String [] dhEngine =new String[]{"bcb4760a449190206170","DefaultDhSolver.groovy"}; 
+	
+	/** The cad engine. */
 	private String [] cadEngine =new String[]{"bcb4760a449190206170","ThreeDPrintCad.groovy"};  
 
 
+	/** The current joint space positions. */
 	/*This is in RAW joint level ticks*/
 	protected double[] currentJointSpacePositions=null;
+	
+	/** The current joint space target. */
 	protected double [] currentJointSpaceTarget;
+	
+	/** The current pose target. */
 	private TransformNR currentPoseTarget=new TransformNR();
+	
+	/** The base2 fiducial. */
 	private TransformNR base2Fiducial=new TransformNR();
+	
+	/** The fiducial2 ras. */
 	private TransformNR fiducial2RAS=new TransformNR();
 	
+	/** The no flush. */
 	private boolean noFlush = false;
+	
+	/** The no xml config. */
 	private boolean noXmlConfig=true;
+	
+	/** The dh parameters chain. */
 	private DHChain dhParametersChain=null;
 	
+	/** The root. */
 	private Affine root = new Affine();
 	
 	/* The device */
+	/** The factory. */
 	//private IPIDControl device =null;
 	private LinkFactory factory=null;
 	
+	/** The retry number before fail. */
 	private int retryNumberBeforeFail = 5;
 	
 	
+	/**
+	 * Gets the root listener.
+	 *
+	 * @return the root listener
+	 */
 	public Affine getRootListener() {
 		return root;
 	}
 
+	/**
+	 * Sets the root listener.
+	 *
+	 * @param listener the new root listener
+	 */
 	void setRootListener(Affine listener) {
 		this.root = listener;
 	}
@@ -85,8 +126,16 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	
 	public abstract void disconnectDevice();
 	
+	/**
+	 * Connect device.
+	 *
+	 * @return true, if successful
+	 */
 	public abstract  boolean connectDevice();
 	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.common.NonBowlerDevice#getNamespacesImp()
+	 */
 	@Override
 	public ArrayList<String> getNamespacesImp() {
 		// TODO Auto-generated method stub
@@ -95,6 +144,9 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		return back;
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.common.NonBowlerDevice#disconnectDeviceImp()
+	 */
 	public void disconnectDeviceImp(){
 		getFactory().removeLinkListener(this);
 		IPidControlNamespace device = getFactory().getPid();
@@ -103,11 +155,17 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		disconnectDevice();
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.common.NonBowlerDevice#connectDeviceImp()
+	 */
 	public  boolean connectDeviceImp(){
 		return connectDevice();
 	}
 		
 
+	/**
+	 * Instantiates a new abstract kinematics nr.
+	 */
 	public AbstractKinematicsNR(){
 //		File l = new File("RobotLog_"+getDate()+"_"+System.currentTimeMillis()+".txt");
 //		//File e = new File("RobotError_"+getDate()+"_"+System.currentTimeMillis()+".txt");
@@ -120,6 +178,13 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 //		}
 		setDhParametersChain(new DHChain( this));
 	}
+	
+	/**
+	 * Instantiates a new abstract kinematics nr.
+	 *
+	 * @param configFile the config file
+	 * @param f the f
+	 */
 	public AbstractKinematicsNR(InputStream configFile,LinkFactory f){
 		this();
 		Document doc =XmlFactory.getAllNodesDocument(configFile);
@@ -139,6 +204,12 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		
 	}
 	
+	/**
+	 * Instantiates a new abstract kinematics nr.
+	 *
+	 * @param doc the doc
+	 * @param f the f
+	 */
 	public AbstractKinematicsNR(Element doc,LinkFactory f){
 		this();
 		noXmlConfig=false;
@@ -149,13 +220,22 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		
 	}
 	
+	/**
+	 * Gets the date.
+	 *
+	 * @return the date
+	 */
 	private String getDate(){
 		Timestamp t = new Timestamp(System.currentTimeMillis());
 		return t.toString().split("\\ ")[0];
 	}
+	
 	/**
 	 * Load XML configuration file, 
-	 * then store in LinkConfiguration (ArrayList type)
+	 * then store in LinkConfiguration (ArrayList type).
+	 *
+	 * @param doc the doc
+	 * @return the array list
 	 */
 	protected ArrayList<LinkConfiguration> loadConfig(Element doc){
 		ArrayList<LinkConfiguration> localConfigsFromXml=new ArrayList<LinkConfiguration>();
@@ -230,6 +310,11 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		return localConfigsFromXml;
 	}
 	
+	/**
+	 * Gets the xml.
+	 *
+	 * @return the xml
+	 */
 	/*
 	 * 
 	 * Generate the xml configuration to generate an XML of this robot. 
@@ -256,10 +341,21 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	}
 
 
+	/**
+	 * Gets the link configuration.
+	 *
+	 * @param linkIndex the link index
+	 * @return the link configuration
+	 */
 	public LinkConfiguration getLinkConfiguration(int linkIndex){
 		return getLinkConfigurations().get(linkIndex);
 	}
 	
+	/**
+	 * Gets the link configurations.
+	 *
+	 * @return the link configurations
+	 */
 	public ArrayList<LinkConfiguration> getLinkConfigurations() {
 
 		return getFactory().getLinkConfigurations();
@@ -267,19 +363,51 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	}
 
 	
+	/**
+	 * Gets the link current configuration.
+	 *
+	 * @param chan the chan
+	 * @return the link current configuration
+	 */
 	public PIDConfiguration getLinkCurrentConfiguration(int chan){
 		return getAxisPidConfiguration().get(chan);
 	}
+	
+	/**
+	 * Sets the link current configuration.
+	 *
+	 * @param chan the chan
+	 * @param c the c
+	 */
 	public void setLinkCurrentConfiguration(int chan,PIDConfiguration c){
 		getAxisPidConfiguration().set(chan, c);
 	}
 	
+	/**
+	 * Gets the device.
+	 *
+	 * @return the device
+	 */
 	protected LinkFactory getDevice(){
 		return getFactory();
 	}
+	
+	/**
+	 * Gets the abstract link.
+	 *
+	 * @param index the index
+	 * @return the abstract link
+	 */
 	public AbstractLink getAbstractLink(int index){
 		return getFactory().getLink(getLinkConfiguration(index));
 	}
+	
+	/**
+	 * Sets the device.
+	 *
+	 * @param f the f
+	 * @param linkConfigs the link configs
+	 */
 	protected void setDevice(LinkFactory f, ArrayList<LinkConfiguration> linkConfigs){
 		Log.info("Loading device: "+f.getClass()+" "+f);
 		setFactory(f);
@@ -329,8 +457,10 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 			getDhParametersChain().addLink(new DHLink(0,0,0,0));
 		}
 	}
+	
 	/**
-	 * Gets the number of links defined in the configuration file
+	 * Gets the number of links defined in the configuration file.
+	 *
 	 * @return number of links in XML
 	 */
 	public int getNumberOfLinks(){
@@ -339,7 +469,8 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	
 	/**
 	 * This takes a reading of the robots position and converts it to a joint space vector
-	 * This vector is converted to task space and returned 
+	 * This vector is converted to task space and returned .
+	 *
 	 * @return taskSpaceVector in mm,radians [x,y,z,rotx,rotY,rotZ]
 	 */
 	public TransformNR getCurrentTaskSpaceTransform() {
@@ -354,8 +485,9 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	
 	/**
 	 * This takes a reading of the robots position and converts it to a joint pace vector
-	 * This vector is converted to Joint space and returned 
-	 * @return JointSpaceVector in mm,radians 
+	 * This vector is converted to Joint space and returned .
+	 *
+	 * @return JointSpaceVector in mm,radians
 	 */
 	public double[] getCurrentJointSpaceVector() {
 		if(currentJointSpacePositions==null){
@@ -384,8 +516,9 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	}
 	
 	/**
-	 * This calculates the target pose 
-	 * @param taskSpaceTransform
+	 * This calculates the target pose .
+	 *
+	 * @param taskSpaceTransform the task space transform
 	 * @param seconds the time for the transition to take from current position to target, unit seconds
 	 * @return The joint space vector is returned for target arrival referance
 	 * @throws Exception If there is a workspace error
@@ -402,8 +535,9 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	}
 	
 	/**
-	 * Checks the desired pose for ability for the IK to calculate a valid pose
-	 * @param taskSpaceTransform
+	 * Checks the desired pose for ability for the IK to calculate a valid pose.
+	 *
+	 * @param taskSpaceTransform the task space transform
 	 * @return True if pose is reachable, false if it is not
 	 */
 	public boolean checkTaskSpaceTransform(TransformNR taskSpaceTransform) {
@@ -426,8 +560,9 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	}
 	
 	/**
-	 * This calculates the target pose 
-	 * @param JointSpaceVector the target joint space vector
+	 * This calculates the target pose .
+	 *
+	 * @param jointSpaceVect the joint space vect
 	 * @param seconds the time for the transition to take from current position to target, unit seconds
 	 * @return The joint space vector is returned for target arrival referance
 	 * @throws Exception If there is a workspace error
@@ -474,9 +609,21 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		return jointSpaceVect;
 	}
 	
+	/**
+	 * Calc forward.
+	 *
+	 * @param jointSpaceVect the joint space vect
+	 * @return the transform nr
+	 */
 	public TransformNR calcForward(double[] jointSpaceVect){
 		return forwardOffset(forwardKinematics(jointSpaceVect));
 	}
+	
+	/**
+	 * Calc home.
+	 *
+	 * @return the transform nr
+	 */
 	public TransformNR calcHome(){
 		double homevect[] = new double[getNumberOfLinks()];
 		for(int i=0;i<homevect.length;i++){
@@ -484,8 +631,10 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		}
 		return forwardOffset(forwardKinematics(homevect));
 	}
+	
 	/**
-	 * Sets an individual target joint position 
+	 * Sets an individual target joint position .
+	 *
 	 * @param axis the joint index to set
 	 * @param value the value to set it to
 	 * @param seconds the time for the transition to take from current position to target, unit seconds
@@ -523,6 +672,11 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		return;
 	}
 	
+	/**
+	 * Fire pose transform.
+	 *
+	 * @param transform the transform
+	 */
 	protected void firePoseTransform(TransformNR transform){
 		for(int i=0;i<taskSpaceUpdateListeners.size();i++){
 			ITaskSpaceUpdateListenerNR p=taskSpaceUpdateListeners.get(i);
@@ -530,6 +684,9 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		}
 	}
 	
+	/**
+	 * Fire pose update.
+	 */
 	protected void firePoseUpdate(){
 		//Log.info("Pose update");
 		firePoseTransform(getCurrentTaskSpaceTransform());
@@ -542,6 +699,12 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		}
 	}
 
+	/**
+	 * Fire target joints update.
+	 *
+	 * @param jointSpaceVector the joint space vector
+	 * @param fwd the fwd
+	 */
 	protected void fireTargetJointsUpdate(double[] jointSpaceVector, TransformNR fwd ){
 		
 		setCurrentPoseTarget(forwardOffset(fwd));
@@ -553,19 +716,33 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 			p.onJointSpaceTargetUpdate(this, currentJointSpaceTarget);
 		}
 	}
+	
+	/**
+	 * Fire joint space limit update.
+	 *
+	 * @param axis the axis
+	 * @param event the event
+	 */
 	private void fireJointSpaceLimitUpdate(int axis,JointLimit event){
 		for(IJointSpaceUpdateListenerNR p:jointSpaceUpdateListeners){
 			p.onJointSpaceLimit(this, axis, event);
 		}
 	}
+	
 	/**
-	 * 
-	 * @return
+	 * Gets the fiducial to global transform.
+	 *
+	 * @return the fiducial to global transform
 	 */
 	public TransformNR getFiducialToGlobalTransform() {
 		return fiducial2RAS;
 	}
 
+	/**
+	 * Sets the base to zframe transform.
+	 *
+	 * @param baseToFiducial the new base to zframe transform
+	 */
 	public void setBaseToZframeTransform(TransformNR baseToFiducial) {
 		Log.info("Setting Fiducial To base Transform "+baseToFiducial);
 		this.base2Fiducial = baseToFiducial;
@@ -581,15 +758,30 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		});
 	}
 	
+	/**
+	 * Sets the zframe to global transform.
+	 *
+	 * @param fiducialToRAS the new zframe to global transform
+	 */
 	private void setZframeToGlobalTransform(TransformNR fiducialToRAS) {
 		setGlobalToFiducialTransform(fiducialToRAS);
 	}
 
 		
+	/**
+	 * Gets the robot to fiducial transform.
+	 *
+	 * @return the robot to fiducial transform
+	 */
 	public TransformNR getRobotToFiducialTransform() {
 		return base2Fiducial;
 	}
 	
+	/**
+	 * Sets the global to fiducial transform.
+	 *
+	 * @param frameToBase the new global to fiducial transform
+	 */
 	public void setGlobalToFiducialTransform(TransformNR frameToBase) {
 		Log.info("Setting Global To Fiducial Transform "+frameToBase);
 		this.fiducial2RAS = frameToBase;
@@ -606,6 +798,12 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		});
 	}
 	
+	/**
+	 * Inverse offset.
+	 *
+	 * @param t the t
+	 * @return the transform nr
+	 */
 	protected TransformNR inverseOffset(TransformNR t){
 		//System.out.println("RobotToFiducialTransform "+getRobotToFiducialTransform());
 		//System.out.println("FiducialToRASTransform "+getFiducialToRASTransform());		
@@ -617,6 +815,13 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		
 		return new TransformNR( mForward);
 	}
+	
+	/**
+	 * Forward offset.
+	 *
+	 * @param t the t
+	 * @return the transform nr
+	 */
 	protected TransformNR forwardOffset(TransformNR t){
 		Matrix btt = getRobotToFiducialTransform().getMatrixTransform();
 		Matrix ftb = getFiducialToGlobalTransform().getMatrixTransform();
@@ -627,27 +832,54 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	
 	
 	
+	/**
+	 * Adds the joint space listener.
+	 *
+	 * @param l the l
+	 */
 	public void addJointSpaceListener(IJointSpaceUpdateListenerNR l){
 		if(jointSpaceUpdateListeners.contains(l) || l==null)
 			return;
 		jointSpaceUpdateListeners.add(l);
 	}
+	
+	/**
+	 * Removes the joint space update listener.
+	 *
+	 * @param l the l
+	 */
 	public void removeJointSpaceUpdateListener(IJointSpaceUpdateListenerNR l){
 		if(jointSpaceUpdateListeners.contains(l))
 			jointSpaceUpdateListeners.remove(l);
 	}
 	
+	/**
+	 * Adds the registration listener.
+	 *
+	 * @param l the l
+	 */
 	public void addRegistrationListener(IRegistrationListenerNR l){
 		if(regListeners.contains(l)|| l==null)
 			return;
 		regListeners.add(l);
 		l.onBaseToFiducialUpdate(this, getRobotToFiducialTransform());
 	}
+	
+	/**
+	 * Removes the regestration update listener.
+	 *
+	 * @param l the l
+	 */
 	public void removeRegestrationUpdateListener(IRegistrationListenerNR l){
 		if(regListeners.contains(l))
 			regListeners.remove(l);
 	}
 	
+	/**
+	 * Adds the pose update listener.
+	 *
+	 * @param l the l
+	 */
 	public void addPoseUpdateListener(ITaskSpaceUpdateListenerNR l){
 		if(taskSpaceUpdateListeners.contains(l) || l==null){
 			return;
@@ -655,6 +887,12 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		//new RuntimeException("adding "+l.getClass().getName()).printStackTrace();
 		taskSpaceUpdateListeners.add(l);
 	}
+	
+	/**
+	 * Removes the pose update listener.
+	 *
+	 * @param l the l
+	 */
 	public void removePoseUpdateListener(ITaskSpaceUpdateListenerNR l){
 		if(taskSpaceUpdateListeners.contains(l)){
 			//new RuntimeException("Removing "+l.getClass().getName()).printStackTrace();
@@ -662,6 +900,9 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.ILinkListener#onLinkPositionUpdate(com.neuronrobotics.sdk.addons.kinematics.AbstractLink, double)
+	 */
 	@Override
 	public void onLinkPositionUpdate(AbstractLink source,double engineeringUnitsValue){
 		for(LinkConfiguration c:getLinkConfigurations()){
@@ -677,11 +918,17 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		Log.error("Got UKNOWN PID event "+source);
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.pid.IPIDEventListener#onPIDEvent(com.neuronrobotics.sdk.pid.PIDEvent)
+	 */
 	@Override
 	public void onPIDEvent(PIDEvent e) {
 		// Ignore and use Link space events
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.pid.IPIDEventListener#onPIDLimitEvent(com.neuronrobotics.sdk.pid.PIDLimitEvent)
+	 */
 	@Override
 	public void onPIDLimitEvent(PIDLimitEvent e) {
 		for(int i=0;i<getNumberOfLinks();i++){
@@ -690,13 +937,16 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.pid.IPIDEventListener#onPIDReset(int, int)
+	 */
 	@Override
 	public void onPIDReset(int group, int currentValue) {
 		// ignore at this level
 	}
 
 	/**
-	 * This method uses the latch values to home all of the robot links
+	 * This method uses the latch values to home all of the robot links.
 	 */
 	public void homeAllLinks() {
 		
@@ -707,12 +957,19 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		}
 		
 	} 
+	
 	/**
-	 * This method uses the latch values to home the given link of the robot links
-	 * @param link The link to be homed
+	 * This method uses the latch values to home the given link of the robot links.
+	 *
 	 */
 	private long homeTime;
 
+	/**
+	 * Run home.
+	 *
+	 * @param joint the joint
+	 * @param tps the tps
+	 */
 	private void runHome(PIDChannel joint, int tps){
 		IPIDEventListener listen = new IPIDEventListener() {
 			
@@ -740,6 +997,12 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		}
 		joint.removePIDEventListener(listen);
 	}
+	
+	/**
+	 * Home link.
+	 *
+	 * @param link the link
+	 */
 	public void homeLink(int link) {
 		if(link<0 || link>=getNumberOfLinks()){
 			throw new IndexOutOfBoundsException("There are only "+getNumberOfLinks()+" known links, requested:"+link);
@@ -799,56 +1062,111 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 //		this.pidConfigurations = conf;
 //	}
 
-	public ArrayList<PIDConfiguration> getAxisPidConfiguration() {
+	/**
+ * Gets the axis pid configuration.
+ *
+ * @return the axis pid configuration
+ */
+public ArrayList<PIDConfiguration> getAxisPidConfiguration() {
 		return pidConfigurations;
 	}
 	
 	/**
 	 * Inverse kinematics.
 	 *
-	 * @param taskSpaceVector the task space vector
+	 * @param taskSpaceTransform the task space transform
 	 * @return Nx1 vector in task space, in mm where N is number of links
-	 * @throws Exception 
+	 * @throws Exception the exception
 	 */ 
 	public abstract double[] inverseKinematics(TransformNR taskSpaceTransform) throws Exception;
 	
 	 /**
-		* Forward kinematics
-		* @param jointSpaceVector the joint space vector
-		* @return 6x1 vector in task space, unit in mm,radians [x,y,z,rotx,rotY,rotZ]
-		*/
+ 	 * Forward kinematics.
+ 	 *
+ 	 * @param jointSpaceVector the joint space vector
+ 	 * @return 6x1 vector in task space, unit in mm,radians [x,y,z,rotx,rotY,rotZ]
+ 	 */
 	public abstract TransformNR forwardKinematics(double[] jointSpaceVector);
 
+	/**
+	 * Gets the current pose target.
+	 *
+	 * @return the current pose target
+	 */
 	public TransformNR getCurrentPoseTarget() {
 		if(currentPoseTarget == null)
 			currentPoseTarget = new TransformNR();
 		return currentPoseTarget;
 	}
 
+	/**
+	 * Sets the current pose target.
+	 *
+	 * @param currentPoseTarget the new current pose target
+	 */
 	public void setCurrentPoseTarget(TransformNR currentPoseTarget) {
 		this.currentPoseTarget = currentPoseTarget;
 	}
+	
+	/**
+	 * Sets the factory.
+	 *
+	 * @param factory the new factory
+	 */
 	public void setFactory(LinkFactory factory) {
 		this.factory = factory;
 	}
+	
+	/**
+	 * Gets the factory.
+	 *
+	 * @return the factory
+	 */
 	public LinkFactory getFactory() {
 		if(factory==null)
 			factory=new LinkFactory();
 		return factory;
 	}
+	
+	/**
+	 * Sets the no flush.
+	 *
+	 * @param noFlush the new no flush
+	 */
 	public void setNoFlush(boolean noFlush) {
 		this.noFlush = noFlush;
 	}
+	
+	/**
+	 * Checks if is no flush.
+	 *
+	 * @return true, if is no flush
+	 */
 	public boolean isNoFlush() {
 		return noFlush;
 	}
+	
+	/**
+	 * Gets the retry number before fail.
+	 *
+	 * @return the retry number before fail
+	 */
 	public int getRetryNumberBeforeFail() {
 		return retryNumberBeforeFail;
 	}
+	
+	/**
+	 * Sets the retry number before fail.
+	 *
+	 * @param retryNumberBeforeFail the new retry number before fail
+	 */
 	public void setRetryNumberBeforeFail(int retryNumberBeforeFail) {
 		this.retryNumberBeforeFail = retryNumberBeforeFail;
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.ILinkListener#onLinkLimit(com.neuronrobotics.sdk.addons.kinematics.AbstractLink, com.neuronrobotics.sdk.pid.PIDLimitEvent)
+	 */
 	@Override
 	public void onLinkLimit(AbstractLink arg0, PIDLimitEvent arg1) {
 		for(int i=0;i<getNumberOfLinks();i++){
@@ -857,36 +1175,78 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		}
 	}
 
+	/**
+	 * Sets the robot to fiducial transform.
+	 *
+	 * @param newTrans the new robot to fiducial transform
+	 */
 	public void setRobotToFiducialTransform(TransformNR newTrans) {
 		setBaseToZframeTransform(newTrans);
 	}
 
+	/**
+	 * Gets the dh parameters chain.
+	 *
+	 * @return the dh parameters chain
+	 */
 	public DHChain getDhParametersChain() {
 		return dhParametersChain;
 	}
 
+	/**
+	 * Sets the dh parameters chain.
+	 *
+	 * @param dhParametersChain the new dh parameters chain
+	 */
 	public void setDhParametersChain(DHChain dhParametersChain) {
 		this.dhParametersChain = dhParametersChain;
 	}
 	
+	/**
+	 * Gets the dh engine.
+	 *
+	 * @return the dh engine
+	 */
 	public String [] getDhEngine() {
 		return dhEngine;
 	}
 
+	/**
+	 * Sets the dh engine.
+	 *
+	 * @param dhEngine the new dh engine
+	 */
 	public void setDhEngine(String [] dhEngine) {
 		if(dhEngine!=null && dhEngine[0]!=null &&dhEngine[1]!=null)
 			this.dhEngine = dhEngine;
 	}
 
+	/**
+	 * Gets the cad engine.
+	 *
+	 * @return the cad engine
+	 */
 	public String [] getCadEngine() {
 		return cadEngine;
 	}
 
+	/**
+	 * Sets the cad engine.
+	 *
+	 * @param cadEngine the new cad engine
+	 */
 	public void setCadEngine(String [] cadEngine) {
 		if(cadEngine!=null&& cadEngine[0]!=null &&cadEngine[1]!=null)
 		this.cadEngine = cadEngine;
 	}
 	
+	/**
+	 * Gets the code.
+	 *
+	 * @param e the e
+	 * @param tag the tag
+	 * @return the code
+	 */
 	protected String getCode(Element e,String tag){
 		try{
 			NodeList nodListofLinks = e.getChildNodes();
@@ -903,6 +1263,13 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		throw new RuntimeException("No tag "+tag+" found");
 	}
 	
+	/**
+	 * Gets the gist codes.
+	 *
+	 * @param doc the doc
+	 * @param tag the tag
+	 * @return the gist codes
+	 */
 	protected String [] getGistCodes(Element doc,String tag){
 		String [] content =new String[2];
 		try{

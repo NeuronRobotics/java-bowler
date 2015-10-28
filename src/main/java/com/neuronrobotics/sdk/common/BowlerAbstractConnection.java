@@ -48,6 +48,7 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
 
 
 
+// TODO: Auto-generated Javadoc
 /**
  * Connections create a bridge between a device and the SDK. Each connection is encapsulated to allow maximum
  * reuse and system changes without the need to restart / reconfigure.
@@ -55,16 +56,20 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
  */
 public abstract class BowlerAbstractConnection {
 	
+	/** The use threaded stack. */
 	//private boolean threadedUpstreamPackets=false;
 	private boolean useThreadedStack=true;
 	
 	/** The sleep time. */
 	private int sleepTime = 1000;
 	
+	/** The last write. */
 	private long lastWrite = -1;
 	
+	/** The heart beat time. */
 	private long heartBeatTime=1000;
 	
+	/** The chunk size. */
 	private int chunkSize = 64;
 	
 	
@@ -73,11 +78,17 @@ public abstract class BowlerAbstractConnection {
 	
 	/** The listeners. */
 	private ArrayList<IBowlerDatagramListener> listeners = new ArrayList<IBowlerDatagramListener>();
+	
+	/** The disconnect listeners. */
 	ArrayList<IConnectionEventListener> disconnectListeners = new ArrayList<IConnectionEventListener> ();
+	
+	/** The sync listen. */
 	private ISynchronousDatagramListener syncListen = null;
 	
 	/** The queue. */
 	private QueueManager syncQueue = null;
+	
+	/** The async queue. */
 	private QueueManager asyncQueue=null;
 	
 	/** The connected. */
@@ -92,8 +103,13 @@ public abstract class BowlerAbstractConnection {
 	//private Updater updater = null;
 
 	
+	/** The namespace list. */
 	private ArrayList<NamespaceEncapsulation> namespaceList=null;
+	
+	/** The name space strings. */
 	private ArrayList<String> nameSpaceStrings = null;
+	
+	/** The beater. */
 	private boolean beater = false;
 	//private ReentrantLock executingLock = new ReentrantLock();
 	
@@ -109,7 +125,6 @@ public abstract class BowlerAbstractConnection {
 	 * Attempt to re-establish a connection. Return if the attempt was successful.
 	 *
 	 * @return true, if successful
-	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	//abstract public boolean reconnect() throws IOException;
 	
@@ -122,7 +137,8 @@ public abstract class BowlerAbstractConnection {
 	
 	/**
 	 * Tells the connection to use asynchronous packets as threads or not. 
-	 * @param up
+	 *
+	 * @param up the new threaded upstream packets
 	 */
 	public void setThreadedUpstreamPackets(boolean up){
 		//threadedUpstreamPackets=up;
@@ -135,7 +151,6 @@ public abstract class BowlerAbstractConnection {
 	 * and use getLastSyncronousResponse() to get the last response since clearing.
 	 *
 	 * @param sendable the sendable
-	 * @param switchParser 
 	 * @return the bowler datagram
 	 */
 	public BowlerDatagram sendSynchronusly(BowlerDatagram sendable){
@@ -148,7 +163,7 @@ public abstract class BowlerAbstractConnection {
 	 * and use getLastSyncronousResponse() to get the last response since clearing.
 	 *
 	 * @param sendable the sendable
-	 * @param switchParser 
+	 * @param switchParser the switch parser
 	 * @return the bowler datagram
 	 */
 	public synchronized BowlerDatagram sendSynchronusly(BowlerDatagram sendable, boolean switchParser){
@@ -214,7 +229,7 @@ public abstract class BowlerAbstractConnection {
 	 * and use getLastSyncronousResponse() to get the last response since clearing.
 	 *
 	 * @param sendable the sendable
-	 * @throws IOException 
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public void sendAsync(BowlerDatagram sendable) throws IOException{
 		if(!isConnected()) {
@@ -281,6 +296,11 @@ public abstract class BowlerAbstractConnection {
 	}
 	
 
+	/**
+	 * Ms since last send.
+	 *
+	 * @return the long
+	 */
 	public long msSinceLastSend() {
 		if(getLastWrite()<0){
 			return 0;
@@ -292,7 +312,7 @@ public abstract class BowlerAbstractConnection {
 	/**
 	 * Sets the connected.
 	 *
-	 * @param connected the new connected
+	 * @param c the new connected
 	 */
 	public synchronized void  setConnected(boolean c) {
 		if(connected == c)
@@ -385,7 +405,7 @@ public abstract class BowlerAbstractConnection {
 	
 	/**
 	 * Whenever a connection has received a full datagram from its "physical" connection, it should then call
-	 * <code>onDataReceived</code> with the datagram. This will set it to the last received data if it is
+	 *  onDataReceived  with the datagram. This will set it to the last received data if it is
 	 * synchronous and will add it to the appropriate queues to be picked up and send to the listeners.
 	 *
 	 * @param data the data
@@ -410,6 +430,7 @@ public abstract class BowlerAbstractConnection {
 	 * Fire On Response.
 	 *
 	 * @param datagram the datagram
+	 * @return the bowler datagram
 	 */
 
 	protected BowlerDatagram  fireSyncOnReceive(BowlerDatagram datagram) {
@@ -422,6 +443,11 @@ public abstract class BowlerAbstractConnection {
 	}
 
 	
+	/**
+	 * Fire async on response.
+	 *
+	 * @param datagram the datagram
+	 */
 	protected void fireAsyncOnResponse(BowlerDatagram datagram) {
 		if(!datagram.isSyncronous()){
 			if(isInitializedNamespaces()){
@@ -475,6 +501,8 @@ public abstract class BowlerAbstractConnection {
 	
 	/**
 	 * Start builder.
+	 *
+	 * @param dataIns the new data ins
 	 */
 
 	
@@ -491,6 +519,7 @@ public abstract class BowlerAbstractConnection {
 	 * Gets the data ins.
 	 *
 	 * @return the data ins
+	 * @throws NullPointerException the null pointer exception
 	 */
 	public DataInputStream getDataIns() throws NullPointerException{
 		if(dataIns==null)
@@ -512,6 +541,7 @@ public abstract class BowlerAbstractConnection {
 	 * Gets the data outs.
 	 *
 	 * @return the data outs
+	 * @throws NullPointerException the null pointer exception
 	 */
 	public DataOutputStream getDataOuts() throws NullPointerException{
 		if(dataOuts==null)
@@ -543,13 +573,29 @@ public abstract class BowlerAbstractConnection {
 		Log.info("Connection ready");
 	}
 	
+	/**
+	 * Sets the chunk size.
+	 *
+	 * @param chunkSize the new chunk size
+	 */
 	public void setChunkSize(int chunkSize) {
 		this.chunkSize = chunkSize;
 	}
 
+	/**
+	 * Gets the chunk size.
+	 *
+	 * @return the chunk size
+	 */
 	public int getChunkSize() {
 		return chunkSize;
 	}
+	
+	/**
+	 * Sets the async queue.
+	 *
+	 * @param asyncQueue the new async queue
+	 */
 	public void setAsyncQueue(QueueManager asyncQueue) {
 		this.asyncQueue = asyncQueue;
 		if(this.asyncQueue != null && isUseThreadedStack()){
@@ -557,6 +603,12 @@ public abstract class BowlerAbstractConnection {
 			asyncQueue.setName("Bowler Platform Asynchronus Queue");
 		}
 	}
+	
+	/**
+	 * Sets the sync queue.
+	 *
+	 * @param syncQueue the new sync queue
+	 */
 	public void setSyncQueue(QueueManager syncQueue) {
 		this.syncQueue = syncQueue;
 		if(this.syncQueue != null && isUseThreadedStack()){
@@ -565,9 +617,21 @@ public abstract class BowlerAbstractConnection {
 		}
 		
 	}
+	
+	/**
+	 * Gets the async queue.
+	 *
+	 * @return the async queue
+	 */
 	public  QueueManager getAsyncQueue() {
 		return asyncQueue;
 	}
+	
+	/**
+	 * Gets the sync queue.
+	 *
+	 * @return the sync queue
+	 */
 	public QueueManager getSyncQueue() {
 		return syncQueue;
 	}
@@ -575,6 +639,12 @@ public abstract class BowlerAbstractConnection {
 	
 
 	
+	/**
+	 * Push up.
+	 *
+	 * @param b the b
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private void pushUp(BowlerDatagram b) throws IOException{
 		if(b==null)
 			return;
@@ -592,27 +662,51 @@ public abstract class BowlerAbstractConnection {
 	
 	
 	
+	/**
+	 * Adds the connection event listener.
+	 *
+	 * @param l the l
+	 */
 	public void addConnectionEventListener(IConnectionEventListener l ) {
 		if(!disconnectListeners.contains(l)) {
 			disconnectListeners.add(l);
 		}
 	}
+	
+	/**
+	 * Removes the connection event listener.
+	 *
+	 * @param l the l
+	 */
 	public void removeConnectionEventListener(IConnectionEventListener l ) {
 		if(disconnectListeners.contains(l)) {
 			disconnectListeners.remove(l);
 		}
 	} 
+	
+	/**
+	 * Fire disconnect event.
+	 */
 	private void fireDisconnectEvent() {
 		for(IConnectionEventListener l:disconnectListeners) {
 			l.onDisconnect(this);
 		}
 	}
+	
+	/**
+	 * Fire connect event.
+	 */
 	private void fireConnectEvent() {
 		for(IConnectionEventListener l:disconnectListeners) {
 			l.onConnect(this);
 		}
 	}
 	
+	/**
+	 * Sets the synchronous datagram listener.
+	 *
+	 * @param l the new synchronous datagram listener
+	 */
 	public void setSynchronousDatagramListener(ISynchronousDatagramListener l ) {
 		if (syncListen == null){
 			syncListen = l;
@@ -622,6 +716,12 @@ public abstract class BowlerAbstractConnection {
 			throw new RuntimeException("There is already a listener "+syncListen);
 		}
 	}
+	
+	/**
+	 * Removes the synchronous datagram listener.
+	 *
+	 * @param l the l
+	 */
 	public void removeSynchronousDatagramListener(ISynchronousDatagramListener l ) {
 		if(syncListen!= null){
 			if(syncListen!= l){
@@ -631,6 +731,14 @@ public abstract class BowlerAbstractConnection {
 		syncListen=null;
 	} 
 	
+	/**
+	 * Locate rpc.
+	 *
+	 * @param namespace the namespace
+	 * @param method the method
+	 * @param rpcString the rpc string
+	 * @return the rpc encapsulation
+	 */
 	public RpcEncapsulation locateRpc(String namespace,BowlerMethod method, String rpcString){
 		for (NamespaceEncapsulation ns:namespaceList){
 			if(ns.getNamespace().toLowerCase().contains(namespace.toLowerCase())){
@@ -647,6 +755,16 @@ public abstract class BowlerAbstractConnection {
 		return null;
 	}
 	
+	/**
+	 * Gets the command.
+	 *
+	 * @param namespace the namespace
+	 * @param method the method
+	 * @param rpcString the rpc string
+	 * @param arguments the arguments
+	 * @param rpc the rpc
+	 * @return the command
+	 */
 	public static  BowlerAbstractCommand getCommand(String namespace,BowlerMethod method, String rpcString, Object[] arguments,RpcEncapsulation rpc){
 		
 		if(rpc != null)
@@ -655,6 +773,16 @@ public abstract class BowlerAbstractConnection {
 		return null;
 		
 	}
+	
+	/**
+	 * Parses the response.
+	 *
+	 * @param namespace the namespace
+	 * @param method the method
+	 * @param rpcString the rpc string
+	 * @param dg the dg
+	 * @return the object[]
+	 */
 	public Object [] parseResponse(String namespace,BowlerMethod method, String rpcString,BowlerDatagram dg){
 		RpcEncapsulation rpc =  locateRpc(namespace, method, rpcString);
 		if(rpc != null)
@@ -662,13 +790,18 @@ public abstract class BowlerAbstractConnection {
 
 		return new Object [0];
 	}
+	
 	/**
 	 * This is the scripting interface to Bowler devices. THis allows a user to describe a namespace, rpc, and array or 
 	 * arguments to be paced into the packet based on the data types of the argument. The response in likewise unpacked 
 	 * into an array of objects.
+	 *
+	 * @param addr the addr
 	 * @param namespace The string of the desired namespace
+	 * @param method the method
 	 * @param rpcString The string of the desired RPC
 	 * @param arguments An array of objects corresponding to the data to be stuffed into the packet.
+	 * @param retry the retry
 	 * @return The return arguments parsed and packet into an array of arguments
 	 * @throws DeviceConnectionException If the desired RPC's are not available then this will be thrown
 	 */
@@ -698,10 +831,17 @@ public abstract class BowlerAbstractConnection {
 		throw new DeviceConnectionException("Device does not contain command NS="+namespace+" Method="+method+" RPC="+rpcString+"'");
 	}
 	
+	/** The namespaces finished initializing. */
 	private boolean namespacesFinishedInitializing = false;
 
+	/** The percentage print. */
 	private double percentagePrint =75.0;
 	
+	/**
+	 * Checks if is initialized namespaces.
+	 *
+	 * @return true, if is initialized namespaces
+	 */
 	public boolean isInitializedNamespaces(){
 		return namespaceList!=null && namespacesFinishedInitializing ;
 	}
@@ -709,6 +849,7 @@ public abstract class BowlerAbstractConnection {
 	/**
 	 * Get all the namespaces.
 	 *
+	 * @param addr the addr
 	 * @return the namespaces
 	 */
 	public ArrayList<String>  getNamespaces(MACAddress addr){	
@@ -804,9 +945,11 @@ public abstract class BowlerAbstractConnection {
 	}
 	
 	/**
-	 * Check the device to see if it has the requested namespace
-	 * @param string
-	 * @return
+	 * Check the device to see if it has the requested namespace.
+	 *
+	 * @param string the string
+	 * @param addr the addr
+	 * @return true, if successful
 	 */
 	public boolean hasNamespace(String string,MACAddress addr) {
 		if(namespaceList == null)
@@ -819,9 +962,11 @@ public abstract class BowlerAbstractConnection {
 	}
 	
 	/**
-	 * Requests all of the RPC's from a namespace
-	 * @param s
-	 * @return
+	 * Requests all of the RPC's from a namespace.
+	 *
+	 * @param namespace the namespace
+	 * @param addr the addr
+	 * @return the rpc list
 	 */
 	public ArrayList<RpcEncapsulation> getRpcList(String namespace,MACAddress addr) {
 		int namespaceIndex = 0;
@@ -918,11 +1063,13 @@ public abstract class BowlerAbstractConnection {
 		}
 		return namespaceList.get(namespaceIndex).getRpcList();
 	}
+	
 	/**
 	 * Send a command to the connection.
 	 *
 	 * @param command the command
-	 * @param switchParser 
+	 * @param addr the addr
+	 * @param retry the retry
 	 * @return the syncronous response
 	 * @throws NoConnectionAvailableException the no connection available exception
 	 * @throws InvalidResponseException the invalid response exception
@@ -930,11 +1077,14 @@ public abstract class BowlerAbstractConnection {
 	public BowlerDatagram send(BowlerAbstractCommand command,MACAddress addr, int retry) throws NoConnectionAvailableException, InvalidResponseException {	
 		return send(command,addr,retry,false);
 	}
+	
 	/**
 	 * Send a command to the connection.
 	 *
 	 * @param command the command
-	 * @param switchParser 
+	 * @param addr the addr
+	 * @param retry the retry
+	 * @param switchParser the switch parser
 	 * @return the syncronous response
 	 * @throws NoConnectionAvailableException the no connection available exception
 	 * @throws InvalidResponseException the invalid response exception
@@ -978,6 +1128,7 @@ public abstract class BowlerAbstractConnection {
 	 * Send a command to the connection.
 	 *
 	 * @param command the command
+	 * @param addr the addr
 	 * @return the syncronous response
 	 * @throws NoConnectionAvailableException the no connection available exception
 	 * @throws InvalidResponseException the invalid response exception
@@ -985,10 +1136,13 @@ public abstract class BowlerAbstractConnection {
 	public BowlerDatagram send(BowlerAbstractCommand command,MACAddress addr) throws NoConnectionAvailableException, InvalidResponseException {	
 		return send(command,addr,false);
 	}
+	
 	/**
 	 * Send a command to the connection.
 	 *
 	 * @param command the command
+	 * @param addr the addr
+	 * @param switchParser the switch parser
 	 * @return the syncronous response
 	 * @throws NoConnectionAvailableException the no connection available exception
 	 * @throws InvalidResponseException the invalid response exception
@@ -1010,6 +1164,9 @@ public abstract class BowlerAbstractConnection {
 		
 	}
 	
+	/**
+	 * The Class PingCommand.
+	 */
 	private class PingCommand extends BowlerAbstractCommand {
 		
 		/**
@@ -1020,22 +1177,25 @@ public abstract class BowlerAbstractConnection {
 			setOpCode("_png");
 		}
 	}
+	
 	/**
 	 * Implementation of the Bowler ping ("_png") command
 	 * Sends a ping to the device returns the device's MAC address.
-	 * @param switchParser 
 	 *
+	 * @param mac the mac
 	 * @return the device's address
 	 */
 	public boolean ping(MACAddress mac) {
 
 		return ping( mac,false);
 	}
+	
 	/**
 	 * Implementation of the Bowler ping ("_png") command
 	 * Sends a ping to the device returns the device's MAC address.
-	 * @param switchParser 
 	 *
+	 * @param mac the mac
+	 * @param switchParser the switch parser
 	 * @return the device's address
 	 */
 	public boolean ping(MACAddress mac, boolean switchParser) {
@@ -1058,20 +1218,35 @@ public abstract class BowlerAbstractConnection {
 		return false;
 	}
 	
+	/**
+	 * Start heart beat.
+	 */
 	public void startHeartBeat(){
 		setBeater(true);
 	}
 	
+	/**
+	 * Start heart beat.
+	 *
+	 * @param msHeartBeatTime the ms heart beat time
+	 */
 	public void startHeartBeat(long msHeartBeatTime){
 		if (msHeartBeatTime<10)
 			msHeartBeatTime = 10;
 		heartBeatTime= msHeartBeatTime;
 		startHeartBeat();
 	}
+	
+	/**
+	 * Stop heart beat.
+	 */
 	public void stopHeartBeat(){
 		setBeater(false);
 	}
 	
+	/**
+	 * Run heart beat.
+	 */
 	private void runHeartBeat(){
 		if((msSinceLastSend())>heartBeatTime){
 			//System.out.println("Heartbeat");
@@ -1087,18 +1262,38 @@ public abstract class BowlerAbstractConnection {
 		}
 	}
 	
+	/**
+	 * Gets the percentage print.
+	 *
+	 * @return the percentage print
+	 */
 	public double getPercentagePrint() {
 		return percentagePrint;
 	}
 
+	/**
+	 * Sets the percentage print.
+	 *
+	 * @param percentagePrint the new percentage print
+	 */
 	public void setPercentagePrint(double percentagePrint) {
 		this.percentagePrint = percentagePrint;
 	}
 
+	/**
+	 * Gets the last write.
+	 *
+	 * @return the last write
+	 */
 	public long getLastWrite() {
 		return lastWrite;
 	}
 
+	/**
+	 * Sets the last write.
+	 *
+	 * @param lastWrite the new last write
+	 */
 	public void setLastWrite(long lastWrite) {
 		this.lastWrite = lastWrite;
 	}
@@ -1112,10 +1307,21 @@ public abstract class BowlerAbstractConnection {
 		// stack extends vector and gives thread safety
 		/** The queue buffer. */
 		private ArrayList<BowlerDatagram> queueBuffer = new ArrayList<BowlerDatagram>();
+		
+		/** The bytes to packet buffer. */
 		private ByteList bytesToPacketBuffer = new ByteList();
+		
+		/** The is system queue. */
 		private boolean isSystemQueue=false;
+		
+		/** The kill switch. */
 		private boolean killSwitch=false;
 		
+		/**
+		 * Instantiates a new queue manager.
+		 *
+		 * @param b the b
+		 */
 		public QueueManager(boolean b) {
 			isSystemQueue = b;
 		}
@@ -1190,6 +1396,11 @@ public abstract class BowlerAbstractConnection {
 			//throw new RuntimeException();
 		}
 		
+		/**
+		 * Run packet update.
+		 *
+		 * @return true, if successful
+		 */
 		private boolean  runPacketUpdate() {
 			try {
 				BowlerDatagram bd = loadPacketFromPhy(bytesToPacketBuffer);
@@ -1229,22 +1440,50 @@ public abstract class BowlerAbstractConnection {
 		}
 	}
 	
+	/**
+	 * Checks if is use threaded stack.
+	 *
+	 * @return true, if is use threaded stack
+	 */
 	public boolean isUseThreadedStack() {
 		return useThreadedStack;
 	}
 
+	/**
+	 * Sets the use threaded stack.
+	 *
+	 * @param useThreadedStack the new use threaded stack
+	 */
 	public  void setUseThreadedStack(boolean useThreadedStack) {
 		this.useThreadedStack = useThreadedStack;
 	}
 
+	/**
+	 * Checks if is beater.
+	 *
+	 * @return true, if is beater
+	 */
 	public boolean isBeater() {
 		return beater;
 	}
 
+	/**
+	 * Sets the beater.
+	 *
+	 * @param beater the new beater
+	 */
 	public void setBeater(boolean beater) {
 		this.beater = beater;
 	}
 	
+	/**
+	 * Load packet from phy.
+	 *
+	 * @param bytesToPacketBuffer the bytes to packet buffer
+	 * @return the bowler datagram
+	 * @throws NullPointerException the null pointer exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public BowlerDatagram  loadPacketFromPhy(ByteList bytesToPacketBuffer) throws NullPointerException, IOException{
 		BowlerDatagram bd=BowlerDatagramFactory.build(bytesToPacketBuffer);
 		if(dataIns!=null){	

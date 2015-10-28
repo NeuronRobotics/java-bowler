@@ -11,19 +11,28 @@ import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 import com.neuronrobotics.sdk.util.ThreadUtil;
+// TODO: Auto-generated Javadoc
 //
 //import eu.mihosoft.vrl.v3d.CSG;
 //import eu.mihosoft.vrl.v3d.Cube;
 
+/**
+ * The Class DHKinematicsViewer.
+ */
 public class DHKinematicsViewer extends JFXPanel {
 
-	/**
-	 * 
-	 */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 4624867202513493512L;
+	
+	/** The robot. */
 	DHParameterKinematics robot;
 
 
+	/**
+	 * Instantiates a new DH kinematics viewer.
+	 *
+	 * @param bot the bot
+	 */
 	public DHKinematicsViewer(final DHParameterKinematics bot) {
 		robot = bot;
 		Platform.runLater(new Runnable() {
@@ -49,6 +58,11 @@ public class DHKinematicsViewer extends JFXPanel {
 
 	}
 	
+    /**
+     * The main method.
+     *
+     * @param args the arguments
+     */
     public static void main(String[] args) {
         System.setProperty("prism.dirtyopts", "false");
         JFrame frame  = new JFrame();

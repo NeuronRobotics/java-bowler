@@ -16,11 +16,13 @@ package com.neuronrobotics.sdk.dyio.peripherals;
 
 import com.neuronrobotics.sdk.common.BowlerRuntimeException;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class DyIOPeripheralException.
  */
 public class DyIOPeripheralException extends BowlerRuntimeException {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 	
 	/**

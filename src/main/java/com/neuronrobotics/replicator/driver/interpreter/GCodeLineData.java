@@ -2,6 +2,7 @@ package com.neuronrobotics.replicator.driver.interpreter;
 import java.util.Arrays;
 
 
+// TODO: Auto-generated Javadoc
 /** 
  * Encapsulates the register information in a line of G code, stored as double-precision floating point values.
  *
@@ -9,6 +10,8 @@ import java.util.Arrays;
  * @version 1
  */
 public class GCodeLineData {
+	
+	/** The line values. */
 	double lineValues[];
 
 	/** 
@@ -46,9 +49,11 @@ public class GCodeLineData {
 	}
 	
 
-	/** 
+	/**
+	 *  
 	 * Retrieve an array of values for the registers named in <tt>words</tt>.
-	 * @param char words[] The register names must be upper case.
+	 *
+	 * @param words the words
 	 * @return the values of the registers in <tt>words</tt>
 	 */
 	public double[] getWords(char words[]) {
@@ -59,6 +64,9 @@ public class GCodeLineData {
 		return d;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	public String toString() {
 		String str="GCodeLine: ";
 		char c;

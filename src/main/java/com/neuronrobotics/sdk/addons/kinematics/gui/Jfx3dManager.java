@@ -92,51 +92,118 @@ import javafx.scene.input.ScrollEvent;
 import javafx.util.Duration;
 import javafx.scene.Node;
 
+// TODO: Auto-generated Javadoc
 /**
- * MoleculeSampleApp
+ * MoleculeSampleApp.
  */
 public class Jfx3dManager extends JFXPanel {
 
+	/** The root. */
 	private final Group root = new Group();
+	
+	/** The axis group. */
 	final Group axisGroup = new Group();
+	
+	/** The world. */
 	final Xform world = new Xform();
+	
+	/** The camera. */
 	final PerspectiveCamera camera = new PerspectiveCamera(true);
+	
+	/** The camera xform. */
 	final Xform cameraXform = new Xform();
+	
+	/** The camera xform2. */
 	final Xform cameraXform2 = new Xform();
+	
+	/** The camera xform3. */
 	final Xform cameraXform3 = new Xform();
+	
+	/** The camera distance. */
 	final double cameraDistance = 3000;
+	
+	/** The molecule group. */
 	final Xform moleculeGroup = new Xform();
+	
+	/** The timeline. */
 	private Timeline timeline;
+	
+	/** The timeline playing. */
 	boolean timelinePlaying = false;
+	
+	/** The one frame. */
 	double ONE_FRAME = 1.0 / 24.0;
+	
+	/** The delta multiplier. */
 	double DELTA_MULTIPLIER = 200.0;
+	
+	/** The control multiplier. */
 	double CONTROL_MULTIPLIER = 0.1;
+	
+	/** The shift multiplier. */
 	double SHIFT_MULTIPLIER = 0.1;
+	
+	/** The alt multiplier. */
 	double ALT_MULTIPLIER = 0.5;
+	
+	/** The mouse pos x. */
 	double mousePosX;
+	
+	/** The mouse pos y. */
 	double mousePosY;
+	
+	/** The mouse old x. */
 	double mouseOldX;
+	
+	/** The mouse old y. */
 	double mouseOldY;
+	
+	/** The mouse delta x. */
 	double mouseDeltaX;
+	
+	/** The mouse delta y. */
 	double mouseDeltaY;
 
+	/** The manipulator. */
 	private final Group manipulator = new Group();
+	
+	/** The look group. */
 	private final Group lookGroup = new Group();
 
+	/** The box size. */
 	private int boxSize = 50;
 	// private Box myBox = new Box(1, 1,boxSize);
 
+	/** The model. */
 	private DHParameterKinematics model;
+	
+	/** The master. */
 	private DyIO master;
 
+	/** The button pressed. */
 	private boolean buttonPressed = false;
+	
+	/** The scene. */
 	private SubScene scene;
+	
+	/** The selected object. */
 	private MeshView selectedObject = null;
+	
+	/** The selsected affine. */
 	private Affine selsectedAffine = new Affine();
+	
+	/** The robot base. */
 	private Affine robotBase = new Affine();
+	
+	/** The camera vr. */
 	private Affine cameraVR = new Affine();
+	
+	/** The ground. */
 	private Group ground;
 
+	/**
+	 * Instantiates a new jfx3d manager.
+	 */
 	public Jfx3dManager() {
 		buildScene();
 		buildCamera();
@@ -153,10 +220,19 @@ public class Jfx3dManager extends JFXPanel {
 		setScene(new Scene(new Group(getSubScene())));
 
 	}
+	
+	/**
+	 * Removes the objects.
+	 */
 	public void removeObjects(){
 		lookGroup.getChildren().clear();
 	}
 
+	/**
+	 * Removes the object.
+	 *
+	 * @param previous the previous
+	 */
 	public void removeObject(MeshView previous) {
 		if (previous != null) {
 			lookGroup.getChildren().remove(previous);
@@ -164,6 +240,12 @@ public class Jfx3dManager extends JFXPanel {
 
 	}
 
+	/**
+	 * Adds the object.
+	 *
+	 * @param current the current
+	 * @return the mesh view
+	 */
 	public MeshView addObject(MeshView current) {
 		Group og = new Group();
 		og.getChildren().add(current);
@@ -175,6 +257,11 @@ public class Jfx3dManager extends JFXPanel {
 		return current;
 	}
 
+	/**
+	 * Save to png.
+	 *
+	 * @param f the f
+	 */
 	public void saveToPng(File f) {
 		String fName = f.getAbsolutePath();
 
@@ -216,6 +303,11 @@ public class Jfx3dManager extends JFXPanel {
 		}
 	}
 
+	/**
+	 * Attach arm.
+	 *
+	 * @param model the model
+	 */
 	public void attachArm(final DHParameterKinematics model) {
 		master = model.getFactory().getDyio();
 		if (master != null)
@@ -314,6 +406,14 @@ public class Jfx3dManager extends JFXPanel {
 
 	}
 
+	/**
+	 * One d bound.
+	 *
+	 * @param location the location
+	 * @param target the target
+	 * @param bound the bound
+	 * @return true, if successful
+	 */
 	private boolean oneDBound(double location, double target, double bound) {
 		if (location > (target + bound))
 			return false;
@@ -322,6 +422,16 @@ public class Jfx3dManager extends JFXPanel {
 		return true;
 	}
 
+	/**
+	 * Threed bound check.
+	 *
+	 * @param x the x
+	 * @param y the y
+	 * @param z the z
+	 * @param a the a
+	 * @param distance the distance
+	 * @return true, if successful
+	 */
 	private boolean threedBoundCheck(double x, double y, double z, Affine a,
 			double distance) {
 //		if (oneDBound(x, a.getTx(), distance))
@@ -333,6 +443,12 @@ public class Jfx3dManager extends JFXPanel {
 		return true;
 	}
 
+	/**
+	 * Attach arm.
+	 *
+	 * @param master the master
+	 * @param xml the xml
+	 */
 	public void attachArm(DyIO master, String xml) {
 		for (int i = 0; i < master.getPIDChannelCount(); i++) {
 			// disable PID controller, default PID and dypid configurations are
@@ -343,18 +459,27 @@ public class Jfx3dManager extends JFXPanel {
 		attachArm(new DHParameterKinematics(master, xml));
 	}
 
+	/**
+	 * Disconnect.
+	 */
 	public void disconnect() {
 		if (master != null) {
 			master.disconnect();
 		}
 	}
 
+	/**
+	 * Builds the scene.
+	 */
 	private void buildScene() {
 		world.rx.setAngle(-90);// point z upwards
 		world.ry.setAngle(180);// arm out towards user
 		getRoot().getChildren().add(world);
 	}
 
+	/**
+	 * Builds the camera.
+	 */
 	private void buildCamera() {
 		getRoot().getChildren().add(cameraXform);
 		cameraXform.getChildren().add(cameraXform2);
@@ -371,10 +496,18 @@ public class Jfx3dManager extends JFXPanel {
 		
 	}
 	
+	/**
+	 * Gets the camera field of view property.
+	 *
+	 * @return the camera field of view property
+	 */
 	public DoubleProperty getCameraFieldOfViewProperty(){
 		return camera.fieldOfViewProperty();
 	}
 
+	/**
+	 * Builds the axes.
+	 */
 	private void buildAxes() {
 		
 		int gridSize=1000;
@@ -404,6 +537,12 @@ public class Jfx3dManager extends JFXPanel {
 	
 	
 
+	/**
+	 * Handle mouse.
+	 *
+	 * @param scene the scene
+	 * @param root the root
+	 */
 	private void handleMouse(SubScene scene, final Node root) {
 		scene.setOnMousePressed(new EventHandler<MouseEvent>() {
 			@Override
@@ -469,6 +608,12 @@ public class Jfx3dManager extends JFXPanel {
 
 	}
 
+	/**
+	 * Handle keyboard.
+	 *
+	 * @param scene the scene
+	 * @param root the root
+	 */
 	private void handleKeyboard(SubScene scene, final Node root) {
 		final boolean moveCamera = true;
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -612,23 +757,54 @@ public class Jfx3dManager extends JFXPanel {
 
 	}
 
+	/**
+	 * Gets the sub scene.
+	 *
+	 * @return the sub scene
+	 */
 	public SubScene getSubScene() {
 		return scene;
 	}
 
+	/**
+	 * Sets the sub scene.
+	 *
+	 * @param scene the new sub scene
+	 */
 	public void setSubScene(SubScene scene) {
 		this.scene = scene;
 	}
 
+	/**
+	 * Gets the root.
+	 *
+	 * @return the root
+	 */
 	public Group getRoot() {
 		return root;
 	}
+	
+	/**
+	 * Gets the camera vr.
+	 *
+	 * @return the camera vr
+	 */
 	public Affine getCameraVR() {
 		return cameraVR;
 	}
+	
+	/**
+	 * Sets the camera vr.
+	 *
+	 * @param cameraVR the new camera vr
+	 */
 	public void setCameraVR(Affine cameraVR) {
 		this.cameraVR = cameraVR;
 	}
+	
+	/**
+	 * Removes the arm.
+	 */
 	public void removeArm() {
 		world.getChildren().remove(manipulator);
 	}

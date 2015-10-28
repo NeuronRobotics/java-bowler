@@ -26,19 +26,50 @@ import com.neuronrobotics.sdk.dyio.DyIOPowerState;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class BasicWalker.
+ */
 public class BasicWalker {
+	
+	/** The legs. */
 	private ArrayList<Leg> legs=new ArrayList<Leg>();
+	
+	/** The link len. */
 	private double scale=0,inverse=0,linkLen = 0;
+	
+	/** The theta. */
 	private double x,y,theta;
+	
+	/** The channel. */
 	private int    llimit,ulimit,home,channel;
+	
+	/** The dyio. */
 	private DyIO dyio;
+	
+	/** The use hardware. */
 	private boolean useHardware = true;
+	
+	/**
+	 * Instantiates a new basic walker.
+	 *
+	 * @param d the d
+	 */
 	public BasicWalker(DyIO d) {
 		setDyio(d);
 		getDyio().setCachedMode(true);
 		System.out.println("Loading default configuration");
 		parse(BasicWalkerConfig.getDefaultConfigurationStream());
 	}
+	
+	/**
+	 * Adds the leg.
+	 *
+	 * @param x the x
+	 * @param y the y
+	 * @param theta the theta
+	 * @param links the links
+	 */
 	public void addLeg(double x, double y, double theta,ArrayList<WalkerServoLink> links) {
 		Leg tmpLeg = new Leg(x,y,theta);
 		for(WalkerServoLink l:links) {
@@ -46,6 +77,13 @@ public class BasicWalker {
 		}
 		legs.add(tmpLeg);
 	}
+	
+	/**
+	 * Instantiates a new basic walker.
+	 *
+	 * @param f the f
+	 * @param d the d
+	 */
 	public BasicWalker(File f,DyIO d){
 		//useHardware = false;
 		if(useHardware){
@@ -54,6 +92,13 @@ public class BasicWalker {
 		getDyio().setCachedMode(true);
 		parse(f);
 	}
+	
+	/**
+	 * Instantiates a new basic walker.
+	 *
+	 * @param is the is
+	 * @param d the d
+	 */
 	public BasicWalker(InputStream is,DyIO d){
 		//useHardware = false;
 		if(useHardware){
@@ -63,6 +108,11 @@ public class BasicWalker {
 		parse(is);
 	}
 	
+	/**
+	 * Parses the.
+	 *
+	 * @param f the f
+	 */
 	private void parse(File f) {
 		InputStream is = null;
 		try {
@@ -75,6 +125,11 @@ public class BasicWalker {
 			parse(is);
 	}
 	
+	/**
+	 * Parses the.
+	 *
+	 * @param is the is
+	 */
 	private void parse(InputStream is) {
 		/**
 		 * sample code from
@@ -137,12 +192,21 @@ public class BasicWalker {
 		System.out.println("Populated Hexapod.");
 	}
 	
+	/**
+	 * Load home values from dy io.
+	 */
 	public void loadHomeValuesFromDyIO() {
 		for(Leg l:legs) {
 			l.loadHomeValuesFromDyIO();
 			l.save();
 		}
 	}
+	
+	/**
+	 * Gets the xml.
+	 *
+	 * @return the xml
+	 */
 	public String getXML() {
 		String s="<hexapod>\n";
 		for(Leg l:legs) {
@@ -151,9 +215,22 @@ public class BasicWalker {
 		s+="\n</hexapod>";
 		return s;
 	}
+	
+	/**
+	 * Write xml.
+	 *
+	 * @param f the f
+	 */
 	public void writeXML(File f) {
 		writeXML(f,getXML());
 	}
+	
+	/**
+	 * Write xml.
+	 *
+	 * @param f the f
+	 * @param xml the xml
+	 */
 	public void writeXML(File f,String xml) {
 	    try {
 	    	Writer output = new BufferedWriter(new FileWriter(f));
@@ -163,6 +240,10 @@ public class BasicWalker {
 			throw new RuntimeException(e);
 		}
 	}
+	
+	/**
+	 * Initialize.
+	 */
 	public void initialize() {
 		int leg=0;
 		for (Leg l:legs){
@@ -183,18 +264,31 @@ public class BasicWalker {
 		try {Thread.sleep(2000);} catch (InterruptedException e) {}
 	}
 	
+	/**
+	 * Home.
+	 */
 	public void Home() {
 		for (Leg l:legs){
 			l.Home();
 		}
 		getDyio().flushCache(2);
 	}
+	
+	/**
+	 * Save.
+	 */
 	public void save() {
 		for (Leg l:legs){
 			l.save();
 		}
 	}
 	
+	/**
+	 * Turn body.
+	 *
+	 * @param degrees the degrees
+	 * @param time the time
+	 */
 	public void turnBody(double degrees,double time) {
 		degrees*=-1;
 		for (Leg l:legs){
@@ -204,6 +298,12 @@ public class BasicWalker {
 		fixAll(time);
 	}
 	
+	/**
+	 * Increment all y.
+	 *
+	 * @param inc the inc
+	 * @param time the time
+	 */
 	public void incrementAllY(double inc,double time) {
 		inc*=-1;
 		for (Leg l:legs){
@@ -212,6 +312,13 @@ public class BasicWalker {
 		updateAllServos((float) time);
 		fixAll(time);
 	}
+	
+	/**
+	 * Increment all x.
+	 *
+	 * @param inc the inc
+	 * @param time the time
+	 */
 	public void incrementAllX(double inc,double time) {
 		inc*=-1;
 		for (Leg l:legs){
@@ -221,6 +328,12 @@ public class BasicWalker {
 		fixAll(time);
 	}
 
+	/**
+	 * Increment all z.
+	 *
+	 * @param inc the inc
+	 * @param time the time
+	 */
 	public void incrementAllZ(double inc,double time) {
 		inc*=-1;
 		for (Leg l:legs){
@@ -229,31 +342,66 @@ public class BasicWalker {
 		updateAllServos((float) time);
 		fixAll(time);
 	}
+	
+	/**
+	 * Gets the legs.
+	 *
+	 * @return the legs
+	 */
 	public ArrayList<Leg> getLegs(){
 		return legs;
 	}
 	
+	/**
+	 * Fix all.
+	 *
+	 * @param time the time
+	 */
 	public void fixAll(double time) {
 		for (Leg l:legs){
 			l.fix();
 		}
 		//updateAllServos((float) time);
 	}
+	
+	/**
+	 * Update all servos.
+	 *
+	 * @param time the time
+	 */
 	public void updateAllServos(double time) {
 		for (Leg l:legs){
 			l.cacheLinkPositions();
 		}
 		getDyio().flushCache((float) time);
 	}
+	
+	/**
+	 * Gets the tag value.
+	 *
+	 * @param sTag the s tag
+	 * @param eElement the e element
+	 * @return the tag value
+	 */
 	private static String getTagValue(String sTag, Element eElement){
 	    NodeList nlList= eElement.getElementsByTagName(sTag).item(0).getChildNodes();
 	    Node nValue = (Node) nlList.item(0); 
 	    //System.out.println("\t\t"+sTag+" = "+nValue.getNodeValue());
 	    return nValue.getNodeValue();    
 	}
+	
+	/**
+	 * Disconnect.
+	 */
 	public void disconnect() {
 		getDyio().disconnect();
 	}
+	
+	/**
+	 * Sets the dyio.
+	 *
+	 * @param dyio the new dyio
+	 */
 	private void setDyio(DyIO dyio) {
 		if(((dyio.getBankAState()==DyIOPowerState.REGULATED) || (dyio.getBankBState()==DyIOPowerState.REGULATED))){
 			System.err.println("Invalid Power Switch configuration!");
@@ -262,6 +410,12 @@ public class BasicWalker {
 		dyio.setServoPowerSafeMode(false);
 		this.dyio = dyio;
 	}
+	
+	/**
+	 * Gets the dyio.
+	 *
+	 * @return the dyio
+	 */
 	private DyIO getDyio() {
 		return dyio;
 	}

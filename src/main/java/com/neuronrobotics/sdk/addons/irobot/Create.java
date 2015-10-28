@@ -22,28 +22,45 @@ import com.neuronrobotics.sdk.dyio.DyIOChannelEvent;
 import com.neuronrobotics.sdk.dyio.peripherals.DyIOPeripheralException;
 import com.neuronrobotics.sdk.dyio.peripherals.IUARTStreamListener;
 import com.neuronrobotics.sdk.dyio.peripherals.UARTChannel;
+// TODO: Auto-generated Javadoc
+
 /**
- * 
+ * The Class Create.
  */
 public class Create implements IUARTStreamListener{
 	
+	/** The my angle. */
 	private short myAngle;
+	
+	/** The my distance. */
 	private short myDistance;
 	//private boolean packetRecieved;
 	
+	/** The previous rad. */
 	private short previousRad=0;
+	
+	/** The previous vel. */
 	private short previousVel=0;
 	
+	/** The channel. */
 	private UARTChannel channel;
+	
+	/** The led state. */
 	private byte []ledState={(byte) 139,0,0,0};
+	
+	/** The sensor. */
 	private byte []sensor  = new byte[26];
+	
+	/** The sen req. */
 	private CreateSensorRequest senReq=CreateSensorRequest.NONE;
+	
+	/** The listeners. */
 	private ArrayList<ICreateSensorListener> listeners = new ArrayList<ICreateSensorListener>();
 	
 	/**
-	 * 
-	 * 
-	 * @param chan
+	 * Instantiates a new creates the.
+	 *
+	 * @param chan the chan
 	 */
 	public Create(UARTChannel chan){
 		channel= chan;
@@ -59,7 +76,7 @@ public class Create implements IUARTStreamListener{
 	}
 	
 	/**
-	 * 
+	 * Sets the full mode.
 	 */
 	public void setFullMode(){
 		byte [] init = {(byte) 128,(byte) 132};
@@ -71,7 +88,7 @@ public class Create implements IUARTStreamListener{
 	}
 	
 	/**
-	 * 
+	 * Inits the create.
 	 */
 	public void InitCreate(){
 		byte [] init = {(byte) 128,(byte) 131};
@@ -83,9 +100,9 @@ public class Create implements IUARTStreamListener{
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @param timeout
+	 * Inits the create blocking.
+	 *
+	 * @param timeout the timeout
 	 */
 	public void InitCreateBlocking(int timeout){
 		byte [] init = {(byte) 128,(byte) 131};
@@ -124,8 +141,10 @@ public class Create implements IUARTStreamListener{
 			throw new DyIOPeripheralException("Failed to send drive command");
 		}
 	}
+	
 	/**
-	 * 
+	 * Drive straight.
+	 *
 	 * @param distance mm Distance from current location to drive
 	 */
 	public void driveStraight(short distance){
@@ -152,12 +171,15 @@ public class Create implements IUARTStreamListener{
 			
 		}
 	}
+	
 	/**
-	 * @param timeout
+	 * Drive straight blocking.
+	 *
+	 * @param timeout the timeout
 	 * @param velocity mm/s
 	 * @param distance mm
-	 * @return 
-	 * @throws InterruptedException 
+	 * @return true, if successful
+	 * @throws InterruptedException the interrupted exception
 	 */
 	public boolean driveStraightBlocking(int timeout,short velocity,short distance) throws InterruptedException{
 		int tries=0;
@@ -199,7 +221,8 @@ public class Create implements IUARTStreamListener{
 	}
 	
 	/**
-	 * 
+	 * Turn.
+	 *
 	 * @param angle degrees Distance from current location to drive
 	 */
 	public void turn(short angle){
@@ -229,13 +252,13 @@ public class Create implements IUARTStreamListener{
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @param timeout
-	 * @param velocity
-	 * @param angle
-	 * @return
-	 * @throws InterruptedException
+	 * Turn blocking.
+	 *
+	 * @param timeout the timeout
+	 * @param velocity the velocity
+	 * @param angle the angle
+	 * @return true, if successful
+	 * @throws InterruptedException the interrupted exception
 	 */
 	public boolean turnBlocking(int timeout,short velocity,short angle) throws InterruptedException{
 		int tries=0;
@@ -275,8 +298,10 @@ public class Create implements IUARTStreamListener{
 		
 		return false;
 	}
+	
 	/**
-	 * 
+	 * Sets the led.
+	 *
 	 * @param max sets the state of the "max" led
 	 * @param spot sets the state of the "spot" led
 	 */
@@ -287,8 +312,10 @@ public class Create implements IUARTStreamListener{
 		ledState[1]=(byte)led;
 		setLed();
 	}
+	
 	/**
-	 * 
+	 * Sets the status led.
+	 *
 	 * @param color Power Color (0 – 255), 0 = green, 255 = red
 	 * @param intensity Power Intensity (0 – 255), 0 = off, 255 = full intensity
 	 */
@@ -299,16 +326,16 @@ public class Create implements IUARTStreamListener{
 	}
 	
 	/**
-	 * 
+	 * Request sensors.
 	 */
 	public void requestSensors(){
 		requestSensors(CreateSensorRequest.ALL);
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @param req
+	 * Request sensors.
+	 *
+	 * @param req the req
 	 */
 	public void requestSensors(CreateSensorRequest req){
 		senReq=req;
@@ -320,6 +347,9 @@ public class Create implements IUARTStreamListener{
 		}
 	}
 	
+	/**
+	 * Sets the led.
+	 */
 	private void setLed(){
 		try {
 			send(ledState);
@@ -328,6 +358,12 @@ public class Create implements IUARTStreamListener{
 		}
 	}
 	
+	/**
+	 * Send.
+	 *
+	 * @param b the b
+	 * @throws Exception the exception
+	 */
 	private void send(byte[]b) throws Exception{
 		channel.sendBytes(new ByteList(b));
 	}
@@ -429,6 +465,11 @@ public class Create implements IUARTStreamListener{
 		listeners.add(l);
 	}
 	
+	/**
+	 * Fire create packet.
+	 *
+	 * @param packet the packet
+	 */
 	private void fireCreatePacket(CreateSensors packet) {
 		// for the blocking drive funcs
 		myAngle=packet.angle;

@@ -13,10 +13,24 @@ import com.neuronrobotics.sdk.pid.GenericPIDDevice;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DeviceManager.
+ */
 public class DeviceManager {
+	
+	/** The Constant devices. */
 	private static final ArrayList<BowlerAbstractDevice> devices = new ArrayList<BowlerAbstractDevice>();
+	
+	/** The Constant deviceAddedListener. */
 	private static final ArrayList<IDeviceAddedListener> deviceAddedListener = new ArrayList<IDeviceAddedListener>();
 	
+	/**
+	 * Adds the connection.
+	 *
+	 * @param newDevice the new device
+	 * @param name the name
+	 */
 	public static void addConnection(final BowlerAbstractDevice newDevice, String name){
 		if(!newDevice.isAvailable())
 			newDevice.connect();
@@ -47,6 +61,12 @@ public class DeviceManager {
 			l.onNewDeviceAdded(newDevice);
 		}
 	}
+	
+	/**
+	 * Adds the connection.
+	 *
+	 * @param connection the connection
+	 */
 	public static void addConnection(BowlerAbstractConnection connection) {
 		if (connection == null) {
 			return;
@@ -113,6 +133,9 @@ public class DeviceManager {
 		
 	}
 
+	/**
+	 * Adds the connection.
+	 */
 	public static void addConnection() {
 		new Thread() {
 			public void run() {
@@ -129,6 +152,11 @@ public class DeviceManager {
 		}.start();
 	}
 
+	/**
+	 * Removes the.
+	 *
+	 * @param newDevice the new device
+	 */
 	public static void remove(BowlerAbstractDevice newDevice) {
 		if(devices.contains(newDevice) && newDevice!=null){
 			devices.remove(newDevice);
@@ -138,15 +166,33 @@ public class DeviceManager {
 		}
 	}
 	
+	/**
+	 * Adds the device added listener.
+	 *
+	 * @param l the l
+	 */
 	public static void addDeviceAddedListener(IDeviceAddedListener l){
 		if(!deviceAddedListener.contains(l))
 			deviceAddedListener.add(l);
 	}
+	
+	/**
+	 * Removes the device added listener.
+	 *
+	 * @param l the l
+	 */
 	public static void removeDeviceAddedListener(IDeviceAddedListener l){
 		if(deviceAddedListener.contains(l))
 			deviceAddedListener.remove(l);
 	}
 	
+	/**
+	 * Gets the specific device.
+	 *
+	 * @param class1 the class1
+	 * @param name the name
+	 * @return the specific device
+	 */
 	public static BowlerAbstractDevice getSpecificDevice(Class<?> class1, String name){
 		List<String> devs =listConnectedDevice( class1);
 		if(devs.size()==0)
@@ -165,6 +211,12 @@ public class DeviceManager {
 		return null;
 	}
 	
+	/**
+	 * List connected device.
+	 *
+	 * @param class1 the class1
+	 * @return the list
+	 */
 	public static List<String> listConnectedDevice(Class<?> class1){
 		List<String> choices = new ArrayList<String>();
 		for (int i = 0; i < devices.size(); i++) {

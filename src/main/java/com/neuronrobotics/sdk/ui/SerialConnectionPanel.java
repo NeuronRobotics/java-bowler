@@ -31,22 +31,31 @@ import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.MissingNativeLibraryException;
 import com.neuronrobotics.sdk.serial.SerialConnection;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class SerialConnectionPanel.
  */
 public class SerialConnectionPanel extends AbstractConnectionPanel {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 	
+	/** The baudrate txt. */
 	private JTextField baudrateTxt = new JTextField(8);
+	
+	/** The connection cbo. */
 	private JComboBox connectionCbo = null;
+	
+	/** The refresh. */
 	private JButton refresh;
 	
+	/** The connection. */
 	private SerialConnection connection = null;
 	
 	/**
-	 * @param connectionDialog 
-	 * 
+	 * Instantiates a new serial connection panel.
+	 *
+	 * @param connectionDialog the connection dialog
 	 */
 	public SerialConnectionPanel(ConnectionDialog connectionDialog) {
 		super("Serial", ConnectionImageIconFactory.getIcon("images/usb-icon.png"),connectionDialog);
@@ -80,6 +89,9 @@ public class SerialConnectionPanel extends AbstractConnectionPanel {
 	}
 
 	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.ui.AbstractConnectionPanel#getConnection()
+	 */
 	public BowlerAbstractConnection getConnection() {
 		try {
 			int baud = Integer.parseInt(baudrateTxt.getText());
@@ -99,6 +111,9 @@ public class SerialConnectionPanel extends AbstractConnectionPanel {
 	}
 
 	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.ui.AbstractConnectionPanel#refresh()
+	 */
 	public void refresh() {		
 		connectionCbo.removeAllItems();
 		String m = "NRSDK not installed properly, native library not found\n\n" +

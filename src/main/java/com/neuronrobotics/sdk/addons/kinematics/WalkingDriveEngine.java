@@ -6,8 +6,18 @@ import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class WalkingDriveEngine.
+ */
 public class WalkingDriveEngine implements IDriveEngine {
+	
+	/** The step over height. */
 	double stepOverHeight=5;
+	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.IDriveEngine#DriveArc(com.neuronrobotics.sdk.addons.kinematics.MobileBase, com.neuronrobotics.sdk.addons.kinematics.math.TransformNR, double)
+	 */
 	@Override
 	public void DriveArc(MobileBase source, TransformNR newPose, double seconds) {
 
@@ -74,12 +84,18 @@ public class WalkingDriveEngine implements IDriveEngine {
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.IDriveEngine#DriveVelocityStraight(com.neuronrobotics.sdk.addons.kinematics.MobileBase, double)
+	 */
 	@Override
 	public void DriveVelocityStraight(MobileBase source, double cmPerSecond) {
 		// TODO Auto-generated method stub
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.IDriveEngine#DriveVelocityArc(com.neuronrobotics.sdk.addons.kinematics.MobileBase, double, double)
+	 */
 	@Override
 	public void DriveVelocityArc(MobileBase source, double degreesPerSecond,
 			double cmRadius) {

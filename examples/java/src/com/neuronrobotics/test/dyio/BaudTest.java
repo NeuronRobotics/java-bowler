@@ -2,8 +2,15 @@ package com.neuronrobotics.test.dyio;
 
 import java.util.ArrayList;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class BaudTest.
+ */
 public class BaudTest {
 	
+	/**
+	 * Instantiates a new baud test.
+	 */
 	public BaudTest(){
 		ArrayList<BaudObject> picBauds = new ArrayList<BaudObject>();
 		ArrayList<BaudObject> avrBauds = new ArrayList<BaudObject>();
@@ -40,38 +47,83 @@ public class BaudTest {
 		}
 	}
 	
+	/**
+	 * Almost equal.
+	 *
+	 * @param a the a
+	 * @param b the b
+	 * @return the double
+	 */
 	public static double almostEqual(double a, double b){
 		double absoluteDifference = (a-b);
 		double percent = (absoluteDifference/a)*100;
 	    return percent;
 	}
 	
+	/**
+	 * The Class BaudObject.
+	 */
 	private class BaudObject{
+		
+		/** The b rg value. */
 		private int bRGValue;
+		
+		/** The baudrate. */
 		private double baudrate;
 
+		/**
+		 * Instantiates a new baud object.
+		 *
+		 * @param BRGValue the BRG value
+		 * @param baudrate the baudrate
+		 */
 		BaudObject(int BRGValue, double baudrate){
 			setbRGValue(BRGValue);
 			this.setBaudrate(baudrate);
 			
 		}
 
+		/**
+		 * Gets the b rg value.
+		 *
+		 * @return the b rg value
+		 */
 		public int getbRGValue() {
 			return bRGValue;
 		}
 
+		/**
+		 * Sets the b rg value.
+		 *
+		 * @param bRGValue the new b rg value
+		 */
 		public void setbRGValue(int bRGValue) {
 			this.bRGValue = bRGValue;
 		}
 
+		/**
+		 * Gets the baudrate.
+		 *
+		 * @return the baudrate
+		 */
 		public double getBaudrate() {
 			return baudrate;
 		}
 
+		/**
+		 * Sets the baudrate.
+		 *
+		 * @param baudrate the new baudrate
+		 */
 		public void setBaudrate(double baudrate) {
 			this.baudrate = baudrate;
 		}
 
+		/**
+		 * Int value.
+		 *
+		 * @return the int
+		 */
 		public int intValue() {
 			// TODO Auto-generated method stub
 			return new Double(getBaudrate()).intValue();
@@ -79,7 +131,9 @@ public class BaudTest {
 	}
 	
 	/**
-	 * @param args
+	 * The main method.
+	 *
+	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
 

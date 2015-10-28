@@ -5,27 +5,53 @@ import com.neuronrobotics.sdk.pid.PIDChannel;
 import com.neuronrobotics.sdk.pid.PIDEvent;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PidRotoryLink.
+ */
 public class PidRotoryLink extends AbstractRotoryLink{
+	
+	/** The channel. */
 	private PIDChannel channel;
+	
+	/**
+	 * Instantiates a new pid rotory link.
+	 *
+	 * @param c the c
+	 * @param conf the conf
+	 */
 	public PidRotoryLink(PIDChannel c,LinkConfiguration conf) {
 		super(conf);
 		setPIDChannel(c);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractLink#cacheTargetValue()
+	 */
 	@Override
 	public void cacheTargetValue() {
 		channel.setCachedTargetValue(getTargetValue());
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractLink#flush(double)
+	 */
 	@Override
 	public void flush(double time) {
 		channel.flush(time);
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractLink#flushAll(double)
+	 */
 	@Override
 	public void flushAll(double time) {
 		channel.getPid().flushPIDChannels(time);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractLink#getCurrentPosition()
+	 */
 	@Override
 	public int getCurrentPosition() {
 		int val=channel.GetPIDPosition();
@@ -33,6 +59,11 @@ public class PidRotoryLink extends AbstractRotoryLink{
 		return val;
 	}
 
+	/**
+	 * Sets the PID channel.
+	 *
+	 * @param channel the new PID channel
+	 */
 	public void setPIDChannel(PIDChannel channel) {
 		channel.addPIDEventListener(new IPIDEventListener() {
 			@Override
@@ -54,6 +85,11 @@ public class PidRotoryLink extends AbstractRotoryLink{
 		this.channel = channel;
 	}
 
+	/**
+	 * Gets the PID channel.
+	 *
+	 * @return the PID channel
+	 */
 	public PIDChannel getPIDChannel() {
 		return channel;
 	}

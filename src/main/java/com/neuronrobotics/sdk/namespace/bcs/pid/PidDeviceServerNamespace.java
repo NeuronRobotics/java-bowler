@@ -14,10 +14,21 @@ import com.neuronrobotics.sdk.pid.PIDCommandException;
 import com.neuronrobotics.sdk.pid.PIDConfiguration;
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PidDeviceServerNamespace.
+ */
 public class PidDeviceServerNamespace extends BowlerAbstractDeviceServerNamespace implements IPidControlNamespace {
 
+	/** The device. */
 	private IPidControlNamespace device;
 
+	/**
+	 * Instantiates a new pid device server namespace.
+	 *
+	 * @param addr the addr
+	 * @param device the device
+	 */
 	public PidDeviceServerNamespace(MACAddress addr,IPidControlNamespace device ) {
 		super(addr, "bcs.pid.*;1.0;;");
 		this.device = device;
@@ -295,93 +306,147 @@ public class PidDeviceServerNamespace extends BowlerAbstractDeviceServerNamespac
 //				}));//Name
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#ResetPIDChannel(int, int)
+	 */
 	@Override
 	public boolean ResetPIDChannel(int group, int valueToSetCurrentTo) {
 		return device.ResetPIDChannel(group, valueToSetCurrentTo);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#ConfigurePIDController(com.neuronrobotics.sdk.pid.PIDConfiguration)
+	 */
 	@Override
 	public boolean ConfigurePIDController(PIDConfiguration config) {
 		return device.ConfigurePIDController(config);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#getPIDConfiguration(int)
+	 */
 	@Override
 	public PIDConfiguration getPIDConfiguration(int group) {
 		return device.getPIDConfiguration(group);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#ConfigurePDVelovityController(com.neuronrobotics.sdk.pid.PDVelocityConfiguration)
+	 */
 	@Override
 	public boolean ConfigurePDVelovityController(PDVelocityConfiguration config) {
 		return device.ConfigurePDVelovityController(config);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#getPDVelocityConfiguration(int)
+	 */
 	@Override
 	public PDVelocityConfiguration getPDVelocityConfiguration(int group) {
 		return device.getPDVelocityConfiguration(group);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#getPIDChannelCount()
+	 */
 	@Override
 	public int getPIDChannelCount() {
 		return device.getPIDChannelCount();
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#SetPIDSetPoint(int, int, double)
+	 */
 	@Override
 	public boolean SetPIDSetPoint(int group, int setpoint, double seconds) {
 		return device.SetPIDSetPoint(group, setpoint, seconds);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#SetAllPIDSetPoint(int[], double)
+	 */
 	@Override
 	public boolean SetAllPIDSetPoint(int[] setpoints, double seconds) {
 		return device.SetAllPIDSetPoint(setpoints, seconds);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#GetPIDPosition(int)
+	 */
 	@Override
 	public int GetPIDPosition(int group) {
 		return device.GetPIDPosition(group);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#GetAllPIDPosition()
+	 */
 	@Override
 	public int[] GetAllPIDPosition() {
 		return device.GetAllPIDPosition();
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#addPIDEventListener(com.neuronrobotics.sdk.pid.IPIDEventListener)
+	 */
 	@Override
 	public void addPIDEventListener(IPIDEventListener l) {
 		device.addPIDEventListener(l);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#removePIDEventListener(com.neuronrobotics.sdk.pid.IPIDEventListener)
+	 */
 	@Override
 	public void removePIDEventListener(IPIDEventListener l) {
 		device.removePIDEventListener(l);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#flushPIDChannels(double)
+	 */
 	@Override
 	public void flushPIDChannels(double time) {
 		device.flushPIDChannels(time);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#SetPIDInterpolatedVelocity(int, int, double)
+	 */
 	@Override
 	public boolean SetPIDInterpolatedVelocity(int group, int unitsPerSecond,
 			double seconds) throws PIDCommandException {
 		return device.SetPIDInterpolatedVelocity(group, unitsPerSecond, seconds);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#SetPDVelocity(int, int, double)
+	 */
 	@Override
 	public boolean SetPDVelocity(int group, int unitsPerSecond, double seconds)
 			throws PIDCommandException {
 		return device.SetPDVelocity(group, unitsPerSecond, seconds);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#getPIDChannel(int)
+	 */
 	@Override
 	public PIDChannel getPIDChannel(int group) {
 		return device.getPIDChannel(group);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#killAllPidGroups()
+	 */
 	@Override
 	public boolean killAllPidGroups() {
 		return device.killAllPidGroups();
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#isAvailable()
+	 */
 	@Override
 	public boolean isAvailable() {
 		return true;

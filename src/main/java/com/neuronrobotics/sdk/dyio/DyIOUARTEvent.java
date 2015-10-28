@@ -15,7 +15,7 @@
 package com.neuronrobotics.sdk.dyio;
 
 /**
- * 
+ * The Class DyIOUARTEvent.
  */
 public class DyIOUARTEvent implements IDyIOEvent {
 

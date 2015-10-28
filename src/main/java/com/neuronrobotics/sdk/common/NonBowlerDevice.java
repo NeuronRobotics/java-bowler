@@ -4,6 +4,10 @@ import java.util.ArrayList;
 
 import com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class NonBowlerDevice.
+ */
 public abstract class  NonBowlerDevice extends BowlerAbstractDevice {
 	/**
 	 * This method tells the connection object to disconnect its pipes and close out the connection. Once this is called, it is safe to remove your device.
@@ -11,9 +15,23 @@ public abstract class  NonBowlerDevice extends BowlerAbstractDevice {
 	
 	public abstract void disconnectDeviceImp();
 	
+	/**
+	 * Connect device imp.
+	 *
+	 * @return true, if successful
+	 */
 	public abstract  boolean connectDeviceImp();
+	
+	/**
+	 * Gets the namespaces imp.
+	 *
+	 * @return the namespaces imp
+	 */
 	public abstract  ArrayList<String>  getNamespacesImp();
 	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.common.BowlerAbstractDevice#connect()
+	 */
 	@Override
 	public boolean connect(){
 		fireConnectEvent();
@@ -41,6 +59,9 @@ public abstract class  NonBowlerDevice extends BowlerAbstractDevice {
 		
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.common.IBowlerDatagramListener#onAsyncResponse(com.neuronrobotics.sdk.common.BowlerDatagram)
+	 */
 	@Override
 	public void onAsyncResponse(BowlerDatagram data) {
 		// TODO Auto-generated method stub

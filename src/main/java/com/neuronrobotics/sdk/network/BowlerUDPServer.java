@@ -30,23 +30,34 @@ import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.Log;
 
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The Class BowlerUDPServer.
  */
 public class BowlerUDPServer extends BowlerAbstractConnection {
+	
+	/** The sleep time. */
 	private int sleepTime = 1000;
 	
+	/** The IP address set. */
 	private InetAddress IPAddressSet=null;
+	
+	/** The internal receive buffer. */
 	private ByteList internalReceiveBuffer= new ByteList();
+	
+	/** The udp sock. */
 	private DatagramSocket udpSock = null;
 	
 	//private UDPStream udp = null;
 
+	/** The port. */
 	private int port = 1865;
+	
+	/** The destination port. */
 	private int destinationPort=port;
 	
 	/**
-	 * 
+	 * Instantiates a new bowler udp server.
 	 */
 	public BowlerUDPServer(){
 		setSynchronusPacketTimeoutTime(sleepTime);
@@ -54,9 +65,9 @@ public class BowlerUDPServer extends BowlerAbstractConnection {
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @param port
+	 * Instantiates a new bowler udp server.
+	 *
+	 * @param port the port
 	 */
 	public BowlerUDPServer(int port){
 		setSynchronusPacketTimeoutTime(sleepTime);
@@ -95,6 +106,12 @@ public class BowlerUDPServer extends BowlerAbstractConnection {
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.common.BowlerAbstractConnection#reconnect()
 	 */
+	/**
+	 * Reconnect.
+	 *
+	 * @return true, if successful
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	//@Override
 	public boolean reconnect() throws IOException {
 		disconnect();
@@ -116,6 +133,7 @@ public class BowlerUDPServer extends BowlerAbstractConnection {
 	 * Gets the data ins.
 	 *
 	 * @return the data ins
+	 * @throws NullPointerException the null pointer exception
 	 */
 	@Override
 	public DataInputStream getDataIns() throws NullPointerException{
@@ -127,6 +145,7 @@ public class BowlerUDPServer extends BowlerAbstractConnection {
 	 * Gets the data outs.
 	 *
 	 * @return the data outs
+	 * @throws NullPointerException the null pointer exception
 	 */
 	@Override
 	public DataOutputStream getDataOuts() throws NullPointerException{
@@ -151,6 +170,9 @@ public class BowlerUDPServer extends BowlerAbstractConnection {
 		
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.common.BowlerAbstractConnection#loadPacketFromPhy(com.neuronrobotics.sdk.common.ByteList)
+	 */
 	@Override
 	public BowlerDatagram loadPacketFromPhy(ByteList bytesToPacketBuffer) throws NullPointerException, IOException{
 		byte[] receiveData=new byte[4096];

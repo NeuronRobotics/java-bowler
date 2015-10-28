@@ -14,26 +14,64 @@ import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.NonBowlerDevice;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class HokuyoURGDevice.
+ */
 public class HokuyoURGDevice extends NonBowlerDevice{
+	
+	/** The serial. */
 	private NRSerialPort serial;
+	
+	/** The ins. */
 	private DataInputStream ins;
+	
+	/** The outs. */
 	private DataOutputStream outs;
+	
+	/** The receive. */
 	private Thread receive;
 	
+	/** The center. */
 	private final int center = 384;//from datasheet
+	
+	/** The degrees per angle unit. */
 	private final double degreesPerAngleUnit = 0.352422908;//from datasheet
 	
 	
+	/** The packet. */
 	private URG2Packet packet=null;
+	
+	/** The run. */
 	boolean run=true;
+	
+	/** The done. */
 	protected boolean done=false;
+	
+	/**
+	 * Instantiates a new hokuyo urg device.
+	 *
+	 * @param port the port
+	 */
 	public HokuyoURGDevice(NRSerialPort port){
 		serial=port;
 	}
 	
+	/**
+	 * Clear.
+	 */
 	public void clear() {
 		send("QT\n");
 	}
+	
+	/**
+	 * Start sweep.
+	 *
+	 * @param startDeg the start deg
+	 * @param endDeg the end deg
+	 * @param degPerStep the deg per step
+	 * @return the UR g2 packet
+	 */
 	public URG2Packet startSweep(double startDeg, double endDeg, double degPerStep) {
 		setPacket(null);
 		int tick =(int)(degPerStep/degreesPerAngleUnit);
@@ -59,6 +97,13 @@ public class HokuyoURGDevice extends NonBowlerDevice{
 		System.out.print("Sweep got packet= "+getPacket());
 		return getPacket();
 	}
+	
+	/**
+	 * Degree to ticks.
+	 *
+	 * @param degrees the degrees
+	 * @return the int
+	 */
 	private int degreeToTicks(double degrees) {
 		int tick =(int)(degrees/degreesPerAngleUnit)+center;
 		if(tick<0)
@@ -67,21 +112,23 @@ public class HokuyoURGDevice extends NonBowlerDevice{
 			tick=center*2;
 		return tick;
 	}
+	
 	/**
-	 * 
+	 * Scan.
+	 *
 	 * @param startStep 	tick to start at
 	 * @param endStep 		tick to end at
 	 * 						Starting step and End Step can be any points between 0 and maximum step (see section 4). End Step
-							should be always greater than Starting step.
+	 * 							should be always greater than Starting step.
 	 * @param clusterCount 	Cluster Count is the number of adjacent steps that can be merged into single data and has a range 0 to
-							99. When cluster count is more than 1, step having minimum measurement value (excluding error) in the
-							cluster will be the output data. 
+	 * 							99. When cluster count is more than 1, step having minimum measurement value (excluding error) in the
+	 * 							cluster will be the output data. 
 	 * @param scanInterval 	Scan Interval and
-							Skipping the number of scans when obtaining multiple scan data can be set in Scan Interval. The value
-							should be in decimal.
+	 * 							Skipping the number of scans when obtaining multiple scan data can be set in Scan Interval. The value
+	 * 							should be in decimal.
 	 * @param numberOfScans User can request number of scan data by supplying the count in Number of Scan. If Number of Scan is
-							set to 00 the data is supplied indefinitely unless canceled using [QT-Command] or [RS-Command].
-							The value should be in decimal.
+	 * 							set to 00 the data is supplied indefinitely unless canceled using [QT-Command] or [RS-Command].
+	 * 							The value should be in decimal.
 	 */
 	public void scan(int startStep,int endStep,int clusterCount,int scanInterval,int numberOfScans){
 		clear();
@@ -95,6 +142,11 @@ public class HokuyoURGDevice extends NonBowlerDevice{
 		send(cmd);
 	}
 	
+	/**
+	 * Send.
+	 *
+	 * @param data the data
+	 */
 	private void send(String data){
 		try {
 			//System.out.println("\nSending: "+data);
@@ -105,14 +157,27 @@ public class HokuyoURGDevice extends NonBowlerDevice{
 		 
 	}
 
+	/**
+	 * Gets the packet.
+	 *
+	 * @return the packet
+	 */
 	public URG2Packet getPacket() {
 		return packet;
 	}
 
+	/**
+	 * Sets the packet.
+	 *
+	 * @param packet the new packet
+	 */
 	public void setPacket(URG2Packet packet) {
 		this.packet = packet;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.common.NonBowlerDevice#disconnectDeviceImp()
+	 */
 	@Override
 	public void disconnectDeviceImp() {
 		run=false;
@@ -128,6 +193,9 @@ public class HokuyoURGDevice extends NonBowlerDevice{
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.common.NonBowlerDevice#connectDeviceImp()
+	 */
 	@Override
 	public boolean connectDeviceImp() {
 		serial.connect();                                 
@@ -185,6 +253,9 @@ public class HokuyoURGDevice extends NonBowlerDevice{
 		return serial.isConnected();
 	}
 
+	/* (non-Javadoc)
+	 * @see com.neuronrobotics.sdk.common.NonBowlerDevice#getNamespacesImp()
+	 */
 	@Override
 	public ArrayList<String> getNamespacesImp() {
 		// TODO Auto-generated method stub

@@ -10,22 +10,51 @@ import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.common.Log;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ServoStockGCodeParser.
+ */
 public class ServoStockGCodeParser {
 	
+	/** The interp. */
 	private GCodeInterpreter interp;
+	
+	/** The device. */
 	NRPrinter device;
 	
+	/** The listeners. */
 	// intrepretur status data
 	private ArrayList<PrinterStatusListener> listeners = new ArrayList<PrinterStatusListener>();
+	
+	/** The current line. */
 	private int currentLine=0;
+	
+	/** The current tempreture. */
 	private double currentTempreture = 0;
+	
+	/** The extrusion. */
 	private double extrusion=0;
+	
+	/** The current transform. */
 	private TransformNR currentTransform= new TransformNR();
+	
+	/**
+	 * Instantiates a new servo stock g code parser.
+	 *
+	 * @param nrPrinter the nr printer
+	 */
 	public ServoStockGCodeParser(NRPrinter nrPrinter) {
 		// TODO Auto-generated constructor stub
 		this.device=nrPrinter;
 	}
 
+	/**
+	 * Prints the.
+	 *
+	 * @param gcode the gcode
+	 * @return true, if successful
+	 * @throws Exception the exception
+	 */
 	public boolean print(InputStream gcode) throws Exception {
 		currentLine=0;
 		//this should be a thread that takes the gcode and sends it to the printer
@@ -42,6 +71,11 @@ public class ServoStockGCodeParser {
 
 	}
 	
+	/**
+	 * Fire printer status update.
+	 *
+	 * @param status the status
+	 */
 	private void firePrinterStatusUpdate(PrinterStatus status){
 		currentLine=status.getPrintProgress();
 		
@@ -51,12 +85,22 @@ public class ServoStockGCodeParser {
 		}
 	}
 	
+	/**
+	 * Fire printer status update.
+	 *
+	 * @param state the state
+	 */
 	public void firePrinterStatusUpdate(PrinterState state) {
 		// TODO Auto-generated method stub
 		firePrinterStatusUpdate(new PrinterStatus(currentTransform,extrusion,currentTempreture,currentLine,state));
 
 	}
 
+	/**
+	 * Adds the handlers.
+	 *
+	 * @param interp the interp
+	 */
 	void addHandlers(GCodeInterpreter interp) {
 		
 		interp.setErrorHandler(new CodeHandler() {
@@ -163,6 +207,9 @@ public class ServoStockGCodeParser {
 		
 	}
 	
+	/**
+	 * Wait for clear to print.
+	 */
 	private void waitForClearToPrint(){
 		while(device!=null && device.getNumberOfSpacesInBuffer()==0) {
 			try {
@@ -175,6 +222,9 @@ public class ServoStockGCodeParser {
 		}
 	}
 	
+	/**
+	 * Wait for empty print queue.
+	 */
 	private void waitForEmptyPrintQueue(){
 		while(device!=null && device.getNumberOfPacketsWaiting() != 0) {
 			try {
@@ -187,6 +237,11 @@ public class ServoStockGCodeParser {
 		}
 	}
 
+	/**
+	 * Cancel.
+	 *
+	 * @return true, if successful
+	 */
 	public boolean cancel() {
 		if(interp!=null) {
 			return interp.cancel();
@@ -194,16 +249,31 @@ public class ServoStockGCodeParser {
 		return false;
 	}
 
+	/**
+	 * Adds the printer status listener.
+	 *
+	 * @param l the l
+	 */
 	public void addPrinterStatusListener(PrinterStatusListener l) {
 		if(!listeners.contains(l))
 			listeners.add(l);
 	}
 
+	/**
+	 * Removes the printer status listener.
+	 *
+	 * @param l the l
+	 */
 	public void removePrinterStatusListener(PrinterStatusListener l) {
 		if(listeners.contains(l))
 			listeners.remove(l);
 	}
 
+	/**
+	 * Checks if is ready.
+	 *
+	 * @return true, if is ready
+	 */
 	public boolean isReady() {
 		// TODO Auto-generated method stub
 //		return false;
