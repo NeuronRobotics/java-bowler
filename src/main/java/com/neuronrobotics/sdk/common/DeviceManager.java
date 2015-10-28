@@ -21,7 +21,7 @@ public class DeviceManager {
 		if(!newDevice.isAvailable())
 			newDevice.connect();
 		if(!newDevice.isAvailable()){
-			throw new BowlerRuntimeException("Device is not availible");
+			throw new BowlerRuntimeException("Device "+name+" of type "+newDevice.getClass().getSimpleName()+ " is not availible");
 		}
 		if(devices.contains(newDevice)){
 			Log.warning("Device is already added " +newDevice.getScriptingName());
