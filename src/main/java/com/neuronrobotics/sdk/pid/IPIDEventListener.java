@@ -6,7 +6,7 @@ package com.neuronrobotics.sdk.pid;
  * The class that is interested in processing a IPIDEvent
  * event implements this interface, and the object created
  * with that class is registered with a component using the
- * component's <code>addIPIDEventListener<code> method. When
+ * component's  addIPIDEventListener  method. When
  * the IPIDEvent event occurs, that object's appropriate
  * method is invoked.
  *

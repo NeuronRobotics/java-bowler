@@ -20,7 +20,7 @@ package com.neuronrobotics.sdk.addons.irobot;
  * The class that is interested in processing a ICreateSensor
  * event implements this interface, and the object created
  * with that class is registered with a component using the
- * component's <code>addICreateSensorListener<code> method. When
+ * component's  addICreateSensorListener  method. When
  * the ICreateSensor event occurs, that object's appropriate
  * method is invoked.
  *

@@ -7,7 +7,7 @@ package com.neuronrobotics.replicator.driver;
 public class DataConvertion {
 	
 	/**
-	 * ** Encodes a <code>double</code> value into bytes
+	 * ** Encodes a  double  value into bytes
 	 * ** 
 	 * ** @param len
 	 *            The number of bytes to encode the value to
@@ -39,13 +39,13 @@ public class DataConvertion {
 	// ------------------------------------------------------------------------
 
 	/**
-	 * ** Decodes a <code>double</code> value from bytes, using IEEE 754 format
+	 * ** Decodes a  double  value from bytes, using IEEE 754 format
 	 * ** .
 	 *
-	 * @param data            The byte array from which to decode the <code>double</code>
+	 * @param data            The byte array from which to decode the  double 
 	 *            value
 	 * ** @param ofs
-	 *            The offset into <code>data</code> to start decoding
+	 *            The offset into  data  to start decoding
 	 * ** @return The decoded value, or 0L
 	 */
 	public static double decodeDouble(byte data[], int ofs) {

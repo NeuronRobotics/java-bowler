@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * The class that is interested in processing a ISensor
  * event implements this interface, and the object created
  * with that class is registered with a component using the
- * component's <code>addISensorListener<code> method. When
+ * component's  addISensorListener  method. When
  * the ISensor event occurs, that object's appropriate
  * method is invoked.
  *

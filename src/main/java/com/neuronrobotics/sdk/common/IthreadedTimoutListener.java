@@ -6,7 +6,7 @@ package com.neuronrobotics.sdk.common;
  * The class that is interested in processing a ithreadedTimout
  * event implements this interface, and the object created
  * with that class is registered with a component using the
- * component's <code>addIthreadedTimoutListener<code> method. When
+ * component's  addIthreadedTimoutListener  method. When
  * the ithreadedTimout event occurs, that object's appropriate
  * method is invoked.
  *

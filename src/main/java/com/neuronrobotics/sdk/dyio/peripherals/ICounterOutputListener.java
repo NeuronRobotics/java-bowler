@@ -20,7 +20,7 @@ package com.neuronrobotics.sdk.dyio.peripherals;
  * The class that is interested in processing a ICounterOutput
  * event implements this interface, and the object created
  * with that class is registered with a component using the
- * component's <code>addICounterOutputListener<code> method. When
+ * component's  addICounterOutputListener  method. When
  * the ICounterOutput event occurs, that object's appropriate
  * method is invoked.
  *

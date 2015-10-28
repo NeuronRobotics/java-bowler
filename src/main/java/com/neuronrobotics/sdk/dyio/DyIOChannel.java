@@ -229,8 +229,8 @@ public class DyIOChannel implements IDyIOChannel {
 	 * a live query to the device for its current mode and cache it to the
 	 * channel for future use.
 	 * 
-	 * Identical to calling <code>resync(false)</code> before
-	 * <code>getMode()</code>
+	 * Identical to calling  resync(false)  before
+	 *  getMode() 
 	 *
 	 * @param resync the resync
 	 * @return the mode

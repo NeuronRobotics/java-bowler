@@ -38,7 +38,7 @@ public class DyIOOutputStream extends OutputStream {
 	}
 	
 	/**
-	 * Writes <code>bl</code> to this output stream as a single packet verses
+	 * Writes  bl  to this output stream as a single packet verses
 	 * individual writes for each byte.
 	 * 
 	 * @param bl

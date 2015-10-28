@@ -6,7 +6,7 @@ package com.neuronrobotics.sdk.util;
  * The class that is interested in processing a IProgressMonitor
  * event implements this interface, and the object created
  * with that class is registered with a component using the
- * component's <code>addIProgressMonitorListener<code> method. When
+ * component's  addIProgressMonitorListener  method. When
  * the IProgressMonitor event occurs, that object's appropriate
  * method is invoked.
  *

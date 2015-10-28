@@ -9,7 +9,7 @@ import java.nio.file.WatchEvent;
  * The class that is interested in processing a IFileChange
  * event implements this interface, and the object created
  * with that class is registered with a component using the
- * component's <code>addIFileChangeListener<code> method. When
+ * component's  addIFileChangeListener  method. When
  * the IFileChange event occurs, that object's appropriate
  * method is invoked.
  *

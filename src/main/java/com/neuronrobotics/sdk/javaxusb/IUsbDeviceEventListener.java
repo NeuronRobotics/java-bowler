@@ -8,7 +8,7 @@ import javax.usb.UsbDevice;
  * The class that is interested in processing a IUsbDeviceEvent
  * event implements this interface, and the object created
  * with that class is registered with a component using the
- * component's <code>addIUsbDeviceEventListener<code> method. When
+ * component's  addIUsbDeviceEventListener  method. When
  * the IUsbDeviceEvent event occurs, that object's appropriate
  * method is invoked.
  *

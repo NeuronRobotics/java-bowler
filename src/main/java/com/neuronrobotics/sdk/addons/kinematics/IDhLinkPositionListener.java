@@ -8,7 +8,7 @@ import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
  * The class that is interested in processing a IDhLinkPosition
  * event implements this interface, and the object created
  * with that class is registered with a component using the
- * component's <code>addIDhLinkPositionListener<code> method. When
+ * component's  addIDhLinkPositionListener  method. When
  * the IDhLinkPosition event occurs, that object's appropriate
  * method is invoked.
  *

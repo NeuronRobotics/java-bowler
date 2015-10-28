@@ -20,7 +20,7 @@ package com.neuronrobotics.sdk.dyio;
  * The class that is interested in processing a IDyIOEvent
  * event implements this interface, and the object created
  * with that class is registered with a component using the
- * component's <code>addIDyIOEventListener<code> method. When
+ * component's  addIDyIOEventListener  method. When
  * the IDyIOEvent event occurs, that object's appropriate
  * method is invoked.
  *

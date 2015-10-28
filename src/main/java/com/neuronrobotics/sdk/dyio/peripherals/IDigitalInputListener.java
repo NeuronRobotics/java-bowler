@@ -20,7 +20,7 @@ package com.neuronrobotics.sdk.dyio.peripherals;
  * The class that is interested in processing a IDigitalInput
  * event implements this interface, and the object created
  * with that class is registered with a component using the
- * component's <code>addIDigitalInputListener<code> method. When
+ * component's  addIDigitalInputListener  method. When
  * the IDigitalInput event occurs, that object's appropriate
  * method is invoked.
  *

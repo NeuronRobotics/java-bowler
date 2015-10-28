@@ -405,7 +405,7 @@ public abstract class BowlerAbstractConnection {
 	
 	/**
 	 * Whenever a connection has received a full datagram from its "physical" connection, it should then call
-	 * <code>onDataReceived</code> with the datagram. This will set it to the last received data if it is
+	 *  onDataReceived  with the datagram. This will set it to the last received data if it is
 	 * synchronous and will add it to the appropriate queues to be picked up and send to the listeners.
 	 *
 	 * @param data the data

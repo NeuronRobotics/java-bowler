@@ -6,7 +6,7 @@ package com.neuronrobotics.addons.driving;
  * The class that is interested in processing a IRobotDriveEvent
  * event implements this interface, and the object created
  * with that class is registered with a component using the
- * component's <code>addIRobotDriveEventListener<code> method. When
+ * component's  addIRobotDriveEventListener  method. When
  * the IRobotDriveEvent event occurs, that object's appropriate
  * method is invoked.
  *

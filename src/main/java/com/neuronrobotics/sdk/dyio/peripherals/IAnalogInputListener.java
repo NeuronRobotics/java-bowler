@@ -20,7 +20,7 @@ package com.neuronrobotics.sdk.dyio.peripherals;
  * The class that is interested in processing a IAnalogInput
  * event implements this interface, and the object created
  * with that class is registered with a component using the
- * component's <code>addIAnalogInputListener<code> method. When
+ * component's  addIAnalogInputListener  method. When
  * the IAnalogInput event occurs, that object's appropriate
  * method is invoked.
  *

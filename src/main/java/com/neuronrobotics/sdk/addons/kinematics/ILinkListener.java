@@ -8,7 +8,7 @@ import com.neuronrobotics.sdk.pid.PIDLimitEvent;
  * The class that is interested in processing a ILink
  * event implements this interface, and the object created
  * with that class is registered with a component using the
- * component's <code>addILinkListener<code> method. When
+ * component's  addILinkListener  method. When
  * the ILink event occurs, that object's appropriate
  * method is invoked.
  *

@@ -6,7 +6,7 @@ package com.neuronrobotics.sdk.dyio;
  * The class that is interested in processing a IDyIOChannelModeChange
  * event implements this interface, and the object created
  * with that class is registered with a component using the
- * component's <code>addIDyIOChannelModeChangeListener<code> method. When
+ * component's  addIDyIOChannelModeChangeListener  method. When
  * the IDyIOChannelModeChange event occurs, that object's appropriate
  * method is invoked.
  *

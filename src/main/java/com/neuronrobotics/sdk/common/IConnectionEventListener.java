@@ -6,7 +6,7 @@ package com.neuronrobotics.sdk.common;
  * The class that is interested in processing a IConnectionEvent
  * event implements this interface, and the object created
  * with that class is registered with a component using the
- * component's <code>addIConnectionEventListener<code> method. When
+ * component's  addIConnectionEventListener  method. When
  * the IConnectionEvent event occurs, that object's appropriate
  * method is invoked.
  *

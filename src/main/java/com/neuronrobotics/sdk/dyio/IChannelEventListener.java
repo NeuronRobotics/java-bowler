@@ -20,7 +20,7 @@ package com.neuronrobotics.sdk.dyio;
  * The class that is interested in processing a IChannelEvent
  * event implements this interface, and the object created
  * with that class is registered with a component using the
- * component's <code>addIChannelEventListener<code> method. When
+ * component's  addIChannelEventListener  method. When
  * the IChannelEvent event occurs, that object's appropriate
  * method is invoked.
  *

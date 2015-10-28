@@ -7,7 +7,7 @@ package com.neuronrobotics.sdk.dyio.peripherals;
  * The class that is interested in processing a IServoPositionUpdate
  * event implements this interface, and the object created
  * with that class is registered with a component using the
- * component's <code>addIServoPositionUpdateListener<code> method. When
+ * component's  addIServoPositionUpdateListener  method. When
  * the IServoPositionUpdate event occurs, that object's appropriate
  * method is invoked.
  *

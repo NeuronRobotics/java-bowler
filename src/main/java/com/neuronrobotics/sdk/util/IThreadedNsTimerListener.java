@@ -6,7 +6,7 @@ package com.neuronrobotics.sdk.util;
  * The class that is interested in processing a IThreadedNsTimer
  * event implements this interface, and the object created
  * with that class is registered with a component using the
- * component's <code>addIThreadedNsTimerListener<code> method. When
+ * component's  addIThreadedNsTimerListener  method. When
  * the IThreadedNsTimer event occurs, that object's appropriate
  * method is invoked.
  *

@@ -6,7 +6,7 @@ package com.neuronrobotics.sdk.dyio.sequencer;
  * The class that is interested in processing a IScheduler
  * event implements this interface, and the object created
  * with that class is registered with a component using the
- * component's <code>addISchedulerListener<code> method. When
+ * component's  addISchedulerListener  method. When
  * the IScheduler event occurs, that object's appropriate
  * method is invoked.
  *

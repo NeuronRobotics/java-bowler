@@ -162,7 +162,7 @@ public class DyIOConversation implements IConversation, MessageListener, IChanne
 	 * The class that is interested in processing a chatAsync
 	 * event implements this interface, and the object created
 	 * with that class is registered with a component using the
-	 * component's <code>addChatAsyncListener<code> method. When
+	 * component's  addChatAsyncListener  method. When
 	 * the chatAsync event occurs, that object's appropriate
 	 * method is invoked.
 	 *

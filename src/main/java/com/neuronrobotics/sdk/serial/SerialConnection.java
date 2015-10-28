@@ -37,11 +37,11 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
  * <li>setting the baudrate</li>
  * <li>sending data and reading data both syncronously and asyncronously</li>
  * </ul>
- * <p>
+ *  
  * SerialConnection extends SerialPortEventListener to use the RXTX framework for receiving serial 
  * communications efficiently. Remember to disconnect whenever reading and writing to the connection is not
  * necessary as a this class will continue to run a thread to wait for incoming data.
- * <p>
+ *  
  *  
  */
 public class SerialConnection extends BowlerAbstractConnection {
@@ -64,7 +64,7 @@ public class SerialConnection extends BowlerAbstractConnection {
 	
 	/**
 	 * Default Constructor.
-	 * <p>
+	 *  
 	 * Using this constructor will require that at least the port be set later on. 
 	 * 
 	 * The baudrate will default to 115200bps.

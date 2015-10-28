@@ -52,7 +52,7 @@ public class BluetoothSerialConnection extends BowlerAbstractConnection{
 		
 		/**
 		 * Default Constructor.
-		 * <p>
+		 *  
 		 * Using this constructor will require that at least the port be set
 		 * later on.
 		 * 
