@@ -1,0 +1,13 @@
+language: java
+install: /bin/true
+script: 
+  - ./gradlew compileJava jar javadoc test 
+cache:
+  directories:
+  - $HOME/.m2
+
+jdk:
+  - oraclejdk8
+
+# for running tests on Travis CI container infrastructure for faster builds
+sudo: false
