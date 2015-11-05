@@ -63,7 +63,7 @@ public class DHLink {
 	/** The root. */
 	private Affine root=null;
 	
-	/** The degenerate. */
+	/** The type. */
 	private DhLinkType type = DhLinkType.ROTORY;
 	
 	/** The dhlisteners. */
@@ -566,9 +566,9 @@ public class DHLink {
 	}
 
 	/**
-	 * Sets the degenerate.
+	 * Sets the type.
 	 *
-	 * @param degenerate the new degenerate
+	 * @param type the new type
 	 */
 	public void setLinkType(DhLinkType type) {
 		this.type = type;
