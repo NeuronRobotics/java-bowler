@@ -82,6 +82,11 @@ public class LinkConfiguration {
 	private ArrayList<LinkConfiguration> slaveLinks = new ArrayList<LinkConfiguration>();
 	
 	/**
+	 * This is the flag for setting the direction of the velocity lock out for limit switches
+	 */
+	private boolean invertVelocity=false;
+	
+	/**
 	 * Instantiates a new link configuration.
 	 *
 	 * @param eElement the e element
@@ -94,6 +99,11 @@ public class LinkConfiguration {
     	setLowerLimit(Double.parseDouble(XmlFactory.getTagValue("lowerLimit",eElement)));
     	try{
     		setDeviceScriptingName(XmlFactory.getTagValue("deviceName",eElement));		
+    	}catch(NullPointerException e){
+    		// no device from connection engine specified
+    	}
+    	try{
+    		invertVelocity=XmlFactory.getTagValue("invertVelocity",eElement).contains("true");
     	}catch(NullPointerException e){
     		// no device from connection engine specified
     	}
@@ -618,6 +628,7 @@ public class LinkConfiguration {
 		this.staticOffset = staticOffset;
 	}
 
+
 	public ArrayList<LinkConfiguration> getSlaveLinks() {
 		return slaveLinks;
 	}
@@ -626,5 +637,12 @@ public class LinkConfiguration {
 		this.slaveLinks = slaveLinks;
 	}
 
+	public boolean isInvertVelocity() {
+		return invertVelocity;
+	}
+
+	public void setInvertVelocity(boolean invertVelocity) {
+		this.invertVelocity = invertVelocity;
+	}
 	
 }
