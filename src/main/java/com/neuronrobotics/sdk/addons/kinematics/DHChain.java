@@ -182,9 +182,15 @@ public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector )
 			}
 			//Assume all rotational joints
 			//Set to zero if prismatic
-			data[i][3]=zVect[0];
-			data[i][4]=zVect[1];
-			data[i][5]=zVect[2];
+			if(getLinks().get(i).getLinkType()==DhLinkType.ROTORY){
+				data[i][3]=zVect[0];
+				data[i][4]=zVect[1];
+				data[i][5]=zVect[2];
+			}else{
+				data[i][3]=0;
+				data[i][4]=0;
+				data[i][5]=0;
+			}
 			
 			//Figure out the current 
 			Matrix current = new TransformNR().getMatrixTransform();
