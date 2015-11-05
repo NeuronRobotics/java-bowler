@@ -37,7 +37,7 @@ public class PidPrismaticLink extends AbstractPrismaticLink{
 	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractLink#flush(double)
 	 */
 	@Override
-	public void flush(double time) {
+	public void flushDevice(double time) {
 		channel.flush(time);
 	}
 	
@@ -45,7 +45,7 @@ public class PidPrismaticLink extends AbstractPrismaticLink{
 	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractLink#flushAll(double)
 	 */
 	@Override
-	public void flushAll(double time) {
+	public void flushAllDevice(double time) {
 		channel.getPid().flushPIDChannels(time);
 	}
 
