@@ -59,10 +59,10 @@ public class ServoPrismaticLink extends AbstractPrismaticLink{
 
 
 	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractLink#cacheTargetValue()
+	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractLink#cacheTargetValueDevice()
 	 */
 	@Override
-	public void cacheTargetValue() {
+	public void cacheTargetValueDevice() {
 		Log.debug("Caching servo value="+getTargetValue());
 		getServoChannel().SetPosition(getTargetValue());
 	}

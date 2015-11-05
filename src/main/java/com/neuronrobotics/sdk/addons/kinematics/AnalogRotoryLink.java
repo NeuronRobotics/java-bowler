@@ -25,10 +25,10 @@ public class AnalogRotoryLink  extends AbstractRotoryLink implements IAnalogInpu
 	}
 
 	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractLink#cacheTargetValue()
+	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractLink#cacheTargetValueDevice()
 	 */
 	@Override
-	public void cacheTargetValue() {
+	public void cacheTargetValueDevice() {
 		//ignore, input only
 	}
 

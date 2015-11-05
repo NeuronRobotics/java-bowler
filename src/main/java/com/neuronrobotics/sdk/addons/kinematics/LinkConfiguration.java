@@ -130,16 +130,6 @@ public class LinkConfiguration {
     	if(staticOffset>getUpperLimit() || staticOffset<getLowerLimit() )
     	   Log.error("PID group "+getHardwareIndex()+" staticOffset is "+staticOffset+" but needs to be between "+getUpperLimit()+" and "+getLowerLimit());
     	//System.out.println("Interted"+ inverted);
-    	NodeList nodListofLinks = eElement.getChildNodes();
-		for (int i = 0; i < nodListofLinks .getLength(); i++) {			
-		    Node linkNode = nodListofLinks.item(i);
-		    
-		    if (linkNode.getNodeType() == Node.ELEMENT_NODE && linkNode.getNodeName().contentEquals("slaveLink")) {
-		    	LinkConfiguration jc =new LinkConfiguration((Element) linkNode);
-		    	System.out.println("Slave link found: "+jc);
-		    	getSlaveLinks().add(jc);
-		    }
-		}
 	}
 	
 	/**

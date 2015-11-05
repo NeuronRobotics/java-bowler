@@ -36,10 +36,25 @@ public abstract class AbstractLink {
 	public AbstractLink(LinkConfiguration conf){
 		this.conf=conf;
 		slaveLinks = conf.getSlaveLinks();
+		if(slaveLinks.size()>0)
+			System.out.println(conf.getName()+" has slaves: "+slaveLinks.size());
+		for(LinkConfiguration c:slaveLinks){
+			//generate the links
+			slaveFactory.getLink(c);
+		}
+	}
+	/**
+	 * This method is called in order to take the target value and pass it to the implementation's target value
+	 * This method should not alter the position of the implementations link
+	 * If the implementation target does not handle chached values, this should be chached in code.
+	 */
+	public void cacheTargetValue(){
 		for(LinkConfiguration c:slaveLinks){
 			//generate the links
 			AbstractLink link = slaveFactory.getLink(c);
+			link.cacheTargetValue();
 		}
+		cacheTargetValueDevice();
 	}
 	
 	/**
@@ -47,7 +62,7 @@ public abstract class AbstractLink {
 	 * This method should not alter the position of the implementations link
 	 * If the implementation target does not handle chached values, this should be chached in code.
 	 */
-	public abstract void cacheTargetValue();
+	public abstract void cacheTargetValueDevice();
 	
 	/**
 	 * This method will force one link to update its position in the given time (seconds).
@@ -282,14 +297,14 @@ public abstract class AbstractLink {
 	 * @param val the new position
 	 */
 	protected void setPosition(int val) {
-		for(LinkConfiguration c:slaveLinks){
-			//generate the links
-			AbstractLink link = slaveFactory.getLink(c);
-			link.setPosition(val);
-		}
 		//if(getTargetValue() != val){
 			setTargetValue(val);
 		//}
+		for(LinkConfiguration c:slaveLinks){
+			//generate the links
+			AbstractLink link = slaveFactory.getLink(c);
+			link.cacheTargetValue();
+		}
 		cacheTargetValue();
 	}
 	
@@ -306,6 +321,11 @@ public abstract class AbstractLink {
 	protected void setTargetValue(int val) {
 		Log.info("Setting cached value :"+val);
 		this.targetValue = val;
+		for(LinkConfiguration c:slaveLinks){
+			//generate the links
+			AbstractLink link = slaveFactory.getLink(c);
+			link.setTargetValue(targetValue);
+		}
 		if(isUseLimits()){
 			double ub = getMaxEngineeringUnits();
 			double lb = getMinEngineeringUnits();
@@ -314,11 +334,21 @@ public abstract class AbstractLink {
 					+ "\nLower Bound="+lb+" (engineering units) Device Units="+getLowerLimit();
 			if(val>getUpperLimit()){
 				this.targetValue = getUpperLimit();
+				for(LinkConfiguration c:slaveLinks){
+					//generate the links
+					AbstractLink link = slaveFactory.getLink(c);
+					link.setTargetValue(targetValue);
+				}
 				cacheTargetValue();
 				throw new RuntimeException("Joint hit Upper software bound\n"+execpt);
 			}
 			if(val<getLowerLimit()) {
 				this.targetValue =getLowerLimit();
+				for(LinkConfiguration c:slaveLinks){
+					//generate the links
+					AbstractLink link = slaveFactory.getLink(c);
+					link.setTargetValue(targetValue);
+				}
 				cacheTargetValue();
 				throw new RuntimeException("Joint hit Lower software bound\n"+execpt);
 			}
