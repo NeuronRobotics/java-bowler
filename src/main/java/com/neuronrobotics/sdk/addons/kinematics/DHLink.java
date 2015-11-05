@@ -99,6 +99,7 @@ public class DHLink {
 		setTheta(Math.toRadians(XmlFactory.getTagValueDouble("Theta", nNode)));
 		setRadius(XmlFactory.getTagValueDouble("Radius", nNode));
 		setAlpha(Math.toRadians(XmlFactory.getTagValueDouble("Alpha", nNode)));
+		
 	}
 	
 	/**
