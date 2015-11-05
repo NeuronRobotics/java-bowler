@@ -74,8 +74,8 @@ public abstract class AbstractLink {
 			//generate the links
 			AbstractLink link = slaveFactory.getLink(c);
 			link.flush(time);
-			flushDevice(time);
 		}
+		flushDevice(time);
 	}
 	
 	/**
@@ -89,8 +89,8 @@ public abstract class AbstractLink {
 			//generate the links
 			AbstractLink link = slaveFactory.getLink(c);
 			link.flushAll(time);
-			flushAllDevice(time);
 		}
+		flushAllDevice(time);
 	}
 	
 	/**
