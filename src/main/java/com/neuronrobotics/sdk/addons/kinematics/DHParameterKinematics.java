@@ -58,6 +58,8 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 		}
 		@Override public void onConnect(BowlerAbstractDevice source) {}
 	} ;
+
+	private ArrayList<LinkConfiguration> configs;
 	
 	/**
 	 * Instantiates a new DH parameter kinematics.
@@ -244,10 +246,13 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 		for(int i=linksListeners.size();i<dhLinks.size();i++){
 			linksListeners.add(new Affine());
 		}
-
+		LinkFactory lf = getFactory();
+		configs = lf.getLinkConfigurations();
 		for(int i=0;i<dhLinks.size();i++){
 			dhLinks.get(i).setListener(linksListeners.get(i));
 			dhLinks.get(i).setRootListener(getRootListener());
+			//This mapps together the position of the links in the kinematics and the link actions themselves (used for cameras and tools)
+			lf.getLink(configs.get(i)).setGlobalPositionListener(linksListeners.get(i));
 			if(getLinkConfiguration(i).getType().isTool()){
 				dhLinks.get(i).setLinkType(DhLinkType.TOOL);
 			}else if(getLinkConfiguration(i).getType().isPrismatic())
@@ -451,6 +456,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 						public void run() {
 							try{
 								TransformFactory.getTransform(linkPos.get(index), getChain().getLinks().get(index).getListener());
+								
 							}catch(Exception ex){
 								//ex.printStackTrace();
 							}

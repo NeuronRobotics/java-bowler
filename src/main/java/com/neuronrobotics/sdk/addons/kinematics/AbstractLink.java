@@ -2,6 +2,8 @@ package com.neuronrobotics.sdk.addons.kinematics;
 
 import java.util.ArrayList;
 
+import javafx.scene.transform.Affine;
+
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 
@@ -23,6 +25,7 @@ public abstract class AbstractLink {
 	
 	/** The conf. */
 	private LinkConfiguration conf =null;
+	
 	
 	/**
 	 * Instantiates a new abstract link.
@@ -252,6 +255,8 @@ public abstract class AbstractLink {
 	
 	/** The use limits. */
 	private boolean useLimits=true;
+
+	private Affine affine=new Affine();
 	
 	/**
 	 * Sets the target value.
@@ -437,6 +442,13 @@ public abstract class AbstractLink {
 	public void removeAllLinkListener() {
 		links.clear();
 	}
-	
+
+	public void setGlobalPositionListener(Affine affine) {
+		this.affine = affine;
+	}
+
+	public Affine getGlobalPositionListener() {
+		return affine;
+	}
 	
 }

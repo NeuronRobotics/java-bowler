@@ -1,5 +1,7 @@
 package com.neuronrobotics.sdk.addons.kinematics;
 
+import javafx.scene.transform.Affine;
+
 import org.w3c.dom.Element;
 
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
@@ -608,5 +610,6 @@ public class LinkConfiguration {
 	public void setStaticOffset(double staticOffset) {
 		this.staticOffset = staticOffset;
 	}
+
 	
 }
