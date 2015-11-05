@@ -47,7 +47,10 @@ public enum LinkType {
 	STEPPER_TOOL("stepper-tool"), 
 	
 	/** The stepper prismatic. */
-	STEPPER_PRISMATIC("stepper-prismatic");
+	STEPPER_PRISMATIC("stepper-prismatic"),
+	
+	/** Camera */
+	CAMERA("camera");
 	
 	 /** The name. */
  	private final String name;
