@@ -64,7 +64,7 @@ public class DHLink {
 	private Affine root=null;
 	
 	/** The degenerate. */
-	private boolean degenerate = false;
+	private DhLinkType type = DhLinkType.ROTORY;
 	
 	/** The dhlisteners. */
 	private ArrayList<IDhLinkPositionListener> dhlisteners = new ArrayList<IDhLinkPositionListener>();
@@ -189,42 +189,25 @@ public class DHLink {
 		return alpha;
 	}
 	
+
 	/**
-	 * Dh step inverse rotory.
+	 * Dh step inverse .
 	 *
 	 * @param end the end
 	 * @param jointValue the joint value
 	 * @return the matrix
 	 */
-	public Matrix DhStepInverseRotory(Matrix end, double jointValue) {	
-		if(degenerate)
-			jointValue=0;
-		return  DhStepInverse(end,jointValue,0);
-	}
-	
-	/**
-	 * Dh step inverse prismatic.
-	 *
-	 * @param end the end
-	 * @param jointValue the joint value
-	 * @return the matrix
-	 */
-	public Matrix DhStepInversePrismatic(Matrix end, double jointValue) {	
-		if(degenerate)
-			jointValue=0;
-		return  DhStepInverse(end,0,jointValue);
-	}
-	
-	/**
-	 * Dh step rotory.
-	 *
-	 * @param jointValue the joint value
-	 * @return the matrix
-	 */
-	public Matrix DhStepRotory(double jointValue) {	
-		if(degenerate)
-			jointValue=0;
-		return DhStep(jointValue,0);
+	public Matrix DhStepInverse(Matrix end, double jointValue) {	
+		switch(type){
+		case PRISMATIC:
+			return DhStepInverse(end,0,jointValue);
+		case ROTORY:
+			return  DhStepInverse(end,jointValue,0);
+		default:
+		case TOOL:
+			return  DhStepInverse(end,0,0);
+		}
+
 	}
 	
 	/**
@@ -233,12 +216,18 @@ public class DHLink {
 	 * @param jointValue the joint value
 	 * @return the matrix
 	 */
-	public Matrix DhStepPrismatic(double jointValue) {
-		if(degenerate)
-			jointValue=0;
-		
-		return DhStep(0,jointValue);
+	public Matrix DhStep(double jointValue) {
+		switch(type){
+		case PRISMATIC:
+			return DhStep(0,jointValue);
+		case ROTORY:
+			return DhStep(jointValue,0);
+		default:
+		case TOOL:
+			return DhStep(0,0);
+		}
 	}
+	
 	
 	/**
 	 * Dh step.
@@ -572,8 +561,8 @@ public class DHLink {
 	 *
 	 * @return true, if is degenerate
 	 */
-	public boolean isDegenerate() {
-		return degenerate;
+	public DhLinkType getLinkType() {
+		return type;
 	}
 
 	/**
@@ -581,8 +570,8 @@ public class DHLink {
 	 *
 	 * @param degenerate the new degenerate
 	 */
-	public void setDegenerate(boolean degenerate) {
-		this.degenerate = degenerate;
+	public void setLinkType(DhLinkType type) {
+		this.type = type;
 	}
 
 	/**

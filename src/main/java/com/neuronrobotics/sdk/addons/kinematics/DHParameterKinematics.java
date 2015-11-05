@@ -249,8 +249,11 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 			dhLinks.get(i).setListener(linksListeners.get(i));
 			dhLinks.get(i).setRootListener(getRootListener());
 			if(getLinkConfiguration(i).getType().isTool()){
-				dhLinks.get(i).setDegenerate(true);
-			}
+				dhLinks.get(i).setLinkType(DhLinkType.TOOL);
+			}else if(getLinkConfiguration(i).getType().isPrismatic())
+				dhLinks.get(i).setLinkType(DhLinkType.PRISMATIC);
+			else
+				dhLinks.get(i).setLinkType(DhLinkType.ROTORY);
 		}
 		addPoseUpdateListener(this);
 		addJointSpaceListener(this);
