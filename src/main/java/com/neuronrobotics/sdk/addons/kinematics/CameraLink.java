@@ -17,7 +17,7 @@ public class CameraLink extends AbstractLink {
 	
 
 	@Override
-	public void cacheTargetValue() {
+	public void cacheTargetValueDevice() {
 		// TODO Auto-generated method stub
 
 	}
