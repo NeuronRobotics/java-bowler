@@ -25,7 +25,8 @@ public abstract class AbstractLink {
 	
 	/** The conf. */
 	private LinkConfiguration conf =null;
-	
+	private ArrayList<LinkConfiguration> slaveLinks;
+	private LinkFactory slaveFactory = new LinkFactory();
 	
 	/**
 	 * Instantiates a new abstract link.
@@ -34,6 +35,11 @@ public abstract class AbstractLink {
 	 */
 	public AbstractLink(LinkConfiguration conf){
 		this.conf=conf;
+		slaveLinks = conf.getSlaveLinks();
+		for(LinkConfiguration c:slaveLinks){
+			//generate the links
+			AbstractLink link = slaveFactory.getLink(c);
+		}
 	}
 	
 	/**
@@ -48,7 +54,14 @@ public abstract class AbstractLink {
 	 *
 	 * @param time (seconds) for the position update to take
 	 */
-	public abstract void flush(double time);
+	public void flush(double time){
+		for(LinkConfiguration c:slaveLinks){
+			//generate the links
+			AbstractLink link = slaveFactory.getLink(c);
+			link.flush(time);
+			flushDevice(time);
+		}
+	}
 	
 	/**
 	 * This method will force one link to update its position in the given time (seconds)
@@ -56,7 +69,29 @@ public abstract class AbstractLink {
 	 *
 	 * @param time (seconds) for the position update to take
 	 */
-	public abstract void flushAll(double time);
+	public void flushAll(double time){
+		for(LinkConfiguration c:slaveLinks){
+			//generate the links
+			AbstractLink link = slaveFactory.getLink(c);
+			link.flushAll(time);
+			flushAllDevice(time);
+		}
+	}
+	
+	/**
+	 * This method will force one link to update its position in the given time (seconds).
+	 *
+	 * @param time (seconds) for the position update to take
+	 */
+	public abstract void flushDevice(double time);
+	
+	/**
+	 * This method will force one link to update its position in the given time (seconds)
+	 * This will also flush the host controller.
+	 *
+	 * @param time (seconds) for the position update to take
+	 */
+	public abstract void flushAllDevice(double time);
 	
 	/**
 	 * This method should return the current position of the link
@@ -247,6 +282,11 @@ public abstract class AbstractLink {
 	 * @param val the new position
 	 */
 	protected void setPosition(int val) {
+		for(LinkConfiguration c:slaveLinks){
+			//generate the links
+			AbstractLink link = slaveFactory.getLink(c);
+			link.setPosition(val);
+		}
 		//if(getTargetValue() != val){
 			setTargetValue(val);
 		//}

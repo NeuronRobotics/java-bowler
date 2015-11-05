@@ -71,7 +71,7 @@ public class ServoPrismaticLink extends AbstractPrismaticLink{
 	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractLink#flush(double)
 	 */
 	@Override
-	public void flush(double time) {
+	public void flushDevice(double time) {
 		getServoChannel().SetPosition(getTargetValue(),(float) time);
 		getServoChannel().getChannel().flush();
 		fireLinkListener(getTargetValue());
@@ -91,7 +91,7 @@ public class ServoPrismaticLink extends AbstractPrismaticLink{
 	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractLink#flushAll(double)
 	 */
 	@Override
-	public void flushAll(double time) {
+	public void flushAllDevice(double time) {
 		// TODO Auto-generated method stub
 		getServoChannel().SetPosition(getTargetValue(),(float) time);
 		getServoChannel().getChannel().getDevice().flushCache((float)time);

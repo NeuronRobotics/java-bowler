@@ -35,7 +35,7 @@ public class StepperRotoryLink extends AbstractRotoryLink {
 	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractLink#flush(double)
 	 */
 	@Override
-	public void flush(double time) {
+	public void flushDevice(double time) {
 		channel.getChannel().setCachedTime((float)time);
 		channel.getChannel().flush();
 		
@@ -45,7 +45,7 @@ public class StepperRotoryLink extends AbstractRotoryLink {
 	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractLink#flushAll(double)
 	 */
 	@Override
-	public void flushAll(double time) {
+	public void flushAllDevice(double time) {
 		channel.getChannel().getDevice().flushCache((float) time);
 	}
 

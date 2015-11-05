@@ -23,13 +23,13 @@ public class CameraLink extends AbstractLink {
 	}
 
 	@Override
-	public void flush(double time) {
+	public void flushDevice(double time) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void flushAll(double time) {
+	public void flushAllDevice(double time) {
 		// TODO Auto-generated method stub
 
 	}

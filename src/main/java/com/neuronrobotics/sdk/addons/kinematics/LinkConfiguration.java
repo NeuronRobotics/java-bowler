@@ -1,9 +1,14 @@
 package com.neuronrobotics.sdk.addons.kinematics;
 
+import java.util.ArrayList;
+
 import javafx.scene.transform.Affine;
 
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
+import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
 import com.neuronrobotics.sdk.common.Log;
 //import org.w3c.dom.Node;
@@ -74,6 +79,8 @@ public class LinkConfiguration {
 	/** The static offset. */
 	private double staticOffset=0;
 	
+	private ArrayList<LinkConfiguration> slaveLinks = new ArrayList<LinkConfiguration>();
+	
 	/**
 	 * Instantiates a new link configuration.
 	 *
@@ -123,6 +130,16 @@ public class LinkConfiguration {
     	if(staticOffset>getUpperLimit() || staticOffset<getLowerLimit() )
     	   Log.error("PID group "+getHardwareIndex()+" staticOffset is "+staticOffset+" but needs to be between "+getUpperLimit()+" and "+getLowerLimit());
     	//System.out.println("Interted"+ inverted);
+    	NodeList nodListofLinks = eElement.getChildNodes();
+		for (int i = 0; i < nodListofLinks .getLength(); i++) {			
+		    Node linkNode = nodListofLinks.item(i);
+		    
+		    if (linkNode.getNodeType() == Node.ELEMENT_NODE && linkNode.getNodeName().contentEquals("slaveLink")) {
+		    	LinkConfiguration jc =new LinkConfiguration((Element) linkNode);
+		    	System.out.println("Slave link found: "+jc);
+		    	getSlaveLinks().add(jc);
+		    }
+		}
 	}
 	
 	/**
@@ -609,6 +626,14 @@ public class LinkConfiguration {
 	 */
 	public void setStaticOffset(double staticOffset) {
 		this.staticOffset = staticOffset;
+	}
+
+	public ArrayList<LinkConfiguration> getSlaveLinks() {
+		return slaveLinks;
+	}
+
+	public void setSlaveLinks(ArrayList<LinkConfiguration> slaveLinks) {
+		this.slaveLinks = slaveLinks;
 	}
 
 	
