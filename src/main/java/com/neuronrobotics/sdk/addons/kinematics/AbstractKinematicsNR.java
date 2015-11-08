@@ -535,8 +535,10 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	public double[]  setDesiredTaskSpaceTransform(TransformNR taskSpaceTransform, double seconds) throws Exception{
 		Log.info("Setting target pose: "+taskSpaceTransform);
 		setCurrentPoseTarget(taskSpaceTransform);
-		taskSpaceTransform = inverseOffset(taskSpaceTransform);
-		double [] jointSpaceVect = inverseKinematics(taskSpaceTransform);
+		
+		double [] jointSpaceVect = inverseKinematics(
+									inverseOffset(taskSpaceTransform)
+									);
 		if(jointSpaceVect==null)
 			throw new RuntimeException("The kinematics model muts return and array, not null");
 		setDesiredJointSpaceVector(jointSpaceVect,  seconds);

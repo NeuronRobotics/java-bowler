@@ -206,6 +206,10 @@ public class LinkConfiguration {
 	 */
 	public String getXml(){
 		String DevStr=deviceScriptingName!= null?"<deviceName>"+getDeviceScriptingName()+"</deviceName>\n":"";
+		String slaves="";
+		for(int i=0;i<slaveLinks.size();i++){
+			slaves+="\n\t<slaveLink>\n"+slaveLinks.get(i).getXml()+"\n\t</slaveLink>\n";
+		}
 		
 		return "\t<name>"+getName()+"</name>\n"+
 				"\t"+DevStr+
@@ -220,7 +224,8 @@ public class LinkConfiguration {
 				"\t<isLatch>"+isLatch+"</isLatch>\n"+
 				"\t<indexLatch>"+indexLatch+"</indexLatch>\n"+
 				"\t<isStopOnLatch>"+isStopOnLatch+"</isStopOnLatch>\n"+	
-				"\t<homingTPS>"+getHomingTicksPerSecond()+"</homingTPS>\n";
+				"\t<homingTPS>"+getHomingTicksPerSecond()+"</homingTPS>\n"
+				+slaves;
 	}
 	
 
