@@ -40,7 +40,7 @@ public abstract class AbstractLink {
 			System.out.println(conf.getName()+" has slaves: "+slaveLinks.size());
 		for(LinkConfiguration c:slaveLinks){
 			//generate the links
-			slaveFactory.getLink(c);
+			getSlaveFactory().getLink(c);
 		}
 	}
 	/**
@@ -51,7 +51,7 @@ public abstract class AbstractLink {
 	public void cacheTargetValue(){
 		for(LinkConfiguration c:slaveLinks){
 			//generate the links
-			AbstractLink link = slaveFactory.getLink(c);
+			AbstractLink link = getSlaveFactory().getLink(c);
 			link.cacheTargetValue();
 		}
 		cacheTargetValueDevice();
@@ -72,7 +72,7 @@ public abstract class AbstractLink {
 	public void flush(double time){
 		for(LinkConfiguration c:slaveLinks){
 			//generate the links
-			AbstractLink link = slaveFactory.getLink(c);
+			AbstractLink link = getSlaveFactory().getLink(c);
 			link.flush(time);
 		}
 		flushDevice(time);
@@ -87,7 +87,7 @@ public abstract class AbstractLink {
 	public void flushAll(double time){
 		for(LinkConfiguration c:slaveLinks){
 			//generate the links
-			AbstractLink link = slaveFactory.getLink(c);
+			AbstractLink link = getSlaveFactory().getLink(c);
 			link.flushAll(time);
 		}
 		flushAllDevice(time);
@@ -302,7 +302,7 @@ public abstract class AbstractLink {
 		//}
 		for(LinkConfiguration c:slaveLinks){
 			//generate the links
-			AbstractLink link = slaveFactory.getLink(c);
+			AbstractLink link = getSlaveFactory().getLink(c);
 			link.cacheTargetValue();
 		}
 		cacheTargetValue();
@@ -323,7 +323,7 @@ public abstract class AbstractLink {
 		this.targetValue = val;
 		for(LinkConfiguration c:slaveLinks){
 			//generate the links
-			AbstractLink link = slaveFactory.getLink(c);
+			AbstractLink link = getSlaveFactory().getLink(c);
 			link.setTargetValue(targetValue);
 		}
 		if(isUseLimits()){
@@ -336,7 +336,7 @@ public abstract class AbstractLink {
 				this.targetValue = getUpperLimit();
 				for(LinkConfiguration c:slaveLinks){
 					//generate the links
-					AbstractLink link = slaveFactory.getLink(c);
+					AbstractLink link = getSlaveFactory().getLink(c);
 					link.setTargetValue(targetValue);
 				}
 				cacheTargetValue();
@@ -346,7 +346,7 @@ public abstract class AbstractLink {
 				this.targetValue =getLowerLimit();
 				for(LinkConfiguration c:slaveLinks){
 					//generate the links
-					AbstractLink link = slaveFactory.getLink(c);
+					AbstractLink link = getSlaveFactory().getLink(c);
 					link.setTargetValue(targetValue);
 				}
 				cacheTargetValue();
@@ -519,6 +519,12 @@ public abstract class AbstractLink {
 
 	public Affine getGlobalPositionListener() {
 		return affine;
+	}
+	public LinkFactory getSlaveFactory() {
+		return slaveFactory;
+	}
+	public void setSlaveFactory(LinkFactory slaveFactory) {
+		this.slaveFactory = slaveFactory;
 	}
 	
 }
