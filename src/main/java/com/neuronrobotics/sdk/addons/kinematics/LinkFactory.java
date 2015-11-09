@@ -221,7 +221,7 @@ public class LinkFactory {
 		}
 		
 		if(tmp==null){
-			String myVirtualDevName="virtual_"+c.getDeviceScriptingName();
+			String myVirtualDevName=c.getDeviceScriptingName();
 			virtual = (VirtualGenericPIDDevice)DeviceManager.getSpecificDevice(VirtualGenericPIDDevice.class, myVirtualDevName);
 			if(virtual==null){
 				virtual=new VirtualGenericPIDDevice();
