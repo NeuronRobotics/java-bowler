@@ -16,7 +16,7 @@ import javafx.application.Platform;
 import javafx.scene.transform.Affine;
 import Jama.Matrix;
 
-import com.neuronrobotics.sdk.addons.kinematics.gui.TransformFactory;
+import com.neuronrobotics.sdk.addons.kinematics.TransformFactory;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;

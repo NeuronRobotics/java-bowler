@@ -16,7 +16,6 @@ import org.w3c.dom.NodeList;
 
 import Jama.Matrix;
 
-import com.neuronrobotics.sdk.addons.kinematics.gui.TransformFactory;
 import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
