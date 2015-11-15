@@ -13,6 +13,7 @@ import java.io.IOException;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
+import javafx.scene.transform.Affine;
 
 import javax.imageio.ImageIO;
 
@@ -23,6 +24,7 @@ import com.neuronrobotics.sdk.common.NonBowlerDevice;
 
 public abstract class AbstractImageProvider extends NonBowlerDevice {
 	private BufferedImage image = null;
+	private Affine globalPos;
 	/**
 	 * This method should capture a new image and load it into the Mat datatype
 	 * @param imageData
@@ -105,5 +107,18 @@ public abstract class AbstractImageProvider extends NonBowlerDevice {
 	}
 	public Image getLatestJfxImage() {
 		return getJfxImage(getLatestImage());
+	}
+
+	public void setGlobalPositionListener(Affine globalPos) {
+		this.setGlobalPos(globalPos);
+	}
+
+	public Affine getGlobalPos() {
+		return globalPos;
+	}
+
+	public void setGlobalPos(Affine globalPos) {
+		this.globalPos = globalPos;
+		
 	}
 }
