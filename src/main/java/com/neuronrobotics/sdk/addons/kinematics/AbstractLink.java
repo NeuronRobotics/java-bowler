@@ -27,6 +27,10 @@ public abstract class AbstractLink {
 	private LinkConfiguration conf =null;
 	private ArrayList<LinkConfiguration> slaveLinks;
 	private LinkFactory slaveFactory = new LinkFactory();
+	/** The use limits. */
+	private boolean useLimits=true;
+
+	private Affine linksLocation=new Affine();
 	
 	/**
 	 * Instantiates a new abstract link.
@@ -308,10 +312,7 @@ public abstract class AbstractLink {
 		cacheTargetValue();
 	}
 	
-	/** The use limits. */
-	private boolean useLimits=true;
 
-	private Affine affine=new Affine();
 	
 	/**
 	 * Sets the target value.
@@ -514,11 +515,11 @@ public abstract class AbstractLink {
 	}
 
 	public void setGlobalPositionListener(Affine affine) {
-		this.affine = affine;
+		this.linksLocation = affine;
 	}
 
 	public Affine getGlobalPositionListener() {
-		return affine;
+		return linksLocation;
 	}
 	public LinkFactory getSlaveFactory() {
 		return slaveFactory;

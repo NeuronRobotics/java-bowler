@@ -2,6 +2,8 @@ package com.neuronrobotics.sdk.addons.kinematics;
 
 import com.neuronrobotics.imageprovider.AbstractImageProvider;
 
+import javafx.scene.transform.Affine;
+
 public class CameraLink extends AbstractLink {
 
 	private AbstractImageProvider img;
@@ -13,8 +15,11 @@ public class CameraLink extends AbstractLink {
 	}
 	
 	
-	
-	
+	@Override
+	public void setGlobalPositionListener(Affine affine) {
+		super.setGlobalPositionListener(affine);
+		img.setGlobalPositionListener(affine);
+	}
 
 	@Override
 	public void cacheTargetValueDevice() {
