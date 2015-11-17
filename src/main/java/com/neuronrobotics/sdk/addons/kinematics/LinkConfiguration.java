@@ -75,7 +75,7 @@ public class LinkConfiguration {
 	/**
 	 * This is the flag for setting the direction of the velocity lock out for limit switches
 	 */
-	private boolean invertVelocity=false;
+	private boolean invertLimitVelocityPolarity=false;
 	
 	/**
 	 * Instantiates a new link configuration.
@@ -94,7 +94,7 @@ public class LinkConfiguration {
     		// no device from connection engine specified
     	}
     	try{
-    		invertVelocity=XmlFactory.getTagValue("invertVelocity",eElement).contains("true");
+    		invertLimitVelocityPolarity=XmlFactory.getTagValue("invertLimitVelocityPolarity",eElement).contains("true");
     	}catch(NullPointerException e){
     		// no device from connection engine specified
     	}
@@ -619,12 +619,12 @@ public class LinkConfiguration {
 		this.staticOffset = staticOffset;
 	}
 
-	public boolean isInvertVelocity() {
-		return invertVelocity;
+	public boolean isInvertLimitVelocityPolarity() {
+		return invertLimitVelocityPolarity;
 	}
 
-	public void setInvertVelocity(boolean invertVelocity) {
-		this.invertVelocity = invertVelocity;
+	public void setInvertLimitVelocityPolarity(boolean invertVelocity) {
+		this.invertLimitVelocityPolarity = invertVelocity;
 	}
 	
 }
