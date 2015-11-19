@@ -32,14 +32,16 @@ public class RotationNR {
 	 * @param azumeth the azumeth
 	 */
 	// create a new object with the given simplified rotations
-	public RotationNR( double elevation  , double tilt,  double azumeth   ) {
+	public RotationNR( double tilt  , double azumeth,  double elevation   ) {
 		
-		double attitude = Math.toRadians(azumeth);
-		double heading= Math.toRadians(tilt);
-		double bank = Math.toRadians(elevation) ;
+		double attitude = Math.toRadians(elevation);
+		double heading= Math.toRadians(azumeth);
+		double bank = Math.toRadians(tilt) ;
 		double w,x,y,z;
 	    // Assuming the angles are in radians.
 		double c1 = Math.cos(heading / 2);
+//		if(Double.isNaN(c1))
+//			
 		double s1 = Math.sin(heading / 2);
 		double c2 = Math.cos(attitude / 2);
 		double s2 = Math.sin(attitude / 2);
@@ -47,10 +49,13 @@ public class RotationNR {
 		double s3 = Math.sin(bank / 2);
 		double c1c2 = c1 * c2;
 		double s1s2 = s1 * s2;
+		System.out.println("C1 ="+c1+" S1 ="+s1+" |C2 ="+c2+" S2 ="+s2+" |C3 ="+c3+" S3 ="+s3);
 		w = c1c2 * c3 - s1s2 * s3;
 		x = c1c2 * s3 + s1s2 * c3;
 		y = s1 * c2 * c3 + c1 * s2 * s3;
 		z = c1 * s2 * c3 - s1 * c2 * s3;
+		System.out.println("W ="+w+" x ="+x+" y ="+y+" z ="+z);
+		
 		quaternion2RotationMatrix(w, x, y, z);
 	}
 
@@ -526,7 +531,7 @@ public double getRotationTilt() {
 	 */
 	public double getRotationElevation() {
 		
-		return  getRotAngle(2);
+		return  getRotAngle(1);
 	}
 
 	/**
@@ -536,7 +541,7 @@ public double getRotationTilt() {
 	 */
 	public double getRotationAzimuth() {
 		
-		return getRotAngle(1);
+		return getRotAngle(2);
 	}
 	
 	/**
