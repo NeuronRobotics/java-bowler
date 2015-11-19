@@ -22,7 +22,7 @@ public class RotationNRTest {
 			double tilt= Math.toRadians(Math.random()*360.0-180);
 			double elevation= Math.toRadians(Math.random()*360.0-180);
 			double azumus=Math.toRadians(Math.random()*360.0-180);
-			RotationNR rotTest = new RotationNR( Math.toDegrees(tilt),Math.toDegrees(elevation), Math.toDegrees(azumus));
+			RotationNR rotTest = new RotationNR( Math.toDegrees(tilt), Math.toDegrees(azumus),Math.toDegrees(elevation));
 			System.out.println("\n\nTest #"+i);
 			System.out.println("Testing Az="+Math.toDegrees(azumus)+
 					" El="+Math.toDegrees(elevation)+
