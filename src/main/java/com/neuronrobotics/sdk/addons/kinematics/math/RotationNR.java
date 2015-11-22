@@ -34,6 +34,20 @@ public class RotationNR {
 	// create a new object with the given simplified rotations
 	public RotationNR( double tilt  , double azumeth,  double elevation   ) {
 		
+		loadFromAngles(tilt  ,  azumeth,   elevation );
+		if(	Double.isNaN(getRotationMatrix2QuaturnionW())||
+			Double.isNaN(getRotationMatrix2QuaturnionX())||
+			Double.isNaN(getRotationMatrix2QuaturnionY())||
+			Double.isNaN(getRotationMatrix2QuaturnionZ())){
+			System.err.println("Failing to set proper angle, jittering");
+			loadFromAngles(	tilt +		Math.random()*.02+.01 ,
+							azumeth+	Math.random()*.02+.01 ,   
+							elevation+	Math.random()*.02+.01  );
+		}
+		
+	}
+	
+	private void loadFromAngles( double tilt  , double azumeth,  double elevation   ){
 		double attitude = Math.toRadians(elevation);
 		double heading= Math.toRadians(azumeth);
 		double bank = Math.toRadians(tilt) ;
@@ -55,10 +69,8 @@ public class RotationNR {
 		y = s1 * c2 * c3 + c1 * s2 * s3;
 		z = c1 * s2 * c3 - s1 * c2 * s3;
 		System.out.println("W ="+w+" x ="+x+" y ="+y+" z ="+z);
-		
 		quaternion2RotationMatrix(w, x, y, z);
 	}
-
 	/**
 	 * Instantiates a new rotation nr.
 	 *
@@ -454,11 +466,13 @@ public class RotationNR {
 												// is correction factor
 		double test = x * y + z * w;
 		if (test > 0.499 * unit) { // singularity at north pole
+			System.err.println("North pole singularity");
 			azumiuth = 2 * Math.atan2(x, w);
 			elevation = Math.PI / 2;
 			tilt = 0;
 
 		} else if (test < -0.499 * unit) { // singularity at south pole
+			System.err.println("South pole singularity");
 			azumiuth = -2 * Math.atan2(x, w);
 			elevation = -Math.PI / 2;
 			tilt = 0;
@@ -470,6 +484,7 @@ public class RotationNR {
 		}
 		if(		bound(-180.01, -179.99, Math.toDegrees(tilt))
 				){
+			System.err.println("180 tilt pole singularity");
 			elevation = -Math.PI +elevation;
 			tilt = Math.PI +tilt;
 			azumiuth = -(Math.PI +azumiuth);
