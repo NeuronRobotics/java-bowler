@@ -63,12 +63,12 @@ public class RotationNR {
 		double s3 = Math.sin(bank / 2);
 		double c1c2 = c1 * c2;
 		double s1s2 = s1 * s2;
-		System.out.println("C1 ="+c1+" S1 ="+s1+" |C2 ="+c2+" S2 ="+s2+" |C3 ="+c3+" S3 ="+s3);
+		//System.out.println("C1 ="+c1+" S1 ="+s1+" |C2 ="+c2+" S2 ="+s2+" |C3 ="+c3+" S3 ="+s3);
 		w = c1c2 * c3 - s1s2 * s3;
 		x = c1c2 * s3 + s1s2 * c3;
 		y = s1 * c2 * c3 + c1 * s2 * s3;
 		z = c1 * s2 * c3 - s1 * c2 * s3;
-		System.out.println("W ="+w+" x ="+x+" y ="+y+" z ="+z);
+		//System.out.println("W ="+w+" x ="+x+" y ="+y+" z ="+z);
 		quaternion2RotationMatrix(w, x, y, z);
 	}
 	/**
