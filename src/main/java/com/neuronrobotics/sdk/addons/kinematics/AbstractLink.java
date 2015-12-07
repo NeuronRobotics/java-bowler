@@ -2,6 +2,8 @@ package com.neuronrobotics.sdk.addons.kinematics;
 
 import java.util.ArrayList;
 
+import javafx.scene.transform.Affine;
+
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 
@@ -23,6 +25,12 @@ public abstract class AbstractLink {
 	
 	/** The conf. */
 	private LinkConfiguration conf =null;
+	private ArrayList<LinkConfiguration> slaveLinks;
+	private LinkFactory slaveFactory = new LinkFactory();
+	/** The use limits. */
+	private boolean useLimits=true;
+
+	private Affine linksLocation=new Affine();
 	
 	/**
 	 * Instantiates a new abstract link.
@@ -31,6 +39,26 @@ public abstract class AbstractLink {
 	 */
 	public AbstractLink(LinkConfiguration conf){
 		this.conf=conf;
+		slaveLinks = conf.getSlaveLinks();
+		if(slaveLinks.size()>0)
+			System.out.println(conf.getName()+" has slaves: "+slaveLinks.size());
+		for(LinkConfiguration c:slaveLinks){
+			//generate the links
+			getSlaveFactory().getLink(c);
+		}
+	}
+	/**
+	 * This method is called in order to take the target value and pass it to the implementation's target value
+	 * This method should not alter the position of the implementations link
+	 * If the implementation target does not handle chached values, this should be chached in code.
+	 */
+	public void cacheTargetValue(){
+		for(LinkConfiguration c:slaveLinks){
+			//generate the links
+			AbstractLink link = getSlaveFactory().getLink(c);
+			link.cacheTargetValue();
+		}
+		cacheTargetValueDevice();
 	}
 	
 	/**
@@ -38,14 +66,21 @@ public abstract class AbstractLink {
 	 * This method should not alter the position of the implementations link
 	 * If the implementation target does not handle chached values, this should be chached in code.
 	 */
-	public abstract void cacheTargetValue();
+	public abstract void cacheTargetValueDevice();
 	
 	/**
 	 * This method will force one link to update its position in the given time (seconds).
 	 *
 	 * @param time (seconds) for the position update to take
 	 */
-	public abstract void flush(double time);
+	public void flush(double time){
+		for(LinkConfiguration c:slaveLinks){
+			//generate the links
+			AbstractLink link = getSlaveFactory().getLink(c);
+			link.flush(time);
+		}
+		flushDevice(time);
+	}
 	
 	/**
 	 * This method will force one link to update its position in the given time (seconds)
@@ -53,7 +88,29 @@ public abstract class AbstractLink {
 	 *
 	 * @param time (seconds) for the position update to take
 	 */
-	public abstract void flushAll(double time);
+	public void flushAll(double time){
+		for(LinkConfiguration c:slaveLinks){
+			//generate the links
+			AbstractLink link = getSlaveFactory().getLink(c);
+			link.flushAll(time);
+		}
+		flushAllDevice(time);
+	}
+	
+	/**
+	 * This method will force one link to update its position in the given time (seconds).
+	 *
+	 * @param time (seconds) for the position update to take
+	 */
+	public abstract void flushDevice(double time);
+	
+	/**
+	 * This method will force one link to update its position in the given time (seconds)
+	 * This will also flush the host controller.
+	 *
+	 * @param time (seconds) for the position update to take
+	 */
+	public abstract void flushAllDevice(double time);
 	
 	/**
 	 * This method should return the current position of the link
@@ -247,11 +304,15 @@ public abstract class AbstractLink {
 		//if(getTargetValue() != val){
 			setTargetValue(val);
 		//}
+		for(LinkConfiguration c:slaveLinks){
+			//generate the links
+			AbstractLink link = getSlaveFactory().getLink(c);
+			link.cacheTargetValue();
+		}
 		cacheTargetValue();
 	}
 	
-	/** The use limits. */
-	private boolean useLimits=true;
+
 	
 	/**
 	 * Sets the target value.
@@ -261,6 +322,11 @@ public abstract class AbstractLink {
 	protected void setTargetValue(int val) {
 		Log.info("Setting cached value :"+val);
 		this.targetValue = val;
+		for(LinkConfiguration c:slaveLinks){
+			//generate the links
+			AbstractLink link = getSlaveFactory().getLink(c);
+			link.setTargetValue(targetValue);
+		}
 		if(isUseLimits()){
 			double ub = getMaxEngineeringUnits();
 			double lb = getMinEngineeringUnits();
@@ -269,11 +335,21 @@ public abstract class AbstractLink {
 					+ "\nLower Bound="+lb+" (engineering units) Device Units="+getLowerLimit();
 			if(val>getUpperLimit()){
 				this.targetValue = getUpperLimit();
+				for(LinkConfiguration c:slaveLinks){
+					//generate the links
+					AbstractLink link = getSlaveFactory().getLink(c);
+					link.setTargetValue(targetValue);
+				}
 				cacheTargetValue();
 				throw new RuntimeException("Joint hit Upper software bound\n"+execpt);
 			}
 			if(val<getLowerLimit()) {
 				this.targetValue =getLowerLimit();
+				for(LinkConfiguration c:slaveLinks){
+					//generate the links
+					AbstractLink link = getSlaveFactory().getLink(c);
+					link.setTargetValue(targetValue);
+				}
 				cacheTargetValue();
 				throw new RuntimeException("Joint hit Lower software bound\n"+execpt);
 			}
@@ -437,6 +513,19 @@ public abstract class AbstractLink {
 	public void removeAllLinkListener() {
 		links.clear();
 	}
-	
+
+	public void setGlobalPositionListener(Affine affine) {
+		this.linksLocation = affine;
+	}
+
+	public Affine getGlobalPositionListener() {
+		return linksLocation;
+	}
+	public LinkFactory getSlaveFactory() {
+		return slaveFactory;
+	}
+	public void setSlaveFactory(LinkFactory slaveFactory) {
+		this.slaveFactory = slaveFactory;
+	}
 	
 }

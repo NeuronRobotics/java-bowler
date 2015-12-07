@@ -1,9 +1,8 @@
-package com.neuronrobotics.sdk.addons.kinematics.gui;
+package com.neuronrobotics.sdk.addons.kinematics;
 
 import java.awt.Color;
 import javafx.scene.Group;
 import javafx.scene.transform.Affine;
-
 import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 
@@ -63,32 +62,5 @@ public class TransformFactory {
 		return rotations;
 	}
 	
-	/**
-	 * Gets the labled axis.
-	 *
-	 * @param trans the trans
-	 * @param text the text
-	 * @param color the color
-	 * @return the labled axis
-	 */
-	public static Group getLabledAxis(Affine trans, String text,Color color){
-		Group back = new Group();
-		back.getChildren().add(new Axis());
-		back.getTransforms().add(trans);
-		
-		return back;
-	}
 	
-	/**
-	 * Gets the labled axis.
-	 *
-	 * @param input the input
-	 * @param text the text
-	 * @param color the color
-	 * @return the labled axis
-	 */
-	public static Group getLabledAxis(TransformNR input, String text,Color color){
-		Affine trans = getTransform(input);
-		return getLabledAxis(trans, text,color);
-	}
 }

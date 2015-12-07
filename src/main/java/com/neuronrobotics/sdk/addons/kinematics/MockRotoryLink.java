@@ -24,10 +24,10 @@ public class MockRotoryLink extends AbstractRotoryLink {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractLink#cacheTargetValue()
+	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractLink#cacheTargetValueDevice()
 	 */
 	@Override
-	public void cacheTargetValue() {
+	public void cacheTargetValueDevice() {
 		val=getTargetValue();
 		System.out.println("Cacheing value="+val);
 	}
@@ -36,7 +36,7 @@ public class MockRotoryLink extends AbstractRotoryLink {
 	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractLink#flush(double)
 	 */
 	@Override
-	public void flush(double time) {
+	public void flushDevice(double time) {
 		val=getTargetValue();
 		System.out.println("Flushing value="+val);
 	}
@@ -54,7 +54,7 @@ public class MockRotoryLink extends AbstractRotoryLink {
 	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractLink#flushAll(double)
 	 */
 	@Override
-	public void flushAll(double time) {
+	public void flushAllDevice(double time) {
 		// TODO Auto-generated method stub
 		val=getTargetValue();
 		System.out.println("Flushing all Values");

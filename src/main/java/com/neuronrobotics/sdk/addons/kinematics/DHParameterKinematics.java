@@ -16,7 +16,7 @@ import javafx.application.Platform;
 import javafx.scene.transform.Affine;
 import Jama.Matrix;
 
-import com.neuronrobotics.sdk.addons.kinematics.gui.TransformFactory;
+import com.neuronrobotics.sdk.addons.kinematics.TransformFactory;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
@@ -58,6 +58,8 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 		}
 		@Override public void onConnect(BowlerAbstractDevice source) {}
 	} ;
+
+	private ArrayList<LinkConfiguration> configs;
 	
 	/**
 	 * Instantiates a new DH parameter kinematics.
@@ -244,13 +246,19 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 		for(int i=linksListeners.size();i<dhLinks.size();i++){
 			linksListeners.add(new Affine());
 		}
-
+		LinkFactory lf = getFactory();
+		configs = lf.getLinkConfigurations();
 		for(int i=0;i<dhLinks.size();i++){
 			dhLinks.get(i).setListener(linksListeners.get(i));
 			dhLinks.get(i).setRootListener(getRootListener());
+			//This mapps together the position of the links in the kinematics and the link actions themselves (used for cameras and tools)
+			lf.getLink(configs.get(i)).setGlobalPositionListener(linksListeners.get(i));
 			if(getLinkConfiguration(i).getType().isTool()){
-				dhLinks.get(i).setDegenerate(true);
-			}
+				dhLinks.get(i).setLinkType(DhLinkType.TOOL);
+			}else if(getLinkConfiguration(i).getType().isPrismatic())
+				dhLinks.get(i).setLinkType(DhLinkType.PRISMATIC);
+			else
+				dhLinks.get(i).setLinkType(DhLinkType.ROTORY);
 		}
 		addPoseUpdateListener(this);
 		addJointSpaceListener(this);
@@ -448,6 +456,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 						public void run() {
 							try{
 								TransformFactory.getTransform(linkPos.get(index), getChain().getLinks().get(index).getListener());
+								
 							}catch(Exception ex){
 								//ex.printStackTrace();
 							}

@@ -13,7 +13,7 @@ import org.w3c.dom.NodeList;
 
 import Jama.Matrix;
 
-import com.neuronrobotics.sdk.addons.kinematics.gui.TransformFactory;
+import com.neuronrobotics.sdk.addons.kinematics.TransformFactory;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
 import com.neuronrobotics.sdk.common.Log;
@@ -182,14 +182,25 @@ public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector )
 			}
 			//Assume all rotational joints
 			//Set to zero if prismatic
-			data[i][3]=zVect[0];
-			data[i][4]=zVect[1];
-			data[i][5]=zVect[2];
+			if(getLinks().get(i).getLinkType()==DhLinkType.ROTORY){
+				data[i][3]=zVect[0];
+				data[i][4]=zVect[1];
+				data[i][5]=zVect[2];
+			}else{
+				data[i][3]=0;
+				data[i][4]=0;
+				data[i][5]=0;
+			}
 			
 			//Figure out the current 
 			Matrix current = new TransformNR().getMatrixTransform();
 			for(int j=i;j<getLinks().size();j++) {
-				Matrix step = getLinks().get(j).DhStepRotory(Math.toRadians(jointSpaceVector[j]));
+				double value=0;
+				if(getLinks().get(j).getLinkType()==DhLinkType.ROTORY)
+					value=Math.toRadians(jointSpaceVector[j]);
+				else
+					value=jointSpaceVector[j];
+				Matrix step = getLinks().get(j).DhStep(value);
 				//Log.info( "Current:\n"+current+"Step:\n"+step);
 				current = current.times(step);
 			}
@@ -247,9 +258,9 @@ public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector )
 			LinkConfiguration conf= getFactory().getLinkConfigurations().get(i);
 			Matrix step;
 			if(conf.getType().isPrismatic())
-				step= getLinks().get(i).DhStepPrismatic(jointSpaceVector[i]);
+				step= getLinks().get(i).DhStep(jointSpaceVector[i]);
 			else
-				step= getLinks().get(i).DhStepRotory(Math.toRadians(jointSpaceVector[i]));
+				step= getLinks().get(i).DhStep(Math.toRadians(jointSpaceVector[i]));
 			//Log.info( "Current:\n"+current+"Step:\n"+step);
 			current = current.times(step);
 			final Matrix update=current.copy();

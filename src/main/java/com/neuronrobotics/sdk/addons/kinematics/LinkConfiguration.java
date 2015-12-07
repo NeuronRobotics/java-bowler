@@ -1,7 +1,14 @@
 package com.neuronrobotics.sdk.addons.kinematics;
 
-import org.w3c.dom.Element;
+import java.util.ArrayList;
 
+import javafx.scene.transform.Affine;
+
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
 import com.neuronrobotics.sdk.common.Log;
 //import org.w3c.dom.Node;
@@ -72,6 +79,13 @@ public class LinkConfiguration {
 	/** The static offset. */
 	private double staticOffset=0;
 	
+	private ArrayList<LinkConfiguration> slaveLinks = new ArrayList<LinkConfiguration>();
+	
+	/**
+	 * This is the flag for setting the direction of the velocity lock out for limit switches
+	 */
+	private boolean invertVelocity=false;
+	
 	/**
 	 * This is the flag for setting the direction of the velocity lock out for limit switches
 	 */
@@ -95,6 +109,7 @@ public class LinkConfiguration {
     	}
     	try{
     		invertLimitVelocityPolarity=XmlFactory.getTagValue("invertLimitVelocityPolarity",eElement).contains("true");
+
     	}catch(NullPointerException e){
     		// no device from connection engine specified
     	}
@@ -197,6 +212,10 @@ public class LinkConfiguration {
 	 */
 	public String getXml(){
 		String DevStr=deviceScriptingName!= null?"<deviceName>"+getDeviceScriptingName()+"</deviceName>\n":"";
+		String slaves="";
+		for(int i=0;i<slaveLinks.size();i++){
+			slaves+="\n\t<slaveLink>\n"+slaveLinks.get(i).getXml()+"\n\t</slaveLink>\n";
+		}
 		
 		return "\t<name>"+getName()+"</name>\n"+
 				"\t"+DevStr+
@@ -211,7 +230,8 @@ public class LinkConfiguration {
 				"\t<isLatch>"+isLatch+"</isLatch>\n"+
 				"\t<indexLatch>"+indexLatch+"</indexLatch>\n"+
 				"\t<isStopOnLatch>"+isStopOnLatch+"</isStopOnLatch>\n"+	
-				"\t<homingTPS>"+getHomingTicksPerSecond()+"</homingTPS>\n";
+				"\t<homingTPS>"+getHomingTicksPerSecond()+"</homingTPS>\n"
+				+slaves;
 	}
 	
 
@@ -619,6 +639,7 @@ public class LinkConfiguration {
 		this.staticOffset = staticOffset;
 	}
 
+
 	public boolean isInvertLimitVelocityPolarity() {
 		return invertLimitVelocityPolarity;
 	}
@@ -626,5 +647,14 @@ public class LinkConfiguration {
 	public void setInvertLimitVelocityPolarity(boolean invertVelocity) {
 		this.invertLimitVelocityPolarity = invertVelocity;
 	}
+
+	public ArrayList<LinkConfiguration> getSlaveLinks() {
+		return slaveLinks;
+	}
+
+	public void setSlaveLinks(ArrayList<LinkConfiguration> slaveLinks) {
+		this.slaveLinks = slaveLinks;
+	}
+
 	
 }
