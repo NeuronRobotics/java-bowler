@@ -1,6 +1,8 @@
 package com.neuronrobotics.sdk.addons.kinematics;
 import java.util.ArrayList;
 
+import com.neuronrobotics.imageprovider.AbstractImageProvider;
+import com.neuronrobotics.imageprovider.VirtualCameraFactory;
 import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
 import com.neuronrobotics.sdk.common.DeviceManager;
 import com.neuronrobotics.sdk.common.Log;
@@ -207,10 +209,19 @@ public class LinkFactory {
 			tmp=new PidRotoryLink(	virtual.getPIDChannel(c.getHardwareIndex()),
 					c);
 			break;
+		case CAMERA:
+			String myVirtualDevName1=c.getDeviceScriptingName();
+			AbstractImageProvider img = (AbstractImageProvider)DeviceManager.getSpecificDevice(AbstractImageProvider.class, myVirtualDevName1);
+			if(img==null){
+				img= VirtualCameraFactory.getVirtualCamera();
+				DeviceManager.addConnection(img, myVirtualDevName1);
+			}
+			tmp=new CameraLink(c,img);
+			break;
 		}
 		
 		if(tmp==null){
-			String myVirtualDevName="virtual_"+c.getDeviceScriptingName();
+			String myVirtualDevName=c.getDeviceScriptingName();
 			virtual = (VirtualGenericPIDDevice)DeviceManager.getSpecificDevice(VirtualGenericPIDDevice.class, myVirtualDevName);
 			if(virtual==null){
 				virtual=new VirtualGenericPIDDevice();

@@ -16,7 +16,6 @@ import org.w3c.dom.NodeList;
 
 import Jama.Matrix;
 
-import com.neuronrobotics.sdk.addons.kinematics.gui.TransformFactory;
 import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
@@ -248,9 +247,11 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		    Node linkNode = nodListofLinks.item(i);
 		    
 		    if (linkNode.getNodeType() == Node.ELEMENT_NODE && linkNode.getNodeName().contentEquals("link")) {
-		    	localConfigsFromXml.add(new LinkConfiguration((Element) linkNode));
+		    	LinkConfiguration newLinkConf = new LinkConfiguration((Element) linkNode);
+		    	localConfigsFromXml.add(newLinkConf);
 		    	
 		    	NodeList dHParameters =linkNode.getChildNodes();
+		    	//System.out.println("Link "+newLinkConf.getName()+" has "+dHParameters .getLength()+" children");
 				for (int x = 0; x < dHParameters .getLength(); x++) {			
 				    Node nNode = dHParameters.item(x);
 				    if (nNode.getNodeType() == Node.ELEMENT_NODE && nNode.getNodeName().contentEquals("DHParameters")) {
@@ -273,6 +274,13 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 								});
 						    }
 						}
+				    }else{
+					    if (nNode.getNodeType() == Node.ELEMENT_NODE && nNode.getNodeName().contentEquals("slaveLink")) {
+					    	System.out.println("Slave link found: ");
+					    	LinkConfiguration jc =new LinkConfiguration((Element) nNode);
+					    	System.out.println(jc);
+					    	newLinkConf.getSlaveLinks().add(jc);
+					    }
 				    }
 				}
 		    }else if (linkNode.getNodeType() == Node.ELEMENT_NODE && linkNode.getNodeName().contentEquals("name")) {
@@ -526,8 +534,10 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	public double[]  setDesiredTaskSpaceTransform(TransformNR taskSpaceTransform, double seconds) throws Exception{
 		Log.info("Setting target pose: "+taskSpaceTransform);
 		setCurrentPoseTarget(taskSpaceTransform);
-		taskSpaceTransform = inverseOffset(taskSpaceTransform);
-		double [] jointSpaceVect = inverseKinematics(taskSpaceTransform);
+		
+		double [] jointSpaceVect = inverseKinematics(
+									inverseOffset(taskSpaceTransform)
+									);
 		if(jointSpaceVect==null)
 			throw new RuntimeException("The kinematics model muts return and array, not null");
 		setDesiredJointSpaceVector(jointSpaceVect,  seconds);

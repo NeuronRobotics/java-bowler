@@ -62,7 +62,8 @@ dependencies {
 	compile 'org.usb4java:usb4java:1.2.0'
 	compile 'org.usb4java:usb4java-javax:1.2.0'
 
-
+	//compile fileTree (dir: '../doychinNRJAVASERISL/nrjavaserial/build/libs', includes: ['*.jar'])
+	compile "com.neuronrobotics:nrjavaserial:3.11.0"
 	
 }
 

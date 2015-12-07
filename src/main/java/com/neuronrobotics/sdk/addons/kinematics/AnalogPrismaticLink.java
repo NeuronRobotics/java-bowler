@@ -26,10 +26,10 @@ public class AnalogPrismaticLink  extends AbstractPrismaticLink implements IAnal
 	}
 
 	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractLink#cacheTargetValue()
+	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractLink#cacheTargetValueDevice()
 	 */
 	@Override
-	public void cacheTargetValue() {
+	public void cacheTargetValueDevice() {
 		//ignore, input only
 	}
 
@@ -37,7 +37,7 @@ public class AnalogPrismaticLink  extends AbstractPrismaticLink implements IAnal
 	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractLink#flush(double)
 	 */
 	@Override
-	public void flush(double time) {
+	public void flushDevice(double time) {
 		//ignore, input only
 	}
 	
@@ -45,7 +45,7 @@ public class AnalogPrismaticLink  extends AbstractPrismaticLink implements IAnal
 	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractLink#flushAll(double)
 	 */
 	@Override
-	public void flushAll(double time) {
+	public void flushAllDevice(double time) {
 		//ignore, input only
 	}
 
