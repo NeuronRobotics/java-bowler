@@ -195,11 +195,19 @@ public class FileChangeWatcher extends Thread {
 					continue;
 				}
 
+				
 				// Context for directory entry event is the file name of entry
 				WatchEvent<Path> ev = cast(event);
 				Path name = ev.context();
 				Path child = dir.resolve(name);
-
+				try {
+					if (!child.toFile().getCanonicalPath().equals(fileToWatch.getCanonicalPath())) {
+						continue;
+					}
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				// print out event
 				//System.out.format("%s: %s\n", event.kind().name(), child);
 				for(IFileChangeListener l: listeners){
