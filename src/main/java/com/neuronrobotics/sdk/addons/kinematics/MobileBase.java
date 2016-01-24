@@ -174,7 +174,7 @@ public class MobileBase extends AbstractKinematicsNR{
 		    	if(kin==null){
 		    		kin= new DHParameterKinematics(e);
 		    		
-		    		DeviceManager.addConnection(kin, name);
+		    		//DeviceManager.addConnection(kin, name);
 		    	}
 		    	kin.setScriptingName(name);
 		    	list.add(kin);
