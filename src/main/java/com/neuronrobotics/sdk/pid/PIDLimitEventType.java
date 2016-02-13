@@ -92,7 +92,7 @@ public enum PIDLimitEventType {
      * @return the bowler method
      */
     public static List<PIDLimitEventType> getAllLimitMasks(byte code) { 
-    	ArrayList<PIDLimitEventType> ret = new ArrayList<>();
+    	ArrayList<PIDLimitEventType> ret = new ArrayList<PIDLimitEventType>();
     	
     	for(PIDLimitEventType s:PIDLimitEventType.values()){
     		if((s.value&code)>0){
