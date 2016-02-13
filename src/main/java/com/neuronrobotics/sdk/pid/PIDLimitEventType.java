@@ -14,8 +14,10 @@
  ******************************************************************************/
 package com.neuronrobotics.sdk.pid;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 // TODO: Auto-generated Javadoc
@@ -25,18 +27,22 @@ import java.util.Map;
  */
 public enum PIDLimitEventType {
 	
-
+	NO_LIMIT(0x00),
 	/** The lowerlimit. */
-	LOWERLIMIT(0x00),
+	LOWERLIMIT(0x01),
 	
 	/** The indexevent. */
-	INDEXEVENT(0x01),
+	INDEXEVENT(0x02),
 	
 	/** The upperlimit. */
-	UPPERLIMIT(0x02),
+	UPPERLIMIT(0x04),
 	
 	/** The overcurrent. */
-	OVERCURRENT(0x03);
+	OVERCURRENT(0x08),
+	CONTROLLER_ERROR(0x10),
+	HOME_EVENT(0x20)
+	;
+	;
 	
 	/** The Constant lookup. */
 	private static final Map<Byte,PIDLimitEventType> lookup = new HashMap<Byte,PIDLimitEventType>();
@@ -75,7 +81,25 @@ public enum PIDLimitEventType {
      * @return the bowler method
      */
     public static PIDLimitEventType get(byte code) { 
+    	
     	return lookup.get(code); 
+    }
+    
+    /**
+     * Gets the.
+     *
+     * @param code the code
+     * @return the bowler method
+     */
+    public static List<PIDLimitEventType> getAllLimitMasks(byte code) { 
+    	ArrayList<PIDLimitEventType> ret = new ArrayList<>();
+    	
+    	for(PIDLimitEventType s:PIDLimitEventType.values()){
+    		if((s.value&code)>0){
+    			ret.add(s);
+    		}
+    	}
+    	return ret; 
     }
 
 	/**
