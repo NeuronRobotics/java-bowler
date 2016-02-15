@@ -204,15 +204,16 @@ public class FileChangeWatcher extends Thread {
 					if (!child.toFile().getCanonicalPath().equals(fileToWatch.getCanonicalPath())) {
 						continue;
 					}
-				} catch (IOException e) {
+					// print out event
+					//System.out.format("%s: %s\n", event.kind().name(), child);
+					for(int i=0;i<listeners.size();i++){
+						listeners.get(i).onFileChange(child.toFile(), event);
+					}
+				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				// print out event
-				//System.out.format("%s: %s\n", event.kind().name(), child);
-				for(IFileChangeListener l: listeners){
-					l.onFileChange(child.toFile(), event);
-				}
+
 
 				// if directory is created, and watching recursively, then
 				// register it and its sub-directories
