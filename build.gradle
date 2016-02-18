@@ -100,9 +100,7 @@ task sourcesJar(type: Jar) {
 	from sourceSets.main.allSource
 }
 /*
-signing {
-	sign configurations.archives
-}
+
 */
 artifacts {
 	archives javadocJar
@@ -131,6 +129,9 @@ artifacts {
 //	}
 //}
 /*
+signing {
+	sign configurations.archives
+}
 uploadArchives {
 	repositories {
 	  mavenDeployer {
