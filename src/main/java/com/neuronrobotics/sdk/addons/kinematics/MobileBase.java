@@ -43,7 +43,7 @@ public class MobileBase extends AbstractKinematicsNR{
 	private IDriveEngine wheeledDriveEngine = new WheeledDriveEngine();
 	
 	/** The walking engine. */
-	private String [] walkingEngine =new String[]{"bcb4760a449190206170","WalkingDriveEngine.groovy"}; 
+	private String [] walkingEngine =new String[]{"https://gist.github.com/bcb4760a449190206170.git","WalkingDriveEngine.groovy"}; 
 	
 	/** The self source. */
 	private String [] selfSource =new String[2];
@@ -118,8 +118,8 @@ public class MobileBase extends AbstractKinematicsNR{
 	private void loadConfigs(Element doc){
 		setScriptingName(XmlFactory.getTagValue("name",doc));
 		
-		setCadEngine(getGistCodes( doc,"cadEngine"));
-		setWalkingEngine(getGistCodes( doc,"driveEngine"));
+		setGitCadEngine(getGitCodes( doc,"cadEngine"));
+		setGitWalkingEngine(getGitCodes( doc,"driveEngine"));
 		loadLimb(doc,"leg",legs);
 		loadLimb(doc,"drivable",drivable);
 		loadLimb(doc,"steerable",steerable);
@@ -296,13 +296,13 @@ public class MobileBase extends AbstractKinematicsNR{
 		xml+="\n<driveType>"+getDriveType()+"</driveType>\n";
 		
 		xml+="\t<cadEngine>\n";
-		xml+="\t\t<gist>"+getCadEngine()[0]+"</gist>\n";
-		xml+="\t\t<file>"+getCadEngine()[1]+"</file>\n";
+		xml+="\t\t<git>"+getGitCadEngine()[0]+"</git>\n";
+		xml+="\t\t<file>"+getGitCadEngine()[1]+"</file>\n";
 		xml+="\t</cadEngine>\n";
 		
 		xml+="\t<driveEngine>\n";
-		xml+="\t\t<gist>"+getWalkingEngine()[0]+"</gist>\n";
-		xml+="\t\t<file>"+getWalkingEngine()[1]+"</file>\n";
+		xml+="\t\t<git>"+getGitWalkingEngine()[0]+"</git>\n";
+		xml+="\t\t<file>"+getGitWalkingEngine()[1]+"</file>\n";
 		xml+="\t</driveEngine>\n";
 		
 		xml+="\n<name>"+getScriptingName()+"</name>\n";
@@ -515,7 +515,7 @@ public class MobileBase extends AbstractKinematicsNR{
 	 *
 	 * @return the walking engine
 	 */
-	public String [] getWalkingEngine() {
+	public String [] getGitWalkingEngine() {
 		return walkingEngine;
 	}
 
@@ -524,7 +524,7 @@ public class MobileBase extends AbstractKinematicsNR{
 	 *
 	 * @param walkingEngine the new walking engine
 	 */
-	public void setWalkingEngine(String [] walkingEngine) {
+	public void setGitWalkingEngine(String [] walkingEngine) {
 		if(walkingEngine!=null && walkingEngine[0]!=null &&walkingEngine[1]!=null)
 			this.walkingEngine = walkingEngine;
 	}
@@ -534,7 +534,7 @@ public class MobileBase extends AbstractKinematicsNR{
 	 *
 	 * @return the self source
 	 */
-	public String [] getSelfSource() {
+	public String [] getGitSelfSource() {
 		return selfSource;
 	}
 
@@ -543,7 +543,7 @@ public class MobileBase extends AbstractKinematicsNR{
 	 *
 	 * @param selfSource the new self source
 	 */
-	public void setSelfSource(String [] selfSource) {
+	public void setGitSelfSource(String [] selfSource) {
 		this.selfSource = selfSource;
 	}
 

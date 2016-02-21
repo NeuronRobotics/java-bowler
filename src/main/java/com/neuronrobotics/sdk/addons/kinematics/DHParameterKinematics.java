@@ -301,13 +301,13 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 		String xml = "";
 		
 		xml+="\t<cadEngine>\n";
-		xml+="\t\t<gist>"+getCadEngine()[0]+"</gist>\n";
-		xml+="\t\t<file>"+getCadEngine()[1]+"</file>\n";
+		xml+="\t\t<git>"+getGitCadEngine()[0]+"</git>\n";
+		xml+="\t\t<file>"+getGitCadEngine()[1]+"</file>\n";
 		xml+="\t</cadEngine>\n";
 		
 		xml+="\t<kinematics>\n";
-		xml+="\t\t<gist>"+getDhEngine()[0]+"</gist>\n";
-		xml+="\t\t<file>"+getDhEngine()[1]+"</file>\n";
+		xml+="\t\t<git>"+getGitDhEngine()[0]+"</git>\n";
+		xml+="\t\t<file>"+getGitDhEngine()[1]+"</file>\n";
 		xml+="\t</kinematics>\n";
 		
 		ArrayList<DHLink> dhLinks = chain.getLinks();
