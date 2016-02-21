@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import javafx.scene.transform.Affine;
 
+import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 
@@ -31,6 +32,8 @@ public abstract class AbstractLink {
 	private boolean useLimits=true;
 
 	private Affine linksLocation=new Affine();
+	
+
 	
 	/**
 	 * Instantiates a new abstract link.
@@ -527,5 +530,6 @@ public abstract class AbstractLink {
 	public void setSlaveFactory(LinkFactory slaveFactory) {
 		this.slaveFactory = slaveFactory;
 	}
+
 	
 }

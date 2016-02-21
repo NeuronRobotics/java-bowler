@@ -8,6 +8,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
 import com.neuronrobotics.sdk.common.Log;
@@ -76,6 +77,9 @@ public class LinkConfiguration {
 	/** The device scripting name. */
 	private String deviceScriptingName=null;
 	
+	private double mass=0.01;// KG
+	private TransformNR centerOfMassFromCentroid=new TransformNR();
+	
 	/** The static offset. */
 	private double staticOffset=0;
 	
@@ -136,6 +140,26 @@ public class LinkConfiguration {
     	}
     	try{
     		setStaticOffset(Double.parseDouble(XmlFactory.getTagValue("staticOffset",eElement)));
+    	}catch (Exception e){
+    		
+    	}
+    	try{
+    		setMassKg(Double.parseDouble(XmlFactory.getTagValue("mass",eElement)));
+    	}catch (Exception e){
+    		
+    	}
+    	
+    	try{
+    		if (eElement.getNodeType() == Node.ELEMENT_NODE && eElement.getNodeName().contentEquals("centerOfMassFromCentroid")) {
+		    	Element cntr = (Element)eElement;	    	    
+		    	setCenterOfMassFromCentroid(new TransformNR(	Double.parseDouble(XmlFactory.getTagValue("x",cntr)),
+							    			Double.parseDouble(XmlFactory.getTagValue("y",cntr)),
+							    			Double.parseDouble(XmlFactory.getTagValue("z",cntr)), 
+							    			new RotationNR(new double[]{	Double.parseDouble(XmlFactory.getTagValue("rotw",cntr)),
+							    							Double.parseDouble(XmlFactory.getTagValue("rotx",cntr)),
+							    							Double.parseDouble(XmlFactory.getTagValue("roty",cntr)),
+							    							Double.parseDouble(XmlFactory.getTagValue("rotz",cntr))})));	 
+		    }
     	}catch (Exception e){
     		
     	}
@@ -230,7 +254,9 @@ public class LinkConfiguration {
 				"\t<isLatch>"+isLatch+"</isLatch>\n"+
 				"\t<indexLatch>"+indexLatch+"</indexLatch>\n"+
 				"\t<isStopOnLatch>"+isStopOnLatch+"</isStopOnLatch>\n"+	
-				"\t<homingTPS>"+getHomingTicksPerSecond()+"</homingTPS>\n"
+				"\t<homingTPS>"+getHomingTicksPerSecond()+"</homingTPS>\n"+
+				"\t<mass>"+getMassKg()+"</mass>\n"+
+				"\t<centerOfMassFromCentroid>"+getCenterOfMassFromCentroid().getXml()+"</enterOfMassFromCentroid>\n"
 				+slaves;
 	}
 	
@@ -656,5 +682,17 @@ public class LinkConfiguration {
 		this.slaveLinks = slaveLinks;
 	}
 
+	public double getMassKg() {
+		return mass;
+	}
+	public void setMassKg(double mass) {
+		this.mass = mass;
+	}
+	public TransformNR getCenterOfMassFromCentroid() {
+		return centerOfMassFromCentroid;
+	}
+	public void setCenterOfMassFromCentroid(TransformNR centerOfMassFromCentroid) {
+		this.centerOfMassFromCentroid = centerOfMassFromCentroid;
+	}
 	
 }
