@@ -256,7 +256,7 @@ public class LinkConfiguration {
 				"\t<isStopOnLatch>"+isStopOnLatch+"</isStopOnLatch>\n"+	
 				"\t<homingTPS>"+getHomingTicksPerSecond()+"</homingTPS>\n"+
 				"\t<mass>"+getMassKg()+"</mass>\n"+
-				"\t<centerOfMassFromCentroid>"+getCenterOfMassFromCentroid().getXml()+"</enterOfMassFromCentroid>\n"
+				"\t<centerOfMassFromCentroid>"+getCenterOfMassFromCentroid().getXml()+"</centerOfMassFromCentroid>\n"
 				+slaves;
 	}
 	
