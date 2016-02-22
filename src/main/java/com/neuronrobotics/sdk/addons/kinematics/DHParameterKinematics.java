@@ -455,7 +455,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 						@Override
 						public void run() {
 							try{
-								TransformFactory.getTransform(linkPos.get(index), getChain().getLinks().get(index).getListener());
+								TransformFactory.nrToAffine(linkPos.get(index), getChain().getLinks().get(index).getListener());
 								
 							}catch(Exception ex){
 								//ex.printStackTrace();

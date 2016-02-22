@@ -21,8 +21,8 @@ public class TransformFactory {
 	 * @param z the z
 	 * @return the transform
 	 */
-	public static Affine getTransform(double x, double y, double z){
-		return getTransform(new TransformNR(x, y, z, new RotationNR()));
+	public static Affine newAffine(double x, double y, double z){
+		return nrToAffine(new TransformNR(x, y, z, new RotationNR()));
 	}
 	
 	/**
@@ -31,9 +31,9 @@ public class TransformFactory {
 	 * @param input the input
 	 * @return the transform
 	 */
-	public static Affine getTransform(TransformNR input){
+	public static Affine nrToAffine(TransformNR input){
 		Affine rotations =new Affine();
-		return getTransform( input , rotations);
+		return nrToAffine( input , rotations);
 	}
 	
 	/**
@@ -42,9 +42,9 @@ public class TransformFactory {
 	 * @param input the input
 	 * @return the transform
 	 */
-	public static TransformNR getTransform(Affine input){
+	public static TransformNR affineToNr(Affine input){
 		TransformNR rotations =new TransformNR();
-		return getTransformFromAffine( rotations,input  );
+		return affineToNr( rotations,input  );
 	}
 	/**
 	 * Gets the transform.
@@ -53,7 +53,7 @@ public class TransformFactory {
 	 * @param rotations the rotations
 	 * @return the transform
 	 */
-	public static TransformNR getTransformFromAffine(TransformNR outputValue ,Affine rotations){
+	public static TransformNR affineToNr(TransformNR outputValue ,Affine rotations){
 		double[][] poseRot = outputValue
 				.getRotationMatrixArray();
 		
@@ -82,7 +82,7 @@ public class TransformFactory {
 	 * @param rotations the rotations
 	 * @return the transform
 	 */
-	public static Affine getTransform(TransformNR input ,Affine rotations){
+	public static Affine nrToAffine(TransformNR input ,Affine rotations){
 		double[][] poseRot = input
 				.getRotationMatrixArray();
 		

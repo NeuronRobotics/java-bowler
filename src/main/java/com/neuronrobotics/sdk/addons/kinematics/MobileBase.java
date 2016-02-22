@@ -48,7 +48,7 @@ public class MobileBase extends AbstractKinematicsNR{
 	/** The self source. */
 	private String [] selfSource =new String[2];
 	
-	private double mass=0.01;// KG
+	private double mass=0.5;// KG
 	private TransformNR centerOfMassFromCentroid=new TransformNR();
 	
 	/**

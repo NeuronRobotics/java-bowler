@@ -763,7 +763,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 			
 			@Override
 			public void run() {
-				TransformFactory.getTransform(forwardOffset(new TransformNR()), root);
+				TransformFactory.nrToAffine(forwardOffset(new TransformNR()), root);
 			}
 		});
 	}
@@ -803,7 +803,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 			
 			@Override
 			public void run() {
-				TransformFactory.getTransform(forwardOffset(new TransformNR()), root);
+				TransformFactory.nrToAffine(forwardOffset(new TransformNR()), root);
 			}
 		});
 	}
