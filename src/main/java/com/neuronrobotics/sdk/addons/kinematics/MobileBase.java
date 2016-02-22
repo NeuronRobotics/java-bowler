@@ -48,6 +48,9 @@ public class MobileBase extends AbstractKinematicsNR{
 	/** The self source. */
 	private String [] selfSource =new String[2];
 	
+	private double mass=0.01;// KG
+	private TransformNR centerOfMassFromCentroid=new TransformNR();
+	
 	/**
 	 * Instantiates a new mobile base.
 	 */
@@ -124,6 +127,26 @@ public class MobileBase extends AbstractKinematicsNR{
 		loadLimb(doc,"drivable",drivable);
 		loadLimb(doc,"steerable",steerable);
 		loadLimb(doc,"appendage",appendages);
+    	try{
+    		setMassKg(Double.parseDouble(XmlFactory.getTagValue("mass",doc)));
+    	}catch (Exception e){
+    		
+    	}
+    	
+    	try{
+    		if (doc.getNodeType() == Node.ELEMENT_NODE && doc.getNodeName().contentEquals("centerOfMassFromCentroid")) {
+		    	Element cntr = (Element)doc;	    	    
+		    	setCenterOfMassFromCentroid(new TransformNR(	Double.parseDouble(XmlFactory.getTagValue("x",cntr)),
+							    			Double.parseDouble(XmlFactory.getTagValue("y",cntr)),
+							    			Double.parseDouble(XmlFactory.getTagValue("z",cntr)), 
+							    			new RotationNR(new double[]{	Double.parseDouble(XmlFactory.getTagValue("rotw",cntr)),
+							    							Double.parseDouble(XmlFactory.getTagValue("rotx",cntr)),
+							    							Double.parseDouble(XmlFactory.getTagValue("roty",cntr)),
+							    							Double.parseDouble(XmlFactory.getTagValue("rotz",cntr))})));	 
+		    }
+    	}catch (Exception e){
+    		
+    	}
 		try{
 			setDriveType(DrivingType.fromString(XmlFactory.getTagValue("driveType",doc)));
 		}catch(Exception ex ){
@@ -338,7 +361,9 @@ public class MobileBase extends AbstractKinematicsNR{
 		
 		xml+="\n<baseToZframe>\n";
 		xml+=getRobotToFiducialTransform().getXml();
-		xml+="\n</baseToZframe>\n";
+		xml+="\n</baseToZframe>\n"+
+		"\t<mass>"+getMassKg()+"</mass>\n"+
+		"\t<centerOfMassFromCentroid>"+getCenterOfMassFromCentroid().getXml()+"</centerOfMassFromCentroid>\n";
 		xml+="\n</mobilebase>\n";
 		setGlobalToFiducialTransform(location);
 		return xml;
@@ -545,6 +570,19 @@ public class MobileBase extends AbstractKinematicsNR{
 	 */
 	public void setGitSelfSource(String [] selfSource) {
 		this.selfSource = selfSource;
+	}
+
+	public double getMassKg() {
+		return mass;
+	}
+	public void setMassKg(double mass) {
+		this.mass = mass;
+	}
+	public TransformNR getCenterOfMassFromCentroid() {
+		return centerOfMassFromCentroid;
+	}
+	public void setCenterOfMassFromCentroid(TransformNR centerOfMassFromCentroid) {
+		this.centerOfMassFromCentroid = centerOfMassFromCentroid;
 	}
 
 }

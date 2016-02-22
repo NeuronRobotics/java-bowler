@@ -1294,8 +1294,12 @@ public ArrayList<PIDConfiguration> getAxisPidConfiguration() {
 			    	}catch(Exception ex){
 			    		
 			    	}
-			    	if(getCode( e,"git")!=null)
-			    		content[0]=getCode( e,"git");
+			    	try{
+				    	if(getCode( e,"git")!=null)
+				    		content[0]=getCode( e,"git");
+		    		}catch(Exception ex){
+			    		
+			    	}
 			    	content[1]=getCode( e,"file");
 			    }
 			}

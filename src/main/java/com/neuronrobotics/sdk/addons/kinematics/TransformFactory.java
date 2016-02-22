@@ -40,6 +40,45 @@ public class TransformFactory {
 	 * Gets the transform.
 	 *
 	 * @param input the input
+	 * @return the transform
+	 */
+	public static TransformNR getTransform(Affine input){
+		TransformNR rotations =new TransformNR();
+		return getTransformFromAffine( rotations,input  );
+	}
+	/**
+	 * Gets the transform.
+	 *
+	 * @param outputValue the input
+	 * @param rotations the rotations
+	 * @return the transform
+	 */
+	public static TransformNR getTransformFromAffine(TransformNR outputValue ,Affine rotations){
+		double[][] poseRot = outputValue
+				.getRotationMatrixArray();
+		
+		poseRot[0][0]=rotations.getMxx();
+		poseRot[0][1]=rotations.getMxy();
+		poseRot[0][2]=rotations.getMxz();
+		poseRot[1][0]=rotations.getMyx();
+		poseRot[1][1]=rotations.getMyy();
+		poseRot[1][2]=rotations.getMyz();
+		poseRot[2][0]=rotations.getMzx();
+		poseRot[2][1]=rotations.getMzy();
+		poseRot[2][2]=rotations.getMzz();
+		
+		outputValue.setX(rotations.getTx());
+		outputValue.setY(rotations.getTy());
+		outputValue.setZ(rotations.getTz());
+		
+		outputValue.setRotation(new RotationNR(poseRot));
+		return outputValue;
+	}
+	
+	/**
+	 * Gets the transform.
+	 *
+	 * @param input the input
 	 * @param rotations the rotations
 	 * @return the transform
 	 */
