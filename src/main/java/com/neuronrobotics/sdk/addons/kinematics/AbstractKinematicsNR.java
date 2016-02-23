@@ -814,7 +814,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 * @param t the t
 	 * @return the transform nr
 	 */
-	protected TransformNR inverseOffset(TransformNR t){
+	public TransformNR inverseOffset(TransformNR t){
 		//System.out.println("RobotToFiducialTransform "+getRobotToFiducialTransform());
 		//System.out.println("FiducialToRASTransform "+getFiducialToRASTransform());		
 		Matrix rtz = getFiducialToGlobalTransform().getMatrixTransform().inverse();
@@ -832,7 +832,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 * @param t the t
 	 * @return the transform nr
 	 */
-	protected TransformNR forwardOffset(TransformNR t){
+	public TransformNR forwardOffset(TransformNR t){
 		Matrix btt = getRobotToFiducialTransform().getMatrixTransform();
 		Matrix ftb = getFiducialToGlobalTransform().getMatrixTransform();
 		Matrix current = t.getMatrixTransform();

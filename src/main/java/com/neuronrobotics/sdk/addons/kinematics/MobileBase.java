@@ -585,4 +585,8 @@ public class MobileBase extends AbstractKinematicsNR{
 		this.centerOfMassFromCentroid = centerOfMassFromCentroid;
 	}
 
+	public void setFiducialToGlobalTransform(TransformNR globe) {
+		setGlobalToFiducialTransform(globe);
+	}
+
 }
