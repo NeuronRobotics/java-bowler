@@ -208,24 +208,13 @@ public class FileChangeWatcher extends Thread {
 					//System.out.format("%s: %s\n", event.kind().name(), child);
 					for(int i=0;i<listeners.size();i++){
 						listeners.get(i).onFileChange(child.toFile(), event);
+						Thread.sleep(50);// pad out the events to avoid file box overwrites
 					}
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
-
-				// if directory is created, and watching recursively, then
-				// register it and its sub-directories
-				if (recursive && (kind == ENTRY_CREATE)) {
-					try {
-						if (Files.isDirectory(child, NOFOLLOW_LINKS)) {
-							registerAll(child);
-						}
-					} catch (IOException x) {
-						// ignore to keep sample readbale
-					}
-				}
 			}
 
 			// reset key and remove from set if directory no longer accessible
