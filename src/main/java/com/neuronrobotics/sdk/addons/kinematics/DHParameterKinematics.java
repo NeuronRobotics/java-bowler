@@ -195,7 +195,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 	public Matrix getJacobian(){
 		long time = System.currentTimeMillis();
 		Matrix m = getDhChain().getJacobian(getCurrentJointSpaceVector());
-		System.out.println("Jacobian calc took: "+(System.currentTimeMillis()-time));
+		//System.out.println("Jacobian calc took: "+(System.currentTimeMillis()-time));
 		return m;
 	}
 	

@@ -67,7 +67,7 @@ public class MobileBase extends AbstractKinematicsNR{
 		NodeList nodListofLinks = doc.getElementsByTagName("root");
 		
 		if(nodListofLinks.getLength()!=1 ){
-			System.out.println("Found "+nodListofLinks.getLength());
+			//System.out.println("Found "+nodListofLinks.getLength());
 			throw new RuntimeException("one mobile base is needed per level");
 		}	
 		NodeList rootNode  = nodListofLinks.item(0).getChildNodes();

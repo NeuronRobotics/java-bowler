@@ -276,9 +276,9 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 						}
 				    }else{
 					    if (nNode.getNodeType() == Node.ELEMENT_NODE && nNode.getNodeName().contentEquals("slaveLink")) {
-					    	System.out.println("Slave link found: ");
+					    	//System.out.println("Slave link found: ");
 					    	LinkConfiguration jc =new LinkConfiguration((Element) nNode);
-					    	System.out.println(jc);
+					    	//System.out.println(jc);
 					    	newLinkConf.getSlaveLinks().add(jc);
 					    }
 				    }

@@ -39,10 +39,10 @@ public class RotationNR {
 			Double.isNaN(getRotationMatrix2QuaturnionX())||
 			Double.isNaN(getRotationMatrix2QuaturnionY())||
 			Double.isNaN(getRotationMatrix2QuaturnionZ())){
-			System.err.println("Failing to set proper angle, jittering");
-			loadFromAngles(	tilt +		Math.random()*.02+.01 ,
-							azumeth+	Math.random()*.02+.01 ,   
-							elevation+	Math.random()*.02+.01  );
+			//System.err.println("Failing to set proper angle, jittering");
+			loadFromAngles(	tilt +		Math.random()*.02+.001 ,
+							azumeth+	Math.random()*.02+.001 ,   
+							elevation+	Math.random()*.02+.001  );
 		}
 		
 	}
@@ -466,13 +466,13 @@ public class RotationNR {
 												// is correction factor
 		double test = x * y + z * w;
 		if (test > 0.499 * unit) { // singularity at north pole
-			System.err.println("North pole singularity");
+			//System.err.println("North pole singularity");
 			azumiuth = 2 * Math.atan2(x, w);
 			elevation = Math.PI / 2;
 			tilt = 0;
 
 		} else if (test < -0.499 * unit) { // singularity at south pole
-			System.err.println("South pole singularity");
+			//System.err.println("South pole singularity");
 			azumiuth = -2 * Math.atan2(x, w);
 			elevation = -Math.PI / 2;
 			tilt = 0;
