@@ -36,10 +36,7 @@ import java.io.IOException;
 import java.nio.file.*;
 
 import static java.nio.file.StandardWatchEventKinds.*;
-import static java.nio.file.LinkOption.*;
-
 import java.nio.file.attribute.*;
-import java.io.*;
 import java.util.*;
 
 // TODO: Auto-generated Javadoc
@@ -227,6 +224,12 @@ public class FileChangeWatcher extends Thread {
 					break;
 				}
 			}
+		}
+		try {
+			watcher.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
