@@ -260,12 +260,54 @@ public class DHLink {
 	public Matrix DhStepInverse(Matrix end,double rotory,double prismatic) {
 		setMatrix(rotory, prismatic);
 		
-		Matrix step = end.times(getTransZ().inverse());
-		step = step.times(getRotZ().inverse());
+		Matrix step = end.times(getRotX().inverse());
 		step = step.times(getTransX().inverse());
-		step = step.times(getRotX().inverse());
+		step = step.times(getRotZ().inverse());
+		step = step.times(getTransZ().inverse());
 		
 		return step;
+	}
+	
+	/**
+	 * Dh step inverse.
+	 *
+	 * @param end the end
+	 * @param rotory the rotory
+	 * @param prismatic the prismatic
+	 * @return the matrix
+	 */
+	public Matrix DhStepInverse(double rotory,double prismatic) {
+		
+		Matrix end=new TransformNR().getMatrixTransform();
+		
+		return DhStepInverse(end,rotory,prismatic);
+	}
+
+	
+	/**
+	 * Dh step inverse.
+	 *
+	 * @param end the end
+	 * @param rotory the rotory
+	 * @param prismatic the prismatic
+	 * @return the matrix
+	 */
+	public Matrix DhStepInversePrismatic(double prismatic) {
+		
+		return DhStepInverse(0,prismatic);
+	}
+
+	
+	/**
+	 * Dh step inverse.
+	 *
+	 * @param end the end
+	 * @param rotory the rotory
+	 * @param prismatic the prismatic
+	 * @return the matrix
+	 */
+	public Matrix DhStepInverseRotory(double rotory) {
+		return DhStepInverse(rotory,0);
 	}
 
 

@@ -7,6 +7,7 @@ import javafx.scene.transform.Affine;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
+import com.neuronrobotics.sdk.pid.PIDLimitEventType;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -344,6 +345,14 @@ public abstract class AbstractLink {
 					link.setTargetValue(targetValue);
 				}
 				cacheTargetValue();
+				fireLinkLimitEvent(
+						new PIDLimitEvent(
+								conf.getHardwareIndex(),
+								toLinkUnits(targetValue) ,
+								PIDLimitEventType.UPPERLIMIT,
+								System.currentTimeMillis()
+								)
+						);
 				throw new RuntimeException("Joint hit Upper software bound\n"+execpt);
 			}
 			if(val<getLowerLimit()) {
@@ -354,6 +363,14 @@ public abstract class AbstractLink {
 					link.setTargetValue(targetValue);
 				}
 				cacheTargetValue();
+				fireLinkLimitEvent(
+						new PIDLimitEvent(
+								conf.getHardwareIndex(),
+								toLinkUnits(targetValue) ,
+								PIDLimitEventType.LOWERLIMIT,
+								System.currentTimeMillis()
+								)
+						);
 				throw new RuntimeException("Joint hit Lower software bound\n"+execpt);
 			}
 		}else{
