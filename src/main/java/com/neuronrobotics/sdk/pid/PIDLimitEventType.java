@@ -27,6 +27,9 @@ import java.util.Map;
  */
 public enum PIDLimitEventType {
 	
+	/**
+	 * 
+	 */
 	NO_LIMIT(0x00),
 	/** The lowerlimit. */
 	LOWERLIMIT(0x01),
@@ -39,7 +42,13 @@ public enum PIDLimitEventType {
 	
 	/** The overcurrent. */
 	OVERCURRENT(0x08),
+	/**
+	 * 
+	 */
 	CONTROLLER_ERROR(0x10),
+	/**
+	 * a home event
+	 */
 	HOME_EVENT(0x20)
 	;
 	;

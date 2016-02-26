@@ -271,7 +271,6 @@ public class DHLink {
 	/**
 	 * Dh step inverse.
 	 *
-	 * @param end the end
 	 * @param rotory the rotory
 	 * @param prismatic the prismatic
 	 * @return the matrix
@@ -287,8 +286,6 @@ public class DHLink {
 	/**
 	 * Dh step inverse.
 	 *
-	 * @param end the end
-	 * @param rotory the rotory
 	 * @param prismatic the prismatic
 	 * @return the matrix
 	 */
@@ -301,9 +298,7 @@ public class DHLink {
 	/**
 	 * Dh step inverse.
 	 *
-	 * @param end the end
 	 * @param rotory the rotory
-	 * @param prismatic the prismatic
 	 * @return the matrix
 	 */
 	public Matrix DhStepInverseRotory(double rotory) {

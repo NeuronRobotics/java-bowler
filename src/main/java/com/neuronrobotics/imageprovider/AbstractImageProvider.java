@@ -22,6 +22,11 @@ import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.common.InvalidConnectionException;
 import com.neuronrobotics.sdk.common.NonBowlerDevice;
 
+/**
+ * This is a class is used as an interface to create cameras for the Bowler system. 
+ * @author hephaestus
+ *
+ */
 public abstract class AbstractImageProvider extends NonBowlerDevice {
 	private BufferedImage image = null;
 	private Affine globalPos;
@@ -56,11 +61,21 @@ public abstract class AbstractImageProvider extends NonBowlerDevice {
 	
 
 	
+	/**
+	 * copy from buffered image to buffered image
+	 * @param src
+	 * @param dest
+	 */
 	public static void deepCopy(BufferedImage src, BufferedImage dest) {
 		Graphics g = dest.createGraphics();
 		g.drawImage(src, 0, 0, null);
 	}
 	
+	/**
+	 * @param inputImage
+	 * @param displayImage
+	 * @return latest image
+	 */
 	public BufferedImage getLatestImage(BufferedImage inputImage, BufferedImage displayImage){
 		captureNewImage(inputImage);
 		if(displayImage!=null){
@@ -71,10 +86,18 @@ public abstract class AbstractImageProvider extends NonBowlerDevice {
 		return image;
 	}
 	
+	/**
+	 * @return latest image
+	 */
 	public BufferedImage getLatestImage(){
 		return image;
 	}
 	
+	/**
+	 * @param w
+	 * @param h
+	 * @return new blnak sized image
+	 */
 	public static BufferedImage newBufferImage(int w, int h) {
 		return new BufferedImage(w, h,  BufferedImage.TYPE_3BYTE_BGR);
 	
@@ -82,6 +105,12 @@ public abstract class AbstractImageProvider extends NonBowlerDevice {
 
 
 
+	/**
+	 * @param in
+	 * @param w
+	 * @param h
+	 * @return grayed image
+	 */
 	public static  BufferedImage toGrayScale(BufferedImage in, int w, int h) {
 		BufferedImage bi = new BufferedImage(w, h, BufferedImage.TYPE_BYTE_GRAY);
 		Graphics g = bi.createGraphics();
@@ -89,11 +118,20 @@ public abstract class AbstractImageProvider extends NonBowlerDevice {
 		return bi;
 	}
 
+	/**
+	 * @param in
+	 * @param scale
+	 * @return toGrayScale
+	 */
 	public  static BufferedImage toGrayScale(BufferedImage in, double scale) {
 		int w = (int) (in.getWidth() * scale);
 		int h = (int) (in.getHeight() * scale);
 		return toGrayScale(in, w, h);
 	}
+	/**
+	 * @param bf
+	 * @return conversion to javafx i mage
+	 */
 	public static Image getJfxImage(BufferedImage bf) {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 	    try {
@@ -105,18 +143,30 @@ public abstract class AbstractImageProvider extends NonBowlerDevice {
 		ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
 	    return new javafx.scene.image.Image(in);
 	}
+	/**
+	 * @return image as Javafx
+	 */ 
 	public Image getLatestJfxImage() {
 		return getJfxImage(getLatestImage());
 	}
 
+	/**
+	 * @param globalPos
+	 */
 	public void setGlobalPositionListener(Affine globalPos) {
 		this.setGlobalPos(globalPos);
 	}
 
+	/**
+	 * @return global positioning of the image
+	 */
 	public Affine getGlobalPos() {
 		return globalPos;
 	}
 
+	/**
+	 * @param globalPos
+	 */
 	public void setGlobalPos(Affine globalPos) {
 		this.globalPos = globalPos;
 		
