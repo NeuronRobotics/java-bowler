@@ -33,14 +33,8 @@ public class MobileBase extends AbstractKinematicsNR{
 	/** The drivable. */
 	private final ArrayList<DHParameterKinematics> drivable=new ArrayList<DHParameterKinematics>();
 	
-	/** The drive type. */
-	private DrivingType driveType = DrivingType.NONE;
-	
 	/** The walking drive engine. */
 	private IDriveEngine walkingDriveEngine = new WalkingDriveEngine();
-	
-	/** The wheeled drive engine. */
-	private IDriveEngine wheeledDriveEngine = new WheeledDriveEngine();
 	
 	/** The walking engine. */
 	private String [] walkingEngine =new String[]{"https://gist.github.com/bcb4760a449190206170.git","WalkingDriveEngine.groovy"}; 
@@ -147,11 +141,7 @@ public class MobileBase extends AbstractKinematicsNR{
     	}catch (Exception e){
     		
     	}
-		try{
-			setDriveType(DrivingType.fromString(XmlFactory.getTagValue("driveType",doc)));
-		}catch(Exception ex ){
-			setDriveType(DrivingType.NONE);
-		}
+
 	}
 	
 	/**
@@ -316,7 +306,7 @@ public class MobileBase extends AbstractKinematicsNR{
 		TransformNR location = getFiducialToGlobalTransform();
 		setGlobalToFiducialTransform(new TransformNR());
 		String xml = "<mobilebase>\n";
-		xml+="\n<driveType>"+getDriveType()+"</driveType>\n";
+
 		
 		xml+="\t<cadEngine>\n";
 		xml+="\t\t<git>"+getGitCadEngine()[0]+"</git>\n";
@@ -394,6 +384,7 @@ public class MobileBase extends AbstractKinematicsNR{
 	 * @return the walking drive engine
 	 */
 	private IDriveEngine getWalkingDriveEngine() {
+
 		return walkingDriveEngine;
 	}
 
@@ -406,42 +397,8 @@ public class MobileBase extends AbstractKinematicsNR{
 		this.walkingDriveEngine = walkingDriveEngine;
 	}
 
-	/**
-	 * Gets the wheeled drive engine.
-	 *
-	 * @return the wheeled drive engine
-	 */
-	private IDriveEngine getWheeledDriveEngine() {
-		return wheeledDriveEngine;
-	}
 
-	/**
-	 * Sets the wheeled drive engine.
-	 *
-	 * @param wheeledDriveEngine the new wheeled drive engine
-	 */
-	public void setWheeledDriveEngine(IDriveEngine wheeledDriveEngine) {
-		this.wheeledDriveEngine = wheeledDriveEngine;
-	}
 
-	/**
-	 * Gets the drive type.
-	 *
-	 * @return the drive type
-	 */
-	public DrivingType getDriveType() {
-		return driveType;
-	}
-
-	/**
-	 * Sets the drive type.
-	 *
-	 * @param driveType the new drive type
-	 */
-	public void setDriveType(DrivingType driveType) {
-		this.driveType = driveType;
-	}
-	
 	/**
 	 * Drive arc.
 	 *
@@ -449,26 +406,7 @@ public class MobileBase extends AbstractKinematicsNR{
 	 * @param seconds the seconds
 	 */
 	public void DriveArc( TransformNR newPose, double seconds) {
-		// TODO Auto-generated method stub
-		switch(driveType){
-		case DRIVING:
-			getWheeledDriveEngine().DriveArc(this,newPose, seconds);
-			break;
-		case NONE:
-			try {
-				//do a simple coordinated motion task
-				for(DHParameterKinematics dh:appendages){
-					dh.setDesiredTaskSpaceTransform(newPose,  seconds);
-				}
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			break;
-		case WALKING:
-			getWalkingDriveEngine().DriveArc(this,newPose, seconds);
-			break;
-		}
+		getWalkingDriveEngine().DriveArc(this,newPose, seconds);
 		updatePositions();
 	}
 
@@ -479,17 +417,8 @@ public class MobileBase extends AbstractKinematicsNR{
 	 * @param cmPerSecond the cm per second
 	 */
 	public void DriveVelocityStraight(double cmPerSecond) {
-		// TODO Auto-generated method stub
-		switch(driveType){
-		case DRIVING:
-			getWheeledDriveEngine().DriveVelocityStraight(this,cmPerSecond);
-			break;
-		case NONE:
-			break;
-		case WALKING:
-			getWalkingDriveEngine().DriveVelocityStraight(this,cmPerSecond);
-			break;
-		}
+		getWalkingDriveEngine().DriveVelocityStraight(this,cmPerSecond);
+
 		updatePositions();
 	}
 
@@ -501,17 +430,8 @@ public class MobileBase extends AbstractKinematicsNR{
 	 * @param cmRadius the cm radius
 	 */
 	public void DriveVelocityArc(double degreesPerSecond, double cmRadius) {
-		// TODO Auto-generated method stub
-		switch(driveType){
-		case DRIVING:
-			getWheeledDriveEngine().DriveVelocityArc(this,degreesPerSecond, cmRadius);
-			break;
-		case NONE:
-			break;
-		case WALKING:
-			getWalkingDriveEngine().DriveVelocityArc(this,degreesPerSecond, cmRadius);
-			break;
-		}
+		getWalkingDriveEngine().DriveVelocityArc(this,degreesPerSecond, cmRadius);
+	
 		updatePositions();
 	}
 	
