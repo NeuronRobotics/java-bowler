@@ -95,6 +95,8 @@ public class LinkConfiguration {
 	 */
 	private boolean invertLimitVelocityPolarity=false;
 	
+	private String electroMechanicalType = "hobbyServo";
+	private String electroMechanicalSize = "standardMicro";
 	/**
 	 * Instantiates a new link configuration.
 	 *
@@ -148,7 +150,17 @@ public class LinkConfiguration {
     	}catch (Exception e){
     		
     	}
+    	try{
+    		setElectroMechanicalType(XmlFactory.getTagValue("electroMechanicalType",eElement));
+    	}catch (Exception e){
+    		
+    	}
     	
+    	try{
+    		setElectroMechanicalSize(XmlFactory.getTagValue("electroMechanicalSize",eElement));
+    	}catch (Exception e){
+    		
+    	}
     	try{
     		if (eElement.getNodeType() == Node.ELEMENT_NODE && eElement.getNodeName().contentEquals("centerOfMassFromCentroid")) {
 		    	Element cntr = (Element)eElement;	    	    
@@ -255,6 +267,8 @@ public class LinkConfiguration {
 				"\t<indexLatch>"+indexLatch+"</indexLatch>\n"+
 				"\t<isStopOnLatch>"+isStopOnLatch+"</isStopOnLatch>\n"+	
 				"\t<homingTPS>"+getHomingTicksPerSecond()+"</homingTPS>\n"+
+				"\t<electroMechanicalSize>"+getElectroMechanicalSize()+"</electroMechanicalSize>\n"+
+				"\t<electroMechanicalType>"+getElectroMechanicalType()+"</electroMechanicalType>\n"+
 				"\t<mass>"+getMassKg()+"</mass>\n"+
 				"\t<centerOfMassFromCentroid>"+getCenterOfMassFromCentroid().getXml()+"</centerOfMassFromCentroid>\n"
 				+slaves;
@@ -693,6 +707,22 @@ public class LinkConfiguration {
 	}
 	public void setCenterOfMassFromCentroid(TransformNR centerOfMassFromCentroid) {
 		this.centerOfMassFromCentroid = centerOfMassFromCentroid;
+	}
+
+	public String getElectroMechanicalType() {
+		return electroMechanicalType;
+	}
+
+	public void setElectroMechanicalType(String electroMechanicalType) {
+		this.electroMechanicalType = electroMechanicalType;
+	}
+
+	public String getElectroMechanicalSize() {
+		return electroMechanicalSize;
+	}
+
+	public void setElectroMechanicalSize(String electroMechanicalSize) {
+		this.electroMechanicalSize = electroMechanicalSize;
 	}
 	
 }
