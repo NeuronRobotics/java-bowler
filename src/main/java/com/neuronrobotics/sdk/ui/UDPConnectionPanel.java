@@ -104,7 +104,7 @@ public class UDPConnectionPanel extends AbstractConnectionPanel {
 			if(baud < 0) {
 				throw new NumberFormatException();
 			}
-			String address =connectionCbo.getSelectedItem().toString();
+			String address =connectionCbo.getSelectedItem().toString().trim();
 			clnt.setAddress(address);
 			setVisible(false);
 			return clnt;
