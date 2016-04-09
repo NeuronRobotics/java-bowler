@@ -97,6 +97,8 @@ public class LinkConfiguration {
 	
 	private String electroMechanicalType = "hobbyServo";
 	private String electroMechanicalSize = "standardMicro";
+	private String shaftType = "hobbyServoHorn";
+	private String shaftSize = "standardMicro1";
 	/**
 	 * Instantiates a new link configuration.
 	 *
@@ -158,6 +160,17 @@ public class LinkConfiguration {
     	
     	try{
     		setElectroMechanicalSize(XmlFactory.getTagValue("electroMechanicalSize",eElement));
+    	}catch (Exception e){
+    		
+    	}
+    	try{
+    		setShaftType(XmlFactory.getTagValue("shaftType",eElement));
+    	}catch (Exception e){
+    		
+    	}
+    	
+    	try{
+    		setShaftSize(XmlFactory.getTagValue("shaftSize",eElement));
     	}catch (Exception e){
     		
     	}
@@ -269,6 +282,8 @@ public class LinkConfiguration {
 				"\t<homingTPS>"+getHomingTicksPerSecond()+"</homingTPS>\n"+
 				"\t<electroMechanicalSize>"+getElectroMechanicalSize()+"</electroMechanicalSize>\n"+
 				"\t<electroMechanicalType>"+getElectroMechanicalType()+"</electroMechanicalType>\n"+
+				"\t<shaftSize>"+getShaftSize()+"</shaftSize>\n"+
+				"\t<shaftType>"+getShaftType()+"</shaftType>\n"+
 				"\t<mass>"+getMassKg()+"</mass>\n"+
 				"\t<centerOfMassFromCentroid>"+getCenterOfMassFromCentroid().getXml()+"</centerOfMassFromCentroid>\n"
 				+slaves;
@@ -723,6 +738,22 @@ public class LinkConfiguration {
 
 	public void setElectroMechanicalSize(String electroMechanicalSize) {
 		this.electroMechanicalSize = electroMechanicalSize;
+	}
+
+	public String getShaftType() {
+		return shaftType;
+	}
+
+	public void setShaftType(String shaftType) {
+		this.shaftType = shaftType;
+	}
+
+	public String getShaftSize() {
+		return shaftSize;
+	}
+
+	public void setShaftSize(String shaftSize) {
+		this.shaftSize = shaftSize;
 	}
 	
 }
