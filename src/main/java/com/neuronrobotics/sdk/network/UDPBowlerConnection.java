@@ -159,7 +159,7 @@ public class UDPBowlerConnection extends BowlerAbstractConnection{
 	public BowlerDatagram loadPacketFromPhy(ByteList bytesToPacketBuffer) throws NullPointerException, IOException{
 		
 		long start = System.currentTimeMillis();
-		Log.info("Waiting for UDP packet");
+		//Log.info("Waiting for UDP packet");
 		udpSock.setSoTimeout(1);// Timeout the socket after 1 ms
 		//System.err.println("Timeout set "+(System.currentTimeMillis()-start));
 		start = System.currentTimeMillis();

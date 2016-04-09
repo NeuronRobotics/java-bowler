@@ -178,7 +178,7 @@ public class BowlerUDPServer extends BowlerAbstractConnection {
 		byte[] receiveData=new byte[4096];
 		
 		DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
-		Log.info("Waiting for UDP packet");
+		//Log.info("Waiting for UDP packet");
 		
 		try{
 			udpSock.receive(receivePacket);
