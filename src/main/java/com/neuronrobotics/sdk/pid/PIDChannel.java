@@ -192,8 +192,9 @@ public class PIDChannel {
 	 * @param e the e
 	 */
 	public void firePIDLimitEvent(PIDLimitEvent e){
-			for(IPIDEventListener l: PIDEventListeners)
-				l.onPIDLimitEvent(e);
+		for (int i=0;i<PIDEventListeners.size();i++){
+			PIDEventListeners.get(i).onPIDLimitEvent(e);
+		}
 	}
 	
 	/**
@@ -202,10 +203,9 @@ public class PIDChannel {
 	 * @param e the e
 	 */
 	public void firePIDEvent(PIDEvent e){
-
-			for(IPIDEventListener l: PIDEventListeners)
-				l.onPIDEvent(e);
-		
+		for (int i=0;i<PIDEventListeners.size();i++){
+			PIDEventListeners.get(i).onPIDEvent(e);
+		}
 	}
 	
 	/**
@@ -215,8 +215,9 @@ public class PIDChannel {
 	 * @param value the value
 	 */
 	public void firePIDResetEvent(int group,int value){
-		for(IPIDEventListener l: PIDEventListeners)
-			l.onPIDReset(group,value);
+		for (int i=0;i<PIDEventListeners.size();i++){
+			PIDEventListeners.get(i).onPIDReset(group,value);
+		}
 	}
 
 	/**
