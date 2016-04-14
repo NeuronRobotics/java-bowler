@@ -754,6 +754,11 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 * @param baseToFiducial the new base to zframe transform
 	 */
 	public void setBaseToZframeTransform(TransformNR baseToFiducial) {
+		if(baseToFiducial == null){
+			Log.error("Fiducial can not be null "+baseToFiducial);
+			new Exception().printStackTrace(System.out);
+			return;
+		}
 		Log.info("Setting Fiducial To base Transform "+baseToFiducial);
 		this.base2Fiducial = baseToFiducial;
 		for(IRegistrationListenerNR r: regListeners){
@@ -793,6 +798,11 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 * @param frameToBase the new global to fiducial transform
 	 */
 	public void setGlobalToFiducialTransform(TransformNR frameToBase) {
+		if(frameToBase == null){
+			Log.error("Fiducial can not be null "+frameToBase);
+			new Exception().printStackTrace(System.out);
+			return;
+		}
 		Log.info("Setting Global To Fiducial Transform "+frameToBase);
 		this.fiducial2RAS = frameToBase;
 	
