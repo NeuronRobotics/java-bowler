@@ -1,7 +1,10 @@
 language: java
-install: /bin/true
+install: 
+  - sudo add-apt-repository ppa:cwchien/gradle -y
+  - sudo apt-get update -qq
+  - sudo apt-get install -y --force-yes gradle
 script: 
-  - ./gradlew compileJava jar javadoc test 
+  - gradle compileJava jar javadoc test 
 cache:
   directories:
   - $HOME/.m2
@@ -10,4 +13,5 @@ jdk:
   - oraclejdk8
 
 # for running tests on Travis CI container infrastructure for faster builds
-sudo: false
+sudo: true
+dist: trusty
