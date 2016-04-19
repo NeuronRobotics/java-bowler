@@ -39,7 +39,6 @@ public abstract class AbstractImageProvider extends NonBowlerDevice {
 	
 	/**
 	 * This method should capture a new image and return it
-	 * @param imageData
 	 * @return
 	 */
 	public abstract BufferedImage captureNewImage();
