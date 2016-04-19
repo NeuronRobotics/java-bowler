@@ -37,6 +37,13 @@ public abstract class AbstractImageProvider extends NonBowlerDevice {
 	 */
 	protected abstract boolean captureNewImage(BufferedImage imageData);
 	
+	/**
+	 * This method should capture a new image and return it
+	 * @param imageData
+	 * @return
+	 */
+	public abstract BufferedImage captureNewImage();
+	
 	@Override
 	public void onAsyncResponse(BowlerDatagram data) {
 		// TODO Auto-generated method stub

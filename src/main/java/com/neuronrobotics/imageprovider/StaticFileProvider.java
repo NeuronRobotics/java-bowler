@@ -21,13 +21,7 @@ public class StaticFileProvider extends AbstractImageProvider {
 
 	@Override
 	protected boolean captureNewImage(BufferedImage imageData) {
-		// TODO Auto-generated method stub
-		BufferedImage buffImg;
-
-		/*In the constructor*/
-		try { buffImg = ImageIO.read(file ); } catch (IOException e) { return false;}
-		
-		AbstractImageProvider.deepCopy(buffImg,imageData);
+		AbstractImageProvider.deepCopy( captureNewImage(),imageData);
 		return true;
 	}
 
@@ -47,6 +41,16 @@ public class StaticFileProvider extends AbstractImageProvider {
 	public ArrayList<String> getNamespacesImp() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public BufferedImage captureNewImage() {
+		/* In the constructor */
+		try {
+			return ImageIO.read(file);
+		} catch (IOException e) {
+			return null;
+		}
 	}
 
 
