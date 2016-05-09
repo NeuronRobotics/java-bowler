@@ -130,9 +130,8 @@ public class BowlerJInputDevice extends NonBowlerDevice {
 			this.listeners.remove(l);
 	}
 	/**
-	 * Removes the listeners.
+	 * Removes all the listeners.
 	 *
-	 * @param l the l
 	 */
 	public void clearListeners() {
 			this.listeners.clear();
