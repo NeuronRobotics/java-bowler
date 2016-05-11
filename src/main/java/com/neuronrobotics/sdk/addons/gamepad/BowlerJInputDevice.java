@@ -39,6 +39,7 @@ public class BowlerJInputDevice extends NonBowlerDevice {
 			this.setController(controller);
 		else
 			throw new RuntimeException("Contoller must not be null");
+
 	}
 
 	/* (non-Javadoc)

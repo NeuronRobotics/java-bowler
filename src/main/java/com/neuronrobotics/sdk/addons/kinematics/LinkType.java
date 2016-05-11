@@ -45,9 +45,18 @@ public enum LinkType {
 	
 	/** The stepper tool. */
 	STEPPER_TOOL("stepper-tool"), 
-	
+
 	/** The stepper prismatic. */
 	STEPPER_PRISMATIC("stepper-prismatic"),
+	
+	/** The stepper rotory. */
+	GCODE_STEPPER_ROTORY("gcode-stepper-rotory"), 
+	/** The stepper tool. */
+	GCODE_STEPPER_TOOL("gcode-stepper-tool"), 
+	/** The stepper tool. */
+	GCODE_STEPPER_PRISMATIC("gcode-stepper-prismatic"), 
+	/** The stepper tool. */
+	GCODE_HEATER_TOOL("gcode-heater-tool"), 
 	
 	/** Camera */
 	CAMERA("camera");
@@ -122,6 +131,8 @@ public enum LinkType {
 		case SERVO_TOOL:
 		case STEPPER_TOOL:
 		case PID_TOOL:
+		case GCODE_STEPPER_TOOL:
+		case GCODE_HEATER_TOOL:
 			return true;
 		default:
 			return false;
@@ -140,6 +151,7 @@ public enum LinkType {
 		case PID_PRISMATIC:
 		case SERVO_PRISMATIC:
 		case STEPPER_PRISMATIC:
+		case GCODE_STEPPER_PRISMATIC:
 			return true;
 		default:
 			return false;
