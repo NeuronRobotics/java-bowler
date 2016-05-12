@@ -76,7 +76,9 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter{
 		try {
 			if(ins.available()>0){
 				java.util.Scanner s = new java.util.Scanner(ins).useDelimiter("\\A");
-				ret =s.hasNext() ? s.next() : "";
+				if(s.hasNext()){
+					ret =s.next();
+				}
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

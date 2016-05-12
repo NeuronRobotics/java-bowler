@@ -15,30 +15,82 @@ import gnu.io.NRSerialPort;
 
 public class GCODETest {
 
+	private static final Class<GcodeDevice> GCODECONTOLLER = GcodeDevice.class;
 	private static final String GCODE = "GCODE";
+	private static final String portname = "/dev/ttyUSB0";
 
-	@Test
-	public void test() {
-		boolean hasPort=false;
-		String portname = "/dev/ttyUSB0";
-				
-		for (String s:NRSerialPort.getAvailableSerialPorts()){
-			if(s.contentEquals(portname))
-				hasPort=true;
+	@BeforeClass
+	public static void loadGCodeDevice() {
+		boolean hasPort = false;
+		for (String s : NRSerialPort.getAvailableSerialPorts()) {
+			if (s.contentEquals(portname))
+				hasPort = true;
 		}
-		if(hasPort){
+		if (hasPort) {
 			GcodeDevice device;
-			NRSerialPort  port = new NRSerialPort(portname, 115200);
+			NRSerialPort port = new NRSerialPort(portname, 115200);
 			device = new GcodeDevice(port);
 			device.connect();
-				
-			String response = device.runLine("M105");
-			
+			DeviceManager.addConnection(device, GCODE);
+		}
+	}
+
+	@AfterClass
+	public static void closeGCodeDevice() {
+		boolean hasPort = false;
+		for (String s : NRSerialPort.getAvailableSerialPorts()) {
+			if (s.contentEquals(portname))
+				hasPort = true;
+		}
+		if (hasPort) {
+			GcodeDevice device = GCODECONTOLLER.cast(DeviceManager.getSpecificDevice(GCODECONTOLLER, GCODE));
 			device.disconnect();
-			if (response.length()>0)
-				System.out.println("Gcode line run: "+response);
-			else
+		}
+	}
+
+	@Test
+	public void M105() {
+		boolean hasPort = false;
+		for (String s : NRSerialPort.getAvailableSerialPorts()) {
+			if (s.contentEquals(portname))
+				hasPort = true;
+		}
+		if (hasPort) {
+			GcodeDevice device = GCODECONTOLLER.cast(DeviceManager.getSpecificDevice(GCODECONTOLLER, GCODE));
+
+			String response = device.runLine("M105");
+			if (response.length() > 0)
+				System.out.println("Gcode line run: " + response);
+			else {
 				fail("No response");
+			}
+
+		}
+	}
+
+	@Test
+	public void G1() {
+		boolean hasPort = false;
+		for (String s : NRSerialPort.getAvailableSerialPorts()) {
+			if (s.contentEquals(portname))
+				hasPort = true;
+		}
+		if (hasPort) {
+			GcodeDevice device = GCODECONTOLLER.cast(DeviceManager.getSpecificDevice(GCODECONTOLLER, GCODE));
+
+			String response = device.runLine("G0 X100 Y100 Z100 E100 F3000");
+			if (response.length() > 0)
+				System.out.println("Gcode line run: " + response);
+			else {
+				fail("No response");
+			}
+			response = device.runLine("G0 X0 Y0 Z0 E0 F3000");
+			if (response.length() > 0)
+				System.out.println("Gcode line run: " + response);
+			else {
+				fail("No response");
+			}
+
 		}
 	}
 
