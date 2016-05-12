@@ -27,16 +27,11 @@ public class GCODETest {
 				hasPort=true;
 		}
 		if(hasPort){
-			Object  d  = DeviceManager.getSpecificDevice(GcodeDevice.class, GCODE);
 			GcodeDevice device;
-			if(d==null){
-				NRSerialPort  port = new NRSerialPort(portname, 230400);
-				device = new GcodeDevice(port);
-				device.connect();
-				DeviceManager.addConnection(device, GCODE);
-			}else{
-				device = (GcodeDevice)d;
-			}
+			NRSerialPort  port = new NRSerialPort(portname, 115200);
+			device = new GcodeDevice(port);
+			device.connect();
+				
 			String response = device.runLine("M105");
 			
 			device.disconnect();

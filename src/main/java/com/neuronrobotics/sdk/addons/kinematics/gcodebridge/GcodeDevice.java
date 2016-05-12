@@ -69,19 +69,26 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter{
 		// TODO Auto-generated method stub
 		return new ArrayList<String>();
 	}
-	
+	@SuppressWarnings("resource")
 	private  String getLine(){
-		@SuppressWarnings("resource")
-		String ret=null;
-		//synchronized(ins){
-			java.util.Scanner s = new java.util.Scanner(ins).useDelimiter("\\A");
-			ret =s.hasNext() ? s.next() : "";
-		//}
+		
+		String ret="";
+		try {
+			if(ins.available()>0){
+				java.util.Scanner s = new java.util.Scanner(ins).useDelimiter("\\A");
+				ret =s.hasNext() ? s.next() : "";
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	    return ret;
 	}
 
 	@Override
 	public   String runLine(String line) {
+		if(!line.endsWith("\n"))
+			line = line+"\n";
 		try {
 			//synchronized(outs){
 				outs.write(line.getBytes());
