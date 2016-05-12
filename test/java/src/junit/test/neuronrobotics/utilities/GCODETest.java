@@ -18,10 +18,11 @@ public class GCODETest {
 	private static final Class<GcodeDevice> GCODECONTOLLER = GcodeDevice.class;
 	private static final String GCODE = "GCODE";
 	private static final String portname = "/dev/ttyUSB0";
+	private static boolean hasPort;
 
 	@BeforeClass
 	public static void loadGCodeDevice() {
-		boolean hasPort = false;
+		hasPort = false;
 		for (String s : NRSerialPort.getAvailableSerialPorts()) {
 			if (s.contentEquals(portname))
 				hasPort = true;
@@ -37,11 +38,7 @@ public class GCODETest {
 
 	@AfterClass
 	public static void closeGCodeDevice() {
-		boolean hasPort = false;
-		for (String s : NRSerialPort.getAvailableSerialPorts()) {
-			if (s.contentEquals(portname))
-				hasPort = true;
-		}
+
 		if (hasPort) {
 			GcodeDevice device = GCODECONTOLLER.cast(DeviceManager.getSpecificDevice(GCODECONTOLLER, GCODE));
 			device.disconnect();
@@ -50,11 +47,7 @@ public class GCODETest {
 
 	@Test
 	public void M105() {
-		boolean hasPort = false;
-		for (String s : NRSerialPort.getAvailableSerialPorts()) {
-			if (s.contentEquals(portname))
-				hasPort = true;
-		}
+
 		if (hasPort) {
 			GcodeDevice device = GCODECONTOLLER.cast(DeviceManager.getSpecificDevice(GCODECONTOLLER, GCODE));
 
@@ -70,11 +63,7 @@ public class GCODETest {
 
 	@Test
 	public void G1() {
-		boolean hasPort = false;
-		for (String s : NRSerialPort.getAvailableSerialPorts()) {
-			if (s.contentEquals(portname))
-				hasPort = true;
-		}
+
 		if (hasPort) {
 			GcodeDevice device = GCODECONTOLLER.cast(DeviceManager.getSpecificDevice(GCODECONTOLLER, GCODE));
 
