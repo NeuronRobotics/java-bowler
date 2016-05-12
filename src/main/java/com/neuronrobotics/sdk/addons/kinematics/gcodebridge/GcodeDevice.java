@@ -48,12 +48,16 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter{
 			}
 			outs=null;
 		}
+		if(serial.isConnected())
+			serial.disconnect();
 	}
 
 	@Override
 	public boolean connectDeviceImp() {
 		disconnectDeviceImp();
-		serial.connect();
+		if(!serial.connect()){
+			throw new RuntimeException("Failed to connect to the serial device");
+		}
 		ins=serial.getInputStream();
 		outs = serial.getOutputStream();
 		
@@ -69,19 +73,19 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter{
 	private  String getLine(){
 		@SuppressWarnings("resource")
 		String ret=null;
-		synchronized(ins){
-			java.util.Scanner s = new java.util.Scanner(ins).useDelimiter("\\n");
+		//synchronized(ins){
+			java.util.Scanner s = new java.util.Scanner(ins).useDelimiter("\\A");
 			ret =s.hasNext() ? s.next() : "";
-		}
+		//}
 	    return ret;
 	}
 
 	@Override
 	public   String runLine(String line) {
 		try {
-			synchronized(outs){
+			//synchronized(outs){
 				outs.write(line.getBytes());
-			}
+			//}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
