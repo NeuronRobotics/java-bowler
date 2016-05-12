@@ -87,8 +87,8 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter{
 
 	@Override
 	public   String runLine(String line) {
-		if(!line.endsWith("\n"))
-			line = line+"\n";
+		if(!line.endsWith("\r\n"))
+			line = line+"\r\n";
 		try {
 			//synchronized(outs){
 				outs.write(line.getBytes());
