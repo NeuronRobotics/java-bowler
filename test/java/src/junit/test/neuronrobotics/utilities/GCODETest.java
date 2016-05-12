@@ -19,24 +19,32 @@ public class GCODETest {
 
 	@Test
 	public void test() {
-		Object  d  = DeviceManager.getSpecificDevice(GcodeDevice.class, GCODE);
-		GcodeDevice device;
-		if(d==null){
-			NRSerialPort  port = new NRSerialPort("/dev/ttyUSB0", 230400);
-			device = new GcodeDevice(port);
-			device.connect();
-			DeviceManager.addConnection(device, GCODE);
-		}else{
-			device = (GcodeDevice)d;
+		boolean hasPort=false;
+		String portname = "/dev/ttyUSB0";
+				
+		for (String s:NRSerialPort.getAvailableSerialPorts()){
+			if(s.contentEquals(portname))
+				hasPort=true;
 		}
-		String response = device.runLine("M105");
-		
-		device.disconnect();
-		if (response.length()>0)
-			System.out.println("Gcode line run: "+response);
-		else
-			fail("No response");
-		
+		if(hasPort){
+			Object  d  = DeviceManager.getSpecificDevice(GcodeDevice.class, GCODE);
+			GcodeDevice device;
+			if(d==null){
+				NRSerialPort  port = new NRSerialPort(portname, 230400);
+				device = new GcodeDevice(port);
+				device.connect();
+				DeviceManager.addConnection(device, GCODE);
+			}else{
+				device = (GcodeDevice)d;
+			}
+			String response = device.runLine("M105");
+			
+			device.disconnect();
+			if (response.length()>0)
+				System.out.println("Gcode line run: "+response);
+			else
+				fail("No response");
+		}
 	}
 
 }
