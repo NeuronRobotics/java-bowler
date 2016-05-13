@@ -31,6 +31,8 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter{
 
 	@Override
 	public void disconnectDeviceImp() {
+		if(serial.isConnected())
+			runLine("M84");// Disable motors on exit
 		if(ins!=null){
 			try {
 				ins.close();

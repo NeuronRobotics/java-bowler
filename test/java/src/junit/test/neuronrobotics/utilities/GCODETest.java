@@ -72,19 +72,19 @@ public class GCODETest {
 			else {
 				fail("No response");
 			}
-			response = device.runLine("G0 X100 Y100 Z100 E100 F12000");
+			response = device.runLine("G0 X100 Y100 Z100 E100 F22000");
 			if (response.length() > 0)
 				System.out.println("Gcode line run: " + response);
 			else {
 				fail("No response");
 			}
-			response = device.runLine("G0 X0 Y0 Z0 E0 F12000");
+			response = device.runLine("G0 X0 Y0 Z0 E0 F22000");
 			if (response.length() > 0)
 				System.out.println("Gcode line run: " + response);
 			else {
 				fail("No response");
 			}
-			device.runLine("M84");// Disable motors on exit
+
 		}
 	}
 
