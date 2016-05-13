@@ -66,20 +66,25 @@ public class GCODETest {
 
 		if (hasPort) {
 			GcodeDevice device = GCODECONTOLLER.cast(DeviceManager.getSpecificDevice(GCODECONTOLLER, GCODE));
-
-			String response = device.runLine("G0 X100 Y100 Z100 E100 F3000");
+			String response = device.runLine("G90");// Absolute mode
 			if (response.length() > 0)
 				System.out.println("Gcode line run: " + response);
 			else {
 				fail("No response");
 			}
-			response = device.runLine("G0 X0 Y0 Z0 E0 F3000");
+			response = device.runLine("G0 X100 Y100 Z100 E100 F12000");
 			if (response.length() > 0)
 				System.out.println("Gcode line run: " + response);
 			else {
 				fail("No response");
 			}
-
+			response = device.runLine("G0 X0 Y0 Z0 E0 F12000");
+			if (response.length() > 0)
+				System.out.println("Gcode line run: " + response);
+			else {
+				fail("No response");
+			}
+			device.runLine("M84");// Disable motors on exit
 		}
 	}
 
