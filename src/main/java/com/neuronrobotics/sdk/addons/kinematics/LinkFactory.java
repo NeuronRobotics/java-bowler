@@ -1,10 +1,13 @@
 package com.neuronrobotics.sdk.addons.kinematics;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.neuronrobotics.imageprovider.AbstractImageProvider;
 import com.neuronrobotics.imageprovider.VirtualCameraFactory;
+import com.neuronrobotics.sdk.addons.kinematics.gcodebridge.GcodeDevice;
 import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
 import com.neuronrobotics.sdk.common.DeviceManager;
+import com.neuronrobotics.sdk.common.IFlushable;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.peripherals.AnalogInputChannel;
@@ -31,11 +34,12 @@ public class LinkFactory {
 	/** The link configurations. */
 	private ArrayList<LinkConfiguration> linkConfigurations=null ;
 	
-	/** The dyio. */
-	private DyIO dyio;
-	
-	/** The pid. */
-	private IPidControlNamespace pid;
+//	/** The dyio. */
+//	private DyIO dyio;
+//	
+//	/** The pid. */
+//	private IPidControlNamespace pid;
+//	
 	
 	/**
 	 * Instantiates a new link factory.
@@ -134,67 +138,63 @@ public class LinkFactory {
 	 */
 	private AbstractLink getLinkLocal(LinkConfiguration c){
 
-		if(dyio==null)
-			dyio=(DyIO) DeviceManager.getSpecificDevice(DyIO.class, c.getDeviceScriptingName());
-		if(pid==null)
-			pid=(IPidControlNamespace) DeviceManager.getSpecificDevice(IPidControlNamespace.class, c.getDeviceScriptingName());
-		
 		AbstractLink tmp=null;
 		Log.info("Loading link: "+c.getName()+" type = "+c.getType()+" device= "+c.getDeviceScriptingName());
 		switch(c.getType()){
-
+		
+			
 		case ANALOG_PRISMATIC:
-			if(dyio!=null){
-				tmp = new AnalogPrismaticLink(	new AnalogInputChannel(dyio.getChannel(c.getHardwareIndex())), 
+			if(getDyio(c)!=null){
+				tmp = new AnalogPrismaticLink(	new AnalogInputChannel(getDyio(c).getChannel(c.getHardwareIndex())), 
 											c);
 				tmp.setUseLimits(false);
 			}
 			break;
 		case ANALOG_ROTORY:
-			if(dyio!=null){
-				tmp = new AnalogRotoryLink(	new AnalogInputChannel(dyio.getChannel(c.getHardwareIndex())), 
+			if(getDyio(c)!=null){
+				tmp = new AnalogRotoryLink(	new AnalogInputChannel(getDyio(c).getChannel(c.getHardwareIndex())), 
 											c);
 				tmp.setUseLimits(false);
 			}
 			break;
 		case PID_TOOL:
 		case PID:
-			if(pid!=null){
-				tmp=new PidRotoryLink(	pid.getPIDChannel(c.getHardwareIndex()),
+			if(getPid(c)!=null){
+				tmp=new PidRotoryLink(	getPid(c).getPIDChannel(c.getHardwareIndex()),
 										c);
 			}
 			break;
 		case PID_PRISMATIC:
-			if(pid!=null){
-				tmp=new PidPrismaticLink(	pid.getPIDChannel(c.getHardwareIndex()),
+			if(getPid(c)!=null){
+				tmp=new PidPrismaticLink(	getPid(c).getPIDChannel(c.getHardwareIndex()),
 										c);
 			}
 			break;
 		case SERVO_PRISMATIC:
-			if(dyio!=null){
-				tmp = new ServoPrismaticLink(	new ServoChannel(dyio.getChannel(c.getHardwareIndex())), 
+			if(getDyio(c)!=null){
+				tmp = new ServoPrismaticLink(	new ServoChannel(getDyio(c).getChannel(c.getHardwareIndex())), 
 											c);
 				
 			}
 			break;
 		case SERVO_ROTORY:
 		case SERVO_TOOL:
-			if(dyio!=null){
-				tmp = new ServoRotoryLink(	new ServoChannel(dyio.getChannel(c.getHardwareIndex())), 
+			if(getDyio(c)!=null){
+				tmp = new ServoRotoryLink(	new ServoChannel(getDyio(c).getChannel(c.getHardwareIndex())), 
 											c);
 				
 			}
 			break;
 		case STEPPER_PRISMATIC:
-			if(dyio!=null){
-				tmp = new StepperPrismaticLink(	new CounterOutputChannel(dyio.getChannel(c.getHardwareIndex())), 
+			if(getDyio(c)!=null){
+				tmp = new StepperPrismaticLink(	new CounterOutputChannel(getDyio(c).getChannel(c.getHardwareIndex())), 
 											c);				
 			}
 			break;
 		case STEPPER_TOOL:
 		case STEPPER_ROTORY:
-			if(dyio!=null){
-				tmp = new StepperRotoryLink(	new CounterOutputChannel(dyio.getChannel(c.getHardwareIndex())), 
+			if(getDyio(c)!=null){
+				tmp = new StepperRotoryLink(	new CounterOutputChannel(getDyio(c).getChannel(c.getHardwareIndex())), 
 											c);				
 			}
 			break;
@@ -217,6 +217,16 @@ public class LinkFactory {
 				DeviceManager.addConnection(img, myVirtualDevName1);
 			}
 			tmp=new CameraLink(c,img);
+			break;
+		case GCODE_HEATER_TOOL:
+			break;
+		case GCODE_STEPPER_PRISMATIC:
+			break;
+		case GCODE_STEPPER_ROTORY:
+			break;
+		case GCODE_STEPPER_TOOL:
+			break;
+		default:
 			break;
 		}
 		
@@ -285,38 +295,57 @@ public class LinkFactory {
 	 * @param seconds the seconds
 	 */
 	public void flush(final double seconds){
-		long time = System.currentTimeMillis();
-		//TODO this feature needs to be made to work, it should also check to see if all the links are on the same device
-		if(dyio!=null){
-			dyio.flushCache(seconds);
-		}
-		if(pid!=null){
-			pid.flushPIDChannels(seconds);
-		}else{	
-			for(AbstractLink l:links){
-				if(l.getLinkConfiguration().getDeviceScriptingName()!=null)
-					l.flush(seconds);
+		HashMap<String , Boolean> flushed=new HashMap<String, Boolean>();
+ 		for(LinkConfiguration c:getLinkConfigurations()){
+ 			String name = c.getDeviceScriptingName();
+			// if a device is disconnected it is removed from the device manager. the factory should check all devices
+			if(DeviceManager.getSpecificDevice(IFlushable.class,name)==null){
+				getLink(c).flush(seconds);//links flushed directly because there is no flushable device
+			}else{
+				if(flushed.get(name)==null){
+					flushed.put(name,true);
+					IFlushable flushDevice = (IFlushable)DeviceManager.getSpecificDevice(IFlushable.class,name);
+					flushDevice.flush(seconds);
+					
+				}
 			}
+			
+			
 		}
 		//System.out.println("Flush Took "+(System.currentTimeMillis()-time)+"ms");
 	}
 	
 	/**
-	 * Gets the pid.
+	 * Gets the pid from the database..
 	 *
-	 * @return the pid
+	 * @return the pid from the database.
 	 */
-	public IPidControlNamespace getPid() {
-		return pid;
+	public IPidControlNamespace getPid(LinkConfiguration c) {
+
+			return (IPidControlNamespace) DeviceManager.getSpecificDevice(IPidControlNamespace.class, c.getDeviceScriptingName());
+
 	}
 	
 	/**
 	 * Gets the dyio.
 	 *
-	 * @return the dyio
+	 * @return the dyio from the database.
 	 */
-	public DyIO getDyio(){
-		return dyio;
+	public DyIO getDyio(LinkConfiguration c){
+	
+			return (DyIO) DeviceManager.getSpecificDevice(DyIO.class, c.getDeviceScriptingName());
+
+	}
+	
+	/**
+	 * Gets the Gcode device from the database.
+	 *
+	 * @return the GCODE device
+	 */
+	public GcodeDevice getGCODE(LinkConfiguration c){
+	
+			return (GcodeDevice) DeviceManager.getSpecificDevice(GcodeDevice.class, c.getDeviceScriptingName());
+
 	}
 	
 	/**
@@ -344,11 +373,11 @@ public class LinkFactory {
 	 * @return true, if is connected
 	 */
 	public boolean isConnected() {
-		if(pid!=null){
-			return pid.isAvailable();
-		}
-		if(dyio!=null){
-			return dyio.isAvailable();
+		for(LinkConfiguration c:getLinkConfigurations()){
+			// if a device is disconnected it is removed from the device manager. the factory should check all devices
+			if(DeviceManager.getSpecificDevice(null, c.getDeviceScriptingName())==null){
+				return false;
+			}
 		}
 		return true;
 	}

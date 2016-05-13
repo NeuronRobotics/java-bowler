@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
 import com.neuronrobotics.sdk.common.BowlerDatagram;
+import com.neuronrobotics.sdk.common.IFlushable;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.MACAddress;
 import com.neuronrobotics.sdk.namespace.bcs.pid.AbstractPidNamespaceImp;
@@ -19,7 +20,7 @@ import com.neuronrobotics.sdk.namespace.bcs.pid.PidNamespaceImp;
  * @author hephaestus
  *
  */
-public class GenericPIDDevice extends BowlerAbstractDevice implements IExtendedPIDControl {
+public class GenericPIDDevice extends BowlerAbstractDevice implements IExtendedPIDControl,IFlushable{
 	
 	/** The is init. */
 	private boolean isInit=false;
@@ -319,6 +320,11 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IExtendedP
 			return false;
 		}
 		
+	}
+
+	@Override
+	public void flush(double seconds) {
+		flushPIDChannels(seconds);
 	}
 	
 }

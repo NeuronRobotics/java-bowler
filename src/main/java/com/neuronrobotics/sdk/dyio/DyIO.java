@@ -34,6 +34,7 @@ import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.common.BowlerMethod;
 import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.IConnectionEventListener;
+import com.neuronrobotics.sdk.common.IFlushable;
 import com.neuronrobotics.sdk.common.InvalidConnectionException;
 import com.neuronrobotics.sdk.common.InvalidResponseException;
 import com.neuronrobotics.sdk.common.Log;
@@ -55,7 +56,7 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
  * object has one connection to one DyIO module and wraps all of the commands in an accessible API. 
  * @author Kevin Harrington, Robert Breznak
  */
-public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,IConnectionEventListener {
+public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,IConnectionEventListener,IFlushable {
 
 	/** The Constant NEURONROBOTICS_DYIO_1_0. */
 	private static final String NEURONROBOTICS_DYIO_1_0 = "neuronrobotics.dyio.*;1.0";
@@ -1414,6 +1415,11 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	 */
 	public void setLegacyParser(boolean legacyParser) {
 		this.legacyParser = legacyParser;
+	}
+
+	@Override
+	public void flush(double seconds) {
+		flushCache(seconds);
 	}
 
 

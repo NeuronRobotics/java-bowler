@@ -148,9 +148,10 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 */
 	public void disconnectDeviceImp(){
 		getFactory().removeLinkListener(this);
-		IPidControlNamespace device = getFactory().getPid();
-		if(device!=null)
-			device.removePIDEventListener(this);
+		for(LinkConfiguration lf: getFactory().getLinkConfigurations())
+			if(getFactory().getPid(lf)!=null)
+				getFactory().getPid(lf).removePIDEventListener(this);
+			
 		disconnectDevice();
 	}
 	
@@ -426,7 +427,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 			getFactory().getLink(c);
 			Log.info("\nAxis #"+i+" Configuration:\n"+c);
 			if(c.getType()==LinkType.PID){
-				IPidControlNamespace device = getFactory().getPid();
+				IPidControlNamespace device = getFactory().getPid(c);
 				try{
 					PIDConfiguration tmpConf = device.getPIDConfiguration(c.getHardwareIndex());
 					tmpConf.setGroup(c.getHardwareIndex());
@@ -1029,13 +1030,13 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		}
 		LinkConfiguration conf = getLinkConfiguration(link);
 		if(conf.getType() == LinkType.PID){
-			getFactory().getPid().removePIDEventListener(this);
+			getFactory().getPid(conf).removePIDEventListener(this);
 			//Range is in encoder units
 			double range = Math.abs(conf.getUpperLimit()-conf.getLowerLimit())*2;
 			
 			Log.info("Homing link:"+link+" to latch value: "+conf.getIndexLatch());
 			PIDConfiguration pidConf = getLinkCurrentConfiguration(link);
-			PIDChannel joint = getFactory().getPid().getPIDChannel(conf.getHardwareIndex());
+			PIDChannel joint = getFactory().getPid(conf).getPIDChannel(conf.getHardwareIndex());
 			
 			
 			//Clear the index
@@ -1065,7 +1066,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			getFactory().getPid().addPIDEventListener(this);
+			getFactory().getPid(conf).addPIDEventListener(this);
 		}else{
 			getFactory().getLink(getLinkConfiguration(link)).Home();
 			getFactory().flush(1000);
@@ -1075,7 +1076,9 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 * This is a quick stop for all axis of the robot.
 	 */
 	public void emergencyStop(){
-		getFactory().getPid().killAllPidGroups();
+		for(LinkConfiguration lf: getFactory().getLinkConfigurations())
+			if(getFactory().getPid(lf)!=null)
+				getFactory().getPid(lf).killAllPidGroups();
 	}
 
 //	public void setAxisPidConfiguration(ArrayList<PIDConfiguration> conf) {

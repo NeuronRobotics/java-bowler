@@ -2,14 +2,21 @@ package junit.test.neuronrobotics.utilities;
 
 import static org.junit.Assert.*;
 
+import javax.security.auth.login.FailedLoginException;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.neuronrobotics.sdk.addons.kinematics.AbstractLink;
+import com.neuronrobotics.sdk.addons.kinematics.LinkConfiguration;
+import com.neuronrobotics.sdk.addons.kinematics.LinkFactory;
+import com.neuronrobotics.sdk.addons.kinematics.LinkType;
 import com.neuronrobotics.sdk.addons.kinematics.gcodebridge.GcodeDevice;
 import com.neuronrobotics.sdk.common.DeviceManager;
+import com.neuronrobotics.sdk.pid.VirtualGenericPIDDevice;
 
 import gnu.io.NRSerialPort;
 
@@ -59,6 +66,15 @@ public class GCODETest {
 			}
 
 		}
+	}
+	@Test
+	public void linkFactory(){
+		LinkFactory lf = new LinkFactory();
+		LinkConfiguration confp = new LinkConfiguration();
+		confp.setType(LinkType.GCODE_STEPPER_PRISMATIC);
+		confp.setDeviceScriptingName(GCODE);
+		AbstractLink link = lf.getLink(confp);
+		assertNotEquals(link.getClass(), VirtualGenericPIDDevice.class);// checks to see a real device was created
 	}
 
 	@Test

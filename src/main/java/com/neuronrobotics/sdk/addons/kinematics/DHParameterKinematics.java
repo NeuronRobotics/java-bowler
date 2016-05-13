@@ -70,8 +70,11 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 	public DHParameterKinematics( BowlerAbstractDevice bad, Element  linkStream ){
 		super(linkStream,new LinkFactory(bad));
 		setChain(getDhParametersChain());
-		if(getFactory().getDyio()!=null)
-			getFactory().getDyio().addConnectionEventListener(l);
+		for(LinkConfiguration lf: getFactory().getLinkConfigurations())
+			if(getFactory().getDyio(lf)!=null){
+				getFactory().getDyio(lf).addConnectionEventListener(l);
+				return;
+			}
 	}
 	
 	/**
@@ -83,8 +86,11 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 	public DHParameterKinematics( BowlerAbstractDevice bad, InputStream  linkStream ){
 		super(linkStream,new LinkFactory(bad));
 		setChain(getDhParametersChain());
-		if(getFactory().getDyio()!=null)
-			getFactory().getDyio().addConnectionEventListener(l);
+		for(LinkConfiguration lf: getFactory().getLinkConfigurations())
+			if(getFactory().getDyio(lf)!=null){
+				getFactory().getDyio(lf).addConnectionEventListener(l);
+				return;
+			}
 	}
 	
 	/**
