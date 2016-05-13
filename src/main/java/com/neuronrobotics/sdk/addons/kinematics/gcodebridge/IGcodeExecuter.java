@@ -14,5 +14,11 @@ public interface IGcodeExecuter {
 	 * @param gcode
 	 */
 	public void runFile(File gcode);
+	
+	/**
+	 * Return the configuration of the gcode device. 
+	 * @return
+	 */
+	public GCodeDeviceConfiguration getConfiguration();
 
 }

@@ -19,9 +19,10 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter{
 	
 	private NRSerialPort serial;
 	
-	InputStream ins;
-	OutputStream outs;
+	private InputStream ins;
+	private OutputStream outs;
 	private int timeoutMs = 1000;
+	private GCodeDeviceConfiguration config = new GCodeDeviceConfiguration();
 
 	public GcodeDevice(NRSerialPort serial){
 		this.serial = serial;
@@ -127,6 +128,11 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter{
 
 	public void setTimeoutMs(int timeoutMs) {
 		this.timeoutMs = timeoutMs;
+	}
+
+	@Override
+	public GCodeDeviceConfiguration getConfiguration() {
+		return config;
 	}
 
 }
