@@ -68,13 +68,15 @@ public class GCODETest {
 		}
 	}
 	@Test
-	public void linkFactory(){
-		LinkFactory lf = new LinkFactory();
-		LinkConfiguration confp = new LinkConfiguration();
-		confp.setType(LinkType.GCODE_STEPPER_PRISMATIC);
-		confp.setDeviceScriptingName(GCODE);
-		AbstractLink link = lf.getLink(confp);
-		assertNotEquals(link.getClass(), VirtualGenericPIDDevice.class);// checks to see a real device was created
+	public void linkFactoryPrismatic(){
+		if (hasPort) {
+			LinkFactory lf = new LinkFactory();
+			LinkConfiguration confp = new LinkConfiguration();
+			confp.setType(LinkType.GCODE_STEPPER_PRISMATIC);
+			confp.setDeviceScriptingName(GCODE);
+			AbstractLink link = lf.getLink(confp);
+			assertEquals(link.getClass(), VirtualGenericPIDDevice.class);// checks to see a real device was created
+		}
 	}
 
 	@Test
@@ -88,13 +90,13 @@ public class GCODETest {
 			else {
 				fail("No response");
 			}
-			response = device.runLine("G0 X100 Y100 Z100 E100 F22000");
+			response = device.runLine("G1 X10 Y10 Z10 E10 F3000");
 			if (response.length() > 0)
 				System.out.println("Gcode line run: " + response);
 			else {
 				fail("No response");
 			}
-			response = device.runLine("G0 X0 Y0 Z0 E0 F22000");
+			response = device.runLine("G1 X0 Y0 Z0 E0 F3000");
 			if (response.length() > 0)
 				System.out.println("Gcode line run: " + response);
 			else {

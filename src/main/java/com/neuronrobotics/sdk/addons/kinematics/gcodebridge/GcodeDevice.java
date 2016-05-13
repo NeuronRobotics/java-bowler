@@ -1,5 +1,7 @@
 package com.neuronrobotics.sdk.addons.kinematics.gcodebridge;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,8 +21,8 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter{
 	
 	private NRSerialPort serial;
 	
-	private InputStream ins;
-	private OutputStream outs;
+	private DataInputStream ins=null;
+	private DataOutputStream outs=null;
 	private int timeoutMs = 1000;
 	private GCodeDeviceConfiguration config = new GCodeDeviceConfiguration();
 
@@ -31,26 +33,33 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter{
 
 	@Override
 	public void disconnectDeviceImp() {
-		if(serial.isConnected())
+		if(serial.isConnected()){
 			runLine("M84");// Disable motors on exit
-		if(ins!=null){
+			getLine();// fluch buffer
+		}
+		if(outs!=null){
 			try {
-				ins.close();
+				outs.flush();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			ins=null;
-		}
-		if(outs!=null){
 			try {
 				outs.close();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			outs=null;
 		}
+		if(ins!=null)
+			try {
+				ins.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		outs=null;
+		ins=null;
 		if(serial.isConnected())
 			serial.disconnect();
 	}
@@ -61,9 +70,9 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter{
 		if(!serial.connect()){
 			throw new RuntimeException("Failed to connect to the serial device");
 		}
-		ins=serial.getInputStream();
-		outs = serial.getOutputStream();
-		
+		ins= new DataInputStream(serial.getInputStream());
+		outs =  new DataOutputStream(serial.getOutputStream());
+		runLine("M105");// initializes the device
 		return true;
 	}
 
@@ -77,11 +86,8 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter{
 		
 		String ret="";
 		try {
-			if(ins.available()>0){
-				java.util.Scanner s = new java.util.Scanner(ins).useDelimiter("\\A");
-				if(s.hasNext()){
-					ret =s.next();
-				}
+			while(ins.available()>0){
+				ret+=new String(new byte[] {(byte) ins.read()});
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -90,15 +96,15 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter{
 	    return ret;
 	}
 
+	//usb.dst contains "1.121.2"
 	@Override
 	public   String runLine(String line) {
 		if(!line.endsWith("\r\n"))
 			line = line+"\r\n";
-		if(!line.startsWith("\r\n"))
-			line = "\r\n"+line;
 		try {
 			//synchronized(outs){
 				outs.write(line.getBytes());
+				outs.flush();
 			//}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
