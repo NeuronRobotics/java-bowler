@@ -13,7 +13,7 @@ public class GcodeRotory extends AbstractRotoryLink implements IGCodeChannel {
 		// TODO Auto-generated constructor stub
 		this.device = device;
 		axis=linkAxis;
-		loadCurrent();
+		//loadCurrent();
 	}
 
 	@Override

@@ -12,7 +12,7 @@ public class GcodePrismatic extends AbstractPrismaticLink implements IGCodeChann
 		// TODO Auto-generated constructor stub
 		this.device = device;
 		axis=linkAxis;
-		loadCurrent();
+		//loadCurrent();
 	}
 
 	@Override
