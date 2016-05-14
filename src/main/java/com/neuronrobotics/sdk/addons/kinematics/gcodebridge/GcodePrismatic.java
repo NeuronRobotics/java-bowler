@@ -21,17 +21,7 @@ public class GcodePrismatic extends AbstractPrismaticLink implements IGCodeChann
 	}
 	
 	private void loadCurrent(){
-		String m114 =device.runLine("M114");
-		String[] currentPosStr = m114.split("Count")[0].split(" ");// get the current position
-		//System.out.println("Fush with current = "+m114);
-		for(String s:currentPosStr){
-			if(s.contains(getAxis())){
-				String [] parts = s.split(":");
-				//System.out.println("Found axis = "+s);
-				setValue(Double.parseDouble(parts[1]));
-				return;
-			}
-		}
+		device.loadCurrent();
 	}
 
 	@Override

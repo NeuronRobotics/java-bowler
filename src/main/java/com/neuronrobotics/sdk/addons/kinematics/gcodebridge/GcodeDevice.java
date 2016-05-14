@@ -216,6 +216,18 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter, IFlu
 			IGCodeChannel thisLink = links.get(l);
 			run +=thisLink.getAxis()+""+((AbstractLink)thisLink).getTargetValue()+" ";
 		}
+		loadCurrent();
+		AbstractLink firstLink = (AbstractLink)links.get(links.keySet().toArray()[0]);
+		double distance = firstLink.getTargetValue()-firstLink.getCurrentPosition();
+		if(distance !=0){
+			int feedrate = (int)Math.abs((distance/(seconds/60)));//mm/min
+			run +=" F"+feedrate;
+		}
+		
+		runLine(run);
+	}
+	
+	public void loadCurrent(){
 		String m114 =runLine("M114");
 		String[] currentPosStr = m114.split("Count")[0].split(" ");// get the current position
 		//System.out.println("Fush with current = "+m114);
@@ -229,14 +241,6 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter, IFlu
 				}
 			}
 		}
-		AbstractLink firstLink = (AbstractLink)links.get(links.keySet().toArray()[0]);
-		double distance = firstLink.getTargetValue()-firstLink.getCurrentPosition();
-		if(distance !=0){
-			int feedrate = (int)Math.abs((distance/(seconds/60)));//mm/min
-			run +=" F"+feedrate;
-		}
-		
-		runLine(run);
 	}
 
 }
