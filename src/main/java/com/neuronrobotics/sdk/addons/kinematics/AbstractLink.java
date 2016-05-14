@@ -142,8 +142,8 @@ public abstract class AbstractLink implements  IFlushable{
 	 * @param euValue the eu value
 	 * @return the int
 	 */
-	public int toLinkUnits(double euValue){
-		return ((int) (euValue/getScale()))+getHome();
+	public double toLinkUnits(double euValue){
+		return  (euValue/getScale())+getHome();
 	}
 	
 	/**
@@ -306,7 +306,7 @@ public abstract class AbstractLink implements  IFlushable{
 	 *
 	 * @param val the new position
 	 */
-	protected void setPosition(int val) {
+	protected void setPosition(double val) {
 		//if(getTargetValue() != val){
 			setTargetValue(val);
 		//}
@@ -439,8 +439,8 @@ public abstract class AbstractLink implements  IFlushable{
 	 *
 	 * @return the upper limit
 	 */
-	public int getUpperLimit() {
-		return (int) conf.getUpperLimit();
+	public double getUpperLimit() {
+		return (double) conf.getUpperLimit();
 	}
 
 	/**
@@ -448,8 +448,8 @@ public abstract class AbstractLink implements  IFlushable{
 	 *
 	 * @return the lower limit
 	 */
-	public int getLowerLimit() {
-		return (int) conf.getLowerLimit();
+	public double getLowerLimit() {
+		return  conf.getLowerLimit();
 	}
 
 	/**
@@ -457,8 +457,8 @@ public abstract class AbstractLink implements  IFlushable{
 	 *
 	 * @return the home
 	 */
-	public int getHome() {
-		return (int) conf.getStaticOffset();
+	public double getHome() {
+		return  conf.getStaticOffset();
 	}
 	
 	/**

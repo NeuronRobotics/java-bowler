@@ -13,7 +13,7 @@ public class PIDLimitEvent {
 	private int channel;
 	
 	/** The ticks. */
-	private int ticks; 
+	private double ticks; 
 	
 	/** The time stamp. */
 	private long timeStamp;
@@ -29,7 +29,7 @@ public class PIDLimitEvent {
 	 * @param type the type
 	 * @param time the time
 	 */
-	public PIDLimitEvent(int chan,int tick,PIDLimitEventType type,long time){
+	public PIDLimitEvent(int chan,double tick,PIDLimitEventType type,long time){
 		setGroup(chan);
 		setLimitType(type);
 		setValue(tick);
@@ -75,7 +75,7 @@ public class PIDLimitEvent {
 	 *
 	 * @param ticks the new value
 	 */
-	public void setValue(int ticks) {
+	public void setValue(double ticks) {
 		this.ticks = ticks;
 	}
 	
@@ -84,7 +84,7 @@ public class PIDLimitEvent {
 	 *
 	 * @return the value
 	 */
-	public int getValue() {
+	public double getValue() {
 		return ticks;
 	}
 	

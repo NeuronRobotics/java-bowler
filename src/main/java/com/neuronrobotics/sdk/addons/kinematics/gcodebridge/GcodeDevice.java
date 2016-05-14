@@ -39,7 +39,7 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter, IFlu
 	
 	public AbstractLink getLink(LinkConfiguration axis){
 		String gcodeAxis = "";
-		GcodePrismatic tmp=null;
+		AbstractLink tmp=null;
 		switch(axis.getType()){
 		case GCODE_STEPPER_PRISMATIC:
 		case GCODE_STEPPER_ROTORY:
@@ -65,21 +65,26 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter, IFlu
 				break;
 		}
 		switch(axis.getType()){
-		case GCODE_HEATER_TOOL:
-			break;
 		case GCODE_STEPPER_PRISMATIC:
 			if(getGCODE(axis)!=null){
 				 tmp = new GcodePrismatic(axis,getGCODE(axis),gcodeAxis);
 			}
 			break;
 		case GCODE_STEPPER_ROTORY:
+			if(getGCODE(axis)!=null){
+				 tmp = new GcodeRotory(axis,getGCODE(axis),gcodeAxis);
+			}
 			break;
 		case GCODE_STEPPER_TOOL:
-			default:
+			if(getGCODE(axis)!=null){
+				 tmp = new GcodeRotory(axis,getGCODE(axis),gcodeAxis);
+			}
+			break;
+		default:
 				break;
 		}
 		if(tmp!=null){
-			links.put(axis,tmp);
+			links.put(axis,(IGCodeChannel) tmp);
 		}
 		return tmp;
 	}

@@ -79,7 +79,7 @@ public class GCODETest {
 			confp.setScale(1);
 			AbstractLink link = lf.getLink(confp);
 			assertEquals(link.getClass(), GcodePrismatic.class);// checks to see a real device was created
-			link.setTargetEngineeringUnits(100);
+			link.setTargetEngineeringUnits(100.5);
 			link.flush(2);//take 2 seconds to flush
 			
 			LinkConfiguration confp2 = new LinkConfiguration();
@@ -89,7 +89,7 @@ public class GCODETest {
 			confp2.setScale(1);
 			AbstractLink link2 = lf.getLink(confp2);
 			assertEquals(link2.getClass(), GcodePrismatic.class);// checks to see a real device was created
-			link2.setTargetEngineeringUnits(100);
+			link2.setTargetEngineeringUnits(100.5);
 			link2.flush(2);//take 2 seconds to flush
 			
 			link2.setTargetEngineeringUnits(0);
@@ -103,28 +103,28 @@ public class GCODETest {
 	@Test
 	public void G1() {
 
-//		if (hasPort) {
-//			GcodeDevice device = GCODECONTOLLER.cast(DeviceManager.getSpecificDevice(GCODECONTOLLER, GCODE));
-//			String response = device.runLine("G90");// Absolute mode
-//			if (response.length() > 0)
-//				System.out.println("Gcode line run: " + response);
-//			else {
-//				fail("No response");
-//			}
-//			response = device.runLine("G1 X100 Y100 Z0 E10 F6000");
-//			if (response.length() > 0)
-//				System.out.println("Gcode line run: " + response);
-//			else {
-//				fail("No response");
-//			}
-//			response = device.runLine("G1 X0 Y0 Z0 E0 F3000");
-//			if (response.length() > 0)
-//				System.out.println("Gcode line run: " + response);
-//			else {
-//				fail("No response");
-//			}
-//
-//		}
+		if (hasPort) {
+			GcodeDevice device = GCODECONTOLLER.cast(DeviceManager.getSpecificDevice(GCODECONTOLLER, GCODE));
+			String response = device.runLine("G90");// Absolute mode
+			if (response.length() > 0)
+				System.out.println("Gcode line run: " + response);
+			else {
+				fail("No response");
+			}
+			response = device.runLine("G1 X100.2 Y100.2 Z0 E10 F6000");
+			if (response.length() > 0)
+				System.out.println("Gcode line run: " + response);
+			else {
+				fail("No response");
+			}
+			response = device.runLine("G1 X0 Y0 Z0 E0 F3000");
+			if (response.length() > 0)
+				System.out.println("Gcode line run: " + response);
+			else {
+				fail("No response");
+			}
+
+		}
 	}
 
 }

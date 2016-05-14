@@ -223,13 +223,11 @@ public class LinkFactory {
 		case GCODE_HEATER_TOOL:
 			break;
 		case GCODE_STEPPER_PRISMATIC:
+		case GCODE_STEPPER_ROTORY:
+		case GCODE_STEPPER_TOOL:
 			if(getGCODE(c)!=null){
 				tmp = getGCODE(c).getLink(c);
 			}
-			break;
-		case GCODE_STEPPER_ROTORY:
-			break;
-		case GCODE_STEPPER_TOOL:
 			break;
 		default:
 			break;
