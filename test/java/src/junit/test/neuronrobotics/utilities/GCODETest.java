@@ -14,6 +14,7 @@ import com.neuronrobotics.sdk.addons.kinematics.AbstractLink;
 import com.neuronrobotics.sdk.addons.kinematics.LinkConfiguration;
 import com.neuronrobotics.sdk.addons.kinematics.LinkFactory;
 import com.neuronrobotics.sdk.addons.kinematics.LinkType;
+import com.neuronrobotics.sdk.addons.kinematics.gcodebridge.GCodeHeater;
 import com.neuronrobotics.sdk.addons.kinematics.gcodebridge.GcodeDevice;
 import com.neuronrobotics.sdk.addons.kinematics.gcodebridge.GcodePrismatic;
 import com.neuronrobotics.sdk.addons.kinematics.gcodebridge.GcodeRotory;
@@ -153,6 +154,38 @@ public class GCODETest {
 			AbstractLink link2 = lf.getLink(confp2);
 			assertEquals(link2.getClass(), GcodeRotory.class);// checks to see a real device was created
 			link2.setTargetEngineeringUnits(100.5);
+			link2.flush(1);//take 2 seconds to flush
+			
+			link2.setTargetEngineeringUnits(0);
+			link.setTargetEngineeringUnits(0);
+			// coordinated motion flush
+			lf.flush(5);
+			
+		}
+	}
+	
+	@Test
+	public void linkFactoryHeater(){
+		if (hasPort) {
+			LinkFactory lf = new LinkFactory();
+			LinkConfiguration confp = new LinkConfiguration();
+			confp.setType(LinkType.GCODE_HEATER_TOOL);
+			confp.setDeviceScriptingName(GCODE);
+			confp.setHardwareIndex(0);
+			confp.setScale(1);
+			AbstractLink link = lf.getLink(confp);
+			assertEquals(link.getClass(), GCodeHeater.class);// checks to see a real device was created
+			link.setTargetEngineeringUnits(25);
+			link.flush(1);//take 2 seconds to flush
+			
+			LinkConfiguration confp2 = new LinkConfiguration();
+			confp2.setType(LinkType.GCODE_HEATER_TOOL);
+			confp2.setDeviceScriptingName(GCODE);
+			confp2.setHardwareIndex(1);
+			confp2.setScale(1);
+			AbstractLink link2 = lf.getLink(confp2);
+			assertEquals(link2.getClass(), GCodeHeater.class);// checks to see a real device was created
+			link2.setTargetEngineeringUnits(25);
 			link2.flush(1);//take 2 seconds to flush
 			
 			link2.setTargetEngineeringUnits(0);
