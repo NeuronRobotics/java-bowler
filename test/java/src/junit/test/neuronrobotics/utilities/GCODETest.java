@@ -16,6 +16,7 @@ import com.neuronrobotics.sdk.addons.kinematics.LinkFactory;
 import com.neuronrobotics.sdk.addons.kinematics.LinkType;
 import com.neuronrobotics.sdk.addons.kinematics.gcodebridge.GcodeDevice;
 import com.neuronrobotics.sdk.addons.kinematics.gcodebridge.GcodePrismatic;
+import com.neuronrobotics.sdk.addons.kinematics.gcodebridge.GcodeRotory;
 import com.neuronrobotics.sdk.common.DeviceManager;
 import com.neuronrobotics.sdk.pid.VirtualGenericPIDDevice;
 
@@ -80,7 +81,7 @@ public class GCODETest {
 			AbstractLink link = lf.getLink(confp);
 			assertEquals(link.getClass(), GcodePrismatic.class);// checks to see a real device was created
 			link.setTargetEngineeringUnits(100.5);
-			link.flush(2);//take 2 seconds to flush
+			link.flush(1);//take 2 seconds to flush
 			
 			LinkConfiguration confp2 = new LinkConfiguration();
 			confp2.setType(LinkType.GCODE_STEPPER_PRISMATIC);
@@ -90,12 +91,74 @@ public class GCODETest {
 			AbstractLink link2 = lf.getLink(confp2);
 			assertEquals(link2.getClass(), GcodePrismatic.class);// checks to see a real device was created
 			link2.setTargetEngineeringUnits(100.5);
-			link2.flush(2);//take 2 seconds to flush
+			link2.flush(1);//take 2 seconds to flush
 			
 			link2.setTargetEngineeringUnits(0);
 			link.setTargetEngineeringUnits(0);
 			// coordinated motion flush
-			lf.flush(2);
+			lf.flush(1);
+			
+		}
+	}
+	@Test
+	public void linkFactoryRotory(){
+		if (hasPort) {
+			LinkFactory lf = new LinkFactory();
+			LinkConfiguration confp = new LinkConfiguration();
+			confp.setType(LinkType.GCODE_STEPPER_ROTORY);
+			confp.setDeviceScriptingName(GCODE);
+			confp.setHardwareIndex(0);
+			confp.setScale(1);
+			AbstractLink link = lf.getLink(confp);
+			assertEquals(link.getClass(), GcodeRotory.class);// checks to see a real device was created
+			link.setTargetEngineeringUnits(100.5);
+			link.flush(1);//take 2 seconds to flush
+			
+			LinkConfiguration confp2 = new LinkConfiguration();
+			confp2.setType(LinkType.GCODE_STEPPER_ROTORY);
+			confp2.setDeviceScriptingName(GCODE);
+			confp2.setHardwareIndex(1);
+			confp2.setScale(1);
+			AbstractLink link2 = lf.getLink(confp2);
+			assertEquals(link2.getClass(), GcodeRotory.class);// checks to see a real device was created
+			link2.setTargetEngineeringUnits(100.5);
+			link2.flush(1);//take 2 seconds to flush
+			
+			link2.setTargetEngineeringUnits(0);
+			link.setTargetEngineeringUnits(0);
+			// coordinated motion flush
+			lf.flush(1);
+			
+		}
+	}
+	@Test
+	public void linkFactoryTool(){
+		if (hasPort) {
+			LinkFactory lf = new LinkFactory();
+			LinkConfiguration confp = new LinkConfiguration();
+			confp.setType(LinkType.GCODE_STEPPER_TOOL);
+			confp.setDeviceScriptingName(GCODE);
+			confp.setHardwareIndex(0);
+			confp.setScale(1);
+			AbstractLink link = lf.getLink(confp);
+			assertEquals(link.getClass(), GcodeRotory.class);// checks to see a real device was created
+			link.setTargetEngineeringUnits(100.5);
+			link.flush(1);//take 2 seconds to flush
+			
+			LinkConfiguration confp2 = new LinkConfiguration();
+			confp2.setType(LinkType.GCODE_STEPPER_TOOL);
+			confp2.setDeviceScriptingName(GCODE);
+			confp2.setHardwareIndex(1);
+			confp2.setScale(1);
+			AbstractLink link2 = lf.getLink(confp2);
+			assertEquals(link2.getClass(), GcodeRotory.class);// checks to see a real device was created
+			link2.setTargetEngineeringUnits(100.5);
+			link2.flush(1);//take 2 seconds to flush
+			
+			link2.setTargetEngineeringUnits(0);
+			link.setTargetEngineeringUnits(0);
+			// coordinated motion flush
+			lf.flush(1);
 			
 		}
 	}

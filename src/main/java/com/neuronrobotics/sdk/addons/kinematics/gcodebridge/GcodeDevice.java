@@ -31,13 +31,35 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter, IFlu
 	private int timeoutMs = 1000;
 	private GCodeDeviceConfiguration config = new GCodeDeviceConfiguration();
 	private HashMap<LinkConfiguration,IGCodeChannel> links = new HashMap<LinkConfiguration,IGCodeChannel>();
+	private AbstractLink heater=null;
+	private AbstractLink bed=null;
+	
 
 	public GcodeDevice(NRSerialPort serial){
 		this.serial = serial;
 		
 	}
-	
+	public AbstractLink getHeater(LinkConfiguration axis){
+		String gcodeAxis;
+		switch(axis.getHardwareIndex()){
+		case 0:
+			gcodeAxis=("T");
+			if(heater==null)
+				heater = new GCodeHeater(axis,gcodeAxis,this);
+			return heater;
+		case 1:
+			gcodeAxis=("B");
+			if(bed==null)
+				bed = new GCodeHeater(axis,gcodeAxis,this);
+			return bed;
+		default:
+			throw new RuntimeException("Gcode devices only support 2 heaters");
+		}
+		
+	}
 	public AbstractLink getLink(LinkConfiguration axis){
+		if(links.get(axis)!=null)
+			return (AbstractLink)links.get(axis);
 		String gcodeAxis = "";
 		AbstractLink tmp=null;
 		switch(axis.getType()){
@@ -66,19 +88,16 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter, IFlu
 		}
 		switch(axis.getType()){
 		case GCODE_STEPPER_PRISMATIC:
-			if(getGCODE(axis)!=null){
-				 tmp = new GcodePrismatic(axis,getGCODE(axis),gcodeAxis);
-			}
+			tmp = new GcodePrismatic(axis,this,gcodeAxis);
+			
 			break;
 		case GCODE_STEPPER_ROTORY:
-			if(getGCODE(axis)!=null){
-				 tmp = new GcodeRotory(axis,getGCODE(axis),gcodeAxis);
-			}
+			tmp = new GcodeRotory(axis,this,gcodeAxis);
+			
 			break;
 		case GCODE_STEPPER_TOOL:
-			if(getGCODE(axis)!=null){
-				 tmp = new GcodeRotory(axis,getGCODE(axis),gcodeAxis);
-			}
+			tmp = new GcodeRotory(axis,this,gcodeAxis);
+		
 			break;
 		default:
 				break;
@@ -87,16 +106,6 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter, IFlu
 			links.put(axis,(IGCodeChannel) tmp);
 		}
 		return tmp;
-	}
-	/**
-	 * Gets the Gcode device from the database.
-	 *
-	 * @return the GCODE device
-	 */
-	private GcodeDevice getGCODE(LinkConfiguration c){
-	
-			return (GcodeDevice) DeviceManager.getSpecificDevice(GcodeDevice.class, c.getDeviceScriptingName());
-
 	}
 
 	@Override
@@ -190,8 +199,8 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter, IFlu
 		if((System.currentTimeMillis()-start)<getTimeoutMs()){
 			Log.error("GCODE TIMEOUT: "+line);
 		}
-		System.out.println("S>>"+line);
-		System.out.println("R<<"+ret);
+		Log.info("S>>"+line);
+		Log.info("R<<"+ret);
 		return ret;
 	}
 
@@ -228,7 +237,10 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter, IFlu
 			int feedrate = (int)Math.abs((distance/(seconds/60)));//mm/min
 			run +=" F"+feedrate;
 		}
-		
+		if(bed!=null)
+			bed.flush(seconds);
+		if(heater!=null)
+			heater.flush(seconds);
 		runLine(run);
 	}
 	
