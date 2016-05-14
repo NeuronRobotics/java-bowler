@@ -99,6 +99,7 @@ public class LinkConfiguration {
 	private String electroMechanicalSize = "standardMicro";
 	private String shaftType = "hobbyServoHorn";
 	private String shaftSize = "standardMicro1";
+	private boolean passive = false;
 	/**
 	 * Instantiates a new link configuration.
 	 *
@@ -171,6 +172,11 @@ public class LinkConfiguration {
     	
     	try{
     		setShaftSize(XmlFactory.getTagValue("shaftSize",eElement));
+    	}catch (Exception e){
+    		
+    	}
+    	try{
+    		setPassive(Boolean.parseBoolean(XmlFactory.getTagValue("passive",eElement)));
     	}catch (Exception e){
     		
     	}
@@ -284,6 +290,7 @@ public class LinkConfiguration {
 				"\t<electroMechanicalType>"+getElectroMechanicalType()+"</electroMechanicalType>\n"+
 				"\t<shaftSize>"+getShaftSize()+"</shaftSize>\n"+
 				"\t<shaftType>"+getShaftType()+"</shaftType>\n"+
+				"\t<passive>"+isPassive()+"</passive>\n"+
 				"\t<mass>"+getMassKg()+"</mass>\n"+
 				"\t<centerOfMassFromCentroid>"+getCenterOfMassFromCentroid().getXml()+"</centerOfMassFromCentroid>\n"
 				+slaves;
@@ -754,6 +761,14 @@ public class LinkConfiguration {
 
 	public void setShaftSize(String shaftSize) {
 		this.shaftSize = shaftSize;
+	}
+
+	public boolean isPassive() {
+		return passive;
+	}
+
+	public void setPassive(boolean passive) {
+		this.passive = passive;
 	}
 	
 }
