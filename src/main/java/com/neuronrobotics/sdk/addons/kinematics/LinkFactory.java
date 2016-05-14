@@ -221,6 +221,9 @@ public class LinkFactory {
 			tmp=new CameraLink(c,img);
 			break;
 		case GCODE_HEATER_TOOL:
+			if(getGCODE(c)!=null){
+				tmp = getGCODE(c).getHeater(c);
+			}
 			break;
 		case GCODE_STEPPER_PRISMATIC:
 		case GCODE_STEPPER_ROTORY:
