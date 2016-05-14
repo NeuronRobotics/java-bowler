@@ -3,34 +3,44 @@ package com.neuronrobotics.sdk.addons.kinematics.gcodebridge;
 import com.neuronrobotics.sdk.addons.kinematics.AbstractPrismaticLink;
 import com.neuronrobotics.sdk.addons.kinematics.LinkConfiguration;
 
-public class GcodePrismatic extends AbstractPrismaticLink {
+public class GcodePrismatic extends AbstractPrismaticLink implements IGCodeChannel {
 	private GcodeDevice device;
 	private String axis = "";
-	double value =0;
+	private double value =0;
 	public GcodePrismatic(LinkConfiguration conf, GcodeDevice device, String linkAxis) {
 		super(conf);
 		// TODO Auto-generated constructor stub
 		this.device = device;
 		axis=linkAxis;
+		loadCurrent();
 	}
 
 	@Override
 	public void cacheTargetValueDevice() {
 		//value
 	}
-
-	@Override
-	public void flushDevice(double time) {
-		String[] currentPosStr = device.runLine("M114").split(" ");// get the current position
+	
+	private void loadCurrent(){
+		String m114 =device.runLine("M114");
+		String[] currentPosStr = m114.split("Count")[0].split(" ");// get the current position
+		//System.out.println("Fush with current = "+m114);
 		for(String s:currentPosStr){
 			if(s.contains(getAxis())){
 				String [] parts = s.split(":");
-				value = Double.parseDouble(parts[1]);
+				//System.out.println("Found axis = "+s);
+				setValue(Double.parseDouble(parts[1]));
+				return;
 			}
 		}
-		double distance = getTargetValue()-value;
+	}
+
+	@Override
+	public void flushDevice(double time) {
+		loadCurrent();
+		
+		double distance = getTargetValue()-getValue();
 		if(distance !=0){
-			int feedrate = (int)(distance/(time/60));//mm/min
+			int feedrate = (int)Math.abs((distance/(time/60)));//mm/min
 			device.runLine("G1 "+getAxis()+""+getTargetValue()+" F"+feedrate);
 		}
 	}
@@ -42,8 +52,8 @@ public class GcodePrismatic extends AbstractPrismaticLink {
 
 	@Override
 	public double getCurrentPosition() {
-		// TODO Auto-generated method stub
-		return  value;
+
+		return  getValue();
 	}
 
 	public String getAxis() {
@@ -52,6 +62,15 @@ public class GcodePrismatic extends AbstractPrismaticLink {
 
 	public void setAxis(String axis) {
 		this.axis = axis;
+	}
+
+	public double getValue() {
+		return value;
+	}
+
+	public void setValue(double value) {
+		this.value = value;
+		fireLinkListener( value);
 	}
 
 }

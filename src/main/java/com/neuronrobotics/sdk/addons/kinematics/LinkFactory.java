@@ -141,31 +141,7 @@ public class LinkFactory {
 
 		AbstractLink tmp=null;
 		Log.info("Loading link: "+c.getName()+" type = "+c.getType()+" device= "+c.getDeviceScriptingName());
-		String gcodeAxis = "";
-		switch(c.getType()){
-		case GCODE_STEPPER_PRISMATIC:
-		case GCODE_STEPPER_ROTORY:
-		case GCODE_STEPPER_TOOL:
-			switch(c.getHardwareIndex()){
-			case 0:
-				gcodeAxis=("X");
-				break;
-			case 1:
-				gcodeAxis=("Y");
-				break;
-			case 2:
-				gcodeAxis=("Z");
-				break;
-			case 3:
-				gcodeAxis=("E");
-				break;
-			default:
-					throw new RuntimeException("Gcode devices only support 4 axis");
-			}
-			break;
-			default:
-				break;
-		}
+
 		switch(c.getType()){
 		
 			
@@ -248,7 +224,7 @@ public class LinkFactory {
 			break;
 		case GCODE_STEPPER_PRISMATIC:
 			if(getGCODE(c)!=null){
-				tmp = new GcodePrismatic(c,getGCODE(c),gcodeAxis);
+				tmp = getGCODE(c).getLink(c);
 			}
 			break;
 		case GCODE_STEPPER_ROTORY:
@@ -335,7 +311,6 @@ public class LinkFactory {
 					flushed.put(name,true);
 					IFlushable flushDevice = (IFlushable)DeviceManager.getSpecificDevice(IFlushable.class,name);
 					flushDevice.flush(seconds);
-					
 				}
 			}
 			
