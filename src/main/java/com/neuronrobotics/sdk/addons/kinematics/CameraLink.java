@@ -40,7 +40,7 @@ public class CameraLink extends AbstractLink {
 	}
 
 	@Override
-	public int getCurrentPosition() {
+	public double getCurrentPosition() {
 		// TODO Auto-generated method stub
 		return 0;
 	}

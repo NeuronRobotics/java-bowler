@@ -10,6 +10,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
 
+import com.neuronrobotics.sdk.common.IFlushable;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.NonBowlerDevice;
 import com.neuronrobotics.sdk.util.ThreadUtil;
@@ -17,7 +18,7 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
 import gnu.io.NRSerialPort;
 import sun.nio.ch.IOUtil;
 
-public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter{
+public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter, IFlushable{
 	
 	private NRSerialPort serial;
 	
@@ -141,6 +142,12 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter{
 	@Override
 	public GCodeDeviceConfiguration getConfiguration() {
 		return config;
+	}
+
+	@Override
+	public void flush(double seconds) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

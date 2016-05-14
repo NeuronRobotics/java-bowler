@@ -30,7 +30,7 @@ public class PidRotoryLink extends AbstractRotoryLink{
 	 */
 	@Override
 	public void cacheTargetValueDevice() {
-		channel.setCachedTargetValue(getTargetValue());
+		channel.setCachedTargetValue((int)getTargetValue());
 	}
 
 	/* (non-Javadoc)
@@ -53,7 +53,7 @@ public class PidRotoryLink extends AbstractRotoryLink{
 	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractLink#getCurrentPosition()
 	 */
 	@Override
-	public int getCurrentPosition() {
+	public double getCurrentPosition() {
 		int val=channel.GetPIDPosition();
 		fireLinkListener(val);
 		return val;

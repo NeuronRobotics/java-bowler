@@ -28,7 +28,7 @@ public class StepperPrismaticLink extends AbstractPrismaticLink {
 	 */
 	@Override
 	public void cacheTargetValueDevice() {
-		channel.setValue(getTargetValue());
+		channel.setValue((int)getTargetValue());
 	}
 
 	/* (non-Javadoc)
@@ -53,7 +53,7 @@ public class StepperPrismaticLink extends AbstractPrismaticLink {
 	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractLink#getCurrentPosition()
 	 */
 	@Override
-	public int getCurrentPosition() {
+	public double getCurrentPosition() {
 		int val=channel.getValue();
 		fireLinkListener(val);
 		return val;

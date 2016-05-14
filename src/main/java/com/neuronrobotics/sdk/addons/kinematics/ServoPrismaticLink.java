@@ -54,7 +54,7 @@ public class ServoPrismaticLink extends AbstractPrismaticLink{
 	 * Save.
 	 */
 	public void save() {
-		getServoChannel().SavePosition(getTargetValue());
+		getServoChannel().SavePosition((int)getTargetValue());
 	}
 
 
@@ -64,7 +64,7 @@ public class ServoPrismaticLink extends AbstractPrismaticLink{
 	@Override
 	public void cacheTargetValueDevice() {
 		Log.debug("Caching servo value="+getTargetValue());
-		getServoChannel().SetPosition(getTargetValue());
+		getServoChannel().SetPosition((int)getTargetValue());
 	}
 	
 	/* (non-Javadoc)
@@ -72,16 +72,16 @@ public class ServoPrismaticLink extends AbstractPrismaticLink{
 	 */
 	@Override
 	public void flushDevice(double time) {
-		getServoChannel().SetPosition(getTargetValue(),(float) time);
+		getServoChannel().SetPosition((int)getTargetValue(),(float) time);
 		getServoChannel().getChannel().flush();
-		fireLinkListener(getTargetValue());
+		fireLinkListener((int)getTargetValue());
 	}
 	
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractLink#getCurrentPosition()
 	 */
 	@Override
-	public int getCurrentPosition() {
+	public double getCurrentPosition() {
 		int val = getServoChannel().getValue();
 		fireLinkListener(val);
 		return val;
@@ -93,9 +93,9 @@ public class ServoPrismaticLink extends AbstractPrismaticLink{
 	@Override
 	public void flushAllDevice(double time) {
 		// TODO Auto-generated method stub
-		getServoChannel().SetPosition(getTargetValue(),(float) time);
+		getServoChannel().SetPosition((int)getTargetValue(),(float) time);
 		getServoChannel().getChannel().getDevice().flushCache((float)time);
-		fireLinkListener(getTargetValue());
+		fireLinkListener((int)getTargetValue());
 	}
 	
 }

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import com.neuronrobotics.imageprovider.AbstractImageProvider;
 import com.neuronrobotics.imageprovider.VirtualCameraFactory;
 import com.neuronrobotics.sdk.addons.kinematics.gcodebridge.GcodeDevice;
+import com.neuronrobotics.sdk.addons.kinematics.gcodebridge.GcodePrismatic;
 import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
 import com.neuronrobotics.sdk.common.DeviceManager;
 import com.neuronrobotics.sdk.common.IFlushable;
@@ -140,6 +141,31 @@ public class LinkFactory {
 
 		AbstractLink tmp=null;
 		Log.info("Loading link: "+c.getName()+" type = "+c.getType()+" device= "+c.getDeviceScriptingName());
+		String gcodeAxis = "";
+		switch(c.getType()){
+		case GCODE_STEPPER_PRISMATIC:
+		case GCODE_STEPPER_ROTORY:
+		case GCODE_STEPPER_TOOL:
+			switch(c.getHardwareIndex()){
+			case 0:
+				gcodeAxis=("X");
+				break;
+			case 1:
+				gcodeAxis=("Y");
+				break;
+			case 2:
+				gcodeAxis=("Z");
+				break;
+			case 3:
+				gcodeAxis=("E");
+				break;
+			default:
+					throw new RuntimeException("Gcode devices only support 4 axis");
+			}
+			break;
+			default:
+				break;
+		}
 		switch(c.getType()){
 		
 			
@@ -221,6 +247,9 @@ public class LinkFactory {
 		case GCODE_HEATER_TOOL:
 			break;
 		case GCODE_STEPPER_PRISMATIC:
+			if(getGCODE(c)!=null){
+				tmp = new GcodePrismatic(c,getGCODE(c),gcodeAxis);
+			}
 			break;
 		case GCODE_STEPPER_ROTORY:
 			break;

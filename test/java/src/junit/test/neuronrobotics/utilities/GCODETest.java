@@ -15,6 +15,7 @@ import com.neuronrobotics.sdk.addons.kinematics.LinkConfiguration;
 import com.neuronrobotics.sdk.addons.kinematics.LinkFactory;
 import com.neuronrobotics.sdk.addons.kinematics.LinkType;
 import com.neuronrobotics.sdk.addons.kinematics.gcodebridge.GcodeDevice;
+import com.neuronrobotics.sdk.addons.kinematics.gcodebridge.GcodePrismatic;
 import com.neuronrobotics.sdk.common.DeviceManager;
 import com.neuronrobotics.sdk.pid.VirtualGenericPIDDevice;
 
@@ -74,8 +75,12 @@ public class GCODETest {
 			LinkConfiguration confp = new LinkConfiguration();
 			confp.setType(LinkType.GCODE_STEPPER_PRISMATIC);
 			confp.setDeviceScriptingName(GCODE);
+			confp.setHardwareIndex(0);
+			confp.setScale(1);
 			AbstractLink link = lf.getLink(confp);
-			assertEquals(link.getClass(), VirtualGenericPIDDevice.class);// checks to see a real device was created
+			assertEquals(link.getClass(), GcodePrismatic.class);// checks to see a real device was created
+			link.setTargetEngineeringUnits(100);
+			
 		}
 	}
 
@@ -90,7 +95,7 @@ public class GCODETest {
 			else {
 				fail("No response");
 			}
-			response = device.runLine("G1 X10 Y10 Z10 E10 F3000");
+			response = device.runLine("G1 X100 Y100 Z0 E10 F6000");
 			if (response.length() > 0)
 				System.out.println("Gcode line run: " + response);
 			else {

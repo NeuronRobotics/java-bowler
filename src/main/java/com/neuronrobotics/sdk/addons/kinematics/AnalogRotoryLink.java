@@ -52,7 +52,7 @@ public class AnalogRotoryLink  extends AbstractRotoryLink implements IAnalogInpu
 	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractLink#getCurrentPosition()
 	 */
 	@Override
-	public int getCurrentPosition() {
+	public double getCurrentPosition() {
 		int val=getChannel().getValue();
 		fireLinkListener(val);
 		return val;

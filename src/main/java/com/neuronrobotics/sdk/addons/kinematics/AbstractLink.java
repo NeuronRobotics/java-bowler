@@ -4,7 +4,9 @@ import java.util.ArrayList;
 
 import javafx.scene.transform.Affine;
 
+import com.neuronrobotics.sdk.addons.kinematics.gcodebridge.IGcodeExecuter;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
+import com.neuronrobotics.sdk.common.IFlushable;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 import com.neuronrobotics.sdk.pid.PIDLimitEventType;
@@ -14,10 +16,10 @@ import com.neuronrobotics.sdk.pid.PIDLimitEventType;
  * The Class AbstractLink.
  */
 // Kevin Shouldn't the Link's channel be kept in this level of Abstraction? The way I designg AbstractCartesianPositonDevice  Requires this
-public abstract class AbstractLink {
+public abstract class AbstractLink implements  IFlushable{
 
 	/** The target value. */
-	private int targetValue=0;
+	private double targetValue=0;
 	
 	/** The target engineering units. */
 	private double targetEngineeringUnits=0;
@@ -122,7 +124,7 @@ public abstract class AbstractLink {
 	 *
 	 * @return the current position of the link
 	 */
-	public abstract int getCurrentPosition();
+	public abstract double getCurrentPosition();
 	
 	/**
 	 * To engineering units.
@@ -130,7 +132,7 @@ public abstract class AbstractLink {
 	 * @param value the value
 	 * @return the double
 	 */
-	public double toEngineeringUnits(int value){
+	public double toEngineeringUnits(double value){
 		return ((value-getHome())*getScale());
 	}
 	
@@ -236,7 +238,7 @@ public abstract class AbstractLink {
 	 * @return the current engineering units
 	 */
 	public double getCurrentEngineeringUnits(){
-		int link = getCurrentPosition();
+		double link = getCurrentPosition();
 		double back = toEngineeringUnits(link);
 		//Log.info("Link space: "+link+" Joint space: "+back);
 		return back;
@@ -323,7 +325,7 @@ public abstract class AbstractLink {
 	 *
 	 * @param val the new target value
 	 */
-	protected void setTargetValue(int val) {
+	protected void setTargetValue(double val) {
 		Log.info("Setting cached value :"+val);
 		this.targetValue = val;
 		for(LinkConfiguration c:slaveLinks){
@@ -383,7 +385,7 @@ public abstract class AbstractLink {
 	 *
 	 * @return the target value
 	 */
-	public int getTargetValue() {
+	public double getTargetValue() {
 		return targetValue;
 	}
 	

@@ -7,7 +7,7 @@ package com.neuronrobotics.sdk.addons.kinematics;
 public class MockRotoryLink extends AbstractRotoryLink {
 	
 	/** The val. */
-	int val=0;
+	double val=0;
 	
 	/**
 	 * Instantiates a new mock rotory link.
@@ -45,7 +45,7 @@ public class MockRotoryLink extends AbstractRotoryLink {
 	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractLink#getCurrentPosition()
 	 */
 	@Override
-	public int getCurrentPosition() {
+	public double getCurrentPosition() {
 		// TODO Auto-generated method stub
 		return 35;
 	}
