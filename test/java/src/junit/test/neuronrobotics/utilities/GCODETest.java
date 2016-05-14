@@ -158,7 +158,7 @@ public class GCODETest {
 			link2.setTargetEngineeringUnits(0);
 			link.setTargetEngineeringUnits(0);
 			// coordinated motion flush
-			lf.flush(1);
+			lf.flush(5);
 			
 		}
 	}
