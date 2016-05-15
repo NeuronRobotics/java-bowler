@@ -2,6 +2,8 @@ package junit.test.neuronrobotics.utilities;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+
 import javax.security.auth.login.FailedLoginException;
 
 import org.junit.After;
@@ -11,13 +13,21 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.neuronrobotics.sdk.addons.kinematics.AbstractLink;
+import com.neuronrobotics.sdk.addons.kinematics.DHChain;
+import com.neuronrobotics.sdk.addons.kinematics.DHLink;
+import com.neuronrobotics.sdk.addons.kinematics.DHParameterKinematics;
+import com.neuronrobotics.sdk.addons.kinematics.DhInverseSolver;
 import com.neuronrobotics.sdk.addons.kinematics.LinkConfiguration;
 import com.neuronrobotics.sdk.addons.kinematics.LinkFactory;
 import com.neuronrobotics.sdk.addons.kinematics.LinkType;
+import com.neuronrobotics.sdk.addons.kinematics.MobileBase;
 import com.neuronrobotics.sdk.addons.kinematics.gcodebridge.GCodeHeater;
 import com.neuronrobotics.sdk.addons.kinematics.gcodebridge.GcodeDevice;
 import com.neuronrobotics.sdk.addons.kinematics.gcodebridge.GcodePrismatic;
 import com.neuronrobotics.sdk.addons.kinematics.gcodebridge.GcodeRotory;
+import com.neuronrobotics.sdk.addons.kinematics.gcodebridge.IGCodeChannel;
+import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
+import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.common.DeviceManager;
 import com.neuronrobotics.sdk.pid.VirtualGenericPIDDevice;
 
@@ -100,6 +110,38 @@ public class GCODETest {
 			lf.flush(1);
 			
 		}
+	}
+	@Test
+	public void loadFromXml(){
+		MobileBase cnc = new MobileBase(GCODETest.class.getResourceAsStream("cnc.xml"));
+		DHParameterKinematics arm = cnc.getAppendages().get(0);
+		arm.setInverseSolver(new DhInverseSolver() {	
+			@Override
+			public double[] inverseKinematics(TransformNR target, double[] jointSpaceVector, DHChain chain) {
+				ArrayList<DHLink> links = chain.getLinks();
+				int linkNum = jointSpaceVector.length;
+				double [] inv = new double[linkNum];
+				inv[2] = target.getX();
+				inv[1] = target.getY();
+				inv[0] = target.getZ();
+				for(int i=3;i<inv.length && i<jointSpaceVector.length ;i++)
+					inv[i]=jointSpaceVector[i];
+				return inv;
+			}
+		});
+		for(LinkConfiguration l:arm.getLinkConfigurations()){
+			AbstractLink link = arm.getFactory().getLink(l);
+			assertTrue(IGCodeChannel.class.isAssignableFrom(link.getClass()));// checks to see a real device was created
+		}
+		System.out.println("Moving using the kinematics");
+		try {
+			arm.setDesiredTaskSpaceTransform(new TransformNR(10, 10, 0, new RotationNR()), 2);
+			arm.setDesiredTaskSpaceTransform(new TransformNR(), 2);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	@Test
 	public void linkFactoryRotory(){

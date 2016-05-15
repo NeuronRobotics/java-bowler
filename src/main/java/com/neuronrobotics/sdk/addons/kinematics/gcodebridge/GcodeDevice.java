@@ -176,7 +176,7 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter, IFlu
 
 	//usb.dst contains "1.121.2"
 	@Override
-	public   String runLine(String line) {
+	public synchronized  String runLine(String line) {
 		if(!line.endsWith("\r\n"))
 			line = line+"\r\n";
 		try {

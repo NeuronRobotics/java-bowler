@@ -1,0 +1,262 @@
+<root>
+<mobilebase>
+	<cadEngine>
+		<git>https://gist.github.com/51a9e0bc4ee095b03979.git</git>
+		<file>CNCMill.groovy</file>
+	</cadEngine>
+	<driveEngine>
+		<git>https://gist.github.com/bcb4760a449190206170.git</git>
+		<file>WalkingDriveEngine.groovy</file>
+	</driveEngine>
+
+<name>CNCGroup</name>
+<appendage>
+
+<name>CNCDevice</name>
+	<cadEngine>
+		<git>https://gist.github.com/51a9e0bc4ee095b03979.git</git>
+		<file>CNCMill.groovy</file>
+	</cadEngine>
+	<kinematics>
+		<git>https://gist.github.com/51a9e0bc4ee095b03979.git</git>
+		<file>CNCKinematics.groovy</file>
+	</kinematics>
+<link>
+	<name>Z</name>
+	<deviceName>GCODE</deviceName>
+	<type>gcode-stepper-prismatic</type>
+	<index>2</index>
+	<scale>0.0084</scale>
+	<upperLimit>25000.0</upperLimit>
+	<lowerLimit>0.0</lowerLimit>
+	<upperVelocity>1.0E8</upperVelocity>
+	<lowerVelocity>-1.0E8</lowerVelocity>
+	<staticOffset>0.0</staticOffset>
+	<isLatch>true</isLatch>
+	<indexLatch>235</indexLatch>
+	<isStopOnLatch>false</isStopOnLatch>
+	<homingTPS>10000000</homingTPS>
+	<electroMechanicalSize>standardMicro</electroMechanicalSize>
+	<electroMechanicalType>hobbyServo</electroMechanicalType>
+	<shaftSize>standardMicro1</shaftSize>
+	<shaftType>hobbyServoHorn</shaftType>
+	<passive>false</passive>
+	<mass>0.01</mass>
+	<centerOfMassFromCentroid>	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>0.0</rotx>
+	<roty>0.0</roty>
+	<rotz>0.0</rotz></centerOfMassFromCentroid>
+
+	<DHParameters>
+		<Delta>0.0</Delta>
+		<Theta>0.0</Theta>
+		<Radius>0.0</Radius>
+		<Alpha>-90.0</Alpha>
+	</DHParameters>
+
+</link>
+<link>
+	<name>Y</name>
+	<deviceName>GCODE</deviceName>
+	<type>gcode-stepper-prismatic</type>
+	<index>1</index>
+	<scale>0.0084</scale>
+	<upperLimit>48000.0</upperLimit>
+	<lowerLimit>0.0</lowerLimit>
+	<upperVelocity>1.0E8</upperVelocity>
+	<lowerVelocity>-1.0E8</lowerVelocity>
+	<staticOffset>0.0</staticOffset>
+	<isLatch>true</isLatch>
+	<indexLatch>128</indexLatch>
+	<isStopOnLatch>false</isStopOnLatch>
+	<homingTPS>10000000</homingTPS>
+	<electroMechanicalSize>standardMicro</electroMechanicalSize>
+	<electroMechanicalType>hobbyServo</electroMechanicalType>
+	<shaftSize>standardMicro1</shaftSize>
+	<shaftType>hobbyServoHorn</shaftType>
+	<passive>false</passive>
+	<mass>0.01</mass>
+	<centerOfMassFromCentroid>	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>0.0</rotx>
+	<roty>0.0</roty>
+	<rotz>0.0</rotz></centerOfMassFromCentroid>
+
+	<DHParameters>
+		<Delta>0.0</Delta>
+		<Theta>-90.0</Theta>
+		<Radius>0.0</Radius>
+		<Alpha>-90.0</Alpha>
+	</DHParameters>
+
+</link>
+<link>
+	<name>X</name>
+	<deviceName>GCODE</deviceName>
+	<type>gcode-stepper-prismatic</type>
+	<index>0</index>
+	<scale>0.0084</scale>
+	<upperLimit>25000.0</upperLimit>
+	<lowerLimit>0.0</lowerLimit>
+	<upperVelocity>1.0E8</upperVelocity>
+	<lowerVelocity>-1.0E8</lowerVelocity>
+	<staticOffset>0.0</staticOffset>
+	<isLatch>true</isLatch>
+	<indexLatch>121</indexLatch>
+	<isStopOnLatch>false</isStopOnLatch>
+	<homingTPS>10000000</homingTPS>
+	<electroMechanicalSize>standardMicro</electroMechanicalSize>
+	<electroMechanicalType>hobbyServo</electroMechanicalType>
+	<shaftSize>standardMicro1</shaftSize>
+	<shaftType>hobbyServoHorn</shaftType>
+	<passive>false</passive>
+	<mass>0.01</mass>
+	<centerOfMassFromCentroid>	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>0.0</rotx>
+	<roty>0.0</roty>
+	<rotz>0.0</rotz></centerOfMassFromCentroid>
+
+	<DHParameters>
+		<Delta>0.0</Delta>
+		<Theta>-90.0</Theta>
+		<Radius>0.0</Radius>
+		<Alpha>0.0</Alpha>
+	</DHParameters>
+
+</link>
+<link>
+	<name>TOOL1</name>
+	<deviceName>GCODE</deviceName>
+	<type>gcode-stepper-tool</type>
+	<index>3</index>
+	<scale>-0.313</scale>
+	<upperLimit>255.0</upperLimit>
+	<lowerLimit>0.0</lowerLimit>
+	<upperVelocity>1.0E8</upperVelocity>
+	<lowerVelocity>-1.0E8</lowerVelocity>
+	<staticOffset>200.0</staticOffset>
+	<isLatch>true</isLatch>
+	<indexLatch>175</indexLatch>
+	<isStopOnLatch>false</isStopOnLatch>
+	<homingTPS>10000000</homingTPS>
+	<electroMechanicalSize>standardMicro</electroMechanicalSize>
+	<electroMechanicalType>hobbyServo</electroMechanicalType>
+	<shaftSize>standardMicro1</shaftSize>
+	<shaftType>hobbyServoHorn</shaftType>
+	<passive>false</passive>
+	<mass>0.01</mass>
+	<centerOfMassFromCentroid>	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>0.0</rotx>
+	<roty>0.0</roty>
+	<rotz>0.0</rotz></centerOfMassFromCentroid>
+
+	<DHParameters>
+		<Delta>0.0</Delta>
+		<Theta>0.0</Theta>
+		<Radius>0.0</Radius>
+		<Alpha>90.0</Alpha>
+	</DHParameters>
+
+</link>
+<link>
+	<name>TOOL2</name>
+	<deviceName>GCODE</deviceName>
+	<type>gcode-heater-tool</type>
+	<index>0</index>
+	<scale>0.3125</scale>
+	<upperLimit>255.0</upperLimit>
+	<lowerLimit>0.0</lowerLimit>
+	<upperVelocity>1.0E8</upperVelocity>
+	<lowerVelocity>-1.0E8</lowerVelocity>
+	<staticOffset>255.0</staticOffset>
+	<isLatch>true</isLatch>
+	<indexLatch>255</indexLatch>
+	<isStopOnLatch>false</isStopOnLatch>
+	<homingTPS>10000000</homingTPS>
+	<electroMechanicalSize>standardMicro</electroMechanicalSize>
+	<electroMechanicalType>hobbyServo</electroMechanicalType>
+	<shaftSize>standardMicro1</shaftSize>
+	<shaftType>hobbyServoHorn</shaftType>
+	<passive>false</passive>
+	<mass>0.01</mass>
+	<centerOfMassFromCentroid>	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>0.0</rotx>
+	<roty>0.0</roty>
+	<rotz>0.0</rotz></centerOfMassFromCentroid>
+
+	<DHParameters>
+		<Delta>0.0</Delta>
+		<Theta>0.0</Theta>
+		<Radius>0.0</Radius>
+		<Alpha>-90.0</Alpha>
+	</DHParameters>
+
+</link>
+
+<ZframeToRAS
+>	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>0.0</rotx>
+	<roty>0.0</roty>
+	<rotz>0.0</rotz>
+</ZframeToRAS>
+
+<baseToZframe>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>0.0</rotx>
+	<roty>0.0</roty>
+	<rotz>0.0</rotz>
+</baseToZframe>
+
+</appendage>
+
+<ZframeToRAS>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>0.0</rotx>
+	<roty>0.0</roty>
+	<rotz>0.0</rotz>
+</ZframeToRAS>
+
+<baseToZframe>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>0.0</rotx>
+	<roty>0.0</roty>
+	<rotz>0.0</rotz>
+</baseToZframe>
+	<mass>0.5</mass>
+	<centerOfMassFromCentroid>	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>0.0</rotx>
+	<roty>0.0</roty>
+	<rotz>0.0</rotz></centerOfMassFromCentroid>
+
+</mobilebase>
+
+</root>
