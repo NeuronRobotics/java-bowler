@@ -80,8 +80,9 @@ public class GCODETest {
 
 		}
 	}
+
 	@Test
-	public void linkFactoryPrismatic(){
+	public void linkFactoryPrismatic() {
 		if (hasPort) {
 			LinkFactory lf = new LinkFactory();
 			LinkConfiguration confp = new LinkConfiguration();
@@ -90,57 +91,77 @@ public class GCODETest {
 			confp.setHardwareIndex(0);
 			confp.setScale(1);
 			AbstractLink link = lf.getLink(confp);
-			assertEquals(link.getClass(), GcodePrismatic.class);// checks to see a real device was created
+			assertEquals(link.getClass(), GcodePrismatic.class);// checks to see
+																// a real device
+																// was created
 			link.setTargetEngineeringUnits(100.5);
-			link.flush(1);//take 2 seconds to flush
-			
+			link.flush(1);// take 2 seconds to flush
+
 			LinkConfiguration confp2 = new LinkConfiguration();
 			confp2.setType(LinkType.GCODE_STEPPER_PRISMATIC);
 			confp2.setDeviceScriptingName(GCODE);
 			confp2.setHardwareIndex(1);
 			confp2.setScale(1);
 			AbstractLink link2 = lf.getLink(confp2);
-			assertEquals(link2.getClass(), GcodePrismatic.class);// checks to see a real device was created
+			assertEquals(link2.getClass(), GcodePrismatic.class);// checks to
+																	// see a
+																	// real
+																	// device
+																	// was
+																	// created
 			link2.setTargetEngineeringUnits(100.5);
-			link2.flush(1);//take 2 seconds to flush
-			
+			link2.flush(1);// take 2 seconds to flush
+
 			link2.setTargetEngineeringUnits(0);
 			link.setTargetEngineeringUnits(0);
 			// coordinated motion flush
 			lf.flush(1);
-			
+
 		}
 	}
+
 	@Test
-	public void loadFromXml(){
-		MobileBase cnc = new MobileBase(GCODETest.class.getResourceAsStream("cnc.xml"));
-		DHParameterKinematics arm = cnc.getAppendages().get(0);
-		arm.setInverseSolver(new DhInverseSolver() {@Override public double[] inverseKinematics
-			(TransformNR target, double[] jointSpaceVector, DHChain chain) {
-				double [] inv = new double[jointSpaceVector.length];
-				//inv[2] = target.getX();
-				inv[1] = target.getY();
-				inv[0] = target.getX();
-				for(int i=3;i<inv.length && i<jointSpaceVector.length ;i++)
-					inv[i]=jointSpaceVector[i];
-				return inv;
-		}});
-		for(LinkConfiguration l:arm.getLinkConfigurations()){
-			AbstractLink link = arm.getFactory().getLink(l);
-			assertTrue(IGCodeChannel.class.isAssignableFrom(link.getClass()));// checks to see a real device was created
+	public void loadFromXml() {
+		if (hasPort) {
+
+			MobileBase cnc = new MobileBase(GCODETest.class.getResourceAsStream("cnc.xml"));
+			DHParameterKinematics arm = cnc.getAppendages().get(0);
+			arm.setInverseSolver(new DhInverseSolver() {
+				@Override
+				public double[] inverseKinematics(TransformNR target, double[] jointSpaceVector, DHChain chain) {
+					double[] inv = new double[jointSpaceVector.length];
+					// inv[2] = target.getX();
+					inv[1] = target.getY();
+					inv[0] = target.getX();
+					for (int i = 3; i < inv.length && i < jointSpaceVector.length; i++)
+						inv[i] = jointSpaceVector[i];
+					return inv;
+				}
+			});
+			for (LinkConfiguration l : arm.getLinkConfigurations()) {
+				AbstractLink link = arm.getFactory().getLink(l);
+				assertTrue(IGCodeChannel.class.isAssignableFrom(link.getClass()));// checks
+																					// to
+																					// see
+																					// a
+																					// real
+																					// device
+																					// was
+																					// created
+			}
+			System.out.println("Moving using the kinematics");
+			try {
+				arm.setDesiredTaskSpaceTransform(new TransformNR(10, 10, 0, new RotationNR()), 1);
+				arm.setDesiredTaskSpaceTransform(new TransformNR(), 1);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-		System.out.println("Moving using the kinematics");
-		try {
-			arm.setDesiredTaskSpaceTransform(new TransformNR(10, 10, 0, new RotationNR()), 1);
-			arm.setDesiredTaskSpaceTransform(new TransformNR(), 1);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
 	}
+
 	@Test
-	public void linkFactoryRotory(){
+	public void linkFactoryRotory() {
 		if (hasPort) {
 			LinkFactory lf = new LinkFactory();
 			LinkConfiguration confp = new LinkConfiguration();
@@ -149,29 +170,34 @@ public class GCODETest {
 			confp.setHardwareIndex(0);
 			confp.setScale(1);
 			AbstractLink link = lf.getLink(confp);
-			assertEquals(link.getClass(), GcodeRotory.class);// checks to see a real device was created
+			assertEquals(link.getClass(), GcodeRotory.class);// checks to see a
+																// real device
+																// was created
 			link.setTargetEngineeringUnits(100.5);
-			link.flush(1);//take 2 seconds to flush
-			
+			link.flush(1);// take 2 seconds to flush
+
 			LinkConfiguration confp2 = new LinkConfiguration();
 			confp2.setType(LinkType.GCODE_STEPPER_ROTORY);
 			confp2.setDeviceScriptingName(GCODE);
 			confp2.setHardwareIndex(1);
 			confp2.setScale(1);
 			AbstractLink link2 = lf.getLink(confp2);
-			assertEquals(link2.getClass(), GcodeRotory.class);// checks to see a real device was created
+			assertEquals(link2.getClass(), GcodeRotory.class);// checks to see a
+																// real device
+																// was created
 			link2.setTargetEngineeringUnits(100.5);
-			link2.flush(1);//take 2 seconds to flush
-			
+			link2.flush(1);// take 2 seconds to flush
+
 			link2.setTargetEngineeringUnits(0);
 			link.setTargetEngineeringUnits(0);
 			// coordinated motion flush
 			lf.flush(1);
-			
+
 		}
 	}
+
 	@Test
-	public void linkFactoryTool(){
+	public void linkFactoryTool() {
 		if (hasPort) {
 			LinkFactory lf = new LinkFactory();
 			LinkConfiguration confp = new LinkConfiguration();
@@ -180,30 +206,34 @@ public class GCODETest {
 			confp.setHardwareIndex(0);
 			confp.setScale(1);
 			AbstractLink link = lf.getLink(confp);
-			assertEquals(link.getClass(), GcodeRotory.class);// checks to see a real device was created
+			assertEquals(link.getClass(), GcodeRotory.class);// checks to see a
+																// real device
+																// was created
 			link.setTargetEngineeringUnits(100.5);
-			link.flush(1);//take 2 seconds to flush
-			
+			link.flush(1);// take 2 seconds to flush
+
 			LinkConfiguration confp2 = new LinkConfiguration();
 			confp2.setType(LinkType.GCODE_STEPPER_TOOL);
 			confp2.setDeviceScriptingName(GCODE);
 			confp2.setHardwareIndex(1);
 			confp2.setScale(1);
 			AbstractLink link2 = lf.getLink(confp2);
-			assertEquals(link2.getClass(), GcodeRotory.class);// checks to see a real device was created
+			assertEquals(link2.getClass(), GcodeRotory.class);// checks to see a
+																// real device
+																// was created
 			link2.setTargetEngineeringUnits(100.5);
-			link2.flush(1);//take 2 seconds to flush
-			
+			link2.flush(1);// take 2 seconds to flush
+
 			link2.setTargetEngineeringUnits(0);
 			link.setTargetEngineeringUnits(0);
 			// coordinated motion flush
 			lf.flush(5);
-			
+
 		}
 	}
-	
+
 	@Test
-	public void linkFactoryHeater(){
+	public void linkFactoryHeater() {
 		if (hasPort) {
 			LinkFactory lf = new LinkFactory();
 			LinkConfiguration confp = new LinkConfiguration();
@@ -212,25 +242,29 @@ public class GCODETest {
 			confp.setHardwareIndex(0);
 			confp.setScale(1);
 			AbstractLink link = lf.getLink(confp);
-			assertEquals(link.getClass(), GCodeHeater.class);// checks to see a real device was created
+			assertEquals(link.getClass(), GCodeHeater.class);// checks to see a
+																// real device
+																// was created
 			link.setTargetEngineeringUnits(25);
-			link.flush(1);//take 2 seconds to flush
-			
+			link.flush(1);// take 2 seconds to flush
+
 			LinkConfiguration confp2 = new LinkConfiguration();
 			confp2.setType(LinkType.GCODE_HEATER_TOOL);
 			confp2.setDeviceScriptingName(GCODE);
 			confp2.setHardwareIndex(1);
 			confp2.setScale(1);
 			AbstractLink link2 = lf.getLink(confp2);
-			assertEquals(link2.getClass(), GCodeHeater.class);// checks to see a real device was created
+			assertEquals(link2.getClass(), GCodeHeater.class);// checks to see a
+																// real device
+																// was created
 			link2.setTargetEngineeringUnits(25);
-			link2.flush(1);//take 2 seconds to flush
-			
+			link2.flush(1);// take 2 seconds to flush
+
 			link2.setTargetEngineeringUnits(0);
 			link.setTargetEngineeringUnits(0);
 			// coordinated motion flush
 			lf.flush(5);
-			
+
 		}
 	}
 
