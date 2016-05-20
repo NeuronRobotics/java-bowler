@@ -21,6 +21,7 @@
 		<git>https://gist.github.com/51a9e0bc4ee095b03979.git</git>
 		<file>CNCKinematics.groovy</file>
 	</kinematics>
+	<!--
 <link>
 	<name>Z</name>
 	<deviceName>GCODE</deviceName>
@@ -58,6 +59,7 @@
 	</DHParameters>
 
 </link>
+-->
 <link>
 	<name>Y</name>
 	<deviceName>GCODE</deviceName>
@@ -132,6 +134,7 @@
 	</DHParameters>
 
 </link>
+<!--
 <link>
 	<name>TOOL1</name>
 	<deviceName>GCODE</deviceName>
@@ -206,7 +209,7 @@
 	</DHParameters>
 
 </link>
-
+-->
 <ZframeToRAS
 >	<x>0.0</x>
 	<y>0.0</y>

@@ -233,7 +233,7 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter, IFlu
 		loadCurrent();
 		AbstractLink firstLink = (AbstractLink)links.get(links.keySet().toArray()[0]);
 		double distance = firstLink.getTargetValue()-firstLink.getCurrentPosition();
-		if(distance !=0){
+		if(distance !=0 && seconds>0){
 			int feedrate = (int)Math.abs((distance/(seconds/60)));//mm/min
 			run +=" F"+feedrate;
 		}
