@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import javafx.scene.transform.Affine;
 
 import com.neuronrobotics.sdk.addons.kinematics.gcodebridge.IGcodeExecuter;
+import com.neuronrobotics.sdk.addons.kinematics.imu.IMU;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.common.IFlushable;
 import com.neuronrobotics.sdk.common.Log;
@@ -36,7 +37,10 @@ public abstract class AbstractLink implements  IFlushable{
 
 	private Affine linksLocation=new Affine();
 	
-
+	/**
+	 * The object for communicating IMU information and registering it with the hardware
+	 */
+	private IMU imu = new IMU();
 	
 	/**
 	 * Instantiates a new abstract link.
@@ -550,5 +554,7 @@ public abstract class AbstractLink implements  IFlushable{
 		this.slaveFactory = slaveFactory;
 	}
 
-	
+	public IMU getImu() {
+		return imu;
+	}
 }

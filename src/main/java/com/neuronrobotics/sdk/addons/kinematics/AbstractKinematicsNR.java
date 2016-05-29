@@ -16,6 +16,7 @@ import org.w3c.dom.NodeList;
 
 import Jama.Matrix;
 
+import com.neuronrobotics.sdk.addons.kinematics.imu.IMU;
 import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
@@ -99,6 +100,10 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	
 	/** The retry number before fail. */
 	private int retryNumberBeforeFail = 5;
+	/**
+	 * The object for communicating IMU information and registering it with the hardware
+	 */
+	private IMU imu = new IMU();
 	
 	
 	/**
@@ -1321,6 +1326,10 @@ public ArrayList<PIDConfiguration> getAxisPidConfiguration() {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public IMU getImu() {
+		return imu;
 	}
 
 }

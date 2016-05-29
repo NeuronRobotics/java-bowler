@@ -79,7 +79,7 @@ public class LinkConfiguration {
 	
 	private double mass=0.01;// KG
 	private TransformNR centerOfMassFromCentroid=new TransformNR();
-	
+	private TransformNR imuFromCentroid=new TransformNR();
 	/** The static offset. */
 	private double staticOffset=0;
 	
@@ -194,7 +194,20 @@ public class LinkConfiguration {
     	}catch (Exception e){
     		
     	}
-    	
+    	try{
+    		if (eElement.getNodeType() == Node.ELEMENT_NODE && eElement.getNodeName().contentEquals("imuFromCentroid")) {
+		    	Element cntr = (Element)eElement;	    	    
+		    	setimuFromCentroid(new TransformNR(	Double.parseDouble(XmlFactory.getTagValue("x",cntr)),
+							    			Double.parseDouble(XmlFactory.getTagValue("y",cntr)),
+							    			Double.parseDouble(XmlFactory.getTagValue("z",cntr)), 
+							    			new RotationNR(new double[]{	Double.parseDouble(XmlFactory.getTagValue("rotw",cntr)),
+							    							Double.parseDouble(XmlFactory.getTagValue("rotx",cntr)),
+							    							Double.parseDouble(XmlFactory.getTagValue("roty",cntr)),
+							    							Double.parseDouble(XmlFactory.getTagValue("rotz",cntr))})));	 
+		    }
+    	}catch (Exception e){
+    		
+    	}
     	isLatch=XmlFactory.getTagValue("isLatch",eElement).contains("true");
     	indexLatch=Integer.parseInt(XmlFactory.getTagValue("indexLatch",eElement));
     	isStopOnLatch=XmlFactory.getTagValue("isStopOnLatch",eElement).contains("true");
@@ -292,7 +305,8 @@ public class LinkConfiguration {
 				"\t<shaftType>"+getShaftType()+"</shaftType>\n"+
 				"\t<passive>"+isPassive()+"</passive>\n"+
 				"\t<mass>"+getMassKg()+"</mass>\n"+
-				"\t<centerOfMassFromCentroid>"+getCenterOfMassFromCentroid().getXml()+"</centerOfMassFromCentroid>\n"
+				"\t<centerOfMassFromCentroid>"+getCenterOfMassFromCentroid().getXml()+"</centerOfMassFromCentroid>\n"+
+				"\t<imuFromCentroid>"+getimuFromCentroid().getXml()+"</imuFromCentroid>\n"
 				+slaves;
 	}
 	
@@ -729,6 +743,12 @@ public class LinkConfiguration {
 	}
 	public void setCenterOfMassFromCentroid(TransformNR centerOfMassFromCentroid) {
 		this.centerOfMassFromCentroid = centerOfMassFromCentroid;
+	}
+	public TransformNR getimuFromCentroid() {
+		return imuFromCentroid;
+	}
+	public void setimuFromCentroid(TransformNR centerOfMassFromCentroid) {
+		this.imuFromCentroid = centerOfMassFromCentroid;
 	}
 
 	public String getElectroMechanicalType() {

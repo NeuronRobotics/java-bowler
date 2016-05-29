@@ -44,6 +44,8 @@ public class MobileBase extends AbstractKinematicsNR{
 	
 	private double mass=0.5;// KG
 	private TransformNR centerOfMassFromCentroid=new TransformNR();
+
+	private TransformNR IMUFromCentroid=new TransformNR();
 	
 	/**
 	 * Instantiates a new mobile base.
@@ -141,7 +143,20 @@ public class MobileBase extends AbstractKinematicsNR{
     	}catch (Exception e){
     		
     	}
-
+    	try{
+    		if (doc.getNodeType() == Node.ELEMENT_NODE && doc.getNodeName().contentEquals("imuFromCentroid")) {
+		    	Element cntr = (Element)doc;	    	    
+		    	setIMUFromCentroid(new TransformNR(	Double.parseDouble(XmlFactory.getTagValue("x",cntr)),
+							    			Double.parseDouble(XmlFactory.getTagValue("y",cntr)),
+							    			Double.parseDouble(XmlFactory.getTagValue("z",cntr)), 
+							    			new RotationNR(new double[]{	Double.parseDouble(XmlFactory.getTagValue("rotw",cntr)),
+							    							Double.parseDouble(XmlFactory.getTagValue("rotx",cntr)),
+							    							Double.parseDouble(XmlFactory.getTagValue("roty",cntr)),
+							    							Double.parseDouble(XmlFactory.getTagValue("rotz",cntr))})));	 
+		    }
+    	}catch (Exception e){
+    		
+    	}
 	}
 	
 	/**
@@ -353,7 +368,8 @@ public class MobileBase extends AbstractKinematicsNR{
 		xml+=getRobotToFiducialTransform().getXml();
 		xml+="\n</baseToZframe>\n"+
 		"\t<mass>"+getMassKg()+"</mass>\n"+
-		"\t<centerOfMassFromCentroid>"+getCenterOfMassFromCentroid().getXml()+"</centerOfMassFromCentroid>\n";
+		"\t<centerOfMassFromCentroid>"+getCenterOfMassFromCentroid().getXml()+"</centerOfMassFromCentroid>\n"+
+		"\t<imuFromCentroid>"+getIMUFromCentroid().getXml()+"</imuFromCentroid>\n";
 		xml+="\n</mobilebase>\n";
 		setGlobalToFiducialTransform(location);
 		return xml;
@@ -504,7 +520,12 @@ public class MobileBase extends AbstractKinematicsNR{
 	public void setCenterOfMassFromCentroid(TransformNR centerOfMassFromCentroid) {
 		this.centerOfMassFromCentroid = centerOfMassFromCentroid;
 	}
-
+	public TransformNR getIMUFromCentroid() {
+		return IMUFromCentroid;
+	}
+	public void setIMUFromCentroid(TransformNR centerOfMassFromCentroid) {
+		this.IMUFromCentroid = centerOfMassFromCentroid;
+	}
 	public void setFiducialToGlobalTransform(TransformNR globe) {
 		setGlobalToFiducialTransform(globe);
 	}

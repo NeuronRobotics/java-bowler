@@ -39,17 +39,16 @@ public class IMU {
 		return virtualState;
 	}
 	public void setVirtualState(IMUUpdate virtualState) {
+		this.virtualState = virtualState;
 		for(int i=0;i<virtualListeneras.size();i++){
 			virtualListeneras.get(i).onIMUUpdate(virtualState);
 		}
-		this.virtualState = virtualState;
 	}
 	public IMUUpdate getHardwareState() {
 		
 		return hardwareState;
 	}
 	public void setHardwareState(IMUUpdate hardwareState) {
-		
 		this.hardwareState = hardwareState;
 		for(int i=0;i<hardwareListeneras.size();i++){
 			hardwareListeneras.get(i).onIMUUpdate(hardwareState);
