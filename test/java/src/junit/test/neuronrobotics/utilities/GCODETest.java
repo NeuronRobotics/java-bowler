@@ -2,19 +2,12 @@ package junit.test.neuronrobotics.utilities;
 
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
-
-import javax.security.auth.login.FailedLoginException;
-
-import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.neuronrobotics.sdk.addons.kinematics.AbstractLink;
 import com.neuronrobotics.sdk.addons.kinematics.DHChain;
-import com.neuronrobotics.sdk.addons.kinematics.DHLink;
 import com.neuronrobotics.sdk.addons.kinematics.DHParameterKinematics;
 import com.neuronrobotics.sdk.addons.kinematics.DhInverseSolver;
 import com.neuronrobotics.sdk.addons.kinematics.LinkConfiguration;
@@ -29,8 +22,6 @@ import com.neuronrobotics.sdk.addons.kinematics.gcodebridge.IGCodeChannel;
 import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.common.DeviceManager;
-import com.neuronrobotics.sdk.pid.VirtualGenericPIDDevice;
-
 import gnu.io.NRSerialPort;
 
 public class GCODETest {
