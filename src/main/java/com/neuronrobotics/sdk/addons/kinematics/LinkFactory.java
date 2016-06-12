@@ -252,10 +252,17 @@ public class LinkFactory {
 			}
 		}
 		tmp.setLinkConfiguration(c);
-		links.add(tmp);
-		if(!getLinkConfigurations().contains(c))
-			getLinkConfigurations().add(c);
+		addLink(tmp);
 		return tmp;
+	}
+	/**
+	 * THis interface lets the user add a link after instantiation
+	 * @param link the link to be added in order
+	 */
+	public void addLink(AbstractLink link){
+		links.add(link);
+		if(!getLinkConfigurations().contains(link.getLinkConfiguration()))
+			getLinkConfigurations().add(link.getLinkConfiguration());
 	}
 	
 	/**

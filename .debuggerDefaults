@@ -21,6 +21,7 @@ StopPattern:
 SourceDirectory:	"/home/hephaestus/git/java-bowler/examples/java/src/"
 SourceDirectory:	"/home/hephaestus/git/java-bowler/src/main/java/"
 SourceDirectory:	"/home/hephaestus/git/nrjavaserial/src/main/java/"
+SourceDirectory:	"/home/hephaestus/git/java-bowler/test/java/src/"
 OnlyInstrument:		
 DidntInstrument:	
 DontInstrumentMethod:	

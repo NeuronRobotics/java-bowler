@@ -2,6 +2,8 @@ package com.neuronrobotics.sdk.addons.kinematics;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Set;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -10,6 +12,7 @@ import org.w3c.dom.NodeList;
 
 import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
+import com.neuronrobotics.sdk.addons.kinematics.parallel.ParallelGroup;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
 import com.neuronrobotics.sdk.common.DeviceManager;
 import com.neuronrobotics.sdk.common.Log;
@@ -46,6 +49,8 @@ public class MobileBase extends AbstractKinematicsNR{
 	private TransformNR centerOfMassFromCentroid=new TransformNR();
 
 	private TransformNR IMUFromCentroid=new TransformNR();
+	
+	private HashMap<String, ParallelGroup> parallelGroups = new HashMap<String, ParallelGroup>();
 	
 	/**
 	 * Instantiates a new mobile base.
@@ -109,6 +114,50 @@ public class MobileBase extends AbstractKinematicsNR{
 		
 	}
 	
+	public ParallelGroup getParallelGroup(String name){
+		if(getParallelGroups().get(name)==null){
+			getParallelGroups().put(name, new ParallelGroup());
+		}
+		return getParallelGroups().get(name);
+	}
+	
+	public Set<String> getParallelGroupNames(){
+		return getParallelGroups().keySet();
+	}
+	public ArrayList<ParallelGroup> getAllParallelGroups(){
+		 ArrayList<ParallelGroup> list = new ArrayList<ParallelGroup>();
+		 for(String name:getParallelGroupNames()){
+			 list.add(getParallelGroup(name));
+		 }
+		 return list;
+	}
+	
+	public ParallelGroup getParallelGroup(DHParameterKinematics limb){
+		for(String name:getParallelGroupNames()){
+			 for(DHParameterKinematics dh :getParallelGroup(name).getConstituantLimbs()){
+				 if(dh==limb){
+					 return getParallelGroup(name);
+				 }
+			 }
+		 }
+		return null;
+	}
+	
+	
+	
+	public void addLimbToParallel(DHParameterKinematics limb,TransformNR tipOffset,String name){
+		removeLimFromParallel(limb);
+		ParallelGroup  g =getParallelGroup( name);
+		g.addLimb(limb, tipOffset);
+	}
+	
+	private void removeLimFromParallel(DHParameterKinematics limb) {
+		 ParallelGroup g = getParallelGroup(limb);
+		 if(g!=null){
+			 g.removeLimb(limb);
+		 }
+	}
+
 	/**
 	 * Load configs.
 	 *
@@ -119,6 +168,14 @@ public class MobileBase extends AbstractKinematicsNR{
 		
 		setGitCadEngine(getGitCodes( doc,"cadEngine"));
 		setGitWalkingEngine(getGitCodes( doc,"driveEngine"));
+		try{
+    		String [] paralellCad = getGitCodes( doc,"parallelCadEngine");
+    		getParallelGroup(paralellCad[2]).setGitCadToolEngine(paralellCad);
+    	}catch (Exception e){
+    		
+    	}
+    	
+		
 		loadLimb(doc,"leg",legs);
 		loadLimb(doc,"drivable",drivable);
 		loadLimb(doc,"steerable",steerable);
@@ -129,34 +186,36 @@ public class MobileBase extends AbstractKinematicsNR{
     		
     	}
     	
-    	try{
-    		if (doc.getNodeType() == Node.ELEMENT_NODE && doc.getNodeName().contentEquals("centerOfMassFromCentroid")) {
-		    	Element cntr = (Element)doc;	    	    
-		    	setCenterOfMassFromCentroid(new TransformNR(	Double.parseDouble(XmlFactory.getTagValue("x",cntr)),
-							    			Double.parseDouble(XmlFactory.getTagValue("y",cntr)),
-							    			Double.parseDouble(XmlFactory.getTagValue("z",cntr)), 
-							    			new RotationNR(new double[]{	Double.parseDouble(XmlFactory.getTagValue("rotw",cntr)),
-							    							Double.parseDouble(XmlFactory.getTagValue("rotx",cntr)),
-							    							Double.parseDouble(XmlFactory.getTagValue("roty",cntr)),
-							    							Double.parseDouble(XmlFactory.getTagValue("rotz",cntr))})));	 
+
+    	TransformNR cmcenter= loadTransform("centerOfMassFromCentroid",doc);
+    	if(cmcenter!=null)
+    		setCenterOfMassFromCentroid(cmcenter);	 
+    	TransformNR IMUcenter= loadTransform("imuFromCentroid",doc);
+    	if(IMUcenter!=null)
+    		setIMUFromCentroid(IMUcenter);	 
+	
+    	
+	}
+	
+	private TransformNR loadTransform(String tagname,Element e){
+
+		NodeList nodListofLinks = e.getChildNodes();
+		
+		for (int i = 0; i < nodListofLinks .getLength(); i++) {			
+		    Node linkNode = nodListofLinks.item(i);
+		   if (linkNode.getNodeType() == Node.ELEMENT_NODE && linkNode.getNodeName().contentEquals(tagname)) {
+			   Element cntr = (Element)linkNode;	    	    
+		    	return new TransformNR(	Double.parseDouble(XmlFactory.getTagValue("x",cntr)),
+		    			Double.parseDouble(XmlFactory.getTagValue("y",cntr)),
+		    			Double.parseDouble(XmlFactory.getTagValue("z",cntr)), 
+		    			new RotationNR(new double[]{	Double.parseDouble(XmlFactory.getTagValue("rotw",cntr)),
+		    							Double.parseDouble(XmlFactory.getTagValue("rotx",cntr)),
+		    							Double.parseDouble(XmlFactory.getTagValue("roty",cntr)),
+		    							Double.parseDouble(XmlFactory.getTagValue("rotz",cntr))}));	
 		    }
-    	}catch (Exception e){
-    		
-    	}
-    	try{
-    		if (doc.getNodeType() == Node.ELEMENT_NODE && doc.getNodeName().contentEquals("imuFromCentroid")) {
-		    	Element cntr = (Element)doc;	    	    
-		    	setIMUFromCentroid(new TransformNR(	Double.parseDouble(XmlFactory.getTagValue("x",cntr)),
-							    			Double.parseDouble(XmlFactory.getTagValue("y",cntr)),
-							    			Double.parseDouble(XmlFactory.getTagValue("z",cntr)), 
-							    			new RotationNR(new double[]{	Double.parseDouble(XmlFactory.getTagValue("rotw",cntr)),
-							    							Double.parseDouble(XmlFactory.getTagValue("rotx",cntr)),
-							    							Double.parseDouble(XmlFactory.getTagValue("roty",cntr)),
-							    							Double.parseDouble(XmlFactory.getTagValue("rotz",cntr))})));	 
-		    }
-    	}catch (Exception e){
-    		
-    	}
+		}
+		
+		return null;
 	}
 	
 	/**
@@ -167,21 +226,44 @@ public class MobileBase extends AbstractKinematicsNR{
 	 * @return the name
 	 */
 	private String getname(Element e,String tag){
+		String name = getTag(e,tag,"name");
+		if(name==null)
+			name="nonamespecified";
+		return name;
+	}
+	/**
+	 * Gets the contents in the group.
+	 *
+	 * @param e the e
+	 * @param tag the tag
+	 * @return the name
+	 */
+	private String getParallelGroup(Element e,String tag){
+		return  getTag(e,tag,"parallelGroup");
+	}
+	
+	/**
+	 * Gets the localTag
+	 *
+	 * @param e the e
+	 * @param tag the tag
+	 * @return the name
+	 */
+	private String getTag(Element e,String tag, String tagname){
 		try{
 			NodeList nodListofLinks = e.getChildNodes();
 			
 			for (int i = 0; i < nodListofLinks .getLength(); i++) {			
 			    Node linkNode = nodListofLinks.item(i);
-			   if (linkNode.getNodeType() == Node.ELEMENT_NODE && linkNode.getNodeName().contentEquals("name")) {
-			    	return XmlFactory.getTagValue("name",e);
+			   if (linkNode.getNodeType() == Node.ELEMENT_NODE && linkNode.getNodeName().contentEquals(tagname)) {
+			    	return XmlFactory.getTagValue(tagname,e);
 			    }
 			}
 		}catch(Exception ex){
 			ex.printStackTrace();
 		}
-		return tag;
+		return null;
 	}
-	
 	
 	/**
 	 * Load limb.
@@ -198,6 +280,7 @@ public class MobileBase extends AbstractKinematicsNR{
 		    	Element e = (Element) linkNode;
 		    	final String name =  getname( e,tag);
 		    	
+		    	
 		    	DHParameterKinematics kin=(DHParameterKinematics) DeviceManager.getSpecificDevice(DHParameterKinematics.class, name);
 		    	if(kin==null){
 		    		kin= new DHParameterKinematics(e);
@@ -206,11 +289,19 @@ public class MobileBase extends AbstractKinematicsNR{
 		    	}
 		    	kin.setScriptingName(name);
 		    	list.add(kin);
-
+		    	String parallel = getParallelGroup( e,"parallelGroup");
+		    	if(parallel!=null){
+		    		TransformNR paraOffset  = loadTransform( "parallelGroupTipOffset",e);
+			    	if(paraOffset==null){
+			    		paraOffset= new TransformNR();
+			    	}
+		    		getParallelGroup(parallel).addLimb(kin, paraOffset);
+		    	}
 		    }
 		}
 	}
 
+	
 
 
 	/* (non-Javadoc)
@@ -283,7 +374,8 @@ public class MobileBase extends AbstractKinematicsNR{
 			copy.add(l);	
 		}
 		for(DHParameterKinematics l:appendages){
-			copy.add(l);	
+			copy.add(l);
+			
 		}
 		for(DHParameterKinematics l:steerable){
 			copy.add(l);	
@@ -333,6 +425,15 @@ public class MobileBase extends AbstractKinematicsNR{
 		xml+="\t\t<file>"+getGitWalkingEngine()[1]+"</file>\n";
 		xml+="\t</driveEngine>\n";
 		
+		for(String key: getParallelGroups().keySet()){
+			ParallelGroup g = getParallelGroups().get(key);
+			xml+="\t<parallelCadEngine>\n";
+			xml+="\t\t<git>"+key+"</git>\n";
+			xml+="\t\t<git>"+g.getGitCadToolEngine()[0]+"</git>\n";
+			xml+="\t\t<file>"+g.getGitCadToolEngine()[1]+"</file>\n";
+			xml+="\t</parallelCadEngine>\n";
+		}
+		
 		xml+="\n<name>"+getScriptingName()+"</name>\n";
 		for(DHParameterKinematics l:legs){
 			xml+="<leg>\n";
@@ -343,6 +444,18 @@ public class MobileBase extends AbstractKinematicsNR{
 		for(DHParameterKinematics l:appendages){
 			xml+="<appendage>\n";
 			xml+="\n<name>"+l.getScriptingName()+"</name>\n";
+			for(String key: getParallelGroups().keySet()){
+				for(DHParameterKinematics pL:getParallelGroups().get(key).getConstituantLimbs())
+					if(pL==l){
+						xml+="\n<parallelGroup>"+key+"</parallelGroup>\n";
+						xml+="\t<parallelGroupTipOffset>\n"+getParallelGroups()
+															.get(key)
+															.getTipOffset()
+															.get(l)
+															.getXml()+
+								"\n</parallelGroupTipOffset>\n";
+					}
+			}
 			xml+=l.getEmbedableXml();
 			xml+="\n</appendage>\n";
 		}
@@ -374,6 +487,8 @@ public class MobileBase extends AbstractKinematicsNR{
 		setGlobalToFiducialTransform(location);
 		return xml;
 	}
+	
+	
 
 	/**
 	 * Gets the steerable.
@@ -529,5 +644,10 @@ public class MobileBase extends AbstractKinematicsNR{
 	public void setFiducialToGlobalTransform(TransformNR globe) {
 		setGlobalToFiducialTransform(globe);
 	}
+
+	private HashMap<String, ParallelGroup> getParallelGroups() {
+		return parallelGroups;
+	}
+
 
 }

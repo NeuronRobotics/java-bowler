@@ -91,7 +91,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	private DHChain dhParametersChain=null;
 	
 	/** The root. */
-	private Affine root = new Affine();
+	private Affine root ;
 	
 	/* The device */
 	/** The factory. */
@@ -112,6 +112,8 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 * @return the root listener
 	 */
 	public Affine getRootListener() {
+		if(root == null)
+			root = new Affine();
 		return root;
 	}
 
@@ -316,7 +318,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 							    							Double.parseDouble(XmlFactory.getTagValue("rotz",eElement))})));	 
 		    }else{
 		    	//System.err.println(linkNode.getNodeName());
-		    	Log.error("Node not known: "+linkNode.getNodeName());
+		    	//Log.error("Node not known: "+linkNode.getNodeName());
 		    }
 		}
 
@@ -774,7 +776,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 			
 			@Override
 			public void run() {
-				TransformFactory.nrToAffine(forwardOffset(new TransformNR()), root);
+				TransformFactory.nrToAffine(forwardOffset(new TransformNR()), getRootListener() );
 			}
 		});
 	}
@@ -819,7 +821,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 			
 			@Override
 			public void run() {
-				TransformFactory.nrToAffine(forwardOffset(new TransformNR()), root);
+				TransformFactory.nrToAffine(forwardOffset(new TransformNR()), getRootListener() );
 			}
 		});
 	}
@@ -1299,7 +1301,7 @@ public ArrayList<PIDConfiguration> getAxisPidConfiguration() {
 	 * @return the gist codes
 	 */
 	protected String [] getGitCodes(Element doc,String tag){
-		String [] content =new String[2];
+		String [] content =new String[3];
 		try{
 			NodeList nodListofLinks = doc.getChildNodes();
 			for (int i = 0; i < nodListofLinks.getLength(); i++) {			
@@ -1315,6 +1317,12 @@ public ArrayList<PIDConfiguration> getAxisPidConfiguration() {
 			    	try{
 				    	if(getCode( e,"git")!=null)
 				    		content[0]=getCode( e,"git");
+		    		}catch(Exception ex){
+			    		
+			    	}
+			    	try{
+				    	if(getCode( e,"parallelGroup")!=null)
+				    		content[2]=getCode( e,"parallelGroup");
 		    		}catch(Exception ex){
 			    		
 			    	}
