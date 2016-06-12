@@ -427,11 +427,13 @@ public class MobileBase extends AbstractKinematicsNR{
 		
 		for(String key: getParallelGroups().keySet()){
 			ParallelGroup g = getParallelGroups().get(key);
-			xml+="\t<parallelCadEngine>\n";
-			xml+="\t\t<git>"+key+"</git>\n";
-			xml+="\t\t<git>"+g.getGitCadToolEngine()[0]+"</git>\n";
-			xml+="\t\t<file>"+g.getGitCadToolEngine()[1]+"</file>\n";
-			xml+="\t</parallelCadEngine>\n";
+			if(key !=null){
+				xml+="\t<parallelCadEngine>\n";
+				xml+="\t\t<parallelGroup>"+key+"</parallelGroup>\n";
+				xml+="\t\t<git>"+g.getGitCadToolEngine()[0]+"</git>\n";
+				xml+="\t\t<file>"+g.getGitCadToolEngine()[1]+"</file>\n";
+				xml+="\t</parallelCadEngine>\n";
+			}
 		}
 		
 		xml+="\n<name>"+getScriptingName()+"</name>\n";
