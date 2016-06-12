@@ -25,7 +25,7 @@ public class SimpleConnection {
 		//s=new SerialConnection("/dev/tty.usbmodemfd13411");
 		
 		//Linux
-		s=new SerialConnection("/dev/DyIO.74F726800079");
+		s=new SerialConnection("/dev/DyIO1");
 		
 		GenericDevice dyio = new GenericDevice(s);
 		//Log.enableDebugPrint(true);
