@@ -110,11 +110,12 @@ public class ParallelGroup extends AbstractKinematicsNR {
 			double rotz = Math.atan2(Math.cos(rotx), Math.sin(rotx) * Math.sin(roty));
 
 			return new TransformNR(x,y,x,new RotationNR(rotx,roty,rotz));
-		} else {
+		} else if(getConstituantLimbs().size() ==2) {
 			return tips.get(getConstituantLimbs().get(0));// assume the first link is
 														// in control or
 														// orentation
-		}
+		}else
+			throw new RuntimeException("There needs to be at least 2 limbs for paralell");
 	}
 	
 	/**
