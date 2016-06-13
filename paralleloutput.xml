@@ -9,12 +9,7 @@
 		<file>WalkingDriveEngine.groovy</file>
 	</driveEngine>
 	<parallelCadEngine>
-		<git>null</git>
-		<git>https://gist.github.com/33f2c10ab3adc5bd91f0a58ea7f24d14.git</git>
-		<file>parallelTool.groovy</file>
-	</parallelCadEngine>
-	<parallelCadEngine>
-		<git>ParallelArmGroup</git>
+		<parallelGroup>ParallelArmGroup</parallelGroup>
 		<git>https://gist.github.com/33f2c10ab3adc5bd91f0a58ea7f24d14.git</git>
 		<file>parallelTool.groovy</file>
 	</parallelCadEngine>

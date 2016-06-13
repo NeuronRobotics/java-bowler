@@ -194,7 +194,17 @@ public class MobileBase extends AbstractKinematicsNR{
     	if(IMUcenter!=null)
     		setIMUFromCentroid(IMUcenter);	 
 	
-    	
+    	for(String key: getParallelGroups().keySet()){
+    		if(key !=null){
+				ParallelGroup g = getParallelGroups().get(key);
+				try {
+					g.setDesiredTaskSpaceTransform(g.getConstituantLimbs().get(0).calcHome(), 1.0);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+    		}
+		}
 	}
 	
 	private TransformNR loadTransform(String tagname,Element e){
