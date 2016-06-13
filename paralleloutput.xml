@@ -21,7 +21,7 @@
 
 <parallelGroup>ParallelArmGroup</parallelGroup>
 	<parallelGroupTipOffset>
-	<x>0.0</x>
+	<x>10.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
 	<rotw>1.0</rotw>
@@ -127,7 +127,7 @@
 </link>
 <link>
 	<name>elbow</name>
-	<deviceName>virtual</deviceName>
+	<deviceName>virtualParallel</deviceName>
 	<type>virtual</type>
 	<index>9</index>
 	<scale>0.33</scale>
@@ -164,7 +164,7 @@
 	<DHParameters>
 		<Delta>0.0</Delta>
 		<Theta>90.0</Theta>
-		<Radius>131.0</Radius>
+		<Radius>100.0</Radius>
 		<Alpha>0.0</Alpha>
 	</DHParameters>
 
@@ -184,10 +184,10 @@
 	<x>-66.66666666666667</x>
 	<y>80.95238095238092</y>
 	<z>42.8571428571428</z>
-	<rotw>0.00617059241954504</rotw>
-	<rotx>0.006170592434779905</rotx>
-	<roty>-0.7070798576001365</roty>
-	<rotz>-0.7070798576001363</rotz>
+	<rotw>NaN</rotw>
+	<rotx>NaN</rotx>
+	<roty>NaN</roty>
+	<rotz>NaN</rotz>
 </baseToZframe>
 
 </appendage>
@@ -215,7 +215,7 @@
 	</kinematics>
 <link>
 	<name>basePan</name>
-	<deviceName>virtual</deviceName>
+	<deviceName>virtualParallel</deviceName>
 	<type>virtual</type>
 	<index>0</index>
 	<scale>0.33</scale>
@@ -303,7 +303,7 @@
 </link>
 <link>
 	<name>elbow</name>
-	<deviceName>virtual</deviceName>
+	<deviceName>virtualParallel</deviceName>
 	<type>virtual</type>
 	<index>2</index>
 	<scale>0.33</scale>
@@ -340,7 +340,7 @@
 	<DHParameters>
 		<Delta>0.0</Delta>
 		<Theta>90.0</Theta>
-		<Radius>131.0</Radius>
+		<Radius>100.0</Radius>
 		<Alpha>0.0</Alpha>
 	</DHParameters>
 
@@ -360,10 +360,10 @@
 	<x>-66.00000000000001</x>
 	<y>-85.71428571428571</y>
 	<z>42.857000000000006</z>
-	<rotw>0.00622420532706175</rotw>
-	<rotx>-0.006116509612128282</rotx>
-	<roty>0.7008825799565995</roty>
-	<rotz>-0.7132232949692224</rotz>
+	<rotw>NaN</rotw>
+	<rotx>NaN</rotx>
+	<roty>NaN</roty>
+	<rotz>NaN</rotz>
 </baseToZframe>
 
 </appendage>

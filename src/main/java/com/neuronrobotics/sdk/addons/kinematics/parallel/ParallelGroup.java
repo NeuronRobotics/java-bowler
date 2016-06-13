@@ -17,7 +17,7 @@ public class ParallelGroup extends AbstractKinematicsNR {
 	private HashMap<DHParameterKinematics, TransformNR> tipOffset = new HashMap<DHParameterKinematics, TransformNR>();
 	/** The cad engine. */
 	private String [] toolEngine =new String[]{"https://gist.github.com/33f2c10ab3adc5bd91f0a58ea7f24d14.git","parallelTool.groovy"}; 
-	
+
 	
 	public void addLimb(DHParameterKinematics limb, TransformNR tip) {
 		if (!getConstituantLimbs().contains(limb)) {
@@ -71,6 +71,7 @@ public class ParallelGroup extends AbstractKinematicsNR {
 	@Override
 	public TransformNR forwardKinematics(double[] jointSpaceVector) {
 		HashMap<DHParameterKinematics, TransformNR> tips = new HashMap<DHParameterKinematics, TransformNR>();
+
 		for (DHParameterKinematics l : getConstituantLimbs()) {
 			TransformNR fwd = l.forwardKinematics(l.getCurrentJointSpaceVector());
 			if (fwd == null)

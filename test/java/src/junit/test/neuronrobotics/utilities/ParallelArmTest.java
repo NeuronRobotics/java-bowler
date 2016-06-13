@@ -9,41 +9,51 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import javax.swing.text.html.HTMLDocument.HTMLReader.IsindexAction;
+
 import org.junit.Test;
 
+import com.neuronrobotics.sdk.addons.kinematics.DHParameterKinematics;
 import com.neuronrobotics.sdk.addons.kinematics.MobileBase;
+import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
+import com.neuronrobotics.sdk.addons.kinematics.parallel.ParallelGroup;
 
 public class ParallelArmTest {
 
 	@Test
-	public void test() {
+	public void test() throws Exception {
 		main(null);
 	}
-	
-	public static void main(String [] args){
-		File f = new File("/home/hephaestus/bowler-workspace/gistcache/gist.github.com/33f2c10ab3adc5bd91f0a58ea7f24d14/ParalellArm.xml");
-		 
-		 try {
-			MobileBase pArm=new MobileBase(new FileInputStream(f));
-			String xmlParsed  =  pArm.getXml();
-			BufferedWriter writer = null;
-			try {
-				writer = new BufferedWriter(new FileWriter("paralleloutput.xml"));
-				writer.write(xmlParsed);
 
-			} catch (IOException e) {
-			} finally {
-				try {
-					if (writer != null)
-						writer.close();
-				} catch (IOException e) {
-				}
-			}
+	public static void main(String[] args) throws Exception {
+		File f = new File("paralleloutput.xml");
 
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		MobileBase pArm = new MobileBase(new FileInputStream(f));
+		String xmlParsed = pArm.getXml();
+		BufferedWriter writer = null;
+
+		writer = new BufferedWriter(new FileWriter("paralleloutput.xml"));
+		writer.write(xmlParsed);
+
+		if (writer != null)
+			writer.close();
+		
+		ParallelGroup group = pArm.getParallelGroup("ParallelArmGroup");
+		
+		TransformNR Tip = group.getCurrentTaskSpaceTransform();
+		
+
+		group.setDesiredTaskSpaceTransform(Tip.copy().translateX(20), 0);
+		for(DHParameterKinematics limb:group.getConstituantLimbs()){
+			TransformNR TipOffset = group.getTipOffset().get(limb);
+			TransformNR newTip = limb.getCurrentTaskSpaceTransform().times(TipOffset);
+			
+			System.out.println("Expected tip to be "+Tip.getX()+" and got: "+newTip.getX());
+			assertTrue(!Double.isNaN(Tip.getX()));
+			assertEquals(Tip.getX(), newTip.getX(), .1);
 		}
+		
+		
 	}
 
 }

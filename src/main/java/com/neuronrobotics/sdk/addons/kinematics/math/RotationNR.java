@@ -33,7 +33,12 @@ public class RotationNR {
 	 */
 	// create a new object with the given simplified rotations
 	public RotationNR( double tilt  , double azumeth,  double elevation   ) {
-		
+		if(Double.isNaN(tilt))
+			throw new RuntimeException("Value can not be NaN");
+		if(Double.isNaN(azumeth))
+			throw new RuntimeException("Value can not be NaN");
+		if(Double.isNaN(elevation))
+			throw new RuntimeException("Value can not be NaN");
 		loadFromAngles(tilt  ,  azumeth,   elevation );
 		if(	Double.isNaN(getRotationMatrix2QuaturnionW())||
 			Double.isNaN(getRotationMatrix2QuaturnionX())||
@@ -291,6 +296,14 @@ public class RotationNR {
 	 * @param z the z
 	 */
 	protected void quaternion2RotationMatrix(double w, double x, double y, double z) {
+		if(Double.isNaN(w))
+			throw new RuntimeException("Value can not be NaN");
+		if(Double.isNaN(x))
+			throw new RuntimeException("Value can not be NaN");
+		if(Double.isNaN(y))
+			throw new RuntimeException("Value can not be NaN");
+		if(Double.isNaN(z))
+			throw new RuntimeException("Value can not be NaN");
 		double norm = Math.sqrt(w * w + x * x + y * y + z * z);
 		// we explicitly test norm against one here, saving a division
 		// at the cost of a test and branch. Is it worth it?

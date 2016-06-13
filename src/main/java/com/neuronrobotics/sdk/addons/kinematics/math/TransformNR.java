@@ -35,9 +35,9 @@ public class TransformNR {
 	 * @param m the m
 	 */
 	public TransformNR(Matrix m){
-		this.x=m.get(0, 3);
-		this.y=m.get(1, 3);
-		this.z=m.get(2, 3);
+		this.setX(m.get(0, 3));
+		this.setY(m.get(1, 3));
+		this.setZ(m.get(2, 3));
 		this.setRotation(new RotationNR(m));
 	}
 	
@@ -53,9 +53,9 @@ public class TransformNR {
 	 * @param rotz the rotz
 	 */
 	public TransformNR(double x, double y, double z, double w, double rotx, double roty, double rotz){
-		this.x=x;
-		this.y=y;
-		this.z=z;
+		this.setX(x);
+		this.setY(y);
+		this.setZ(z);
 		this.setRotation(new RotationNR(new double[]{w,rotx,roty,rotz}));
 	}
 	
@@ -66,9 +66,9 @@ public class TransformNR {
 	 * @param rotationMatrix the rotation matrix
 	 */
 	public TransformNR(double[] cartesianSpaceVector, double[][] rotationMatrix) {
-		this.x=cartesianSpaceVector[0];
-		this.y=cartesianSpaceVector[1];
-		this.z=cartesianSpaceVector[2];
+		this.setX(cartesianSpaceVector[0]);
+		this.setY(cartesianSpaceVector[1]);
+		this.setZ(cartesianSpaceVector[2]);
 		this.setRotation(new RotationNR(rotationMatrix));
 	}
 	
@@ -79,9 +79,9 @@ public class TransformNR {
 	 * @param quaternionVector the quaternion vector
 	 */
 	public TransformNR(double[] cartesianSpaceVector, double[] quaternionVector) {
-		this.x=cartesianSpaceVector[0];
-		this.y=cartesianSpaceVector[1];
-		this.z=cartesianSpaceVector[2];
+		this.setX(cartesianSpaceVector[0]);
+		this.setY(cartesianSpaceVector[1]);
+		this.setZ(cartesianSpaceVector[2]);
 		this.setRotation(new RotationNR(quaternionVector));
 	}
 	
@@ -94,9 +94,9 @@ public class TransformNR {
 	 * @param q the q
 	 */
 	public TransformNR(double x, double y, double z, RotationNR q){
-		this.x=x;
-		this.y=y;
-		this.z=z;
+		this.setX(x);
+		this.setY(y);
+		this.setZ(z);
 		this.setRotation(q);
 	}
 	
@@ -107,9 +107,9 @@ public class TransformNR {
 	 * @param q the q
 	 */
 	public TransformNR(double[] cartesianSpaceVector, RotationNR q) {
-		this.x=cartesianSpaceVector[0];
-		this.y=cartesianSpaceVector[1];
-		this.z=cartesianSpaceVector[2];
+		this.setX(cartesianSpaceVector[0]);
+		this.setY(cartesianSpaceVector[1]);
+		this.setZ(cartesianSpaceVector[2]);
 		this.setRotation(q);
 	}
 	
@@ -117,9 +117,9 @@ public class TransformNR {
 	 * Instantiates a new transform nr.
 	 */
 	public TransformNR() {
-		this.x=0;
-		this.y=0;
-		this.z=0;
+		this.setX(0);
+		this.setY(0);
+		this.setZ(0);
 		this.setRotation(new RotationNR());
 	}
 	
@@ -348,9 +348,11 @@ public class TransformNR {
 	 * Translate x.
 	 *
 	 * @param translation the translation
+	 * @return 
 	 */
-	public void translateX(double translation){
-		x+=translation;
+	public TransformNR translateX(double translation){
+		setX(getX() + translation);
+		return this;
 	}
 	
 	/**
@@ -358,8 +360,9 @@ public class TransformNR {
 	 *
 	 * @param translation the translation
 	 */
-	public void translateY(double translation){
-		y+=translation;
+	public TransformNR translateY(double translation){
+		setY(getY() + translation);return this;
+		
 	}
 	
 	/**
@@ -367,8 +370,9 @@ public class TransformNR {
 	 *
 	 * @param translation the translation
 	 */
-	public void translateZ(double translation){
-		z+=translation;
+	public TransformNR translateZ(double translation){
+		
+		setZ(getZ() + translation);return this;
 	}
 	
 	/**
@@ -376,8 +380,10 @@ public class TransformNR {
 	 *
 	 * @param translation the new x
 	 */
-	public void setX(double translation){
-		x=translation;
+	public TransformNR setX(double translation){
+		if(Double.isNaN(translation))
+			throw new RuntimeException("Value can not be NaN");
+		x=translation;return this;
 	}
 	
 	/**
@@ -385,8 +391,10 @@ public class TransformNR {
 	 *
 	 * @param translation the new y
 	 */
-	public void setY(double translation){
-		y=translation;
+	public TransformNR setY(double translation){
+		if(Double.isNaN(translation))
+			throw new RuntimeException("Value can not be NaN");
+		y=translation;return this;
 	}
 	
 	/**
@@ -394,8 +402,10 @@ public class TransformNR {
 	 *
 	 * @param translation the new z
 	 */
-	public void setZ(double translation){
-		z=translation;
+	public TransformNR setZ(double translation){
+		if(Double.isNaN(translation))
+			throw new RuntimeException("Value can not be NaN");
+		z=translation;return this;
 	}
 	
 	/**
@@ -408,9 +418,9 @@ public class TransformNR {
 	 * Generate the xml configuration to generate an XML of this robot. 
 	 */
 	public String getXml(){
-		String xml = 	"\t<x>"+x+"</x>\n"+
-						"\t<y>"+y+"</y>\n"+
-						"\t<z>"+z+"</z>\n"+
+		String xml = 	"\t<x>"+getX()+"</x>\n"+
+						"\t<y>"+getY()+"</y>\n"+
+						"\t<z>"+getZ()+"</z>\n"+
 						"\t<rotw>"+getRotation().getRotationMatrix2QuaturnionW()+"</rotw>\n"+
 						"\t<rotx>"+getRotation().getRotationMatrix2QuaturnionX()+"</rotx>\n"+
 						"\t<roty>"+getRotation().getRotationMatrix2QuaturnionY()+"</roty>\n"+
