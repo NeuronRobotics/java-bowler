@@ -6,3 +6,6 @@
 /bin/
 /gradle.properties
 gradle.properties
+/odb-test/
+/odb-test.zip
+/paralleloutput2.xml
