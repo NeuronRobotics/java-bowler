@@ -27,33 +27,32 @@ public class ParallelArmTest {
 
 	public static void main(String[] args) throws Exception {
 		File f = new File("paralleloutput.xml");
+		if (f.exists()) {
+			MobileBase pArm = new MobileBase(new FileInputStream(f));
+			String xmlParsed = pArm.getXml();
+			BufferedWriter writer = null;
 
-		MobileBase pArm = new MobileBase(new FileInputStream(f));
-		String xmlParsed = pArm.getXml();
-		BufferedWriter writer = null;
+			writer = new BufferedWriter(new FileWriter("paralleloutput2.xml"));
+			writer.write(xmlParsed);
 
-		writer = new BufferedWriter(new FileWriter("paralleloutput2.xml"));
-		writer.write(xmlParsed);
+			if (writer != null)
+				writer.close();
 
-		if (writer != null)
-			writer.close();
-		
-		ParallelGroup group = pArm.getParallelGroup("ParallelArmGroup");
-		
-		TransformNR Tip = group.getCurrentTaskSpaceTransform();
-		
+			ParallelGroup group = pArm.getParallelGroup("ParallelArmGroup");
 
-		group.setDesiredTaskSpaceTransform(Tip.copy().translateX(-1), 0);
-		for(DHParameterKinematics limb:group.getConstituantLimbs()){
-			TransformNR TipOffset = group.getTipOffset().get(limb);
-			TransformNR newTip = limb.getCurrentTaskSpaceTransform().times(TipOffset);
-			
-			System.out.println("Expected tip to be "+Tip.getX()+" and got: "+newTip.getX());
-			assertTrue(!Double.isNaN(Tip.getX()));
-			assertEquals(Tip.getX(), newTip.getX(), .1);
+			TransformNR Tip = group.getCurrentTaskSpaceTransform();
+
+			group.setDesiredTaskSpaceTransform(Tip.copy().translateX(-1), 0);
+			for (DHParameterKinematics limb : group.getConstituantLimbs()) {
+				TransformNR TipOffset = group.getTipOffset().get(limb);
+				TransformNR newTip = limb.getCurrentTaskSpaceTransform().times(TipOffset);
+
+				System.out.println("Expected tip to be " + Tip.getX() + " and got: " + newTip.getX());
+				assertTrue(!Double.isNaN(Tip.getX()));
+				assertEquals(Tip.getX(), newTip.getX(), .1);
+			}
 		}
-		
-		
+
 	}
 
 }
