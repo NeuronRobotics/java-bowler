@@ -8,11 +8,25 @@
 		<git>https://gist.github.com/bcb4760a449190206170.git</git>
 		<file>WalkingDriveEngine.groovy</file>
 	</driveEngine>
-
+	<parallelCadEngine>
+		<parallelGroup>ParallelArmGroup</parallelGroup>
+		<git>https://gist.github.com/33f2c10ab3adc5bd91f0a58ea7f24d14.git</git>
+		<file>parallelTool.groovy</file>
+	</parallelCadEngine>
 <name>ParallelArm</name>
 <appendage>
 
 <name>ParalellArm1</name>
+<parallelGroup>ParallelArmGroup</parallelGroup>
+	<parallelGroupTipOffset>
+	<x>10.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>0.0</rotx>
+	<roty>0.0</roty>
+	<rotz>0.0</rotz>
+</parallelGroupTipOffset>
 	<cadEngine>
 		<git>https://gist.github.com/4ef911736d351f44aa1fa178d50c897c.git</git>
 		<file>LinkedCadEngine.groovy</file>
@@ -23,6 +37,7 @@
 	</kinematics>
 <link>
 	<name>basePan</name>
+	
 	<deviceName>dyio</deviceName>
 	<type>servo-rotory</type>
 	<index>11</index>
@@ -178,6 +193,16 @@
 <appendage>
 
 <name>ParallelArm2</name>
+<parallelGroup>ParallelArmGroup</parallelGroup>
+	<parallelGroupTipOffset>
+	<x>10.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>0.0</rotx>
+	<roty>0.0</roty>
+	<rotz>0.0</rotz>
+</parallelGroupTipOffset>
 	<cadEngine>
 		<git>https://gist.github.com/4ef911736d351f44aa1fa178d50c897c.git</git>
 		<file>LinkedCadEngine.groovy</file>

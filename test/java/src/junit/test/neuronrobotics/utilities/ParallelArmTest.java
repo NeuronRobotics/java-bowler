@@ -32,7 +32,7 @@ public class ParallelArmTest {
 		String xmlParsed = pArm.getXml();
 		BufferedWriter writer = null;
 
-		writer = new BufferedWriter(new FileWriter("paralleloutput.xml"));
+		writer = new BufferedWriter(new FileWriter("paralleloutput2.xml"));
 		writer.write(xmlParsed);
 
 		if (writer != null)
@@ -43,7 +43,7 @@ public class ParallelArmTest {
 		TransformNR Tip = group.getCurrentTaskSpaceTransform();
 		
 
-		group.setDesiredTaskSpaceTransform(Tip.copy().translateX(20), 0);
+		group.setDesiredTaskSpaceTransform(Tip.copy().translateX(-1), 0);
 		for(DHParameterKinematics limb:group.getConstituantLimbs()){
 			TransformNR TipOffset = group.getTipOffset().get(limb);
 			TransformNR newTip = limb.getCurrentTaskSpaceTransform().times(TipOffset);
