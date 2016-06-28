@@ -244,8 +244,6 @@ public class LinkConfiguration {
 	 * Gets the vitamins.
 	 *
 	 * @param doc the doc
-	 * @param tag the tag
-	 * @return the gist codes
 	 */
 	protected void getVitamins(Element doc) {
 
