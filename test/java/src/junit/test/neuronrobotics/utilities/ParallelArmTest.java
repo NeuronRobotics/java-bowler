@@ -15,8 +15,10 @@ import org.junit.Test;
 
 import com.neuronrobotics.sdk.addons.kinematics.DHParameterKinematics;
 import com.neuronrobotics.sdk.addons.kinematics.MobileBase;
+import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.parallel.ParallelGroup;
+import com.neuronrobotics.sdk.common.Log;
 
 public class ParallelArmTest {
 
@@ -30,30 +32,45 @@ public class ParallelArmTest {
 		File f = new File("paralleloutput.xml");
 		if (f.exists()) {
 			MobileBase pArm = new MobileBase(new FileInputStream(f));
-			String xmlParsed = pArm.getXml();
-			BufferedWriter writer = null;
-
-			writer = new BufferedWriter(new FileWriter("paralleloutput2.xml"));
-			writer.write(xmlParsed);
-
-			if (writer != null)
-				writer.close();
-
-			ParallelGroup group = pArm.getParallelGroup("ParallelArmGroup");
-
-			TransformNR Tip = group.getCurrentTaskSpaceTransform();
-
-			group.setDesiredTaskSpaceTransform(Tip.copy().translateX(-1), 0);
-			for (DHParameterKinematics limb : group.getConstituantLimbs()) {
-				TransformNR TipOffset = group.getTipOffset().get(limb);
-				TransformNR newTip = limb.getCurrentTaskSpaceTransform().times(TipOffset);
-
-				System.out.println("Expected tip to be " + Tip.getX() + " and got: " + newTip.getX());
-				assertTrue(!Double.isNaN(Tip.getX()));
-				assertEquals(Tip.getX(), newTip.getX(), .1);
+			try{
+				String xmlParsed = pArm.getXml();
+				BufferedWriter writer = null;
+	
+				writer = new BufferedWriter(new FileWriter("paralleloutput2.xml"));
+				writer.write(xmlParsed);
+	
+				if (writer != null)
+					writer.close();
+	
+				ParallelGroup group = pArm.getParallelGroup("ParallelArmGroup");
+				
+				Log.enableInfoPrint();
+				//TransformNR Tip = group.getCurrentTaskSpaceTransform();
+				TransformNR Tip = new TransformNR(87,12,25,new RotationNR());
+				
+				for(DHParameterKinematics kin:pArm.getAppendages()){
+					kin.setDesiredJointSpaceVector(new double[]{0,0,0}, 0);
+					kin.setDesiredTaskSpaceTransform(Tip, 0);
+					
+					System.out.println("Arm "+kin.getScriptingName()+"setting to : "+Tip);
+				}
+				assertEquals(Tip.getX(), group.getCurrentTaskSpaceTransform().getX(), 1);
+				group.setDesiredTaskSpaceTransform(Tip.copy(), 0);
+				for (DHParameterKinematics limb : group.getConstituantLimbs()) {
+					TransformNR TipOffset = group.getTipOffset().get(limb);
+					TransformNR newTip = limb.getCurrentTaskSpaceTransform().times(TipOffset);
+	
+					System.out.println("Expected tip to be " + Tip.getX() + " and got: " + newTip.getX());
+					assertTrue(!Double.isNaN(Tip.getX()));
+					assertEquals(Tip.getX(), newTip.getX(), 1);
+				}
+			}catch(Exception ex){
+				ex.printStackTrace();
 			}
+			pArm.disconnect();
+			System.exit(0);
 		}
-
+		
 	}
 
 }

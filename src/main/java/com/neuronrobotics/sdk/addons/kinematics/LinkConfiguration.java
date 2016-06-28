@@ -1,6 +1,7 @@
 package com.neuronrobotics.sdk.addons.kinematics;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javafx.scene.transform.Affine;
 
@@ -95,10 +96,8 @@ public class LinkConfiguration {
 	 */
 	private boolean invertLimitVelocityPolarity=false;
 	
-	private String electroMechanicalType = "hobbyServo";
-	private String electroMechanicalSize = "standardMicro";
-	private String shaftType = "hobbyServoHorn";
-	private String shaftSize = "standardMicro1";
+
+	private HashMap<String , String[]> vitamins= new HashMap<String, String[]>();
 	private boolean passive = false;
 	/**
 	 * Instantiates a new link configuration.
@@ -180,34 +179,45 @@ public class LinkConfiguration {
     	}catch (Exception e){
     		
     	}
-    	try{
-    		if (eElement.getNodeType() == Node.ELEMENT_NODE && eElement.getNodeName().contentEquals("centerOfMassFromCentroid")) {
-		    	Element cntr = (Element)eElement;	    	    
-		    	setCenterOfMassFromCentroid(new TransformNR(	Double.parseDouble(XmlFactory.getTagValue("x",cntr)),
-							    			Double.parseDouble(XmlFactory.getTagValue("y",cntr)),
-							    			Double.parseDouble(XmlFactory.getTagValue("z",cntr)), 
-							    			new RotationNR(new double[]{	Double.parseDouble(XmlFactory.getTagValue("rotw",cntr)),
-							    							Double.parseDouble(XmlFactory.getTagValue("rotx",cntr)),
-							    							Double.parseDouble(XmlFactory.getTagValue("roty",cntr)),
-							    							Double.parseDouble(XmlFactory.getTagValue("rotz",cntr))})));	 
-		    }
-    	}catch (Exception e){
-    		
-    	}
-    	try{
-    		if (eElement.getNodeType() == Node.ELEMENT_NODE && eElement.getNodeName().contentEquals("imuFromCentroid")) {
-		    	Element cntr = (Element)eElement;	    	    
-		    	setimuFromCentroid(new TransformNR(	Double.parseDouble(XmlFactory.getTagValue("x",cntr)),
-							    			Double.parseDouble(XmlFactory.getTagValue("y",cntr)),
-							    			Double.parseDouble(XmlFactory.getTagValue("z",cntr)), 
-							    			new RotationNR(new double[]{	Double.parseDouble(XmlFactory.getTagValue("rotw",cntr)),
-							    							Double.parseDouble(XmlFactory.getTagValue("rotx",cntr)),
-							    							Double.parseDouble(XmlFactory.getTagValue("roty",cntr)),
-							    							Double.parseDouble(XmlFactory.getTagValue("rotz",cntr))})));	 
-		    }
-    	}catch (Exception e){
-    		
-    	}
+    	NodeList nodListofLinks = eElement.getChildNodes();
+		
+		for (int i = 0; i < nodListofLinks .getLength(); i++) {			
+		    Node linkNode = nodListofLinks.item(i);
+	    	try{
+	    		if (linkNode.getNodeType() == Node.ELEMENT_NODE && linkNode.getNodeName().contentEquals("centerOfMassFromCentroid")) {
+			    	Element cntr = (Element)linkNode;	    	    
+			    	setCenterOfMassFromCentroid(new TransformNR(	Double.parseDouble(XmlFactory.getTagValue("x",cntr)),
+								    			Double.parseDouble(XmlFactory.getTagValue("y",cntr)),
+								    			Double.parseDouble(XmlFactory.getTagValue("z",cntr)), 
+								    			new RotationNR(new double[]{	Double.parseDouble(XmlFactory.getTagValue("rotw",cntr)),
+								    							Double.parseDouble(XmlFactory.getTagValue("rotx",cntr)),
+								    							Double.parseDouble(XmlFactory.getTagValue("roty",cntr)),
+								    							Double.parseDouble(XmlFactory.getTagValue("rotz",cntr))})));	 
+			    }
+	    	}catch (Exception e){
+	    		
+	    	}
+	    	try{
+	    		if (linkNode.getNodeType() == Node.ELEMENT_NODE && linkNode.getNodeName().contentEquals("imuFromCentroid")) {
+			    	Element cntr = (Element)linkNode;	    	    
+			    	setimuFromCentroid(new TransformNR(	Double.parseDouble(XmlFactory.getTagValue("x",cntr)),
+								    			Double.parseDouble(XmlFactory.getTagValue("y",cntr)),
+								    			Double.parseDouble(XmlFactory.getTagValue("z",cntr)), 
+								    			new RotationNR(new double[]{	Double.parseDouble(XmlFactory.getTagValue("rotw",cntr)),
+								    							Double.parseDouble(XmlFactory.getTagValue("rotx",cntr)),
+								    							Double.parseDouble(XmlFactory.getTagValue("roty",cntr)),
+								    							Double.parseDouble(XmlFactory.getTagValue("rotz",cntr))})));	 
+			    }
+	    	}catch (Exception e){
+	    		
+	    	}try{
+	    		if (linkNode.getNodeType() == Node.ELEMENT_NODE && linkNode.getNodeName().contentEquals("vitamins")) {    	    
+			    	getVitamins((Element)linkNode)	 ;
+			    }
+	    	}catch (Exception e){
+	    		
+	    	}
+		}
     	isLatch=XmlFactory.getTagValue("isLatch",eElement).contains("true");
     	indexLatch=Integer.parseInt(XmlFactory.getTagValue("indexLatch",eElement));
     	isStopOnLatch=XmlFactory.getTagValue("isStopOnLatch",eElement).contains("true");
@@ -229,6 +239,33 @@ public class LinkConfiguration {
     	setLowerLimit((Integer)args[3]);
     	setType(LinkType.PID);
     	setTotlaNumberOfLinks((Integer)args[1]);
+	}
+	/**
+	 * Gets the vitamins.
+	 *
+	 * @param doc the doc
+	 * @param tag the tag
+	 * @return the gist codes
+	 */
+	protected void getVitamins(Element doc) {
+
+		try {
+			NodeList nodListofLinks = doc.getChildNodes();
+			for (int i = 0; i < nodListofLinks.getLength(); i++) {
+				Node linkNode = nodListofLinks.item(i);
+				if (linkNode.getNodeType() == Node.ELEMENT_NODE && linkNode.getNodeName().contentEquals("vitamin")) {
+					Element e = (Element) linkNode;
+					setVitamin(XmlFactory.getTagValue("name",e),
+							XmlFactory.getTagValue("type",e),
+							XmlFactory.getTagValue("id",e)
+							);
+				}
+			}
+			return;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return;
 	}
 	
 	/**
@@ -284,6 +321,15 @@ public class LinkConfiguration {
 		for(int i=0;i<slaveLinks.size();i++){
 			slaves+="\n\t<slaveLink>\n"+slaveLinks.get(i).getXml()+"\n\t</slaveLink>\n";
 		}
+		String allVitamins="";
+		for(String key: getVitamins().keySet()){
+			String v = "\t<vitamin>\n";
+			v+=		"\t<name>"+key+"</name>\n"+
+					"\t<type>"+getVitamins().get(key)[0]+"</type>\n"+
+					"\t<id>"+getVitamins().get(key)[1]+"</id>\n";
+			v+="\t</vitamin>\n";
+			allVitamins+=v;
+		}
 		
 		return "\t<name>"+getName()+"</name>\n"+
 				"\t"+DevStr+
@@ -299,17 +345,27 @@ public class LinkConfiguration {
 				"\t<indexLatch>"+indexLatch+"</indexLatch>\n"+
 				"\t<isStopOnLatch>"+isStopOnLatch+"</isStopOnLatch>\n"+	
 				"\t<homingTPS>"+getHomingTicksPerSecond()+"</homingTPS>\n"+
-				"\t<electroMechanicalSize>"+getElectroMechanicalSize()+"</electroMechanicalSize>\n"+
-				"\t<electroMechanicalType>"+getElectroMechanicalType()+"</electroMechanicalType>\n"+
-				"\t<shaftSize>"+getShaftSize()+"</shaftSize>\n"+
-				"\t<shaftType>"+getShaftType()+"</shaftType>\n"+
+				"\t<vitamins>\n"+allVitamins+"\n</vitamins>\n"+
 				"\t<passive>"+isPassive()+"</passive>\n"+
 				"\t<mass>"+getMassKg()+"</mass>\n"+
 				"\t<centerOfMassFromCentroid>"+getCenterOfMassFromCentroid().getXml()+"</centerOfMassFromCentroid>\n"+
 				"\t<imuFromCentroid>"+getimuFromCentroid().getXml()+"</imuFromCentroid>\n"
 				+slaves;
 	}
-	
+	/**
+	 * Add a vitamin to this link
+	 * @param 	name the name of this vitamin, 
+				if the name already exists, the data will be overwritten. 
+	 * @param type the vitamin type, this maps the the json filename
+	 * @param id the part ID, theis maps to the key in the json for the vitamin
+	 */
+	public void setVitamin(String name, String type, String id){
+		if(getVitamins().get(name)==null){
+			getVitamins().put(name, new String[2]);
+		}
+		getVitamins().get(name)[0]=type;
+		getVitamins().get(name)[1]=id;
+	}
 
 	/**
 	 * Sets the name.
@@ -750,37 +806,53 @@ public class LinkConfiguration {
 	public void setimuFromCentroid(TransformNR centerOfMassFromCentroid) {
 		this.imuFromCentroid = centerOfMassFromCentroid;
 	}
-
+//	private String electroMechanicalType = "hobbyServo";
+//	private String electroMechanicalSize = "standardMicro";
+//	private String shaftType = "hobbyServoHorn";
+//	private String shaftSize = "standardMicro1";
+	
+	private String[] getCoreShaftPart(){
+		if(vitamins.get("shaft")==null){
+			vitamins.put("shaft", new String[]{"hobbyServoHorn","standardMicro1"});
+		}
+		return vitamins.get("shaft");
+	}
+	private String[] getCoreEmPart(){
+		if(vitamins.get("electroMechanical")==null){
+			vitamins.put("electroMechanical", new String[]{"hobbyServo","standardMicro"});
+		}
+		return vitamins.get("electroMechanical");
+	}
 	public String getElectroMechanicalType() {
-		return electroMechanicalType;
+		return getCoreEmPart()[0] ;
 	}
 
 	public void setElectroMechanicalType(String electroMechanicalType) {
-		this.electroMechanicalType = electroMechanicalType;
+		getCoreEmPart()[0] = electroMechanicalType;
 	}
 
 	public String getElectroMechanicalSize() {
-		return electroMechanicalSize;
+		return getCoreEmPart()[1] ;
 	}
 
 	public void setElectroMechanicalSize(String electroMechanicalSize) {
-		this.electroMechanicalSize = electroMechanicalSize;
+		getCoreEmPart()[1] = electroMechanicalSize;
 	}
 
 	public String getShaftType() {
-		return shaftType;
+		return getCoreShaftPart()[0];
 	}
 
 	public void setShaftType(String shaftType) {
-		this.shaftType = shaftType;
+		getCoreShaftPart()[0] = shaftType;
 	}
 
 	public String getShaftSize() {
-		return shaftSize;
+		return getCoreShaftPart()[1];
 	}
 
 	public void setShaftSize(String shaftSize) {
-		this.shaftSize = shaftSize;
+		getCoreShaftPart()[1] = shaftSize;
 	}
 
 	public boolean isPassive() {
@@ -789,6 +861,14 @@ public class LinkConfiguration {
 
 	public void setPassive(boolean passive) {
 		this.passive = passive;
+	}
+
+	public HashMap<String , String[]> getVitamins() {
+		return vitamins;
+	}
+
+	public void setVitamins(HashMap<String , String[]> vitamins) {
+		this.vitamins = vitamins;
 	}
 	
 }

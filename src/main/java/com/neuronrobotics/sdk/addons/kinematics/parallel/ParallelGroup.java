@@ -73,11 +73,11 @@ public class ParallelGroup extends AbstractKinematicsNR {
 		HashMap<DHParameterKinematics, TransformNR> tips = new HashMap<DHParameterKinematics, TransformNR>();
 
 		for (DHParameterKinematics l : getConstituantLimbs()) {
-			TransformNR fwd = l.forwardKinematics(l.getCurrentJointSpaceVector());
+			TransformNR fwd = l.getCurrentTaskSpaceTransform();
 			if (fwd == null)
 				throw new RuntimeException("Implementations of the kinematics need to return a transform not null");
 			// Log.info("Getting robot task space "+fwd);
-			tips.put(l, l.forwardOffset(fwd));
+			tips.put(l, fwd);
 
 			// tips.get(l).times(tipOffset.get(l)));//apply tip offset
 			// TODO check to see if the TIps are alligned as you add them and

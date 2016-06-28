@@ -386,7 +386,7 @@ public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector )
 				
 				@Override
 				public double[] inverseKinematics(TransformNR target,
-						double[] jointSpaceVector, DHChain chain ) {
+						double[] jointSpaceVector,DHChain chain ) {
 					ArrayList<DHLink> links = chain.getLinks();
 					// THis is the jacobian for the given configuration
 					//Matrix jacobian =  chain.getJacobian(jointSpaceVector);
@@ -431,6 +431,23 @@ public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector )
 					double l2 = links.get(2).getR();
 
 					double vect = Math.sqrt(xSet*xSet+ySet*ySet+zSet*zSet);
+					/*
+					println ( "TO: "+target);
+					println ( "Trangular TO: "+overGripper);
+					println ( "lengthXYPlaneVect: "+lengthXYPlaneVect);
+					println( "angleXYPlaneVect: "+Math.toDegrees(angleXYPlaneVect));
+					println( "angleRectangleAdjustedXY: "+Math.toDegrees(angleRectangleAdjustedXY));
+					println( "lengthRectangleAdjustedXY: "+lengthRectangleAdjustedXY);
+					println( "r: "+r);
+					println( "d: "+d);
+					
+					println( "x Correction: "+xSet);
+					println( "y Correction: "+ySet);
+					
+					println( "Orentation: "+Math.toDegrees(orentation));
+					println( "z: "+zSet);
+				*/
+					
 
 					if (vect > l1+l2 ||  vect<0 ||lengthRectangleAdjustedXY<0 ) {
 						throw new RuntimeException("Hypotenus too long: "+vect+" longer then "+l1+l2);
@@ -444,6 +461,13 @@ public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector )
 					double C =Math.PI-A-B;//Rule of triangles
 					double elevation = Math.asin(zSet/vect);
 
+			/*
+					println( "vect: "+vect);
+					println( "A: "+Math.toDegrees(A));
+					println( "elevation: "+Math.toDegrees(elevation));
+					println( "l1 from x/y plane: "+Math.toDegrees(A+elevation));
+					println( "l2 from l1: "+Math.toDegrees(C));
+					*/
 					inv[0] = Math.toDegrees(orentation);
 					inv[1] = -Math.toDegrees((A+elevation+links.get(1).getTheta()));
 					if((int)links.get(1).getAlpha() ==180){
@@ -475,6 +499,7 @@ public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector )
 					return inv;
 				}
 			};
+
 		}
 		return is;
 	}

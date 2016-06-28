@@ -13,10 +13,12 @@
 		<git>https://gist.github.com/33f2c10ab3adc5bd91f0a58ea7f24d14.git</git>
 		<file>parallelTool.groovy</file>
 	</parallelCadEngine>
+
 <name>ParallelArm</name>
 <appendage>
 
 <name>ParalellArm1</name>
+
 <parallelGroup>ParallelArmGroup</parallelGroup>
 	<parallelGroupTipOffset>
 	<x>10.0</x>
@@ -37,7 +39,6 @@
 	</kinematics>
 <link>
 	<name>basePan</name>
-	
 	<deviceName>dyio</deviceName>
 	<type>servo-rotory</type>
 	<index>11</index>
@@ -51,10 +52,19 @@
 	<indexLatch>235</indexLatch>
 	<isStopOnLatch>false</isStopOnLatch>
 	<homingTPS>10000000</homingTPS>
-	<electroMechanicalSize>towerProMG91</electroMechanicalSize>
-	<electroMechanicalType>hobbyServo</electroMechanicalType>
-	<shaftSize>standardMicro1</shaftSize>
-	<shaftType>hobbyServoHorn</shaftType>
+	<vitamins>
+	<vitamin>
+	<name>electroMechanical</name>
+	<type>hobbyServo</type>
+	<id>towerProMG91</id>
+	</vitamin>
+	<vitamin>
+	<name>shaft</name>
+	<type>hobbyServoHorn</type>
+	<id>standardMicro1</id>
+	</vitamin>
+
+</vitamins>
 	<passive>false</passive>
 	<mass>0.01</mass>
 	<centerOfMassFromCentroid>	<x>0.0</x>
@@ -95,10 +105,19 @@
 	<indexLatch>128</indexLatch>
 	<isStopOnLatch>false</isStopOnLatch>
 	<homingTPS>10000000</homingTPS>
-	<electroMechanicalSize>towerProMG91</electroMechanicalSize>
-	<electroMechanicalType>hobbyServo</electroMechanicalType>
-	<shaftSize>standardMicro1</shaftSize>
-	<shaftType>hobbyServoHorn</shaftType>
+	<vitamins>
+	<vitamin>
+	<name>electroMechanical</name>
+	<type>hobbyServo</type>
+	<id>towerProMG91</id>
+	</vitamin>
+	<vitamin>
+	<name>shaft</name>
+	<type>hobbyServoHorn</type>
+	<id>standardMicro1</id>
+	</vitamin>
+
+</vitamins>
 	<passive>false</passive>
 	<mass>0.01</mass>
 	<centerOfMassFromCentroid>	<x>0.0</x>
@@ -139,10 +158,19 @@
 	<indexLatch>121</indexLatch>
 	<isStopOnLatch>false</isStopOnLatch>
 	<homingTPS>10000000</homingTPS>
-	<electroMechanicalSize>towerProMG91</electroMechanicalSize>
-	<electroMechanicalType>hobbyServo</electroMechanicalType>
-	<shaftSize>standardMicro1</shaftSize>
-	<shaftType>hobbyServoHorn</shaftType>
+	<vitamins>
+	<vitamin>
+	<name>electroMechanical</name>
+	<type>hobbyServo</type>
+	<id>towerProMG91</id>
+	</vitamin>
+	<vitamin>
+	<name>shaft</name>
+	<type>hobbyServoHorn</type>
+	<id>standardMicro1</id>
+	</vitamin>
+
+</vitamins>
 	<passive>false</passive>
 	<mass>0.01</mass>
 	<centerOfMassFromCentroid>	<x>0.0</x>
@@ -193,6 +221,7 @@
 <appendage>
 
 <name>ParallelArm2</name>
+
 <parallelGroup>ParallelArmGroup</parallelGroup>
 	<parallelGroupTipOffset>
 	<x>10.0</x>
@@ -226,10 +255,19 @@
 	<indexLatch>235</indexLatch>
 	<isStopOnLatch>false</isStopOnLatch>
 	<homingTPS>10000000</homingTPS>
-	<electroMechanicalSize>towerProMG91</electroMechanicalSize>
-	<electroMechanicalType>hobbyServo</electroMechanicalType>
-	<shaftSize>standardMicro1</shaftSize>
-	<shaftType>hobbyServoHorn</shaftType>
+	<vitamins>
+	<vitamin>
+	<name>electroMechanical</name>
+	<type>hobbyServo</type>
+	<id>towerProMG91</id>
+	</vitamin>
+	<vitamin>
+	<name>shaft</name>
+	<type>hobbyServoHorn</type>
+	<id>standardMicro1</id>
+	</vitamin>
+
+</vitamins>
 	<passive>false</passive>
 	<mass>0.01</mass>
 	<centerOfMassFromCentroid>	<x>0.0</x>
@@ -270,10 +308,19 @@
 	<indexLatch>128</indexLatch>
 	<isStopOnLatch>false</isStopOnLatch>
 	<homingTPS>10000000</homingTPS>
-	<electroMechanicalSize>towerProMG91</electroMechanicalSize>
-	<electroMechanicalType>hobbyServo</electroMechanicalType>
-	<shaftSize>standardMicro1</shaftSize>
-	<shaftType>hobbyServoHorn</shaftType>
+	<vitamins>
+	<vitamin>
+	<name>electroMechanical</name>
+	<type>hobbyServo</type>
+	<id>towerProMG91</id>
+	</vitamin>
+	<vitamin>
+	<name>shaft</name>
+	<type>hobbyServoHorn</type>
+	<id>standardMicro1</id>
+	</vitamin>
+
+</vitamins>
 	<passive>false</passive>
 	<mass>0.01</mass>
 	<centerOfMassFromCentroid>	<x>0.0</x>
@@ -314,10 +361,19 @@
 	<indexLatch>121</indexLatch>
 	<isStopOnLatch>false</isStopOnLatch>
 	<homingTPS>10000000</homingTPS>
-	<electroMechanicalSize>towerProMG91</electroMechanicalSize>
-	<electroMechanicalType>hobbyServo</electroMechanicalType>
-	<shaftSize>standardMicro1</shaftSize>
-	<shaftType>hobbyServoHorn</shaftType>
+	<vitamins>
+	<vitamin>
+	<name>electroMechanical</name>
+	<type>hobbyServo</type>
+	<id>towerProMG91</id>
+	</vitamin>
+	<vitamin>
+	<name>shaft</name>
+	<type>hobbyServoHorn</type>
+	<id>standardMicro1</id>
+	</vitamin>
+
+</vitamins>
 	<passive>false</passive>
 	<mass>0.01</mass>
 	<centerOfMassFromCentroid>	<x>0.0</x>
