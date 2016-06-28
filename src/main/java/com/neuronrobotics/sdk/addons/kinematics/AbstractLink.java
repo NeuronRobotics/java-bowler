@@ -337,48 +337,48 @@ public abstract class AbstractLink implements  IFlushable{
 			AbstractLink link = getSlaveFactory().getLink(c);
 			link.setTargetValue(targetValue);
 		}
-		if(isUseLimits()){
-			double ub = getMaxEngineeringUnits();
-			double lb = getMinEngineeringUnits();
-			String execpt = "Attempted="+toEngineeringUnits(targetValue)+" (engineering units) Device Units="+targetValue
-					+" \nUpper Bound="+ub+" (engineering units) Device Units="+getUpperLimit()
-					+ "\nLower Bound="+lb+" (engineering units) Device Units="+getLowerLimit();
-			if(val>getUpperLimit()){
-				this.targetValue = getUpperLimit();
-				for(LinkConfiguration c:slaveLinks){
-					//generate the links
-					AbstractLink link = getSlaveFactory().getLink(c);
-					link.setTargetValue(targetValue);
-				}
-				cacheTargetValue();
-				fireLinkLimitEvent(
-						new PIDLimitEvent(
-								conf.getHardwareIndex(),
-								toLinkUnits(targetValue) ,
-								PIDLimitEventType.UPPERLIMIT,
-								System.currentTimeMillis()
-								)
-						);
-				throw new RuntimeException("Joint hit Upper software bound\n"+execpt);
+	
+		double ub = getMaxEngineeringUnits();
+		double lb = getMinEngineeringUnits();
+		String execpt = "Attempted="+toEngineeringUnits(targetValue)+" (engineering units) Device Units="+targetValue
+				+" \nUpper Bound="+ub+" (engineering units) Device Units="+getUpperLimit()
+				+ "\nLower Bound="+lb+" (engineering units) Device Units="+getLowerLimit();
+		if(val>getUpperLimit()){
+			this.targetValue = getUpperLimit();
+			for(LinkConfiguration c:slaveLinks){
+				//generate the links
+				AbstractLink link = getSlaveFactory().getLink(c);
+				link.setTargetValue(targetValue);
 			}
-			if(val<getLowerLimit()) {
-				this.targetValue =getLowerLimit();
-				for(LinkConfiguration c:slaveLinks){
-					//generate the links
-					AbstractLink link = getSlaveFactory().getLink(c);
-					link.setTargetValue(targetValue);
-				}
-				cacheTargetValue();
-				fireLinkLimitEvent(
-						new PIDLimitEvent(
-								conf.getHardwareIndex(),
-								toLinkUnits(targetValue) ,
-								PIDLimitEventType.LOWERLIMIT,
-								System.currentTimeMillis()
-								)
-						);
-				throw new RuntimeException("Joint hit Lower software bound\n"+execpt);
+			cacheTargetValue();
+			fireLinkLimitEvent(
+					new PIDLimitEvent(
+							conf.getHardwareIndex(),
+							toLinkUnits(targetValue) ,
+							PIDLimitEventType.UPPERLIMIT,
+							System.currentTimeMillis()
+							)
+					);
+			if(isUseLimits())throw new RuntimeException("Joint hit Upper software bound\n"+execpt);
+		}
+		if(val<getLowerLimit()) {
+			this.targetValue =getLowerLimit();
+			for(LinkConfiguration c:slaveLinks){
+				//generate the links
+				AbstractLink link = getSlaveFactory().getLink(c);
+				link.setTargetValue(targetValue);
 			}
+			cacheTargetValue();
+			fireLinkLimitEvent(
+					new PIDLimitEvent(
+							conf.getHardwareIndex(),
+							toLinkUnits(targetValue) ,
+							PIDLimitEventType.LOWERLIMIT,
+							System.currentTimeMillis()
+							)
+					);
+			if(isUseLimits())throw new RuntimeException("Joint hit Lower software bound\n"+execpt);
+			
 		}else{
 			Log.info("Abstract Link: limits disabled");
 		}
