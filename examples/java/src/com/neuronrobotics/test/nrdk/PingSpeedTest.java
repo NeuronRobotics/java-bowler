@@ -3,8 +3,10 @@ package com.neuronrobotics.test.nrdk;
 import java.net.InetAddress;
 
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
+import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.genericdevice.GenericDevice;
 import com.neuronrobotics.sdk.network.UDPBowlerConnection;
+import com.neuronrobotics.sdk.serial.SerialConnection;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 
 // TODO: Auto-generated Javadoc
@@ -20,9 +22,9 @@ public class PingSpeedTest {
 	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
-//		BowlerAbstractConnection c =  new SerialConnection("/dev/DyIO0");
+		BowlerAbstractConnection c =  new SerialConnection("/dev/ttyACM0",9600);
 //		BowlerAbstractConnection c =  new SerialConnection("COM65");
-		BowlerAbstractConnection c = ConnectionDialog.promptConnection();
+		//BowlerAbstractConnection c = ConnectionDialog.promptConnection();
 //		BowlerAbstractConnection c=null;
 //		try {
 //			//c = new BowlerTCPClient("192.168.1.10", 1866);
@@ -35,7 +37,7 @@ public class PingSpeedTest {
 		if(c==null)
 			System.exit(1);
 		System.out.println("Starting test");
-		//Log.enableInfoPrint();
+		Log.enableInfoPrint();
 		GenericDevice dev = new GenericDevice(c);
 		dev.connect();
 		long start;

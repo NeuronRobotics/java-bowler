@@ -4,6 +4,7 @@ import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.peripherals.DigitalInputChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.DigitalOutputChannel;
+import com.neuronrobotics.sdk.serial.SerialConnection;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 
 // TODO: Auto-generated Javadoc
@@ -21,13 +22,13 @@ public class DIgitalOutputTest {
 		Log.enableInfoPrint();
 		DyIO.disableFWCheck();
 		
-		DyIO dyio=new DyIO();
-		if (!ConnectionDialog.getBowlerDevice(dyio)){
-			System.exit(1);
-		}
-		
-		DigitalInputChannel dic = new DigitalInputChannel(dyio.getChannel(1));
-		DigitalOutputChannel doc = new DigitalOutputChannel(dyio.getChannel(1));
+		DyIO dyio=new DyIO(new SerialConnection("/dev/ttyACM0", 115200));
+		dyio.connect();
+//		if (!ConnectionDialog.getBowlerDevice(dyio)){
+//			System.exit(1);
+//		}
+//		
+		DigitalOutputChannel doc = new DigitalOutputChannel(dyio.getChannel(13));
 		// Blink the LED 5 times
 		for(int i = 0; i < 10; i++) {
 			System.out.println("Blinking.");

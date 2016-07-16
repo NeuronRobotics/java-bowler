@@ -48,6 +48,7 @@ import com.neuronrobotics.sdk.pid.PDVelocityConfiguration;
 import com.neuronrobotics.sdk.pid.PIDChannel;
 import com.neuronrobotics.sdk.pid.PIDCommandException;
 import com.neuronrobotics.sdk.pid.PIDConfiguration;
+import com.neuronrobotics.sdk.pid.VirtualGenericPIDDevice;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 // TODO: Auto-generated Javadoc
@@ -1063,9 +1064,15 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 			getConnection().setSynchronusPacketTimeoutTime(3000);
 		}
 		if(super.connect()) {
-			getPid().setConnection(getConnection());
-			getPid().setAddress(getAddress());
-			getPid().connect();
+			if(getConnection().hasNamespace("bcs.pid.*;1.0;;", getAddress())){
+				getPid().setConnection(getConnection());
+				getPid().setAddress(getAddress());
+				getPid().connect();
+			}else{
+				pid=new VirtualGenericPIDDevice();
+			}
+			
+			
 			send( new PowerCommand());
 			startHeartBeat(3000);
 			resync();

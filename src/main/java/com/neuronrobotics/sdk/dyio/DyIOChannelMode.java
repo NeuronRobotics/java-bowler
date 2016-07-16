@@ -95,7 +95,12 @@ public enum DyIOChannelMode implements ISendable {
 	DC_MOTOR_DIR  (0x15, "DC Motor Direction"),
 	
 	/** The ppm in. */
-	PPM_IN  	  (0x16, "PPM Reader");
+	PPM_IN  	  (0x16, "PPM Reader"),
+	/** DEBUG_TX*/
+	DEBUG_TX  (0x17, "DEBUG_TX"),
+	
+	/** DEBUG_RX */
+	DEBUG_RX  	  (0x18, "DEBUG_RX");
 	
 	/** The Constant lookup. */
 	private static final Map<Byte,DyIOChannelMode> lookup = new HashMap<Byte,DyIOChannelMode>();
@@ -148,6 +153,8 @@ public enum DyIOChannelMode implements ISendable {
      * @return the dy io channel mode
      */
     public static DyIOChannelMode get(byte code) { 
+    	if(lookup.get(code)==null)
+    		lookup.put(code, NO_CHANGE);
     	return lookup.get(code);
     }
     
