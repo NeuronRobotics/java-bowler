@@ -457,7 +457,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 					
 					Log.info("\nAxis #"+i+" "+tmpConf);
 					getAxisPidConfiguration().add(tmpConf);
-					setLinkCurrentConfiguration(i,tmpConf);
+					//setLinkCurrentConfiguration(i,tmpConf);
 					//Send configuration for ONE axis
 					device.ConfigurePIDController(tmpConf);		
 				}catch(Exception ex){				
