@@ -12,6 +12,7 @@ public class CameraLink extends AbstractLink {
 		super(conf);
 		// TODO Auto-generated constructor stub
 		this.setImageProvider(img);
+		
 	}
 	
 	
@@ -19,6 +20,7 @@ public class CameraLink extends AbstractLink {
 	public void setGlobalPositionListener(Affine affine) {
 		super.setGlobalPositionListener(affine);
 		img.setGlobalPositionListener(affine);
+		
 	}
 
 	@Override
@@ -55,6 +57,7 @@ public class CameraLink extends AbstractLink {
 
 	public void setImageProvider(AbstractImageProvider img) {
 		this.img = img;
+		img.setGlobalPositionListener(getGlobalPositionListener());
 	}
 
 }
