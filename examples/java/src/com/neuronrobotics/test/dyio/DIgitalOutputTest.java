@@ -6,6 +6,7 @@ import com.neuronrobotics.sdk.dyio.peripherals.DigitalInputChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.DigitalOutputChannel;
 import com.neuronrobotics.sdk.serial.SerialConnection;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
+import com.neuronrobotics.sdk.util.ThreadUtil;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -19,9 +20,10 @@ public class DIgitalOutputTest {
 	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
-		Log.enableInfoPrint();
+		Log.enableWarningPrint();
 		DyIO.disableFWCheck();
-		
+		SerialConnection.getAvailableSerialPorts();
+		ThreadUtil.wait(5000);
 		DyIO dyio=new DyIO(new SerialConnection("/dev/ttyACM0", 115200));
 		dyio.connect();
 //		if (!ConnectionDialog.getBowlerDevice(dyio)){
