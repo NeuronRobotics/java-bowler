@@ -31,7 +31,7 @@ public class ExternalLinkProviderTest {
 
 	@Test
 	public void test() throws Exception {
-		main(null);
+		//main(null);
 	}
 	static VirtualGenericPIDDevice virtual=new VirtualGenericPIDDevice();
 
