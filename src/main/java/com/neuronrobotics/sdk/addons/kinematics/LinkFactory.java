@@ -253,7 +253,7 @@ public class LinkFactory {
 				virtual=new VirtualGenericPIDDevice();
 				DeviceManager.addConnection(virtual, myVirtualDevName);
 			}
-			if(!c.getType().isPrismatic()){
+			if(!c.isPrismatic()){
 				tmp=new PidRotoryLink(	virtual.getPIDChannel(c.getHardwareIndex()),
 						c);
 			}else{

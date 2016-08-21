@@ -114,59 +114,7 @@ public enum LinkType {
 	   throw new NoSuchElementException(name + "not found");
 	 }
 	 
-	 /**
- 	 * Checks if is virtual.
- 	 *
- 	 * @return true, if is virtual
- 	 */
- 	public boolean isVirtual(){
-		 switch(this){
 
-		case DUMMY:
-		case VIRTUAL:
-			return true;
-		default:
-			return false;
-		 }
-	 }
-	 
-	 /**
- 	 * Checks if is tool.
- 	 *
- 	 * @return true, if is tool
- 	 */
- 	public boolean isTool(){
-		 switch(this){
-		case SERVO_TOOL:
-		case STEPPER_TOOL:
-		case PID_TOOL:
-		case GCODE_STEPPER_TOOL:
-		case GCODE_HEATER_TOOL:
-			return true;
-		default:
-			return false;
-		 
-		 } 
-	 }
-	 
-	 /**
- 	 * Checks if is prismatic.
- 	 *
- 	 * @return true, if is prismatic
- 	 */
- 	public boolean isPrismatic(){
-		 switch(this){
-		case ANALOG_PRISMATIC:
-		case PID_PRISMATIC:
-		case SERVO_PRISMATIC:
-		case STEPPER_PRISMATIC:
-		case GCODE_STEPPER_PRISMATIC:
-			return true;
-		default:
-			return false;
-
-		 } 
-	 }
 	 
 	 
 	 /* (non-Javadoc)

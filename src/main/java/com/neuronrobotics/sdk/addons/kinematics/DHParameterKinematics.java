@@ -259,9 +259,9 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 			dhLinks.get(i).setRootListener(getRootListener());
 			//This mapps together the position of the links in the kinematics and the link actions themselves (used for cameras and tools)
 			lf.getLink(configs.get(i)).setGlobalPositionListener(linksListeners.get(i));
-			if(getLinkConfiguration(i).getType().isTool()){
+			if(getLinkConfiguration(i).isTool()){
 				dhLinks.get(i).setLinkType(DhLinkType.TOOL);
-			}else if(getLinkConfiguration(i).getType().isPrismatic())
+			}else if(getLinkConfiguration(i).isPrismatic())
 				dhLinks.get(i).setLinkType(DhLinkType.PRISMATIC);
 			else
 				dhLinks.get(i).setLinkType(DhLinkType.ROTORY);

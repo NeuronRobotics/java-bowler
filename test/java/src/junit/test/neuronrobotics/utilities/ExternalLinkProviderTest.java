@@ -31,11 +31,11 @@ public class ExternalLinkProviderTest {
 
 	@Test
 	public void test() throws Exception {
-		//main(null);
+		main(null);
 	}
-	
+	static VirtualGenericPIDDevice virtual=new VirtualGenericPIDDevice();
+
 	private static class myLinkImplementation extends PidRotoryLink{
-		static VirtualGenericPIDDevice virtual=new VirtualGenericPIDDevice();
 		public myLinkImplementation( LinkConfiguration conf) {
 			super(virtual.getPIDChannel(conf.getHardwareIndex()), conf);
 			System.out.println("Loading MY link");

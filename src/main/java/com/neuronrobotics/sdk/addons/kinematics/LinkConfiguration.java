@@ -880,4 +880,70 @@ public class LinkConfiguration {
 		this.typeString = typeString;
 	}
 	
+	 /**
+	 * Checks if is virtual.
+	 *
+	 * @return true, if is virtual
+	 */
+	public boolean isVirtual(){
+		 switch(type){
+
+		case DUMMY:
+		case VIRTUAL:
+			return true;
+		case USERDEFINED:
+			if(typeString.toLowerCase().contains("virtual")){
+				return true;
+			}
+		default:
+			return false;
+		 }
+	 }
+	 
+	 /**
+	 * Checks if is tool.
+	 *
+	 * @return true, if is tool
+	 */
+	public boolean isTool(){
+		 switch(type){
+		case SERVO_TOOL:
+		case STEPPER_TOOL:
+		case PID_TOOL:
+		case GCODE_STEPPER_TOOL:
+		case GCODE_HEATER_TOOL:
+			return true;
+		case USERDEFINED:
+			if(typeString.toLowerCase().contains("tool")){
+				return true;
+			}	
+		default:
+			return false;
+		 
+		 } 
+	 }
+	 
+	 /**
+	 * Checks if is prismatic.
+	 *
+	 * @return true, if is prismatic
+	 */
+	public boolean isPrismatic(){
+		 switch(type){
+		case ANALOG_PRISMATIC:
+		case PID_PRISMATIC:
+		case SERVO_PRISMATIC:
+		case STEPPER_PRISMATIC:
+		case GCODE_STEPPER_PRISMATIC:
+			return true;
+		case USERDEFINED:
+			if(typeString.toLowerCase().contains("prismatic")){
+				return true;
+			}
+		default:
+			return false;
+
+		 } 
+	 }
+	
 }
