@@ -13,16 +13,6 @@
 <appendage>
 
 <name>NewLinkArm</name>
-
-	<parallelGroupTipOffset>
-	<x>10.0</x>
-	<y>0.0</y>
-	<z>0.0</z>
-	<rotw>1.0</rotw>
-	<rotx>0.0</rotx>
-	<roty>0.0</roty>
-	<rotz>0.0</rotz>
-</parallelGroupTipOffset>
 	<cadEngine>
 		<git>https://gist.github.com/4ef911736d351f44aa1fa178d50c897c.git</git>
 		<file>LinkedCadEngine.groovy</file>

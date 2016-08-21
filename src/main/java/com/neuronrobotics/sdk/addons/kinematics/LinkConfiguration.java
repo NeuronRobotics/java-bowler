@@ -298,7 +298,7 @@ public class LinkConfiguration {
 		String s="LinkConfiguration: \n\tName: "+getName();
 		if(deviceScriptingName!=null)
 			s="Device Name: \n\tName: "+getDeviceScriptingName();
-		s+=	"\n\tType: "+getType();
+		s+=	"\n\tType: "+getType()+" "+getTypeString();
 		s+=	"\n\tHardware Board Index: "+getHardwareIndex();
 		s+=	"\n\tScale: "+getScale();
 		s+=	"\n\tUpper Limit: "+getUpperLimit();
@@ -334,7 +334,7 @@ public class LinkConfiguration {
 		
 		return "\t<name>"+getName()+"</name>\n"+
 				"\t"+DevStr+
-				"\t<type>"+getType()+"</type>\n"+
+				"\t<type>"+getTypeString()+"</type>\n"+
 				"\t<index>"+getHardwareIndex()+"</index>\n"+
 				"\t<scale>"+getScale()+"</scale>\n"+
 				"\t<upperLimit>"+getUpperLimit()+"</upperLimit>\n"+

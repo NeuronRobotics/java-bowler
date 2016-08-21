@@ -300,7 +300,7 @@ public class MobileBase extends AbstractKinematicsNR {
 			if (linkNode.getNodeType() == Node.ELEMENT_NODE && linkNode.getNodeName().contentEquals(tag)) {
 				Element e = (Element) linkNode;
 				final String name = getname(e);
-				System.out.println("Loading arm "+name);
+				//System.out.println("Loading arm "+name);
 				DHParameterKinematics kin = (DHParameterKinematics) DeviceManager
 						.getSpecificDevice(DHParameterKinematics.class, name);
 				if (kin == null) {
@@ -311,7 +311,7 @@ public class MobileBase extends AbstractKinematicsNR {
 				kin.setScriptingName(name);
 				list.add(kin);
 				String parallel = getParallelGroup(e);
-				System.out.println("paralell "+parallel);
+				//System.out.println("paralell "+parallel);
 				if (parallel != null) {
 					TransformNR paraOffset = loadTransform("parallelGroupTipOffset", e);
 					if (paraOffset == null) {

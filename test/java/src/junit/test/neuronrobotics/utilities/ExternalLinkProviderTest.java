@@ -13,63 +13,75 @@ import javax.swing.text.html.HTMLDocument.HTMLReader.IsindexAction;
 
 import org.junit.Test;
 
+import com.neuronrobotics.sdk.addons.kinematics.AbstractLink;
 import com.neuronrobotics.sdk.addons.kinematics.DHParameterKinematics;
+import com.neuronrobotics.sdk.addons.kinematics.INewLinkProvider;
+import com.neuronrobotics.sdk.addons.kinematics.LinkConfiguration;
+import com.neuronrobotics.sdk.addons.kinematics.LinkFactory;
 import com.neuronrobotics.sdk.addons.kinematics.MobileBase;
+import com.neuronrobotics.sdk.addons.kinematics.PidRotoryLink;
 import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.parallel.ParallelGroup;
 import com.neuronrobotics.sdk.common.Log;
+import com.neuronrobotics.sdk.pid.PIDChannel;
+import com.neuronrobotics.sdk.pid.VirtualGenericPIDDevice;
 
 public class ExternalLinkProviderTest {
 
 	@Test
 	public void test() throws Exception {
-		//main(null);
+		main(null);
+	}
+	
+	private static class myLinkImplementation extends PidRotoryLink{
+		static VirtualGenericPIDDevice virtual=new VirtualGenericPIDDevice();
+		public myLinkImplementation( LinkConfiguration conf) {
+			super(virtual.getPIDChannel(conf.getHardwareIndex()), conf);
+			System.out.println("Loading MY link");
+		}
 	}
 
 	public static void main(String[] args) throws Exception {
 		
-		File f = new File("paralleloutput.xml");
+		File f = new File("unknownLink.xml");
 		if (f.exists()) {
+			
+			String typeTag = "myUserType";
+			
+			INewLinkProvider provider = new INewLinkProvider() {
+				
+				@Override
+				public AbstractLink generate(LinkConfiguration conf) {
+					System.out.println("Loading my type link factory call");
+					return new myLinkImplementation(conf);
+				}
+			};
+			
+			LinkFactory.addLinkProvider(typeTag, provider );
+			
+			
 			MobileBase pArm = new MobileBase(new FileInputStream(f));
+			//System.out.println(pArm.getXml());
+			
 			try{
 				String xmlParsed = pArm.getXml();
 				BufferedWriter writer = null;
 	
-				writer = new BufferedWriter(new FileWriter("paralleloutput2.xml"));
+				writer = new BufferedWriter(new FileWriter("unknownLink2.xml"));
 				writer.write(xmlParsed);
 	
 				if (writer != null)
 					writer.close();
 	
-				ParallelGroup group = pArm.getParallelGroup("ParallelArmGroup");
 				
-				Log.enableInfoPrint();
-				//TransformNR Tip = group.getCurrentTaskSpaceTransform();
-				TransformNR Tip = new TransformNR(87,12,25,new RotationNR());
-				
-				for(DHParameterKinematics kin:pArm.getAppendages()){
-					kin.setDesiredJointSpaceVector(new double[]{0,0,0}, 0);
-					kin.setDesiredTaskSpaceTransform(Tip, 0);
-					
-					System.out.println("Arm "+kin.getScriptingName()+"setting to : "+Tip);
-				}
-				assertEquals(Tip.getX(), group.getCurrentTaskSpaceTransform().getX(), 1);
-				group.setDesiredTaskSpaceTransform(Tip.copy(), 0);
-				for (DHParameterKinematics limb : group.getConstituantLimbs()) {
-					TransformNR TipOffset = group.getTipOffset().get(limb);
-					TransformNR newTip = limb.getCurrentTaskSpaceTransform().times(TipOffset);
-	
-					System.out.println("Expected tip to be " + Tip.getX() + " and got: " + newTip.getX());
-					assertTrue(!Double.isNaN(Tip.getX()));
-					assertEquals(Tip.getX(), newTip.getX(), 1);
-				}
 			}catch(Exception ex){
 				ex.printStackTrace();
 			}
 			pArm.disconnect();
 			System.exit(0);
-		}
+		}else
+			System.err.println("No config file");
 		
 	}
 
