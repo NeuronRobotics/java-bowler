@@ -61,7 +61,7 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter, IFlu
 			return (AbstractLink)links.get(axis);
 		String gcodeAxis = "";
 		AbstractLink tmp=null;
-		switch(axis.getType()){
+		switch(axis.getTypeEnum()){
 		case GCODE_STEPPER_PRISMATIC:
 		case GCODE_STEPPER_ROTORY:
 		case GCODE_STEPPER_TOOL:
@@ -85,7 +85,7 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter, IFlu
 			default:
 				break;
 		}
-		switch(axis.getType()){
+		switch(axis.getTypeEnum()){
 		case GCODE_STEPPER_PRISMATIC:
 			tmp = new GcodePrismatic(axis,this,gcodeAxis);
 			

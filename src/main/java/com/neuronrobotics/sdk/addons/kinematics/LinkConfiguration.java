@@ -129,7 +129,7 @@ public class LinkConfiguration {
     	}catch (NullPointerException e){
     		setType(LinkType.PID);
     	}
-    	if(getType()==LinkType.PID){
+    	if(getTypeEnum()==LinkType.PID){
     		try{
 		    	k[0]=Double.parseDouble(XmlFactory.getTagValue("pGain",eElement));
 		    	k[1]=Double.parseDouble(XmlFactory.getTagValue("iGain",eElement));
@@ -298,7 +298,7 @@ public class LinkConfiguration {
 		String s="LinkConfiguration: \n\tName: "+getName();
 		if(deviceScriptingName!=null)
 			s="Device Name: \n\tName: "+getDeviceScriptingName();
-		s+=	"\n\tType: "+getType()+" "+getTypeString();
+		s+=	"\n\tType: "+getTypeEnum()+" "+getTypeString();
 		s+=	"\n\tHardware Board Index: "+getHardwareIndex();
 		s+=	"\n\tScale: "+getScale();
 		s+=	"\n\tUpper Limit: "+getUpperLimit();
@@ -620,7 +620,7 @@ public class LinkConfiguration {
 	 *
 	 * @return the type
 	 */
-	public LinkType getType() {
+	public LinkType getTypeEnum() {
 		return type;
 	}
 	
@@ -720,7 +720,7 @@ public class LinkConfiguration {
 	 */
 	public void setPidConfiguration(IPidControlNamespace pid) {
 		PIDConfiguration conf = pid.getPIDConfiguration(getHardwareIndex());
-    	if(getType()==LinkType.PID){
+    	if(getTypeEnum()==LinkType.PID){
 	    	k[0]=conf.getKP();
 	    	k[1]=conf.getKI();
 	    	k[2]=conf.getKD();
