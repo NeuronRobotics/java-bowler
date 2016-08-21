@@ -59,7 +59,9 @@ public enum LinkType {
 	GCODE_HEATER_TOOL("gcode-heater-tool"), 
 	
 	/** Camera */
-	CAMERA("camera");
+	CAMERA("camera"),
+	/** Camera */
+	USERDEFINED(null);
 	
 	 /** The name. */
  	private final String name;
@@ -72,6 +74,13 @@ public enum LinkType {
 	   for (LinkType type : LinkType.values()) {
 	     map.put(type.name, type);
 	   }
+	 }
+	 /**
+	  * Only classes in this package should add types, and only from LinkFactory
+	  * @param type a new type name to regester as user defined
+	  */
+	 static void addType(String type){
+		 map.put(type, USERDEFINED);
 	 }
 	 
 	 /**

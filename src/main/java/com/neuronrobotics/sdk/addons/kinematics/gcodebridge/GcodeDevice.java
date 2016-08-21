@@ -20,7 +20,6 @@ import com.neuronrobotics.sdk.common.NonBowlerDevice;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 import gnu.io.NRSerialPort;
-import sun.nio.ch.IOUtil;
 
 public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter, IFlushable{
 	

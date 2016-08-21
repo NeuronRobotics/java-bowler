@@ -99,6 +99,8 @@ public class LinkConfiguration {
 
 	private HashMap<String , String[]> vitamins= new HashMap<String, String[]>();
 	private boolean passive = false;
+
+	private String typeString;
 	/**
 	 * Instantiates a new link configuration.
 	 *
@@ -122,7 +124,8 @@ public class LinkConfiguration {
     		// no device from connection engine specified
     	}
     	try{
-    		setType(LinkType.fromString(XmlFactory.getTagValue("type",eElement)));
+    		setTypeString(XmlFactory.getTagValue("type",eElement));
+    		setType(LinkType.fromString(getTypeString()));
     	}catch (NullPointerException e){
     		setType(LinkType.PID);
     	}
@@ -867,6 +870,14 @@ public class LinkConfiguration {
 
 	public void setVitamins(HashMap<String , String[]> vitamins) {
 		this.vitamins = vitamins;
+	}
+
+	public String getTypeString() {
+		return typeString;
+	}
+
+	public void setTypeString(String typeString) {
+		this.typeString = typeString;
 	}
 	
 }

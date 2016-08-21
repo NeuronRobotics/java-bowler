@@ -25,7 +25,7 @@ import com.neuronrobotics.sdk.pid.VirtualGenericPIDDevice;
  * A factory for creating Link objects.
  */
 public class LinkFactory {
-	
+	private static HashMap<String ,INewLinkProvider> userLinkProviders = new HashMap<String, INewLinkProvider>();
 	/** The virtual. */
 	private VirtualGenericPIDDevice virtual=null; 
 	
@@ -34,6 +34,11 @@ public class LinkFactory {
 	
 	/** The link configurations. */
 	private ArrayList<LinkConfiguration> linkConfigurations=null ;
+	
+	public static void addLinkProvider(String typeTag, INewLinkProvider provider){
+		userLinkProviders.put(typeTag, provider);
+		LinkType.addType(typeTag);
+	}
 	
 //	/** The dyio. */
 //	private DyIO dyio;
@@ -230,6 +235,11 @@ public class LinkFactory {
 		case GCODE_STEPPER_TOOL:
 			if(getGCODE(c)!=null){
 				tmp = getGCODE(c).getLink(c);
+			}
+			break;
+		case USERDEFINED:
+			if(userLinkProviders.containsKey(c.getTypeString())){
+				tmp = userLinkProviders.get(c.getTypeString()).generate(c);
 			}
 			break;
 		default:
