@@ -45,6 +45,9 @@ public class MobileBase extends AbstractKinematicsNR {
 	private String[] walkingEngine = new String[] { "https://gist.github.com/bcb4760a449190206170.git",
 			"WalkingDriveEngine.groovy" };
 
+	private HashMap<String , String[]> vitamins= new HashMap<String, String[]>();
+	private HashMap<String , String> vitaminVariant= new HashMap<String, String>();
+	
 	/** The self source. */
 	private String[] selfSource = new String[2];
 
@@ -178,6 +181,7 @@ public class MobileBase extends AbstractKinematicsNR {
 
 		}
 
+		loadVitamins( doc);
 		loadLimb(doc, "leg", legs);
 		loadLimb(doc, "drivable", drivable);
 		loadLimb(doc, "steerable", steerable);
@@ -413,6 +417,93 @@ public class MobileBase extends AbstractKinematicsNR {
 		}
 		return copy;
 	}
+	/**
+	 * Load limb.
+	 *
+	 * @param doc
+	 *            the doc
+	 * @param tag
+	 *            the tag
+	 * @param list
+	 *            the list
+	 */
+	private void loadVitamins(Element doc) {
+		NodeList nodListofLinks = doc.getChildNodes();
+		for (int i = 0; i < nodListofLinks.getLength(); i++) {
+			Node linkNode = nodListofLinks.item(i);
+			try{
+	    		if (linkNode.getNodeType() == Node.ELEMENT_NODE && linkNode.getNodeName().contentEquals("vitamins")) {    	    
+			    	getVitamins((Element)linkNode)	 ;
+			    }
+	    	}catch (Exception e){
+	    		
+	    	}
+		}
+	}
+	
+	public HashMap<String , String[]> getVitamins() {
+		return vitamins;
+	}
+	/**
+	 * Gets the vitamins.
+	 *
+	 * @param doc the doc
+	 */
+	private void getVitamins(Element doc) {
+
+		try {
+			NodeList nodListofLinks = doc.getChildNodes();
+			for (int i = 0; i < nodListofLinks.getLength(); i++) {
+				Node linkNode = nodListofLinks.item(i);
+				if (linkNode.getNodeType() == Node.ELEMENT_NODE && linkNode.getNodeName().contentEquals("vitamin")) {
+					Element e = (Element) linkNode;
+					setVitamin(XmlFactory.getTagValue("name",e),
+							XmlFactory.getTagValue("type",e),
+							XmlFactory.getTagValue("id",e)
+							);
+					try{
+						setVitaminVariant(XmlFactory.getTagValue("name",e),
+								XmlFactory.getTagValue("variant",e));
+					}catch(Exception ex){}
+				}
+			}
+			return;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return;
+	}
+	
+	/**
+	 * Add a vitamin to this link
+	 * @param 	name the name of this vitamin, 
+				if the name already exists, the data will be overwritten. 
+	 * @param type the vitamin type, this maps the the json filename
+	 * @param id the part ID, theis maps to the key in the json for the vitamin
+	 */
+	public void setVitamin(String name, String type, String id){
+		if(getVitamins().get(name)==null){
+			getVitamins().put(name, new String[2]);
+		}
+		getVitamins().get(name)[0]=type;
+		getVitamins().get(name)[1]=id;
+	}
+	/**
+	 * Set a purchasing code for a vitamin
+	 * @param name name of vitamin
+	 * @param tagValue2 Purchaning code
+	 */
+	public void setVitaminVariant(String name, String tagValue2) {
+		vitaminVariant.put(name, tagValue2);
+	}
+	/**
+	 * Get a purchaing code for a vitamin
+	 * @param name name of vitamin
+	 * @return
+	 */
+	public String getVitaminVariant(String name) {
+		return vitaminVariant.get(name);
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -443,6 +534,19 @@ public class MobileBase extends AbstractKinematicsNR {
 	public String getEmbedableXml() {
 		TransformNR location = getFiducialToGlobalTransform();
 		setGlobalToFiducialTransform(new TransformNR());
+		
+		String allVitamins="";
+		for(String key: getVitamins().keySet()){
+			String v = "\t\t<vitamin>\n";
+			v+=		"\t\t\t<name>"+key+"</name>\n"+
+					"\t\t\t<type>"+getVitamins().get(key)[0]+"</type>\n"+
+					"\t\t\t<id>"+getVitamins().get(key)[1]+"</id>\n";
+			if (getVitaminVariant(key)!=null){
+				v+=		"\t\t\t<variant>"+getVitamins().get(key)[1]+"</variant>\n";
+			}
+			v+="\t\t</vitamin>\n";
+			allVitamins+=v;
+		}
 		String xml = "<mobilebase>\n";
 
 		xml += "\t<cadEngine>\n";
@@ -511,6 +615,7 @@ public class MobileBase extends AbstractKinematicsNR {
 		xml += "\n</baseToZframe>\n" + "\t<mass>" + getMassKg() + "</mass>\n" + "\t<centerOfMassFromCentroid>"
 				+ getCenterOfMassFromCentroid().getXml() + "</centerOfMassFromCentroid>\n" + "\t<imuFromCentroid>"
 				+ getIMUFromCentroid().getXml() + "</imuFromCentroid>\n";
+		xml += "\n<vitamins>\n"+allVitamins+"\n</vitamins>\n";
 		xml += "\n</mobilebase>\n";
 		setGlobalToFiducialTransform(location);
 		return xml;

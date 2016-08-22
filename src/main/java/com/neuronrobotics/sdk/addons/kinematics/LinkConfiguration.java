@@ -98,6 +98,7 @@ public class LinkConfiguration {
 	
 
 	private HashMap<String , String[]> vitamins= new HashMap<String, String[]>();
+	private HashMap<String , String> vitaminVariant= new HashMap<String, String>();
 	private boolean passive = false;
 
 	private String typeString;
@@ -260,6 +261,10 @@ public class LinkConfiguration {
 							XmlFactory.getTagValue("type",e),
 							XmlFactory.getTagValue("id",e)
 							);
+					try{
+						setVitaminVariant(XmlFactory.getTagValue("name",e),
+								XmlFactory.getTagValue("variant",e));
+					}catch(Exception ex){}
 				}
 			}
 			return;
@@ -269,6 +274,37 @@ public class LinkConfiguration {
 		return;
 	}
 	
+	/**
+	 * Add a vitamin to this link
+	 * @param 	name the name of this vitamin, 
+				if the name already exists, the data will be overwritten. 
+	 * @param type the vitamin type, this maps the the json filename
+	 * @param id the part ID, theis maps to the key in the json for the vitamin
+	 */
+	public void setVitamin(String name, String type, String id){
+		if(getVitamins().get(name)==null){
+			getVitamins().put(name, new String[2]);
+		}
+		getVitamins().get(name)[0]=type;
+		getVitamins().get(name)[1]=id;
+	}
+	/**
+	 * Set a purchasing code for a vitamin
+	 * @param name name of vitamin
+	 * @param tagValue2 Purchaning code
+	 */
+	public void setVitaminVariant(String name, String tagValue2) {
+		vitaminVariant.put(name, tagValue2);
+	}
+	/**
+	 * Get a purchaing code for a vitamin
+	 * @param name name of vitamin
+	 * @return
+	 */
+	public String getVitaminVariant(String name) {
+		return vitaminVariant.get(name);
+	}
+
 	/**
 	 * Instantiates a new link configuration.
 	 */
@@ -324,11 +360,14 @@ public class LinkConfiguration {
 		}
 		String allVitamins="";
 		for(String key: getVitamins().keySet()){
-			String v = "\t<vitamin>\n";
-			v+=		"\t<name>"+key+"</name>\n"+
-					"\t<type>"+getVitamins().get(key)[0]+"</type>\n"+
-					"\t<id>"+getVitamins().get(key)[1]+"</id>\n";
-			v+="\t</vitamin>\n";
+			String v = "\t\t<vitamin>\n";
+			v+=		"\t\t\t<name>"+key+"</name>\n"+
+					"\t\t\t<type>"+getVitamins().get(key)[0]+"</type>\n"+
+					"\t\t\t<id>"+getVitamins().get(key)[1]+"</id>\n";
+			if (getVitaminVariant(key)!=null){
+				v+=		"\t\t\t<variant>"+getVitamins().get(key)[1]+"</variant>\n";
+			}
+			v+="\t\t</vitamin>\n";
 			allVitamins+=v;
 		}
 		
@@ -346,26 +385,12 @@ public class LinkConfiguration {
 				"\t<indexLatch>"+indexLatch+"</indexLatch>\n"+
 				"\t<isStopOnLatch>"+isStopOnLatch+"</isStopOnLatch>\n"+	
 				"\t<homingTPS>"+getHomingTicksPerSecond()+"</homingTPS>\n"+
-				"\t<vitamins>\n"+allVitamins+"\n</vitamins>\n"+
+				"\n\t<vitamins>\n"+allVitamins+"\n\t</vitamins>\n"+
 				"\t<passive>"+isPassive()+"</passive>\n"+
 				"\t<mass>"+getMassKg()+"</mass>\n"+
 				"\t<centerOfMassFromCentroid>"+getCenterOfMassFromCentroid().getXml()+"</centerOfMassFromCentroid>\n"+
 				"\t<imuFromCentroid>"+getimuFromCentroid().getXml()+"</imuFromCentroid>\n"
 				+slaves;
-	}
-	/**
-	 * Add a vitamin to this link
-	 * @param 	name the name of this vitamin, 
-				if the name already exists, the data will be overwritten. 
-	 * @param type the vitamin type, this maps the the json filename
-	 * @param id the part ID, theis maps to the key in the json for the vitamin
-	 */
-	public void setVitamin(String name, String type, String id){
-		if(getVitamins().get(name)==null){
-			getVitamins().put(name, new String[2]);
-		}
-		getVitamins().get(name)[0]=type;
-		getVitamins().get(name)[1]=id;
 	}
 
 	/**
