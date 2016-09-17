@@ -1,7 +1,9 @@
 package com.neuronrobotics.test.dyio;
 import com.neuronrobotics.sdk.dyio.DyIO;
+import com.neuronrobotics.sdk.dyio.DyIOChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.IServoPositionUpdateListener;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
+import com.neuronrobotics.sdk.serial.SerialConnection;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 
 // TODO: Auto-generated Javadoc
@@ -16,6 +18,7 @@ public class ServoTest implements IServoPositionUpdateListener{
 	private ServoTest(){
 		DyIO.disableFWCheck();
 		DyIO dyio=new DyIO();
+		
 		//dyio.enableDebug();
 		if (!ConnectionDialog.getBowlerDevice(dyio)){
 			System.exit(1);
@@ -24,9 +27,9 @@ public class ServoTest implements IServoPositionUpdateListener{
 		//If your DyIO is using a lower voltage power source, you need to disable the brownout detect
 		dyio.setServoPowerSafeMode(false);
 		
-
-		
-		ServoChannel srv = new ServoChannel (dyio.getChannel(0));
+		DyIOChannel cn = dyio.getChannel(9);
+		System.out.println(cn.getAvailableModes());
+		ServoChannel srv = new ServoChannel (cn);
 		srv.addIServoPositionUpdateListener(this);
                 //Loop 10 times setting the position of the servo 
                 //the time the loop waits will be the time it takes for the servo to arrive
