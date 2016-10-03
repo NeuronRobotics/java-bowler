@@ -37,14 +37,27 @@ public class CoordinatedMotion {
 		dyio.setCachedMode(true);
 		int pos = 50;
 		for(int i=0;i<5;i++){
-			pos = (pos==50)?200:50;
-			for(ServoChannel s:chans){
-				//Store the cached value
-				s.getChannel().setCachedValue(pos);
+			 if(pos==50){
+				pos=200;
+				for(ServoChannel s:chans){
+					//Store the cached value
+					s.getChannel().setCachedValue(pos);
+				}
+				
+				//Flush all values to the DyIO
+				dyio.flushCache(time);
+			}else{
+				pos=50;
+				for(ServoChannel s:chans){
+					// set the servo positions individually
+					s.SetPosition(pos, time);
+					if(s.getChannel().getCachedMode())
+						s.getChannel().flush();
+				}
 			}
-			//Flush all values to the DyIO
-			dyio.flushCache(time);
+
 			Thread.sleep((long) (time*1500));
+			System.out.println("Sending "+pos);
 		}
 		System.exit(0);
 	}
