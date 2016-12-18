@@ -426,7 +426,7 @@ public class TransformNR {
 				Double.isNaN(getRotation().getRotationMatrix2QuaturnionY())||
 				Double.isNaN(getRotation().getRotationMatrix2QuaturnionZ())
 				){
-			xml = "\t<!-- ERROR a NaN was detected and replaced with a valid rotation -->\n";
+			xml +="\n\t<!-- ERROR a NaN was detected and replaced with a valid rotation -->\n";
 			setRotation(new RotationNR());
 		}
 		xml +="\t<rotw>"+getRotation().getRotationMatrix2QuaturnionW()+"</rotw>\n"+
