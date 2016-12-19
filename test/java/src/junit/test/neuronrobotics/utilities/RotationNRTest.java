@@ -47,7 +47,7 @@ public class RotationNRTest {
 			}
 		}
 
-		if (failCount > 200) {
+		if (failCount > 1) {
 			fail("Rotation failed " + failCount + " times");
 
 		}
