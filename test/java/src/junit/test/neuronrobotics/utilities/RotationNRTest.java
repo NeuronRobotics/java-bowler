@@ -21,9 +21,9 @@ public class RotationNRTest {
 		int failCount = 0;
 		int iterations = 100;
 		for (int i = 0; i < iterations; i++) {
-			double tilt = Math.toRadians((Math.random() *360.0) - 180);
-			double elevation = Math.toRadians((Math.random() * 360.0) - 180);
-			double azumus = Math.toRadians((Math.random() * 360.0) - 180);
+			double tilt = Math.toRadians((Math.random() *360.0) -180);
+			double elevation = Math.toRadians((Math.random() * 360.0) -180 );
+			double azumus = Math.toRadians((Math.random() * 360.0) -180 );
 			RotationNR rotTest = new RotationNR(Math.toDegrees(tilt), Math.toDegrees(azumus),
 					Math.toDegrees(elevation));
 			System.out.println("\n\nTest #" + i);
@@ -32,25 +32,30 @@ public class RotationNRTest {
 			System.out.println("Got     Az=" + Math.toDegrees(rotTest.getRotationAzimuth()) + " El="
 					+ Math.toDegrees(rotTest.getRotationElevation()) + " Tl="
 					+ Math.toDegrees(rotTest.getRotationTilt()));
-			if (!RotationNR.bound(tilt - .001, tilt + .001, rotTest.getRotationTilt())) {
+	
+			if (!RotationNR.bound(tilt - .01, tilt + .01, rotTest.getRotationTilt())) {
 				failCount++;
 				System.err.println("Rotation Tilt is not consistant. expected " + Math.toDegrees(tilt) + " got "
-						+ Math.toDegrees(rotTest.getRotationTilt()));
+						+ Math.toDegrees(rotTest.getRotationTilt())+
+						" \t\tOff By "+(Math.toDegrees(tilt) - Math.toDegrees(rotTest.getRotationTilt()) )
+						);
 			}
-			if (!RotationNR.bound(elevation - .001, elevation + .001, rotTest.getRotationElevation())) {
+			if (!RotationNR.bound(elevation - .01, elevation + .01, rotTest.getRotationElevation())) {
 				failCount++;
 				System.err.println("Rotation Elevation is not consistant. expected " + Math.toDegrees(elevation)
-						+ " got " + Math.toDegrees(rotTest.getRotationElevation()));
+						+ " got " + Math.toDegrees(rotTest.getRotationElevation())+
+						" \t\tOff By "+(Math.toDegrees(elevation) + Math.toDegrees(rotTest.getRotationElevation()) )
+						
+						);
 			}
-			if (!RotationNR.bound(azumus - .001, azumus + .001, rotTest.getRotationAzimuth())) {
+			if (!RotationNR.bound(azumus - .01, azumus + .01, rotTest.getRotationAzimuth())) {
 				failCount++;
 				System.err.println("Rotation Tilt is not consistant. expected " + Math.toDegrees(azumus) + " got "
-						+ Math.toDegrees(rotTest.getRotationAzimuth()));
+						+ Math.toDegrees(rotTest.getRotationAzimuth())+
+						" \t\tOff By "+(Math.toDegrees(azumus) - Math.toDegrees(rotTest.getRotationAzimuth()) )
+						);
 			}
 			ThreadUtil.wait(20);
-			
-			
-			
 		}
 
 		if (failCount > 1) {

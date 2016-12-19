@@ -496,21 +496,6 @@ public class RotationNR {
 			elevation = Math.asin(2 * test / unit);
 			tilt = Math.atan2(2 * x * w - 2 * y * z, -sqx + sqy - sqz + sqw);
 		}
-		if (bound(-180.01, -179.99, Math.toDegrees(tilt))) {
-			System.err.println("180 tilt pole singularity");
-			elevation = -Math.PI + elevation;
-			tilt = Math.PI + tilt;
-			azumiuth = -(Math.PI + azumiuth);
-		}
-		if (bound(359.99, 360.01, Math.abs(Math.toDegrees(tilt)))) {
-			tilt = 0;
-		}
-		if (bound(359.99, 360.01, Math.abs(Math.toDegrees(azumiuth)))) {
-			azumiuth = 0;
-		}
-		if (bound(359.99, 360.01, Math.abs(Math.toDegrees(elevation)))) {
-			elevation = 0;
-		}
 
 		switch (index) {
 		case 0:
