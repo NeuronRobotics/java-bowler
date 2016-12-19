@@ -6,61 +6,61 @@ import Jama.Matrix;
 
 // TODO: Auto-generated Javadoc
 /**
- * This class is to represent a 3x3 rotation sub-matrix
- * This class also contains static methods for dealing with 3x3 rotations.
+ * This class is to represent a 3x3 rotation sub-matrix This class also contains
+ * static methods for dealing with 3x3 rotations.
+ * 
  * @author Kevin Harrington
  *
  */
 
 public class RotationNR {
-	
+
 	/** The rotation matrix. */
-	double[][] rotationMatrix = new double[][] { { 1, 0, 0 }, { 0, 1, 0 },
-			{ 0, 0, 1 } };
-	
+	double[][] rotationMatrix = new double[][] { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } };
+
 	/**
 	 * Null constructor forms a.
 	 */
 	public RotationNR() {
 	}
-	
+
 	/**
 	 * Instantiates a new rotation nr.
 	 *
-	 * @param elevation the elevation
-	 * @param tilt the tilt
-	 * @param azumeth the azumeth
+	 * @param elevation
+	 *            the elevation
+	 * @param tilt
+	 *            the tilt
+	 * @param azumeth
+	 *            the azumeth
 	 */
 	// create a new object with the given simplified rotations
-	public RotationNR( double tilt  , double azumeth,  double elevation   ) {
-		if(Double.isNaN(tilt))
+	public RotationNR(double tilt, double azumeth, double elevation) {
+		if (Double.isNaN(tilt))
 			throw new RuntimeException("Value can not be NaN");
-		if(Double.isNaN(azumeth))
+		if (Double.isNaN(azumeth))
 			throw new RuntimeException("Value can not be NaN");
-		if(Double.isNaN(elevation))
+		if (Double.isNaN(elevation))
 			throw new RuntimeException("Value can not be NaN");
-		loadFromAngles(tilt  ,  azumeth,   elevation );
-		if(	Double.isNaN(getRotationMatrix2QuaturnionW())||
-			Double.isNaN(getRotationMatrix2QuaturnionX())||
-			Double.isNaN(getRotationMatrix2QuaturnionY())||
-			Double.isNaN(getRotationMatrix2QuaturnionZ())){
-			//System.err.println("Failing to set proper angle, jittering");
-			loadFromAngles(	tilt +		Math.random()*.02+.001 ,
-							azumeth+	Math.random()*.02+.001 ,   
-							elevation+	Math.random()*.02+.001  );
+		loadFromAngles(tilt, azumeth, elevation);
+		if (Double.isNaN(getRotationMatrix2QuaturnionW()) || Double.isNaN(getRotationMatrix2QuaturnionX())
+				|| Double.isNaN(getRotationMatrix2QuaturnionY()) || Double.isNaN(getRotationMatrix2QuaturnionZ())) {
+			// System.err.println("Failing to set proper angle, jittering");
+			loadFromAngles(tilt + Math.random() * .02 + .001, azumeth + Math.random() * .02 + .001,
+					elevation + Math.random() * .02 + .001);
 		}
-		
+
 	}
-	
-	private void loadFromAngles( double tilt  , double azumeth,  double elevation   ){
+
+	private void loadFromAngles(double tilt, double azumeth, double elevation) {
 		double attitude = Math.toRadians(elevation);
-		double heading= Math.toRadians(azumeth);
-		double bank = Math.toRadians(tilt) ;
-		double w,x,y,z;
-	    // Assuming the angles are in radians.
+		double heading = Math.toRadians(azumeth);
+		double bank = Math.toRadians(tilt);
+		double w, x, y, z;
+		// Assuming the angles are in radians.
 		double c1 = Math.cos(heading / 2);
-//		if(Double.isNaN(c1))
-//			
+		// if(Double.isNaN(c1))
+		//
 		double s1 = Math.sin(heading / 2);
 		double c2 = Math.cos(attitude / 2);
 		double s2 = Math.sin(attitude / 2);
@@ -68,18 +68,21 @@ public class RotationNR {
 		double s3 = Math.sin(bank / 2);
 		double c1c2 = c1 * c2;
 		double s1s2 = s1 * s2;
-		//System.out.println("C1 ="+c1+" S1 ="+s1+" |C2 ="+c2+" S2 ="+s2+" |C3 ="+c3+" S3 ="+s3);
+		// System.out.println("C1 ="+c1+" S1 ="+s1+" |C2 ="+c2+" S2 ="+s2+" |C3
+		// ="+c3+" S3 ="+s3);
 		w = c1c2 * c3 - s1s2 * s3;
 		x = c1c2 * s3 + s1s2 * c3;
 		y = s1 * c2 * c3 + c1 * s2 * s3;
 		z = c1 * s2 * c3 - s1 * c2 * s3;
-		//System.out.println("W ="+w+" x ="+x+" y ="+y+" z ="+z);
+		// System.out.println("W ="+w+" x ="+x+" y ="+y+" z ="+z);
 		quaternion2RotationMatrix(w, x, y, z);
 	}
+
 	/**
 	 * Instantiates a new rotation nr.
 	 *
-	 * @param rotationMatrix the rotation matrix
+	 * @param rotationMatrix
+	 *            the rotation matrix
 	 */
 	public RotationNR(double[][] rotationMatrix) {
 		loadRotations(rotationMatrix);
@@ -88,16 +91,18 @@ public class RotationNR {
 	/**
 	 * Instantiates a new rotation nr.
 	 *
-	 * @param values the values
+	 * @param values
+	 *            the values
 	 */
 	public RotationNR(double[] values) {
 		this(values[0], values[1], values[2], values[3]);
 	}
-	
+
 	/**
 	 * Get a rotation matrix with a rotation around X.
 	 *
-	 * @param rotationAngleDegrees in degrees
+	 * @param rotationAngleDegrees
+	 *            in degrees
 	 * @return the static matrix
 	 */
 	public static RotationNR getRotationX(double rotationAngleDegrees) {
@@ -119,11 +124,12 @@ public class RotationNR {
 
 		return new RotationNR(rotation);
 	}
-	
+
 	/**
 	 * Get a rotation matrix with a rotation around Y.
 	 *
-	 * @param rotationAngleDegrees in degrees
+	 * @param rotationAngleDegrees
+	 *            in degrees
 	 * @return the static matrix
 	 */
 	public static RotationNR getRotationY(double rotationAngleDegrees) {
@@ -145,11 +151,12 @@ public class RotationNR {
 
 		return new RotationNR(rotation);
 	}
-	
+
 	/**
 	 * Get a rotation matrix with a rotation around Z.
 	 *
-	 * @param rotationAngleDegrees in degrees
+	 * @param rotationAngleDegrees
+	 *            in degrees
 	 * @return the static matrix
 	 */
 	public static RotationNR getRotationZ(double rotationAngleDegrees) {
@@ -171,16 +178,18 @@ public class RotationNR {
 
 		return new RotationNR(rotation);
 	}
-	
-
 
 	/**
 	 * Instantiates a new rotation nr.
 	 *
-	 * @param w the w
-	 * @param x the x
-	 * @param y the y
-	 * @param z the z
+	 * @param w
+	 *            the w
+	 * @param x
+	 *            the x
+	 * @param y
+	 *            the y
+	 * @param z
+	 *            the z
 	 */
 	// create a new object with the given components
 	public RotationNR(double w, double x, double y, double z) {
@@ -190,7 +199,8 @@ public class RotationNR {
 	/**
 	 * Instantiates a new rotation nr.
 	 *
-	 * @param m the m
+	 * @param m
+	 *            the m
 	 */
 	public RotationNR(Matrix m) {
 		double[][] rotation = new double[3][3];
@@ -201,12 +211,12 @@ public class RotationNR {
 		}
 		loadRotations(rotation);
 	}
-	
 
 	/**
 	 * Load rotations.
 	 *
-	 * @param rotM the rot m
+	 * @param rotM
+	 *            the rot m
 	 */
 	private void loadRotations(double[][] rotM) {
 		if (rotM.length != 3)
@@ -241,7 +251,9 @@ public class RotationNR {
 		return b;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	// return a string representation of the invoking object
@@ -256,26 +268,22 @@ public class RotationNR {
 			s += " ]\n";
 		}
 		s += "]";
-		return "Quaturnion: "
-				+"W="+ getRotationMatrix2QuaturnionW() + ", "
-				+"x="+ getRotationMatrix2QuaturnionX() + ", "
-				+"y="+ getRotationMatrix2QuaturnionY() + ", "
-				+"z="+ getRotationMatrix2QuaturnionZ() + "\n"+
-				 "Rotation angle (degrees): "
-					+"rx="+ getRotationX() + ", "
-					+"ry="+ getRotationY() + ", "
-					+"rz="+ getRotationZ() + "";
+		return "Quaturnion: " + "W=" + getRotationMatrix2QuaturnionW() + ", " + "x=" + getRotationMatrix2QuaturnionX()
+				+ ", " + "y=" + getRotationMatrix2QuaturnionY() + ", " + "z=" + getRotationMatrix2QuaturnionZ() + "\n"
+				+ "Rotation angle (degrees): " + "rx=" + getRotationX() + ", " + "ry=" + getRotationY() + ", " + "rz="
+				+ getRotationZ() + "";
 	}
-	
+
 	/**
 	 * To string.
 	 *
-	 * @param array the array
+	 * @param array
+	 *            the array
 	 * @return the string
 	 */
 	// return a string representation of the invoking object
 	public String toString(double[][] array) {
-		String s = "[\n";		
+		String s = "[\n";
 		for (int i = 0; i < 3; i++) {
 			s += "[ ";
 			for (int j = 0; j < 3; j++) {
@@ -284,25 +292,29 @@ public class RotationNR {
 			s += " ]\n";
 		}
 		s += "]";
-		return "Matrix = " + s ;
+		return "Matrix = " + s;
 	}
 
 	/**
 	 * Quaternion2 rotation matrix.
 	 *
-	 * @param w the w
-	 * @param x the x
-	 * @param y the y
-	 * @param z the z
+	 * @param w
+	 *            the w
+	 * @param x
+	 *            the x
+	 * @param y
+	 *            the y
+	 * @param z
+	 *            the z
 	 */
 	protected void quaternion2RotationMatrix(double w, double x, double y, double z) {
-		if(Double.isNaN(w))
+		if (Double.isNaN(w))
 			throw new RuntimeException("Value can not be NaN");
-		if(Double.isNaN(x))
+		if (Double.isNaN(x))
 			throw new RuntimeException("Value can not be NaN");
-		if(Double.isNaN(y))
+		if (Double.isNaN(y))
 			throw new RuntimeException("Value can not be NaN");
-		if(Double.isNaN(z))
+		if (Double.isNaN(z))
 			throw new RuntimeException("Value can not be NaN");
 		double norm = Math.sqrt(w * w + x * x + y * y + z * z);
 		// we explicitly test norm against one here, saving a division
@@ -327,150 +339,139 @@ public class RotationNR {
 		rotationMatrix[0][0] = 1 - (yy + zz);
 		rotationMatrix[0][1] = (xy - zw);
 		rotationMatrix[0][2] = (xz + yw);
-		
+
 		rotationMatrix[1][0] = (xy + zw);
 		rotationMatrix[1][1] = 1 - (xx + zz);
 		rotationMatrix[1][2] = (yz - xw);
-		
+
 		rotationMatrix[2][0] = (xz - yw);
 		rotationMatrix[2][1] = (yz + xw);
 		rotationMatrix[2][2] = 1 - (xx + yy);
-		
+
 		toString(rotationMatrix);
 	}
-	
+
 	/**
-	 * 	This requires a pure rotation matrix 'm' as input.
-	 * 	from http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToAngle/
+	 * This requires a pure rotation matrix 'm' as input. from
+	 * http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToAngle/
 	 *
 	 * @return the double[]
 	 */
-	public double [] toAxisAngle() {
-	  double angle,x,y,z; // variables for result
+	public double[] toAxisAngle() {
+		double angle, x, y, z; // variables for result
 		double epsilon = 0.01; // margin to allow for rounding errors
-		double epsilon2 = 0.1; // margin to distinguish between 0 and 180 degrees
-		// optional check that input is pure rotation, 'isRotationMatrix' is defined at:
+		double epsilon2 = 0.1; // margin to distinguish between 0 and 180
+								// degrees
+		// optional check that input is pure rotation, 'isRotationMatrix' is
+		// defined at:
 		// http://www.euclideanspace.com/maths/algebra/matrix/orthogonal/rotation/
-		if (( (Math.abs(rotationMatrix[0][1])-Math.abs(rotationMatrix[1][0]))< epsilon)
-		  && ((Math.abs(rotationMatrix[0][2])-Math.abs(rotationMatrix[2][0]))< epsilon)
-		  && ((Math.abs(rotationMatrix[1][2])-Math.abs(rotationMatrix[2][1]))< epsilon)) {
+		if (((Math.abs(rotationMatrix[0][1]) - Math.abs(rotationMatrix[1][0])) < epsilon)
+				&& ((Math.abs(rotationMatrix[0][2]) - Math.abs(rotationMatrix[2][0])) < epsilon)
+				&& ((Math.abs(rotationMatrix[1][2]) - Math.abs(rotationMatrix[2][1])) < epsilon)) {
 			// singularity found
 			// first check for identity matrix which must have +1 for all terms
-			//  in leading diagonaland zero in other terms
-			if (
-					(Math.abs(rotationMatrix[0][1])+Math.abs(rotationMatrix[1][0])) < epsilon2
-			  && 	(Math.abs(rotationMatrix[0][2])+Math.abs(rotationMatrix[2][0])) < epsilon2
-			  && 	(Math.abs(rotationMatrix[1][2])+Math.abs(rotationMatrix[2][1]))< epsilon2
-			  && 	(Math.abs(rotationMatrix[0][0])+Math.abs(rotationMatrix[1][1])+Math.abs(rotationMatrix[2][2])-3) < epsilon2) {
+			// in leading diagonaland zero in other terms
+			if ((Math.abs(rotationMatrix[0][1]) + Math.abs(rotationMatrix[1][0])) < epsilon2
+					&& (Math.abs(rotationMatrix[0][2]) + Math.abs(rotationMatrix[2][0])) < epsilon2
+					&& (Math.abs(rotationMatrix[1][2]) + Math.abs(rotationMatrix[2][1])) < epsilon2
+					&& (Math.abs(rotationMatrix[0][0]) + Math.abs(rotationMatrix[1][1]) + Math.abs(rotationMatrix[2][2])
+							- 3) < epsilon2) {
 				// this singularity is identity matrix so angle = 0
-				return new double[]{0,1,0,0}; // zero angle, arbitrary axis
+				return new double[] { 0, 1, 0, 0 }; // zero angle, arbitrary
+													// axis
 			}
 			// otherwise this singularity is angle = 180
 			angle = Math.PI;
-			double xx = (rotationMatrix[0][0]+1)/2;
-			double yy = (rotationMatrix[1][1]+1)/2;
-			double zz = (rotationMatrix[2][2]+1)/2;
-			double xy = (rotationMatrix[0][1]+rotationMatrix[1][0])/4;
-			double xz = (rotationMatrix[0][2]+rotationMatrix[2][0])/4;
-			double yz = (rotationMatrix[1][2]+rotationMatrix[2][1])/4;
-			if ((xx > yy) && (xx > zz)) { // m[0][0] is the largest diagonal term
-				if (xx< epsilon) {
+			double xx = (rotationMatrix[0][0] + 1) / 2;
+			double yy = (rotationMatrix[1][1] + 1) / 2;
+			double zz = (rotationMatrix[2][2] + 1) / 2;
+			double xy = (rotationMatrix[0][1] + rotationMatrix[1][0]) / 4;
+			double xz = (rotationMatrix[0][2] + rotationMatrix[2][0]) / 4;
+			double yz = (rotationMatrix[1][2] + rotationMatrix[2][1]) / 4;
+			if ((xx > yy) && (xx > zz)) { // m[0][0] is the largest diagonal
+											// term
+				if (xx < epsilon) {
 					x = 0;
 					y = 0.7071;
 					z = 0.7071;
 				} else {
 					x = Math.sqrt(xx);
-					y = xy/x;
-					z = xz/x;
+					y = xy / x;
+					z = xz / x;
 				}
 			} else if (yy > zz) { // m[1][1] is the largest diagonal term
-				if (yy< epsilon) {
+				if (yy < epsilon) {
 					x = 0.7071;
 					y = 0;
 					z = 0.7071;
 				} else {
 					y = Math.sqrt(yy);
-					x = xy/y;
-					z = yz/y;
-				}	
-			} else { // m[2][2] is the largest diagonal term so base result on this
-				if (zz< epsilon) {
+					x = xy / y;
+					z = yz / y;
+				}
+			} else { // m[2][2] is the largest diagonal term so base result on
+						// this
+				if (zz < epsilon) {
 					x = 0.7071;
 					y = 0.7071;
 					z = 0;
 				} else {
 					z = Math.sqrt(zz);
-					x = xz/z;
-					y = yz/z;
+					x = xz / z;
+					y = yz / z;
 				}
 			}
-			return  new double[]{angle,x,y,z}; // return 180 deg rotation
+			return new double[] { angle, x, y, z }; // return 180 deg rotation
 		}
-		// as we have reached here there are no singularities so we can handle normally
-		double s = Math.sqrt((rotationMatrix[2][1] - rotationMatrix[1][2])*(rotationMatrix[2][1] - rotationMatrix[1][2])
-			+(rotationMatrix[0][2] - rotationMatrix[2][0])*(rotationMatrix[0][2] - rotationMatrix[2][0])
-			+(rotationMatrix[1][0] - rotationMatrix[0][1])*(rotationMatrix[1][0] - rotationMatrix[0][1])); // used to normalise
-		if (Math.abs(s) < 0.001) s=1; 
-			// prevent divide by zero, should not happen if matrix is orthogonal and should be
-			// caught by singularity test above, but I've left it in just in case
-		angle = Math.acos(( rotationMatrix[0][0] + rotationMatrix[1][1] + rotationMatrix[2][2] - 1)/2);
-		x = (rotationMatrix[2][1] - rotationMatrix[1][2])/s;
-		y = (rotationMatrix[0][2] - rotationMatrix[2][0])/s;
-		z = (rotationMatrix[1][0] - rotationMatrix[0][1])/s;
-	   return new  double[]{angle,x,y,z};
+		// as we have reached here there are no singularities so we can handle
+		// normally
+		double s = Math
+				.sqrt((rotationMatrix[2][1] - rotationMatrix[1][2]) * (rotationMatrix[2][1] - rotationMatrix[1][2])
+						+ (rotationMatrix[0][2] - rotationMatrix[2][0]) * (rotationMatrix[0][2] - rotationMatrix[2][0])
+						+ (rotationMatrix[1][0] - rotationMatrix[0][1])
+								* (rotationMatrix[1][0] - rotationMatrix[0][1])); // used
+																					// to
+																					// normalise
+		if (Math.abs(s) < 0.001)
+			s = 1;
+		// prevent divide by zero, should not happen if matrix is orthogonal and
+		// should be
+		// caught by singularity test above, but I've left it in just in case
+		angle = Math.acos((rotationMatrix[0][0] + rotationMatrix[1][1] + rotationMatrix[2][2] - 1) / 2);
+		x = (rotationMatrix[2][1] - rotationMatrix[1][2]) / s;
+		y = (rotationMatrix[0][2] - rotationMatrix[2][0]) / s;
+		z = (rotationMatrix[1][0] - rotationMatrix[0][1]) / s;
+		return new double[] { angle, x, y, z };
 	}
 
-	
-	/**
-	 * Calculate axis angle.
-	 *
-	 * @param quaturnian the quaturnian
-	 * @return the double
-	 */
-	private double calculateAxisAngle(double quaturnian){
-		double w =getRotationMatrix2QuaturnionW();
-		double neg = quaturnian<0?-1:1;
-		quaturnian=Math.abs(quaturnian);
-		double s = Math.sqrt(1-w*w);
-		double currentAxis;
-		if(Math.abs(s)<.001||Double.isNaN(s))
-			currentAxis= 0;
-		else
-			 currentAxis = (quaturnian/s);
-		double angle = 2*Math.acos(w);
-		if(Double.isNaN(angle))
-			angle=0;
-		double degAng=Math.toDegrees(angle);
-		double ret=(angle*currentAxis)*neg;
-		double deg=Math.toDegrees(ret);
-		
-		return ret;
-	}
-	
 	/**
 	 * Bound.
 	 *
-	 * @param low the low
-	 * @param high the high
-	 * @param n the n
+	 * @param low
+	 *            the low
+	 * @param high
+	 *            the high
+	 * @param n
+	 *            the n
 	 * @return true, if successful
 	 */
-	public static  boolean bound(double low, double high, double n) {
-	    return n >= low && n <= high;
+	public static boolean bound(double low, double high, double n) {
+		return n >= low && n <= high;
 	}
 
 	/**
 	 * Gets the rot angle.
 	 *
-	 * @param index the index
+	 * @param index
+	 *            the index
 	 * @return the rot angle
 	 */
-	private double getRotAngle(int index){
-		double w,x,y,z,tilt,azumiuth,elevation;
-		w=getRotationMatrix2QuaturnionW();
-		x=getRotationMatrix2QuaturnionX();
-		y=getRotationMatrix2QuaturnionY();
-		z=getRotationMatrix2QuaturnionZ();
+	private double getRotAngle(int index) {
+		double w, x, y, z, tilt, azumiuth, elevation;
+		w = getRotationMatrix2QuaturnionW();
+		x = getRotationMatrix2QuaturnionX();
+		y = getRotationMatrix2QuaturnionY();
+		z = getRotationMatrix2QuaturnionZ();
 		double sqw = w * w;
 		double sqx = x * x;
 		double sqy = y * y;
@@ -479,13 +480,13 @@ public class RotationNR {
 												// is correction factor
 		double test = x * y + z * w;
 		if (test > 0.499 * unit) { // singularity at north pole
-			//System.err.println("North pole singularity");
+			// System.err.println("North pole singularity");
 			azumiuth = 2 * Math.atan2(x, w);
 			elevation = Math.PI / 2;
 			tilt = 0;
 
 		} else if (test < -0.499 * unit) { // singularity at south pole
-			//System.err.println("South pole singularity");
+			// System.err.println("South pole singularity");
 			azumiuth = -2 * Math.atan2(x, w);
 			elevation = -Math.PI / 2;
 			tilt = 0;
@@ -495,60 +496,59 @@ public class RotationNR {
 			elevation = Math.asin(2 * test / unit);
 			tilt = Math.atan2(2 * x * w - 2 * y * z, -sqx + sqy - sqz + sqw);
 		}
-		if(		bound(-180.01, -179.99, Math.toDegrees(tilt))
-				){
+		if (bound(-180.01, -179.99, Math.toDegrees(tilt))) {
 			System.err.println("180 tilt pole singularity");
-			elevation = -Math.PI +elevation;
-			tilt = Math.PI +tilt;
-			azumiuth = -(Math.PI +azumiuth);
+			elevation = -Math.PI + elevation;
+			tilt = Math.PI + tilt;
+			azumiuth = -(Math.PI + azumiuth);
 		}
-		if(bound(359.99,360.01,Math.abs(Math.toDegrees(tilt)))){
-			tilt=0;
+		if (bound(359.99, 360.01, Math.abs(Math.toDegrees(tilt)))) {
+			tilt = 0;
 		}
-		if(bound(359.99,360.01,Math.abs(Math.toDegrees(azumiuth)))){
-			azumiuth=0;
+		if (bound(359.99, 360.01, Math.abs(Math.toDegrees(azumiuth)))) {
+			azumiuth = 0;
 		}
-		if(bound(359.99,360.01,Math.abs(Math.toDegrees(elevation)))){
-			elevation=0;
+		if (bound(359.99, 360.01, Math.abs(Math.toDegrees(elevation)))) {
+			elevation = 0;
 		}
-		
-		switch(index){
+
+		switch (index) {
 		case 0:
 			return tilt;
 		case 1:
-			return elevation ;
+			return elevation;
 		case 2:
 			return azumiuth;
-		default: 
+		default:
 			return 0;
 		}
-		
+
 	}
-	
-//	public double getRotationBank() {
-//
-//		return getRotAngle(0) ;
-//
-//	}
 
-//	public double getRotationAttitude() {
-//		
-//		return getRotAngle(2);
-//	}
-//
-//	public double getRotationHeading() {
-//		
-//		return getRotAngle(1) ;
-//	}
-	
+	// public double getRotationBank() {
+	//
+	// return getRotAngle(0) ;
+	//
+	// }
+
+	// public double getRotationAttitude() {
+	//
+	// return getRotAngle(2);
+	// }
+	//
+	// public double getRotationHeading() {
+	//
+	// return getRotAngle(1) ;
+	// }
+
 	/**
- * Gets the rotation tilt.
- *
- * @return the rotation tilt
- */
-public double getRotationTilt() {
+	 * Gets the rotation tilt.
+	 *
+	 * @return the rotation tilt
+	 */
+	public double getRotationTilt() {
 
-		return  getRotAngle(0) ;
+		return getRotAngle(0);
 
 	}
 
@@ -558,8 +558,8 @@ public double getRotationTilt() {
 	 * @return the rotation elevation
 	 */
 	public double getRotationElevation() {
-		
-		return  getRotAngle(1);
+
+		return getRotAngle(1);
 	}
 
 	/**
@@ -568,42 +568,42 @@ public double getRotationTilt() {
 	 * @return the rotation azimuth
 	 */
 	public double getRotationAzimuth() {
-		
+
 		return getRotAngle(2);
 	}
-	
+
 	/**
 	 * Gets the rotation x.
 	 *
 	 * @return the rotation x
 	 */
-	@Deprecated //use  getRotationBank()
+	@Deprecated // use getRotationBank()
 	public double getRotationX() {
 
-		return getRotAngle(0) ;
+		return getRotAngle(0);
 
 	}
-	
+
 	/**
 	 * Gets the rotation y.
 	 *
 	 * @return the rotation y
 	 */
-	@Deprecated //use  getRotationAttitude()
+	@Deprecated // use getRotationAttitude()
 	public double getRotationY() {
-		
+
 		return getRotAngle(2);
 	}
-	
+
 	/**
 	 * Gets the rotation z.
 	 *
 	 * @return the rotation z
 	 */
-	@Deprecated //use  getRotationHeading()
+	@Deprecated // use getRotationHeading()
 	public double getRotationZ() {
-		
-		return getRotAngle(1) ;
+
+		return getRotAngle(1);
 	}
 
 	/**
@@ -612,8 +612,8 @@ public double getRotationTilt() {
 	 * @return the rotation matrix2 quaturnion w
 	 */
 	public double getRotationMatrix2QuaturnionW() {
-		double temp = 0.5 * Math.sqrt(1 + rotationMatrix[0][0]+ rotationMatrix[1][1] + rotationMatrix[2][2]);
-		if(temp>1)
+		double temp = 0.5 * Math.sqrt(1 + rotationMatrix[0][0] + rotationMatrix[1][1] + rotationMatrix[2][2]);
+		if (temp > 1)
 			throw new RuntimeException("Matrix needs normalization");
 		return temp;
 	}
@@ -624,9 +624,9 @@ public double getRotationTilt() {
 	 * @return the rotation matrix2 quaturnion x
 	 */
 	public double getRotationMatrix2QuaturnionX() {
-		double temp = 0.5 * Math.sqrt(1 + rotationMatrix[0][0]+ rotationMatrix[1][1] + rotationMatrix[2][2]);
+		double temp = 0.5 * Math.sqrt(1 + rotationMatrix[0][0] + rotationMatrix[1][1] + rotationMatrix[2][2]);
 		return (rotationMatrix[2][1] - rotationMatrix[1][2]) * 0.25 / temp;
-		}
+	}
 
 	/**
 	 * Gets the rotation matrix2 quaturnion y.
@@ -634,7 +634,7 @@ public double getRotationTilt() {
 	 * @return the rotation matrix2 quaturnion y
 	 */
 	public double getRotationMatrix2QuaturnionY() {
-		double temp = 0.5 * Math.sqrt(1 + rotationMatrix[0][0]+ rotationMatrix[1][1] + rotationMatrix[2][2]);
+		double temp = 0.5 * Math.sqrt(1 + rotationMatrix[0][0] + rotationMatrix[1][1] + rotationMatrix[2][2]);
 		return (rotationMatrix[0][2] - rotationMatrix[2][0]) * 0.25 / temp;
 	}
 
@@ -644,7 +644,7 @@ public double getRotationTilt() {
 	 * @return the rotation matrix2 quaturnion z
 	 */
 	public double getRotationMatrix2QuaturnionZ() {
-		double temp = 0.5 * Math.sqrt(1 + rotationMatrix[0][0]+ rotationMatrix[1][1] + rotationMatrix[2][2]);
+		double temp = 0.5 * Math.sqrt(1 + rotationMatrix[0][0] + rotationMatrix[1][1] + rotationMatrix[2][2]);
 		return (rotationMatrix[1][0] - rotationMatrix[0][1]) * 0.25 / temp;
 	}
 
