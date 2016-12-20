@@ -45,6 +45,9 @@ public class RotationNR {
 			throw new RuntimeException("Value can not be NaN");
 		if (Double.isNaN(elevation))
 			throw new RuntimeException("Value can not be NaN");
+		if(elevation >90 || elevation <-90){
+			throw new RuntimeException("Elevation can not be greater than 90 nor less than -90");
+		}
 		loadFromAngles(tilt, azumeth, elevation);
 		if (Double.isNaN(getRotationMatrix2QuaturnionW()) || Double.isNaN(getRotationMatrix2QuaturnionX())
 				|| Double.isNaN(getRotationMatrix2QuaturnionY()) || Double.isNaN(getRotationMatrix2QuaturnionZ())) {

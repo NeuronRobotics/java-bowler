@@ -22,10 +22,7 @@ public class RotationNRTest {
 	public void test() {
 		int failCount = 0;
 		int iterations = 10;
-		RotationOrder[] list = { RotationOrder.XYZ, 
-				RotationOrder.XZY, RotationOrder.YXZ, RotationOrder.YZX,
-				RotationOrder.ZXY, RotationOrder.ZYX, RotationOrder.XYX, RotationOrder.XZX, RotationOrder.YXY,
-				RotationOrder.YZY, RotationOrder.ZXZ, RotationOrder.ZYZ
+		RotationOrder[] list = { RotationOrder.XYZ
 				
 		};
 		RotationConvention[] conventions = { RotationConvention.FRAME_TRANSFORM, RotationConvention.VECTOR_OPERATOR };
@@ -38,7 +35,7 @@ public class RotationNRTest {
 				failCount = 0;
 				for (int i = 0; i < iterations; i++) {
 					double tilt = Math.toRadians((Math.random() * 359) - 179.5);
-					double elevation = Math.toRadians((Math.random() * 359) - 179.5);
+					double elevation = Math.toRadians((Math.random() * 180) - 90);
 					double azumus = Math.toRadians((Math.random() * 359) - 179.5);
 					RotationNR rotTest = new RotationNR(Math.toDegrees(tilt), Math.toDegrees(azumus),
 							Math.toDegrees(elevation));
