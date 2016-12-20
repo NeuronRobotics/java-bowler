@@ -19,7 +19,7 @@ public class RotationNR {
 	/** The rotation matrix. */
 	//double[][] rotationMatrix = ;
 	private Rotation storage=new Rotation(1,0,0,0,false);
-	private static RotationOrder order = RotationOrder.ZXZ;
+	private static RotationOrder order = RotationOrder.XYZ;
 	private static RotationConvention convention = RotationConvention.FRAME_TRANSFORM;
 	/**
 	 * Null constructor forms a.
