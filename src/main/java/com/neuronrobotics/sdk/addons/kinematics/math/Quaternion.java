@@ -23,10 +23,10 @@ import java.io.Serializable;
  * @author badlogicgames@gmail.com
  * @author vesuvio
  * @author xoppa */
- class QuaternionGDX implements Serializable {
+ class Quaternion implements Serializable {
 	private static final long serialVersionUID = -7661875440774897168L;
-	private static QuaternionGDX tmp1 = new QuaternionGDX(0, 0, 0, 0);
-	private static QuaternionGDX tmp2 = new QuaternionGDX(0, 0, 0, 0);
+	private static Quaternion tmp1 = new Quaternion(0, 0, 0, 0);
+	private static Quaternion tmp2 = new Quaternion(0, 0, 0, 0);
 
 	public float x;
 	public float y;
@@ -38,18 +38,18 @@ import java.io.Serializable;
 	 * @param y The y-component
 	 * @param z The z-component
 	 * @param w The w-component */
-	public QuaternionGDX (float x, float y, float z, float w) {
+	public Quaternion (float x, float y, float z, float w) {
 		this.set(x, y, z, w);
 	}
 
-	public QuaternionGDX () {
+	public Quaternion () {
 		idt();
 	}
 
 	/** Constructor, sets the QuaternionGDX components from the given quaternion.
 	 * 
-	 * @param QuaternionGDX The QuaternionGDX to copy. */
-	public QuaternionGDX (QuaternionGDX quaternion) {
+	 * @param Quaternion The QuaternionGDX to copy. */
+	public Quaternion (Quaternion quaternion) {
 		this.set(quaternion);
 	}
 
@@ -57,7 +57,7 @@ import java.io.Serializable;
 	 * 
 	 * @param axis The axis
 	 * @param angle The angle in degrees. */
-	public QuaternionGDX (Vector3 axis, float angle) {
+	public Quaternion (Vector3 axis, float angle) {
 		this.set(axis, angle);
 	}
 
@@ -67,7 +67,7 @@ import java.io.Serializable;
 	 * @param z The z-component
 	 * @param w The w-component
 	 * @return This QuaternionGDX for chaining */
-	public QuaternionGDX set (float x, float y, float z, float w) {
+	public Quaternion set (float x, float y, float z, float w) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -76,9 +76,9 @@ import java.io.Serializable;
 	}
 
 	/** Sets the QuaternionGDX components from the given quaternion.
-	 * @param QuaternionGDX The quaternion.
+	 * @param Quaternion The quaternion.
 	 * @return This QuaternionGDX for chaining. */
-	public QuaternionGDX set (QuaternionGDX quaternion) {
+	public Quaternion set (Quaternion quaternion) {
 		return this.set(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
 	}
 
@@ -87,13 +87,13 @@ import java.io.Serializable;
 	 * @param axis The axis
 	 * @param angle The angle in degrees
 	 * @return This QuaternionGDX for chaining. */
-	public QuaternionGDX set (Vector3 axis, float angle) {
+	public Quaternion set (Vector3 axis, float angle) {
 		return setFromAxis(axis.x, axis.y, axis.z, angle);
 	}
 
 	/** @return a copy of this QuaternionGDX */
-	public QuaternionGDX cpy () {
-		return new QuaternionGDX(this);
+	public Quaternion cpy () {
+		return new Quaternion(this);
 	}
 
 	/** @return the euclidean length of the specified QuaternionGDX */
@@ -116,7 +116,7 @@ import java.io.Serializable;
 	 * @param pitch the rotation around the x axis in degrees
 	 * @param roll the rotation around the z axis degrees
 	 * @return this QuaternionGDX */
-	public QuaternionGDX setEulerAngles (float yaw, float pitch, float roll) {
+	public Quaternion setEulerAngles (float yaw, float pitch, float roll) {
 		return setEulerAnglesRad(yaw * MathUtils.degreesToRadians, pitch * MathUtils.degreesToRadians, roll
 			* MathUtils.degreesToRadians);
 	}
@@ -126,7 +126,7 @@ import java.io.Serializable;
 	 * @param pitch the rotation around the x axis in radians
 	 * @param roll the rotation around the z axis in radians
 	 * @return this QuaternionGDX */
-	public QuaternionGDX setEulerAnglesRad (float yaw, float pitch, float roll) {
+	public Quaternion setEulerAnglesRad (float yaw, float pitch, float roll) {
 		final float hr = roll * 0.5f;
 		final float shr = (float)Math.sin(hr);
 		final float chr = (float)Math.cos(hr);
@@ -205,7 +205,7 @@ import java.io.Serializable;
 
 	/** Normalizes this QuaternionGDX to unit length
 	 * @return the QuaternionGDX for chaining */
-	public QuaternionGDX nor () {
+	public Quaternion nor () {
 		float len = len2();
 		if (len != 0.f && !MathUtils.isEqual(len, 1f)) {
 			len = (float)Math.sqrt(len);
@@ -220,7 +220,7 @@ import java.io.Serializable;
 	/** Conjugate the quaternion.
 	 * 
 	 * @return This QuaternionGDX for chaining */
-	public QuaternionGDX conjugate () {
+	public Quaternion conjugate () {
 		x = -x;
 		y = -y;
 		z = -z;
@@ -246,7 +246,7 @@ import java.io.Serializable;
 	 * 
 	 * @param other QuaternionGDX to multiply with
 	 * @return This QuaternionGDX for chaining */
-	public QuaternionGDX mul (final QuaternionGDX other) {
+	public Quaternion mul (final Quaternion other) {
 		final float newX = this.w * other.x + this.x * other.w + this.y * other.z - this.z * other.y;
 		final float newY = this.w * other.y + this.y * other.w + this.z * other.x - this.x * other.z;
 		final float newZ = this.w * other.z + this.z * other.w + this.x * other.y - this.y * other.x;
@@ -265,7 +265,7 @@ import java.io.Serializable;
 	 * @param z the z component of the other QuaternionGDX to multiply with
 	 * @param w the w component of the other QuaternionGDX to multiply with
 	 * @return This QuaternionGDX for chaining */
-	public QuaternionGDX mul (final float x, final float y, final float z, final float w) {
+	public Quaternion mul (final float x, final float y, final float z, final float w) {
 		final float newX = this.w * x + this.x * w + this.y * z - this.z * y;
 		final float newY = this.w * y + this.y * w + this.z * x - this.x * z;
 		final float newZ = this.w * z + this.z * w + this.x * y - this.y * x;
@@ -281,7 +281,7 @@ import java.io.Serializable;
 	 * 
 	 * @param other QuaternionGDX to multiply with
 	 * @return This QuaternionGDX for chaining */
-	public QuaternionGDX mulLeft (QuaternionGDX other) {
+	public Quaternion mulLeft (Quaternion other) {
 		final float newX = other.w * this.x + other.x * this.w + other.y * this.z - other.z * y;
 		final float newY = other.w * this.y + other.y * this.w + other.z * this.x - other.x * z;
 		final float newZ = other.w * this.z + other.z * this.w + other.x * this.y - other.y * x;
@@ -300,7 +300,7 @@ import java.io.Serializable;
 	 * @param z the z component of the other QuaternionGDX to multiply with
 	 * @param w the w component of the other QuaternionGDX to multiply with
 	 * @return This QuaternionGDX for chaining */
-	public QuaternionGDX mulLeft (final float x, final float y, final float z, final float w) {
+	public Quaternion mulLeft (final float x, final float y, final float z, final float w) {
 		final float newX = w * this.x + x * this.w + y * this.z - z * this.y;
 		final float newY = w * this.y + y * this.w + z * this.x - x * this.z;
 		final float newZ = w * this.z + z * this.w + x * this.y - y * this.x;
@@ -313,7 +313,7 @@ import java.io.Serializable;
 	}
 
 	/** Add the x,y,z,w components of the passed in QuaternionGDX to the ones of this QuaternionGDX */
-	public QuaternionGDX add (QuaternionGDX quaternion) {
+	public Quaternion add (Quaternion quaternion) {
 		this.x += quaternion.x;
 		this.y += quaternion.y;
 		this.z += quaternion.z;
@@ -322,7 +322,7 @@ import java.io.Serializable;
 	}
 
 	/** Add the x,y,z,w components of the passed in QuaternionGDX to the ones of this QuaternionGDX */
-	public QuaternionGDX add (float qx, float qy, float qz, float qw) {
+	public Quaternion add (float qx, float qy, float qz, float qw) {
 		this.x += qx;
 		this.y += qy;
 		this.z += qz;
@@ -366,7 +366,7 @@ import java.io.Serializable;
 
 	/** Sets the QuaternionGDX to an identity Quaternion
 	 * @return this QuaternionGDX for chaining */
-	public QuaternionGDX idt () {
+	public Quaternion idt () {
 		return this.set(0, 0, 0, 1);
 	}
 
@@ -387,7 +387,7 @@ import java.io.Serializable;
 	 * @param axis The axis
 	 * @param degrees The angle in degrees
 	 * @return This QuaternionGDX for chaining. */
-	public QuaternionGDX setFromAxis (final Vector3 axis, final float degrees) {
+	public Quaternion setFromAxis (final Vector3 axis, final float degrees) {
 		return setFromAxis(axis.x, axis.y, axis.z, degrees);
 	}
 
@@ -396,7 +396,7 @@ import java.io.Serializable;
 	 * @param axis The axis
 	 * @param radians The angle in radians
 	 * @return This QuaternionGDX for chaining. */
-	public QuaternionGDX setFromAxisRad (final Vector3 axis, final float radians) {
+	public Quaternion setFromAxisRad (final Vector3 axis, final float radians) {
 		return setFromAxisRad(axis.x, axis.y, axis.z, radians);
 	}
 
@@ -406,7 +406,7 @@ import java.io.Serializable;
 	 * @param z Z direction of the axis
 	 * @param degrees The angle in degrees
 	 * @return This QuaternionGDX for chaining. */
-	public QuaternionGDX setFromAxis (final float x, final float y, final float z, final float degrees) {
+	public Quaternion setFromAxis (final float x, final float y, final float z, final float degrees) {
 		return setFromAxisRad(x, y, z, degrees * MathUtils.degreesToRadians);
 	}
 
@@ -416,7 +416,7 @@ import java.io.Serializable;
 	 * @param z Z direction of the axis
 	 * @param radians The angle in radians
 	 * @return This QuaternionGDX for chaining. */
-	public QuaternionGDX setFromAxisRad (final float x, final float y, final float z, final float radians) {
+	public Quaternion setFromAxisRad (final float x, final float y, final float z, final float radians) {
 		float d = Vector3.len(x, y, z);
 		if (d == 0f) return idt();
 		d = 1f / d;
@@ -427,26 +427,26 @@ import java.io.Serializable;
 	}
 
 	/** Sets the QuaternionGDX from the given matrix, optionally removing any scaling. */
-	public QuaternionGDX setFromMatrix (boolean normalizeAxes, Matrix4 matrix) {
+	public Quaternion setFromMatrix (boolean normalizeAxes, Matrix4 matrix) {
 		return setFromAxes(normalizeAxes, matrix.val[Matrix4.M00], matrix.val[Matrix4.M01], matrix.val[Matrix4.M02],
 			matrix.val[Matrix4.M10], matrix.val[Matrix4.M11], matrix.val[Matrix4.M12], matrix.val[Matrix4.M20],
 			matrix.val[Matrix4.M21], matrix.val[Matrix4.M22]);
 	}
 
 	/** Sets the QuaternionGDX from the given rotation matrix, which must not contain scaling. */
-	public QuaternionGDX setFromMatrix (Matrix4 matrix) {
+	public Quaternion setFromMatrix (Matrix4 matrix) {
 		return setFromMatrix(false, matrix);
 	}
 
 	/** Sets the QuaternionGDX from the given matrix, optionally removing any scaling. */
-	public QuaternionGDX setFromMatrix (boolean normalizeAxes, Matrix3 matrix) {
+	public Quaternion setFromMatrix (boolean normalizeAxes, Matrix3 matrix) {
 		return setFromAxes(normalizeAxes, matrix.val[Matrix3.M00], matrix.val[Matrix3.M01], matrix.val[Matrix3.M02],
 			matrix.val[Matrix3.M10], matrix.val[Matrix3.M11], matrix.val[Matrix3.M12], matrix.val[Matrix3.M20],
 			matrix.val[Matrix3.M21], matrix.val[Matrix3.M22]);
 	}
 
 	/** Sets the QuaternionGDX from the given rotation matrix, which must not contain scaling. */
-	public QuaternionGDX setFromMatrix (Matrix3 matrix) {
+	public Quaternion setFromMatrix (Matrix3 matrix) {
 		return setFromMatrix(false, matrix);
 	}
 
@@ -468,7 +468,7 @@ import java.io.Serializable;
 	 * @param zx z-axis x-coordinate
 	 * @param zy z-axis y-coordinate
 	 * @param zz z-axis z-coordinate */
-	public QuaternionGDX setFromAxes (float xx, float xy, float xz, float yx, float yy, float yz, float zx, float zy, float zz) {
+	public Quaternion setFromAxes (float xx, float xy, float xz, float yx, float yy, float yz, float zx, float zy, float zz) {
 		return setFromAxes(false, xx, xy, xz, yx, yy, yz, zx, zy, zz);
 	}
 
@@ -491,7 +491,7 @@ import java.io.Serializable;
 	 * @param zx z-axis x-coordinate
 	 * @param zy z-axis y-coordinate
 	 * @param zz z-axis z-coordinate */
-	public QuaternionGDX setFromAxes (boolean normalizeAxes, float xx, float xy, float xz, float yx, float yy, float yz, float zx,
+	public Quaternion setFromAxes (boolean normalizeAxes, float xx, float xy, float xz, float yx, float yy, float yz, float zx,
 		float zy, float zz) {
 		if (normalizeAxes) {
 			final float lx = 1f / Vector3.len(xx, xy, xz);
@@ -549,7 +549,7 @@ import java.io.Serializable;
 	 * @param v1 The base vector, which should be normalized.
 	 * @param v2 The target vector, which should be normalized.
 	 * @return This QuaternionGDX for chaining */
-	public QuaternionGDX setFromCross (final Vector3 v1, final Vector3 v2) {
+	public Quaternion setFromCross (final Vector3 v1, final Vector3 v2) {
 		final float dot = MathUtils.clamp(v1.dot(v2), -1f, 1f);
 		final float angle = (float)Math.acos(dot);
 		return setFromAxisRad(v1.y * v2.z - v1.z * v2.y, v1.z * v2.x - v1.x * v2.z, v1.x * v2.y - v1.y * v2.x, angle);
@@ -563,7 +563,7 @@ import java.io.Serializable;
 	 * @param y2 The target vector y value, which should be normalized.
 	 * @param z2 The target vector z value, which should be normalized.
 	 * @return This QuaternionGDX for chaining */
-	public QuaternionGDX setFromCross (final float x1, final float y1, final float z1, final float x2, final float y2, final float z2) {
+	public Quaternion setFromCross (final float x1, final float y1, final float z1, final float x2, final float y2, final float z2) {
 		final float dot = MathUtils.clamp(Vector3.dot(x1, y1, z1, x2, y2, z2), -1f, 1f);
 		final float angle = (float)Math.acos(dot);
 		return setFromAxisRad(y1 * z2 - z1 * y2, z1 * x2 - x1 * z2, x1 * y2 - y1 * x2, angle);
@@ -574,7 +574,7 @@ import java.io.Serializable;
 	 * @param end the end quaternion
 	 * @param alpha alpha in the range [0,1]
 	 * @return this QuaternionGDX for chaining */
-	public QuaternionGDX slerp (QuaternionGDX end, float alpha) {
+	public Quaternion slerp (Quaternion end, float alpha) {
 		final float d = this.x * end.x + this.y * end.y + this.z * end.z + this.w * end.w;
 		float absDot = d < 0.f ? -d : d;
 
@@ -612,7 +612,7 @@ import java.io.Serializable;
 	 * previously inside the elements of q. result = (q_1^w_1)*(q_2^w_2)* ... *(q_n^w_n) where w_i=1/n.
 	 * @param q List of quaternions
 	 * @return This QuaternionGDX for chaining */
-	public QuaternionGDX slerp (QuaternionGDX[] q) {
+	public Quaternion slerp (Quaternion[] q) {
 
 		// Calculate exponents and multiply everything from left to right
 		final float w = 1.0f / q.length;
@@ -629,7 +629,7 @@ import java.io.Serializable;
 	 * @param q List of quaternions
 	 * @param w List of weights
 	 * @return This QuaternionGDX for chaining */
-	public QuaternionGDX slerp (QuaternionGDX[] q, float[] w) {
+	public Quaternion slerp (Quaternion[] q, float[] w) {
 
 		// Calculate exponents and multiply everything from left to right
 		set(q[0]).exp(w[0]);
@@ -643,7 +643,7 @@ import java.io.Serializable;
 	 * http://en.wikipedia.org/wiki/Quaternion#Exponential.2C_logarithm.2C_and_power
 	 * @param alpha Exponent
 	 * @return This QuaternionGDX for chaining */
-	public QuaternionGDX exp (float alpha) {
+	public Quaternion exp (float alpha) {
 
 		// Calculate |q|^alpha
 		float norm = len();
@@ -691,10 +691,10 @@ import java.io.Serializable;
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof QuaternionGDX)) {
+		if (!(obj instanceof Quaternion)) {
 			return false;
 		}
-		QuaternionGDX other = (QuaternionGDX)obj;
+		Quaternion other = (Quaternion)obj;
 		return (NumberUtils.floatToRawIntBits(w) == NumberUtils.floatToRawIntBits(other.w))
 			&& (NumberUtils.floatToRawIntBits(x) == NumberUtils.floatToRawIntBits(other.x))
 			&& (NumberUtils.floatToRawIntBits(y) == NumberUtils.floatToRawIntBits(other.y))
@@ -719,7 +719,7 @@ import java.io.Serializable;
 	/** Get the dot product between this and the other QuaternionGDX (commutative).
 	 * @param other the other quaternion.
 	 * @return the dot product of this and the other quaternion. */
-	public float dot (final QuaternionGDX other) {
+	public float dot (final Quaternion other) {
 		return this.x * other.x + this.y * other.y + this.z * other.z + this.w * other.w;
 	}
 
@@ -736,7 +736,7 @@ import java.io.Serializable;
 	/** Multiplies the components of this QuaternionGDX with the given scalar.
 	 * @param scalar the scalar.
 	 * @return this QuaternionGDX for chaining. */
-	public QuaternionGDX mul (float scalar) {
+	public Quaternion mul (float scalar) {
 		this.x *= scalar;
 		this.y *= scalar;
 		this.z *= scalar;
@@ -812,8 +812,8 @@ import java.io.Serializable;
 	 * @param swing will receive the swing rotation: the rotation around an axis perpendicular to the specified axis
 	 * @param twist will receive the twist rotation: the rotation around the specified axis
 	 * @see <a href="http://www.euclideanspace.com/maths/geometry/rotations/for/decomposition">calculation</a> */
-	public void getSwingTwist (final float axisX, final float axisY, final float axisZ, final QuaternionGDX swing,
-		final QuaternionGDX twist) {
+	public void getSwingTwist (final float axisX, final float axisY, final float axisZ, final Quaternion swing,
+		final Quaternion twist) {
 		final float d = Vector3.dot(this.x, this.y, this.z, axisX, axisY, axisZ);
 		twist.set(axisX * d, axisY * d, axisZ * d, this.w).nor();
 		if (d < 0) twist.mul(-1f);
@@ -829,7 +829,7 @@ import java.io.Serializable;
 	 * @param swing will receive the swing rotation: the rotation around an axis perpendicular to the specified axis
 	 * @param twist will receive the twist rotation: the rotation around the specified axis
 	 * @see <a href="http://www.euclideanspace.com/maths/geometry/rotations/for/decomposition">calculation</a> */
-	public void getSwingTwist (final Vector3 axis, final QuaternionGDX swing, final QuaternionGDX twist) {
+	public void getSwingTwist (final Vector3 axis, final Quaternion swing, final Quaternion twist) {
 		getSwingTwist(axis.x, axis.y, axis.z, swing, twist);
 	}
 
@@ -840,7 +840,7 @@ import java.io.Serializable;
 	 * @return the angle in radians of the rotation around the specified axis */
 	public float getAngleAroundRad (final float axisX, final float axisY, final float axisZ) {
 		final float d = Vector3.dot(this.x, this.y, this.z, axisX, axisY, axisZ);
-		final float l2 = QuaternionGDX.len2(axisX * d, axisY * d, axisZ * d, this.w);
+		final float l2 = Quaternion.len2(axisX * d, axisY * d, axisZ * d, this.w);
 		return MathUtils.isZero(l2) ? 0f : (float)(2.0 * Math.acos(MathUtils.clamp(
 			(float)((d < 0 ? -this.w : this.w) / Math.sqrt(l2)), -1f, 1f)));
 	}

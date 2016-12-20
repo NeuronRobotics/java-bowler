@@ -96,8 +96,8 @@ class Matrix4 implements Serializable {
 	}
 
 	/** Constructs a rotation matrix from the given {@link Quaternion}.
-	 * @param QuaternionGDX The QuaternionGDX to be copied. (The QuaternionGDX is not modified) */
-	public Matrix4 (QuaternionGDX quaternion) {
+	 * @param Quaternion The QuaternionGDX to be copied. (The QuaternionGDX is not modified) */
+	public Matrix4 (Quaternion quaternion) {
 		this.set(quaternion);
 	}
 
@@ -105,7 +105,7 @@ class Matrix4 implements Serializable {
 	 * @param position The translation
 	 * @param rotation The rotation, must be normalized
 	 * @param scale The scale */
-	public Matrix4 (Vector3 position, QuaternionGDX rotation, Vector3 scale) {
+	public Matrix4 (Vector3 position, Quaternion rotation, Vector3 scale) {
 		set(position, rotation, scale);
 	}
 
@@ -130,9 +130,9 @@ class Matrix4 implements Serializable {
 
 	/** Sets the matrix to a rotation matrix representing the quaternion.
 	 * 
-	 * @param QuaternionGDX The QuaternionGDX that is to be used to set this matrix.
+	 * @param Quaternion The QuaternionGDX that is to be used to set this matrix.
 	 * @return This matrix for the purpose of chaining methods together. */
-	public Matrix4 set (QuaternionGDX quaternion) {
+	public Matrix4 set (Quaternion quaternion) {
 		return set(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
 	}
 
@@ -151,7 +151,7 @@ class Matrix4 implements Serializable {
 	 * @param position The translation
 	 * @param orientation The rotation, must be normalized
 	 * @return This matrix for chaining */
-	public Matrix4 set (Vector3 position, QuaternionGDX orientation) {
+	public Matrix4 set (Vector3 position, Quaternion orientation) {
 		return set(position.x, position.y, position.z, orientation.x, orientation.y, orientation.z, orientation.w);
 	}
 
@@ -199,7 +199,7 @@ class Matrix4 implements Serializable {
 	 * @param orientation The rotation, must be normalized
 	 * @param scale The scale
 	 * @return This matrix for chaining */
-	public Matrix4 set (Vector3 position, QuaternionGDX orientation, Vector3 scale) {
+	public Matrix4 set (Vector3 position, Quaternion orientation, Vector3 scale) {
 		return set(position.x, position.y, position.z, orientation.x, orientation.y, orientation.z, orientation.w, scale.x,
 			scale.y, scale.z);
 	}
@@ -698,8 +698,8 @@ class Matrix4 implements Serializable {
 		return this;
 	}
 
-	static QuaternionGDX quat = new QuaternionGDX();
-	static QuaternionGDX quat2 = new QuaternionGDX();
+	static Quaternion quat = new Quaternion();
+	static Quaternion quat2 = new Quaternion();
 
 	/** Sets the matrix to a rotation matrix around the given axis.
 	 * 
@@ -1047,14 +1047,14 @@ class Matrix4 implements Serializable {
 	 * @param rotation The {@link Quaternion} to receive the rotation
 	 * @param normalizeAxes True to normalize the axes, necessary when the matrix might also include scaling.
 	 * @return The provided {@link Quaternion} for chaining. */
-	public QuaternionGDX getRotation (QuaternionGDX rotation, boolean normalizeAxes) {
+	public Quaternion getRotation (Quaternion rotation, boolean normalizeAxes) {
 		return rotation.setFromMatrix(normalizeAxes, this);
 	}
 
 	/** Gets the rotation of this matrix.
 	 * @param rotation The {@link Quaternion} to receive the rotation
 	 * @return The provided {@link Quaternion} for chaining. */
-	public QuaternionGDX getRotation (QuaternionGDX rotation) {
+	public Quaternion getRotation (Quaternion rotation) {
 		return rotation.setFromMatrix(this);
 	}
 
@@ -1451,7 +1451,7 @@ class Matrix4 implements Serializable {
 	 * 
 	 * @param rotation
 	 * @return This matrix for the purpose of chaining methods together. */
-	public Matrix4 rotate (QuaternionGDX rotation) {
+	public Matrix4 rotate (Quaternion rotation) {
 		rotation.toMatrix(tmp);
 		mul(val, tmp);
 		return this;
