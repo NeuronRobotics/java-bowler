@@ -35,9 +35,9 @@ public class WalkingDriveEngine implements IDriveEngine {
 		global.translateX(newPose.getX());
 		global.translateY(newPose.getY());
 		global.translateZ(newPose.getZ());
-		double rotz = newPose.getRotation().getRotationZ() +global.getRotation().getRotationZ() ;
-		double roty = newPose.getRotation().getRotationY() ;
-		double rotx = newPose.getRotation().getRotationX() ;
+		double rotz = newPose.getRotation().getRotationAzimuth() +global.getRotation().getRotationAzimuth() ;
+		double roty = newPose.getRotation().getRotationElevation() ;
+		double rotx = newPose.getRotation().getRotationTilt() ;
 		global.setRotation(new RotationNR( rotx,roty, rotz) );
 		// New target calculated appliaed to global offset
 		source.setGlobalToFiducialTransform(global);
