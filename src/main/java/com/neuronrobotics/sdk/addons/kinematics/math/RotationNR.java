@@ -5,6 +5,8 @@ import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 import org.apache.commons.math3.geometry.euclidean.threed.RotationConvention;
 import org.apache.commons.math3.geometry.euclidean.threed.RotationOrder;
 
+import com.neuronrobotics.sdk.common.Log;
+
 // TODO: Auto-generated Javadoc
 /**
  * This class is to represent a 3x3 rotation sub-matrix This class also contains
@@ -20,7 +22,7 @@ public class RotationNR {
 	//double[][] rotationMatrix = ;
 	private Rotation storage=new Rotation(1,0,0,0,false);
 	private static RotationOrder order = RotationOrder.XYZ;
-	private static RotationConvention convention = RotationConvention.FRAME_TRANSFORM;
+	private static RotationConvention convention = RotationConvention.VECTOR_OPERATOR;
 	/**
 	 * Null constructor forms a.
 	 */
@@ -51,7 +53,7 @@ public class RotationNR {
 		loadFromAngles(tilt, azumeth, elevation);
 		if (Double.isNaN(getRotationMatrix2QuaturnionW()) || Double.isNaN(getRotationMatrix2QuaturnionX())
 				|| Double.isNaN(getRotationMatrix2QuaturnionY()) || Double.isNaN(getRotationMatrix2QuaturnionZ())) {
-			// System.err.println("Failing to set proper angle, jittering");
+			Log.error("Failing to set proper angle, jittering");
 			loadFromAngles(tilt + Math.random() * .02 + .001, azumeth + Math.random() * .02 + .001,
 					elevation + Math.random() * .02 + .001);
 		}

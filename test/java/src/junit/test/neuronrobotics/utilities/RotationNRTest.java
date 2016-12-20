@@ -21,11 +21,11 @@ public class RotationNRTest {
 	@Test
 	public void test() {
 		int failCount = 0;
-		int iterations = 10;
+		int iterations = 100;
 		RotationOrder[] list = { RotationOrder.XYZ
 				
 		};
-		RotationConvention[] conventions = { RotationConvention.FRAME_TRANSFORM, RotationConvention.VECTOR_OPERATOR };
+		RotationConvention[] conventions = {  RotationConvention.VECTOR_OPERATOR };
 		for (RotationConvention conv : conventions) {
 			RotationNR.setConvention(conv);
 			System.out.println("\n\nUsing convention " + conv.toString());
