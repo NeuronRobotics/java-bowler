@@ -19,8 +19,8 @@ public class RotationNR {
 	/** The rotation matrix. */
 	//double[][] rotationMatrix = ;
 	private Rotation storage=new Rotation(1,0,0,0,false);
-	private RotationOrder order = RotationOrder.ZXZ;
-	private RotationConvention convention = RotationConvention.VECTOR_OPERATOR;
+	private static RotationOrder order = RotationOrder.ZXZ;
+	private static RotationConvention convention = RotationConvention.FRAME_TRANSFORM;
 	/**
 	 * Null constructor forms a.
 	 */
@@ -56,7 +56,11 @@ public class RotationNR {
 	}
 
 	private void loadFromAngles(double tilt, double azumeth, double elevation) {
-		storage = new Rotation(order, convention, azumeth, elevation, tilt);
+		storage = new Rotation(getOrder(), getConvention(), 
+				Math.toRadians(azumeth), 
+				Math.toRadians(elevation), 
+				Math.toRadians(tilt)
+				);
 	}
 
 	/**
@@ -315,7 +319,7 @@ public class RotationNR {
 	 */
 	public double getRotationTilt() {
 
-		return storage.getAngles(order, convention)[1];
+		return storage.getAngles(getOrder(), getConvention())[2];
 
 	}
 
@@ -326,7 +330,7 @@ public class RotationNR {
 	 */
 	public double getRotationElevation() {
 
-		return storage.getAngles(order, convention)[1];
+		return storage.getAngles(getOrder(), getConvention())[1];
 	}
 
 	/**
@@ -336,7 +340,7 @@ public class RotationNR {
 	 */
 	public double getRotationAzimuth() {
 
-		return storage.getAngles(order, convention)[0];
+		return storage.getAngles(getOrder(), getConvention())[0];
 	}
 
 	/**
@@ -373,6 +377,22 @@ public class RotationNR {
 	 */
 	public double getRotationMatrix2QuaturnionZ() {
 		return storage.getQ3();
+	}
+
+	public static  RotationOrder getOrder() {
+		return order;
+	}
+
+	public static  void setOrder(RotationOrder o) {
+		order = o;
+	}
+
+	public static RotationConvention getConvention() {
+		return convention;
+	}
+
+	public static void setConvention(RotationConvention convention) {
+		RotationNR.convention = convention;
 	}
 
 }
