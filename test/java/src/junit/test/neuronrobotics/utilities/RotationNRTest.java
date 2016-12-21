@@ -2,11 +2,22 @@ package junit.test.neuronrobotics.utilities;
 
 import static org.junit.Assert.*;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+
 import org.apache.commons.math3.geometry.euclidean.threed.RotationConvention;
 import org.apache.commons.math3.geometry.euclidean.threed.RotationOrder;
 import org.junit.Test;
 
+import com.neuronrobotics.sdk.addons.kinematics.DHParameterKinematics;
+import com.neuronrobotics.sdk.addons.kinematics.MobileBase;
 import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
+import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
+import com.neuronrobotics.sdk.addons.kinematics.parallel.ParallelGroup;
+import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 // TODO: Auto-generated Javadoc
@@ -17,11 +28,12 @@ public class RotationNRTest {
 
 	/**
 	 * Test.
+	 * @throws FileNotFoundException 
 	 */
 	@Test
-	public void test() {
+	public void test() throws FileNotFoundException {
 		int failCount = 0;
-		int iterations = 100;
+		int iterations = 10;
 		RotationOrder[] list = { RotationOrder.XYZ
 				
 		};
@@ -70,9 +82,29 @@ public class RotationNRTest {
 				}
 				if (failCount < 1) {
 					System.out.println("Orentation " + ro.toString() + " worked ina all cases");
-					return;
+
 				}
 			}
+		}
+		new RotationNR(0.38268343236509234, -1.2443977214448087E-17, 2.1758644300923683E-16, -0.9238795325112857);
+		File f = new File("carlRobot.xml");
+		if (f.exists()) {
+			MobileBase pArm = new MobileBase(new FileInputStream(f));
+			try{
+				String xmlParsed = pArm.getXml();
+				BufferedWriter writer = null;
+	
+				writer = new BufferedWriter(new FileWriter("carlRobot2.xml"));
+				writer.write(xmlParsed);
+	
+				if (writer != null)
+					writer.close();
+				
+			}catch(Exception ex){
+				ex.printStackTrace();
+			}
+			pArm.disconnect();
+			System.exit(0);
 		}
 		if (failCount > 1) {
 			fail("Rotation failed " + failCount + " times of " + ((iterations * 3 * list.length) - 0));
