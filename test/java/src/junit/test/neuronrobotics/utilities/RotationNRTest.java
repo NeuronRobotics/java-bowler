@@ -15,7 +15,8 @@ import org.junit.Test;
 import com.neuronrobotics.sdk.addons.kinematics.DHParameterKinematics;
 import com.neuronrobotics.sdk.addons.kinematics.MobileBase;
 import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
-import com.neuronrobotics.sdk.addons.kinematics.math.RotationNRWrapper;
+import com.neuronrobotics.sdk.addons.kinematics.math.RotationNRLegacy;
+import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.parallel.ParallelGroup;
 import com.neuronrobotics.sdk.common.Log;
@@ -125,11 +126,12 @@ public class RotationNRTest {
 				//RotationOrder.YZY, RotationOrder.ZXZ, RotationOrder.ZYZ 
 				};
 		RotationConvention[] conventions = { RotationConvention.VECTOR_OPERATOR };
+		Log.enableDebugPrint();
 		for (RotationConvention conv : conventions) {
-			RotationNRWrapper.setConvention(conv);
+			RotationNR.setConvention(conv);
 			System.out.println("\n\nUsing convention " + conv.toString());
 			for (RotationOrder ro : list) {
-				RotationNRWrapper.setOrder(ro);
+				RotationNR.setOrder(ro);
 				System.out.println("\n\nUsing rotationOrder " + ro.toString());
 				failCount = 0;
 				for (int i = 0; i < iterations; i++) {
@@ -152,8 +154,8 @@ public class RotationNRTest {
 					rotation[1][2] = 0;
 					rotation[2][2] = 1;
 					// pure rotation in azumuth
-					RotationNRWrapper newRot = new RotationNRWrapper(rotation);
-					RotationNR oldRot = new RotationNR(rotation);
+					RotationNR newRot = new RotationNR(rotation);
+					RotationNRLegacy oldRot = new RotationNRLegacy(rotation);
 					double[][] rotationMatrix = newRot.getRotationMatrix();
 					System.out.println("Testing pure azumeth \nrotation "+rotationAngleDegrees+
 							"\n as radian "+Math.toRadians(rotationAngleDegrees)+
@@ -190,25 +192,30 @@ public class RotationNRTest {
 							Math.abs(newRot.getRotationMatrix2QuaturnionZ()),
 					}, 0.001);
 					// Check Euler angles
-//					assertArrayEquals(new double []{
-//							oldRot.getRotationAzimuth(),
-//							oldRot.getRotationElevation(),
-//							oldRot.getRotationTilt()
-//					}, new double []{
-//							newRot.getRotationAzimuth(),
-//							newRot.getRotationElevation(),
-//							newRot.getRotationTilt()
-//					}, 0.001);
-					// Check the old rotation against the known value
-//					assertArrayEquals(new double []{
-//							Math.toRadians(rotationAngleDegrees),
-//							0,
-//							0
-//					}, new double []{
-//							oldRot.getRotationAzimuth(),
-//							oldRot.getRotationElevation(),
-//							oldRot.getRotationTilt()
-//					}, 0.001);
+					// this check is needed to work around a known bug in the legact implementation
+					if(!(rotationAngleDegrees>=90||rotationAngleDegrees<=-90)){
+						assertArrayEquals(new double []{
+								oldRot.getRotationAzimuth(),
+								oldRot.getRotationElevation(),
+								oldRot.getRotationTilt()
+						}, new double []{
+								newRot.getRotationAzimuth(),
+								newRot.getRotationElevation(),
+								newRot.getRotationTilt()
+						}, 0.001);
+						// Check the old rotation against the known value
+						assertArrayEquals(new double []{
+								Math.toRadians(rotationAngleDegrees),
+								0,
+								0
+						}, new double []{
+								oldRot.getRotationAzimuth(),
+								oldRot.getRotationElevation(),
+								oldRot.getRotationTilt()
+						}, 0.001);
+					}else{
+						System.err.println("Legacy angle would fail here "+rotationAngleDegrees);
+					}
 					// Check the new rotation against the known value
 					assertArrayEquals(new double []{
 							Math.toRadians(rotationAngleDegrees),
@@ -245,10 +252,10 @@ public class RotationNRTest {
 				};
 		RotationConvention[] conventions = { RotationConvention.VECTOR_OPERATOR };
 		for (RotationConvention conv : conventions) {
-			RotationNRWrapper.setConvention(conv);
+			RotationNR.setConvention(conv);
 			System.out.println("\n\nUsing convention " + conv.toString());
 			for (RotationOrder ro : list) {
-				RotationNRWrapper.setOrder(ro);
+				RotationNR.setOrder(ro);
 				System.out.println("\n\nUsing rotationOrder " + ro.toString());
 				failCount = 0;
 				for (int i = 0; i < iterations; i++) {
@@ -271,8 +278,8 @@ public class RotationNRTest {
 					rotation[1][2] = 0;
 					rotation[2][2] = Math.cos(rotationAngleRadians);
 					// pure rotation in azumuth
-					RotationNRWrapper newRot = new RotationNRWrapper(rotation);
-					RotationNR oldRot = new RotationNR(rotation);
+					RotationNR newRot = new RotationNR(rotation);
+					RotationNRLegacy oldRot = new RotationNRLegacy(rotation);
 					double[][] rotationMatrix = newRot.getRotationMatrix();
 					System.out.println("Testing pure elevation \nrotation "+rotationAngleDegrees+
 							"\n as radian "+Math.toRadians(rotationAngleDegrees)+
@@ -309,15 +316,15 @@ public class RotationNRTest {
 							Math.abs(newRot.getRotationMatrix2QuaturnionZ()),
 					}, 0.001);
 					// Check Euler angles
-//					assertArrayEquals(new double []{
-//							oldRot.getRotationAzimuth(),
-//							oldRot.getRotationElevation(),
-//							oldRot.getRotationTilt()
-//					}, new double []{
-//							newRot.getRotationAzimuth(),
-//							newRot.getRotationElevation(),
-//							newRot.getRotationTilt()
-//					}, 0.001);
+					assertArrayEquals(new double []{
+							oldRot.getRotationAzimuth(),
+							oldRot.getRotationElevation(),
+							oldRot.getRotationTilt()
+					}, new double []{
+							newRot.getRotationAzimuth(),
+							newRot.getRotationElevation(),
+							newRot.getRotationTilt()
+					}, 0.001);
 					// Check the old rotation against the known value
 					assertArrayEquals(new double []{
 							
@@ -365,10 +372,10 @@ public class RotationNRTest {
 				};
 		RotationConvention[] conventions = { RotationConvention.VECTOR_OPERATOR };
 		for (RotationConvention conv : conventions) {
-			RotationNRWrapper.setConvention(conv);
+			RotationNR.setConvention(conv);
 			System.out.println("\n\nUsing convention " + conv.toString());
 			for (RotationOrder ro : list) {
-				RotationNRWrapper.setOrder(ro);
+				RotationNR.setOrder(ro);
 				System.out.println("\n\nUsing rotationOrder " + ro.toString());
 				failCount = 0;
 				for (int i = 0; i < iterations; i++) {
@@ -391,8 +398,8 @@ public class RotationNRTest {
 					rotation[1][2] = -Math.sin(rotationAngleRadians);
 					rotation[2][2] = Math.cos(rotationAngleRadians);
 					// pure rotation in azumuth
-					RotationNRWrapper newRot = new RotationNRWrapper(rotation);
-					RotationNR oldRot = new RotationNR(rotation);
+					RotationNR newRot = new RotationNR(rotation);
+					RotationNRLegacy oldRot = new RotationNRLegacy(rotation);
 					double[][] rotationMatrix = newRot.getRotationMatrix();
 					System.out.println("Testing pure tilt \nrotation "+rotationAngleDegrees+
 							"\n as radian "+Math.toRadians(rotationAngleDegrees)+
@@ -429,15 +436,15 @@ public class RotationNRTest {
 							Math.abs(newRot.getRotationMatrix2QuaturnionZ()),
 					}, 0.001);
 					// Check Euler angles
-//					assertArrayEquals(new double []{
-//							oldRot.getRotationAzimuth(),
-//							oldRot.getRotationElevation(),
-//							oldRot.getRotationTilt()
-//					}, new double []{
-//							newRot.getRotationAzimuth(),
-//							newRot.getRotationElevation(),
-//							newRot.getRotationTilt()
-//					}, 0.001);
+					assertArrayEquals(new double []{
+							oldRot.getRotationAzimuth(),
+							oldRot.getRotationElevation(),
+							oldRot.getRotationTilt()
+					}, new double []{
+							newRot.getRotationAzimuth(),
+							newRot.getRotationElevation(),
+							newRot.getRotationTilt()
+					}, 0.001);
 					// Check the old rotation against the known value
 					assertArrayEquals(new double []{
 							0,
