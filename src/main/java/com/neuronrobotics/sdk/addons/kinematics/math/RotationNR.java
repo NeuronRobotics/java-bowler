@@ -28,16 +28,22 @@ public class RotationNR {
 	 */
 	public RotationNR() {
 	}
-
+	/**
+	 * Instatiate using the org.apache.commons.math3.geometry.euclidean.threed.Rotation .
+	 * @param store A org.apache.commons.math3.geometry.euclidean.threed.Rotation instance
+	 */
+	public RotationNR(Rotation store) {
+		storage=store;
+	}
 	/**
 	 * Instantiates a new rotation nr.
 	 *
-	 * @param elevation
-	 *            the elevation
-	 * @param tilt
+	 ** @param tilt
 	 *            the tilt
 	 * @param azumeth
 	 *            the azumeth
+	 * @param elevation
+	 *            the elevation
 	 */
 	// create a new object with the given simplified rotations
 	public RotationNR(double tilt, double azumeth, double elevation) {
@@ -241,8 +247,9 @@ public class RotationNR {
 		s += "]";
 		return "Quaturnion: " + "W=" + getRotationMatrix2QuaturnionW() + ", " + "x=" + getRotationMatrix2QuaturnionX()
 				+ ", " + "y=" + getRotationMatrix2QuaturnionY() + ", " + "z=" + getRotationMatrix2QuaturnionZ() + "\n"
-				+ "Rotation angle (degrees): " + "az=" + getRotationAzimuth() + ", " + "elev=" + getRotationElevation() + ", " + " tilt="
-				+ getRotationTilt() + "";
+				+ "Rotation angle (degrees): " + "az= " + Math.toDegrees(getRotationAzimuth()) + 
+											", elev= " + Math.toDegrees(getRotationElevation())  +
+											", tilt="+ Math.toDegrees(getRotationTilt())  ;
 	}
 
 	/**
