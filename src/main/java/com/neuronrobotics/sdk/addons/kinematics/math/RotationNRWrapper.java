@@ -60,13 +60,6 @@ public class RotationNRWrapper {
 
 	}
 
-	private void loadFromAngles(double tilt, double azumeth, double elevation) {
-		storage = new Rotation(getOrder(), getConvention(), 
-				Math.toRadians(azumeth), 
-				Math.toRadians(elevation), 
-				Math.toRadians(tilt)
-				);
-	}
 
 	/**
 	 * Instantiates a new rotation nr.
@@ -216,7 +209,7 @@ public class RotationNRWrapper {
 				throw new RuntimeException("Must be 3x3 rotation matrix");
 			}
 		}
-		storage = new Rotation(rotM, 0.00001);
+		setStorage(new Rotation(rotM, 0.00001));
 	}
 
 	/**
@@ -226,7 +219,7 @@ public class RotationNRWrapper {
 	 */
 	public double[][] getRotationMatrix() {
 		
-		return storage.getMatrix();
+		return getStorage().getMatrix();
 	}
 
 	/*
@@ -294,7 +287,7 @@ public class RotationNRWrapper {
 			throw new RuntimeException("Value can not be NaN");
 		if (Double.isNaN(z))
 			throw new RuntimeException("Value can not be NaN");
-		storage = new Rotation(w, x, y,z, true);
+		setStorage(new Rotation(w, x, y,-z, true));
 	}
 
 	
@@ -315,7 +308,14 @@ public class RotationNRWrapper {
 
 
 
-	
+	private void loadFromAngles(double tilt, double azumeth, double elevation) {
+		setStorage(new Rotation(getOrder(), getConvention(), 
+				Math.toRadians(tilt), 
+				Math.toRadians(elevation), 
+				Math.toRadians(azumeth)
+				));
+	}
+
 
 	/**
 	 * Gets the rotation tilt.
@@ -324,7 +324,7 @@ public class RotationNRWrapper {
 	 */
 	public double getRotationTilt() {
 
-		return storage.getAngles(getOrder(), getConvention())[2];
+		return getStorage().getAngles(getOrder(), getConvention())[0];
 
 	}
 
@@ -335,7 +335,7 @@ public class RotationNRWrapper {
 	 */
 	public double getRotationElevation() {
 
-		return storage.getAngles(getOrder(), getConvention())[1];
+		return getStorage().getAngles(getOrder(), getConvention())[1];
 	}
 
 	/**
@@ -345,7 +345,7 @@ public class RotationNRWrapper {
 	 */
 	public double getRotationAzimuth() {
 
-		return storage.getAngles(getOrder(), getConvention())[0];
+		return getStorage().getAngles(getOrder(), getConvention())[2];
 	}
 
 	/**
@@ -354,7 +354,7 @@ public class RotationNRWrapper {
 	 * @return the rotation matrix2 quaturnion w
 	 */
 	public double getRotationMatrix2QuaturnionW() {
-		return storage.getQ0();
+		return getStorage().getQ0();
 	}
 
 	/**
@@ -363,7 +363,7 @@ public class RotationNRWrapper {
 	 * @return the rotation matrix2 quaturnion x
 	 */
 	public double getRotationMatrix2QuaturnionX() {
-		return storage.getQ1();
+		return getStorage().getQ1();
 	}
 
 	/**
@@ -372,7 +372,7 @@ public class RotationNRWrapper {
 	 * @return the rotation matrix2 quaturnion y
 	 */
 	public double getRotationMatrix2QuaturnionY() {
-		return storage.getQ2();
+		return getStorage().getQ2();
 	}
 
 	/**
@@ -381,7 +381,7 @@ public class RotationNRWrapper {
 	 * @return the rotation matrix2 quaturnion z
 	 */
 	public double getRotationMatrix2QuaturnionZ() {
-		return storage.getQ3();
+		return -getStorage().getQ3();
 	}
 
 	public static  RotationOrder getOrder() {
@@ -398,6 +398,14 @@ public class RotationNRWrapper {
 
 	public static void setConvention(RotationConvention convention) {
 		RotationNRWrapper.convention = convention;
+	}
+
+	public Rotation getStorage() {
+		return storage;
+	}
+
+	public void setStorage(Rotation storage) {
+		this.storage = storage;
 	}
 
 }

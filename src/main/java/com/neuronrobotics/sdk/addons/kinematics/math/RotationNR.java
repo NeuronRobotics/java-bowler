@@ -35,7 +35,7 @@ public class RotationNR {
 	 *            the azumeth
 	 */
 	// create a new object with the given simplified rotations
-	public RotationNR(double tilt, double azumeth, double elevation) {
+	public RotationNR(double tilt, double elevation, double azumeth) {
 		if (Double.isNaN(tilt))
 			throw new NumberFormatException("Value can not be NaN");
 		if (Double.isNaN(azumeth))
@@ -481,7 +481,7 @@ public class RotationNR {
 	 * @return the rot angle
 	 */
 	private double getRotAngle(int index) {
-		double w, x, y, z, tilt, azumiuth, elevation;
+		double w, x, y, z, tilt, elev, azumeth;
 		w = getRotationMatrix2QuaturnionW();
 		x = getRotationMatrix2QuaturnionX();
 		y = getRotationMatrix2QuaturnionY();
@@ -502,19 +502,19 @@ public class RotationNR {
 																// the data type
 		if (test > testingValue) { // singularity at north pole
 			Log.warning("North pole singularity ");
-			azumiuth = 2 * Math.atan2(x, w);
-			elevation = Math.PI / 2;
+			elev = 2 * Math.atan2(x, w);
+			azumeth = Math.PI / 2;
 			tilt = 0;
 
 		} else if (test < -testingValue) { // singularity at south pole
 			Log.warning("South pole singularity");
-			azumiuth = -2 * Math.atan2(x, w);
-			elevation = -Math.PI / 2;
+			elev = -2 * Math.atan2(x, w);
+			azumeth = -Math.PI / 2;
 			tilt = 0;
 
 		} else {
-			azumiuth = Math.atan2(2 * y * w - 2 * x * z, sqx - sqy - sqz + sqw);
-			elevation = Math.asin(2 * test / unit);
+			elev = Math.atan2(2 * y * w - 2 * x * z, sqx - sqy - sqz + sqw);
+			azumeth = Math.asin(2 * test / unit);
 			tilt = Math.atan2(2 * x * w - 2 * y * z, -sqx + sqy - sqz + sqw);
 		}
 
@@ -522,9 +522,9 @@ public class RotationNR {
 		case 0:
 			return tilt;
 		case 1:
-			return elevation;
+			return elev;
 		case 2:
-			return azumiuth;
+			return azumeth;
 		default:
 			return 0;
 		}

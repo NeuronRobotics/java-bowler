@@ -15,6 +15,7 @@ import org.junit.Test;
 import com.neuronrobotics.sdk.addons.kinematics.DHParameterKinematics;
 import com.neuronrobotics.sdk.addons.kinematics.MobileBase;
 import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
+import com.neuronrobotics.sdk.addons.kinematics.math.RotationNRWrapper;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.parallel.ParallelGroup;
 import com.neuronrobotics.sdk.common.Log;
@@ -49,10 +50,10 @@ public class RotationNRTest {
 			for (RotationOrder ro : list) {
 				// RotationNR.setOrder(ro);
 				System.out.println("\n\nUsing rotationOrder " + ro.toString());
-				failCount = 0;
+				//
 				for (int i = 0; i < iterations; i++) {
 					double tilt = Math.toRadians((Math.random() * 360) - 180);
-					double elevation = Math.toRadians((Math.random() * 360) - 180);
+					double elevation = Math.toRadians((Math.random() * 180) - 90);
 					double azumus = Math.toRadians((Math.random() * 360) - 180);
 					try {
 						RotationNR rotTest = new RotationNR(Math.toDegrees(tilt), Math.toDegrees(azumus),
@@ -93,9 +94,131 @@ public class RotationNRTest {
 					}
 
 				}
-				if (failCount < 1) {
-					System.out.println("Orentation " + ro.toString() + " worked in all cases");
+				
+				// frame();
+				// frame2();
+				System.out.println("Frame test passed with " + ro);
+				//return;
+			}
+		}
+		if (failCount > 1) {
+			fail();
 
+		}
+	}
+
+
+	/**
+	 * Test.
+	 * 
+	 * @throws FileNotFoundException
+	 */
+	@Test
+	public void compareAzemuth() throws FileNotFoundException {
+		int failCount = 0;
+		int iterations = 100;
+		RotationOrder[] list = {  RotationOrder.XYZ
+									// RotationOrder.XZY,
+									// RotationOrder.YXZ,
+									// RotationOrder.YZX,
+				//RotationOrder.ZXY, RotationOrder.ZYX, RotationOrder.XYX, RotationOrder.XZX, RotationOrder.YXY,
+				//RotationOrder.YZY, RotationOrder.ZXZ, RotationOrder.ZYZ 
+				};
+		RotationConvention[] conventions = { RotationConvention.VECTOR_OPERATOR };
+		for (RotationConvention conv : conventions) {
+			RotationNRWrapper.setConvention(conv);
+			System.out.println("\n\nUsing convention " + conv.toString());
+			for (RotationOrder ro : list) {
+				RotationNRWrapper.setOrder(ro);
+				System.out.println("\n\nUsing rotationOrder " + ro.toString());
+				failCount = 0;
+				for (int i = 0; i < iterations; i++) {
+					
+					double rotationAngleDegrees = (Math.random() * 360) - 180;
+					
+					double rotationAngleRadians = Math.PI / 180 * rotationAngleDegrees;
+
+					double[][] rotation = new double[3][3];
+					// Rotation matrix, 1st column
+					rotation [0][0] = Math.cos(rotationAngleRadians);
+					rotation[1][0] = Math.sin(rotationAngleRadians);
+					rotation[2][0] = 0;
+					// Rotation matrix, 2nd column
+					rotation[0][1] = -Math.sin(rotationAngleRadians);
+					rotation[1][1] = Math.cos(rotationAngleRadians);
+					rotation[2][1] = 0;
+					// Rotation matrix, 3rd column
+					rotation[0][2] = 0;
+					rotation[1][2] = 0;
+					rotation[2][2] = 1;
+					// pure rotation in azumuth
+					RotationNRWrapper newRot = new RotationNRWrapper(rotation);
+					RotationNR oldRot = new RotationNR(rotation);
+					double[][] rotationMatrix = newRot.getRotationMatrix();
+					System.out.println("Testing pure azumeth \nrotation "+rotationAngleDegrees+
+							"\n as radian "+Math.toRadians(rotationAngleDegrees)+
+							"\n     Az "+oldRot.getRotationAzimuth()+
+							"\n     El "+oldRot.getRotationElevation()+
+							"\n     Tl "+oldRot.getRotationTilt()+
+							"\n New Az "+newRot.getRotationAzimuth()+
+							"\n New El "+newRot.getRotationElevation()+
+							"\n New Tl "+newRot.getRotationTilt()
+							);
+					assertArrayEquals(rotation[0], rotationMatrix[0], 0.001);
+					assertArrayEquals(rotation[1], rotationMatrix[1], 0.001);
+					assertArrayEquals(rotation[2], rotationMatrix[2], 0.001);
+					
+					System.out.println("Testing Quaturnion \nrotation "+
+							"\n     qw "+oldRot.getRotationMatrix2QuaturnionW()+
+							"\n     qx "+oldRot.getRotationMatrix2QuaturnionX()+
+							"\n     qy "+oldRot.getRotationMatrix2QuaturnionY()+
+							"\n     qz "+oldRot.getRotationMatrix2QuaturnionZ()+
+							"\nNEW  qw "+newRot.getRotationMatrix2QuaturnionW()+
+							"\nNEW  qx "+newRot.getRotationMatrix2QuaturnionX()+
+							"\nNEW  qy "+newRot.getRotationMatrix2QuaturnionY()+
+							"\nNEW  qz "+newRot.getRotationMatrix2QuaturnionZ()
+							);
+					assertArrayEquals(new double []{
+							Math.abs(oldRot.getRotationMatrix2QuaturnionW()),
+							Math.abs(oldRot.getRotationMatrix2QuaturnionX()),
+							Math.abs(oldRot.getRotationMatrix2QuaturnionY()),
+							Math.abs(oldRot.getRotationMatrix2QuaturnionZ()),
+					}, new double []{
+							Math.abs(newRot.getRotationMatrix2QuaturnionW()),
+							Math.abs(newRot.getRotationMatrix2QuaturnionX()),
+							Math.abs(newRot.getRotationMatrix2QuaturnionY()),
+							Math.abs(newRot.getRotationMatrix2QuaturnionZ()),
+					}, 0.001);
+					// Check Euler angles
+//					assertArrayEquals(new double []{
+//							oldRot.getRotationAzimuth(),
+//							oldRot.getRotationElevation(),
+//							oldRot.getRotationTilt()
+//					}, new double []{
+//							newRot.getRotationAzimuth(),
+//							newRot.getRotationElevation(),
+//							newRot.getRotationTilt()
+//					}, 0.001);
+					// Check the old rotation against the known value
+//					assertArrayEquals(new double []{
+//							Math.toRadians(rotationAngleDegrees),
+//							0,
+//							0
+//					}, new double []{
+//							oldRot.getRotationAzimuth(),
+//							oldRot.getRotationElevation(),
+//							oldRot.getRotationTilt()
+//					}, 0.001);
+					// Check the new rotation against the known value
+					assertArrayEquals(new double []{
+							Math.toRadians(rotationAngleDegrees),
+							0,
+							0
+					}, new double []{
+							newRot.getRotationAzimuth(),
+							newRot.getRotationElevation(),
+							newRot.getRotationTilt()
+					}, 0.001);
 				}
 				// frame();
 				// frame2();
@@ -103,82 +226,244 @@ public class RotationNRTest {
 				//return;
 			}
 		}
+	}
+	/**
+	 * Test.
+	 * 
+	 * @throws FileNotFoundException
+	 */
+	@Test
+	public void compareElevation() throws FileNotFoundException {
+		int failCount = 0;
+		int iterations = 100;
+		RotationOrder[] list = {  RotationOrder.XYZ
+									// RotationOrder.XZY,
+									// RotationOrder.YXZ,
+									// RotationOrder.YZX,
+				//RotationOrder.ZXY, RotationOrder.ZYX, RotationOrder.XYX, RotationOrder.XZX, RotationOrder.YXY,
+				//RotationOrder.YZY, RotationOrder.ZXZ, RotationOrder.ZYZ 
+				};
+		RotationConvention[] conventions = { RotationConvention.VECTOR_OPERATOR };
+		for (RotationConvention conv : conventions) {
+			RotationNRWrapper.setConvention(conv);
+			System.out.println("\n\nUsing convention " + conv.toString());
+			for (RotationOrder ro : list) {
+				RotationNRWrapper.setOrder(ro);
+				System.out.println("\n\nUsing rotationOrder " + ro.toString());
+				failCount = 0;
+				for (int i = 0; i < iterations; i++) {
+					
+					double rotationAngleDegrees = (Math.random() * 180) - 90;
+					
+					double rotationAngleRadians = Math.PI / 180 * rotationAngleDegrees;
 
-		File f = new File("carlRobot.xml");
-		if (f.exists()) {
-			MobileBase pArm = new MobileBase(new FileInputStream(f));
-			try {
-				String xmlParsed = pArm.getXml();
-				BufferedWriter writer = null;
-
-				writer = new BufferedWriter(new FileWriter("carlRobot2.xml"));
-				writer.write(xmlParsed);
-
-				if (writer != null)
-					writer.close();
-
-			} catch (Exception ex) {
-				ex.printStackTrace();
+					double[][] rotation = new double[3][3];
+					// Rotation matrix, 1st column
+					rotation[0][0] = Math.cos(rotationAngleRadians);
+					rotation[1][0] = 0;
+					rotation[2][0] = -Math.sin(rotationAngleRadians);
+					// Rotation matrix, 2nd column
+					rotation[0][1] = 0;
+					rotation[1][1] = 1;
+					rotation[2][1] = 0;
+					// Rotation matrix, 3rd column
+					rotation[0][2] = Math.sin(rotationAngleRadians);
+					rotation[1][2] = 0;
+					rotation[2][2] = Math.cos(rotationAngleRadians);
+					// pure rotation in azumuth
+					RotationNRWrapper newRot = new RotationNRWrapper(rotation);
+					RotationNR oldRot = new RotationNR(rotation);
+					double[][] rotationMatrix = newRot.getRotationMatrix();
+					System.out.println("Testing pure elevation \nrotation "+rotationAngleDegrees+
+							"\n as radian "+Math.toRadians(rotationAngleDegrees)+
+							"\n     Az "+oldRot.getRotationAzimuth()+
+							"\n     El "+oldRot.getRotationElevation()+
+							"\n     Tl "+oldRot.getRotationTilt()+
+							"\n New Az "+newRot.getRotationAzimuth()+
+							"\n New El "+newRot.getRotationElevation()+
+							"\n New Tl "+newRot.getRotationTilt()
+							);
+					assertArrayEquals(rotation[0], rotationMatrix[0], 0.001);
+					assertArrayEquals(rotation[1], rotationMatrix[1], 0.001);
+					assertArrayEquals(rotation[2], rotationMatrix[2], 0.001);
+					
+					System.out.println("Testing Quaturnion \nrotation "+
+							"\n     qw "+oldRot.getRotationMatrix2QuaturnionW()+
+							"\n     qx "+oldRot.getRotationMatrix2QuaturnionX()+
+							"\n     qy "+oldRot.getRotationMatrix2QuaturnionY()+
+							"\n     qz "+oldRot.getRotationMatrix2QuaturnionZ()+
+							"\nNEW  qw "+newRot.getRotationMatrix2QuaturnionW()+
+							"\nNEW  qx "+newRot.getRotationMatrix2QuaturnionX()+
+							"\nNEW  qy "+newRot.getRotationMatrix2QuaturnionY()+
+							"\nNEW  qz "+newRot.getRotationMatrix2QuaturnionZ()
+							);
+					assertArrayEquals(new double []{
+							Math.abs(oldRot.getRotationMatrix2QuaturnionW()),
+							Math.abs(oldRot.getRotationMatrix2QuaturnionX()),
+							Math.abs(oldRot.getRotationMatrix2QuaturnionY()),
+							Math.abs(oldRot.getRotationMatrix2QuaturnionZ()),
+					}, new double []{
+							Math.abs(newRot.getRotationMatrix2QuaturnionW()),
+							Math.abs(newRot.getRotationMatrix2QuaturnionX()),
+							Math.abs(newRot.getRotationMatrix2QuaturnionY()),
+							Math.abs(newRot.getRotationMatrix2QuaturnionZ()),
+					}, 0.001);
+					// Check Euler angles
+//					assertArrayEquals(new double []{
+//							oldRot.getRotationAzimuth(),
+//							oldRot.getRotationElevation(),
+//							oldRot.getRotationTilt()
+//					}, new double []{
+//							newRot.getRotationAzimuth(),
+//							newRot.getRotationElevation(),
+//							newRot.getRotationTilt()
+//					}, 0.001);
+					// Check the old rotation against the known value
+					assertArrayEquals(new double []{
+							
+							0,
+							Math.toRadians(rotationAngleDegrees),
+							0
+					}, new double []{
+							oldRot.getRotationAzimuth(),
+							oldRot.getRotationElevation(),
+							oldRot.getRotationTilt()
+					}, 0.001);
+					// Check the new rotation against the known value
+					assertArrayEquals(new double []{
+							0,
+							Math.toRadians(rotationAngleDegrees),
+							0
+					}, new double []{
+							newRot.getRotationAzimuth(),
+							newRot.getRotationElevation(),
+							newRot.getRotationTilt()
+					}, 0.001);
+				}
+				// frame();
+				// frame2();
+				System.out.println("Frame test passed with " + ro);
+				//return;
 			}
-			pArm.disconnect();
-		}
-		if (failCount > 1) {
-			fail("Rotation failed " + failCount + " times of " + ((iterations * 3 * list.length) - 0));
-
 		}
 	}
+	/**
+	 * Test.
+	 * 
+	 * @throws FileNotFoundException
+	 */
+	@Test
+	public void compareTilt() throws FileNotFoundException {
+		int failCount = 0;
+		int iterations = 100;
+		RotationOrder[] list = {  RotationOrder.XYZ
+									// RotationOrder.XZY,
+									// RotationOrder.YXZ,
+									// RotationOrder.YZX,
+				//RotationOrder.ZXY, RotationOrder.ZYX, RotationOrder.XYX, RotationOrder.XZX, RotationOrder.YXY,
+				//RotationOrder.YZY, RotationOrder.ZXZ, RotationOrder.ZYZ 
+				};
+		RotationConvention[] conventions = { RotationConvention.VECTOR_OPERATOR };
+		for (RotationConvention conv : conventions) {
+			RotationNRWrapper.setConvention(conv);
+			System.out.println("\n\nUsing convention " + conv.toString());
+			for (RotationOrder ro : list) {
+				RotationNRWrapper.setOrder(ro);
+				System.out.println("\n\nUsing rotationOrder " + ro.toString());
+				failCount = 0;
+				for (int i = 0; i < iterations; i++) {
+					
+					double rotationAngleDegrees = (Math.random() * 360) - 180;
+					
+					double rotationAngleRadians = Math.PI / 180 * rotationAngleDegrees;
 
-//	public void frame() {
-//		double w = 0.25021580750394473;
-//		double x = -0.5895228206035708;
-//		double y = 0.12359002177935843;
-//		double z = 0.758010817983053;
-//		RotationNR knownAngles = new RotationNR(w, x, y, z);
-//		assertArrayEquals(new double[] { w, x, y, z },
-//				new double[] { knownAngles.getRotationMatrix2QuaturnionW(), knownAngles.getRotationMatrix2QuaturnionX(),
-//						knownAngles.getRotationMatrix2QuaturnionY(), knownAngles.getRotationMatrix2QuaturnionZ() },
-//				0.0000001);
-//		double knownTilt = Math.toDegrees(knownAngles.getRotationTilt());
-//		double knownAz = Math.toDegrees(knownAngles.getRotationAzimuth());
-//		double knownel = Math.toDegrees(knownAngles.getRotationElevation());
-//		System.out.println("Known angles are az=" + knownAz + " el=" + knownel + " tilt=" + knownTilt);
-//
-//		RotationNR doubleCheck = new RotationNR(knownTilt, knownAz, knownel);
-//		assertArrayEquals(
-//				new double[] { doubleCheck.getRotationMatrix2QuaturnionW(), doubleCheck.getRotationMatrix2QuaturnionX(),
-//						doubleCheck.getRotationMatrix2QuaturnionY(), doubleCheck.getRotationMatrix2QuaturnionZ() },
-//				new double[] { knownAngles.getRotationMatrix2QuaturnionW(), knownAngles.getRotationMatrix2QuaturnionX(),
-//						knownAngles.getRotationMatrix2QuaturnionY(), knownAngles.getRotationMatrix2QuaturnionZ() },
-//				0.0000001);
-//
-//		assertArrayEquals(new double[] { knownTilt, knownel, knownAz }, new double[] { -111.422, -72.858, 37.570 },
-//				0.01);
-//	}
-//
-//	public void frame2() {
-//		double w = 0.29405190560732924;
-//		double x = 0.5230342577988376;
-//		double y = -0.32364491993997213;
-//		double z = 0.7315890976323846;
-//		RotationNR knownAngles = new RotationNR(w, x, y, z);
-//		assertArrayEquals(new double[] { w, x, y, z },
-//				new double[] { knownAngles.getRotationMatrix2QuaturnionW(), knownAngles.getRotationMatrix2QuaturnionX(),
-//						knownAngles.getRotationMatrix2QuaturnionY(), knownAngles.getRotationMatrix2QuaturnionZ() },
-//				0.0000001);
-//		double knownTilt = Math.toDegrees(knownAngles.getRotationTilt());
-//		double knownAz = Math.toDegrees(knownAngles.getRotationAzimuth());
-//		double knownel = Math.toDegrees(knownAngles.getRotationElevation());
-//		System.out.println("Known angles are az=" + knownAz + " el=" + knownel + " tilt=" + knownTilt);
-//
-//		RotationNR doubleCheck = new RotationNR(knownTilt, knownAz, knownel);
-//		assertArrayEquals(
-//				new double[] { doubleCheck.getRotationMatrix2QuaturnionW(), doubleCheck.getRotationMatrix2QuaturnionX(),
-//						doubleCheck.getRotationMatrix2QuaturnionY(), doubleCheck.getRotationMatrix2QuaturnionZ() },
-//				new double[] { knownAngles.getRotationMatrix2QuaturnionW(), knownAngles.getRotationMatrix2QuaturnionX(),
-//						knownAngles.getRotationMatrix2QuaturnionY(), knownAngles.getRotationMatrix2QuaturnionZ() },
-//				0.0000001);
-//
-//		assertArrayEquals(new double[] { knownTilt, knownel, knownAz }, new double[] { 55.711, 107.132, -108.137 },
-//				0.01);
-//	}
+					double[][] rotation = new double[3][3];
+					// Rotation matrix, 1st column
+					rotation[0][0] = 1;
+					rotation[1][0] = 0;
+					rotation[2][0] = 0;
+					// Rotation matrix, 2nd column
+					rotation[0][1] = 0;
+					rotation[1][1] = Math.cos(rotationAngleRadians);
+					rotation[2][1] = Math.sin(rotationAngleRadians);
+					// Rotation matrix, 3rd column
+					rotation[0][2] = 0;
+					rotation[1][2] = -Math.sin(rotationAngleRadians);
+					rotation[2][2] = Math.cos(rotationAngleRadians);
+					// pure rotation in azumuth
+					RotationNRWrapper newRot = new RotationNRWrapper(rotation);
+					RotationNR oldRot = new RotationNR(rotation);
+					double[][] rotationMatrix = newRot.getRotationMatrix();
+					System.out.println("Testing pure tilt \nrotation "+rotationAngleDegrees+
+							"\n as radian "+Math.toRadians(rotationAngleDegrees)+
+							"\n     Az "+oldRot.getRotationAzimuth()+
+							"\n     El "+oldRot.getRotationElevation()+
+							"\n     Tl "+oldRot.getRotationTilt()+
+							"\n New Az "+newRot.getRotationAzimuth()+
+							"\n New El "+newRot.getRotationElevation()+
+							"\n New Tl "+newRot.getRotationTilt()
+							);
+					assertArrayEquals(rotation[0], rotationMatrix[0], 0.001);
+					assertArrayEquals(rotation[1], rotationMatrix[1], 0.001);
+					assertArrayEquals(rotation[2], rotationMatrix[2], 0.001);
+					
+					System.out.println("Testing Quaturnion \nrotation "+
+							"\n     qw "+oldRot.getRotationMatrix2QuaturnionW()+
+							"\n     qx "+oldRot.getRotationMatrix2QuaturnionX()+
+							"\n     qy "+oldRot.getRotationMatrix2QuaturnionY()+
+							"\n     qz "+oldRot.getRotationMatrix2QuaturnionZ()+
+							"\nNEW  qw "+newRot.getRotationMatrix2QuaturnionW()+
+							"\nNEW  qx "+newRot.getRotationMatrix2QuaturnionX()+
+							"\nNEW  qy "+newRot.getRotationMatrix2QuaturnionY()+
+							"\nNEW  qz "+newRot.getRotationMatrix2QuaturnionZ()
+							);
+					assertArrayEquals(new double []{
+							Math.abs(oldRot.getRotationMatrix2QuaturnionW()),
+							Math.abs(oldRot.getRotationMatrix2QuaturnionX()),
+							Math.abs(oldRot.getRotationMatrix2QuaturnionY()),
+							Math.abs(oldRot.getRotationMatrix2QuaturnionZ()),
+					}, new double []{
+							Math.abs(newRot.getRotationMatrix2QuaturnionW()),
+							Math.abs(newRot.getRotationMatrix2QuaturnionX()),
+							Math.abs(newRot.getRotationMatrix2QuaturnionY()),
+							Math.abs(newRot.getRotationMatrix2QuaturnionZ()),
+					}, 0.001);
+					// Check Euler angles
+//					assertArrayEquals(new double []{
+//							oldRot.getRotationAzimuth(),
+//							oldRot.getRotationElevation(),
+//							oldRot.getRotationTilt()
+//					}, new double []{
+//							newRot.getRotationAzimuth(),
+//							newRot.getRotationElevation(),
+//							newRot.getRotationTilt()
+//					}, 0.001);
+					// Check the old rotation against the known value
+					assertArrayEquals(new double []{
+							0,
+							0,
+							Math.toRadians(rotationAngleDegrees)
+					}, new double []{
+							oldRot.getRotationAzimuth(),
+							oldRot.getRotationElevation(),
+							oldRot.getRotationTilt()
+					}, 0.001);
+					// Check the new rotation against the known value
+					assertArrayEquals(new double []{
+							0,
+							0,
+							Math.toRadians(rotationAngleDegrees)
+					}, new double []{
+							newRot.getRotationAzimuth(),
+							newRot.getRotationElevation(),
+							newRot.getRotationTilt()
+					}, 0.001);
+				}
+				// frame();
+				// frame2();
+				System.out.println("Frame test passed with " + ro);
+				//return;
+			}
+		}
+	}
 }
