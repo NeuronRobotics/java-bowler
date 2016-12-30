@@ -214,23 +214,28 @@ public class MobileBase extends AbstractKinematicsNR {
 
 	private TransformNR loadTransform(String tagname, Element e) {
 
-		NodeList nodListofLinks = e.getChildNodes();
-
-		for (int i = 0; i < nodListofLinks.getLength(); i++) {
-			Node linkNode = nodListofLinks.item(i);
-			if (linkNode.getNodeType() == Node.ELEMENT_NODE && linkNode.getNodeName().contentEquals(tagname)) {
-				Element cntr = (Element) linkNode;
-				return new TransformNR(Double.parseDouble(XmlFactory.getTagValue("x", cntr)),
-						Double.parseDouble(XmlFactory.getTagValue("y", cntr)),
-						Double.parseDouble(XmlFactory.getTagValue("z", cntr)),
-						new RotationNR(new double[] { Double.parseDouble(XmlFactory.getTagValue("rotw", cntr)),
-								Double.parseDouble(XmlFactory.getTagValue("rotx", cntr)),
-								Double.parseDouble(XmlFactory.getTagValue("roty", cntr)),
-								Double.parseDouble(XmlFactory.getTagValue("rotz", cntr)) }));
+		try{
+			NodeList nodListofLinks = e.getChildNodes();
+	
+			for (int i = 0; i < nodListofLinks.getLength(); i++) {
+				Node linkNode = nodListofLinks.item(i);
+				if (linkNode.getNodeType() == Node.ELEMENT_NODE && linkNode.getNodeName().contentEquals(tagname)) {
+					Element cntr = (Element) linkNode;
+					return new TransformNR(Double.parseDouble(XmlFactory.getTagValue("x", cntr)),
+							Double.parseDouble(XmlFactory.getTagValue("y", cntr)),
+							Double.parseDouble(XmlFactory.getTagValue("z", cntr)),
+							new RotationNR(new double[] { Double.parseDouble(XmlFactory.getTagValue("rotw", cntr)),
+									Double.parseDouble(XmlFactory.getTagValue("rotx", cntr)),
+									Double.parseDouble(XmlFactory.getTagValue("roty", cntr)),
+									Double.parseDouble(XmlFactory.getTagValue("rotz", cntr)) }));
+				}
 			}
-		}
 
-		return null;
+		}catch(Exception ex){
+			ex.printStackTrace();
+			
+		}
+		return new TransformNR();
 	}
 
 	/**

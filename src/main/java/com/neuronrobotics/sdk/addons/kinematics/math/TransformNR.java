@@ -204,7 +204,11 @@ public class TransformNR {
 	 */
 	@Override
 	public String toString(){
-		return getMatrixString(getMatrixTransform())+getRotation().toString();
+		try{
+			return getMatrixString(getMatrixTransform())+getRotation().toString();
+		}catch(Exception ex){
+			return "Transform error"+ex.getLocalizedMessage();
+		}
 	}
 	
 	/**

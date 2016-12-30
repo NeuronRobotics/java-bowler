@@ -1,6 +1,8 @@
 package com.neuronrobotics.sdk.addons.kinematics.math;
 
 import Jama.Matrix;
+
+import org.apache.commons.math3.geometry.euclidean.threed.CardanEulerSingularityException;
 import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 import org.apache.commons.math3.geometry.euclidean.threed.RotationConvention;
 import org.apache.commons.math3.geometry.euclidean.threed.RotationOrder;
@@ -19,22 +21,29 @@ import com.neuronrobotics.sdk.common.Log;
 public class RotationNR {
 
 	/** The rotation matrix. */
-	//double[][] rotationMatrix = ;
-	private Rotation storage=new Rotation(1,0,0,0,false);
+	// double[][] rotationMatrix = ;
+	private Rotation storage = new Rotation(1, 0, 0, 0, false);
 	private static RotationOrder order = RotationOrder.ZYX;
 	private static RotationConvention convention = RotationConvention.VECTOR_OPERATOR;
+
 	/**
 	 * Null constructor forms a.
 	 */
 	public RotationNR() {
 	}
+
 	/**
-	 * Instatiate using the org.apache.commons.math3.geometry.euclidean.threed.Rotation .
-	 * @param store A org.apache.commons.math3.geometry.euclidean.threed.Rotation instance
+	 * Instatiate using the
+	 * org.apache.commons.math3.geometry.euclidean.threed.Rotation .
+	 * 
+	 * @param store
+	 *            A org.apache.commons.math3.geometry.euclidean.threed.Rotation
+	 *            instance
 	 */
 	public RotationNR(Rotation store) {
-		storage=store;
+		storage = store;
 	}
+
 	/**
 	 * Instantiates a new rotation nr.
 	 *
@@ -53,7 +62,7 @@ public class RotationNR {
 			throw new RuntimeException("Value can not be NaN");
 		if (Double.isNaN(elevation))
 			throw new RuntimeException("Value can not be NaN");
-		if(elevation >90 || elevation <-90){
+		if (elevation > 90 || elevation < -90) {
 			throw new RuntimeException("Elevation can not be greater than 90 nor less than -90");
 		}
 		loadFromAngles(tilt, azumeth, elevation);
@@ -65,7 +74,6 @@ public class RotationNR {
 		}
 
 	}
-
 
 	/**
 	 * Instantiates a new rotation nr.
@@ -224,7 +232,7 @@ public class RotationNR {
 	 * @return the rotation matrix
 	 */
 	public double[][] getRotationMatrix() {
-		
+
 		return getStorage().getMatrix();
 	}
 
@@ -235,21 +243,15 @@ public class RotationNR {
 	 */
 	// return a string representation of the invoking object
 	public String toString() {
-		String s = "[\n";
-		double[][] m = getRotationMatrix();
-		for (int i = 0; i < 3; i++) {
-			s += "[ ";
-			for (int j = 0; j < 3; j++) {
-				s += m[i][j] + "\t\t";
-			}
-			s += " ]\n";
-		}
-		s += "]";
-		return "Quaturnion: " + "W=" + getRotationMatrix2QuaturnionW() + ", " + "x=" + getRotationMatrix2QuaturnionX()
+		try{
+			return "Quaturnion: " + "W=" + getRotationMatrix2QuaturnionW() + ", " + "x=" + getRotationMatrix2QuaturnionX()
 				+ ", " + "y=" + getRotationMatrix2QuaturnionY() + ", " + "z=" + getRotationMatrix2QuaturnionZ() + "\n"
-				+ "Rotation angle (degrees): " + "az= " + Math.toDegrees(getRotationAzimuth()) + 
-											", elev= " + Math.toDegrees(getRotationElevation())  +
-											", tilt="+ Math.toDegrees(getRotationTilt())  ;
+				+ "Rotation angle (degrees): " + "az= " + Math.toDegrees(getRotationAzimuth()) + ", elev= "
+				+ Math.toDegrees(getRotationElevation()) + ", tilt=" + Math.toDegrees(getRotationTilt());
+		}catch(Exception ex){
+			return "Rotation error"+ex.getLocalizedMessage();
+		}
+		
 	}
 
 	/**
@@ -294,10 +296,9 @@ public class RotationNR {
 			throw new RuntimeException("Value can not be NaN");
 		if (Double.isNaN(z))
 			throw new RuntimeException("Value can not be NaN");
-		setStorage(new Rotation(w, x, y,-z, true));
+		setStorage(new Rotation(w, x, y, -z, true));
 	}
 
-	
 	/**
 	 * Bound.
 	 *
@@ -313,16 +314,10 @@ public class RotationNR {
 		return n >= low && n <= high;
 	}
 
-
-
 	private void loadFromAngles(double tilt, double azumeth, double elevation) {
-		setStorage(new Rotation(getOrder(), getConvention(), 
-				Math.toRadians(azumeth), 
-				Math.toRadians(elevation), 
-				Math.toRadians(tilt )
-				));
+		setStorage(new Rotation(getOrder(), getConvention(), Math.toRadians(azumeth), Math.toRadians(elevation),
+				Math.toRadians(tilt)));
 	}
-
 
 	/**
 	 * Gets the rotation tilt.
@@ -330,9 +325,11 @@ public class RotationNR {
 	 * @return the rotation tilt
 	 */
 	public double getRotationTilt() {
-
-		return getStorage().getAngles(getOrder(), getConvention())[2];
-
+		try {
+			return getStorage().getAngles(getOrder(), getConvention())[2];
+		} catch (CardanEulerSingularityException e) {
+			return 0;
+		}
 	}
 
 	/**
@@ -341,8 +338,11 @@ public class RotationNR {
 	 * @return the rotation elevation
 	 */
 	public double getRotationElevation() {
-
-		return getStorage().getAngles(getOrder(), getConvention())[1];
+		try {
+			return getStorage().getAngles(getOrder(), getConvention())[1];
+		} catch (CardanEulerSingularityException e) {
+			return 0;
+		}
 	}
 
 	/**
@@ -351,8 +351,11 @@ public class RotationNR {
 	 * @return the rotation azimuth
 	 */
 	public double getRotationAzimuth() {
-
-		return getStorage().getAngles(getOrder(), getConvention())[0];
+		try {
+			return getStorage().getAngles(getOrder(), getConvention())[0];
+		} catch (CardanEulerSingularityException e) {
+			return 0;
+		}
 	}
 
 	/**
@@ -391,11 +394,11 @@ public class RotationNR {
 		return -getStorage().getQ3();
 	}
 
-	public static  RotationOrder getOrder() {
+	public static RotationOrder getOrder() {
 		return order;
 	}
 
-	public static  void setOrder(RotationOrder o) {
+	public static void setOrder(RotationOrder o) {
 		order = o;
 	}
 
