@@ -317,9 +317,9 @@ public class RotationNR {
 
 	private void loadFromAngles(double tilt, double azumeth, double elevation) {
 		setStorage(new Rotation(getOrder(), getConvention(), 
-				Math.toRadians(tilt), 
+				Math.toRadians(azumeth), 
 				Math.toRadians(elevation), 
-				Math.toRadians(azumeth)
+				Math.toRadians(tilt )
 				));
 	}
 
@@ -331,7 +331,7 @@ public class RotationNR {
 	 */
 	public double getRotationTilt() {
 
-		return getStorage().getAngles(getOrder(), getConvention())[0];
+		return getStorage().getAngles(getOrder(), getConvention())[2];
 
 	}
 
@@ -352,7 +352,7 @@ public class RotationNR {
 	 */
 	public double getRotationAzimuth() {
 
-		return getStorage().getAngles(getOrder(), getConvention())[2];
+		return getStorage().getAngles(getOrder(), getConvention())[0];
 	}
 
 	/**
