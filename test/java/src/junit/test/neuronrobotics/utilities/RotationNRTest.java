@@ -37,7 +37,7 @@ public class RotationNRTest {
 	public void test() throws FileNotFoundException {
 		int failCount = 0;
 		int iterations = 100;
-		RotationOrder[] list = {  RotationOrder.XYZ
+		RotationOrder[] list = {  RotationOrder.ZYX
 									// RotationOrder.XZY,
 									// RotationOrder.YXZ,
 									// RotationOrder.YZX,
@@ -49,7 +49,7 @@ public class RotationNRTest {
 			// RotationNR.setConvention(conv);
 			System.out.println("\n\nUsing convention " + conv.toString());
 			for (RotationOrder ro : list) {
-				// RotationNR.setOrder(ro);
+				RotationNR.setOrder(ro);
 				System.out.println("\n\nUsing rotationOrder " + ro.toString());
 				//
 				for (int i = 0; i < iterations; i++) {
