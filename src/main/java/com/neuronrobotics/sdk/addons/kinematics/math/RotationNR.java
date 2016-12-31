@@ -296,7 +296,7 @@ public class RotationNR {
 			throw new RuntimeException("Value can not be NaN");
 		if (Double.isNaN(z))
 			throw new RuntimeException("Value can not be NaN");
-		setStorage(new Rotation(w, x, y, -z, true));
+		setStorage(new Rotation(w,- x, -y, -z, true));
 	}
 
 	/**
@@ -373,7 +373,7 @@ public class RotationNR {
 	 * @return the rotation matrix2 quaturnion x
 	 */
 	public double getRotationMatrix2QuaturnionX() {
-		return getStorage().getQ1();
+		return -getStorage().getQ1();
 	}
 
 	/**
@@ -382,7 +382,7 @@ public class RotationNR {
 	 * @return the rotation matrix2 quaturnion y
 	 */
 	public double getRotationMatrix2QuaturnionY() {
-		return getStorage().getQ2();
+		return -getStorage().getQ2();
 	}
 
 	/**
