@@ -42,7 +42,7 @@ public class MobileBase extends AbstractKinematicsNR {
 	private IDriveEngine walkingDriveEngine = new WalkingDriveEngine();
 
 	/** The walking engine. */
-	private String[] walkingEngine = new String[] { "https://gist.github.com/bcb4760a449190206170.git",
+	private String[] walkingEngine = new String[] { "https://github.com/madhephaestus/carl-the-hexapod.git",
 			"WalkingDriveEngine.groovy" };
 
 	private HashMap<String , String[]> vitamins= new HashMap<String, String[]>();

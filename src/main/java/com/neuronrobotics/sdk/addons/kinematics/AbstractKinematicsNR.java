@@ -60,10 +60,10 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	private ArrayList<MobileBase> mobileBases = new ArrayList<MobileBase>();
 	
 	/** The dh engine. */
-	private String [] dhEngine =new String[]{"https://gist.github.com/bcb4760a449190206170.git","DefaultDhSolver.groovy"}; 
+	private String [] dhEngine =new String[]{"https://github.com/madhephaestus/carl-the-hexapod.git","DefaultDhSolver.groovy"}; 
 	
 	/** The cad engine. */
-	private String [] cadEngine =new String[]{"https://gist.github.com/bcb4760a449190206170.git","ThreeDPrintCad.groovy"};  
+	private String [] cadEngine =new String[]{"https://github.com/madhephaestus/carl-the-hexapod.git","ThreeDPrintCad.groovy"};  
 
 
 	/** The current joint space positions. */
