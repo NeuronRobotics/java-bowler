@@ -34,18 +34,24 @@ public class LinkFactory {
 	
 	/** The link configurations. */
 	private ArrayList<LinkConfiguration> linkConfigurations=null ;
-	
+	/**
+	 * Add a new link provider
+	 * 
+	 * @param typeTag a string to link it to the string in the XML that determines type
+	 * @param provider the provider module
+	 */
 	public static void addLinkProvider(String typeTag, INewLinkProvider provider){
 		userLinkProviders.put(typeTag, provider);
 		LinkType.addType(typeTag);
 	}
-	
-//	/** The dyio. */
-//	private DyIO dyio;
-//	
-//	/** The pid. */
-//	private IPidControlNamespace pid;
-//	
+	/**
+	 * Check to see if link provider is already defined
+	 * @param typeTag
+	 * @return
+	 */
+	public static boolean linkProviderExists(String typeTag){
+		return userLinkProviders.get(typeTag)!=null;
+	}
 	
 	/**
 	 * Instantiates a new link factory.

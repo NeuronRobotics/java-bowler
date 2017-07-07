@@ -184,7 +184,37 @@ public class DeviceManager {
 	public static void removeDeviceAddedListener(IDeviceAddedListener l){
 		if(deviceAddedListener.contains(l))
 			deviceAddedListener.remove(l);
+	}	
+	/**
+	 * Gets the specific device.
+	 *
+	 * @param name the name
+	 * @return the specific device
+	 */
+	public static BowlerAbstractDevice getSpecificDevice( String name, IDeviceProvider provider){
+		for (int i = 0; i < devices.size(); i++) {
+			if(devices.get(i).getScriptingName().contains(name))
+				return devices.get(i);
+		}
+		// device doesn't exist already so we use the call back to build a new one on the fly
+		BowlerAbstractDevice newDev = provider.call();
+		addConnection(newDev,name);
+		return newDev;
 	}
+	/**
+	 * Gets the specific device.
+	 *
+	 * @param name the name
+	 * @return the specific device
+	 */
+	public static BowlerAbstractDevice getSpecificDevice( String name){
+		for (int i = 0; i < devices.size(); i++) {
+			if(devices.get(i).getScriptingName().contains(name))
+				return devices.get(i);
+		}
+		return null;
+	}
+	
 	
 	/**
 	 * Gets the specific device.
@@ -194,6 +224,8 @@ public class DeviceManager {
 	 * @return the specific device
 	 */
 	public static BowlerAbstractDevice getSpecificDevice(Class<?> class1, String name){
+		if(class1==null)
+			return getSpecificDevice(name);
 		List<String> devs =listConnectedDevice( class1);
 		if(devs.size()==0)
 			return null;
@@ -210,7 +242,20 @@ public class DeviceManager {
 			}
 		return null;
 	}
-	
+	/**
+	 * List connected device.
+	 *
+	 * @param class1 the class1
+	 * @return the list
+	 */
+	public static List<String> listConnectedDevice(){
+		List<String> choices = new ArrayList<String>();
+		for (int i = 0; i < devices.size(); i++) {
+			choices.add(devices.get(i).getScriptingName());
+		}
+		return choices;
+		
+	}
 	/**
 	 * List connected device.
 	 *

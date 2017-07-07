@@ -58,6 +58,7 @@ public class RotationNRTest {
 				System.out.println("\n\nUsing rotationOrder " + ro.toString());
 				//
 				for (int i = 0; i < iterations; i++) {
+					
 					double tilt = Math.toRadians((Math.random() * 360) - 180);
 					double elevation = Math.toRadians((Math.random() * 180) - 90);
 					double azumus = Math.toRadians((Math.random() * 360) - 180);
