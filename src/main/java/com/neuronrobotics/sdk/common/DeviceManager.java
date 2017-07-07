@@ -245,7 +245,6 @@ public class DeviceManager {
 	/**
 	 * List connected device.
 	 *
-	 * @param class1 the class1
 	 * @return the list
 	 */
 	public static List<String> listConnectedDevice(){
