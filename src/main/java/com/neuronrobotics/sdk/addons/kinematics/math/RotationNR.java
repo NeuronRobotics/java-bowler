@@ -325,11 +325,7 @@ public class RotationNR {
 	 * @return the rotation tilt
 	 */
 	public double getRotationTilt() {
-		try {
-			return getStorage().getAngles(getOrder(), getConvention())[2];
-		} catch (CardanEulerSingularityException e) {
-			return 0;
-		}
+		return getAngle(2);
 	}
 
 	/**
@@ -338,11 +334,8 @@ public class RotationNR {
 	 * @return the rotation elevation
 	 */
 	public double getRotationElevation() {
-		try {
-			return getStorage().getAngles(getOrder(), getConvention())[1];
-		} catch (CardanEulerSingularityException e) {
-			return 0;
-		}
+		return getAngle(1);
+
 	}
 
 	/**
@@ -351,12 +344,28 @@ public class RotationNR {
 	 * @return the rotation azimuth
 	 */
 	public double getRotationAzimuth() {
+		return getAngle(0);
+	}
+	
+	double getAngle(int index){
+		double offsetSize=5;
+		double offset = (index==1?offsetSize:0);
 		try {
-			return getStorage().getAngles(getOrder(), getConvention())[0];
+			return getStorage().getAngles(getOrder(), getConvention())[index];
 		} catch (CardanEulerSingularityException e) {
-			return 0;
+			try {
+				TransformNR current = new TransformNR(0, 0, 0, this);
+				TransformNR newTf = current.times(new TransformNR(0, 0, 0, new RotationNR(0,0,-offsetSize)));
+				return 	 newTf.getRotation().getStorage().getAngles(getOrder(), getConvention())[index]+offset;
+			} catch (CardanEulerSingularityException ex) {
+				TransformNR current = new TransformNR(0, 0, 0, this);
+				TransformNR newTf = current.times(new TransformNR(0, 0, 0, new RotationNR(0,0,offsetSize)));
+				return 	 newTf.getRotation().getStorage().getAngles(getOrder(), getConvention())[index]-offset;
+	
+			}
 		}
 	}
+	 
 
 	/**
 	 * Gets the rotation matrix2 quaturnion w.
