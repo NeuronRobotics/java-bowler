@@ -58,7 +58,7 @@ public class RotationNRTest {
 				System.out.println("\n\nUsing rotationOrder " + ro.toString());
 				//
 				for (int i = 0; i < iterations; i++) {
-					
+
 					double tilt = Math.toRadians((Math.random() * 360) - 180);
 					double elevation = Math.toRadians((Math.random() * 180) - 90);
 					double azumus = Math.toRadians((Math.random() * 360) - 180);
@@ -396,4 +396,26 @@ public class RotationNRTest {
 			}
 		}
 	}
+
+	@Test
+	public void checkEulerSingularities() {
+		RotationNR tester1 = new RotationNR(0.7071067811865476, 0, 0.7071067811865475, 0);
+		RotationNR tester2 = new RotationNR(4.329780281177467E-17, -0.7071067811865475, 4.329780281177466E-17,
+				0.7071067811865476);
+		RotationNR tester3 = new RotationNR(0.7064894449532356, 1.0769850738285257E-7, 0.7077235789272859,
+				1.0769850738285257E-7);
+		assertArrayEquals(new double[] { 0, 90, 0 }, new double[] { Math.toDegrees(tester1.getRotationAzimuth()),
+				Math.toDegrees(tester1.getRotationElevation()), Math.toDegrees(tester1.getRotationTilt()) },
+
+				0.001);
+		assertArrayEquals(new double[] { 0, 90, 180 }, new double[] { Math.toDegrees(tester2.getRotationAzimuth()),
+				Math.toDegrees(tester2.getRotationElevation()), Math.toDegrees(tester2.getRotationTilt()) },
+
+				0.001);
+		assertArrayEquals(new double[] { 179.99, 89.9, 179.99 }, new double[] { Math.toDegrees(tester3.getRotationAzimuth()),
+				Math.toDegrees(tester3.getRotationElevation()), Math.toDegrees(tester3.getRotationTilt()) },
+
+				0.001);
+	}
+
 }

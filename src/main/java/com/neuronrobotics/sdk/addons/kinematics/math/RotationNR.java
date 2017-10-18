@@ -346,21 +346,34 @@ public class RotationNR {
 	public double getRotationAzimuth() {
 		return getAngle(0);
 	}
-	
-	double getAngle(int index){
-		double offsetSize=5;
+	private void simpilfyAngles(double [] angles){
+		double epsilon=1.0E-7;
+		if(Math.abs(angles[0] - Math.toRadians(180)) < epsilon&&
+		   Math.abs(angles[2] - Math.toRadians(180)) < epsilon	){
+			if(!(Math.abs(getRotationMatrix2QuaturnionZ())>epsilon))
+				angles[0]=0;
+			if(!(Math.abs(getRotationMatrix2QuaturnionX())>epsilon))
+				angles[2]=0;
+		}
+	}
+	private double eulerFix(double offsetSize, int index){
 		double offset = (index==1?offsetSize:0);
+		TransformNR current = new TransformNR(0, 0, 0, this);
+		TransformNR newTf = current.times(new TransformNR(0, 0, 0, new RotationNR(0,0,Math.toDegrees(offsetSize))));
+		double[] angles = newTf.getRotation().getStorage().getAngles(getOrder(), getConvention());
+		simpilfyAngles(angles);
+		double finalResult= angles[index];
+		return finalResult+offset;
+	}
+	private double getAngle(int index){
+		
 		try {
 			return getStorage().getAngles(getOrder(), getConvention())[index];
 		} catch (CardanEulerSingularityException e) {
 			try {
-				TransformNR current = new TransformNR(0, 0, 0, this);
-				TransformNR newTf = current.times(new TransformNR(0, 0, 0, new RotationNR(0,0,-offsetSize)));
-				return 	 newTf.getRotation().getStorage().getAngles(getOrder(), getConvention())[index]+offset;
+				return eulerFix( Math.toRadians(5),  index);
 			} catch (CardanEulerSingularityException ex) {
-				TransformNR current = new TransformNR(0, 0, 0, this);
-				TransformNR newTf = current.times(new TransformNR(0, 0, 0, new RotationNR(0,0,offsetSize)));
-				return 	 newTf.getRotation().getStorage().getAngles(getOrder(), getConvention())[index]-offset;
+				return eulerFix(  Math.toRadians(-5),  index);
 	
 			}
 		}
