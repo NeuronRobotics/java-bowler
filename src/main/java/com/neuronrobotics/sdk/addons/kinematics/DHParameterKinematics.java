@@ -24,6 +24,7 @@ import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
 import com.neuronrobotics.sdk.common.DeviceManager;
 import com.neuronrobotics.sdk.common.IConnectionEventListener;
 import com.neuronrobotics.sdk.common.IDeviceConnectionEventListener;
+import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.pid.GenericPIDDevice;
 import com.neuronrobotics.sdk.pid.VirtualGenericPIDDevice;
@@ -438,9 +439,23 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 	 * Update cad locations.
 	 */
 	public void updateCadLocations(){
-		double[] joints =getCurrentJointSpaceVector();
-		getChain().getChain(joints);
-		onJointSpaceUpdate(this, getCurrentJointSpaceVector());
+		ArrayList<TransformNR> ll;
+		if(getChain().getCachedChain().size()==0 ){
+			ll= getChain().getChain(currentJointSpacePositions);
+		}else
+			ll= getChain().getCachedChain();
+		for(int i=0;i<ll.size();i++) {
+			final ArrayList<TransformNR> linkPos = ll;
+			final int index=i;
+			Platform.runLater(() -> {
+				try{
+					TransformFactory.nrToAffine(linkPos.get(index), getChain().getLinks().get(index).getListener());
+					
+				}catch(Exception ex){
+					//ex.printStackTrace();
+				}
+			});
+		}
 	}
 
 	/* (non-Javadoc)
@@ -448,28 +463,21 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 	 */
 	@Override
 	public void onJointSpaceUpdate(final AbstractKinematicsNR source, final double[] joints) {
-				ArrayList<TransformNR> ll;
-				if(getChain().getCachedChain().size()==0 ){
-					ll= getChain().getChain(joints);
-				}else
-					ll= getChain().getCachedChain();
-				//System.out.println("Updating "+source.getScriptingName()+" links # "+linkPos.size());
-				for(int i=0;i<ll.size();i++) {
-					final ArrayList<TransformNR> linkPos = ll;
-					final int index=i;
-					Platform.runLater(new Runnable() {
-						@Override
-						public void run() {
-							try{
-								TransformFactory.nrToAffine(linkPos.get(index), getChain().getLinks().get(index).getListener());
-								
-							}catch(Exception ex){
-								//ex.printStackTrace();
-							}
-						}
-					});
-				}
+		updateCadLocations();
+	}
 	
+
+	
+	
+	/**
+	 * Sets the global to fiducial transform.
+	 *
+	 * @param frameToBase the new global to fiducial transform
+	 */
+	@Override
+	public void setGlobalToFiducialTransform(TransformNR frameToBase) {
+		super.setGlobalToFiducialTransform(frameToBase);
+		updateCadLocations();
 	}
 
 	/* (non-Javadoc)

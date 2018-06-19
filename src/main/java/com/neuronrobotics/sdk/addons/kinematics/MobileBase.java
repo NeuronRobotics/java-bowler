@@ -788,12 +788,28 @@ public class MobileBase extends AbstractKinematicsNR {
 	}
 
 	public void setFiducialToGlobalTransform(TransformNR globe) {
-		setGlobalToFiducialTransform(globe);
+		super.setGlobalToFiducialTransform(globe);
+		
 	}
+	/**
+	 * Sets the global to fiducial transform.
+	 *
+	 * @param frameToBase the new global to fiducial transform
+	 */
+	@Override
+	public void setGlobalToFiducialTransform(TransformNR frameToBase) {
+		super.setGlobalToFiducialTransform(frameToBase);
+		for(DHParameterKinematics l:getAllDHChains()) {
+			l.setGlobalToFiducialTransform(frameToBase);
+		}
+	}
+
 
 	private HashMap<String, ParallelGroup> getParallelGroups() {
 		return parallelGroups;
 	}
+
+
 
 	public static void main(String[] args) throws Exception {
 		File f = new File("paralleloutput.xml");
