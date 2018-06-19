@@ -447,12 +447,15 @@ public class DHParameterKinematics extends AbstractKinematicsNR implements ITask
 		for(int i=0;i<ll.size();i++) {
 			final ArrayList<TransformNR> linkPos = ll;
 			final int index=i;
-			Platform.runLater(() -> {
-				try{
-					TransformFactory.nrToAffine(linkPos.get(index), getChain().getLinks().get(index).getListener());
-					
-				}catch(Exception ex){
-					//ex.printStackTrace();
+			Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+					try{
+						TransformFactory.nrToAffine(linkPos.get(index), getChain().getLinks().get(index).getListener());
+						
+					}catch(Exception ex){
+						//ex.printStackTrace();
+					}
 				}
 			});
 		}
