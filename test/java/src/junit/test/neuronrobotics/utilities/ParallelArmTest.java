@@ -32,6 +32,7 @@ public class ParallelArmTest {
 		File f = new File("paralleloutput.xml");
 		if (f.exists()) {
 			MobileBase pArm = new MobileBase(new FileInputStream(f));
+			pArm.setGlobalToFiducialTransform(new TransformNR());
 			try{
 				String xmlParsed = pArm.getXml();
 				BufferedWriter writer = null;
