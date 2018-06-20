@@ -786,9 +786,8 @@ public class MobileBase extends AbstractKinematicsNR {
 	public void setIMUFromCentroid(TransformNR centerOfMassFromCentroid) {
 		this.IMUFromCentroid = centerOfMassFromCentroid;
 	}
-
 	public void setFiducialToGlobalTransform(TransformNR globe) {
-		super.setGlobalToFiducialTransform(globe);
+		setGlobalToFiducialTransform(globe);
 		
 	}
 	/**
