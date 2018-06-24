@@ -506,7 +506,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 							TransformFactory.nrToAffine(nr,
 									af);
 						} catch (Exception ex) {
-							 ex.printStackTrace();
+							 //ex.printStackTrace();
 						}
 					}
 				});
