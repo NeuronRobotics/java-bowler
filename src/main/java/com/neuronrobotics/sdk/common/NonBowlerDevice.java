@@ -9,6 +9,7 @@ import com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace;
  * The Class NonBowlerDevice.
  */
 public abstract class  NonBowlerDevice extends BowlerAbstractDevice {
+	boolean connectedYet = false;
 	/**
 	 * This method tells the connection object to disconnect its pipes and close out the connection. Once this is called, it is safe to remove your device.
 	 */
@@ -35,7 +36,8 @@ public abstract class  NonBowlerDevice extends BowlerAbstractDevice {
 	@Override
 	public boolean connect(){
 		fireConnectEvent();
-		return connectDeviceImp();
+		connectedYet= connectDeviceImp();
+		return isAvailable();
 	}
 	
 	/**
@@ -46,7 +48,7 @@ public abstract class  NonBowlerDevice extends BowlerAbstractDevice {
 	 */
 	@Override
 	public boolean isAvailable() throws InvalidConnectionException{
-		return true;
+		return connectedYet;
 	}
 	
 	/**
