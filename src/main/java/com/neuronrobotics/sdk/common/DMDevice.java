@@ -78,6 +78,8 @@ public class DMDevice extends NonBowlerDevice {
 		return false;
 	}
 	public static boolean wrappable(Object o) {
+		if(o==null)
+			return false;
 		return methodExists(o, "connect") &&
 				   methodExists(o, "disconnect");
 		
