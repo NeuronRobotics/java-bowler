@@ -788,7 +788,6 @@ public class MobileBase extends AbstractKinematicsNR {
 	}
 	public void setFiducialToGlobalTransform(TransformNR globe) {
 		setGlobalToFiducialTransform(globe);
-		
 	}
 	/**
 	 * Sets the global to fiducial transform.
