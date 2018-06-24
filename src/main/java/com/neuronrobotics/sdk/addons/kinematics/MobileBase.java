@@ -354,7 +354,7 @@ public class MobileBase extends AbstractKinematicsNR {
 	@Override
 	public boolean connectDevice() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	/*
@@ -813,6 +813,11 @@ public class MobileBase extends AbstractKinematicsNR {
 		File f = new File("paralleloutput.xml");
 
 		MobileBase pArm = new MobileBase(new FileInputStream(f));
+//		pArm.isAvailable();
+//		pArm.connect();
+//		pArm.connectDeviceImp();
+//		pArm.connectDevice();
+		
 		String xmlParsed = pArm.getXml();
 		BufferedWriter writer = null;
 
