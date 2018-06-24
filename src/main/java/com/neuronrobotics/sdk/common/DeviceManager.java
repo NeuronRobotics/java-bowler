@@ -36,7 +36,7 @@ public class DeviceManager {
 	 *            the name
 	 */
 	public static void addConnection(final Object newDevice, String name) {
-
+		
 		if (BowlerAbstractDevice.class.isInstance(newDevice)) {
 			addConnectionBAD((BowlerAbstractDevice) newDevice, name);
 		} else if (DMDevice.wrappable(newDevice)) {
@@ -63,15 +63,21 @@ public class DeviceManager {
 			System.out.println("Device " + name + " is already in the manager");
 			return;
 		}
-		if (DMDevice.class.isInstance(DeviceManager.getSpecificDevice(name)) && DMDevice.class.isInstance(newDevice)) {
-			DMDevice inside = (DMDevice) DeviceManager.getSpecificDevice(name);
+		if ( DMDevice.class.isInstance(newDevice)) {
 			DMDevice incoming = (DMDevice) newDevice;
-			if (inside.getWrapped() == incoming.getWrapped()) {
-				System.out.println("Wrapped Device " + name + " is already in the manager");
-				return;
+			for(String s:listConnectedDevice() ){
+				BowlerAbstractDevice sDev = DeviceManager.getSpecificDevice(s);
+				if(DMDevice.class.isInstance(sDev)) {
+					DMDevice inside = (DMDevice) sDev;
+					if (inside.getWrapped() == incoming.getWrapped()) {
+						System.out.println("Wrapped Device " + name + " is already in the manager");
+						return;
+					}
+				}
 			}
 
 		}
+		
 		if (!newDevice.isAvailable())
 			newDevice.connect();
 		if (!newDevice.isAvailable()) {
