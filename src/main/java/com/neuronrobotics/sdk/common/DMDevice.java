@@ -29,7 +29,7 @@ public class DMDevice extends NonBowlerDevice {
 				try {
 					methodGetName = getWrapped().getClass().getDeclaredMethod("getName", null);
 					
-				} catch (NoSuchMethodException | SecurityException e) {
+				} catch (Exception e) {
 					return super.getScriptingName();
 				}
 		} else {
@@ -39,7 +39,7 @@ public class DMDevice extends NonBowlerDevice {
 			return super.getScriptingName();
 		try {
 			super.setScriptingName( (String) methodGetName.invoke(getWrapped(), null));
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+		} catch (Exception e) {
 			return super.getScriptingName();
 		}
 		return super.getScriptingName();
@@ -48,14 +48,14 @@ public class DMDevice extends NonBowlerDevice {
 	@Override
 	public ArrayList<String> getNamespacesImp() {
 		// TODO Auto-generated method stub
-		return new ArrayList<>();
+		return new ArrayList<String>();
 	}
 
 	@Override
 	public void disconnectDeviceImp() {
 		try {
 			methodDisconnect.invoke(getWrapped(), null);
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -66,12 +66,12 @@ public class DMDevice extends NonBowlerDevice {
 		try {
 			Object value = methodConnect.invoke(getWrapped(), null);
 			try {
-				return (boolean) value;
+				return (Boolean) value;
 			} catch (Exception e) {
 
 			}
 			return true;
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

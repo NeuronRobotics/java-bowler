@@ -497,8 +497,8 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 			for (int i = 0; i < ll.size(); i++) {
 				final ArrayList<TransformNR> linkPos = ll;
 				final int index = i;
-				Affine af = getChain().getLinks().get(index).getListener();
-				TransformNR nr = linkPos.get(index);
+				final Affine af = getChain().getLinks().get(index).getListener();
+				final TransformNR nr = linkPos.get(index);
 				Platform.runLater(new Runnable() {
 					@Override
 					public void run() {
