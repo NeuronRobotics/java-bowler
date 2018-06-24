@@ -3,6 +3,8 @@ package com.neuronrobotics.sdk.common;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.management.RuntimeErrorException;
+
 import com.neuronrobotics.replicator.driver.BowlerBoardDevice;
 import com.neuronrobotics.replicator.driver.NRPrinter;
 import com.neuronrobotics.sdk.bootloader.NRBootLoader;
@@ -24,14 +26,32 @@ public class DeviceManager {
 	
 	/** The Constant deviceAddedListener. */
 	private static final ArrayList<IDeviceAddedListener> deviceAddedListener = new ArrayList<IDeviceAddedListener>();
-	
 	/**
 	 * Adds the connection.
 	 *
 	 * @param newDevice the new device
 	 * @param name the name
 	 */
-	public static void addConnection(final BowlerAbstractDevice newDevice, String name){
+	public static void addConnection(final Object newDevice, String name) {
+		if(BowlerAbstractDevice.class.isInstance(newDevice)) {
+			addConnectionBAD((BowlerAbstractDevice)newDevice,name);
+		}else if(DMDevice.wrappable(newDevice)) {
+			try {
+				addConnectionBAD(new DMDevice(newDevice),name);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}else {
+			throw new RuntimeException("This object can not behave as a device");
+		}
+	}
+	/**
+	 * Adds the connection.
+	 *
+	 * @param newDevice the new device
+	 * @param name the name
+	 */
+	private static void addConnectionBAD(final BowlerAbstractDevice newDevice, String name){
 		if(!newDevice.isAvailable())
 			newDevice.connect();
 		if(!newDevice.isAvailable()){
@@ -197,9 +217,9 @@ public class DeviceManager {
 				return devices.get(i);
 		}
 		// device doesn't exist already so we use the call back to build a new one on the fly
-		BowlerAbstractDevice newDev = provider.call();
+		Object newDev = provider.call();
 		addConnection(newDev,name);
-		return newDev;
+		return getSpecificDevice(name);
 	}
 	/**
 	 * Gets the specific device.
