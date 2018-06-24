@@ -10,7 +10,7 @@ public class VirtualCameraFactory {
 		public AbstractImageProvider getVirtualCamera() {
 			// TODO Auto-generated method stub
 			try {
-				return new URLImageProvider(new URL("http://neuronrobotics.com/img/AndrewHarrington/2014-09-15-86.jpg"));
+				return new URLImageProvider(new URL("http://commonwealthrobotics.com/img/AndrewHarrington/2014-09-15-86.jpg"));
 			} catch (MalformedURLException e) {
 				// TODO Auto-generated catch block
 				throw new RuntimeException(e);			

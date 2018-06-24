@@ -833,11 +833,11 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		for(IRegistrationListenerNR r: regListeners){
 			r.onFiducialToGlobalUpdate(this, frameToBase);
 		}
+		TransformNR tf =forwardOffset(new TransformNR());
 		Platform.runLater(new Runnable() {
-			
 			@Override
 			public void run() {
-				TransformFactory.nrToAffine(forwardOffset(new TransformNR()), getRootListener() );
+				TransformFactory.nrToAffine(tf, getRootListener() );
 			}
 		});
 	}

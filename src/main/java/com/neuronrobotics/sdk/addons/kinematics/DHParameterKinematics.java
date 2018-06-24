@@ -497,15 +497,16 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 			for (int i = 0; i < ll.size(); i++) {
 				final ArrayList<TransformNR> linkPos = ll;
 				final int index = i;
+				Affine af = getChain().getLinks().get(index).getListener();
+				TransformNR nr = linkPos.get(index);
 				Platform.runLater(new Runnable() {
 					@Override
 					public void run() {
 						try {
-							TransformFactory.nrToAffine(linkPos.get(index),
-									getChain().getLinks().get(index).getListener());
-
+							TransformFactory.nrToAffine(nr,
+									af);
 						} catch (Exception ex) {
-							// ex.printStackTrace();
+							 ex.printStackTrace();
 						}
 					}
 				});
@@ -536,6 +537,10 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	@Override
 	public void setGlobalToFiducialTransform(TransformNR frameToBase) {
 		super.setGlobalToFiducialTransform(frameToBase);
+		if(getChain()!=null) {
+			getChain().setChain(null);// force an update of teh cached locations because base changed
+			getChain().getChain(getCurrentJointSpaceVector());//calculate new locations
+		}
 		updateCadLocations();
 	}
 
