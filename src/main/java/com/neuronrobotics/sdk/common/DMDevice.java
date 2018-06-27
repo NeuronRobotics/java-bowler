@@ -85,7 +85,7 @@ public class DMDevice extends NonBowlerDevice {
 		
 	}
 	public static boolean methodExists(Object clazz, String methodName) {
-		for (Method method : clazz.getClass().getDeclaredMethods()) {
+		for (Method method : clazz.getClass().getMethods()) {
 			if (method.getName().equals(methodName)) {
 				return true;
 			}
