@@ -249,6 +249,9 @@ public class DeviceManager {
 	 * @return the specific device
 	 */
 	public static Object getSpecificDevice(String name, IDeviceProvider provider) {
+		if(name.contains("*")) {
+			name = name.split("\\*")[0];
+		}
 		for (int i = 0; i < devices.size(); i++) {
 			if (devices.get(i).getScriptingName().contains(name)) {
 				if(DMDevice.class.isInstance(devices.get(i))) {
@@ -277,8 +280,12 @@ public class DeviceManager {
 	 * @return the specific device
 	 */
 	public static BowlerAbstractDevice getSpecificDevice(String name) {
+		if(name.contains("*")) {
+			name = name.split("\\*")[0];
+		}
 		for (int i = 0; i < devices.size(); i++) {
-			if (devices.get(i).getScriptingName().contains(name)) {
+			String devname = devices.get(i).getScriptingName();
+			if (devname.contains(name)) {
 				BowlerAbstractDevice dev = devices.get(i);
 				return dev;
 			}
@@ -296,6 +303,9 @@ public class DeviceManager {
 	 * @return the specific device
 	 */
 	public static BowlerAbstractDevice getSpecificDevice(Class<?> class1, String name) {
+		if(name.contains("*")) {
+			name = name.split("\\*")[0];
+		}
 		if (class1 == null)
 			return getSpecificDevice(name);
 		List<String> devs = listConnectedDevice(class1);
