@@ -15,8 +15,8 @@ public class DMDevice extends NonBowlerDevice {
 		if(!wrappable(o))
 			throw new RuntimeException("This object is not wrappable! ");
 		setWrapped(o);
-		methodConnect = getWrapped().getClass().getDeclaredMethod("connect", null);
-		methodDisconnect = getWrapped().getClass().getDeclaredMethod("disconnect", null);
+		methodConnect = getWrapped().getClass().getMethod("connect", null);
+		methodDisconnect = getWrapped().getClass().getMethod("disconnect", null);
 		hasGetName = methodExists(getWrapped(), "getName");
 		methodGetName = null;
 	}
@@ -27,7 +27,7 @@ public class DMDevice extends NonBowlerDevice {
 		if (hasGetName) {
 			if (methodGetName == null)
 				try {
-					methodGetName = getWrapped().getClass().getDeclaredMethod("getName", null);
+					methodGetName = getWrapped().getClass().getMethod("getName", null);
 					
 				} catch (Exception e) {
 					return super.getScriptingName();
