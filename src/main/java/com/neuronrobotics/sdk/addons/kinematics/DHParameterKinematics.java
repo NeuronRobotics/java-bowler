@@ -383,7 +383,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	@Override
 	public boolean connectDevice() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	/*
