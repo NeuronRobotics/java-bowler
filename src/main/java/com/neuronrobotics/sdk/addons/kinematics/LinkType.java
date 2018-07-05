@@ -111,7 +111,7 @@ public enum LinkType {
 	   if (map.containsKey(name)) {
 	     return map.get(name);
 	   }
-	   throw new NoSuchElementException(name + "not found");
+	   throw new NoSuchElementException(name + " not found");
 	 }
 	 
 

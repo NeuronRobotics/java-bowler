@@ -2,6 +2,7 @@ package com.neuronrobotics.sdk.addons.kinematics;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.NoSuchElementException;
 
 import javafx.scene.transform.Affine;
 
@@ -126,7 +127,12 @@ public class LinkConfiguration {
     	}
     	try{
     		setTypeString(XmlFactory.getTagValue("type",eElement));
-    		setType(LinkType.fromString(getTypeString()));
+    		try {
+    			setType(LinkType.fromString(getTypeString()));
+    		}catch(NoSuchElementException e) {
+    			setType(LinkType.VIRTUAL);
+    			setTypeString("virtual");
+    		}
     	}catch (NullPointerException e){
     		setType(LinkType.PID);
     	}
