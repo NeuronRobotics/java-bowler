@@ -1,9 +1,10 @@
-/build/
+/build
+/bin
+/out
 /.gradle*
 .project
 .classpath
 .settings*
-/bin/
 /gradle.properties
 gradle.properties
 /odb-test/
