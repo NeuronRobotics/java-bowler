@@ -7,7 +7,7 @@ before_install:
 install: 
   - TERM=dumb ./gradlew --refresh-dependencies --stacktrace
 script:
-    - TERM=dumb ./gradlew  compileJava  javadoc test --stacktrace
+    - TERM=dumb ./gradlew  jar  javadoc test --stacktrace
 cache:
   directories:
   - $HOME/.m2
