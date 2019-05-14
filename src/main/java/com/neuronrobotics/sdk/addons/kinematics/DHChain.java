@@ -274,10 +274,10 @@ public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector )
 				else{
 					intChain.set(i, new TransformNR(step));
 				}
-				if(chain.size()<=i)
-					chain.add(pose);
+				if(getCachedChain().size()<=i)
+					getCachedChain().add(pose);
 				else{
-					chain.set(i, pose);
+					getCachedChain().set(i, pose);
 				}
 			}
 		}
@@ -312,7 +312,7 @@ public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector )
 	 */
 	public ArrayList<TransformNR> getChain(double[] jointSpaceVector) {
 		forwardKinematics(jointSpaceVector,true);
-		return chain;
+		return getCachedChain();
 	}
 	
 	/**
@@ -321,7 +321,8 @@ public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector )
 	 * @return the cached chain
 	 */
 	public ArrayList<TransformNR> getCachedChain() {
-		
+		if(chain==null)
+			chain=new ArrayList<TransformNR>();
 		return chain;
 	}
 	
