@@ -254,6 +254,7 @@ public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector )
 		Matrix current = new TransformNR().getMatrixTransform();
 		if(store)
 			setChain(new ArrayList<TransformNR>());
+		ArrayList<TransformNR> cachedChain = getCachedChain();
 		for(int i=0;i<getLinks().size();i++) {
 			LinkConfiguration conf= getFactory().getLinkConfigurations().get(i);
 			Matrix step;
@@ -274,10 +275,11 @@ public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector )
 				else{
 					intChain.set(i, new TransformNR(step));
 				}
-				if(getCachedChain().size()<=i)
-					getCachedChain().add(pose);
+				
+				if(cachedChain.size()<=i)
+					cachedChain.add(pose);
 				else{
-					getCachedChain().set(i, pose);
+					cachedChain.set(i, pose);
 				}
 			}
 		}
@@ -301,7 +303,11 @@ public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector )
 	 * @param chain the new chain
 	 */
 	public void setChain(ArrayList<TransformNR> chain) {
-		this.chain = chain;
+		if(chain!=null)
+			this.chain = chain;
+		getCachedChain().clear();
+		//else
+		//	new RuntimeException().printStackTrace();
 	}
 
 	/**
