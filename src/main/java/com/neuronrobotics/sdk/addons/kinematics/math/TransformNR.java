@@ -3,7 +3,8 @@ package com.neuronrobotics.sdk.addons.kinematics.math;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-
+import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
+import org.apache.commons.math3.util.FastMath;
 import com.neuronrobotics.sdk.addons.kinematics.DHLink;
 import com.neuronrobotics.sdk.common.Log;
 
@@ -335,8 +336,16 @@ public class TransformNR {
 	 * @param scale the scale
 	 * @return the transform nr
 	 */
-	public TransformNR scale(double scale) {
-		return new TransformNR(getMatrixTransform().times(Matrix.identity(4, 4).times(scale)));	
+	public TransformNR scale(double t) {
+	
+	  
+	double tilt = Math.toDegrees(getRotation().getRotationTilt()*t);
+    double az =Math.toDegrees( getRotation().getRotationAzimuth()*t);
+    double ele = Math.toDegrees(getRotation().getRotationElevation()*t);
+    return new TransformNR(getX()*t,
+		    getY()*t,
+		    getZ()*t,
+		    new RotationNR(tilt,az,ele));	
 	}
 	
 	/**
