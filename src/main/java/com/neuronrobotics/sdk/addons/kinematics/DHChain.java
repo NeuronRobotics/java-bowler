@@ -157,70 +157,7 @@ public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector )
 		return new TransformNR(forwardKinematicsMatrix(jointSpaceVector, store) );
 	}
 	
-	/**
-	 * Gets the Jacobian matrix.
-	 *
-	 * @param jointSpaceVector the joint space vector
-	 * @return a matrix representing the Jacobian for the current configuration
-	 */
-	public Matrix getJacobian(double[] jointSpaceVector){
-		double [][] data = new double[getLinks().size()][6]; 
-		getChain(jointSpaceVector);
-		for(int i=0;i<getLinks().size();i++){
-			
-			double [] zVect = new double [3];
-			
-			if(i==0){
-				zVect[0]=0;
-				zVect[1]=0;
-				zVect[2]=1;
-			}else{
-				//Get the rz vector from matrix
-				zVect[0]=intChain.get(i-1).getRotationMatrix().getRotationMatrix()[0][2];
-				zVect[1]=intChain.get(i-1).getRotationMatrix().getRotationMatrix()[1][2];
-				zVect[2]=intChain.get(i-1).getRotationMatrix().getRotationMatrix()[2][2];
-			}
-			//Assume all rotational joints
-			//Set to zero if prismatic
-			if(getLinks().get(i).getLinkType()==DhLinkType.ROTORY){
-				data[i][3]=zVect[0];
-				data[i][4]=zVect[1];
-				data[i][5]=zVect[2];
-			}else{
-				data[i][3]=0;
-				data[i][4]=0;
-				data[i][5]=0;
-			}
-			
-			//Figure out the current 
-			Matrix current = new TransformNR().getMatrixTransform();
-			for(int j=i;j<getLinks().size();j++) {
-				double value=0;
-				if(getLinks().get(j).getLinkType()==DhLinkType.ROTORY)
-					value=Math.toRadians(jointSpaceVector[j]);
-				else
-					value=jointSpaceVector[j];
-				Matrix step = getLinks().get(j).DhStep(value);
-				//Log.info( "Current:\n"+current+"Step:\n"+step);
-				current = current.times(step);
-			}
-			double []rVect = new double [3];
-			TransformNR tmp = new TransformNR(current);
-			rVect[0]=tmp.getX();
-			rVect[1]=tmp.getY();
-			rVect[2]=tmp.getZ();
-			
-			//Cross product of rVect and Z vect
-			double []xProd = crossProduct(rVect, zVect);
-			
-			data[i][0]=xProd[0];
-			data[i][1]=xProd[1];
-			data[i][2]=xProd[2];
-			
-		}
-		
-		return new Matrix(data);
-	}
+
 	
 	/**
 	 * Cross product.
