@@ -247,7 +247,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
                 
                 continue;
             }
-            Matrix rotationComponent = new TransformNR().getMatrixTransform();
+            Matrix rotationComponent = forwardOffset(new TransformNR()).getMatrixTransform();
             for(int j=i;j<size && j<=index;j++) {
                 double value=0;
                 if(chain.getLinks().get(j).getLinkType()==DhLinkType.ROTORY)
@@ -294,7 +294,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
             double []rVect = new double [3];
             
             
-            Matrix rComponentmx = new TransformNR().getMatrixTransform();
+            Matrix rComponentmx = forwardOffset(new TransformNR()).getMatrixTransform();
             //if(i>0){
                 for(int j=0;j<i ;j++) {
                     double value=0;
@@ -310,7 +310,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
             //}
             
             //Figure out the current 
-            Matrix tipOffsetmx = new TransformNR().getMatrixTransform();
+            Matrix tipOffsetmx =forwardOffset( new TransformNR()).getMatrixTransform();
             for(int j=0;j<size && j<=index;j++) {
                 double value=0;
                 if(chain.getLinks().get(j).getLinkType()==DhLinkType.ROTORY)
