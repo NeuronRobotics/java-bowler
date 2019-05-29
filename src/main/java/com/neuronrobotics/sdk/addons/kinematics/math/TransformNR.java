@@ -333,11 +333,14 @@ public class TransformNR {
 	/**
 	 * Scale.
 	 *
-	 * @param scale the scale
+	 * @param scale the scale from 0 to 1.0
 	 * @return the transform nr
 	 */
 	public TransformNR scale(double t) {
-	
+	if(t>1)
+	  t=1;
+	if(t<=0)
+	  return new TransformNR();
 	  
 	double tilt = Math.toDegrees(getRotation().getRotationTilt()*t);
     double az =Math.toDegrees( getRotation().getRotationAzimuth()*t);
