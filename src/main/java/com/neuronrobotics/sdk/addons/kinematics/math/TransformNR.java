@@ -338,7 +338,7 @@ public class TransformNR {
   /**
    * Scale.
    *
-   * @param scale the scale from 0 to 1.0
+   * @param t the scale from 0 to 1.0
    * @return the transform nr
    */
   public TransformNR scale(double t) {
