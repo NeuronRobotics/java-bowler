@@ -1,10 +1,22 @@
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'maven'
-apply plugin: 'signing'
-	
-sourceCompatibility = '1.6'
-targetCompatibility = '1.6'
+
+plugins {
+ 	id 'java'
+ 	id 'signing'
+ 	id 'eclipse'
+ 	id 'maven'
+	id 'application'
+	id 'org.openjfx.javafxplugin' version '0.0.7'
+}
+javafx {
+    version = "11.0.2"
+    modules = [ 'javafx.controls',
+    'javafx.fxml',
+    'javafx.media',
+    'javafx.swing'
+     ]
+}
+sourceCompatibility = '1.11'
+targetCompatibility = '1.11'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 File buildDir = file(".");
