@@ -53,7 +53,7 @@ public class SequencerMP3 {
     public SequencerMP3(String filename) {
     	fn = filename;
         try {
-        	//new JFXPanel(); // initializes JavaFX environment 
+    		javafx.application.Application.launch(); // this will prepare JavaFX toolkit and environment
         	player = new MediaPlayer(
     													new Media(
     															new File(fn).toURI().toString()));

@@ -51,7 +51,7 @@ public  class DHChain {
 	/** The factory. */
 	private LinkFactory factory;
 	static{
-		//new JFXPanel(); // initializes JavaFX environment
+		javafx.application.Application.launch(); // this will prepare JavaFX toolkit and environment
 	}
 	
 	/**

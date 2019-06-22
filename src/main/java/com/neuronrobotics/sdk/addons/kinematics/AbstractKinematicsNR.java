@@ -42,6 +42,7 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
 /**
  * The Class AbstractKinematicsNR.
  */
+@SuppressWarnings("restriction")
 public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IPIDEventListener, ILinkListener {
 	
 	/** The configurations. */
@@ -107,7 +108,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	private IMU imu = new IMU();
 	
 	static{
-        //new JFXPanel(); // this will prepare JavaFX toolkit and environment
+		javafx.application.Application.launch(); // this will prepare JavaFX toolkit and environment
 
 	}
 	
@@ -834,6 +835,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 			r.onFiducialToGlobalUpdate(this, frameToBase);
 		}
 		final TransformNR tf =forwardOffset(new TransformNR());
+		
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
