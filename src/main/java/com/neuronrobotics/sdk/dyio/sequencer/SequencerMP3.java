@@ -24,7 +24,7 @@ import java.io.FileInputStream;
 
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
-import javafx.embed.swing.JFXPanel;
+//import javafx.embed.swing.JFXPanel;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
@@ -53,7 +53,7 @@ public class SequencerMP3 {
     public SequencerMP3(String filename) {
     	fn = filename;
         try {
-        	new JFXPanel(); // initializes JavaFX environment 
+        	//new JFXPanel(); // initializes JavaFX environment 
         	player = new MediaPlayer(
     													new Media(
     															new File(fn).toURI().toString()));

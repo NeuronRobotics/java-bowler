@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import javafx.application.Platform;
-import javafx.embed.swing.JFXPanel;
+//import javafx.embed.swing.JFXPanel;
 import javafx.scene.transform.Affine;
 
 import javax.management.RuntimeErrorException;
@@ -107,7 +107,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	private IMU imu = new IMU();
 	
 	static{
-        new JFXPanel(); // this will prepare JavaFX toolkit and environment
+        //new JFXPanel(); // this will prepare JavaFX toolkit and environment
 
 	}
 	
