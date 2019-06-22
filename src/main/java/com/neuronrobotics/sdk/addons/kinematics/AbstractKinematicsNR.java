@@ -109,7 +109,6 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	
 	static{
 		javafx.application.Application.launch(); // this will prepare JavaFX toolkit and environment
-
 	}
 	
 	
