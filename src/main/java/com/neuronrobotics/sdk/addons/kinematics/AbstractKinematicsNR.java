@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import javafx.application.Platform;
 //import javafx.embed.swing.JFXPanel;
 import javafx.scene.transform.Affine;
+import javafx.stage.Stage;
 
 import javax.management.RuntimeErrorException;
 
@@ -107,8 +108,18 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 */
 	private IMU imu = new IMU();
 	
+	public static class JavaFXInitializer extends javafx.application.Application {
+		public JavaFXInitializer(){
+			
+		}
+		public static void go() {
+			launch();
+		}
+		@Override
+		public void start(Stage primaryStage) throws Exception {}
+	}
 	static{
-		javafx.application.Application.launch(); // this will prepare JavaFX toolkit and environment
+		JavaFXInitializer.go();
 	}
 	
 	

@@ -22,11 +22,13 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 
+import com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR.JavaFXInitializer;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 //import javafx.embed.swing.JFXPanel;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 // TODO: Auto-generated Javadoc
@@ -50,10 +52,22 @@ public class SequencerMP3 {
      *
      * @param filename the filename
      */
+	public static class JavaFXInitializer extends javafx.application.Application {
+		public JavaFXInitializer(){
+			
+		}
+		public static void go() {
+			launch();
+		}
+		@Override
+		public void start(Stage primaryStage) throws Exception {}
+	}
+	static{
+		JavaFXInitializer.go();
+	}
     public SequencerMP3(String filename) {
     	fn = filename;
         try {
-    		javafx.application.Application.launch(); // this will prepare JavaFX toolkit and environment
         	player = new MediaPlayer(
     													new Media(
     															new File(fn).toURI().toString()));
