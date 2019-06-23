@@ -3,6 +3,7 @@ package com.neuronrobotics.sdk.addons.kinematics;
 import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+//import java.util.concurrent.CountDownLatch;
 
 import javafx.application.Platform;
 //import javafx.embed.swing.JFXPanel;
@@ -108,16 +109,6 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 */
 	private IMU imu = new IMU();
 	
-	public static class JavaFXInitializer extends javafx.application.Application {
-		public JavaFXInitializer(){
-			
-		}
-		public static void go() {
-			launch();
-		}
-		@Override
-		public void start(Stage primaryStage) throws Exception {}
-	}
 	static{
 		JavaFXInitializer.go();
 	}

@@ -22,7 +22,7 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 
-import com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR.JavaFXInitializer;
+import com.neuronrobotics.sdk.addons.kinematics.JavaFXInitializer;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 //import javafx.embed.swing.JFXPanel;
@@ -52,16 +52,7 @@ public class SequencerMP3 {
      *
      * @param filename the filename
      */
-	public static class JavaFXInitializer extends javafx.application.Application {
-		public JavaFXInitializer(){
-			
-		}
-		public static void go() {
-			launch();
-		}
-		@Override
-		public void start(Stage primaryStage) throws Exception {}
-	}
+
 	static{
 		JavaFXInitializer.go();
 	}

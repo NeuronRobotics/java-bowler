@@ -15,7 +15,6 @@ import org.w3c.dom.NodeList;
 import Jama.Matrix;
 
 import com.neuronrobotics.sdk.addons.kinematics.TransformFactory;
-import com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR.JavaFXInitializer;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
 import com.neuronrobotics.sdk.common.Log;
@@ -52,16 +51,7 @@ public  class DHChain {
 	
 	/** The factory. */
 	private LinkFactory factory;
-	public static class JavaFXInitializer extends javafx.application.Application {
-		public JavaFXInitializer(){
-			
-		}
-		public static void go() {
-			launch();
-		}
-		@Override
-		public void start(Stage primaryStage) throws Exception {}
-	}
+
 	static{
 		JavaFXInitializer.go();
 	}
