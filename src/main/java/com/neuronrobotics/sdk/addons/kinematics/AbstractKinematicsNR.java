@@ -1144,7 +1144,7 @@ public ArrayList<PIDConfiguration> getAxisPidConfiguration() {
 	 */
 	public TransformNR getCurrentPoseTarget() {
 		if(currentPoseTarget == null)
-			currentPoseTarget = new TransformNR();
+			currentPoseTarget = calcHome();
 		return currentPoseTarget;
 	}
 
