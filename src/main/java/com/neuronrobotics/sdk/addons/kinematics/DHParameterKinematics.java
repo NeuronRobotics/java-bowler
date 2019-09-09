@@ -243,10 +243,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
         double [][] data = new double[6][size]; 
         chain.getChain(jointSpaceVector);
         for(int i=0;i<size;i++){
-            if(i>index){
-                
-                continue;
-            }
+            if(i>index) continue;
             Matrix rotationComponent = forwardOffset(new TransformNR()).getMatrixTransform();
             for(int j=i;j<size && j<=index;j++) {
                 double value=0;
@@ -291,24 +288,19 @@ public class DHParameterKinematics extends AbstractKinematicsNR
                 data[4][i]=0;
                 data[5][i]=0;
             }
-            double []rVect = new double [3];
-            
-            
+            double []rVect = new double [3];            
             Matrix rComponentmx = forwardOffset(new TransformNR()).getMatrixTransform();
-            //if(i>0){
-                for(int j=0;j<i ;j++) {
-                    double value=0;
-                    if(chain.getLinks().get(j).getLinkType()==DhLinkType.ROTORY)
-                        value=Math.toRadians(jointSpaceVector[j]);
-                    else
-                        value=jointSpaceVector[j];
-                    Matrix step = chain.getLinks().get(j).DhStep(value);
-                    //Log.info( "Current:\n"+current+"Step:\n"+step);
-                    //println i+" Link "+j+" index "+index+" step "+TransformNR.getMatrixString(step)
-                    rComponentmx = rComponentmx.times(step);
-                }
-            //}
-            
+            for(int j=0;j<i ;j++) {
+                double value=0;
+                if(chain.getLinks().get(j).getLinkType()==DhLinkType.ROTORY)
+                    value=Math.toRadians(jointSpaceVector[j]);
+                else
+                    value=jointSpaceVector[j];
+                Matrix step = chain.getLinks().get(j).DhStep(value);
+                //Log.info( "Current:\n"+current+"Step:\n"+step);
+                //println i+" Link "+j+" index "+index+" step "+TransformNR.getMatrixString(step)
+                rComponentmx = rComponentmx.times(step);
+            }
             //Figure out the current 
             Matrix tipOffsetmx =forwardOffset( new TransformNR()).getMatrixTransform();
             for(int j=0;j<size && j<=index;j++) {
@@ -322,49 +314,23 @@ public class DHParameterKinematics extends AbstractKinematicsNR
                 //println i+" Link "+j+" index "+index+" step "+TransformNR.getMatrixString(step)
                 tipOffsetmx = tipOffsetmx.times(step);
             }
-            
             double []tipOffset = new double [3];
             double []rComponent = new double [3];
             TransformNR tipOffsetnr = new TransformNR(tipOffsetmx);//.times(myInvertedStarting);
             tipOffset[0]=tipOffsetnr.getX();
             tipOffset[1]=tipOffsetnr.getY();
             tipOffset[2]=tipOffsetnr.getZ();
-            
             TransformNR rComponentnr = new TransformNR(rComponentmx);//.times(myInvertedStarting);
             rComponent[0]=rComponentnr.getX();
             rComponent[1]=rComponentnr.getY();
             rComponent[2]=rComponentnr.getZ();
             for(int x=0;x<3;x++)
                 rVect[x]=(tipOffset[x]-rComponent[x]);
-                
-            /*
-            Matrix current = new TransformNR().getMatrixTransform();
-            for(int j=index;j>=i;j--) {
-                double value=0;
-                if(chain.getLinks().get(j).getLinkType()==DhLinkType.ROTORY)
-                    value=Math.toRadians(jointSpaceVector[j]);
-                else
-                    value=jointSpaceVector[j];
-                Matrix step = new TransformNR(chain.getLinks().get(j).DhStep(value)).inverse().getMatrixTransform();
-                //Log.info( "Current:\n"+current+"Step:\n"+step);
-                //println i+" Link "+j+" index "+index+" step "+TransformNR.getMatrixString(step)
-                current = current.times(step);
-            }
-            TransformNR intermediate = new TransformNR(current)//.times(myInvertedStarting);
-            rVect[0]=intermediate.getX();
-            rVect[1]=intermediate.getY();
-            rVect[2]=intermediate.getZ();   
-            */
             //Cross product of rVect and Z vect
             double []xProd = crossProduct( zVect,rVect);
-            //println i+" R vector "+rVect //+" \t\t Zvect "+zVect+" \t\tcrossProd "+xProd
-            //println TransformNR.getMatrixString(tipOffsetmx)
-            
-            
             data[0][i]=xProd[0];
             data[1][i]=xProd[1];
             data[2][i]=xProd[2];
-            
         }
         //println "\n\n"
         return new Matrix(data);
