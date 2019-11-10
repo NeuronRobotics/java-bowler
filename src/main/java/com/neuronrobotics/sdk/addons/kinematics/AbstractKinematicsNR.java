@@ -565,7 +565,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 									inverseOffset(taskSpaceTransform)
 									);
 		if(jointSpaceVect==null)
-			throw new RuntimeException("The kinematics model muts return and array, not null");
+			throw new RuntimeException("The kinematics model must return and array, not null");
 		setDesiredJointSpaceVector(jointSpaceVect,  seconds);
 		return jointSpaceVect;
 	}
@@ -578,9 +578,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 */
 	public boolean checkTaskSpaceTransform(TransformNR taskSpaceTransform) {
 		try{
-			Log.info("Checking target pose: "+taskSpaceTransform);
-			taskSpaceTransform = inverseOffset(taskSpaceTransform);
-			double [] jointSpaceVect = inverseKinematics(taskSpaceTransform);
+			double [] jointSpaceVect = inverseKinematics(inverseOffset(taskSpaceTransform));
 			double[] uLim=factory.getUpperLimits();
 			double[] lLim=factory.getLowerLimits();
 			for(int i=0;i<jointSpaceVect.length;i++){
@@ -854,13 +852,13 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	public TransformNR inverseOffset(TransformNR t){
 		//System.out.println("RobotToFiducialTransform "+getRobotToFiducialTransform());
 		//System.out.println("FiducialToRASTransform "+getFiducialToRASTransform());		
-		Matrix rtz = getFiducialToGlobalTransform().getMatrixTransform().inverse();
-		Matrix ztr = getRobotToFiducialTransform().getMatrixTransform().inverse();
+		Matrix globalToFeducialInverse = getFiducialToGlobalTransform().getMatrixTransform().inverse();
+		Matrix feducialToLimbInverse = getRobotToFiducialTransform().getMatrixTransform().inverse();
 
-		Matrix current = t.getMatrixTransform();
-		Matrix mForward = ztr.times(rtz).times(current);
+		Matrix NewGlobalSpaceTarget = t.getMatrixTransform();
+		Matrix limbSpaceTarget = feducialToLimbInverse.times(globalToFeducialInverse).times(NewGlobalSpaceTarget);
 		
-		return new TransformNR( mForward);
+		return new TransformNR( limbSpaceTarget);
 	}
 	
 	/**
@@ -870,10 +868,10 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 * @return the transform nr
 	 */
 	public TransformNR forwardOffset(TransformNR t){
-		Matrix btt = getRobotToFiducialTransform().getMatrixTransform();
-		Matrix ftb = getFiducialToGlobalTransform().getMatrixTransform();
-		Matrix current = t.getMatrixTransform();
-		Matrix mForward = ftb.times(btt).times(current);
+		Matrix feducialToLimb = getRobotToFiducialTransform().getMatrixTransform();
+		Matrix globaltoFeducial = getFiducialToGlobalTransform().getMatrixTransform();
+		Matrix fkOfLimb = t.getMatrixTransform();
+		Matrix mForward = globaltoFeducial.times(feducialToLimb).times(fkOfLimb);
 		return new TransformNR( mForward);
 	}
 	
