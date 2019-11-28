@@ -45,6 +45,7 @@ public class NativeResource {
 		}
 
 	}
+	@SuppressWarnings("rawtypes")
 	public static File inJarLoad(Class inputClass, String name) throws IOException{
 		InputStream resourceSource = inputClass.getResourceAsStream(name);
 		File resourceLocation = prepResourceLocation(name);
