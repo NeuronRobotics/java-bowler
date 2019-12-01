@@ -354,7 +354,7 @@ public abstract class AbstractLink implements  IFlushable{
 			fireLinkLimitEvent(
 					new PIDLimitEvent(
 							conf.getHardwareIndex(),
-							toLinkUnits(targetValue) ,
+							targetValue ,
 							PIDLimitEventType.UPPERLIMIT,
 							System.currentTimeMillis()
 							)
@@ -372,7 +372,7 @@ public abstract class AbstractLink implements  IFlushable{
 			fireLinkLimitEvent(
 					new PIDLimitEvent(
 							conf.getHardwareIndex(),
-							toLinkUnits(targetValue) ,
+							targetValue ,
 							PIDLimitEventType.LOWERLIMIT,
 							System.currentTimeMillis()
 							)
