@@ -576,23 +576,33 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 * @param taskSpaceTransform the task space transform
 	 * @return True if pose is reachable, false if it is not
 	 */
-	public boolean checkTaskSpaceTransform(TransformNR taskSpaceTransform) {
+	public static boolean checkTaskSpaceTransform(AbstractKinematicsNR dev,TransformNR taskSpaceTransform) {
 		try{
-			double [] jointSpaceVect = inverseKinematics(inverseOffset(taskSpaceTransform));
-			double[] uLim=factory.getUpperLimits();
-			double[] lLim=factory.getLowerLimits();
+			double [] jointSpaceVect = dev.inverseKinematics(dev.inverseOffset(taskSpaceTransform));
 			for(int i=0;i<jointSpaceVect.length;i++){
-				if(jointSpaceVect[i]>uLim[i])
+				AbstractLink link = dev.factory.getLink(dev.getLinkConfiguration(i));
+				double val = link.toLinkUnits(jointSpaceVect[i]);
+				if(val>link.getUpperLimit()){
 					return false;
-				if(jointSpaceVect[i]<lLim[i])
+				}
+				if(val<link.getLowerLimit()) {
 					return false;
+				}
 			}
 		}catch(Exception ex){
 			return false;
 		}
 		return true;
 	}
-	
+	/**
+	 * Checks the desired pose for ability for the IK to calculate a valid pose.
+	 *
+	 * @param taskSpaceTransform the task space transform
+	 * @return True if pose is reachable, false if it is not
+	 */
+	public  boolean checkTaskSpaceTransform(TransformNR taskSpaceTransform) {
+		return AbstractKinematicsNR.checkTaskSpaceTransform(this,taskSpaceTransform);
+	}
 	/**
 	 * This calculates the target pose .
 	 *
