@@ -54,7 +54,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 		public void onDisconnect(BowlerAbstractDevice source) {
 			if (!disconnecting) {
 				disconnecting = true;
-				disconnect();
+				//disconnect();
 			}
 
 		}
@@ -703,4 +703,28 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 
 	}
 
+	// New helper functions
+	
+	public TransformNR linkCoM( double linkAngleToClaculate ,int linkIndex) {
+		//int linkIndex=1
+		for(int i=0;i<5;i++) {
+			try {
+				double [] vectortail = getCurrentJointSpaceVector();
+				vectortail[linkIndex]=linkAngleToClaculate;
+				return getChain().getChain(vectortail).get(linkIndex).
+						times(getLinkConfiguration(linkIndex).getCenterOfMassFromCentroid());
+			}catch (Exception e) {
+				try {
+					Thread.sleep(0,20);
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		}
+		throw new RuntimeException("Failed to compute CoM");
+	}
+	public TransformNR linkCoM(int linkIndex) {
+		return linkCoM(getCurrentJointSpaceVector()[linkIndex],linkIndex);
+	}
 }
