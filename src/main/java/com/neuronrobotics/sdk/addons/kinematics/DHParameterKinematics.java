@@ -706,7 +706,6 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	// New helper functions
 	
 	public TransformNR linkCoM(double linkAngleToClaculate, int linkIndex) {
-
 		double[] vectortail = getCurrentJointSpaceVector();
 		vectortail[linkIndex] = linkAngleToClaculate;
 		return getChain().getChain(vectortail).get(linkIndex)
