@@ -284,12 +284,12 @@ public class MobileBase extends AbstractKinematicsNR {
 			for (int i = 0; i < nodListofLinks.getLength(); i++) {
 				Node linkNode = nodListofLinks.item(i);
 				String nameParent = linkNode.getParentNode().getNodeName();
-				boolean isMobileBase = nameParent.contains("mobilebase");
+				boolean isMobileBase = !nameParent.contains("link");
 				if (linkNode.getNodeType() == Node.ELEMENT_NODE && 
 						linkNode.getNodeName().contentEquals(tagname)
 						&& isMobileBase) {
 					String value = linkNode.getChildNodes().item(0).getNodeValue();
-					System.out.println("Loading tag "+tagname+" from "+nameParent+" value "+value);
+					//System.out.println("Loading tag "+tagname+" from "+nameParent+" value "+value);
 					return value;
 				}
 			}

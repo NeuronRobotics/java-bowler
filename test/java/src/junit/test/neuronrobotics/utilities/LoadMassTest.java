@@ -20,6 +20,7 @@ public class LoadMassTest {
 			MobileBase pArm = new MobileBase(new FileInputStream(f));
 			System.out.println("Mass = "+pArm.getMassKg());
 			assertEquals(99, pArm.getMassKg(),0.1);
+			assertEquals(pArm.getLegs().get(0).getScriptingName(),"Carl_One");
 		}
 	}
 
