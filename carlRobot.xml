@@ -876,7 +876,7 @@
 	<roty>0.0</roty>
 	<rotz>0.0</rotz>
 </baseToZframe>
-	<mass>0.01</mass>
+	<mass>99</mass>
 	<centerOfMassFromCentroid>	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>

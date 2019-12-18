@@ -75,6 +75,7 @@ public class XmlFactory {
 	 * @return the tag value
 	 */
 	public static String getTagValue(String sTag, Element eElement){
+		
 	    NodeList nlList= eElement.getElementsByTagName(sTag).item(0).getChildNodes();
 	    Node nValue = (Node) nlList.item(0); 
 	   // System.out.println("\t\t"+sTag+" = "+nValue.getNodeValue());

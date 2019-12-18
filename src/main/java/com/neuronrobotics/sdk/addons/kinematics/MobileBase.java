@@ -187,7 +187,7 @@ public class MobileBase extends AbstractKinematicsNR {
 		loadLimb(doc, "steerable", steerable);
 		loadLimb(doc, "appendage", appendages);
 		try {
-			String massString = XmlFactory.getTagValue("mass", doc);
+			String massString =getTag(doc,"mass");
 			setMassKg(Double.parseDouble(massString));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -263,7 +263,7 @@ public class MobileBase extends AbstractKinematicsNR {
 	 * @param tag
 	 *            the tag
 	 * @return the name
-	 */
+	 */ 
 	private String getParallelGroup(Element e) {
 		return getTag(e,  "parallelGroup");
 	}
@@ -279,12 +279,18 @@ public class MobileBase extends AbstractKinematicsNR {
 	 */
 	private String getTag(Element e, String tagname) {
 		try {
-			NodeList nodListofLinks = e.getChildNodes();
+			NodeList nodListofLinks = e.getElementsByTagName(tagname);
 
 			for (int i = 0; i < nodListofLinks.getLength(); i++) {
 				Node linkNode = nodListofLinks.item(i);
-				if (linkNode.getNodeType() == Node.ELEMENT_NODE && linkNode.getNodeName().contentEquals(tagname)) {
-					return XmlFactory.getTagValue(tagname, e);
+				String nameParent = linkNode.getParentNode().getNodeName();
+				boolean isMobileBase = nameParent.contains("mobilebase");
+				if (linkNode.getNodeType() == Node.ELEMENT_NODE && 
+						linkNode.getNodeName().contentEquals(tagname)
+						&& isMobileBase) {
+					String value = linkNode.getChildNodes().item(0).getNodeValue();
+					System.out.println("Loading tag "+tagname+" from "+nameParent+" value "+value);
+					return value;
 				}
 			}
 		} catch (Exception ex) {
@@ -769,6 +775,7 @@ public class MobileBase extends AbstractKinematicsNR {
 	}
 
 	public void setMassKg(double mass) {
+		System.out.println("Mass of device "+getScriptingName()+" is "+mass);
 		this.mass = mass;
 	}
 
