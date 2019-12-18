@@ -705,26 +705,94 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 
 	// New helper functions
 	
-	public TransformNR linkCoM( double linkAngleToClaculate ,int linkIndex) {
-		//int linkIndex=1
-		for(int i=0;i<5;i++) {
-			try {
-				double [] vectortail = getCurrentJointSpaceVector();
-				vectortail[linkIndex]=linkAngleToClaculate;
-				return getChain().getChain(vectortail).get(linkIndex).
-						times(getLinkConfiguration(linkIndex).getCenterOfMassFromCentroid());
-			}catch (Exception e) {
-				try {
-					Thread.sleep(0,20);
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-		}
-		throw new RuntimeException("Failed to compute CoM");
+	public TransformNR linkCoM(double linkAngleToClaculate, int linkIndex) {
+
+		double[] vectortail = getCurrentJointSpaceVector();
+		vectortail[linkIndex] = linkAngleToClaculate;
+		return getChain().getChain(vectortail).get(linkIndex)
+				.times(getLinkConfiguration(linkIndex).getCenterOfMassFromCentroid());
+
 	}
+	
 	public TransformNR linkCoM(int linkIndex) {
 		return linkCoM(getCurrentJointSpaceVector()[linkIndex],linkIndex);
+	}
+	public Affine getLinkAffineManipulator(int index) {
+		 return getChain().getLinks().get(index).getListener();
+	}
+	/**
+	 * Gets the theta.
+	 *
+	 * @return the theta
+	 */
+
+	public double getDH_Theta(int index) {
+		return getChain().getLinks().get(index).getTheta();
+	}
+	/**
+	 * Gets the d.
+	 *
+	 * @return the d
+	 */
+	public double getDH_D(int index) {
+		return getChain().getLinks().get(index).getDelta();
+	}
+
+
+
+	/**
+	 * Gets the r.
+	 *
+	 * @return the r
+	 */
+	public double getDH_R(int index) {
+		return getChain().getLinks().get(index).getRadius();
+	}
+
+	/**
+	 * Gets the alpha.
+	 *
+	 * @return the alpha
+	 */
+	public double getDH_Alpha(int index) {
+		return getChain().getLinks().get(index).getAlpha();
+	}
+	
+	/**
+	 * Gets the theta.
+	 *
+	 * @return the theta
+	 */
+
+	public void setDH_Theta(int index, double value) {
+		 getChain().getLinks().get(index).setTheta(value);
+	}
+	/**
+	 * Gets the d.
+	 *
+	 * @return the d
+	 */
+	public void setDH_D(int index, double value) {
+		 getChain().getLinks().get(index).setDelta(value);
+	}
+
+
+
+	/**
+	 * Gets the r.
+	 *
+	 * @return the r
+	 */
+	public void setDH_R(int index, double value) {
+		 getChain().getLinks().get(index).setRadius(value);
+	}
+
+	/**
+	 * Gets the alpha.
+	 *
+	 * @return the alpha
+	 */
+	public void setDH_Alpha(int index, double value) {
+		 getChain().getLinks().get(index).setAlpha(value);
 	}
 }
