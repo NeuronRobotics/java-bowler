@@ -187,9 +187,10 @@ public class MobileBase extends AbstractKinematicsNR {
 		loadLimb(doc, "steerable", steerable);
 		loadLimb(doc, "appendage", appendages);
 		try {
-			setMassKg(Double.parseDouble(XmlFactory.getTagValue("mass", doc)));
+			String massString = XmlFactory.getTagValue("mass", doc);
+			setMassKg(Double.parseDouble(massString));
 		} catch (Exception e) {
-
+			e.printStackTrace();
 		}
 
 		TransformNR cmcenter = loadTransform("centerOfMassFromCentroid", doc);
