@@ -186,14 +186,15 @@ public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector )
 	 * @return the matrix
 	 */
 	public Matrix forwardKinematicsMatrix(double[] jointSpaceVector, boolean store) {
+		return forwardKinematicsMatrix(jointSpaceVector,store?getCachedChain():null);
+	}
+	private Matrix forwardKinematicsMatrix(double[] jointSpaceVector, 	ArrayList<TransformNR>  chainToLoad) {
 		if(getLinks() == null)
 			return new TransformNR().getMatrixTransform();
 		if (jointSpaceVector.length!=getLinks().size())
 			throw new IndexOutOfBoundsException("DH links do not match defined links");
 		Matrix current = new TransformNR().getMatrixTransform();
-		if(store)
-			setChain(new ArrayList<TransformNR>());
-		ArrayList<TransformNR> cachedChain = getCachedChain();
+		
 		for(int i=0;i<getLinks().size();i++) {
 			LinkConfiguration conf= getFactory().getLinkConfigurations().get(i);
 			Matrix step;
@@ -208,17 +209,17 @@ public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector )
 			final TransformNR pose =forwardOffset(new TransformNR(update));
 			//getLinks().get(index).fireOnLinkGlobalPositionChange(pose);	
 
-			if(store){
+			if(chainToLoad!=null){
 				if(intChain.size()<=i)
 					intChain.add(new TransformNR(step));
 				else{
 					intChain.set(i, new TransformNR(step));
 				}
 				
-				if(cachedChain.size()<=i)
-					cachedChain.add(pose);
+				if(chainToLoad.size()<=i)
+					chainToLoad.add(pose);
 				else{
-					cachedChain.set(i, pose);
+					chainToLoad.set(i, pose);
 				}
 			}
 		}
@@ -256,8 +257,9 @@ public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector )
 	 * @return the chain
 	 */
 	public ArrayList<TransformNR> getChain(double[] jointSpaceVector) {
-		forwardKinematics(jointSpaceVector,true);
-		return getCachedChain();
+		ArrayList<TransformNR> chainToLoad = new ArrayList<TransformNR>();
+		forwardKinematicsMatrix(jointSpaceVector,chainToLoad);
+		return chainToLoad;
 	}
 	
 	/**

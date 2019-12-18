@@ -1366,5 +1366,30 @@ public ArrayList<PIDConfiguration> getAxisPidConfiguration() {
 	public IMU getImu() {
 		return imu;
 	}
+	
+	//New helper functions to make the API simpler
+	
+	public void boundedLinkValueSet( int index,double value) throws Exception {
+		value=boundToLinkLimits(index,value);
+		double[] vect =getCurrentJointSpaceVector();
+		vect[index]=value;
+		setDesiredJointSpaceVector(vect, 0);
+	}
+	public double boundToLinkLimits( int index,double value) {
+		AbstractLink l1 = getAbstractLink(index);
+		if(value>l1.getMaxEngineeringUnits()){
+			value=l1.getMaxEngineeringUnits();
+		}
+		if(value<l1.getMinEngineeringUnits()){
+			value=l1.getMinEngineeringUnits();
+		}
+		return value;
+	}
+	
+	public double linkMass(int linkIndex) {
+		return getLinkConfiguration(linkIndex).getMassKg();
+	}
+
+	
 
 }
