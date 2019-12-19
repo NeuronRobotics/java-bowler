@@ -102,7 +102,7 @@ public class NativeResource {
 			System.err.println("Can't load native file: "+name+" for os arch: "+ getOsArch());
 			return null;
 		}
-		System.out.println("Loading "+file);
+		//System.out.println("Loading "+file);
 		return getClass().getResourceAsStream(file);
 	}
 	
