@@ -151,7 +151,7 @@ public class LinkFactory {
 	private AbstractLink getLinkLocal(LinkConfiguration c){
 
 		AbstractLink tmp=null;
-		Log.info("Loading link: "+c.getName()+" type = "+c.getTypeEnum()+" device= "+c.getDeviceScriptingName());
+		//Log.info("Loading link: "+c.getName()+" type = "+c.getTypeEnum()+" device= "+c.getDeviceScriptingName());
 
 		switch(c.getTypeEnum()){
 		
