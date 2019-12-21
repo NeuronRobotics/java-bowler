@@ -109,7 +109,9 @@ public class DeviceManager {
 			public void onConnect(BowlerAbstractDevice source) {
 			}
 		});
-		for (IDeviceAddedListener l : deviceAddedListener) {
+		
+		for (int i=0;i< deviceAddedListener.size();i++) {
+			IDeviceAddedListener l = deviceAddedListener.get(i);
 			l.onNewDeviceAdded(newDevice);
 		}
 	}
