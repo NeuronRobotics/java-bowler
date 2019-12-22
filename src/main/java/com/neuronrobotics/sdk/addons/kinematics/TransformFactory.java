@@ -1,6 +1,8 @@
 package com.neuronrobotics.sdk.addons.kinematics;
 
 import java.awt.Color;
+
+import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.transform.Affine;
 import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
@@ -83,6 +85,9 @@ public class TransformFactory {
 	 * @return the transform
 	 */
 	public static Affine nrToAffine(TransformNR input ,Affine rotations){
+	    if (!Platform.isFxApplicationThread()) {
+	    	new RuntimeException("This method must be in UI thread!").printStackTrace();
+	    }
 		double[][] poseRot = input
 				.getRotationMatrixArray();
 		
