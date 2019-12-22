@@ -617,34 +617,28 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	 * Update cad locations.
 	 */
 	public void updateCadLocations() {
-		try {
-			if (getChain() == null)
-				return;
-
-			ArrayList<TransformNR> ll;
-			if (getChain().getCachedChain() != null && getChain().getCachedChain().size() == 0) {
-				ll = getChain().getChain(getCurrentJointSpaceVector());
-			} else
-				ll = getChain().getCachedChain();
-			for (int i = 0; i < ll.size(); i++) {
-				final ArrayList<TransformNR> linkPos = ll;
-				final int index = i;
-				final Affine af = getChain().getLinks().get(index).getListener();
-				final TransformNR nr = linkPos.get(index);
-				Platform.runLater(new Runnable() {
-					@Override
-					public void run() {
-						try {
-							TransformFactory.nrToAffine(nr,
-									af);
-						} catch (Exception ex) {
-							 //ex.printStackTrace();
+		synchronized (DHParameterKinematics.class) {
+			try {
+				ArrayList<TransformNR> ll = getChain().getChain(getCurrentJointSpaceVector());
+				for (int i = 0; i < ll.size(); i++) {
+					ArrayList<TransformNR> linkPos = ll;
+					int index = i;
+					Affine af = getChain().getLinks().get(index).getListener();
+					TransformNR nr = linkPos.get(index);
+					Platform.runLater(() -> {
+						if (nr == null || af == null) {
+							return;
 						}
-					}
-				});
+						try {
+							TransformFactory.nrToAffine(nr, af);
+						} catch (Exception ex) {
+							// ex.printStackTrace();
+						}
+					});
+				}
+			} catch (Exception ex) {
+				// ex.printStackTrace();
 			}
-		} catch (Exception ex) {
-			// ex.printStackTrace();
 		}
 	}
 

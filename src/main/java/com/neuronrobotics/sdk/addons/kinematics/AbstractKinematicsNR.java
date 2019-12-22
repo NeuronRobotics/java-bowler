@@ -46,6 +46,8 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
  */
 @SuppressWarnings("restriction")
 public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IPIDEventListener, ILinkListener {
+	
+	
 
 	/** The configurations. */
 	private ArrayList<PIDConfiguration> pidConfigurations = new ArrayList<PIDConfiguration>();
@@ -526,7 +528,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 * @return JointSpaceVector in mm,radians
 	 */
 	public double[] getCurrentJointSpaceVector() {
-		if (currentJointSpacePositions == null) {
+		if (currentJointSpacePositions == null||currentJointSpacePositions.length!= getNumberOfLinks()) {
 			// Happens once and only once on the first initialization
 			currentJointSpacePositions = new double[getNumberOfLinks()];
 			currentJointSpaceTarget = new double[getNumberOfLinks()];
@@ -548,7 +550,11 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 			// double pos =
 			// currentLinkSpacePositions[getLinkConfigurations().get(i).getHardwareIndex()];
 			// Here the RAW values are converted to engineering units
-			jointSpaceVect[i] = currentJointSpacePositions[i];
+			try {
+				jointSpaceVect[i] = currentJointSpacePositions[i];
+			}catch(Exception e) {
+				jointSpaceVect[i]=0;
+			}
 		}
 
 		return jointSpaceVect;
@@ -622,45 +628,37 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 * @return The joint space vector is returned for target arrival referance
 	 * @throws Exception If there is a workspace error
 	 */
-	public synchronized double[] setDesiredJointSpaceVector(double[] jointSpaceVect, double seconds) throws Exception {
+	public  double[] setDesiredJointSpaceVector(double[] jointSpaceVect, double seconds) throws Exception {
 		if (jointSpaceVect.length != getNumberOfLinks()) {
 			throw new IndexOutOfBoundsException("Vector must be " + getNumberOfLinks()
 					+ " links, actual number of links = " + jointSpaceVect.length);
 		}
-		String joints = "[";
-		for (int i = 0; i < jointSpaceVect.length; i++) {
-			joints += jointSpaceVect[i] + " ";
-		}
-		joints += "]";
-		Log.info("Setting target joints: " + joints);
 
-		int except = 0;
-		Exception e = null;
-		do {
-			try {
-				factory.setCachedTargets(jointSpaceVect);
-				if (!isNoFlush()) {
-					//
-					factory.flush(seconds);
-					//
+		synchronized(AbstractKinematicsNR.class) {
+			int except = 0;
+			Exception e = null;
+			do {
+				try {
+					factory.setCachedTargets(jointSpaceVect);
+					if (!isNoFlush()) {
+						//
+						factory.flush(seconds);
+						//
+					}
+					except = 0;
+					e = null;
+				} catch (Exception ex) {
+					except++;
+					e = ex;
 				}
-				except = 0;
-				e = null;
-			} catch (Exception ex) {
-				except++;
-				e = ex;
-			}
-		} while (except > 0 && except < getRetryNumberBeforeFail());
-		if (e != null)
-			throw e;
-
-//		for(int i=0;i<getNumberOfLinks();i++){
-//			setDesiredJointAxisValue(i, jointSpaceVect[i],  seconds);
-//		}
-
-		currentJointSpaceTarget = jointSpaceVect;
-		TransformNR fwd = forwardKinematics(currentJointSpaceTarget);
-		fireTargetJointsUpdate(currentJointSpaceTarget, fwd);
+			} while (except > 0 && except < getRetryNumberBeforeFail());
+			if (e != null)
+				throw e;
+			for(int i=0;i<getNumberOfLinks();i++)
+				currentJointSpaceTarget[i] = jointSpaceVect[i];
+			TransformNR fwd = forwardKinematics(currentJointSpaceTarget);
+			fireTargetJointsUpdate(currentJointSpaceTarget, fwd);
+		}
 		return jointSpaceVect;
 	}
 
@@ -696,36 +694,38 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 *                target, unit seconds
 	 * @throws Exception If there is a workspace error
 	 */
-	public void setDesiredJointAxisValue(int axis, double value, double seconds) throws Exception {
-		LinkConfiguration c = getLinkConfiguration(axis);
+	public  void setDesiredJointAxisValue(int axis, double value, double seconds) throws Exception {
+		synchronized(AbstractKinematicsNR.class) {
+			LinkConfiguration c = getLinkConfiguration(axis);
 
-		Log.info("Setting single target joint in mm/deg, axis=" + axis + " value=" + value);
+			Log.info("Setting single target joint in mm/deg, axis=" + axis + " value=" + value);
 
-		currentJointSpaceTarget[axis] = value;
-		try {
-			getFactory().getLink(c).setTargetEngineeringUnits(value);
-		} catch (Exception ex) {
-			throw new Exception("Joint hit software bound, index " + axis + " attempted: " + value + " boundes: U="
-					+ c.getUpperLimit() + ", L=" + c.getLowerLimit());
+			currentJointSpaceTarget[axis] = value;
+			try {
+				getFactory().getLink(c).setTargetEngineeringUnits(value);
+			} catch (Exception ex) {
+				throw new Exception("Joint hit software bound, index " + axis + " attempted: " + value + " boundes: U="
+						+ c.getUpperLimit() + ", L=" + c.getLowerLimit());
+			}
+			if (!isNoFlush()) {
+				int except = 0;
+				Exception e = null;
+				do {
+					try {
+						getFactory().getLink(c).flush(seconds);
+						except = 0;
+						e = null;
+					} catch (Exception ex) {
+						except++;
+						e = ex;
+					}
+				} while (except > 0 && except < getRetryNumberBeforeFail());
+				if (e != null)
+					throw e;
+			}
+			TransformNR fwd = forwardKinematics(currentJointSpaceTarget);
+			fireTargetJointsUpdate(currentJointSpaceTarget, fwd);
 		}
-		if (!isNoFlush()) {
-			int except = 0;
-			Exception e = null;
-			do {
-				try {
-					getFactory().getLink(c).flush(seconds);
-					except = 0;
-					e = null;
-				} catch (Exception ex) {
-					except++;
-					e = ex;
-				}
-			} while (except > 0 && except < getRetryNumberBeforeFail());
-			if (e != null)
-				throw e;
-		}
-		TransformNR fwd = forwardKinematics(currentJointSpaceTarget);
-		fireTargetJointsUpdate(currentJointSpaceTarget, fwd);
 		return;
 	}
 
@@ -851,18 +851,20 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		}
 		Log.info("Setting Global To Fiducial Transform " + frameToBase);
 		this.fiducial2RAS = frameToBase;
-
-		for (IRegistrationListenerNR r : regListeners) {
-			r.onFiducialToGlobalUpdate(this, frameToBase);
-		}
-		final TransformNR tf = forwardOffset(new TransformNR());
-
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				TransformFactory.nrToAffine(tf, getRootListener());
+		synchronized (AbstractKinematicsNR.class) {
+			for (IRegistrationListenerNR r : regListeners) {
+				r.onFiducialToGlobalUpdate(this, frameToBase);
 			}
-		});
+
+			TransformNR tf = forwardOffset(new TransformNR());
+
+			Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+					TransformFactory.nrToAffine(tf, getRootListener());
+				}
+			});
+		}
 	}
 
 	/**
