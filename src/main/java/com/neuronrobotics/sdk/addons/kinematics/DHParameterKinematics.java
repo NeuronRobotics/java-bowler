@@ -754,7 +754,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	/**
 	 * Gets the theta.
 	 *
-	 * @return the theta
+	 * 
 	 */
 
 	public void setDH_Theta(int index, double value) {
@@ -763,7 +763,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	/**
 	 * Gets the d.
 	 *
-	 * @return the d
+	 * 
 	 */
 	public void setDH_D(int index, double value) {
 		 getChain().getLinks().get(index).setDelta(value);
@@ -774,7 +774,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	/**
 	 * Gets the r.
 	 *
-	 * @return the r
+	 * 
 	 */
 	public void setDH_R(int index, double value) {
 		 getChain().getLinks().get(index).setRadius(value);
@@ -783,7 +783,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	/**
 	 * Gets the alpha.
 	 *
-	 * @return the alpha
+	 * 
 	 */
 	public void setDH_Alpha(int index, double value) {
 		 getChain().getLinks().get(index).setAlpha(value);
