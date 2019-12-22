@@ -88,21 +88,28 @@ public class TransformFactory {
 	    if (!Platform.isFxApplicationThread()) {
 	    	new RuntimeException("This method must be in UI thread!").printStackTrace();
 	    }
+	    if(input==null )
+	    	return rotations;
+	    if( rotations==null)
+	    	rotations=new Affine();
 		double[][] poseRot = input
 				.getRotationMatrixArray();
-		
-		rotations.setMxx(poseRot[0][0]);
-		rotations.setMxy(poseRot[0][1]);
-		rotations.setMxz(poseRot[0][2]);
-		rotations.setMyx(poseRot[1][0]);
-		rotations.setMyy(poseRot[1][1]);
-		rotations.setMyz(poseRot[1][2]);
-		rotations.setMzx(poseRot[2][0]);
-		rotations.setMzy(poseRot[2][1]);
-		rotations.setMzz(poseRot[2][2]);
-		rotations.setTx(input.getX());
-		rotations.setTy(input.getY());
-		rotations.setTz(input.getZ());
+		try {
+			rotations.setMxx(poseRot[0][0]);
+			rotations.setMxy(poseRot[0][1]);
+			rotations.setMxz(poseRot[0][2]);
+			rotations.setMyx(poseRot[1][0]);
+			rotations.setMyy(poseRot[1][1]);
+			rotations.setMyz(poseRot[1][2]);
+			rotations.setMzx(poseRot[2][0]);
+			rotations.setMzy(poseRot[2][1]);
+			rotations.setMzz(poseRot[2][2]);
+			rotations.setTx(input.getX());
+			rotations.setTy(input.getY());
+			rotations.setTz(input.getZ());
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
 		return rotations;
 	}
 	
