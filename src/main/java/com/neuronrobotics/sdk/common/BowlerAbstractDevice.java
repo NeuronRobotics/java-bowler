@@ -82,7 +82,9 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	 * Set the connection to use when communicating commands with a device.
 	 */
 	protected void fireDisconnectEvent() {
-		for(IDeviceConnectionEventListener l:getDisconnectListeners()) {
+		ArrayList<IDeviceConnectionEventListener> disconnectListeners2 = getDisconnectListeners();
+		for (int i = 0; i < disconnectListeners2.size(); i++) {
+			IDeviceConnectionEventListener l = disconnectListeners2.get(i);
 			l.onDisconnect(getDevice());
 		}
 	}
@@ -91,7 +93,9 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	 * Fire connect event.
 	 */
 	protected void fireConnectEvent() {
-		for(IDeviceConnectionEventListener l:getDisconnectListeners()) {
+		ArrayList<IDeviceConnectionEventListener> disconnectListeners2 = getDisconnectListeners();
+		for (int i = 0; i < disconnectListeners2.size(); i++) {
+			IDeviceConnectionEventListener l = disconnectListeners2.get(i);
 			l.onConnect(getDevice());
 		}
 	}
