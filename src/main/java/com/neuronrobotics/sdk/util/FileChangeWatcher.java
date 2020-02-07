@@ -79,7 +79,9 @@ public class FileChangeWatcher {
 			public void run() {
 				setName("File Watcher Thread");
 				while (runThread) {
-					for (String key : activeListener.keySet()) {
+					Object[] array = activeListener.keySet().toArray();
+					for (int i = 0; i < array.length; i++) {
+						Object key = array[i];
 						try {
 							FileChangeWatcher w = activeListener.get(key);
 							if (!w.run) {
