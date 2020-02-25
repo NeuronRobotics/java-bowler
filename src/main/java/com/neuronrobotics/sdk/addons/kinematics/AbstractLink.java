@@ -180,7 +180,9 @@ public abstract class AbstractLink implements  IFlushable{
 	 * @param linkUnitsValue the link units value
 	 */
 	public void fireLinkListener(double linkUnitsValue){
-		for(ILinkListener l:getLinks()){
+		ArrayList<ILinkListener> links2 = getLinks();
+		for (int i = 0; i < links2.size(); i++) {
+			ILinkListener l = links2.get(i);
 			//Log.info("Link Event, RAW="+linkUnitsValue);
 			l.onLinkPositionUpdate(this,toEngineeringUnits(linkUnitsValue));
 		}
