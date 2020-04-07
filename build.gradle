@@ -64,7 +64,7 @@ dependencies {
 	compile 'org.usb4java:usb4java-javax:1.2.0'
 
 	//compile fileTree (dir: '../doychinNRJAVASERISL/nrjavaserial/build/libs', includes: ['*.jar'])
-	compile "com.neuronrobotics:nrjavaserial:3.12.1"
+	compile "com.neuronrobotics:nrjavaserial:3.16.0"
 	// https://mvnrepository.com/artifact/org.apache.commons/commons-math3
 	compile group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
 
