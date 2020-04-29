@@ -57,6 +57,29 @@ public abstract class AbstractLink implements  IFlushable{
 	}
 	
 	/**
+	 * Gets the max engineering units.
+	 *
+	 * @return the max engineering units
+	 */
+	public double getDeviceMaxEngineeringUnits() {
+		if(conf.getScale()>0)
+			return toEngineeringUnits(getDeviceMaximumValue());
+		else
+			return toEngineeringUnits(getDeviceMinimumValue());
+	}
+	
+	/**
+	 * Gets the min engineering units.
+	 *
+	 * @return the min engineering units
+	 */
+	public double getDeviceMinEngineeringUnits() {
+		if(conf.getScale()>0)
+			return toEngineeringUnits(getDeviceMinimumValue());
+		else
+			return toEngineeringUnits(getDeviceMaximumValue());
+	}
+	/**
 	 * Instantiates a new abstract link.
 	 *
 	 * @param conf the conf
