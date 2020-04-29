@@ -19,7 +19,7 @@ public interface IDriveEngine {
 	 * thing here is time synchronicity.you may get it called with a large transform, 
 	 * larger than you can take in one step,a nd you may get a transform with a step size so 
 	 * small it would never move. You will need to warp and stretch the transform coming in 
-	 * to make sure there are an integer number of steps, with a t least some minimum step length.
+	 * to make sure there are an integer number of steps, with at least some minimum step length.
 	 * 
 	 * Be sure to have any threads you create timeout and die, don't wait for disconnect, as you 
 	 * are developing that will be a pain in the ass
