@@ -3,7 +3,6 @@ package com.neuronrobotics.sdk.addons.kinematics;
 import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Interface IDriveEngine.
  */
