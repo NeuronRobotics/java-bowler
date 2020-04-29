@@ -41,6 +41,20 @@ public abstract class AbstractLink implements  IFlushable{
 	 * The object for communicating IMU information and registering it with the hardware
 	 */
 	private IMU imu = new IMU();
+	/**
+	 * Override this method to specify a larger range
+	 * @return the maximum value possible for a link
+	 */
+	public double getDeviceMaximumValue() {
+		return 180.0;
+	}
+	/**
+	 * Override this method to specify a larger range
+	 * @return the minimum value possible for a link
+	 */
+	public double getDeviceMinimumValue() {
+		return 0;
+	}
 	
 	/**
 	 * Instantiates a new abstract link.
