@@ -26,7 +26,7 @@ import com.neuronrobotics.sdk.pid.PIDConfiguration;
  * The Class LinkConfiguration.
  */
 public class LinkConfiguration {
-	
+	private ArrayList<ILinkConfigurationChangeListener> listeners=null;
 	/** The name. */
 	private String name="newLink";// = getTagValue("name",eElement);
 	
@@ -262,6 +262,7 @@ public class LinkConfiguration {
     	setLowerLimit((Integer)args[3]);
     	setType(LinkType.PID);
     	setTotlaNumberOfLinks((Integer)args[1]);
+    	fireChangeEvent();
 	}
 	/**
 	 * Gets the vitamins.
@@ -306,6 +307,7 @@ public class LinkConfiguration {
 		}
 		getVitamins().get(name)[0]=type;
 		getVitamins().get(name)[1]=id;
+		fireChangeEvent();
 	}
 	/**
 	 * Set a purchasing code for a vitamin
@@ -314,6 +316,7 @@ public class LinkConfiguration {
 	 */
 	public void setVitaminVariant(String name, String tagValue2) {
 		vitaminVariant.put(name, tagValue2);
+		fireChangeEvent();
 	}
 	/**
 	 * Get a purchaing code for a vitamin
@@ -344,6 +347,7 @@ public class LinkConfiguration {
     	setUpperLimit(ulimit);
     	setLowerLimit(llimit);
     	setStaticOffset(home);
+    	fireChangeEvent();
 	}
 	
 	/* (non-Javadoc)
@@ -422,6 +426,7 @@ public class LinkConfiguration {
 	public void setName(String name) {
 		Log.info("Setting controller name: "+name);
 		this.name = name;
+		fireChangeEvent();
 	}
 	
 	/**
@@ -440,6 +445,7 @@ public class LinkConfiguration {
 	 */
 	public void setHardwareIndex(int index) {
 		this.index = index;
+		fireChangeEvent();
 	}
 	
 	/**
@@ -458,6 +464,7 @@ public class LinkConfiguration {
 	 */
 	public void setScale(double scale) {
 		this.scale = scale;
+		fireChangeEvent();
 	}
 	
 	/**
@@ -476,6 +483,7 @@ public class LinkConfiguration {
 	 */
 	public void setUpperLimit(double upperLimit) {
 		this.upperLimit = upperLimit;
+		fireChangeEvent();
 	}
 	
 	/**
@@ -494,6 +502,7 @@ public class LinkConfiguration {
 	 */
 	public void setLowerLimit(double lowerLimit) {
 		this.lowerLimit = lowerLimit;
+		fireChangeEvent();
 	}
 	
 	/**
@@ -539,6 +548,7 @@ public class LinkConfiguration {
 	 */
 	public void setKP(double kP) {
 		k[0] = kP;
+		fireChangeEvent();
 	}
 	
 	/**
@@ -548,6 +558,7 @@ public class LinkConfiguration {
 	 */
 	public void setKI(double kI) {
 		k[1] = kI;
+		fireChangeEvent();
 	}
 	
 	/**
@@ -557,6 +568,7 @@ public class LinkConfiguration {
 	 */
 	public void setKD(double kD) {
 		k[2] = kD;
+		fireChangeEvent();
 	}
 	
 	/**
@@ -566,6 +578,7 @@ public class LinkConfiguration {
 	 */
 	public void setInverted(boolean inverted) {
 		this.inverted = inverted;
+		fireChangeEvent();
 	}
 	
 	/**
@@ -584,6 +597,7 @@ public class LinkConfiguration {
 	 */
 	public void setIndexLatch(int indexLatch) {
 		this.indexLatch = indexLatch;
+		fireChangeEvent();
 	}
 	
 	/**
@@ -620,6 +634,7 @@ public class LinkConfiguration {
 	 */
 	public void setStopOnLatch(boolean isStopOnLatch) {
 		this.isStopOnLatch = isStopOnLatch;
+		fireChangeEvent();
 	}
 	
 	/**
@@ -638,6 +653,7 @@ public class LinkConfiguration {
 	 */
 	public void setHomingTicksPerSecond(int homingTicksPerSecond) {
 		this.homingTicksPerSecond = homingTicksPerSecond;
+		fireChangeEvent();
 	}
 	
 	/**
@@ -659,6 +675,7 @@ public class LinkConfiguration {
 			this.type = type;
 		else
 			this.type=LinkType.VIRTUAL;
+		fireChangeEvent();
 	}
 	
 	/**
@@ -677,6 +694,7 @@ public class LinkConfiguration {
 	 */
 	public void setUpperVelocity(double upperVelocity) {
 		this.upperVelocity = upperVelocity;
+		fireChangeEvent();
 	}
 	
 	/**
@@ -695,6 +713,7 @@ public class LinkConfiguration {
 	 */
 	public void setLowerVelocity(double lowerVelocity) {
 		this.lowerVelocity = lowerVelocity;
+		fireChangeEvent();
 	}
 	
 	/**
@@ -722,6 +741,7 @@ public class LinkConfiguration {
 	 */
 	public void setLinkIndex(int linkIndex) {
 		this.linkIndex = linkIndex;
+		fireChangeEvent();
 	}
 	
 	/**
@@ -740,6 +760,7 @@ public class LinkConfiguration {
 	 */
 	public void setTotlaNumberOfLinks(int totlaNumberOfLinks) {
 		this.totlaNumberOfLinks = totlaNumberOfLinks;
+		fireChangeEvent();
 	}
 	
 	/**
@@ -777,6 +798,7 @@ public class LinkConfiguration {
     	isLatch=conf.isUseLatch();
     	indexLatch=(int) conf.getIndexLatch();
     	isStopOnLatch=conf.isStopOnIndex();
+    	fireChangeEvent();
 //    	if(indexLatch>getUpperLimit() || indexLatch<getLowerLimit() )
 //    	    throw new RuntimeException("PID group "+getHardwareIndex()+" Index latch is "+indexLatch+" but needs to be between "+getUpperLimit()+" and "+getLowerLimit());
     	
@@ -798,6 +820,7 @@ public class LinkConfiguration {
 	 */
 	public void setDeviceScriptingName(String deviceScriptingName) {
 		this.deviceScriptingName = deviceScriptingName;
+		fireChangeEvent();
 	}
 	
 	/**
@@ -816,6 +839,7 @@ public class LinkConfiguration {
 	 */
 	public void setStaticOffset(double staticOffset) {
 		this.staticOffset = staticOffset;
+		fireChangeEvent();
 	}
 
 
@@ -825,6 +849,7 @@ public class LinkConfiguration {
 
 	public void setInvertLimitVelocityPolarity(boolean invertVelocity) {
 		this.invertLimitVelocityPolarity = invertVelocity;
+		fireChangeEvent();
 	}
 
 	public ArrayList<LinkConfiguration> getSlaveLinks() {
@@ -833,6 +858,7 @@ public class LinkConfiguration {
 
 	public void setSlaveLinks(ArrayList<LinkConfiguration> slaveLinks) {
 		this.slaveLinks = slaveLinks;
+		fireChangeEvent();
 	}
 
 	public double getMassKg() {
@@ -840,18 +866,21 @@ public class LinkConfiguration {
 	}
 	public void setMassKg(double mass) {
 		this.mass = mass;
+		fireChangeEvent();
 	}
 	public TransformNR getCenterOfMassFromCentroid() {
 		return centerOfMassFromCentroid;
 	}
 	public void setCenterOfMassFromCentroid(TransformNR centerOfMassFromCentroid) {
 		this.centerOfMassFromCentroid = centerOfMassFromCentroid;
+		fireChangeEvent();
 	}
 	public TransformNR getimuFromCentroid() {
 		return imuFromCentroid;
 	}
 	public void setimuFromCentroid(TransformNR centerOfMassFromCentroid) {
 		this.imuFromCentroid = centerOfMassFromCentroid;
+		fireChangeEvent();
 	}
 //	private String electroMechanicalType = "hobbyServo";
 //	private String electroMechanicalSize = "standardMicro";
@@ -876,6 +905,7 @@ public class LinkConfiguration {
 
 	public void setElectroMechanicalType(String electroMechanicalType) {
 		getCoreEmPart()[0] = electroMechanicalType;
+		fireChangeEvent();
 	}
 
 	public String getElectroMechanicalSize() {
@@ -884,6 +914,7 @@ public class LinkConfiguration {
 
 	public void setElectroMechanicalSize(String electroMechanicalSize) {
 		getCoreEmPart()[1] = electroMechanicalSize;
+		fireChangeEvent();
 	}
 
 	public String getShaftType() {
@@ -892,6 +923,7 @@ public class LinkConfiguration {
 
 	public void setShaftType(String shaftType) {
 		getCoreShaftPart()[0] = shaftType;
+		fireChangeEvent();
 	}
 
 	public String getShaftSize() {
@@ -900,6 +932,7 @@ public class LinkConfiguration {
 
 	public void setShaftSize(String shaftSize) {
 		getCoreShaftPart()[1] = shaftSize;
+		fireChangeEvent();
 	}
 
 	public boolean isPassive() {
@@ -908,6 +941,7 @@ public class LinkConfiguration {
 
 	public void setPassive(boolean passive) {
 		this.passive = passive;
+		fireChangeEvent();
 	}
 
 	public HashMap<String , String[]> getVitamins() {
@@ -916,6 +950,7 @@ public class LinkConfiguration {
 
 	public void setVitamins(HashMap<String , String[]> vitamins) {
 		this.vitamins = vitamins;
+		fireChangeEvent();
 	}
 
 	public String getTypeString() {
@@ -924,6 +959,7 @@ public class LinkConfiguration {
 
 	public void setTypeString(String typeString) {
 		this.typeString = typeString;
+		fireChangeEvent();
 	}
 	
 	 /**
@@ -998,6 +1034,7 @@ public class LinkConfiguration {
 
 	public void setDeviceTheoreticalMax(double deviceTheoreticalMax) {
 		this.deviceTheoreticalMax = deviceTheoreticalMax;
+		fireChangeEvent();
 	}
 
 	public double getDeviceTheoreticalMin() {
@@ -1006,6 +1043,37 @@ public class LinkConfiguration {
 
 	public void setDeviceTheoreticalMin(double deviceTheoreticalMin) {
 		this.deviceTheoreticalMin = deviceTheoreticalMin;
+		fireChangeEvent();
+	}
+	
+	public void addChangeListener(ILinkConfigurationChangeListener l) {
+		if(!getListeners().contains(l))
+			getListeners().add(l);
+	}
+	public void removeChangeListener(ILinkConfigurationChangeListener l) {
+		if(getListeners().contains(l))
+			getListeners().remove(l);
+	}
+	public void clearChangeListener() {
+		getListeners().clear();
+		listeners=null;
+	}
+	public ArrayList<ILinkConfigurationChangeListener> getListeners() {
+		if(listeners==null)
+			listeners=new ArrayList<ILinkConfigurationChangeListener>();
+		return listeners;
+	}
+
+	private void fireChangeEvent() {
+		if(listeners!=null) {
+			for(int i=0;i<listeners.size();i++) {
+				try {
+					listeners.get(i).event(this);
+				}catch (Throwable t) {
+					t.printStackTrace();
+				}
+			}
+		}
 	}
 	
 }

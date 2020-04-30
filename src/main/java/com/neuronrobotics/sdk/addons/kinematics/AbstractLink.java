@@ -608,4 +608,13 @@ public abstract class AbstractLink implements  IFlushable{
 	public IMU getImu() {
 		return imu;
 	}
+	public void addChangeListener(ILinkConfigurationChangeListener l) {
+		conf.addChangeListener(l);
+	}
+	public void removeChangeListener(ILinkConfigurationChangeListener l) {
+		conf.removeChangeListener(l);
+	}
+	public void clearChangeListener() {
+		conf.clearChangeListener();
+	}
 }

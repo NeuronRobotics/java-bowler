@@ -1498,4 +1498,13 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	public double getDeviceMinimumValue(int linkIndex) {
 		return getLinkConfiguration(linkIndex).getDeviceTheoreticalMin();
 	}
+	public void addChangeListener(int linkIndex,ILinkConfigurationChangeListener l) {
+		getLinkConfiguration(linkIndex).addChangeListener(l);
+	}
+	public void removeChangeListener(int linkIndex,ILinkConfigurationChangeListener l) {
+		getLinkConfiguration(linkIndex).removeChangeListener(l);
+	}
+	public void clearChangeListener(int linkIndex) {
+		getLinkConfiguration(linkIndex).clearChangeListener();
+	}
 }
