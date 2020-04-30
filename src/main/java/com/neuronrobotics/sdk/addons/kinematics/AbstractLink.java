@@ -46,16 +46,28 @@ public abstract class AbstractLink implements  IFlushable{
 	 * @return the maximum value possible for a link
 	 */
 	public double getDeviceMaximumValue() {
-		return 180.0;
+		return conf.getDeviceTheoreticalMax();
 	}
 	/**
 	 * Override this method to specify a larger range
 	 * @return the minimum value possible for a link
 	 */
 	public double getDeviceMinimumValue() {
-		return 0;
+		return conf.getDeviceTheoreticalMin();
 	}
-	
+	/**
+	 * Override this method to specify a larger range
+	 */
+	public void setDeviceMaximumValue(double max) {
+		 conf.setDeviceTheoreticalMax(max);
+	}
+	/**
+	 * Override this method to specify a larger range
+
+	 */
+	public void setDeviceMinimumValue(double min) {
+		 conf.setDeviceTheoreticalMin(min);
+	}
 	/**
 	 * Gets the max engineering units.
 	 *

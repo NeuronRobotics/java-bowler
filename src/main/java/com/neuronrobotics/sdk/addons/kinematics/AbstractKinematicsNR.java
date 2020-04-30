@@ -1471,4 +1471,31 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	public String getShaftSize(int linkIndex) {
 		return getLinkConfiguration(linkIndex).getShaftSize();
 	}
+	/**
+	 * Override this method to specify a larger range
+	 */
+	public void setDeviceMaximumValue(int linkIndex,double max) {
+		getLinkConfiguration(linkIndex).setDeviceTheoreticalMax(max);
+	}
+	/**
+	 * Override this method to specify a larger range
+
+	 */
+	public void setDeviceMinimumValue(int linkIndex,double min) {
+		getLinkConfiguration(linkIndex).setDeviceTheoreticalMin(min);
+	}
+	/**
+	 * Override this method to specify a larger range
+	 * @return the maximum value possible for a link
+	 */
+	public double getDeviceMaximumValue(int linkIndex) {
+		return getLinkConfiguration(linkIndex).getDeviceTheoreticalMax();
+	}
+	/**
+	 * Override this method to specify a larger range
+	 * @return the minimum value possible for a link
+	 */
+	public double getDeviceMinimumValue(int linkIndex) {
+		return getLinkConfiguration(linkIndex).getDeviceTheoreticalMin();
+	}
 }

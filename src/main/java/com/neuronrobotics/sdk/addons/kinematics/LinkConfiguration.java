@@ -78,7 +78,8 @@ public class LinkConfiguration {
 	
 	/** The device scripting name. */
 	private String deviceScriptingName=null;
-	
+	private double deviceTheoreticalMax =180;
+	private double deviceTheoreticalMin =0;
 	private double mass=0.01;// KG
 	private TransformNR centerOfMassFromCentroid=new TransformNR();
 	private TransformNR imuFromCentroid=new TransformNR();
@@ -157,6 +158,17 @@ public class LinkConfiguration {
     	}catch (Exception e){
     		
     	}
+    	
+    	try{
+    		setDeviceTheoreticalMax(Double.parseDouble(XmlFactory.getTagValue("deviceTheoreticalMax",eElement)));
+    	}catch (Exception e){
+    		
+    	}try{
+    		setDeviceTheoreticalMin(Double.parseDouble(XmlFactory.getTagValue("deviceTheoreticalMin",eElement)));
+    	}catch (Exception e){
+    		
+    	}
+    	
     	try{
     		setMassKg(Double.parseDouble(XmlFactory.getTagValue("mass",eElement)));
     	}catch (Exception e){
@@ -387,6 +399,8 @@ public class LinkConfiguration {
 				"\t<upperVelocity>"+upperVelocity+"</upperVelocity>\n"+
 				"\t<lowerVelocity>"+lowerVelocity+"</lowerVelocity>\n"+
 				"\t<staticOffset>"+staticOffset+"</staticOffset>\n"+
+				"\t<deviceTheoreticalMax>"+deviceTheoreticalMax+"</deviceTheoreticalMax>\n"+
+				"\t<deviceTheoreticalMin>"+deviceTheoreticalMin+"</deviceTheoreticalMin>\n"+
 				"\t<isLatch>"+isLatch+"</isLatch>\n"+
 				"\t<indexLatch>"+indexLatch+"</indexLatch>\n"+
 				"\t<isStopOnLatch>"+isStopOnLatch+"</isStopOnLatch>\n"+	
@@ -976,5 +990,21 @@ public class LinkConfiguration {
 
 		 } 
 	 }
+
+	public double getDeviceTheoreticalMax() {
+		return deviceTheoreticalMax;
+	}
+
+	public void setDeviceTheoreticalMax(double deviceTheoreticalMax) {
+		this.deviceTheoreticalMax = deviceTheoreticalMax;
+	}
+
+	public double getDeviceTheoreticalMin() {
+		return deviceTheoreticalMin;
+	}
+
+	public void setDeviceTheoreticalMin(double deviceTheoreticalMin) {
+		this.deviceTheoreticalMin = deviceTheoreticalMin;
+	}
 	
 }
