@@ -410,7 +410,7 @@ public class TransformNR {
   /**
    * Sets the x.
    *
-   * @param translation the new x
+   * @param tx the new x
    */
   public TransformNR setX(double tx) {
     if (Double.isNaN(tx))
@@ -423,7 +423,7 @@ public class TransformNR {
   /**
    * Sets the y.
    *
-   * @param translation the new y
+   * @param ty the new y
    */
   public TransformNR setY(double ty) {
     if (Double.isNaN(ty))
@@ -436,7 +436,7 @@ public class TransformNR {
   /**
    * Sets the z.
    *
-   * @param translation the new z
+   * @param tz the new z
    */
   public TransformNR setZ(double tz) {
     if (Double.isNaN(tz))
