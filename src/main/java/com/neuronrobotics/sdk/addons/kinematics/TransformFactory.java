@@ -69,11 +69,7 @@ public class TransformFactory {
 		poseRot[2][1]=rotations.getMzy();
 		poseRot[2][2]=rotations.getMzz();
 		
-		outputValue.setX(rotations.getTx());
-		outputValue.setY(rotations.getTy());
-		outputValue.setZ(rotations.getTz());
-		
-		outputValue.setRotation(new RotationNR(poseRot));
+		outputValue.set(rotations.getTx(),rotations.getTy(),rotations.getTz(),poseRot);
 		return outputValue;
 	}
 	

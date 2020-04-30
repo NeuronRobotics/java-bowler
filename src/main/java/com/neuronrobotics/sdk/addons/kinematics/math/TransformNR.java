@@ -3,9 +3,6 @@ package com.neuronrobotics.sdk.addons.kinematics.math;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
-import org.apache.commons.math3.util.FastMath;
-import com.neuronrobotics.sdk.addons.kinematics.DHLink;
 import com.neuronrobotics.sdk.common.Log;
 import Jama.Matrix;
 
@@ -14,7 +11,7 @@ import Jama.Matrix;
  * The Class TransformNR.
  */
 public class TransformNR {
-
+  private ArrayList<ITransformNRChangeListener> listeners=null;
   /** The x. */
   private double x;
 
@@ -394,16 +391,32 @@ public class TransformNR {
     setZ(getZ() + translation);
     return this;
   }
+  
+	public TransformNR set(double tx, double ty, double tz, double[][] poseRot) {
+		if (Double.isNaN(tx))
+			throw new RuntimeException("Value can not be NaN");
+		x = tx;
+		if (Double.isNaN(ty))
+			throw new RuntimeException("Value can not be NaN");
+		y = ty;
+		if (Double.isNaN(tz))
+			throw new RuntimeException("Value can not be NaN");
+		z = tz;
+		getRotation().set(poseRot);
+		fireChangeEvent();
+		return this;
+	}
 
   /**
    * Sets the x.
    *
    * @param translation the new x
    */
-  public TransformNR setX(double translation) {
-    if (Double.isNaN(translation))
+  public TransformNR setX(double tx) {
+    if (Double.isNaN(tx))
       throw new RuntimeException("Value can not be NaN");
-    x = translation;
+    x = tx;
+    fireChangeEvent();
     return this;
   }
 
@@ -412,10 +425,11 @@ public class TransformNR {
    *
    * @param translation the new y
    */
-  public TransformNR setY(double translation) {
-    if (Double.isNaN(translation))
+  public TransformNR setY(double ty) {
+    if (Double.isNaN(ty))
       throw new RuntimeException("Value can not be NaN");
-    y = translation;
+    y = ty;
+    fireChangeEvent();
     return this;
   }
 
@@ -424,10 +438,11 @@ public class TransformNR {
    *
    * @param translation the new z
    */
-  public TransformNR setZ(double translation) {
-    if (Double.isNaN(translation))
+  public TransformNR setZ(double tz) {
+    if (Double.isNaN(tz))
       throw new RuntimeException("Value can not be NaN");
-    z = translation;
+    z = tz;
+    fireChangeEvent();
     return this;
   }
 
@@ -465,8 +480,39 @@ public class TransformNR {
    */
   public void setRotation(RotationNR rotation) {
     this.rotation = rotation;
+    fireChangeEvent();
   }
 
+
+	public void addChangeListener(ITransformNRChangeListener l) {
+		if(!getListeners().contains(l))
+			getListeners().add(l);
+	}
+	public void removeChangeListener(ITransformNRChangeListener l) {
+		if(getListeners().contains(l))
+			getListeners().remove(l);
+	}
+	public void clearChangeListener() {
+		getListeners().clear();
+		listeners=null;
+	}
+	public ArrayList<ITransformNRChangeListener> getListeners() {
+		if(listeners==null)
+			listeners=new ArrayList<ITransformNRChangeListener>();
+		return listeners;
+	}
+
+	void fireChangeEvent() {
+		if(listeners!=null) {
+			for(int i=0;i<listeners.size();i++) {
+				try {
+					listeners.get(i).event(this);
+				}catch (Throwable t) {
+					t.printStackTrace();
+				}
+			}
+		}
+	}
 
 
 }

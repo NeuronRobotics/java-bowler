@@ -10,6 +10,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.neuronrobotics.sdk.addons.kinematics.math.ITransformNRChangeListener;
 import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
@@ -25,7 +26,7 @@ import com.neuronrobotics.sdk.pid.PIDConfiguration;
 /**
  * The Class LinkConfiguration.
  */
-public class LinkConfiguration {
+public class LinkConfiguration implements ITransformNRChangeListener {
 	private ArrayList<ILinkConfigurationChangeListener> listeners=null;
 	/** The name. */
 	private String name="newLink";// = getTagValue("name",eElement);
@@ -871,15 +872,21 @@ public class LinkConfiguration {
 	public TransformNR getCenterOfMassFromCentroid() {
 		return centerOfMassFromCentroid;
 	}
-	public void setCenterOfMassFromCentroid(TransformNR centerOfMassFromCentroid) {
-		this.centerOfMassFromCentroid = centerOfMassFromCentroid;
+	public void setCenterOfMassFromCentroid(TransformNR com) {
+		if(this.centerOfMassFromCentroid!=null)
+			this.centerOfMassFromCentroid.removeChangeListener(this);
+		this.centerOfMassFromCentroid = com;
+		this.centerOfMassFromCentroid.addChangeListener(this);
 		fireChangeEvent();
 	}
 	public TransformNR getimuFromCentroid() {
 		return imuFromCentroid;
 	}
-	public void setimuFromCentroid(TransformNR centerOfMassFromCentroid) {
-		this.imuFromCentroid = centerOfMassFromCentroid;
+	public void setimuFromCentroid(TransformNR imu) {
+		if(this.imuFromCentroid!=null)
+			this.imuFromCentroid.removeChangeListener(this);
+		this.imuFromCentroid = imu;
+		this.imuFromCentroid.addChangeListener(this);
 		fireChangeEvent();
 	}
 //	private String electroMechanicalType = "hobbyServo";
@@ -1074,6 +1081,11 @@ public class LinkConfiguration {
 				}
 			}
 		}
+	}
+
+	@Override
+	public void event(TransformNR changed) {
+		fireChangeEvent();
 	}
 	
 }

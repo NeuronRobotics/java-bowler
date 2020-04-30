@@ -25,6 +25,7 @@ public class RotationNR {
 	private Rotation storage = new Rotation(1, 0, 0, 0, false);
 	private static RotationOrder order = RotationOrder.ZYX;
 	private static RotationConvention convention = RotationConvention.VECTOR_OPERATOR;
+	
 
 	/**
 	 * Null constructor forms a.
@@ -438,6 +439,10 @@ public class RotationNR {
 
 	public void setStorage(Rotation storage) {
 		this.storage = storage;
+	}
+
+	public void set(double[][] poseRot) {
+		loadRotations(poseRot);
 	}
 
 }
