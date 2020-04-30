@@ -113,6 +113,15 @@ public class LinkConfiguration {
     	setName(XmlFactory.getTagValue("name",eElement));
     	setHardwareIndex(Integer.parseInt(XmlFactory.getTagValue("index",eElement)));
     	setScale(Double.parseDouble(XmlFactory.getTagValue("scale",eElement)));
+    	try{
+    		setDeviceTheoreticalMax(Double.parseDouble(XmlFactory.getTagValue("deviceTheoreticalMax",eElement)));
+    	}catch (Exception e){
+    		
+    	}try{
+    		setDeviceTheoreticalMin(Double.parseDouble(XmlFactory.getTagValue("deviceTheoreticalMin",eElement)));
+    	}catch (Exception e){
+    		
+    	}
     	setUpperLimit(Double.parseDouble(XmlFactory.getTagValue("upperLimit",eElement)));
     	setLowerLimit(Double.parseDouble(XmlFactory.getTagValue("lowerLimit",eElement)));
     	try{
@@ -159,15 +168,7 @@ public class LinkConfiguration {
     		
     	}
     	
-    	try{
-    		setDeviceTheoreticalMax(Double.parseDouble(XmlFactory.getTagValue("deviceTheoreticalMax",eElement)));
-    	}catch (Exception e){
-    		
-    	}try{
-    		setDeviceTheoreticalMin(Double.parseDouble(XmlFactory.getTagValue("deviceTheoreticalMin",eElement)));
-    	}catch (Exception e){
-    		
-    	}
+
     	
     	try{
     		setMassKg(Double.parseDouble(XmlFactory.getTagValue("mass",eElement)));
@@ -396,14 +397,14 @@ public class LinkConfiguration {
 				"\t<scale>"+getScale()+"</scale>\n"+
 				"\t<upperLimit>"+getUpperLimit()+"</upperLimit>\n"+
 				"\t<lowerLimit>"+getLowerLimit()+"</lowerLimit>\n"+
-				"\t<upperVelocity>"+upperVelocity+"</upperVelocity>\n"+
-				"\t<lowerVelocity>"+lowerVelocity+"</lowerVelocity>\n"+
-				"\t<staticOffset>"+staticOffset+"</staticOffset>\n"+
-				"\t<deviceTheoreticalMax>"+deviceTheoreticalMax+"</deviceTheoreticalMax>\n"+
-				"\t<deviceTheoreticalMin>"+deviceTheoreticalMin+"</deviceTheoreticalMin>\n"+
-				"\t<isLatch>"+isLatch+"</isLatch>\n"+
-				"\t<indexLatch>"+indexLatch+"</indexLatch>\n"+
-				"\t<isStopOnLatch>"+isStopOnLatch+"</isStopOnLatch>\n"+	
+				"\t<upperVelocity>"+getUpperVelocity()+"</upperVelocity>\n"+
+				"\t<lowerVelocity>"+getLowerVelocity()+"</lowerVelocity>\n"+
+				"\t<staticOffset>"+getStaticOffset()+"</staticOffset>\n"+
+				"\t<deviceTheoreticalMax>"+getDeviceTheoreticalMax()+"</deviceTheoreticalMax>\n"+
+				"\t<deviceTheoreticalMin>"+getDeviceTheoreticalMin()+"</deviceTheoreticalMin>\n"+
+				"\t<isLatch>"+isLatch()+"</isLatch>\n"+
+				"\t<indexLatch>"+getIndexLatch()+"</indexLatch>\n"+
+				"\t<isStopOnLatch>"+isStopOnLatch()+"</isStopOnLatch>\n"+	
 				"\t<homingTPS>"+getHomingTicksPerSecond()+"</homingTPS>\n"+
 				"\n\t<vitamins>\n"+allVitamins+"\n\t</vitamins>\n"+
 				"\t<passive>"+isPassive()+"</passive>\n"+
