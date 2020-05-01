@@ -389,7 +389,7 @@ public class LinkFactory {
 			try{
 				lin.setTargetEngineeringUnits(jointSpaceVect[i]);
 			}catch (Exception ee){
-				throw new RuntimeException("Joint "+i+" failed, "+ee.getMessage());
+				throw new RuntimeException("Joint "+i+" failed\n"+ee.getMessage());
 			}
 			i++;
 		}

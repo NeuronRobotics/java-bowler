@@ -653,7 +653,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 				}
 			} while (except > 0 && except < getRetryNumberBeforeFail());
 			if (e != null)
-				throw e;
+				throw new RuntimeException("Limit On "+getScriptingName()+" "+e.getMessage());
 			for(int i=0;i<getNumberOfLinks();i++)
 				currentJointSpaceTarget[i] = jointSpaceVect[i];
 			TransformNR fwd = forwardKinematics(currentJointSpaceTarget);
