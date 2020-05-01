@@ -391,10 +391,13 @@ public abstract class AbstractLink implements  IFlushable{
 	
 		double ub = getMaxEngineeringUnits();
 		double lb = getMinEngineeringUnits();
+		boolean flip = getScale()<0;
+		boolean belowLower = targetValue<getLowerLimit();
+		boolean aboveUpper = targetValue>getUpperLimit();
 		String execpt = "Attempted="+toEngineeringUnits(targetValue)+" (engineering units) Device Units="+targetValue
 				+" \nUpper Bound="+ub+" (engineering units) Device Units="+getUpperLimit()
 				+ "\nLower Bound="+lb+" (engineering units) Device Units="+getLowerLimit();
-		if(val>getUpperLimit()){
+		if(flip?belowLower:aboveUpper){
 			this.targetValue = getUpperLimit();
 			for(LinkConfiguration c:slaveLinks){
 				//generate the links
@@ -412,7 +415,7 @@ public abstract class AbstractLink implements  IFlushable{
 					);
 			if(isUseLimits())throw new RuntimeException("Joint hit Upper software bound\n"+execpt);
 		}
-		if(val<getLowerLimit()) {
+		if(flip?aboveUpper:belowLower) {
 			this.targetValue =getLowerLimit();
 			for(LinkConfiguration c:slaveLinks){
 				//generate the links
