@@ -484,6 +484,8 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	 */
 	public void setUpperLimit(double upperLimit) {
 		this.upperLimit = upperLimit;
+		if(upperLimit>getDeviceTheoreticalMax())
+			this.upperLimit=getDeviceTheoreticalMax();	
 		fireChangeEvent();
 	}
 	
@@ -503,6 +505,8 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	 */
 	public void setLowerLimit(double lowerLimit) {
 		this.lowerLimit = lowerLimit;
+		if(lowerLimit<getDeviceTheoreticalMin())
+			this.lowerLimit=getDeviceTheoreticalMin();	
 		fireChangeEvent();
 	}
 	
