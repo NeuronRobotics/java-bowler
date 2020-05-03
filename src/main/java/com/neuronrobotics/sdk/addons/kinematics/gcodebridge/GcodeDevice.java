@@ -61,6 +61,8 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter, IFlu
 			return (AbstractLink)links.get(axis);
 		String gcodeAxis = "";
 		AbstractLink tmp=null;
+		axis.setDeviceTheoreticalMax(Integer.MAX_VALUE);
+		axis.setDeviceTheoreticalMax(Integer.MIN_VALUE);
 		switch(axis.getTypeEnum()){
 		case GCODE_STEPPER_PRISMATIC:
 		case GCODE_STEPPER_ROTORY:
