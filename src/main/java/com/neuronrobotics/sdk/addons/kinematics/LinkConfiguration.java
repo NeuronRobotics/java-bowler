@@ -63,7 +63,7 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	private boolean isLatch=false;
 	
 	/** The index latch. */
-	private int indexLatch=0;
+	private double indexLatch=0;
 	
 	/** The is stop on latch. */
 	private boolean isStopOnLatch=false;
@@ -243,7 +243,7 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	    	}
 		}
     	isLatch=XmlFactory.getTagValue("isLatch",eElement).contains("true");
-    	indexLatch=Integer.parseInt(XmlFactory.getTagValue("indexLatch",eElement));
+    	setIndexLatch(Double.parseDouble(XmlFactory.getTagValue("indexLatch",eElement)));
     	isStopOnLatch=XmlFactory.getTagValue("isStopOnLatch",eElement).contains("true");
     	if(staticOffset>getUpperLimit() || staticOffset<getLowerLimit() )
     	   Log.error("PID group "+getHardwareIndex()+" staticOffset is "+staticOffset+" but needs to be between "+getUpperLimit()+" and "+getLowerLimit());
@@ -600,7 +600,12 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	 *
 	 * @param indexLatch the new index latch
 	 */
-	public void setIndexLatch(int indexLatch) {
+	public void setIndexLatch(double indexLatch) {
+		
+		if(indexLatch>getDeviceTheoreticalMax())
+			indexLatch= getDeviceTheoreticalMax();
+		if(indexLatch<getDeviceTheoreticalMin())
+			indexLatch=getDeviceTheoreticalMin();
 		this.indexLatch = indexLatch;
 		fireChangeEvent();
 	}
@@ -610,7 +615,7 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	 *
 	 * @return the index latch
 	 */
-	public int getIndexLatch() {
+	public double getIndexLatch() {
 		return indexLatch;
 	}
 	
@@ -843,6 +848,10 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	 * @param staticOffset the new static offset
 	 */
 	public void setStaticOffset(double staticOffset) {
+		if(staticOffset>getUpperLimit())
+			staticOffset= getUpperLimit();
+		if(staticOffset<getLowerLimit())
+			staticOffset=getLowerLimit();
 		this.staticOffset = staticOffset;
 		fireChangeEvent();
 	}
