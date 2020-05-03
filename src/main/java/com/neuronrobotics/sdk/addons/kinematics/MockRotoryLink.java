@@ -22,8 +22,8 @@ public class MockRotoryLink extends AbstractRotoryLink {
 		setScale(Math.PI/180);
 		setTargetValue(35);
 		conf.setDeviceTheoreticalMax(Integer.MAX_VALUE);
-		conf.setDeviceTheoreticalMax(Integer.MIN_VALUE);
-	}
+		conf.setDeviceTheoreticalMin(Integer.MIN_VALUE);
+		}
 
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractLink#cacheTargetValueDevice()

@@ -23,8 +23,7 @@ public class PidRotoryLink extends AbstractRotoryLink{
 	public PidRotoryLink(PIDChannel c,LinkConfiguration conf) {
 		super(conf);
 		conf.setDeviceTheoreticalMax(Integer.MAX_VALUE);
-		conf.setDeviceTheoreticalMax(Integer.MIN_VALUE);
-
+		conf.setDeviceTheoreticalMin(Integer.MIN_VALUE);
 		setPIDChannel(c);
 	}
 

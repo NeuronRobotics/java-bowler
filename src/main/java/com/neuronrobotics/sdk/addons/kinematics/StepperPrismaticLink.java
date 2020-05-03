@@ -21,7 +21,7 @@ public class StepperPrismaticLink extends AbstractPrismaticLink {
 	public StepperPrismaticLink(CounterOutputChannel chan, LinkConfiguration conf) {
 		super(conf);
 		conf.setDeviceTheoreticalMax(Integer.MAX_VALUE);
-		conf.setDeviceTheoreticalMax(Integer.MIN_VALUE);
+		conf.setDeviceTheoreticalMin(Integer.MIN_VALUE);
 		this.setChannel(chan);
 	}
 
