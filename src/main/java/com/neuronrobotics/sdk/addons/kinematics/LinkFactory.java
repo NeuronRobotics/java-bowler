@@ -174,13 +174,13 @@ public class LinkFactory {
 		case PID:
 			if(getPid(c)!=null){
 				tmp=new PidRotoryLink(	getPid(c).getPIDChannel(c.getHardwareIndex()),
-										c);
+										c,false);
 			}
 			break;
 		case PID_PRISMATIC:
 			if(getPid(c)!=null){
 				tmp=new PidPrismaticLink(	getPid(c).getPIDChannel(c.getHardwareIndex()),
-										c);
+										c,false);
 			}
 			break;
 		case SERVO_PRISMATIC:
@@ -220,7 +220,7 @@ public class LinkFactory {
 				DeviceManager.addConnection(virtual, myVirtualDevName);
 			}
 			tmp=new PidRotoryLink(	virtual.getPIDChannel(c.getHardwareIndex()),
-					c);
+					c,true);
 			break;
 		case CAMERA:
 			String myVirtualDevName1=c.getDeviceScriptingName();
@@ -261,10 +261,10 @@ public class LinkFactory {
 			}
 			if(!c.isPrismatic()){
 				tmp=new PidRotoryLink(	virtual.getPIDChannel(c.getHardwareIndex()),
-						c);
+						c,true);
 			}else{
 				tmp=new PidPrismaticLink(virtual.getPIDChannel(c.getHardwareIndex()),
-						c);
+						c,true);
 			}
 		}
 		tmp.setLinkConfiguration(c);

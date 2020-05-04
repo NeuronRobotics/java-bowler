@@ -37,7 +37,7 @@ public class ExternalLinkProviderTest {
 
 	private static class myLinkImplementation extends PidRotoryLink{
 		public myLinkImplementation( LinkConfiguration conf) {
-			super(virtual.getPIDChannel(conf.getHardwareIndex()), conf);
+			super(virtual.getPIDChannel(conf.getHardwareIndex()), conf,true);
 			System.out.println("Loading MY link");
 		}
 	}
