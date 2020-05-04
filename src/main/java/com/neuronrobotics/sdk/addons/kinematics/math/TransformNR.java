@@ -478,9 +478,10 @@ public class TransformNR {
    *
    * @param rotation the new rotation
    */
-  public void setRotation(RotationNR rotation) {
+  public TransformNR setRotation(RotationNR rotation) {
     this.rotation = rotation;
     fireChangeEvent();
+    return this;
   }
 
 
