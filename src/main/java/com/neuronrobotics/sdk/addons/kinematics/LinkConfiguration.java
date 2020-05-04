@@ -19,6 +19,7 @@ import com.neuronrobotics.sdk.common.Log;
 //import org.w3c.dom.NodeList;
 import com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace;
 import com.neuronrobotics.sdk.pid.PIDConfiguration;
+import com.sun.org.apache.bcel.internal.generic.NEWARRAY;
 
 
 
@@ -103,7 +104,7 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	private HashMap<String , String[]> vitamins= new HashMap<String, String[]>();
 	private HashMap<String , String> vitaminVariant= new HashMap<String, String>();
 	private boolean passive = false;
-
+	private boolean newAbs=false;
 	private String typeString;
 	/**
 	 * Instantiates a new link configuration.
@@ -117,11 +118,11 @@ public class LinkConfiguration implements ITransformNRChangeListener {
     	try{
     		setDeviceTheoreticalMax(Double.parseDouble(XmlFactory.getTagValue("deviceTheoreticalMax",eElement)));
     	}catch (Exception e){
-    		
+    		newAbs=true;
     	}try{
     		setDeviceTheoreticalMin(Double.parseDouble(XmlFactory.getTagValue("deviceTheoreticalMin",eElement)));
     	}catch (Exception e){
-    		
+    		newAbs=true;
     	}
     	setUpperLimit(Double.parseDouble(XmlFactory.getTagValue("upperLimit",eElement)));
     	setLowerLimit(Double.parseDouble(XmlFactory.getTagValue("lowerLimit",eElement)));
@@ -477,6 +478,24 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 		return scale;
 	}
 
+	public double getDeviceTheoreticalMax() {
+		return deviceTheoreticalMax;
+	}
+
+	public void setDeviceTheoreticalMax(double deviceTheoreticalMax) {
+		this.deviceTheoreticalMax = deviceTheoreticalMax;
+		fireChangeEvent();
+	}
+
+	public double getDeviceTheoreticalMin() {
+		return deviceTheoreticalMin;
+	}
+
+	public void setDeviceTheoreticalMin(double deviceTheoreticalMin) {
+		this.deviceTheoreticalMin = deviceTheoreticalMin;
+		fireChangeEvent();
+	}
+	
 	/**
 	 * Sets the upper limit.
 	 *
@@ -484,8 +503,13 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	 */
 	public void setUpperLimit(double upperLimit) {
 		this.upperLimit = upperLimit;
-		if(upperLimit>getDeviceTheoreticalMax())
-			this.upperLimit=getDeviceTheoreticalMax();	
+		if(upperLimit>getDeviceTheoreticalMax()) {
+			if(!newAbs)
+				this.upperLimit=getDeviceTheoreticalMax();	
+			else
+				setDeviceTheoreticalMax(upperLimit);
+				
+		}
 		fireChangeEvent();
 	}
 	
@@ -506,7 +530,14 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	public void setLowerLimit(double lowerLimit) {
 		this.lowerLimit = lowerLimit;
 		if(lowerLimit<getDeviceTheoreticalMin())
-			this.lowerLimit=getDeviceTheoreticalMin();	
+		{
+			if(!newAbs) {
+				this.lowerLimit=getDeviceTheoreticalMin();	
+			}else {
+				setDeviceTheoreticalMin(lowerLimit);
+			}
+		}
+				
 		fireChangeEvent();
 	}
 	
@@ -1048,24 +1079,6 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 		 } 
 	 }
 
-	public double getDeviceTheoreticalMax() {
-		return deviceTheoreticalMax;
-	}
-
-	public void setDeviceTheoreticalMax(double deviceTheoreticalMax) {
-		this.deviceTheoreticalMax = deviceTheoreticalMax;
-		fireChangeEvent();
-	}
-
-	public double getDeviceTheoreticalMin() {
-		return deviceTheoreticalMin;
-	}
-
-	public void setDeviceTheoreticalMin(double deviceTheoreticalMin) {
-		this.deviceTheoreticalMin = deviceTheoreticalMin;
-		fireChangeEvent();
-	}
-	
 	public void addChangeListener(ILinkConfigurationChangeListener l) {
 		if(!getListeners().contains(l))
 			getListeners().add(l);
