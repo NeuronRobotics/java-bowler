@@ -515,5 +515,56 @@ public class TransformNR {
 		}
 	}
 
+	public void setTiltDegrees(double newAngleDegrees) {
+		double  e=0;
+		try{
+			e=Math.toDegrees(getRotation().getRotationElevation());
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+		double  a=0;
+		try{
+			a=Math.toDegrees(getRotation().getRotationAzimuth());
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+		
+		setRotation(new RotationNR(newAngleDegrees, a, e));
+		
+		
+	}
 
+	public void setElevationDegrees(double newAngleDegrees) {
+		double  t=0;
+		try{
+			t=Math.toDegrees(getRotation().getRotationTilt());
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+		
+		double  a=0;
+		try{
+			a=Math.toDegrees(getRotation().getRotationAzimuth());
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+		setRotation(new RotationNR(t, a, newAngleDegrees));
+	}
+
+	public void setAzimuthDegrees(double newAngleDegrees) {
+		double  t=0;
+		try{
+			t=Math.toDegrees(getRotation().getRotationTilt());
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+			
+		double  e=0;
+		try{
+			e=Math.toDegrees(getRotation().getRotationElevation());
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+		setRotation(new RotationNR(t, newAngleDegrees, e));
+	}
 }
