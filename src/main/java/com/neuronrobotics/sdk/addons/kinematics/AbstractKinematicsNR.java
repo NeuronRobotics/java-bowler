@@ -641,7 +641,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 * @return The joint space vector is returned for target arrival referance
 	 * @throws Exception If there is a workspace error
 	 */
-	public  double[] _setDesiredJointSpaceVector(double[] jointSpaceVect, double seconds, boolean fireTaskUpdate) throws Exception {
+	private  double[] _setDesiredJointSpaceVector(double[] jointSpaceVect, double seconds, boolean fireTaskUpdate) throws Exception {
 		if (jointSpaceVect.length != getNumberOfLinks()) {
 			throw new IndexOutOfBoundsException("Vector must be " + getNumberOfLinks()
 					+ " links, actual number of links = " + jointSpaceVect.length);
