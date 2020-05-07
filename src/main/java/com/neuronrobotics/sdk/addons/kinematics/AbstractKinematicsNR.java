@@ -580,7 +580,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		double[] jointSpaceVect = inverseKinematics(inverseOffset(taskSpaceTransform));
 		if (jointSpaceVect == null)
 			throw new RuntimeException("The kinematics model must return and array, not null");
-		setDesiredJointSpaceVector(jointSpaceVect, seconds);
+		_setDesiredJointSpaceVector(jointSpaceVect, seconds,false);
 		return jointSpaceVect;
 	}
 
@@ -629,6 +629,19 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 * @throws Exception If there is a workspace error
 	 */
 	public  double[] setDesiredJointSpaceVector(double[] jointSpaceVect, double seconds) throws Exception {
+		
+		return _setDesiredJointSpaceVector(jointSpaceVect,seconds,true);
+	}
+	/**
+	 * This calculates the target pose .
+	 *
+	 * @param jointSpaceVect the joint space vect
+	 * @param seconds        the time for the transition to take from current
+	 *                       position to target, unit seconds
+	 * @return The joint space vector is returned for target arrival referance
+	 * @throws Exception If there is a workspace error
+	 */
+	public  double[] _setDesiredJointSpaceVector(double[] jointSpaceVect, double seconds, boolean fireTaskUpdate) throws Exception {
 		if (jointSpaceVect.length != getNumberOfLinks()) {
 			throw new IndexOutOfBoundsException("Vector must be " + getNumberOfLinks()
 					+ " links, actual number of links = " + jointSpaceVect.length);
@@ -658,10 +671,12 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 				currentJointSpaceTarget[i] = jointSpaceVect[i];
 			TransformNR fwd = forwardKinematics(currentJointSpaceTarget);
 			fireTargetJointsUpdate(currentJointSpaceTarget, fwd);
+			if(fireTaskUpdate) {
+				setCurrentPoseTarget(forwardOffset(fwd));	
+			}
 		}
 		return jointSpaceVect;
 	}
-
 	/**
 	 * Calc forward.
 	 *
@@ -764,11 +779,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 */
 	protected void fireTargetJointsUpdate(double[] jointSpaceVector, TransformNR fwd) {
 
-		setCurrentPoseTarget(forwardOffset(fwd));
-		for (ITaskSpaceUpdateListenerNR p : taskSpaceUpdateListeners) {
-			p.onTargetTaskSpaceUpdate(this, getCurrentPoseTarget());
-			// new RuntimeException("Fireing "+p.getClass().getName()).printStackTrace();
-		}
+		
 		for (IJointSpaceUpdateListenerNR p : jointSpaceUpdateListeners) {
 			p.onJointSpaceTargetUpdate(this, currentJointSpaceTarget);
 		}
@@ -1194,6 +1205,9 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 */
 	public void setCurrentPoseTarget(TransformNR currentPoseTarget) {
 		this.currentPoseTarget = currentPoseTarget;
+		for (ITaskSpaceUpdateListenerNR p : taskSpaceUpdateListeners) {
+			p.onTargetTaskSpaceUpdate(this, currentPoseTarget);
+		}
 	}
 
 	/**
