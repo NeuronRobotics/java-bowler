@@ -603,7 +603,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 					return false;
 				}
 			}
-		} catch (Exception ex) {
+		} catch (Throwable ex) {
 			return false;
 		}
 		return true;
