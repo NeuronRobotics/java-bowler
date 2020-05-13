@@ -740,6 +740,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 			}
 			TransformNR fwd = forwardKinematics(currentJointSpaceTarget);
 			fireTargetJointsUpdate(currentJointSpaceTarget, fwd);
+			setCurrentPoseTarget(forwardOffset(fwd));
 		}
 		return;
 	}
