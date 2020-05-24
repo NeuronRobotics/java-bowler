@@ -292,7 +292,6 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 								newLink.addDhLinkPositionListener(new IDhLinkPositionListener() {
 									@Override
 									public void onLinkGlobalPositionChange(TransformNR newPose) {
-										Log.debug("Motion in the D-H link has caused this mobile base to move");
 										newMobileBase.setGlobalToFiducialTransform(newPose);
 									}
 								});
@@ -300,7 +299,6 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 									
 									@Override
 									public void onDisconnect(BowlerAbstractDevice source) {
-										newMobileBase.disconnect();
 										mobileBases.remove(newMobileBase);
 									}
 									
