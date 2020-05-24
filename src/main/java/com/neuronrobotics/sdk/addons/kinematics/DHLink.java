@@ -70,7 +70,7 @@ public class DHLink {
 	private ArrayList<IDhLinkPositionListener> dhlisteners = new ArrayList<IDhLinkPositionListener>();
 	
 	/** The embedable xml. */
-	private MobileBase embedableXml=null;
+	private MobileBase slaveMobileBase=null;
 	
 	
 	/**
@@ -143,7 +143,7 @@ public class DHLink {
 	 * Generate the xml configuration to generate a link of this configuration. 
 	 */
 	public String getXml(){
-		String mb = embedableXml==null?"":"\n\t\t"+embedableXml.getEmbedableXml() +"\n";
+		String mb = getSlaveMobileBase()==null?"":"\n\t\t"+getSlaveMobileBase().getEmbedableXml() +"\n";
 		return "\n\t<DHParameters>\n"+
 		    "\t\t<Delta>"+d+"</Delta>\n"+
 		    "\t\t<Theta>"+Math.toDegrees(theta)+"</Theta>\n"+
@@ -617,7 +617,15 @@ public class DHLink {
 	 * @param embedableXml the new mobile base xml
 	 */
 	public void setMobileBaseXml(MobileBase embedableXml) {
-		this.embedableXml = embedableXml;
+		this.setSlaveMobileBase(embedableXml);
+	}
+
+	public MobileBase getSlaveMobileBase() {
+		return slaveMobileBase;
+	}
+
+	public void setSlaveMobileBase(MobileBase embedableXml) {
+		this.slaveMobileBase = embedableXml;
 	}
 
 }
