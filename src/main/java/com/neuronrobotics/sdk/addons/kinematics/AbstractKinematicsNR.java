@@ -25,6 +25,7 @@ import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
 import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
 import com.neuronrobotics.sdk.common.BowlerDatagram;
+import com.neuronrobotics.sdk.common.IDeviceConnectionEventListener;
 import com.neuronrobotics.sdk.common.InvalidConnectionException;
 //import com.neuronrobotics.sdk.addons.kinematics.PidRotoryLink;
 import com.neuronrobotics.sdk.common.Log;
@@ -294,6 +295,17 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 										Log.debug("Motion in the D-H link has caused this mobile base to move");
 										newMobileBase.setGlobalToFiducialTransform(newPose);
 									}
+								});
+								addConnectionEventListener(new IDeviceConnectionEventListener() {
+									
+									@Override
+									public void onDisconnect(BowlerAbstractDevice source) {
+										newMobileBase.disconnect();
+										mobileBases.remove(newMobileBase);
+									}
+									
+									@Override
+									public void onConnect(BowlerAbstractDevice source) {}
 								});
 							}
 						}

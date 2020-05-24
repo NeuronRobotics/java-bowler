@@ -788,4 +788,11 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	public void setDH_Alpha(int index, double value) {
 		 getChain().getLinks().get(index).setAlpha(value);
 	}
+
+	public DHLink getDhLink(int i) {
+		return getDhChain().getLinks().get(i);
+	}
+	public Affine getListener(int i) {
+		return getDhChain().getLinks().get(i).getListener();
+	}
 }
