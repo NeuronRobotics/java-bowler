@@ -77,7 +77,7 @@ public enum LinkType {
 	   }
 	 }
 	 
-	 static ArrayList<String> getUserDefined(){
+	 public static ArrayList<String> getUserDefined(){
 		 ArrayList<String> back = new ArrayList<String>();
 		 for(String s:map.keySet()) {
 			 if(map.get(s)==USERDEFINED) {
@@ -91,7 +91,7 @@ public enum LinkType {
 	  * Only classes in this package should add types, and only from LinkFactory
 	  * @param type a new type name to regester as user defined
 	  */
-	 static void addType(String type){
+	 public static void addType(String type){
 		 map.put(type, USERDEFINED);
 	 }
 	 
