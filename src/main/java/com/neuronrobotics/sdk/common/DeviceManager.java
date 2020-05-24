@@ -66,7 +66,7 @@ public class DeviceManager {
 		if ( DMDevice.class.isInstance(newDevice)) {
 			DMDevice incoming = (DMDevice) newDevice;
 			for(String s:listConnectedDevice() ){
-				BowlerAbstractDevice sDev = DeviceManager.getSpecificDevice(s);
+				Object sDev = DeviceManager.getSpecificDevice(s);
 				if(DMDevice.class.isInstance(sDev)) {
 					DMDevice inside = (DMDevice) sDev;
 					if (inside.getWrapped() == incoming.getWrapped()) {
@@ -281,7 +281,7 @@ public class DeviceManager {
 	 *            the name
 	 * @return the specific device
 	 */
-	public static BowlerAbstractDevice getSpecificDevice(String name) {
+	public static Object getSpecificDevice(String name) {
 		if(name.contains("*")) {
 			name = name.split("\\*")[0];
 		}
@@ -289,6 +289,9 @@ public class DeviceManager {
 			String devname = devices.get(i).getScriptingName();
 			if (devname.contains(name)) {
 				BowlerAbstractDevice dev = devices.get(i);
+				if(DMDevice.class.isInstance(dev)) {
+					return ((DMDevice)dev).getWrapped();
+				}
 				return dev;
 			}
 		}
@@ -304,7 +307,7 @@ public class DeviceManager {
 	 *            the name
 	 * @return the specific device
 	 */
-	public static BowlerAbstractDevice getSpecificDevice(Class<?> class1, String name) {
+	public static Object getSpecificDevice(Class<?> class1, String name) {
 		if(name.contains("*")) {
 			name = name.split("\\*")[0];
 		}
