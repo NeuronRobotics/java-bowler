@@ -1,5 +1,6 @@
 package com.neuronrobotics.sdk.addons.kinematics;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -74,6 +75,17 @@ public enum LinkType {
 	   for (LinkType type : LinkType.values()) {
 	     map.put(type.name, type);
 	   }
+	 }
+	 
+	 static ArrayList<String> getUserDefined(){
+		 ArrayList<String> back = new ArrayList<String>();
+		 for(String s:map.keySet()) {
+			 if(map.get(s)==USERDEFINED) {
+				 back.add(s);
+			 }
+		 }
+		 return back;
+		 
 	 }
 	 /**
 	  * Only classes in this package should add types, and only from LinkFactory
