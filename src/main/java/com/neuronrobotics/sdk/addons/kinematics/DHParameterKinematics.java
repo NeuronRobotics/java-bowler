@@ -4,10 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.net.URL;
-//import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 
 import org.w3c.dom.Element;
@@ -19,15 +15,8 @@ import Jama.Matrix;
 import com.neuronrobotics.sdk.addons.kinematics.TransformFactory;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
-import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
-import com.neuronrobotics.sdk.common.DeviceManager;
-import com.neuronrobotics.sdk.common.IConnectionEventListener;
 import com.neuronrobotics.sdk.common.IDeviceConnectionEventListener;
-import com.neuronrobotics.sdk.common.Log;
-import com.neuronrobotics.sdk.dyio.DyIO;
-import com.neuronrobotics.sdk.pid.GenericPIDDevice;
-import com.neuronrobotics.sdk.pid.VirtualGenericPIDDevice;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -794,5 +783,28 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	}
 	public Affine getListener(int i) {
 		return getDhChain().getLinks().get(i).getListener();
+	}
+	/**
+	 * Sets the robot to fiducial transform.
+	 *
+	 * @param newTrans the new robot to fiducial transform
+	 */
+	@Override
+	public void setRobotToFiducialTransform(TransformNR newTrans) {
+		super.setBaseToZframeTransform(newTrans);
+		if(this.checkTaskSpaceTransform(this.getCurrentPoseTarget())) {
+			try {
+				this.setDesiredTaskSpaceTransform(this.getCurrentPoseTarget(), 0);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		}else {
+			this.getCurrentTaskSpaceTransform();
+			// this calls the render update function attachec as the on jointspace
+			// update
+			double[] joint = this.getCurrentJointSpaceVector();
+			this.getChain().getChain(joint);
+			Platform.runLater(() -> this.onJointSpaceUpdate(this, joint));
+		}
 	}
 }
