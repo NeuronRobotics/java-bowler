@@ -303,7 +303,8 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 									}
 									
 									@Override
-									public void onConnect(BowlerAbstractDevice source) {}
+									public void onConnect(BowlerAbstractDevice source) {
+									}
 								});
 							}
 						}

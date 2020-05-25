@@ -815,7 +815,19 @@ public class MobileBase extends AbstractKinematicsNR {
 		return parallelGroups;
 	}
 
-
+	@Override
+	public boolean connect(){
+		super.connect();
+		for(DHParameterKinematics kin:this.getAllDHChains()) {
+	    	for(int i=0;i<kin.getNumberOfLinks();i++) {
+	    		MobileBase m = kin.getDhLink(i).getSlaveMobileBase();
+	    		if(m!=null) {
+	    			m.connect();
+	    		}
+	    	}
+	    }
+		return isAvailable();
+	}
 
 	public static void main(String[] args) throws Exception {
 		File f = new File("paralleloutput.xml");
