@@ -792,6 +792,9 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	@Override
 	public void setRobotToFiducialTransform(TransformNR newTrans) {
 		super.setBaseToZframeTransform(newTrans);
+	}
+	
+	public void refreshPose() {
 		if(this.checkTaskSpaceTransform(this.getCurrentPoseTarget())) {
 			try {
 				this.setDesiredTaskSpaceTransform(this.getCurrentPoseTarget(), 0);
