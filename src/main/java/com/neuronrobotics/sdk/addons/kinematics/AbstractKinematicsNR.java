@@ -877,7 +877,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		}
 		Log.info("Setting Global To Fiducial Transform " + frameToBase);
 		this.fiducial2RAS = frameToBase;
-		synchronized (AbstractKinematicsNR.class) {
+		//synchronized (AbstractKinematicsNR.class) {
 			for (IRegistrationListenerNR r : regListeners) {
 				r.onFiducialToGlobalUpdate(this, frameToBase);
 			}
@@ -890,7 +890,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 					TransformFactory.nrToAffine(tf, getRootListener());
 				}
 			});
-		}
+		//}
 	}
 
 	/**

@@ -208,7 +208,7 @@ public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector )
 			final int index=i;
 			final TransformNR pose =forwardOffset(new TransformNR(update));
 			
-			getLinks().get(index).fireOnLinkGlobalPositionChange(pose);	
+			
 
 			if(chainToLoad!=null){
 				if(intChain.size()<=i)

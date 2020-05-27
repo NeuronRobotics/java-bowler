@@ -606,7 +606,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	 * Update cad locations.
 	 */
 	public void updateCadLocations() {
-		synchronized (DHParameterKinematics.class) {
+		//synchronized (DHParameterKinematics.class) {
 			try {
 				ArrayList<TransformNR> ll = getChain().getChain(getCurrentJointSpaceVector());
 				for (int i = 0; i < ll.size(); i++) {
@@ -628,7 +628,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 			} catch (Exception ex) {
 				// ex.printStackTrace();
 			}
-		}
+		//}
 	}
 
 	/*
@@ -641,6 +641,11 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	@Override
 	public void onJointSpaceUpdate(final AbstractKinematicsNR source, final double[] joints) {
 		updateCadLocations();
+		for(int i=0;i<joints.length;i++) {
+			DHLink dhLink = getChain().getLinks().get(i);
+			TransformNR newPose = getChain().getCachedChain().get(i);
+			dhLink.fireOnLinkGlobalPositionChange(newPose);
+		}	
 	}
 
 	/**
