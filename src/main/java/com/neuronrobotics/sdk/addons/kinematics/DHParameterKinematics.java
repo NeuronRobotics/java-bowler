@@ -146,7 +146,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	 * Instantiates a new DH parameter kinematics.
 	 */
 	public DHParameterKinematics() {
-		this(null, XmlFactory.getDefaultConfigurationStream("TrobotLinks.xml"));
+		this(null,(InputStream)null);
 	}
 
 	/**

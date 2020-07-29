@@ -212,6 +212,8 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 */
 	public AbstractKinematicsNR(InputStream configFile, LinkFactory f) {
 		this();
+		if(configFile==null||f==null)
+			return;
 		Document doc = XmlFactory.getAllNodesDocument(configFile);
 		NodeList nodListofLinks = doc.getElementsByTagName("appendage");
 		for (int i = 0; i < 1; i++) {
@@ -225,6 +227,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 				Log.info("Not Element Node");
 			}
 		}
+		
 
 	}
 

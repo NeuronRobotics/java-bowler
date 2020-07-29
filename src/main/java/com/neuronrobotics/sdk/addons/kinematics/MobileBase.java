@@ -131,8 +131,8 @@ public class MobileBase extends AbstractKinematicsNR {
 		return getParallelGroups().keySet();
 	}
 
-	public ArrayList<ParallelGroup> getAllParallelGroups() {
-		ArrayList<ParallelGroup> list = new ArrayList<ParallelGroup>();
+	public ArrayList<DHParameterKinematics> getAllParallelGroups() {
+		ArrayList<DHParameterKinematics> list = new ArrayList<DHParameterKinematics>();
 		for (String name : getParallelGroupNames()) {
 			list.add(getParallelGroup(name));
 		}
@@ -322,19 +322,27 @@ public class MobileBase extends AbstractKinematicsNR {
 				if (kin == null) {
 					kin = new DHParameterKinematics(e);
 
-					// DeviceManager.addConnection(kin, name);
 				}
 				kin.setScriptingName(name);
-				list.add(kin);
+				
 				String parallel = getParallelGroup(e);
 				//System.out.println("paralell "+parallel);
 				if (parallel != null) {
+					System.out.println("Loading Paralell group "+parallel+" limb "+name);
 					TransformNR paraOffset = loadTransform("parallelGroupTipOffset", e);
 					if (paraOffset == null) {
 						paraOffset = new TransformNR();
 					}
-					getParallelGroup(parallel).addLimb(kin, paraOffset);
+					ParallelGroup parallelGroup = getParallelGroup(parallel);
+					parallelGroup.setScriptingName(parallel);
+					parallelGroup.addLimb(kin, paraOffset);
+//					if(!list.contains(parallelGroup)) {
+//						list.add(parallelGroup);
+//					}
 				}
+				//else {
+					list.add(kin);
+				//}
 			}
 		}
 	}

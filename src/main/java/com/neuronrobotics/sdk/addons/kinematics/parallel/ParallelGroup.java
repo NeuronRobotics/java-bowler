@@ -11,14 +11,16 @@ import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.sun.javafx.geom.Vec3d;
 
-public class ParallelGroup extends AbstractKinematicsNR {
+public class ParallelGroup extends DHParameterKinematics {
 
 	private ArrayList<DHParameterKinematics> constituantLimbs = new ArrayList<DHParameterKinematics>();
 	private HashMap<DHParameterKinematics, TransformNR> tipOffset = new HashMap<DHParameterKinematics, TransformNR>();
 	/** The cad engine. */
 	private String [] toolEngine =new String[]{"https://gist.github.com/33f2c10ab3adc5bd91f0a58ea7f24d14.git","parallelTool.groovy"}; 
 
-	
+	public ParallelGroup() {
+		// empty constructor
+	}
 	public void addLimb(DHParameterKinematics limb, TransformNR tip) {
 		if (!getConstituantLimbs().contains(limb)) {
 			getConstituantLimbs().add(limb);
