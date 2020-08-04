@@ -204,7 +204,7 @@ public class MobileBase extends AbstractKinematicsNR {
 			if (key != null) {
 				ParallelGroup g = getParallelGroups().get(key);
 				try {
-					g.setDesiredTaskSpaceTransform(g.getConstituantLimbs().get(0).calcHome(), 1.0);
+					g.setDesiredTaskSpaceTransform(g.calcHome(), 1.0);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

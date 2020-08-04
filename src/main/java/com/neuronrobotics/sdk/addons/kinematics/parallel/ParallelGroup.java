@@ -41,7 +41,25 @@ public class ParallelGroup extends DHParameterKinematics {
 		}
 
 	}
-
+	
+	public DHParameterKinematics getFKLimb() {
+		for(DHParameterKinematics d:getConstituantLimbs()) {
+			if(getTipOffset(d)==null) {
+				return d;// this is the first limb with no relative tip
+			}
+		}
+		// this should be impossible
+		throw new RuntimeException("FK lim must be possible, one limb must not have a reference to another");
+	}
+	/**
+	 * Calc home.
+	 *
+	 * @return the transform nr
+	 */
+	@Override
+	public TransformNR calcHome() {
+		return getFKLimb().calcHome();
+	}
 	public void setupReferencedLimb(DHParameterKinematics limb, TransformNR tip, String name, int index) {
 		tipOffsetRelativeToName.put(limb, name);
 		tipOffsetRelativeIndex.put(limb, index);
@@ -182,7 +200,7 @@ public class ParallelGroup extends DHParameterKinematics {
 
 			return new TransformNR(x, y, x, new RotationNR(rotx, roty, rotz));
 		} else if (getConstituantLimbs().size() == 2) {
-			return tips.get(getConstituantLimbs().get(0));// assume the first link is
+			return tips.get(getFKLimb());// assume the first link is
 															// in control or
 															// orentation
 		} else
