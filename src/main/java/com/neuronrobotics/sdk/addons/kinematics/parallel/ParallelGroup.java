@@ -32,9 +32,7 @@ public class ParallelGroup extends DHParameterKinematics {
 			getConstituantLimbs().add(limb);
 		}
 		if (tip != null) {
-			tipOffsetRelativeToName.put(limb, name);
-			tipOffsetRelativeIndex.put(limb, index);
-			getTipOffset().put(limb, tip);
+			setupReferencedLimb(limb, tip, name, index);
 		}
 		for (LinkConfiguration c : limb.getFactory().getLinkConfigurations()) {
 
@@ -44,15 +42,19 @@ public class ParallelGroup extends DHParameterKinematics {
 
 	}
 
+	public void setupReferencedLimb(DHParameterKinematics limb, TransformNR tip, String name, int index) {
+		tipOffsetRelativeToName.put(limb, name);
+		tipOffsetRelativeIndex.put(limb, index);
+		getTipOffset().put(limb, tip);
+	}
+
 	@Override
 	public void disconnectDevice() {
 		// TODO Auto-generated method stub
 		for (DHParameterKinematics l : getConstituantLimbs()) {
 			l.disconnect();
 		}
-		tipOffset.clear();
-		constituantLimbs.clear();
-		tipOffsetRelativeToName.clear();
+		close();
 
 	}
 
@@ -77,13 +79,7 @@ public class ParallelGroup extends DHParameterKinematics {
 			TransformNR offset = getTipOffset().get(l);
 			String refLimbName = tipOffsetRelativeToName.get(l);
 			int index = tipOffsetRelativeIndex.get(l);
-			DHParameterKinematics referencedLimb = null;
-			for (DHParameterKinematics lm : getConstituantLimbs()) {
-				if (lm.getScriptingName().toLowerCase().contentEquals(refLimbName.toLowerCase())) {
-					// FOund the referenced limb
-					referencedLimb = lm;
-				}
-			}
+			DHParameterKinematics referencedLimb = findReferencedLimb(refLimbName);
 			if (referencedLimb == null)
 				throw new RuntimeException("Referenced limb missing, IK for " + l.getScriptingName() + " Failed");
 			double[] jointSpaceVectReferenced = compute(referencedLimb, IKvalues, taskSpaceTransform);
@@ -95,6 +91,17 @@ public class ParallelGroup extends DHParameterKinematics {
 		}
 
 		return IKvalues.get(scriptingName);
+	}
+
+	private DHParameterKinematics findReferencedLimb(String refLimbName) {
+		DHParameterKinematics referencedLimb = null;
+		for (DHParameterKinematics lm : getConstituantLimbs()) {
+			if (lm.getScriptingName().toLowerCase().contentEquals(refLimbName.toLowerCase())) {
+				// FOund the referenced limb
+				referencedLimb = lm;
+			}
+		}
+		return referencedLimb;
 	}
 	/**
 	 * Sets the current pose target.
@@ -215,6 +222,9 @@ public class ParallelGroup extends DHParameterKinematics {
 	public TransformNR getTipOffset(DHParameterKinematics l) {
 		return tipOffset.get(l);
 	}
+	public void setTipOffset(DHParameterKinematics l,TransformNR n) {
+		tipOffset.put(l,n);
+	}
 	public String getTipOffsetRelativeName(DHParameterKinematics l) {
 		return tipOffsetRelativeToName.get(l);
 	}
@@ -241,6 +251,14 @@ public class ParallelGroup extends DHParameterKinematics {
 
 	public String getNameOfParallelGroup() {
 		return name;
+	}
+
+	public void close() {
+		constituantLimbs.clear();
+		tipOffset.clear();
+		constituantLimbs.clear();
+		tipOffsetRelativeToName.clear();
+
 	}
 
 }

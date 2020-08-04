@@ -832,7 +832,10 @@ public class MobileBase extends AbstractKinematicsNR {
 			l.setGlobalToFiducialTransform(frameToBase);
 		}
 	}
-
+	public void shutDownParallel(ParallelGroup group) {
+		group.close();
+		parallelGroups.remove(group.getNameOfParallelGroup());
+	}
 
 	private HashMap<String, ParallelGroup> getParallelGroups() {
 		return parallelGroups;
@@ -887,5 +890,7 @@ public class MobileBase extends AbstractKinematicsNR {
 		
 		
 	}
+
+
 
 }
