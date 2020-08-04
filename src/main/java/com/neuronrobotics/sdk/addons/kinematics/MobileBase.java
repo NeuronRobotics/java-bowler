@@ -643,11 +643,13 @@ public class MobileBase extends AbstractKinematicsNR {
 				
 				if (pL == l) {
 					xml += "\n<parallelGroup>" + key + "</parallelGroup>\n";
-					xml += "\t<parallelGroupTipOffset>\n"
-							+ parallelGroup.getTipOffset(l).getXml()
-							+ "\n<relativeTo>" + parallelGroup.getTipOffsetRelativeIndex(l) + "</relativeTo>\n"
-							+ "\n<relativeToLink>" + parallelGroup.getTipOffsetRelativeIndex(l) + "</relativeToLink>\n"
-							+ "\n</parallelGroupTipOffset>\n";
+					if(parallelGroup.getTipOffset(l)!=null) {
+						xml += "\n<parallelGroupTipOffset>\n"
+								+ parallelGroup.getTipOffset(l).getXml()
+								+ "\n\t<relativeTo>" + parallelGroup.getTipOffsetRelativeIndex(l) + "</relativeTo>\n"
+								+ "\n\t<relativeToLink>" + parallelGroup.getTipOffsetRelativeIndex(l) + "</relativeToLink>\n"
+								+ "\n</parallelGroupTipOffset>\n";
+					}
 				}
 		}
 		xml += l.getEmbedableXml();
