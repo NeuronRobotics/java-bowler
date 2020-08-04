@@ -21,9 +21,10 @@ public class ParallelGroup extends DHParameterKinematics {
 	/** The cad engine. */
 	private String[] toolEngine = new String[] { "https://gist.github.com/33f2c10ab3adc5bd91f0a58ea7f24d14.git",
 			"parallelTool.groovy" };
+	private String name;
 
-	public ParallelGroup() {
-		// empty constructor
+	public ParallelGroup(String name) {
+		this.name = name;
 	}
 
 	public void addLimb(DHParameterKinematics limb, TransformNR tip, String name, int index) {
@@ -236,6 +237,10 @@ public class ParallelGroup extends DHParameterKinematics {
 				}
 			}
 		}
+	}
+
+	public String getNameOfParallelGroup() {
+		return name;
 	}
 
 }

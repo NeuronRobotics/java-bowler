@@ -122,7 +122,7 @@ public class MobileBase extends AbstractKinematicsNR {
 
 	public ParallelGroup getParallelGroup(String name) {
 		if (getParallelGroups().get(name) == null) {
-			getParallelGroups().put(name, new ParallelGroup());
+			getParallelGroups().put(name, new ParallelGroup(name));
 		}
 		return getParallelGroups().get(name);
 	}
