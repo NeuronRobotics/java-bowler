@@ -150,10 +150,10 @@ public class MobileBase extends AbstractKinematicsNR {
 		return null;
 	}
 
-	public void addLimbToParallel(DHParameterKinematics limb, TransformNR tipOffset, String name) {
+	public void addLimbToParallel(DHParameterKinematics limb, TransformNR tipOffset, String name, String relativeLimb,int relativeIndex) {
 		removeLimFromParallel(limb);
 		ParallelGroup g = getParallelGroup(name);
-		g.addLimb(limb, tipOffset);
+		g.addLimb(limb, tipOffset,relativeLimb,relativeIndex);
 	}
 
 	private void removeLimFromParallel(DHParameterKinematics limb) {
@@ -330,12 +330,17 @@ public class MobileBase extends AbstractKinematicsNR {
 				if (parallel != null) {
 					System.out.println("Loading Paralell group "+parallel+" limb "+name);
 					TransformNR paraOffset = loadTransform("parallelGroupTipOffset", e);
-					if (paraOffset == null) {
-						paraOffset = new TransformNR();
+					String relativeName = getTag( e, "relativeTo");
+					int index =0;
+					try {
+						index = Integer.parseInt(getTag( e, "relativeToLink"));
+					}catch(Exception ex) {
+						paraOffset=null;
+						relativeName=null;
 					}
 					ParallelGroup parallelGroup = getParallelGroup(parallel);
 					parallelGroup.setScriptingName(parallel);
-					parallelGroup.addLimb(kin, paraOffset);
+					parallelGroup.addLimb(kin, paraOffset,relativeName,index);
 //					if(!list.contains(parallelGroup)) {
 //						list.add(parallelGroup);
 //					}
@@ -593,23 +598,12 @@ public class MobileBase extends AbstractKinematicsNR {
 		xml += "\n<name>" + getScriptingName() + "</name>\n";
 		for (DHParameterKinematics l : legs) {
 			xml += "<leg>\n";
-			xml += "\n<name>" + l.getScriptingName() + "</name>\n";
-			xml += l.getEmbedableXml();
+			xml = makeLimbTag(xml, l);
 			xml += "\n</leg>\n";
 		}
 		for (DHParameterKinematics l : appendages) {
 			xml += "<appendage>\n";
-			xml += "\n<name>" + l.getScriptingName() + "</name>\n";
-			for (String key : getParallelGroups().keySet()) {
-				for (DHParameterKinematics pL : getParallelGroups().get(key).getConstituantLimbs())
-					if (pL == l) {
-						xml += "\n<parallelGroup>" + key + "</parallelGroup>\n";
-						xml += "\t<parallelGroupTipOffset>\n"
-								+ getParallelGroups().get(key).getTipOffset().get(l).getXml()
-								+ "\n</parallelGroupTipOffset>\n";
-					}
-			}
-			xml += l.getEmbedableXml();
+			xml = makeLimbTag(xml, l);
 			xml += "\n</appendage>\n";
 		}
 
@@ -638,6 +632,25 @@ public class MobileBase extends AbstractKinematicsNR {
 		xml += "\n<vitamins>\n"+allVitamins+"\n</vitamins>\n";
 		xml += "\n</mobilebase>\n";
 		setGlobalToFiducialTransform(location);
+		return xml;
+	}
+
+	private String makeLimbTag(String xml, DHParameterKinematics l) {
+		xml += "\n<name>" + l.getScriptingName() + "</name>\n";
+		for (String key : getParallelGroups().keySet()) {
+			ParallelGroup parallelGroup = getParallelGroups().get(key);
+			for (DHParameterKinematics pL : parallelGroup.getConstituantLimbs())
+				
+				if (pL == l) {
+					xml += "\n<parallelGroup>" + key + "</parallelGroup>\n";
+					xml += "\t<parallelGroupTipOffset>\n"
+							+ parallelGroup.getTipOffset(l).getXml()
+							+ "\n<relativeTo>" + parallelGroup.getTipOffsetRelativeIndex(l) + "</relativeTo>\n"
+							+ "\n<relativeToLink>" + parallelGroup.getTipOffsetRelativeIndex(l) + "</relativeToLink>\n"
+							+ "\n</parallelGroupTipOffset>\n";
+				}
+		}
+		xml += l.getEmbedableXml();
 		return xml;
 	}
 

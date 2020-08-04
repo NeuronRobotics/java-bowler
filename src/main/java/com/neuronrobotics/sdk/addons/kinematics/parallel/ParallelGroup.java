@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR;
 import com.neuronrobotics.sdk.addons.kinematics.DHParameterKinematics;
+import com.neuronrobotics.sdk.addons.kinematics.ITaskSpaceUpdateListenerNR;
 import com.neuronrobotics.sdk.addons.kinematics.LinkConfiguration;
 import com.neuronrobotics.sdk.addons.kinematics.LinkFactory;
 import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
@@ -15,21 +16,29 @@ public class ParallelGroup extends DHParameterKinematics {
 
 	private ArrayList<DHParameterKinematics> constituantLimbs = new ArrayList<DHParameterKinematics>();
 	private HashMap<DHParameterKinematics, TransformNR> tipOffset = new HashMap<DHParameterKinematics, TransformNR>();
+	private HashMap<DHParameterKinematics, String> tipOffsetRelativeToName = new HashMap<>();
+	private HashMap<DHParameterKinematics, Integer> tipOffsetRelativeIndex = new HashMap<>();
 	/** The cad engine. */
-	private String [] toolEngine =new String[]{"https://gist.github.com/33f2c10ab3adc5bd91f0a58ea7f24d14.git","parallelTool.groovy"}; 
+	private String[] toolEngine = new String[] { "https://gist.github.com/33f2c10ab3adc5bd91f0a58ea7f24d14.git",
+			"parallelTool.groovy" };
 
 	public ParallelGroup() {
 		// empty constructor
 	}
-	public void addLimb(DHParameterKinematics limb, TransformNR tip) {
+
+	public void addLimb(DHParameterKinematics limb, TransformNR tip, String name, int index) {
 		if (!getConstituantLimbs().contains(limb)) {
 			getConstituantLimbs().add(limb);
 		}
-		getTipOffset().put(limb, tip);
+		if (tip != null) {
+			tipOffsetRelativeToName.put(limb, name);
+			tipOffsetRelativeIndex.put(limb, index);
+			getTipOffset().put(limb, tip);
+		}
 		for (LinkConfiguration c : limb.getFactory().getLinkConfigurations()) {
-			
+
 			getFactory().addLink(limb.getFactory().getLink(c));// adding the configurations the the single
-									// factory
+			// factory
 		}
 
 	}
@@ -40,6 +49,10 @@ public class ParallelGroup extends DHParameterKinematics {
 		for (DHParameterKinematics l : getConstituantLimbs()) {
 			l.disconnect();
 		}
+		tipOffset.clear();
+		constituantLimbs.clear();
+		tipOffsetRelativeToName.clear();
+
 	}
 
 	@Override
@@ -48,25 +61,73 @@ public class ParallelGroup extends DHParameterKinematics {
 		return true;
 	}
 
+	private double[] compute(DHParameterKinematics l, HashMap<String, double[]> IKvalues,
+			TransformNR taskSpaceTransform) throws Exception {
+		String scriptingName = l.getScriptingName();
+		if (IKvalues.get(scriptingName) != null) {
+			// existes already
+			return IKvalues.get(scriptingName);
+		}
+		if (getTipOffset().get(l) == null) {
+			// no offset, compute as normal
+			double[] jointSpaceVect = l.inverseKinematics(l.inverseOffset(taskSpaceTransform));
+			IKvalues.put(scriptingName, jointSpaceVect);
+		} else {
+			TransformNR offset = getTipOffset().get(l);
+			String refLimbName = tipOffsetRelativeToName.get(l);
+			int index = tipOffsetRelativeIndex.get(l);
+			DHParameterKinematics referencedLimb = null;
+			for (DHParameterKinematics lm : getConstituantLimbs()) {
+				if (lm.getScriptingName().toLowerCase().contentEquals(refLimbName.toLowerCase())) {
+					// FOund the referenced limb
+					referencedLimb = lm;
+				}
+			}
+			if (referencedLimb == null)
+				throw new RuntimeException("Referenced limb missing, IK for " + l.getScriptingName() + " Failed");
+			double[] jointSpaceVectReferenced = compute(referencedLimb, IKvalues, taskSpaceTransform);
+
+			TransformNR transformTOLinksTip = referencedLimb.getChain().getChain(jointSpaceVectReferenced).get(index)
+					.times(offset.inverse());
+			double[] jointSpaceVect = l.inverseKinematics(l.inverseOffset(transformTOLinksTip));
+			IKvalues.put(scriptingName, jointSpaceVect);
+		}
+
+		return IKvalues.get(scriptingName);
+	}
+	/**
+	 * Sets the current pose target.
+	 *
+	 * @param currentPoseTarget the new current pose target
+	 */
+	@Override
+	public void setCurrentPoseTarget(TransformNR currentPoseTarget) {
+		if(checkTaskSpaceTransform(currentPoseTarget)) {
+			super.setCurrentPoseTarget(currentPoseTarget);
+			System.out.println("Paralell set to "+currentPoseTarget);
+		}
+	}
 	@Override
 	public double[] inverseKinematics(TransformNR taskSpaceTransform) throws Exception {
+
 		int numBerOfLinks = 0;
 		for (DHParameterKinematics l : getConstituantLimbs()) {
 			numBerOfLinks += l.getNumberOfLinks();
 		}
 		double[] linkValues = new double[numBerOfLinks];
 		int limbOffset = 0;
+		HashMap<String, double[]> IKvalues = new HashMap<>();
+
 		for (DHParameterKinematics l : getConstituantLimbs()) {
-			TransformNR localTip = taskSpaceTransform.times(getTipOffset().get(l).inverse());
 			// Use the built in IK model for the limb
-			double[] jointSpaceVect = l.inverseKinematics(l.inverseOffset(localTip));
+			double[] jointSpaceVect =compute(l,IKvalues,taskSpaceTransform);
 			// Load the link vector into the total vector
 			for (int i = 0; i < jointSpaceVect.length; i++) {
 				linkValues[limbOffset + i] = jointSpaceVect[i];
 			}
 			limbOffset += jointSpaceVect.length;
 		}
-
+		IKvalues.clear();
 		return linkValues;
 	}
 
@@ -104,28 +165,28 @@ public class ParallelGroup extends DHParameterKinematics {
 
 			double rotx = Math.atan2(y, z);
 			double roty;
-			 if (z >= 0) {
-			    roty = -Math.atan2( x * Math.cos(rotx), z );
-			 }else{
-			    roty = Math.atan2( x * Math.cos(rotx), -z );
-			 }
+			if (z >= 0) {
+				roty = -Math.atan2(x * Math.cos(rotx), z);
+			} else {
+				roty = Math.atan2(x * Math.cos(rotx), -z);
+			}
 			double rotz = Math.atan2(Math.cos(rotx), Math.sin(rotx) * Math.sin(roty));
 
-			return new TransformNR(x,y,x,new RotationNR(rotx,roty,rotz));
-		} else if(getConstituantLimbs().size() ==2) {
+			return new TransformNR(x, y, x, new RotationNR(rotx, roty, rotz));
+		} else if (getConstituantLimbs().size() == 2) {
 			return tips.get(getConstituantLimbs().get(0));// assume the first link is
-														// in control or
-														// orentation
-		}else
+															// in control or
+															// orentation
+		} else
 			throw new RuntimeException("There needs to be at least 2 limbs for paralell");
 	}
-	
+
 	/**
 	 * Gets the cad engine.
 	 *
 	 * @return the cad engine
 	 */
-	public String [] getGitCadToolEngine() {
+	public String[] getGitCadToolEngine() {
 		return toolEngine;
 	}
 
@@ -134,9 +195,9 @@ public class ParallelGroup extends DHParameterKinematics {
 	 *
 	 * @param cadEngine the new cad engine
 	 */
-	public void setGitCadToolEngine(String [] cadEngine) {
-		if(cadEngine!=null&& cadEngine[0]!=null &&cadEngine[1]!=null)
-		this.toolEngine = cadEngine;
+	public void setGitCadToolEngine(String[] cadEngine) {
+		if (cadEngine != null && cadEngine[0] != null && cadEngine[1] != null)
+			this.toolEngine = cadEngine;
 	}
 
 	public ArrayList<DHParameterKinematics> getConstituantLimbs() {
@@ -150,25 +211,31 @@ public class ParallelGroup extends DHParameterKinematics {
 	public HashMap<DHParameterKinematics, TransformNR> getTipOffset() {
 		return tipOffset;
 	}
-
+	public TransformNR getTipOffset(DHParameterKinematics l) {
+		return tipOffset.get(l);
+	}
+	public String getTipOffsetRelativeName(DHParameterKinematics l) {
+		return tipOffsetRelativeToName.get(l);
+	}
+	public int getTipOffsetRelativeIndex(DHParameterKinematics l) {
+		return tipOffsetRelativeIndex.get(l);
+	}
 	public void setTipOffset(HashMap<DHParameterKinematics, TransformNR> tipOffset) {
 		this.tipOffset = tipOffset;
 	}
 
 	public void removeLimb(DHParameterKinematics limb) {
-		if(constituantLimbs.contains(limb)){
+		if (constituantLimbs.contains(limb)) {
 			constituantLimbs.remove(limb);
 			getTipOffset().remove(limb);
 			setFactory(new LinkFactory());// clear the links
-			for(DHParameterKinematics remaining: constituantLimbs){
+			for (DHParameterKinematics remaining : constituantLimbs) {
 				for (LinkConfiguration c : remaining.getFactory().getLinkConfigurations()) {
 					getFactory().addLink(remaining.getFactory().getLink(c));// adding the configurations the the single
-											// factory
+					// factory
 				}
 			}
 		}
 	}
-	
-	
-	
+
 }
