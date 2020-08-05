@@ -76,6 +76,7 @@ public class ParallelGroup extends DHParameterKinematics {
 			tipOffsetRelativeToName.put(limb, name);
 			tipOffsetRelativeIndex.put(limb, index);
 			getTipOffset().put(limb, tip);
+			System.out.println("Limp "+limb.getScriptingName()+" set relative to "+name);
 		} else {
 			clearReferencedLimb(limb);
 		}
@@ -286,8 +287,8 @@ public class ParallelGroup extends DHParameterKinematics {
 
 	public void removeLimb(DHParameterKinematics limb) {
 		if (constituantLimbs.contains(limb)) {
+			clearReferencedLimb( limb);
 			constituantLimbs.remove(limb);
-			getTipOffset().remove(limb);
 			setFactory(new LinkFactory());// clear the links
 			for (DHParameterKinematics remaining : constituantLimbs) {
 				for (LinkConfiguration c : remaining.getFactory().getLinkConfigurations()) {
