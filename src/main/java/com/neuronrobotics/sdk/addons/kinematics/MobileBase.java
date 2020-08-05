@@ -337,7 +337,7 @@ public class MobileBase extends AbstractKinematicsNR {
 					}
 					ParallelGroup parallelGroup = getParallelGroup(parallel);
 					parallelGroup.setScriptingName(parallel);
-					parallelGroup.addLimb(kin, paraOffset,relativeName,index);
+					parallelGroup.setupReferencedLimbStartup(kin, paraOffset,relativeName,index);
 //					if(!list.contains(parallelGroup)) {
 //						list.add(parallelGroup);
 //					}
@@ -643,7 +643,7 @@ public class MobileBase extends AbstractKinematicsNR {
 					if(parallelGroup.getTipOffset(l)!=null) {
 						xml += "\n<parallelGroupTipOffset>\n"
 								+ parallelGroup.getTipOffset(l).getXml()
-								+ "\n\t<relativeTo>" + parallelGroup.getTipOffsetRelativeIndex(l) + "</relativeTo>\n"
+								+ "\n\t<relativeTo>" + parallelGroup.getTipOffsetRelativeName(l) + "</relativeTo>\n"
 								+ "\n\t<relativeToLink>" + parallelGroup.getTipOffsetRelativeIndex(l) + "</relativeToLink>\n"
 								+ "\n</parallelGroupTipOffset>\n";
 					}

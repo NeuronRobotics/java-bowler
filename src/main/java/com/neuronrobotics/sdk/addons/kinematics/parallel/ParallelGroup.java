@@ -28,29 +28,21 @@ public class ParallelGroup extends DHParameterKinematics {
 	}
 
 	public void addLimb(DHParameterKinematics limb, TransformNR tip, String name, int index) {
-		if (!getConstituantLimbs().contains(limb)) {
-			getConstituantLimbs().add(limb);
-			for (LinkConfiguration c : limb.getFactory().getLinkConfigurations()) {
 
-				getFactory().addLink(limb.getFactory().getLink(c));// adding the configurations the the single
-				// factory
-			}
-		}
-		if (tip != null) {
-			setupReferencedLimb(limb, tip, name, index);
-		}
+		setupReferencedLimb(limb, tip, name, index);
 
 	}
-	
+
 	public DHParameterKinematics getFKLimb() {
-		for(DHParameterKinematics d:getConstituantLimbs()) {
-			if(getTipOffset(d)==null) {
+		for (DHParameterKinematics d : getConstituantLimbs()) {
+			if (getTipOffset(d) == null) {
 				return d;// this is the first limb with no relative tip
 			}
 		}
 		// this should be impossible
 		throw new RuntimeException("FK lim must be possible, one limb must not have a reference to another");
 	}
+
 	/**
 	 * Calc home.
 	 *
@@ -60,12 +52,35 @@ public class ParallelGroup extends DHParameterKinematics {
 	public TransformNR calcHome() {
 		return getFKLimb().calcHome();
 	}
+
 	public void setupReferencedLimb(DHParameterKinematics limb, TransformNR tip, String name, int index) {
-		tipOffsetRelativeToName.put(limb, name);
-		tipOffsetRelativeIndex.put(limb, index);
-		getTipOffset().put(limb, tip);
+		for (DHParameterKinematics d : getConstituantLimbs()) {
+			if (d.getScriptingName().contentEquals(name)) {
+				setupReferencedLimbStartup(limb, tip, name, index);
+				return;
+			}
+		}
+		throw new RuntimeException("Limb named: " + name + " does not exist");
 	}
-	
+
+	public void setupReferencedLimbStartup(DHParameterKinematics limb, TransformNR tip, String name, int index) {
+		if (!getConstituantLimbs().contains(limb)) {
+			getConstituantLimbs().add(limb);
+			for (LinkConfiguration c : limb.getFactory().getLinkConfigurations()) {
+
+				getFactory().addLink(limb.getFactory().getLink(c));// adding the configurations the the single
+				// factory
+			}
+		}
+		if (tip != null) {
+			tipOffsetRelativeToName.put(limb, name);
+			tipOffsetRelativeIndex.put(limb, index);
+			getTipOffset().put(limb, tip);
+		} else {
+			clearReferencedLimb(limb);
+		}
+	}
+
 	public void clearReferencedLimb(DHParameterKinematics limb) {
 		tipOffsetRelativeToName.remove(limb);
 		tipOffsetRelativeIndex.remove(limb);
@@ -105,7 +120,8 @@ public class ParallelGroup extends DHParameterKinematics {
 			int index = tipOffsetRelativeIndex.get(l);
 			DHParameterKinematics referencedLimb = findReferencedLimb(refLimbName);
 			if (referencedLimb == null)
-				throw new RuntimeException("Referenced limb missing, IK for " + l.getScriptingName() + " Failed");
+				throw new RuntimeException("Referenced limb missing, IK for " + l.getScriptingName()
+						+ " Failed looking for " + refLimbName);
 			double[] jointSpaceVectReferenced = compute(referencedLimb, IKvalues, taskSpaceTransform);
 
 			TransformNR transformTOLinksTip = referencedLimb.getChain().getChain(jointSpaceVectReferenced).get(index)
@@ -123,10 +139,13 @@ public class ParallelGroup extends DHParameterKinematics {
 			if (lm.getScriptingName().toLowerCase().contentEquals(refLimbName.toLowerCase())) {
 				// FOund the referenced limb
 				referencedLimb = lm;
+			}else {
+				//System.out.println("Searching for "+refLimbName+" no match with "+lm.getScriptingName());
 			}
 		}
 		return referencedLimb;
 	}
+
 	/**
 	 * Sets the current pose target.
 	 *
@@ -134,11 +153,12 @@ public class ParallelGroup extends DHParameterKinematics {
 	 */
 	@Override
 	public void setCurrentPoseTarget(TransformNR currentPoseTarget) {
-		if(checkTaskSpaceTransform(currentPoseTarget)) {
+		if (checkTaskSpaceTransform(currentPoseTarget)) {
 			super.setCurrentPoseTarget(currentPoseTarget);
-			System.out.println("Paralell set to "+currentPoseTarget);
+			System.out.println("Paralell set to " + currentPoseTarget);
 		}
 	}
+
 	@Override
 	public double[] inverseKinematics(TransformNR taskSpaceTransform) throws Exception {
 
@@ -152,7 +172,7 @@ public class ParallelGroup extends DHParameterKinematics {
 
 		for (DHParameterKinematics l : getConstituantLimbs()) {
 			// Use the built in IK model for the limb
-			double[] jointSpaceVect =compute(l,IKvalues,taskSpaceTransform);
+			double[] jointSpaceVect = compute(l, IKvalues, taskSpaceTransform);
 			// Load the link vector into the total vector
 			for (int i = 0; i < jointSpaceVect.length; i++) {
 				linkValues[limbOffset + i] = jointSpaceVect[i];
@@ -178,39 +198,39 @@ public class ParallelGroup extends DHParameterKinematics {
 			// TODO check to see if the TIps are alligned as you add them and
 			// throw an exception if a tip is misalligned
 		}
-		if (getConstituantLimbs().size() > 3) {
-			// we are assuming any passive links are encoded
-			double dx = 0;
-			double dy = 0;
-			double dz = 0;
-
-			for (int i = 0; i < 3; i++) {
-				TransformNR l = tips.get(getConstituantLimbs().get(i));
-				Vec3d p1 = new Vec3d(l.getX(), l.getY(), l.getZ());
-				dx += p1.x;
-				dy += p1.y;
-				dz += p1.z;
-			}
-			double x = dx /= 3;
-			double y = dy /= 3;
-			double z = dz /= 3;
-
-			double rotx = Math.atan2(y, z);
-			double roty;
-			if (z >= 0) {
-				roty = -Math.atan2(x * Math.cos(rotx), z);
-			} else {
-				roty = Math.atan2(x * Math.cos(rotx), -z);
-			}
-			double rotz = Math.atan2(Math.cos(rotx), Math.sin(rotx) * Math.sin(roty));
-
-			return new TransformNR(x, y, x, new RotationNR(rotx, roty, rotz));
-		} else if (getConstituantLimbs().size() == 2) {
-			return tips.get(getFKLimb());// assume the first link is
-															// in control or
-															// orentation
-		} else
-			throw new RuntimeException("There needs to be at least 2 limbs for paralell");
+//		if (getConstituantLimbs().size() > 3) {
+//			// we are assuming any passive links are encoded
+//			double dx = 0;
+//			double dy = 0;
+//			double dz = 0;
+//
+//			for (int i = 0; i < 3; i++) {
+//				TransformNR l = tips.get(getConstituantLimbs().get(i));
+//				Vec3d p1 = new Vec3d(l.getX(), l.getY(), l.getZ());
+//				dx += p1.x;
+//				dy += p1.y;
+//				dz += p1.z;
+//			}
+//			double x = dx /= 3;
+//			double y = dy /= 3;
+//			double z = dz /= 3;
+//
+//			double rotx = Math.atan2(y, z);
+//			double roty;
+//			if (z >= 0) {
+//				roty = -Math.atan2(x * Math.cos(rotx), z);
+//			} else {
+//				roty = Math.atan2(x * Math.cos(rotx), -z);
+//			}
+//			double rotz = Math.atan2(Math.cos(rotx), Math.sin(rotx) * Math.sin(roty));
+//
+//			return new TransformNR(x, y, x, new RotationNR(rotx, roty, rotz));
+//		} else if (getConstituantLimbs().size() == 2) {
+		return tips.get(getFKLimb());// assume the first link is
+//															// in control or
+//															// orentation
+//		} else
+//			throw new RuntimeException("There needs to be at least 2 limbs for paralell");
 	}
 
 	/**
@@ -243,18 +263,23 @@ public class ParallelGroup extends DHParameterKinematics {
 	public HashMap<DHParameterKinematics, TransformNR> getTipOffset() {
 		return tipOffset;
 	}
+
 	public TransformNR getTipOffset(DHParameterKinematics l) {
 		return tipOffset.get(l);
 	}
-	public void setTipOffset(DHParameterKinematics l,TransformNR n) {
-		tipOffset.put(l,n);
+
+	public void setTipOffset(DHParameterKinematics l, TransformNR n) {
+		tipOffset.put(l, n);
 	}
+
 	public String getTipOffsetRelativeName(DHParameterKinematics l) {
 		return tipOffsetRelativeToName.get(l);
 	}
+
 	public int getTipOffsetRelativeIndex(DHParameterKinematics l) {
 		return tipOffsetRelativeIndex.get(l);
 	}
+
 	public void setTipOffset(HashMap<DHParameterKinematics, TransformNR> tipOffset) {
 		this.tipOffset = tipOffset;
 	}
