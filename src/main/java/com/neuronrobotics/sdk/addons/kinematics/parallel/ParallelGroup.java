@@ -30,14 +30,14 @@ public class ParallelGroup extends DHParameterKinematics {
 	public void addLimb(DHParameterKinematics limb, TransformNR tip, String name, int index) {
 		if (!getConstituantLimbs().contains(limb)) {
 			getConstituantLimbs().add(limb);
+			for (LinkConfiguration c : limb.getFactory().getLinkConfigurations()) {
+
+				getFactory().addLink(limb.getFactory().getLink(c));// adding the configurations the the single
+				// factory
+			}
 		}
 		if (tip != null) {
 			setupReferencedLimb(limb, tip, name, index);
-		}
-		for (LinkConfiguration c : limb.getFactory().getLinkConfigurations()) {
-
-			getFactory().addLink(limb.getFactory().getLink(c));// adding the configurations the the single
-			// factory
 		}
 
 	}
@@ -64,6 +64,12 @@ public class ParallelGroup extends DHParameterKinematics {
 		tipOffsetRelativeToName.put(limb, name);
 		tipOffsetRelativeIndex.put(limb, index);
 		getTipOffset().put(limb, tip);
+	}
+	
+	public void clearReferencedLimb(DHParameterKinematics limb) {
+		tipOffsetRelativeToName.remove(limb);
+		tipOffsetRelativeIndex.remove(limb);
+		getTipOffset().remove(limb);
 	}
 
 	@Override
