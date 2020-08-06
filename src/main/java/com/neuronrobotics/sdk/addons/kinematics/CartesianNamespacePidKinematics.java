@@ -47,8 +47,7 @@ public class CartesianNamespacePidKinematics extends AbstractKinematicsNR{
 		
 		double [] jointSpaceVect = connection.setDesiredTaskSpaceTransform(taskSpaceTransform, seconds);
 		factory.setCachedTargets(jointSpaceVect);
-		currentJointSpaceTarget = jointSpaceVect;
-		fireTargetJointsUpdate(currentJointSpaceTarget,taskSpaceTransform );
+		fireTargetJointsUpdate(getCurrentJointSpaceTarget(),taskSpaceTransform );
 		//setDesiredJointSpaceVector(jointSpaceVect,  seconds);
 		
 		return jointSpaceVect;
@@ -88,10 +87,9 @@ public class CartesianNamespacePidKinematics extends AbstractKinematicsNR{
 		}
 		factory.setCachedTargets(jointSpaceVect);
 		
-		currentJointSpaceTarget = jointSpaceVect;
 		
 		TransformNR fwd  = connection.setDesiredJointSpaceVector(jointSpaceVect, seconds);
-		fireTargetJointsUpdate(currentJointSpaceTarget,fwd );
+		fireTargetJointsUpdate(getCurrentJointSpaceTarget(),fwd );
 		return jointSpaceVect;
 	}
 	
@@ -109,7 +107,7 @@ public class CartesianNamespacePidKinematics extends AbstractKinematicsNR{
 
 		Log.info("Setting single target joint in mm/deg, axis="+axis+" value="+value);
 		
-		currentJointSpaceTarget[axis] = value;
+		getCurrentJointSpaceTarget()[axis] = value;
 		try{
 			getFactory().getLink(c).setTargetEngineeringUnits(value);
 		}catch (Exception ex){
@@ -132,7 +130,7 @@ public class CartesianNamespacePidKinematics extends AbstractKinematicsNR{
 				throw e;	
 		}
 		TransformNR fwd  = connection.getCurrentTaskSpaceTransform();
-		fireTargetJointsUpdate(currentJointSpaceTarget,fwd );
+		fireTargetJointsUpdate(getCurrentJointSpaceTarget(),fwd );
 		return;
 	}
 	

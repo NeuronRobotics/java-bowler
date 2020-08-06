@@ -78,7 +78,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	protected double[] currentJointSpacePositions = null;
 
 	/** The current joint space target. */
-	protected double[] currentJointSpaceTarget;
+	public double[] currentJointSpaceTarget;
 
 	/** The current pose target. */
 	private TransformNR currentPoseTarget = new TransformNR();
@@ -545,7 +545,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		if (currentJointSpacePositions == null||currentJointSpacePositions.length!= getNumberOfLinks()) {
 			// Happens once and only once on the first initialization
 			currentJointSpacePositions = new double[getNumberOfLinks()];
-			currentJointSpaceTarget = new double[getNumberOfLinks()];
+			
 			for (int i = 0; i < getNumberOfLinks(); i++) {
 				// double pos =
 				// currentLinkSpacePositions[getLinkConfigurations().get(i).getHardwareIndex()];
@@ -682,9 +682,9 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 			if (e != null)
 				throw new RuntimeException("Limit On "+getScriptingName()+" "+e.getMessage());
 			for(int i=0;i<getNumberOfLinks();i++)
-				currentJointSpaceTarget[i] = jointSpaceVect[i];
-			TransformNR fwd = forwardKinematics(currentJointSpaceTarget);
-			fireTargetJointsUpdate(currentJointSpaceTarget, fwd);
+				getCurrentJointSpaceTarget()[i] = jointSpaceVect[i];
+			TransformNR fwd = forwardKinematics(getCurrentJointSpaceTarget());
+			fireTargetJointsUpdate(getCurrentJointSpaceTarget(), fwd);
 			if(fireTaskUpdate) {
 				setCurrentPoseTarget(forwardOffset(fwd));	
 			}
@@ -729,7 +729,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 
 			Log.info("Setting single target joint in mm/deg, axis=" + axis + " value=" + value);
 
-			currentJointSpaceTarget[axis] = value;
+			getCurrentJointSpaceTarget()[axis] = value;
 			try {
 				getFactory().getLink(c).setTargetEngineeringUnits(value);
 			} catch (Exception ex) {
@@ -752,8 +752,8 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 				if (e != null)
 					throw e;
 			}
-			TransformNR fwd = forwardKinematics(currentJointSpaceTarget);
-			fireTargetJointsUpdate(currentJointSpaceTarget, fwd);
+			TransformNR fwd = forwardKinematics(getCurrentJointSpaceTarget());
+			fireTargetJointsUpdate(getCurrentJointSpaceTarget(), fwd);
 			setCurrentPoseTarget(forwardOffset(fwd));
 		}
 		return;
@@ -796,7 +796,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 
 		
 		for (IJointSpaceUpdateListenerNR p : jointSpaceUpdateListeners) {
-			p.onJointSpaceTargetUpdate(this, currentJointSpaceTarget);
+			p.onJointSpaceTargetUpdate(this, getCurrentJointSpaceTarget());
 		}
 	}
 
@@ -1536,4 +1536,14 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	public void clearChangeListener(int linkIndex) {
 		getLinkConfiguration(linkIndex).clearChangeListener();
 	}
+
+	public double[] getCurrentJointSpaceTarget() {
+		if(currentJointSpaceTarget==null)
+			currentJointSpaceTarget=new double[getNumberOfLinks()];
+		return currentJointSpaceTarget;
+	}
+
+//	public void setCurrentJointSpaceTarget(double[] currentJointSpaceTarget) {
+//		this.currentJointSpaceTarget = currentJointSpaceTarget;
+//	}
 }
