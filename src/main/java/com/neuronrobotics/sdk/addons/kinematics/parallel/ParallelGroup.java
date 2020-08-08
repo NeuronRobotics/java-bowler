@@ -158,7 +158,7 @@ public class ParallelGroup extends DHParameterKinematics {
 	public void setCurrentPoseTarget(TransformNR currentPoseTarget) {
 		if (checkTaskSpaceTransform(currentPoseTarget)) {
 			super.setCurrentPoseTarget(currentPoseTarget);
-			System.out.println("Paralell set to " + currentPoseTarget);
+			//System.out.println("Paralell set to " + currentPoseTarget);
 		}
 	}
 
