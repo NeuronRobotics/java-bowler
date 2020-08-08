@@ -661,7 +661,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 					+ " links, actual number of links = " + jointSpaceVect.length);
 		}
 
-		synchronized(AbstractKinematicsNR.class) {
+		//synchronized(AbstractKinematicsNR.class) {
 			int except = 0;
 			Exception e = null;
 			do {
@@ -688,7 +688,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 			if(fireTaskUpdate) {
 				setCurrentPoseTarget(forwardOffset(fwd));	
 			}
-		}
+		//}
 		return jointSpaceVect;
 	}
 	/**
@@ -724,7 +724,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 * @throws Exception If there is a workspace error
 	 */
 	public  void setDesiredJointAxisValue(int axis, double value, double seconds) throws Exception {
-		synchronized(AbstractKinematicsNR.class) {
+		//synchronized(AbstractKinematicsNR.class) {
 			LinkConfiguration c = getLinkConfiguration(axis);
 
 			Log.info("Setting single target joint in mm/deg, axis=" + axis + " value=" + value);
@@ -755,7 +755,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 			TransformNR fwd = forwardKinematics(getCurrentJointSpaceTarget());
 			fireTargetJointsUpdate(getCurrentJointSpaceTarget(), fwd);
 			setCurrentPoseTarget(forwardOffset(fwd));
-		}
+		//}
 		return;
 	}
 

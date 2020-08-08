@@ -149,7 +149,7 @@ public class VirtualWorld extends NrMap{
 	 * @param deltForward the delt forward
 	 * @param c the c
 	 */
-	public synchronized void addSensorDisplayDot(AbstractRobotDrive platform, double deltLateral, double deltForward, Color c){
+	public  void addSensorDisplayDot(AbstractRobotDrive platform, double deltLateral, double deltForward, Color c){
 		for( int i=0;i<bots.size();i++){
 			DrivingRobotUI b = bots.get(i);
 			if(b.getRobot()==platform){
