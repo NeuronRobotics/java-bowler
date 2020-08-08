@@ -25,6 +25,8 @@ public class ParallelGroup extends DHParameterKinematics {
 
 	public ParallelGroup(String name) {
 		this.name = name;
+		if (name==null)
+			throw new RuntimeException();
 	}
 
 	public void addLimb(DHParameterKinematics limb, TransformNR tip, String name, int index) {

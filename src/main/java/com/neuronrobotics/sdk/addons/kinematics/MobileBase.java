@@ -121,6 +121,8 @@ public class MobileBase extends AbstractKinematicsNR {
 	}
 
 	public ParallelGroup getParallelGroup(String name) {
+		if(name==null)
+			 throw new RuntimeException("No groups named null allowed");
 		if (getParallelGroups().get(name) == null) {
 			getParallelGroups().put(name, new ParallelGroup(name));
 		}
