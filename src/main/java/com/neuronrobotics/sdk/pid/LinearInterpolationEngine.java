@@ -86,7 +86,7 @@ public class LinearInterpolationEngine {
 	 * @param setpoint the setpoint
 	 * @param seconds the seconds
 	 */
-	public synchronized  void SetPIDSetPoint(int setpoint,double seconds){
+	public synchronized  void SetPIDSetPoint(float setpoint,double seconds){
 		getConfigs().setEnabled(true);
 		velocityRun=false;
 		setPause(true);
@@ -126,7 +126,7 @@ public class LinearInterpolationEngine {
 	 *
 	 * @param value the value
 	 */
-	public synchronized  void ResetEncoder(int value) {
+	public synchronized  void ResetEncoder(float value) {
 		//System.out.println("Resetting channel "+getChan());
 		velocityRun=false;
 		setPause(true);

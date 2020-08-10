@@ -77,7 +77,7 @@ public class GCODETest {
 		if (hasPort) {
 			LinkFactory lf = new LinkFactory();
 			LinkConfiguration confp = new LinkConfiguration();
-			confp.setType(LinkType.GCODE_STEPPER_PRISMATIC);
+			confp.setTypeString(LinkType.GCODE_STEPPER_PRISMATIC.getName());
 			confp.setDeviceScriptingName(GCODE);
 			confp.setHardwareIndex(0);
 			confp.setScale(1);
@@ -89,7 +89,7 @@ public class GCODETest {
 			link.flush(1);// take 2 seconds to flush
 
 			LinkConfiguration confp2 = new LinkConfiguration();
-			confp2.setType(LinkType.GCODE_STEPPER_PRISMATIC);
+			confp2.setTypeString(LinkType.GCODE_STEPPER_PRISMATIC.getName());
 			confp2.setDeviceScriptingName(GCODE);
 			confp2.setHardwareIndex(1);
 			confp2.setScale(1);
@@ -156,7 +156,7 @@ public class GCODETest {
 		if (hasPort) {
 			LinkFactory lf = new LinkFactory();
 			LinkConfiguration confp = new LinkConfiguration();
-			confp.setType(LinkType.GCODE_STEPPER_ROTORY);
+			confp.setTypeString(LinkType.GCODE_STEPPER_ROTORY.getName());
 			confp.setDeviceScriptingName(GCODE);
 			confp.setHardwareIndex(0);
 			confp.setScale(1);
@@ -168,7 +168,7 @@ public class GCODETest {
 			link.flush(1);// take 2 seconds to flush
 
 			LinkConfiguration confp2 = new LinkConfiguration();
-			confp2.setType(LinkType.GCODE_STEPPER_ROTORY);
+			confp2.setTypeString(LinkType.GCODE_STEPPER_ROTORY.getName());
 			confp2.setDeviceScriptingName(GCODE);
 			confp2.setHardwareIndex(1);
 			confp2.setScale(1);
@@ -192,7 +192,7 @@ public class GCODETest {
 		if (hasPort) {
 			LinkFactory lf = new LinkFactory();
 			LinkConfiguration confp = new LinkConfiguration();
-			confp.setType(LinkType.GCODE_STEPPER_TOOL);
+			confp.setTypeString(LinkType.GCODE_STEPPER_TOOL.getName());
 			confp.setDeviceScriptingName(GCODE);
 			confp.setHardwareIndex(0);
 			confp.setScale(1);
@@ -204,7 +204,7 @@ public class GCODETest {
 			link.flush(1);// take 2 seconds to flush
 
 			LinkConfiguration confp2 = new LinkConfiguration();
-			confp2.setType(LinkType.GCODE_STEPPER_TOOL);
+			confp2.setTypeString(LinkType.GCODE_STEPPER_TOOL.getName());
 			confp2.setDeviceScriptingName(GCODE);
 			confp2.setHardwareIndex(1);
 			confp2.setScale(1);
@@ -228,7 +228,7 @@ public class GCODETest {
 		if (hasPort) {
 			LinkFactory lf = new LinkFactory();
 			LinkConfiguration confp = new LinkConfiguration();
-			confp.setType(LinkType.GCODE_HEATER_TOOL);
+			confp.setTypeString(LinkType.GCODE_HEATER_TOOL.getName());
 			confp.setDeviceScriptingName(GCODE);
 			confp.setHardwareIndex(0);
 			confp.setScale(1);
@@ -240,7 +240,7 @@ public class GCODETest {
 			link.flush(1);// take 2 seconds to flush
 
 			LinkConfiguration confp2 = new LinkConfiguration();
-			confp2.setType(LinkType.GCODE_HEATER_TOOL);
+			confp2.setTypeString(LinkType.GCODE_HEATER_TOOL.getName());
 			confp2.setDeviceScriptingName(GCODE);
 			confp2.setHardwareIndex(1);
 			confp2.setScale(1);

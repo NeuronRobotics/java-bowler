@@ -40,7 +40,7 @@ public abstract class AbstractPidNamespaceImp implements IExtendedPIDControl {
 	public AbstractPidNamespaceImp(BowlerAbstractDevice device){
 		this.setDevice(device);
 		addPIDEventListener(new IPIDEventListener() {
-			public void onPIDReset(int group, int currentValue) {}
+			public void onPIDReset(int group, float currentValue) {}
 			public void onPIDLimitEvent(PIDLimitEvent e) {}
 			public void onPIDEvent(PIDEvent e) {
 				getPIDChannel(e.getGroup()).setCurrentCachedPosition(e.getValue());
@@ -55,7 +55,7 @@ public abstract class AbstractPidNamespaceImp implements IExtendedPIDControl {
 	 * @param group the group
 	 * @return the int
 	 */
-	public int GetCachedPosition(int group) {
+	public float GetCachedPosition(int group) {
 		return getPIDChannel(group).getCurrentCachedPosition();
 	}
 
@@ -65,7 +65,7 @@ public abstract class AbstractPidNamespaceImp implements IExtendedPIDControl {
 	 * @param group the group
 	 * @param value the value
 	 */
-	public void SetCachedPosition(int group, int value) {
+	public void SetCachedPosition(int group, float value) {
 
 		getPIDChannel(group).setCurrentCachedPosition(value);
 	}
@@ -76,7 +76,7 @@ public abstract class AbstractPidNamespaceImp implements IExtendedPIDControl {
 	 */
 	@Override
 	public void flushPIDChannels(double time) {
-		int [] data = new int[getNumberOfChannels()];
+		float [] data = new float[getNumberOfChannels()];
 		for(int i=0;i<getNumberOfChannels();i++){
 			data[i]=getPIDChannel(i).getCachedTargetValue();
 		}
@@ -169,7 +169,7 @@ public abstract class AbstractPidNamespaceImp implements IExtendedPIDControl {
 	 * @param group the group
 	 * @param value the value
 	 */
-	public void firePIDResetEvent(int group,int value){
+	public void firePIDResetEvent(int group,float value){
 		SetCachedPosition(group, value);
 		for(IPIDEventListener l: PIDEventListeners)
 			l.onPIDReset(group,value);

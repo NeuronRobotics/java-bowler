@@ -18,7 +18,7 @@ public interface IPidControlNamespace {
 	 * @param valueToSetCurrentTo the target value that the controller should be set to. 
 	 * @return true if success
 	 */
-	public boolean ResetPIDChannel(int group,int valueToSetCurrentTo);
+	public boolean ResetPIDChannel(int group,float valueToSetCurrentTo);
 	/**
 	 * This method sends a PID configuration object to the device. THe controller can be enabled/disabled with this method
 	 * All PID parameters are stored in the PIDConfiguration ojbect prior to calling this method will be sent to the device. 
@@ -63,26 +63,26 @@ public interface IPidControlNamespace {
 	 * @param seconds units in Seconds, the time it takes to make the transition from current to target. Zero will tell the controller to go as fast as possible. 
 	 * @return true if no errors occur 
 	 */
-	public boolean SetPIDSetPoint(int group,int setpoint,double seconds);
+	public boolean SetPIDSetPoint(int group,float setpoint,double seconds);
 	/**
 	 * Same as SetPIDSetPoint, but will set all setpoints at once. This can be used for co-ordinated motion of independant PID control groups.
 	 * @param setpoints and array of setpoint values (must match the number of availible PID control groups)
 	 * @param seconds units in Seconds, the time it takes to make the transition from current to target. Zero will tell the controllers to go as fast as possible. 
 	 * @return true if no errors occur 
 	 */
-	public boolean SetAllPIDSetPoint(int []setpoints,double seconds);
+	public boolean SetAllPIDSetPoint(float []setpoints,double seconds);
 	/**
 	 * This method requests a single PID controller group value. The value returned represents the current state of the PID controller's input sensor in raw units
 	 * @param group  the index of the PID group 
 	 * @return The current value of the sensor input 
 	 */
-	public int GetPIDPosition(int group);
+	public float GetPIDPosition(int group);
 	/**
 	 * This method requests all PID controllers to report back their current value of their input sensors. 
 	 * This method is also used to determine dynamically how many PID control groups are availible on a device. 
 	 * @return and array of values representing the current state of the given cntrollers input
 	 */
-	public int [] GetAllPIDPosition();
+	public float [] GetAllPIDPosition();
 	
 	/**
 	 * Allows a user to attach a listener to the device to listen for PID events

@@ -62,7 +62,7 @@ public class PidRotoryLink extends AbstractRotoryLink{
 	 */
 	@Override
 	public double getCurrentPosition() {
-		int val=channel.GetPIDPosition();
+		float val=channel.GetPIDPosition();
 		fireLinkListener(val);
 		return val;
 	}
@@ -75,7 +75,7 @@ public class PidRotoryLink extends AbstractRotoryLink{
 	public void setPIDChannel(PIDChannel channel) {
 		channel.addPIDEventListener(new IPIDEventListener() {
 			@Override
-			public void onPIDReset(int group, int currentValue) {
+			public void onPIDReset(int group, float currentValue) {
 				fireLinkListener(currentValue);
 			}
 			

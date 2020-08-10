@@ -42,11 +42,11 @@ public class ControlPIDCommand extends BowlerAbstractCommand {
 	 * @param setpoint the setpoint
 	 * @param seconds the seconds
 	 */
-	public ControlPIDCommand(int group, int setpoint,double seconds) {
+	public ControlPIDCommand(int group, float setpoint,double seconds) {
 		setOpCode("_pid");
 		setMethod(BowlerMethod.POST);
 		getCallingDataStorage().add(group);
-		getCallingDataStorage().addAs32(setpoint);
+		getCallingDataStorage().addAs32((int)setpoint);
 		getCallingDataStorage().addAs32((int)(seconds*1000));
 	}
 

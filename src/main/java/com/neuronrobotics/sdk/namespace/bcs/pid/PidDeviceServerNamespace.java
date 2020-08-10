@@ -42,10 +42,10 @@ public class PidDeviceServerNamespace extends BowlerAbstractDeviceServerNamespac
 				new IBowlerCommandProcessor() {
 					@Override
 					public Object[] process(Object[] data) {
-						int [] current = GetAllPIDPosition();
+						float [] current = GetAllPIDPosition();
 						Integer [] d = new Integer[current.length];
 						for(int i=0;i<current.length;i++){
-							d[i]=new Integer(current[i]);
+							d[i]=new Integer((int)current[i]);
 						}
 						return new Object[]{d};
 					}
@@ -65,7 +65,7 @@ public class PidDeviceServerNamespace extends BowlerAbstractDeviceServerNamespac
 					@Override
 					public Object[] process(Object[] data) {
 						//anythign
-						return new Object[]{data[0],new Integer(GetPIDPosition((Integer) data[0]))};
+						return new Object[]{data[0],new Integer((int)GetPIDPosition((Integer) data[0]))};
 					}
 				}));//Name
 		
@@ -143,7 +143,7 @@ public class PidDeviceServerNamespace extends BowlerAbstractDeviceServerNamespac
 					public Object[] process(Object[] data) {
 						Integer time = (Integer)data[0];
 						Integer [] d = (Integer [])data[1];
-						int [] current = new int[d.length];
+						float [] current = new float[d.length];
 						for(int i=0;i<current.length;i++){
 							current[i] = d[i];
 						}
@@ -310,7 +310,7 @@ public class PidDeviceServerNamespace extends BowlerAbstractDeviceServerNamespac
 	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#ResetPIDChannel(int, int)
 	 */
 	@Override
-	public boolean ResetPIDChannel(int group, int valueToSetCurrentTo) {
+	public boolean ResetPIDChannel(int group, float valueToSetCurrentTo) {
 		return device.ResetPIDChannel(group, valueToSetCurrentTo);
 	}
 
@@ -358,7 +358,7 @@ public class PidDeviceServerNamespace extends BowlerAbstractDeviceServerNamespac
 	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#SetPIDSetPoint(int, int, double)
 	 */
 	@Override
-	public boolean SetPIDSetPoint(int group, int setpoint, double seconds) {
+	public boolean SetPIDSetPoint(int group, float setpoint, double seconds) {
 		return device.SetPIDSetPoint(group, setpoint, seconds);
 	}
 
@@ -366,7 +366,7 @@ public class PidDeviceServerNamespace extends BowlerAbstractDeviceServerNamespac
 	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#SetAllPIDSetPoint(int[], double)
 	 */
 	@Override
-	public boolean SetAllPIDSetPoint(int[] setpoints, double seconds) {
+	public boolean SetAllPIDSetPoint(float[] setpoints, double seconds) {
 		return device.SetAllPIDSetPoint(setpoints, seconds);
 	}
 
@@ -374,7 +374,7 @@ public class PidDeviceServerNamespace extends BowlerAbstractDeviceServerNamespac
 	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#GetPIDPosition(int)
 	 */
 	@Override
-	public int GetPIDPosition(int group) {
+	public float GetPIDPosition(int group) {
 		return device.GetPIDPosition(group);
 	}
 
@@ -382,7 +382,7 @@ public class PidDeviceServerNamespace extends BowlerAbstractDeviceServerNamespac
 	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#GetAllPIDPosition()
 	 */
 	@Override
-	public int[] GetAllPIDPosition() {
+	public float[] GetAllPIDPosition() {
 		return device.GetAllPIDPosition();
 	}
 

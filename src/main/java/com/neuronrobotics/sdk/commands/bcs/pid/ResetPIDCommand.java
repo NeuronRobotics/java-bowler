@@ -27,10 +27,10 @@ public class ResetPIDCommand extends BowlerAbstractCommand {
 	 * @param group the group
 	 * @param valueToSetCurrentTo the value to set current to
 	 */
-	public ResetPIDCommand(char group,int valueToSetCurrentTo) {
+	public ResetPIDCommand(char group,float valueToSetCurrentTo) {
 		setOpCode("rpid");
 		setMethod(BowlerMethod.POST);
 		getCallingDataStorage().add(group);
-		getCallingDataStorage().addAs32(valueToSetCurrentTo);
+		getCallingDataStorage().addAs32((int)valueToSetCurrentTo);
 	}
 }

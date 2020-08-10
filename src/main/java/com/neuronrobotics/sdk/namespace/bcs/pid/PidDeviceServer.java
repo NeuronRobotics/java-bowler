@@ -91,7 +91,7 @@ public class PidDeviceServer extends BowlerAbstractServer implements IPIDEventLi
 	 * @see com.neuronrobotics.sdk.pid.IPIDEventListener#onPIDReset(int, int)
 	 */
 	@Override
-	public void onPIDReset(int group, int currentValue) {}//used for object state not commands
+	public void onPIDReset(int group, float currentValue) {}//used for object state not commands
 
 	
 	/**

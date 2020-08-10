@@ -35,5 +35,5 @@ public interface IPIDEventListener {
 	 * @param group the group
 	 * @param currentValue the current value
 	 */
-	public void onPIDReset(int group,int currentValue);
+	public void onPIDReset(int group,float currentValue);
 }

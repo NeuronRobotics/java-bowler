@@ -84,7 +84,7 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IExtendedP
 	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#ResetPIDChannel(int, int)
 	 */
 	@Override
-	public boolean ResetPIDChannel(int group, int valueToSetCurrentTo) {
+	public boolean ResetPIDChannel(int group, float valueToSetCurrentTo) {
 		return getImplementation().ResetPIDChannel(group, valueToSetCurrentTo);
 	}
 
@@ -142,7 +142,7 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IExtendedP
 	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#SetPIDSetPoint(int, int, double)
 	 */
 	@Override
-	public boolean SetPIDSetPoint(int group, int setpoint, double seconds) {
+	public boolean SetPIDSetPoint(int group, float setpoint, double seconds) {
 		return getImplementation().SetPIDSetPoint(group, setpoint, seconds);
 	}
 
@@ -150,7 +150,7 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IExtendedP
 	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#SetAllPIDSetPoint(int[], double)
 	 */
 	@Override
-	public boolean SetAllPIDSetPoint(int[] setpoints, double seconds) {
+	public boolean SetAllPIDSetPoint(float[] setpoints, double seconds) {
 		return getImplementation().SetAllPIDSetPoint(setpoints, seconds);
 	}
 
@@ -158,7 +158,7 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IExtendedP
 	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#GetPIDPosition(int)
 	 */
 	@Override
-	public int GetPIDPosition(int group) {
+	public float GetPIDPosition(int group) {
 		return getImplementation().GetPIDPosition(group);
 	}
 
@@ -166,7 +166,7 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IExtendedP
 	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#GetAllPIDPosition()
 	 */
 	@Override
-	public int[] GetAllPIDPosition() {
+	public float[] GetAllPIDPosition() {
 		return getImplementation().GetAllPIDPosition();
 	}
 
@@ -242,7 +242,7 @@ public class GenericPIDDevice extends BowlerAbstractDevice implements IExtendedP
 	 * @param group the group
 	 * @param val the val
 	 */
-	protected void firePIDResetEvent(int group, int val) {
+	protected void firePIDResetEvent(int group, float val) {
 		getImplementation().firePIDResetEvent(group, val);
 	}
 	

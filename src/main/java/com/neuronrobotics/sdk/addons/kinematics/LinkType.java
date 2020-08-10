@@ -120,10 +120,10 @@ public enum LinkType {
  	 * @return the link type
  	 */
  	public static LinkType fromString(String name) {
-	   if (map.containsKey(name)) {
-	     return map.get(name);
+	   if (!map.containsKey(name)) {
+		   map.put(name, USERDEFINED);
 	   }
-	   throw new NoSuchElementException(name + " not found");
+	   return map.get(name);
 	 }
 	 
 

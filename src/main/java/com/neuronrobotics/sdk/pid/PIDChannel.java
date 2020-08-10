@@ -18,10 +18,10 @@ public class PIDChannel {
 	private int index;
 	
 	/** The target value. */
-	private int targetValue;
+	private float targetValue;
 	
 	/** The current cached position. */
-	private int currentCachedPosition;
+	private float currentCachedPosition;
 	
 	/** The PID event listeners. */
 	private ArrayList<IPIDEventListener> PIDEventListeners = new ArrayList<IPIDEventListener>();
@@ -44,7 +44,7 @@ public class PIDChannel {
 	 * @param seconds the seconds
 	 * @return true, if successful
 	 */
-	public boolean SetPIDSetPoint(int setpoint,double seconds){
+	public boolean SetPIDSetPoint(float setpoint,double seconds){
 		
 		return getPid().SetPIDSetPoint(index, setpoint, seconds);
 	}
@@ -78,7 +78,7 @@ public class PIDChannel {
 	 *
 	 * @return the int
 	 */
-	public int GetPIDPosition() {
+	public float GetPIDPosition() {
 		return getPid().GetPIDPosition(index);
 	}
 	
@@ -132,7 +132,7 @@ public class PIDChannel {
 		pid = p;
 		pid.addPIDEventListener(new IPIDEventListener() {
 			@Override
-			public void onPIDReset(int group, int currentValue) {
+			public void onPIDReset(int group, float currentValue) {
 				if(group==index){
 					firePIDResetEvent(index, currentValue);
 				}
@@ -214,7 +214,7 @@ public class PIDChannel {
 	 * @param group the group
 	 * @param value the value
 	 */
-	public void firePIDResetEvent(int group,int value){
+	public void firePIDResetEvent(int group,float value){
 		for (int i=0;i<PIDEventListeners.size();i++){
 			PIDEventListeners.get(i).onPIDReset(group,value);
 		}
@@ -234,7 +234,7 @@ public class PIDChannel {
 	 *
 	 * @param targetValue the new cached target value
 	 */
-	public void setCachedTargetValue(int targetValue) {
+	public void setCachedTargetValue(float targetValue) {
 		Log.info("Cacheing PID position group="+getGroup()+", setpoint="+targetValue+" ticks");
 		this.targetValue = targetValue;
 	}
@@ -244,7 +244,7 @@ public class PIDChannel {
 	 *
 	 * @return the cached target value
 	 */
-	public int getCachedTargetValue() {
+	public float getCachedTargetValue() {
 		return targetValue;
 	}
 
@@ -255,7 +255,7 @@ public class PIDChannel {
 	 *
 	 * @param currentCachedPosition the new current cached position
 	 */
-	public void setCurrentCachedPosition(int currentCachedPosition) {
+	public void setCurrentCachedPosition(float currentCachedPosition) {
 		this.currentCachedPosition = currentCachedPosition;
 	}
 
@@ -266,7 +266,7 @@ public class PIDChannel {
 	 *
 	 * @return the current cached position
 	 */
-	public int getCurrentCachedPosition() {
+	public float getCurrentCachedPosition() {
 		return currentCachedPosition;
 	}
 

@@ -5,8 +5,6 @@ import java.util.List;
 
 import javax.management.RuntimeErrorException;
 
-import com.neuronrobotics.replicator.driver.BowlerBoardDevice;
-import com.neuronrobotics.replicator.driver.NRPrinter;
 import com.neuronrobotics.sdk.bootloader.NRBootLoader;
 import com.neuronrobotics.sdk.bowlercam.device.BowlerCamDevice;
 import com.neuronrobotics.sdk.dyio.DyIO;
@@ -155,15 +153,7 @@ public class DeviceManager {
 
 			addConnection(dyio, name);
 
-		} else if (gen.hasNamespace("bcs.cartesian.*")) {
-			BowlerBoardDevice delt = new BowlerBoardDevice();
-			delt.setConnection(gen.getConnection());
-			delt.connect();
-			String name = "bowlerBoard";
-			addConnection(delt, name);
-			addConnection(new NRPrinter(delt), "cnc");
-
-		} else if (gen.hasNamespace("bcs.pid.*")) {
+		}else if (gen.hasNamespace("bcs.pid.*")) {
 			GenericPIDDevice delt = new GenericPIDDevice();
 			delt.setConnection(gen.getConnection());
 			delt.connect();

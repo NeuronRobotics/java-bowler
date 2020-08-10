@@ -24,13 +24,13 @@ public class ControlAllPIDCommand extends BowlerAbstractCommand {
 	 *
 	 * @param setpoint the setpoint
 	 */
-	public ControlAllPIDCommand( int []setpoint) {
+	public ControlAllPIDCommand( float []setpoint) {
 		setOpCode("apid");
 		setMethod(BowlerMethod.POST);
 		getCallingDataStorage().addAs32(0);
 		//getCallingDataStorage().add(setpoint.length);
 		for(int i=0;i<setpoint.length;i++){
-			getCallingDataStorage().addAs32(setpoint[i]);
+			getCallingDataStorage().addAs32((int)setpoint[i]);
 		}
 	}
 	
@@ -40,13 +40,13 @@ public class ControlAllPIDCommand extends BowlerAbstractCommand {
 	 * @param setpoint the setpoint
 	 * @param seconds the seconds
 	 */
-	public ControlAllPIDCommand(int []setpoint,double seconds) {
+	public ControlAllPIDCommand(float []setpoint,double seconds) {
 		setOpCode("apid");
 		setMethod(BowlerMethod.POST);
 		getCallingDataStorage().addAs32((int)(seconds*1000));
 		//getCallingDataStorage().add(setpoint.length);
 		for(int i=0;i<setpoint.length;i++){
-			getCallingDataStorage().addAs32(setpoint[i]);
+			getCallingDataStorage().addAs32((int)setpoint[i]);
 		}
 	}
 

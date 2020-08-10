@@ -33,7 +33,7 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	private String name="newLink";// = getTagValue("name",eElement);
 	
 	/** The type. */
-	private LinkType type=LinkType.VIRTUAL;
+	private String type="virtual";
 	
 	/** The index. */
 	private int index=0;// = Double.parseDouble(getTagValue("index",eElement));
@@ -105,7 +105,6 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	private HashMap<String , String> vitaminVariant= new HashMap<String, String>();
 	private boolean passive = false;
 	private boolean newAbs=false;
-	private String typeString;
 	/**
 	 * Instantiates a new link configuration.
 	 *
@@ -140,13 +139,13 @@ public class LinkConfiguration implements ITransformNRChangeListener {
     	try{
     		setTypeString(XmlFactory.getTagValue("type",eElement));
     		try {
-    			setType(LinkType.fromString(getTypeString()));
+    			setTypeString(getTypeString());
     		}catch(NoSuchElementException e) {
-    			setType(LinkType.VIRTUAL);
+    			setTypeString(LinkType.VIRTUAL.getName());
     			setTypeString("virtual");
     		}
     	}catch (NullPointerException e){
-    		setType(LinkType.PID);
+    		setTypeString(LinkType.PID.getName());
     	}
     	if(getTypeEnum()==LinkType.PID){
     		try{
@@ -262,7 +261,8 @@ public class LinkConfiguration implements ITransformNRChangeListener {
     	setScale((Double)args[5]);
     	setUpperLimit((Integer)args[4]);
     	setLowerLimit((Integer)args[3]);
-    	setType(LinkType.PID);
+    	setTypeString(LinkType.PID.getName());
+
     	setTotlaNumberOfLinks((Integer)args[1]);
     	fireChangeEvent();
 	}
@@ -706,26 +706,15 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 		return homingTicksPerSecond;
 	}
 	
-	/**
-	 * Sets the type.
-	 *
-	 * @param type the new type
-	 */
-	public void setType(LinkType type) {
-		if(type!=null)
-			this.type = type;
-		else
-			this.type=LinkType.VIRTUAL;
-		fireChangeEvent();
-	}
+
 	
 	/**
 	 * Gets the type.
 	 *
 	 * @return the type
 	 */
-	public LinkType getTypeEnum() {
-		return type;
+	LinkType getTypeEnum() {
+		return LinkType.fromString(type);
 	}
 	
 	/**
@@ -1005,11 +994,13 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	}
 
 	public String getTypeString() {
-		return typeString;
+		return type;
 	}
 
 	public void setTypeString(String typeString) {
-		this.typeString = typeString;
+		if(typeString==null)
+			throw new NullPointerException();
+		type=typeString;
 		fireChangeEvent();
 	}
 	
@@ -1019,13 +1010,13 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	 * @return true, if is virtual
 	 */
 	public boolean isVirtual(){
-		 switch(type){
+		 switch(getTypeEnum()){
 
 		case DUMMY:
 		case VIRTUAL:
 			return true;
 		case USERDEFINED:
-			if(typeString.toLowerCase().contains("virtual")){
+			if(getTypeString().toLowerCase().contains("virtual")){
 				return true;
 			}
 		default:
@@ -1039,7 +1030,7 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	 * @return true, if is tool
 	 */
 	public boolean isTool(){
-		 switch(type){
+		 switch(getTypeEnum()){
 		case SERVO_TOOL:
 		case STEPPER_TOOL:
 		case PID_TOOL:
@@ -1047,7 +1038,7 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 		case GCODE_HEATER_TOOL:
 			return true;
 		case USERDEFINED:
-			if(typeString.toLowerCase().contains("tool")){
+			if(getTypeString().toLowerCase().contains("tool")){
 				return true;
 			}	
 		default:
@@ -1062,7 +1053,7 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	 * @return true, if is prismatic
 	 */
 	public boolean isPrismatic(){
-		 switch(type){
+		 switch(getTypeEnum()){
 		case ANALOG_PRISMATIC:
 		case PID_PRISMATIC:
 		case SERVO_PRISMATIC:
@@ -1070,7 +1061,7 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 		case GCODE_STEPPER_PRISMATIC:
 			return true;
 		case USERDEFINED:
-			if(typeString.toLowerCase().contains("prismatic")){
+			if(getTypeString().toLowerCase().contains("prismatic")){
 				return true;
 			}
 		default:

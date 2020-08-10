@@ -65,11 +65,11 @@ public class LegacyPidNamespaceImp extends AbstractPidNamespaceImp {
 	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#ResetPIDChannel
 	 */
 	@Override
-	public boolean ResetPIDChannel(int group, int valueToSetCurrentTo) {
+	public boolean ResetPIDChannel(int group, float valueToSetCurrentTo) {
 		BowlerDatagram rst = getDevice().send(new  ResetPIDCommand((char) group,valueToSetCurrentTo));
 		if(rst==null)
 			return false;
-		int val = GetPIDPosition(group);
+		float val = GetPIDPosition(group);
 		firePIDResetEvent(group,val);
 		return true;
 	}
@@ -126,7 +126,7 @@ public class LegacyPidNamespaceImp extends AbstractPidNamespaceImp {
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#SetPIDSetPoint
 	 */
-	public boolean SetPIDSetPoint(int group,int setpoint,double seconds){
+	public boolean SetPIDSetPoint(int group,float setpoint,double seconds){
 		getPIDChannel(group).setCachedTargetValue(setpoint);
 		Log.info("Setting PID position group="+group+", setpoint="+setpoint+" ticks, time="+seconds+" sec.");
 		return getDevice().send(new  ControlPIDCommand((char) group,setpoint, seconds))!=null;
@@ -136,10 +136,10 @@ public class LegacyPidNamespaceImp extends AbstractPidNamespaceImp {
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#SetAllPIDSetPoint
 	 */
-	public boolean SetAllPIDSetPoint(int []setpoints,double seconds){
-		int[] sp;
+	public boolean SetAllPIDSetPoint(float []setpoints,double seconds){
+		float[] sp;
 		if(setpoints.length<getNumberOfChannels()) {
-			sp = new int[getNumberOfChannels()];
+			sp = new float[getNumberOfChannels()];
 			for(int i=0;i<sp.length;i++) {
 				sp[i]=getPIDChannel(i).getCachedTargetValue();
 			}
@@ -159,7 +159,7 @@ public class LegacyPidNamespaceImp extends AbstractPidNamespaceImp {
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#GetPIDPosition
 	 */
-	public int GetPIDPosition(int group) {
+	public float GetPIDPosition(int group) {
 		BowlerDatagram b = getDevice().send(new  ControlPIDCommand((char) group));
 		return ByteList.convertToInt(b.getData().getBytes(	1,//Starting index
 															4),//number of bytes
@@ -169,11 +169,11 @@ public class LegacyPidNamespaceImp extends AbstractPidNamespaceImp {
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#GetAllPIDPosition
 	 */
-	public int [] GetAllPIDPosition() {
+	public float [] GetAllPIDPosition() {
 		Log.debug("Getting All PID Positions");
 		BowlerDatagram b = getDevice().send(new ControlAllPIDCommand());
 		ByteList data = b.getData();
-		int [] back = new int[data.size()/4];
+		float [] back = new float[data.size()/4];
 		for(int i=0;i<back.length;i++) {
 			int start = i*4;
 			byte [] tmp = data.getBytes(start, 4);

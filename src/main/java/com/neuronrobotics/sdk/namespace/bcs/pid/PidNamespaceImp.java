@@ -47,7 +47,7 @@ public class PidNamespaceImp extends AbstractPidNamespaceImp implements IExtende
 	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#ResetPIDChannel(int, int)
 	 */
 	@Override
-	public boolean ResetPIDChannel(int group, int valueToSetCurrentTo) throws DeviceConnectionException {
+	public boolean ResetPIDChannel(int group, float valueToSetCurrentTo) throws DeviceConnectionException {
 		Object[] args = new Object[]{group,valueToSetCurrentTo};
 		send(BowlerMethod.POST,
 				"rpid",
@@ -120,7 +120,7 @@ public class PidNamespaceImp extends AbstractPidNamespaceImp implements IExtende
 	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#SetPIDSetPoint(int, int, double)
 	 */
 	@Override
-	public boolean SetPIDSetPoint(int group, int setpoint, double seconds) {
+	public boolean SetPIDSetPoint(int group, float setpoint, double seconds) {
 		send(BowlerMethod.POST,
 				"_pid",
 				new Object[]{	group,
@@ -133,7 +133,7 @@ public class PidNamespaceImp extends AbstractPidNamespaceImp implements IExtende
 	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#SetAllPIDSetPoint(int[], double)
 	 */
 	@Override
-	public boolean SetAllPIDSetPoint(int[] setpoints, double seconds) {
+	public boolean SetAllPIDSetPoint(float[] setpoints, double seconds) {
 		send(BowlerMethod.POST,
 				"apid",
 				new Object[]{	new Integer((int) (seconds*1000)),
@@ -145,7 +145,7 @@ public class PidNamespaceImp extends AbstractPidNamespaceImp implements IExtende
 	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#GetPIDPosition(int)
 	 */
 	@Override
-	public int GetPIDPosition(int group) {
+	public float GetPIDPosition(int group) {
 		Object [] args = send(BowlerMethod.GET,
 				"_pid",
 				new Object[]{group});
@@ -159,11 +159,11 @@ public class PidNamespaceImp extends AbstractPidNamespaceImp implements IExtende
 	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#GetAllPIDPosition()
 	 */
 	@Override
-	public int[] GetAllPIDPosition() {
+	public float[] GetAllPIDPosition() {
 		Object [] args = send(BowlerMethod.GET,
 				"apid",
 				new Object[]{});
-		int[] data=new int[((Integer[])args[0]).length];
+		float[] data=new float[((Integer[])args[0]).length];
 		for(int i=0;i<data.length;i++){
 			data[i] = ((Integer[])args[0])[i];
 		}

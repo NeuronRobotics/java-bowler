@@ -854,7 +854,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.pid.IPIDControl#ResetPIDChannel
 	 */
-	public boolean ResetPIDChannel(int group, int valueToSetCurrentTo) {
+	public boolean ResetPIDChannel(int group, float valueToSetCurrentTo) {
 		return getPid().ResetPIDChannel(group, valueToSetCurrentTo);
 	}
 	
@@ -873,25 +873,25 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.pid.IPIDControl#SetPIDSetPoint
 	 */
-	public boolean SetPIDSetPoint(int group,int setpoint, double seconds){
+	public boolean SetPIDSetPoint(int group,float setpoint, double seconds){
 		return getPid().SetPIDSetPoint(group, setpoint,seconds);
 	}
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.pid.IPIDControl#SetAllPIDSetPoint
 	 */
-	public boolean SetAllPIDSetPoint(int []setpoints, double seconds){
+	public boolean SetAllPIDSetPoint(float []setpoints, double seconds){
 		return getPid().SetAllPIDSetPoint(setpoints,seconds);
 	}
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.pid.IPIDControl#GetPIDPosition
 	 */
-	public int GetPIDPosition(int group) {
+	public float GetPIDPosition(int group) {
 		return getPid().GetPIDPosition(group);
 	}
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.pid.IPIDControl#GetAllPIDPosition
 	 */
-	public int [] GetAllPIDPosition() {
+	public float [] GetAllPIDPosition() {
 		return getPid().GetAllPIDPosition();
 	}
 	/* (non-Javadoc)
@@ -1428,8 +1428,5 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	public void flush(double seconds) {
 		flushCache(seconds);
 	}
-
-
-
 
 }

@@ -63,7 +63,7 @@ public class PidPrismaticLink extends AbstractPrismaticLink{
 	 */
 	@Override
 	public double getCurrentPosition() {
-		int val=channel.GetPIDPosition();
+		float val=channel.GetPIDPosition();
 		fireLinkListener(val);
 		return val;
 	}
@@ -76,7 +76,7 @@ public class PidPrismaticLink extends AbstractPrismaticLink{
 	public void setPIDChannel(PIDChannel channel) {
 		channel.addPIDEventListener(new IPIDEventListener() {
 			@Override
-			public void onPIDReset(int group, int currentValue) {}
+			public void onPIDReset(int group, float currentValue) {}
 			
 			@Override
 			public void onPIDLimitEvent(PIDLimitEvent e) {}

@@ -1051,7 +1051,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 * @see com.neuronrobotics.sdk.pid.IPIDEventListener#onPIDReset(int, int)
 	 */
 	@Override
-	public void onPIDReset(int group, int currentValue) {
+	public void onPIDReset(int group, float currentValue) {
 		// ignore at this level
 	}
 
@@ -1084,7 +1084,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		IPIDEventListener listen = new IPIDEventListener() {
 
 			@Override
-			public void onPIDReset(int group, int currentValue) {
+			public void onPIDReset(int group, float currentValue) {
 			}
 
 			@Override

@@ -13,6 +13,7 @@ import java.util.HashMap;
 
 import com.neuronrobotics.sdk.addons.kinematics.AbstractLink;
 import com.neuronrobotics.sdk.addons.kinematics.LinkConfiguration;
+import com.neuronrobotics.sdk.addons.kinematics.LinkType;
 import com.neuronrobotics.sdk.common.DeviceManager;
 import com.neuronrobotics.sdk.common.IFlushable;
 import com.neuronrobotics.sdk.common.Log;
@@ -23,6 +24,12 @@ import gnu.io.NRSerialPort;
 
 public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter, IFlushable{
 	
+	private static final String tool = LinkType.GCODE_STEPPER_TOOL.getName();
+
+	private static final String rot = LinkType.GCODE_STEPPER_ROTORY.getName();
+
+	private static final String pris = LinkType.GCODE_STEPPER_PRISMATIC.getName();
+
 	private NRSerialPort serial;
 	
 	private DataInputStream ins=null;
@@ -63,10 +70,17 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter, IFlu
 		AbstractLink tmp=null;
 		axis.setDeviceTheoreticalMax(Integer.MAX_VALUE);
 		axis.setDeviceTheoreticalMin(Integer.MIN_VALUE);
-		switch(axis.getTypeEnum()){
-		case GCODE_STEPPER_PRISMATIC:
-		case GCODE_STEPPER_ROTORY:
-		case GCODE_STEPPER_TOOL:
+		int test =0;
+		if(axis.getTypeString().contentEquals(pris))
+			test=1;
+		if(axis.getTypeString().contentEquals(rot))
+			test=2;
+		if(axis.getTypeString().contentEquals(tool))
+			test=3;
+		switch(test){
+		case 1:
+		case 2:
+		case 3:
 			switch(axis.getHardwareIndex()){
 			case 0:
 				gcodeAxis=("X");
@@ -87,16 +101,16 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter, IFlu
 			default:
 				break;
 		}
-		switch(axis.getTypeEnum()){
-		case GCODE_STEPPER_PRISMATIC:
+		switch(test){
+		case 1:
 			tmp = new GcodePrismatic(axis,this,gcodeAxis);
 			
 			break;
-		case GCODE_STEPPER_ROTORY:
+		case 2:
 			tmp = new GcodeRotory(axis,this,gcodeAxis);
 			
 			break;
-		case GCODE_STEPPER_TOOL:
+		case 3:
 			tmp = new GcodeRotory(axis,this,gcodeAxis);
 		
 			break;

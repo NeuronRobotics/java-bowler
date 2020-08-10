@@ -137,9 +137,9 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 	 * @see com.neuronrobotics.sdk.pid.GenericPIDDevice#ResetPIDChannel(int, int)
 	 */
 	@Override
-	public boolean ResetPIDChannel(int group, int valueToSetCurrentTo) {
+	public boolean ResetPIDChannel(int group, float valueToSetCurrentTo) {
 		driveThreads.get(group).ResetEncoder(valueToSetCurrentTo);
-		int val = GetPIDPosition(group);
+		float val = GetPIDPosition(group);
 		firePIDResetEvent(group,val);
 		return true;
 	}
@@ -149,7 +149,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 	 * @see com.neuronrobotics.sdk.pid.GenericPIDDevice#SetPIDSetPoint(int, int, double)
 	 */
 	@Override
-	public boolean SetPIDSetPoint(int group, int setpoint, double seconds) {
+	public boolean SetPIDSetPoint(int group, float setpoint, double seconds) {
 		Log.info("Virtual setpoint, group="+group+" setpoint="+setpoint);
 		driveThreads.get(group).SetPIDSetPoint(setpoint, seconds);
 		return true;
@@ -179,7 +179,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 	 */
 	@Override
 	public void flushPIDChannels(double time) {
-		int [] data = new int[getChannels().size()];
+		float [] data = new float[getChannels().size()];
 		for(int i=0;i<data.length;i++){
 			data[i]=getPIDChannel(i).getCachedTargetValue();
 		}
@@ -192,7 +192,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 	 * @see com.neuronrobotics.sdk.pid.GenericPIDDevice#SetAllPIDSetPoint(int[], double)
 	 */
 	@Override
-	public boolean SetAllPIDSetPoint(int[] setpoints, double seconds) {
+	public boolean SetAllPIDSetPoint(float[] setpoints, double seconds) {
 		sync.setPause(true);
 		for(int i=0;i<setpoints.length;i++){
 			SetPIDSetPoint(i,  setpoints[i], seconds);
@@ -205,7 +205,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 	 * @see com.neuronrobotics.sdk.pid.GenericPIDDevice#GetPIDPosition(int)
 	 */
 	@Override
-	public int GetPIDPosition(int group) {
+	public float GetPIDPosition(int group) {
 		// TODO Auto-generated method stub
 		return driveThreads.get(group).getPosition();
 	}
@@ -222,9 +222,9 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 	 * @see com.neuronrobotics.sdk.pid.GenericPIDDevice#GetAllPIDPosition()
 	 */
 	@Override
-	public int[] GetAllPIDPosition() {
+	public float[] GetAllPIDPosition() {
 		//This is the trigger to populate the number of PID channels
-		int [] back = new int[numChannels];
+		float [] back = new float[numChannels];
 
 		setChannels(  new ArrayList<PIDChannel>());
 		//lastPacketTime =  new long[back.length];
