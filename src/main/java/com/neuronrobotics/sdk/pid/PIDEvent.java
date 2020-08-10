@@ -13,7 +13,7 @@ public class PIDEvent {
 	private int channel;
 	
 	/** The ticks. */
-	private int ticks; 
+	private float ticks; 
 	
 	/** The time stamp. */
 	private long timeStamp;
@@ -29,7 +29,7 @@ public class PIDEvent {
 	 * @param time the time
 	 * @param velocity the velocity
 	 */
-	public PIDEvent(int chan,int tick,long time,int velocity){
+	public PIDEvent(int chan,float tick,long time,int velocity){
 		setGroup(chan);
 		setValue(tick);
 		setTimeStamp(time);
@@ -74,7 +74,7 @@ public class PIDEvent {
 	 *
 	 * @param ticks the new value
 	 */
-	public void setValue(int ticks) {
+	public void setValue(float ticks) {
 		this.ticks = ticks;
 	}
 	
@@ -83,7 +83,7 @@ public class PIDEvent {
 	 *
 	 * @return the value
 	 */
-	public int getValue() {
+	public float getValue() {
 		return ticks;
 	}
 	

@@ -150,7 +150,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 	 */
 	@Override
 	public boolean SetPIDSetPoint(int group, float setpoint, double seconds) {
-		Log.info("Virtual setpoint, group="+group+" setpoint="+setpoint);
+		//new RuntimeException("Virtual setpoint, group="+group+" setpoint="+setpoint).printStackTrace();;
 		driveThreads.get(group).SetPIDSetPoint(setpoint, seconds);
 		return true;
 	}
@@ -286,7 +286,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 				for(LinearInterpolationEngine dr : driveThreads){
 					if(dr.update()){
 						try{
-							firePIDEvent(new PIDEvent(dr.getChan(), (int)dr.getTicks(), time,0));
+							firePIDEvent(new PIDEvent(dr.getChan(), (float)dr.getTicks(), time,0));
 						}catch (NullPointerException ex){
 							//initialization issue, let it work itself out
 						}catch (Exception ex){

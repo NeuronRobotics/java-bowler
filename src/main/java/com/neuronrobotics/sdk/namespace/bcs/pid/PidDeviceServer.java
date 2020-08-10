@@ -53,7 +53,7 @@ public class PidDeviceServer extends BowlerAbstractServer implements IPIDEventLi
 				"_pid", 
 				new Object[]{
 					new Byte((byte) e.getGroup()),
-					new Integer(e.getValue()),
+					new Integer((int)e.getValue()),
 					new Integer((int) e.getTimeStamp()),
 					new Integer(e.getVelocity())
 				}, 
