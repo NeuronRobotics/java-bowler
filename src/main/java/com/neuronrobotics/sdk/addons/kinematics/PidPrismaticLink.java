@@ -38,7 +38,7 @@ public class PidPrismaticLink extends AbstractPrismaticLink{
 	 */
 	@Override
 	public void cacheTargetValueDevice() {
-		channel.setCachedTargetValue((int)getTargetValue());
+		channel.setCachedTargetValue((float)getTargetValue());
 	}
 
 	/* (non-Javadoc)

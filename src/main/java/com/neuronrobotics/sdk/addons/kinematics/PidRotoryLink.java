@@ -38,7 +38,7 @@ public class PidRotoryLink extends AbstractRotoryLink{
 	 */
 	@Override
 	public void cacheTargetValueDevice() {
-		channel.setCachedTargetValue((int)getTargetValue());
+		channel.setCachedTargetValue((float)getTargetValue());
 	}
 
 	/* (non-Javadoc)
