@@ -19,7 +19,6 @@ import com.neuronrobotics.sdk.common.Log;
 //import org.w3c.dom.NodeList;
 import com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace;
 import com.neuronrobotics.sdk.pid.PIDConfiguration;
-import com.sun.org.apache.bcel.internal.generic.NEWARRAY;
 
 
 
