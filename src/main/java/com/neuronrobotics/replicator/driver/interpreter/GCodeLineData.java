@@ -30,7 +30,7 @@ public class GCodeLineData {
 	}
 	
 	/** 
-	 * Set the value for register <tt>c</tt> in the line to <tt>val</tt>.
+	 * Set the value for register <code>c</code> in the line to <code>val</code>.
 	 * @param c the register letter. May be upper or lower case.
 	 * @param val the new value.
 	 */
@@ -40,9 +40,9 @@ public class GCodeLineData {
 	}
 	
 	/**
-	 * Retrieve the value for register <tt>c</tt>.
+	 * Retrieve the value for register <code>c</code>.
 	 * @param c the register letter. <em>must</em> be upper case.
-	 * @return the value of the register for <tt>c</tt>
+	 * @return the value of the register for <code>c</code>
 	 */
 	public double getWord(char c) {
 		return lineValues[c-'A'];
@@ -51,10 +51,10 @@ public class GCodeLineData {
 
 	/**
 	 *  
-	 * Retrieve an array of values for the registers named in <tt>words</tt>.
+	 * Retrieve an array of values for the registers named in <code>words</code>.
 	 *
 	 * @param words the words
-	 * @return the values of the registers in <tt>words</tt>
+	 * @return the values of the registers in <code>words</code>
 	 */
 	public double[] getWords(char words[]) {
 		double[] d=new double[words.length];
