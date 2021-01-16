@@ -58,7 +58,7 @@ public abstract class  NonBowlerDevice extends BowlerAbstractDevice {
 	public void disconnect(){
 		fireDisconnectEvent();
 		disconnectDeviceImp();
-		
+		connectedYet = false;
 	}
 	
 	/* (non-Javadoc)
