@@ -2,8 +2,6 @@ package com.neuronrobotics.sdk.addons.kinematics;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.neuronrobotics.imageprovider.AbstractImageProvider;
-import com.neuronrobotics.imageprovider.VirtualCameraFactory;
 import com.neuronrobotics.sdk.addons.kinematics.gcodebridge.GcodeDevice;
 import com.neuronrobotics.sdk.addons.kinematics.gcodebridge.GcodePrismatic;
 import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
@@ -221,15 +219,6 @@ public class LinkFactory {
 			}
 			tmp=new PidRotoryLink(	virtual.getPIDChannel(c.getHardwareIndex()),
 					c,true);
-			break;
-		case CAMERA:
-			String myVirtualDevName1=c.getDeviceScriptingName();
-			AbstractImageProvider img = (AbstractImageProvider)DeviceManager.getSpecificDevice(AbstractImageProvider.class, myVirtualDevName1);
-			if(img==null){
-				img= VirtualCameraFactory.getVirtualCamera();
-				DeviceManager.addConnection(img, myVirtualDevName1);
-			}
-			tmp=new CameraLink(c,img);
 			break;
 		case GCODE_HEATER_TOOL:
 			if(getGCODE(c)!=null){

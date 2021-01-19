@@ -110,10 +110,6 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	
 	private Runnable renderWrangler=null;
 
-	static {
-		JavaFXInitializer.go();
-	}
-
 	/**
 	 * Gets the root listener.
 	 *

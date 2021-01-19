@@ -48,10 +48,7 @@ public  class DHChain {
 	/** The factory. */
 	private LinkFactory factory;
 
-	static{
-		JavaFXInitializer.go();
-	}
-	
+
 	/**
 	 * Instantiates a new DH chain.
 	 *
