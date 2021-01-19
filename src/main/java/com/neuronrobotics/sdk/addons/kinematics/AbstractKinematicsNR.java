@@ -5,12 +5,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 //import java.util.concurrent.CountDownLatch;
 
-import javafx.application.Platform;
-//import javafx.embed.swing.JFXPanel;
-import javafx.scene.transform.Affine;
-import javafx.stage.Stage;
-
-import javax.management.RuntimeErrorException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -99,7 +93,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	private DHChain dhParametersChain = null;
 
 	/** The root. */
-	private Affine root;
+	private Object root;
 
 	/* The device */
 	/** The factory. */
@@ -113,6 +107,8 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 * hardware
 	 */
 	private IMU imu = new IMU();
+	
+	private Runnable renderWrangler=null;
 
 	static {
 		JavaFXInitializer.go();
@@ -123,9 +119,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 *
 	 * @return the root listener
 	 */
-	public Affine getRootListener() {
-		if (root == null)
-			root = new Affine();
+	public Object getRootListener() {
 		return root;
 	}
 
@@ -134,7 +128,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 *
 	 * @param listener the new root listener
 	 */
-	void setRootListener(Affine listener) {
+	public void setRootListener(Object listener) {
 		this.root = listener;
 	}
 
@@ -837,16 +831,17 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		for (IRegistrationListenerNR r : regListeners) {
 			r.onBaseToFiducialUpdate(this, baseToFiducial);
 		}
-		Platform.runLater(new Runnable() {
-
-			@Override
-			public void run() {
-				
-				TransformNR forwardOffset = forwardOffset(new TransformNR());
-				if(forwardOffset!=null && getRootListener()!=null)
-					TransformFactory.nrToAffine(forwardOffset, getRootListener());
-			}
-		});
+//		Platform.runLater(new Runnable() {
+//
+//			@Override
+//			public void run() {
+//				
+//				TransformNR forwardOffset = forwardOffset(new TransformNR());
+//				if(forwardOffset!=null && getRootListener()!=null)
+//					TransformFactory.nrToObject(forwardOffset, getRootListener());
+//			}
+//		});
+		runRenderWrangler();
 	}
 
 	/**
@@ -885,14 +880,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 				r.onFiducialToGlobalUpdate(this, frameToBase);
 			}
 
-			TransformNR tf = forwardOffset(new TransformNR());
-
-			Platform.runLater(new Runnable() {
-				@Override
-				public void run() {
-					TransformFactory.nrToAffine(tf, getRootListener());
-				}
-			});
+			runRenderWrangler();
 		//}
 	}
 
@@ -1541,6 +1529,19 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		if(currentJointSpaceTarget==null)
 			currentJointSpaceTarget=new double[getNumberOfLinks()];
 		return currentJointSpaceTarget;
+	}
+
+	public void runRenderWrangler() {
+		if(renderWrangler!=null)
+			try {
+				renderWrangler.run();
+			}catch(Throwable t) {
+				t.printStackTrace();
+			}
+	}
+
+	public void setRenderWrangler(Runnable renderWrangler) {
+		this.renderWrangler = renderWrangler;
 	}
 
 //	public void setCurrentJointSpaceTarget(double[] currentJointSpaceTarget) {

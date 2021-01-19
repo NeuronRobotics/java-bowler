@@ -2,16 +2,11 @@ package com.neuronrobotics.sdk.addons.kinematics;
 
 import java.util.ArrayList;
 
-import javax.xml.transform.TransformerFactory;
-
-import javafx.application.Platform;
-import javafx.scene.transform.Affine;
 
 import org.w3c.dom.Element;
 
 import Jama.Matrix;
 
-import com.neuronrobotics.sdk.addons.kinematics.TransformFactory;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
 
@@ -58,10 +53,10 @@ public class DHLink {
 	private Matrix rotZ_J;
 	
 	/** The listener. */
-	private Affine listener=null;
+	private Object listener=null;
 	
 	/** The root. */
-	private Affine root=null;
+	private Object root=null;
 	
 	/** The type. */
 	private DhLinkType type = DhLinkType.ROTORY;
@@ -504,7 +499,7 @@ public class DHLink {
 	 *
 	 * @return the listener
 	 */
-	public Affine getListener() {
+	public Object getListener() {
 		return listener;
 	}
 
@@ -513,7 +508,7 @@ public class DHLink {
 	 *
 	 * @param listener the new listener
 	 */
-	void setListener(Affine listener) {
+	public void setListener(Object listener) {
 		this.listener = listener;
 	}
 	
@@ -522,7 +517,7 @@ public class DHLink {
 	 *
 	 * @return the root listener
 	 */
-	public Affine getRootListener() {
+	public Object getRootListener() {
 		return root;
 	}
 
@@ -531,7 +526,7 @@ public class DHLink {
 	 *
 	 * @param listener the new root listener
 	 */
-	void setRootListener(Affine listener) {
+	void setRootListener(Object listener) {
 		this.root = listener;
 	}
 	

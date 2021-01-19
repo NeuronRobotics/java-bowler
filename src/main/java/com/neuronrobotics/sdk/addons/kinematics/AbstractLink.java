@@ -2,7 +2,6 @@ package com.neuronrobotics.sdk.addons.kinematics;
 
 import java.util.ArrayList;
 
-import javafx.scene.transform.Affine;
 
 import com.neuronrobotics.sdk.addons.kinematics.gcodebridge.IGcodeExecuter;
 import com.neuronrobotics.sdk.addons.kinematics.imu.IMU;
@@ -35,7 +34,7 @@ public abstract class AbstractLink implements  IFlushable{
 	/** The use limits. */
 	private boolean useLimits=true;
 
-	private Affine linksLocation=new Affine();
+	private Object linksLocation=null;
 	
 	/**
 	 * The object for communicating IMU information and registering it with the hardware
@@ -594,11 +593,11 @@ public abstract class AbstractLink implements  IFlushable{
 		links.clear();
 	}
 
-	public void setGlobalPositionListener(Affine affine) {
-		this.linksLocation = affine;
+	public void setGlobalPositionListener(Object Object) {
+		this.linksLocation = Object;
 	}
 
-	public Affine getGlobalPositionListener() {
+	public Object getGlobalPositionListener() {
 		return linksLocation;
 	}
 	public LinkFactory getSlaveFactory() {

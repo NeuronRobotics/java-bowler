@@ -8,11 +8,8 @@ import java.util.ArrayList;
 
 import org.w3c.dom.Element;
 
-import javafx.application.Platform;
-import javafx.scene.transform.Affine;
 import Jama.Matrix;
 
-import com.neuronrobotics.sdk.addons.kinematics.TransformFactory;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
 import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
@@ -29,10 +26,10 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	private DHChain chain = null;
 
 	/** The links listeners. */
-	private ArrayList<Affine> linksListeners = new ArrayList<Affine>();
+	private ArrayList<Object> linksListeners = new ArrayList<Object>();
 
 	/** The current target. */
-	private Affine currentTarget = new Affine();
+	private Object currentTarget = new Object();
 
 	/** The disconnecting. */
 	boolean disconnecting = false;
@@ -397,7 +394,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 		this.chain = chain;
 		ArrayList<DHLink> dhLinks = chain.getLinks();
 		for (int i = linksListeners.size(); i < dhLinks.size(); i++) {
-			linksListeners.add(new Affine());
+			linksListeners.add(new Object());
 		}
 		LinkFactory lf = getFactory();
 		configs = lf.getLinkConfigurations();
@@ -531,7 +528,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	@Override
 	public void onTargetTaskSpaceUpdate(AbstractKinematicsNR source, TransformNR pose) {
 		// TODO Auto-generated method stub
-		// TransformFactory.getTransform(pose, getCurrentTargetAffine());
+		// TransformFactory.getTransform(pose, getCurrentTargetObject());
 	}
 
 	/**
@@ -554,11 +551,11 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	}
 
 	/**
-	 * Gets the current target affine.
+	 * Gets the current target Object.
 	 *
-	 * @return the current target affine
+	 * @return the current target Object
 	 */
-	public Affine getCurrentTargetAffine() {
+	public Object getCurrentTargetObject() {
 		return currentTarget;
 	}
 
@@ -609,22 +606,23 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 		//synchronized (DHParameterKinematics.class) {
 			try {
 				ArrayList<TransformNR> ll = getChain().getChain(getCurrentJointSpaceVector());
-				for (int i = 0; i < ll.size(); i++) {
-					ArrayList<TransformNR> linkPos = ll;
-					int index = i;
-					Affine af = getChain().getLinks().get(index).getListener();
-					TransformNR nr = linkPos.get(index);
-					Platform.runLater(() -> {
-						if (nr == null || af == null) {
-							return;
-						}
-						try {
-							TransformFactory.nrToAffine(nr, af);
-						} catch (Exception ex) {
-							// ex.printStackTrace();
-						}
-					});
-				}
+//				for (int i = 0; i < ll.size(); i++) {
+//					ArrayList<TransformNR> linkPos = ll;
+//					int index = i;
+//					Object af = getChain().getLinks().get(index).getListener();
+//					TransformNR nr = linkPos.get(index);
+//					Platform.runLater(() -> {
+//						if (nr == null || af == null) {
+//							return;
+//						}
+//						try {
+//							TransformFactory.nrToObject(nr, af);
+//						} catch (Exception ex) {
+//							// ex.printStackTrace();
+//						}
+//					});
+//				}
+				runRenderWrangler();
 				return ll;
 			} catch (Exception ex) {
 				// ex.printStackTrace();
@@ -707,7 +705,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	public TransformNR linkCoM(int linkIndex) {
 		return linkCoM(getCurrentJointSpaceVector()[linkIndex],linkIndex);
 	}
-	public Affine getLinkAffineManipulator(int index) {
+	public Object getLinkObjectManipulator(int index) {
 		 return getChain().getLinks().get(index).getListener();
 	}
 	/**
@@ -789,7 +787,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	public DHLink getDhLink(int i) {
 		return getDhChain().getLinks().get(i);
 	}
-	public Affine getListener(int i) {
+	public Object getListener(int i) {
 		return getDhChain().getLinks().get(i).getListener();
 	}
 	/**
@@ -803,19 +801,6 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	}
 	
 	public void refreshPose() {
-		if(this.checkTaskSpaceTransform(this.getCurrentPoseTarget())) {
-			try {
-				this.setDesiredTaskSpaceTransform(this.getCurrentPoseTarget(), 0);
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-		}else {
-			this.getCurrentTaskSpaceTransform();
-			// this calls the render update function attachec as the on jointspace
-			// update
-			double[] joint = this.getCurrentJointSpaceVector();
-			this.getChain().getChain(joint);
-			Platform.runLater(() -> this.onJointSpaceUpdate(this, joint));
-		}
+		runRenderWrangler();
 	}
 }

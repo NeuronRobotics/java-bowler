@@ -10,10 +10,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
-import javafx.scene.image.Image;
-import javafx.scene.image.PixelWriter;
-import javafx.scene.image.WritableImage;
-import javafx.scene.transform.Affine;
 
 import javax.imageio.ImageIO;
 
@@ -29,7 +25,7 @@ import com.neuronrobotics.sdk.common.NonBowlerDevice;
  */
 public abstract class AbstractImageProvider extends NonBowlerDevice {
 	private BufferedImage image = null;
-	private Affine globalPos;
+	private javafx.scene.transform.Affine globalPos;
 	/**
 	 * This method should capture a new image and load it into the Mat datatype
 	 * @param imageData
@@ -138,7 +134,7 @@ public abstract class AbstractImageProvider extends NonBowlerDevice {
 	 * @param bf
 	 * @return conversion to javafx i mage
 	 */
-	public static Image getJfxImage(BufferedImage bf) {
+	public static javafx.scene.image.Image getJfxImage(BufferedImage bf) {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 	    try {
 	        ImageIO.write( bf, "png", out);
@@ -152,28 +148,28 @@ public abstract class AbstractImageProvider extends NonBowlerDevice {
 	/**
 	 * @return image as Javafx
 	 */ 
-	public Image getLatestJfxImage() {
+	public javafx.scene.image.Image getLatestJfxImage() {
 		return getJfxImage(getLatestImage());
 	}
 
 	/**
 	 * @param globalPos
 	 */
-	public void setGlobalPositionListener(Affine globalPos) {
+	public void setGlobalPositionListener(javafx.scene.transform.Affine globalPos) {
 		this.setGlobalPos(globalPos);
 	}
 
 	/**
 	 * @return global positioning of the image
 	 */
-	public Affine getGlobalPos() {
+	public javafx.scene.transform.Affine getGlobalPos() {
 		return globalPos;
 	}
 
 	/**
 	 * @param globalPos
 	 */
-	public void setGlobalPos(Affine globalPos) {
+	public void setGlobalPos(javafx.scene.transform.Affine globalPos) {
 		this.globalPos = globalPos;
 		
 	}

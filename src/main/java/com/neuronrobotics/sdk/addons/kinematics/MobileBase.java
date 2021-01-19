@@ -736,21 +736,21 @@ public class MobileBase extends AbstractKinematicsNR {
 	 * Update positions.
 	 */
 	public void updatePositions() {
-		for (DHParameterKinematics kin : getAppendages()) {
-			// System.err.println("Updating arm: "+kin.getScriptingName());
-			kin.updateCadLocations();
-		}
-		for (DHParameterKinematics kin : getDrivable()) {
-			// System.err.println("Updating getDrivable:
-			// "+kin.getScriptingName());
-			kin.updateCadLocations();
-		}
-		for (DHParameterKinematics kin : getSteerable()) {
-			// System.err.println("Updating getSteerable:
-			// "+kin.getScriptingName());
-			kin.updateCadLocations();
-		}
-
+//		for (DHParameterKinematics kin : getAppendages()) {
+//			// System.err.println("Updating arm: "+kin.getScriptingName());
+//			kin.updateCadLocations();
+//		}
+//		for (DHParameterKinematics kin : getDrivable()) {
+//			// System.err.println("Updating getDrivable:
+//			// "+kin.getScriptingName());
+//			kin.updateCadLocations();
+//		}
+//		for (DHParameterKinematics kin : getSteerable()) {
+//			// System.err.println("Updating getSteerable:
+//			// "+kin.getScriptingName());
+//			kin.updateCadLocations();
+//		}
+		runRenderWrangler();
 	}
 
 	/**
