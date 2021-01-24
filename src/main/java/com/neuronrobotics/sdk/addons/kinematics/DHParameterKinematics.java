@@ -393,17 +393,17 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	public void setChain(DHChain chain) {
 		this.chain = chain;
 		ArrayList<DHLink> dhLinks = chain.getLinks();
-		for (int i = linksListeners.size(); i < dhLinks.size(); i++) {
-			linksListeners.add(new Object());
-		}
+//		for (int i = linksListeners.size(); i < dhLinks.size(); i++) {
+//			linksListeners.add(new Object());
+//		}
 		LinkFactory lf = getFactory();
 		configs = lf.getLinkConfigurations();
 		for (int i = 0; i < dhLinks.size(); i++) {
-			dhLinks.get(i).setListener(linksListeners.get(i));
+			//dhLinks.get(i).setListener(linksListeners.get(i));
 			dhLinks.get(i).setRootListener(getRootListener());
 			// This mapps together the position of the links in the kinematics and the link
 			// actions themselves (used for cameras and tools)
-			lf.getLink(configs.get(i)).setGlobalPositionListener(linksListeners.get(i));
+			//lf.getLink(configs.get(i)).setGlobalPositionListener(linksListeners.get(i));
 			if (getLinkConfiguration(i).isTool()) {
 				dhLinks.get(i).setLinkType(DhLinkType.TOOL);
 			} else if (getLinkConfiguration(i).isPrismatic())

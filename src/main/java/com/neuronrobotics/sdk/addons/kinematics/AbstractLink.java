@@ -11,6 +11,8 @@ import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 import com.neuronrobotics.sdk.pid.PIDLimitEventType;
 
+import javafx.scene.transform.Affine;
+
 // TODO: Auto-generated Javadoc
 /**
  * The Class AbstractLink.
@@ -594,6 +596,11 @@ public abstract class AbstractLink implements  IFlushable{
 	}
 
 	public void setGlobalPositionListener(Object Object) {
+//		if(!Affine.class.isInstance(Object)) {
+//			RuntimeException runtimeException = new RuntimeException("Must be an Affine");
+//			runtimeException.printStackTrace();
+//			throw runtimeException;
+//		}
 		this.linksLocation = Object;
 	}
 
