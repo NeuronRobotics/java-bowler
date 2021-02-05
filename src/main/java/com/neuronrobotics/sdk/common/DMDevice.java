@@ -9,7 +9,9 @@ public class DMDevice extends NonBowlerDevice {
 	Method methodConnect = null;
 	Method methodDisconnect = null;
 	boolean hasGetName = false;
+	boolean hasIsAvailible=false;
 	Method methodGetName = null;
+	Method isAvaibleMeth=null;
 
 	public DMDevice(Object o) throws NoSuchMethodException, SecurityException {
 		if(!wrappable(o))
@@ -18,6 +20,7 @@ public class DMDevice extends NonBowlerDevice {
 		methodConnect = getWrapped().getClass().getMethod("connect", null);
 		methodDisconnect = getWrapped().getClass().getMethod("disconnect", null);
 		hasGetName = methodExists(getWrapped(), "getName");
+		hasIsAvailible = methodExists(getWrapped(), "isAvailable");
 		methodGetName = null;
 	}
 
@@ -59,6 +62,30 @@ public class DMDevice extends NonBowlerDevice {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	/**
+	 * Determines if the device is available.
+	 *
+	 * @return true if the device is avaiable, false if it is not
+	 * @throws InvalidConnectionException the invalid connection exception
+	 */
+	@Override
+	public boolean isAvailable() throws InvalidConnectionException{
+		if(hasIsAvailible) {
+			if(isAvaibleMeth==null) {
+				try {
+					isAvaibleMeth = getWrapped().getClass().getMethod("isAvailable", null);	
+				} catch (Exception e) {
+					//true
+				}
+			}
+			try {
+				return (boolean) isAvaibleMeth.invoke(getWrapped(), null);
+			} catch (Exception e) {
+				//true
+			}
+		}
+		return true;
 	}
 
 	@Override
