@@ -109,9 +109,9 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 		if(!getDisconnectListeners().contains(l)) {
 			getDisconnectListeners().add(l);
 		}
-		System.err.println(getScriptingName()+" Adding listener "+l.getClass());
-		l.trace.printStackTrace();
-		new Exception().printStackTrace();
+//		System.err.println(getScriptingName()+" Adding listener "+l.getClass());
+//		l.trace.printStackTrace();
+//		new Exception().printStackTrace();
 		BowlerAbstractDevice bad = this;
 		if(connection !=null)
 		connection.addConnectionEventListener(new IConnectionEventListener() {

@@ -16,7 +16,7 @@ import java.io.StringWriter;
  */
 public interface IDeviceConnectionEventListener {
 	
-	Exception trace = new Exception();
+	//Exception trace = new Exception();
 	/**
 	 * Called on the event of a connection object disconnect.
 	 *
