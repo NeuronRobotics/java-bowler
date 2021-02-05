@@ -1,5 +1,8 @@
 package com.neuronrobotics.sdk.common;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 // TODO: Auto-generated Javadoc
 /**
  * The listener interface for receiving IDeviceConnectionEvent events.
@@ -13,6 +16,7 @@ package com.neuronrobotics.sdk.common;
  */
 public interface IDeviceConnectionEventListener {
 	
+	Exception trace = new Exception();
 	/**
 	 * Called on the event of a connection object disconnect.
 	 *

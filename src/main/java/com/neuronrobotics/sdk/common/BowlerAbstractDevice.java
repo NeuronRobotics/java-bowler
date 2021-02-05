@@ -61,7 +61,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	private MACAddress address = new MACAddress(MACAddress.BROADCAST);
 	
 	/** The disconnect listeners. */
-	private static ArrayList<IDeviceConnectionEventListener> disconnectListeners = new ArrayList<IDeviceConnectionEventListener> ();
+	private ArrayList<IDeviceConnectionEventListener> disconnectListeners = new ArrayList<IDeviceConnectionEventListener> ();
 	
 	/** The scripting name. */
 	private String scriptingName = "device";
@@ -85,7 +85,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 		ArrayList<IDeviceConnectionEventListener> disconnectListeners2 = getDisconnectListeners();
 		for (int i = 0; i < disconnectListeners2.size(); i++) {
 			IDeviceConnectionEventListener l = disconnectListeners2.get(i);
-			l.onDisconnect(getDevice());
+			l.onDisconnect(this);
 		}
 	}
 	
@@ -96,7 +96,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 		ArrayList<IDeviceConnectionEventListener> disconnectListeners2 = getDisconnectListeners();
 		for (int i = 0; i < disconnectListeners2.size(); i++) {
 			IDeviceConnectionEventListener l = disconnectListeners2.get(i);
-			l.onConnect(getDevice());
+			l.onConnect(this);
 		}
 	}
 	
@@ -109,19 +109,23 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 		if(!getDisconnectListeners().contains(l)) {
 			getDisconnectListeners().add(l);
 		}
+		System.err.println(getScriptingName()+" Adding listener "+l.getClass());
+		l.trace.printStackTrace();
+		new Exception().printStackTrace();
+		BowlerAbstractDevice bad = this;
 		if(connection !=null)
 		connection.addConnectionEventListener(new IConnectionEventListener() {
 			
 			@Override
 			public void onDisconnect(BowlerAbstractConnection source) {
 				
-				l.onDisconnect(getDevice());
+				l.onDisconnect(bad);
 			}
 			
 			@Override
 			public void onConnect(BowlerAbstractConnection source) {
 				// TODO Auto-generated method stub
-				l.onConnect(getDevice());
+				l.onConnect(bad);
 			}
 		});
 	}
@@ -138,14 +142,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 
 	}
 	
-	/**
-	 * Gets the device.
-	 *
-	 * @return the device
-	 */
-	private BowlerAbstractDevice getDevice(){
-		return this;
-	}
+
 	
 	/**
 	 * Sets the connection.
@@ -157,19 +154,20 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 		if(connection == null) {
 			throw new NullPointerException("Can not use a NULL connection.");
 		}
+		BowlerAbstractDevice bad = this;
 		for(int i=0;i<getDisconnectListeners().size();i++) {
 			final int index = i;
 			connection.addConnectionEventListener(new IConnectionEventListener() {
 				
 				@Override
 				public void onDisconnect(BowlerAbstractConnection source) {
-					getDisconnectListeners().get(index).onDisconnect(getDevice());
+					getDisconnectListeners().get(index).onDisconnect(bad);
 				}
 				
 				@Override
 				public void onConnect(BowlerAbstractConnection source) {
 					// TODO Auto-generated method stub
-					getDisconnectListeners().get(index).onConnect(getDevice());
+					getDisconnectListeners().get(index).onConnect(bad);
 				}
 			});
 		}
@@ -506,18 +504,9 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	 *
 	 * @return the disconnect listeners
 	 */
-	public static ArrayList<IDeviceConnectionEventListener> getDisconnectListeners() {
+	public ArrayList<IDeviceConnectionEventListener> getDisconnectListeners() {
 		return disconnectListeners;
 	}
 
-
-	/**
-	 * Sets the disconnect listeners.
-	 *
-	 * @param disconnectListeners the new disconnect listeners
-	 */
-	public static void setDisconnectListeners(ArrayList<IDeviceConnectionEventListener> disconnectListeners) {
-		BowlerAbstractDevice.disconnectListeners = disconnectListeners;
-	}
 	
 }
