@@ -399,7 +399,7 @@ public abstract class AbstractLink implements  IFlushable{
 				+" \nUpper Bound="+ub+" (engineering units) Device Units="+getUpperLimit()
 				+ "\nLower Bound="+lb+" (engineering units) Device Units="+getLowerLimit();
 		if(flip?belowLower:aboveUpper){
-			this.targetValue = getUpperLimit();
+			this.targetValue = flip?getLowerLimit():getUpperLimit();
 			for(LinkConfiguration c:slaveLinks){
 				//generate the links
 				AbstractLink link = getSlaveFactory().getLink(c);
@@ -417,7 +417,7 @@ public abstract class AbstractLink implements  IFlushable{
 			if(isUseLimits())throw new RuntimeException("Joint hit Upper software bound\n"+execpt);
 		}
 		if(flip?aboveUpper:belowLower) {
-			this.targetValue =getLowerLimit();
+			this.targetValue =flip?getUpperLimit():getLowerLimit();
 			for(LinkConfiguration c:slaveLinks){
 				//generate the links
 				AbstractLink link = getSlaveFactory().getLink(c);
