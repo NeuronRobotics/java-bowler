@@ -57,13 +57,70 @@ public class MobileBase extends AbstractKinematicsNR {
 	private TransformNR IMUFromCentroid = new TransformNR();
 
 	private HashMap<String, ParallelGroup> parallelGroups = new HashMap<String, ParallelGroup>();
-
+	private ICalcLimbHomeProvider homeProvider=null;
 	/**
 	 * Instantiates a new mobile base.
 	 */
 	public MobileBase() {
 	}// used for building new bases live
 
+	
+	/**
+	 * Calc home.
+	 *
+	 * @return the transform nr
+	 */
+	public TransformNR calcHome(DHParameterKinematics limb) {
+		try {
+			return homeProvider.calcHome(limb);
+		}catch(Throwable t) {}
+		return limb.calcHome();
+	}
+	
+	public HashMap<DHParameterKinematics, TransformNR> getTipLocations() {
+
+		HashMap<DHParameterKinematics, TransformNR> tipList = new HashMap<DHParameterKinematics, TransformNR>();
+		for (DHParameterKinematics leg : legs) {
+			// Read the location of the foot before moving the body
+			TransformNR home = calcHome(leg);
+			tipList.put(leg, home);
+		}
+		return tipList;
+	}
+	public boolean pose(TransformNR newAbsolutePose) throws Exception {
+		HashMap<DHParameterKinematics, TransformNR> tipLocations = getTipLocations();
+		
+		return pose(newAbsolutePose,getIMUFromCentroid(),tipLocations);
+	}
+	public boolean poseAroundPoint(TransformNR newAbsolutePose,TransformNR around) throws Exception {
+		HashMap<DHParameterKinematics, TransformNR> tipLocations = getTipLocations();
+		
+		return pose(newAbsolutePose,around,tipLocations);
+	}
+	public boolean pose(TransformNR newAbsolutePose,TransformNR around, HashMap<DHParameterKinematics, TransformNR> tipList)
+			throws Exception {
+		TransformNR newPoseTransformedToIMUCenter = newAbsolutePose.times(around.inverse());
+		TransformNR newPoseAdjustedBacktoRobotCenterFrame = around.times(newPoseTransformedToIMUCenter);
+		TransformNR previous =getFiducialToGlobalTransform();
+		// Perform a pose opperation
+		setGlobalToFiducialTransform(newPoseAdjustedBacktoRobotCenterFrame);
+
+		for (DHParameterKinematics leg : legs) {
+			TransformNR pose = tipList.get(leg);
+			if (leg.checkTaskSpaceTransform(pose))// move the leg only is the pose of hte limb is possible
+				leg.setDesiredTaskSpaceTransform(pose, 0);// set leg to the location of where the foot was
+			else {
+				setGlobalToFiducialTransform(previous);
+				for (DHParameterKinematics l : legs) {
+					TransformNR p = tipList.get(l);
+					l.setDesiredTaskSpaceTransform(p, 0);// set leg to the location of where the foot was
+				}
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	/**
 	 * Instantiates a new mobile base.
 	 *
@@ -888,6 +945,10 @@ public class MobileBase extends AbstractKinematicsNR {
 		}
 		
 		
+	}
+
+	public void setHomeProvider(ICalcLimbHomeProvider homeProvider) {
+		this.homeProvider = homeProvider;
 	}
 
 
