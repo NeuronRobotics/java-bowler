@@ -582,10 +582,13 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		setCurrentPoseTarget(taskSpaceTransform);
 
 		double[] jointSpaceVect = inverseKinematics(inverseOffset(taskSpaceTransform));
-		if (jointSpaceVect == null)
-			throw new RuntimeException("The kinematics model must return and array, not null");
-		_setDesiredJointSpaceVector(jointSpaceVect, seconds,false);
-		return jointSpaceVect;
+		if(checkVector(this,jointSpaceVect)) {
+			if (jointSpaceVect == null)
+				throw new RuntimeException("The kinematics model must return and array, not null");
+			_setDesiredJointSpaceVector(jointSpaceVect, seconds,false);
+			return jointSpaceVect;
+		}
+		return getCurrentJointSpaceTarget();
 	}
 
 	/**
@@ -597,18 +600,26 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	public static boolean checkTaskSpaceTransform(AbstractKinematicsNR dev, TransformNR taskSpaceTransform) {
 		try {
 			double[] jointSpaceVect = dev.inverseKinematics(dev.inverseOffset(taskSpaceTransform));
-			for (int i = 0; i < jointSpaceVect.length; i++) {
-				AbstractLink link = dev.factory.getLink(dev.getLinkConfiguration(i));
-				double val = link.toLinkUnits(jointSpaceVect[i]);
-				if (val > link.getUpperLimit()) {
-					return false;
-				}
-				if (val < link.getLowerLimit()) {
-					return false;
-				}
-			}
+			return checkVector(dev, jointSpaceVect);
 		} catch (Throwable ex) {
 			return false;
+		}
+	}
+
+	private static boolean checkVector(AbstractKinematicsNR dev, double[] jointSpaceVect) {
+		for (int i = 0; i < jointSpaceVect.length; i++) {
+			AbstractLink link = dev.factory.getLink(dev.getLinkConfiguration(i));
+			double val = link.toLinkUnits(jointSpaceVect[i]);
+			Double double1 = new Double(val);
+			if(double1.isNaN() ||double1.isInfinite() ) {
+				return false;
+			}
+			if (val > link.getUpperLimit()) {
+				return false;
+			}
+			if (val < link.getLowerLimit()) {
+				return false;
+			}
 		}
 		return true;
 	}
@@ -994,8 +1005,12 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 			AbstractLink tmp = getFactory().getLink(c);
 			if (tmp == source) {// Check to see if this lines up with a known link
 				// Log.info("Got PID event "+source+" value="+engineeringUnitsValue);
-
+				if(new Double(engineeringUnitsValue).isNaN()) {
+					new RuntimeException("Link values can not ne NaN").printStackTrace();					
+					engineeringUnitsValue=0;
+				}
 				currentJointSpacePositions[getLinkConfigurations().indexOf(c)] = engineeringUnitsValue;
+				
 				firePoseUpdate();
 				return;
 			}

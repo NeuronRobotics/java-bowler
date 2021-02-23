@@ -16,7 +16,7 @@ public class LinearInterpolationEngine {
 	private double lastInterpolationTime;
 	
 	/** The set point. */
-	private double setPoint;
+	private double setPoint=0;
 	
 	/** The duration. */
 	private double duration;
@@ -99,7 +99,11 @@ public class LinearInterpolationEngine {
 //		}
 		duration = (long) (seconds*1000);
 		startTime=System.currentTimeMillis();
-		setPoint=setpoint;
+		if(new Double(setpoint).isNaN()) {
+			new RuntimeException("Setpopint in virtual device can not be set to nan").printStackTrace();
+		
+		}else
+			setPoint=setpoint;
 		startPoint = getTicks();
 		
 		setPause(false);
@@ -162,12 +166,14 @@ public class LinearInterpolationEngine {
 	 * Interpolate.
 	 */
 	private void interpolate() {
-		double back;
+		double back=ticks;
 		double diffTime;
-		if(duration > 0 ){
+		double dur = duration;
+		if(dur > 0 ){
+			
 			diffTime = System.currentTimeMillis()-startTime;
-			if((diffTime < duration) && (diffTime>0) ){
-				double elapsed = 1-((duration-diffTime)/duration);
+			if((diffTime < dur) && (diffTime>0) ){
+				double elapsed = 1-((dur-diffTime)/dur);
 				double tmp=((float)startPoint+(float)(setPoint-startPoint)*elapsed);
 				if(setPoint>startPoint){
 					if((tmp>setPoint)||(tmp<startPoint))
@@ -176,18 +182,32 @@ public class LinearInterpolationEngine {
 					if((tmp<setPoint) || (tmp>startPoint))
 						tmp=setPoint;
 				}
-				back=tmp;
+				if(new Double(tmp).isNaN()) {
+					new RuntimeException("Ticks in virtual device can not be set to nan").printStackTrace();
+				
+				}else
+					back=tmp;
 			}else{
 				// Fixes the overflow case and the timeout case
 				duration=0;
+				if(new Double(setPoint).isNaN()) {
+					new RuntimeException("Ticks in virtual device can not be set to nan").printStackTrace();
+				}else
 				back=setPoint;
 			}
 		}else{
-			back=setPoint;
+			if(new Double(setPoint).isNaN()) {
+				new RuntimeException("Ticks in virtual device can not be set to nan").printStackTrace();
+			}else
+				back=setPoint;
 			duration = 0;
 		}
 		if(velocityRun){
 			double ms = (double) (System.currentTimeMillis()-lastInterpolationTime);
+			if(new Double(ms).isNaN()) {
+				new RuntimeException("Ticks in virtual device can not be set to nan").printStackTrace();
+			
+			}else
 			back=(getTicks()+unitsPerMs*ms);
 			//System.out.println("Time Diff="+ms+" \n\ttick difference="+unitsPerMs*ms+" \n\tticksPerMs="+unitsPerMs +" \n\tCurrent value="+back );
 		}
@@ -228,6 +248,10 @@ public class LinearInterpolationEngine {
 	 * @param ticks the new ticks
 	 */
 	public void setTicks(double ticks) {
+		if(new Double(ticks).isNaN()) {
+			new RuntimeException("Ticks in virtual device can not be set to nan").printStackTrace();
+			return;
+		}
 		this.ticks = ticks;
 	}
 	

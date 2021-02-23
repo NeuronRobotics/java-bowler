@@ -199,22 +199,31 @@ public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector )
 			current = current.times(step);
 			final Matrix update=current.copy();
 			final int index=i;
-			final TransformNR pose =forwardOffset(new TransformNR(update));
-			
-			
-
-			if(chainToLoad!=null){
-				if(intChain.size()<=i)
-					intChain.add(new TransformNR(step));
-				else{
-					intChain.set(i, new TransformNR(step));
-				}
+			try {
+				final TransformNR pose =forwardOffset(new TransformNR(update));
 				
-				if(chainToLoad.size()<=i)
-					chainToLoad.add(pose);
-				else{
-					chainToLoad.set(i, pose);
+				
+	
+				if(chainToLoad!=null){
+					if(intChain.size()<=i)
+						intChain.add(new TransformNR(step));
+					else{
+						intChain.set(i, new TransformNR(step));
+					}
+					
+					if(chainToLoad.size()<=i)
+						chainToLoad.add(pose);
+					else{
+						chainToLoad.set(i, pose);
+					}
 				}
+			}catch(java.lang.RuntimeException ex) {
+				String pose="[\n";
+				for(int x=0;x<jointSpaceVector.length;x++) {
+					pose=pose+" "+jointSpaceVector[x]+" , \n";
+				}
+				pose+="]";
+				throw new RuntimeException(ex.getMessage()+" for pose "+pose);
 			}
 		}
 		//Log.info( "Final:\n"+current);

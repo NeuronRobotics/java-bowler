@@ -234,9 +234,13 @@ public class PIDChannel {
 	 *
 	 * @param targetValue the new cached target value
 	 */
-	public void setCachedTargetValue(float targetValue) {
-		Log.info("Cacheing PID position group="+getGroup()+", setpoint="+targetValue+" ticks");
-		this.targetValue = targetValue;
+	public void setCachedTargetValue(float targetValue) {		
+		if(new Double(targetValue).isNaN()) {
+			new RuntimeException("Setpoint in can not be set to nan").printStackTrace();
+		}else {
+			Log.info("Cacheing PID position group="+getGroup()+", setpoint="+targetValue+" ticks");
+			this.targetValue = targetValue;
+		}
 	}
 	
 	/**

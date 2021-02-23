@@ -803,4 +803,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	public void refreshPose() {
 		runRenderWrangler();
 	}
+	public MobileBase getSlaveMobileBase(int index) {
+		return getDhLink(index).getSlaveMobileBase();
+	}
 }

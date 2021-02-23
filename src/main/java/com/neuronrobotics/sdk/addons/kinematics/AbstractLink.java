@@ -273,6 +273,10 @@ public abstract class AbstractLink implements  IFlushable{
 	 * @param pos the new target engineering units
 	 */
 	public void setTargetEngineeringUnits(double pos) {
+		if(new Double(pos).isNaN()) {
+			new RuntimeException("Setpopint in setTargetEngineeringUnits can not be set to nan").printStackTrace();
+			return;
+		}
 		targetEngineeringUnits = pos;
 		setPosition(toLinkUnits(targetEngineeringUnits));
 	}
@@ -295,6 +299,8 @@ public abstract class AbstractLink implements  IFlushable{
 	 */
 	public double getCurrentEngineeringUnits(){
 		double link = getCurrentPosition();
+		if(new Double(link).isNaN())
+			link=0;
 		double back = toEngineeringUnits(link);
 		//Log.info("Link space: "+link+" Joint space: "+back);
 		return back;
@@ -382,6 +388,10 @@ public abstract class AbstractLink implements  IFlushable{
 	 * @param val the new target value
 	 */
 	protected void setTargetValue(double val) {
+		if(new Double(val).isNaN()) {
+			new RuntimeException("Setpopint in virtual device can not be set to nan").printStackTrace();
+			return;
+		}
 		Log.info("Setting cached value :"+val);
 		this.targetValue = val;
 		for(LinkConfiguration c:slaveLinks){
