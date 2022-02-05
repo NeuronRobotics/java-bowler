@@ -228,7 +228,12 @@ public class ParallelGroup extends DHParameterKinematics {
 //
 //			return new TransformNR(x, y, x, new RotationNR(rotx, roty, rotz));
 //		} else if (getConstituantLimbs().size() == 2) {
-		return tips.get(getFKLimb());// assume the first link is
+		try {
+			return tips.get(getFKLimb());// assume the first link is
+		}catch(Exception e) {
+			e.printStackTrace();
+			return new TransformNR();
+		}
 //															// in control or
 //															// orentation
 //		} else
@@ -258,9 +263,9 @@ public class ParallelGroup extends DHParameterKinematics {
 		return constituantLimbs;
 	}
 
-	public void setConstituantLimbs(ArrayList<DHParameterKinematics> constituantLimbs) {
-		this.constituantLimbs = constituantLimbs;
-	}
+//	public void setConstituantLimbs(ArrayList<DHParameterKinematics> constituantLimbs) {
+//		this.constituantLimbs = constituantLimbs;
+//	}
 
 	public HashMap<DHParameterKinematics, TransformNR> getTipOffset() {
 		return tipOffset;

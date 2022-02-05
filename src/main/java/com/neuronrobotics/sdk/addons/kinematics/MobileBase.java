@@ -264,7 +264,9 @@ public class MobileBase extends AbstractKinematicsNR {
 				ParallelGroup g = getParallelGroups().get(key);
 				try {
 					g.setDesiredTaskSpaceTransform(g.calcHome(), 1.0);
-				} catch (Exception e) {}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
@@ -380,7 +382,6 @@ public class MobileBase extends AbstractKinematicsNR {
 
 				}
 				kin.setScriptingName(name);
-				
 				String parallel = getParallelGroup(e);
 				//System.out.println("paralell "+parallel);
 				if (parallel != null) {
