@@ -80,7 +80,33 @@ public class ParallelGroup extends DHParameterKinematics {
 			System.out.println("Limp "+limb.getScriptingName()+" set relative to "+name);
 		} else {
 			clearReferencedLimb(limb);
+			DHParameterKinematics fk=getFKLimb();
+			fk.addPoseUpdateListener(new ITaskSpaceUpdateListenerNR() {
+				@Override
+				public void onTaskSpaceUpdate(AbstractKinematicsNR source, TransformNR pose) {
+					HashMap<String, double[]> IKvalues = new HashMap<>();
+					for (DHParameterKinematics d : getConstituantLimbs()) {
+						if (getTipOffset(d) != null) {
+							try {
+								double[] jointSpaceVect = compute(d, IKvalues, pose);
+								d.setDesiredJointSpaceVector(jointSpaceVect, 0);
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+					}
+				}
+				
+				@Override
+				public void onTargetTaskSpaceUpdate(AbstractKinematicsNR source, TransformNR pose) {
+					// TODO Auto-generated method stub
+					
+				}
+			});
 		}
+		
+		
 	}
 
 	public void clearReferencedLimb(DHParameterKinematics limb) {

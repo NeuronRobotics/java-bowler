@@ -220,6 +220,9 @@ public class MobileBase extends AbstractKinematicsNR {
 		if (g != null) {
 			g.removeLimb(limb);
 		}
+		if(g.getConstituantLimbs().size()==0) {
+			getParallelGroups().remove(g.getNameOfParallelGroup());
+		}
 	}
 
 	/**
@@ -258,15 +261,23 @@ public class MobileBase extends AbstractKinematicsNR {
 		TransformNR IMUcenter = loadTransform("imuFromCentroid", doc);
 		if (IMUcenter != null)
 			setIMUFromCentroid(IMUcenter);
-
+		
+	}
+	
+	public void initializeParalellGroups() {
 		for (String key : getParallelGroups().keySet()) {
 			if (key != null) {
 				ParallelGroup g = getParallelGroups().get(key);
-				try {
-					g.setDesiredTaskSpaceTransform(g.calcHome(), 1.0);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				// Clean up broken configurations
+				if(g.getConstituantLimbs().size()==0) {
+					getParallelGroups().remove(g.getNameOfParallelGroup());
+				}else
+					try {
+						g.setDesiredTaskSpaceTransform(g.calcHome(), 1.0);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+
 			}
 		}
 	}
