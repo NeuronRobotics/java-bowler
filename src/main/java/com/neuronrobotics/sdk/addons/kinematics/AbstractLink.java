@@ -234,7 +234,11 @@ public abstract class AbstractLink implements  IFlushable{
 		for (int i = 0; i < links2.size(); i++) {
 			ILinkListener l = links2.get(i);
 			//Log.info("Link Event, RAW="+linkUnitsValue);
-			l.onLinkPositionUpdate(this,toEngineeringUnits(linkUnitsValue));
+			try {
+				l.onLinkPositionUpdate(this,toEngineeringUnits(linkUnitsValue));
+			}catch( Throwable t) {
+				t.printStackTrace(System.out);
+			}
 		}
 	}
 	

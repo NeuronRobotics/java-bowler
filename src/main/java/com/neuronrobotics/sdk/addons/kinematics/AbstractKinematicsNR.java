@@ -1009,8 +1009,12 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 					new RuntimeException("Link values can not ne NaN").printStackTrace();					
 					engineeringUnitsValue=0;
 				}
-				currentJointSpacePositions[getLinkConfigurations().indexOf(c)] = engineeringUnitsValue;
-				
+				ArrayList<LinkConfiguration> linkConfigurations = getLinkConfigurations();
+				if(linkConfigurations!=null) {
+					int indexOf = linkConfigurations.indexOf(c);
+					if(indexOf>=0 && indexOf<currentJointSpacePositions.length)
+						currentJointSpacePositions[indexOf] = engineeringUnitsValue;
+				}
 				firePoseUpdate();
 				return;
 			}
