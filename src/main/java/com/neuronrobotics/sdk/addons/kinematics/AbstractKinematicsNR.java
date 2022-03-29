@@ -1012,8 +1012,9 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 				ArrayList<LinkConfiguration> linkConfigurations = getLinkConfigurations();
 				if(linkConfigurations!=null) {
 					int indexOf = linkConfigurations.indexOf(c);
-					if(indexOf>=0 && indexOf<currentJointSpacePositions.length)
-						currentJointSpacePositions[indexOf] = engineeringUnitsValue;
+					if(currentJointSpacePositions!=null)
+						if(indexOf>=0 && indexOf<currentJointSpacePositions.length)
+							currentJointSpacePositions[indexOf] = engineeringUnitsValue;
 				}
 				firePoseUpdate();
 				return;
