@@ -584,7 +584,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		double[] jointSpaceVect = inverseKinematics(inverseOffset(taskSpaceTransform));
 		if(checkVector(this,jointSpaceVect)) {
 			if (jointSpaceVect == null)
-				throw new RuntimeException("The kinematics model must return and array, not null");
+				throw new RuntimeException("The kinematics model must return an array, not null");
 			_setDesiredJointSpaceVector(jointSpaceVect, seconds,false);
 			return jointSpaceVect;
 		}
@@ -678,6 +678,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 				} catch (Exception ex) {
 					except++;
 					e = ex;
+					e.printStackTrace();
 				}
 			} while (except > 0 && except < getRetryNumberBeforeFail());
 			if (e != null)
