@@ -95,6 +95,7 @@ public class ParallelGroup extends DHParameterKinematics {
 							try {
 								double[] jointSpaceVect = compute(d, IKvalues, pose);
 								System.out.println(fk.getScriptingName()+" is Setting sublimb target "+d.getScriptingName());
+								d.throwExceptionOnJointLimit(false);
 								d.setDesiredJointSpaceVector(jointSpaceVect, 0);
 							} catch (Exception e) {
 								// TODO Auto-generated catch block

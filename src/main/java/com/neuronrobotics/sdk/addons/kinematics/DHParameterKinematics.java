@@ -806,4 +806,16 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	public MobileBase getSlaveMobileBase(int index) {
 		return getDhLink(index).getSlaveMobileBase();
 	}
+	/**
+	 * THis disables the exception being thrown on joint limits
+	 * normal mode is to throw an exception when a joint is commanded to a value beyond its limits
+	 * 
+	 * when exceptions are disabled, the joint just goes to the limit instead. 
+	 * @param b
+	 */
+	public void throwExceptionOnJointLimit(boolean b) {
+		for(int i=0;i<getNumberOfLinks();i++) {
+			getAbstractLink(i).setUseLimits(!b);
+		}
+	}
 }
