@@ -806,4 +806,10 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	public MobileBase getSlaveMobileBase(int index) {
 		return getDhLink(index).getSlaveMobileBase();
 	}
+
+	public void throwExceptionOnJointLimit(boolean b) {
+		for(int i=0;i<getNumberOfLinks();i++) {
+			getAbstractLink(i).setUseLimits(!b);
+		}
+	}
 }
