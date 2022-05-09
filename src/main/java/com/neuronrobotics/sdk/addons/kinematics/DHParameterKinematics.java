@@ -815,7 +815,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	 */
 	public void throwExceptionOnJointLimit(boolean b) {
 		for(int i=0;i<getNumberOfLinks();i++) {
-			getAbstractLink(i).setUseLimits(!b);
+			getAbstractLink(i).setUseLimits(b);
 		}
 	}
 }
