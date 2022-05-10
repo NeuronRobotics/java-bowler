@@ -21,6 +21,19 @@ public class ParallelGroup extends DHParameterKinematics {
 	private String[] toolEngine = new String[] { "https://gist.github.com/33f2c10ab3adc5bd91f0a58ea7f24d14.git",
 			"parallelTool.groovy" };
 	private String name;
+	
+	public TransformNR getTipOffsetFromThisLinkInLimb(DHParameterKinematics control,int index) {
+		String name = control.getScriptingName();
+		for(DHParameterKinematics s:tipOffsetRelativeToName.keySet()) {
+			String refName = tipOffsetRelativeToName.get(s);
+			if(refName.contentEquals(name)) {
+				if(index==tipOffsetRelativeIndex.get(s)) {
+					return getTipOffset(s);
+				}
+			}
+		}
+		return null;
+	}
 
 	public ParallelGroup(String name) {
 		this.name = name;
