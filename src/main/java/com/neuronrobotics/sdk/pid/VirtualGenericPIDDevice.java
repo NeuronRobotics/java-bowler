@@ -272,6 +272,8 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 		/** The pause. */
 		private boolean pause =false;
 		
+		private boolean isPaused=false;
+		
 		/* (non-Javadoc)
 		 * @see java.lang.Thread#run()
 		 */
@@ -280,8 +282,10 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 			while(true) {
 				try {Thread.sleep(threadTime);} catch (InterruptedException e) {}
 				while(isPause()){
+					isPaused=true;
 					ThreadUtil.wait(10);
 				}
+				isPaused=false;
 				long time = System.currentTimeMillis();
 				for(LinearInterpolationEngine dr : driveThreads){
 					if(dr.update()){
@@ -313,8 +317,11 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 		 */
 		public void setPause(boolean pause) {
 			if(pause)
-				try {Thread.sleep(threadTime*2);} catch (InterruptedException e) {}
+				isPaused=false;
 			this.pause = pause;
+			while(!isPaused) {
+				try {Thread.sleep(threadTime);} catch (InterruptedException e) {}
+			}
 		}
 	}
 
