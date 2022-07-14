@@ -298,8 +298,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 						}catch (Exception ex){
 							ex.printStackTrace();
 						}
-					}else
-						Log.warning("LinearInterp failed! link = "+dr.getChan());
+					}
 				}
 			}
 		}
