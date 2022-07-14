@@ -151,7 +151,9 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 	@Override
 	public boolean SetPIDSetPoint(int group, float setpoint, double seconds) {
 		//new RuntimeException("Virtual setpoint, group="+group+" setpoint="+setpoint).printStackTrace();;
+		sync.setPause(true);
 		driveThreads.get(group).SetPIDSetPoint(setpoint, seconds);
+		sync.setPause(false);
 		return true;
 	}
 	
@@ -195,7 +197,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice{
 	public boolean SetAllPIDSetPoint(float[] setpoints, double seconds) {
 		sync.setPause(true);
 		for(int i=0;i<setpoints.length;i++){
-			SetPIDSetPoint(i,  setpoints[i], seconds);
+			driveThreads.get(i).SetPIDSetPoint(setpoints[i], seconds);
 		}
 		sync.setPause(false);
 		return true;
