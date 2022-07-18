@@ -70,10 +70,7 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	private int homingTicksPerSecond=10000000;
 	
 	/** The upper velocity. */
-	private double upperVelocity = 100000000;
-	
-	/** The lower velocity. */
-	private double lowerVelocity = -100000000;
+	private double velocityLimit = 100000000;
 	
 	/** The device scripting name. */
 	private String deviceScriptingName=null;
@@ -156,7 +153,6 @@ public class LinkConfiguration implements ITransformNRChangeListener {
     	
     	try{
     		setUpperVelocity(Double.parseDouble(XmlFactory.getTagValue("upperVelocity",eElement)));
-    		setLowerVelocity(Double.parseDouble(XmlFactory.getTagValue("lowerVelocity",eElement)));
     	}catch (Exception e){
     		
     	}
@@ -720,7 +716,7 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	 * @param upperVelocity the new upper velocity
 	 */
 	public void setUpperVelocity(double upperVelocity) {
-		this.upperVelocity = upperVelocity;
+		this.velocityLimit = upperVelocity;
 		fireChangeEvent();
 	}
 	
@@ -730,18 +726,9 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	 * @return the upper velocity
 	 */
 	public double getUpperVelocity() {
-		return upperVelocity;
+		return velocityLimit;
 	}
-	
-	/**
-	 * Sets the lower velocity.
-	 *
-	 * @param lowerVelocity the new lower velocity
-	 */
-	public void setLowerVelocity(double lowerVelocity) {
-		this.lowerVelocity = lowerVelocity;
-		fireChangeEvent();
-	}
+
 	
 	/**
 	 * Gets the lower velocity.
@@ -749,7 +736,7 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	 * @return the lower velocity
 	 */
 	public double getLowerVelocity() {
-		return lowerVelocity;
+		return -velocityLimit;
 	}
 	
 	/**

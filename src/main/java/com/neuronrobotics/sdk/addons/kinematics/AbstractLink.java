@@ -352,7 +352,15 @@ public abstract class AbstractLink implements  IFlushable{
 	public double getMaxVelocityEngineeringUnits() {
 		return Math.abs(toEngineeringUnits(conf.getUpperVelocity()));
 	}
-	
+	/**
+	 * Gets the max engineering units.
+	 *
+	 * @return the max engineering units
+	 */
+	public void setMaxVelocityEngineeringUnits(double max) {
+		conf.setUpperVelocity(toLinkUnits(max)); 
+		conf.setLowerVelocity(-toLinkUnits(max)); 
+	}
 	
 	/**
 	 * Checks if is max engineering units.
