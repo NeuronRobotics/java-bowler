@@ -359,7 +359,6 @@ public abstract class AbstractLink implements  IFlushable{
 	 */
 	public void setMaxVelocityEngineeringUnits(double max) {
 		conf.setUpperVelocity(toLinkUnits(max)); 
-		conf.setLowerVelocity(-toLinkUnits(max)); 
 	}
 	
 	/**
