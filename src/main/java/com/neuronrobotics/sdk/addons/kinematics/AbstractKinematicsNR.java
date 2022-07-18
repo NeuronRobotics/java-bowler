@@ -615,7 +615,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		return checkTaskSpaceTransform(dev,taskSpaceTransform,0);
 	}
 	private static boolean checkVector(AbstractKinematicsNR dev, double[] jointSpaceVect, double seconds) {
-		double[] current = dev.getCurrentJointSpaceVector();
+		double[] current = dev.getCurrentJointSpaceTarget();
 		for (int i = 0; i < jointSpaceVect.length; i++) {
 			AbstractLink link = dev.factory.getLink(dev.getLinkConfiguration(i));
 			double val = link.toLinkUnits(jointSpaceVect[i]);
@@ -634,7 +634,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 				double deltaPosition = Math.abs(current[i] - jointSpaceVect[i]);
 				double computedVelocity = deltaPosition/seconds;		
 				if(computedVelocity>maxVel) {
-					Log.error("Link "+i+" can not move at rate of "+computedVelocity+" capped at "+maxVel);
+					Log.error("Link "+i+" can not move at rate of "+computedVelocity+" capped at "+maxVel+" requested position of "+jointSpaceVect[i]+" from current position of "+current[i]+" in "+seconds+" seconds");
 					return false;
 				}
 			}
