@@ -633,7 +633,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 				double maxVel = Math.abs(link.getMaxVelocityEngineeringUnits());
 				double deltaPosition = Math.abs(current[i] - jointSpaceVect[i]);
 				double computedVelocity = deltaPosition/seconds;		
-				if(computedVelocity>maxVel) {
+				if(Math.abs(computedVelocity-maxVel)>0.0001) {
 					Log.error("Link "+i+" can not move at rate of "+computedVelocity+" capped at "+maxVel+" requested position of "+jointSpaceVect[i]+" from current position of "+current[i]+" in "+seconds+" seconds");
 					return false;
 				}
