@@ -603,31 +603,13 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	 * Update cad locations.
 	 */
 	public ArrayList<TransformNR>  updateCadLocations() {
-		//synchronized (DHParameterKinematics.class) {
 			try {
 				ArrayList<TransformNR> ll = getChain().getChain(getCurrentJointSpaceVector());
-//				for (int i = 0; i < ll.size(); i++) {
-//					ArrayList<TransformNR> linkPos = ll;
-//					int index = i;
-//					Object af = getChain().getLinks().get(index).getListener();
-//					TransformNR nr = linkPos.get(index);
-//					Platform.runLater(() -> {
-//						if (nr == null || af == null) {
-//							return;
-//						}
-//						try {
-//							TransformFactory.nrToObject(nr, af);
-//						} catch (Exception ex) {
-//							// ex.printStackTrace();
-//						}
-//					});
-//				}
-				runRenderWrangler();
 				return ll;
 			} catch (Exception ex) {
 				// ex.printStackTrace();
 			}
-		//}
+
 			return null;
 	}
 
@@ -662,7 +644,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 			getChain().setChain(null);// force an update of teh cached locations because base changed
 			getChain().getChain(getCurrentJointSpaceVector());//calculate new locations
 		}
-		updateCadLocations();
+		runRenderWrangler();
 	}
 
 	/*

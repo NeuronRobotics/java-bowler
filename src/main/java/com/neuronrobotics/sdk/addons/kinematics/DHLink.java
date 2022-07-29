@@ -103,6 +103,8 @@ public class DHLink {
 	 * @param newPose the new pose
 	 */
 	public void fireOnLinkGlobalPositionChange(TransformNR newPose){
+		if(slaveMobileBase!=null)
+			slaveMobileBase.setGlobalToFiducialTransform(newPose);
 		for(IDhLinkPositionListener l:dhlisteners){
 			l.onLinkGlobalPositionChange(newPose);
 		}

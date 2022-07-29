@@ -282,12 +282,6 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 								final MobileBase newMobileBase = new MobileBase((Element) mb);
 								mobileBases.add(newMobileBase);
 								newLink.setMobileBaseXml(newMobileBase);
-								newLink.addDhLinkPositionListener(new IDhLinkPositionListener() {
-									@Override
-									public void onLinkGlobalPositionChange(TransformNR newPose) {
-										newMobileBase.setGlobalToFiducialTransform(newPose);
-									}
-								});
 								addConnectionEventListener(new IDeviceConnectionEventListener() {
 									
 									@Override
@@ -802,7 +796,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	/**
 	 * Fire pose update.
 	 */
-	protected void firePoseUpdate() {
+	public void firePoseUpdate() {
 		// Log.info("Pose update");
 		firePoseTransform(getCurrentTaskSpaceTransform());
 
@@ -1575,6 +1569,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	}
 
 	public void runRenderWrangler() {
+		firePoseUpdate();
 		if(renderWrangler!=null)
 			try {
 				renderWrangler.run();
