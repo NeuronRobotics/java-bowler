@@ -654,6 +654,45 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	public boolean checkTaskSpaceTransform(TransformNR taskSpaceTransform) {
 		return checkTaskSpaceTransform(this, taskSpaceTransform,0);
 	}
+	
+	/**
+	 * get the best possible time for a translation by checking the joint velocities
+	 * 
+	 * @param currentTaskSpaceTransform new tip location to check
+	 * @return the time of translation at best possible speed based on checking each link
+	 */
+	public double getBestTime(TransformNR currentTaskSpaceTransform) {
+		double[] jointSpaceVect;
+		double best = 0;
+		try {
+			jointSpaceVect = inverseKinematics(inverseOffset(currentTaskSpaceTransform));
+			best = getBestTime(jointSpaceVect);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return best;
+	}
+	/**
+	 * get the best possible time for a translation by checking the joint velocities
+	 * 
+	 * @param jointSpaceVect new joint pose
+	 * @return the time of translation at best possible speed based on checking each link
+	 */
+	public double getBestTime(double[] jointSpaceVect) {
+		double best=0;
+		double[] current = getCurrentJointSpaceTarget();
+		for (int i = 0; i < current.length; i++) {
+			AbstractLink link = getAbstractLink(i);
+			double maxVel = Math.abs(link.getMaxVelocityEngineeringUnits());
+			double deltaPosition = Math.abs(current[i] - jointSpaceVect[i]);
+			double seconds = deltaPosition / maxVel;
+			if (seconds > best)
+				best = seconds + Double.MIN_VALUE;
+		}
+		return best;
+	}
+	
+	
 	/**
 	 * This calculates the target pose .
 	 *
