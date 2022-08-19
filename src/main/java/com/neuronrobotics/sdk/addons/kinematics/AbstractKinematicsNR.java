@@ -26,6 +26,7 @@ import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.NonBowlerDevice;
 import com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace;
 import com.neuronrobotics.sdk.pid.IPIDEventListener;
+import com.neuronrobotics.sdk.pid.InterpolationEngine;
 import com.neuronrobotics.sdk.pid.InterpolationType;
 import com.neuronrobotics.sdk.pid.PIDChannel;
 //import com.neuronrobotics.sdk.pid.PIDCommandException;
@@ -36,6 +37,8 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
 // TODO: Auto-generated Javadoc
 //import javax.swing.JFrame;
 //import javax.swing.JOptionPane;
+import com.srirobotics.robot.RunState;
+import com.srirobotics.ui.Main;
 
 /**
  * The Class AbstractKinematicsNR.
@@ -1631,8 +1634,69 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	public TransformNR getTipAlongTrajectory(TransformNR startingPoint,TransformNR deltaToTarget,double unitIncrement) {
 		return startingPoint.times(deltaToTarget.scale(unitIncrement));
 	}
-	
-	public void blockingInterpolatedMove(TransformNR target, double seconds, InterpolationType type, double ...conf ) {
+	public void asyncInterpolatedMove(TransformNR target, double seconds, InterpolationType type,IOnInterpolationDone listener, double ...conf ) {
+		new Thread(()->{
+			try {
+				InterpolationMoveState s = blockingInterpolatedMove(target, seconds, type, conf);
+				listener.done(s);
+			}catch(Throwable t) {
+				t.printStackTrace();
+				listener.done(InterpolationMoveState.FAULT);
+			}
+		}).start();
 		
+	}
+	
+	public InterpolationMoveState blockingInterpolatedMove(TransformNR target, double seconds, InterpolationType type, double ...conf ) {
+		InterpolationEngine engine = new InterpolationEngine();
+		
+		TransformNR delta =getDeltaToTarget(target);
+		TransformNR startingPoint = getCurrentPoseTarget();
+		if (checkTaskSpaceTransform(target)) {
+			if (!checkTaskSpaceTransform(target, seconds)) {
+				// if the robot can not acive that speed, then compute the best possible time
+				double bestTime = getBestTime(target);
+				// if speed is capped and no valid, then just cap the speed and print a warning
+				if (bestTime > seconds) {
+					seconds = bestTime;
+				}
+			}
+			engine.setSetpointWithTime(1,seconds,type,conf);
+			double ms = seconds * 1000;
+			double msPerStep = 10;
+			double steps = ms / msPerStep;
+			double unitIncrement = 1.0 / steps;
+			// iterate over all of the time slices to perfoem a task-space interpolation
+			for (double i = 0; i < (1 + unitIncrement); i += unitIncrement) {
+				// compute the next tip location
+				// the delta of the overall translation above is scaled by the unit vector
+				// of the translation
+				// the new tip point here calculated is multiplied by the starting point to get
+				// a global space tip target
+				TransformNR nextPoint = getTipAlongTrajectory(startingPoint,delta,engine.getInterpolationUnitIncrement());
+				// now the best time for this increment is calculated
+				double bestTime = getBestTime(nextPoint);
+				// error check for the best time being below the commanded time
+				if (bestTime > msPerStep / 1000.0) {
+					// print an error in the event of speed capped
+				}
+				// perform one last tip and speed check of the increment
+				if (checkTaskSpaceTransform(nextPoint, bestTime)) {
+					// send the tip update to the simulator
+					try {
+						setDesiredTaskSpaceTransform(nextPoint, bestTime);
+					} catch (Exception e) {
+						return InterpolationMoveState.FAULT;
+					}
+				} else {
+					// incremental tip failed, fault
+					return InterpolationMoveState.FAULT;
+				}
+				ThreadUtil.wait((int) msPerStep);
+			}
+		}else {
+			return InterpolationMoveState.FAULT;
+		}
+		return InterpolationMoveState.READY;
 	}
 }

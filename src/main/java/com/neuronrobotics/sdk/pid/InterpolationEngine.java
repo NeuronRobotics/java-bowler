@@ -76,7 +76,14 @@ public class InterpolationEngine {
 		setSetpointWithTime(setpoint, seconds, InterpolationType.SINUSOIDAL);
 	}
 
-	private void setSetpointWithTime(double setpoint,double seconds, InterpolationType mode) {
+	public void setSetpointWithTime(double setpoint,double seconds, InterpolationType mode,double ...conf) {
+		if(InterpolationType.TRAPEZOIDAL==mode) {
+			TRAPEZOIDAL_time =conf[0];
+		}
+		if(InterpolationType.BEZIER==mode) {
+			BEZIER_P0 = conf[0];
+			BEZIER_P1 = conf[1];
+		}
 		type = mode;
 		if(seconds<0.001)
 			seconds = 0.001;// one ms garunteed
@@ -99,8 +106,7 @@ public class InterpolationEngine {
 			StartSinusoidalMotion(setpoint, seconds);
 			return;
 		}
-		TRAPEZOIDAL_time = trapazoidalTime;
-		setSetpointWithTime(setpoint, seconds, InterpolationType.TRAPEZOIDAL);
+		setSetpointWithTime(setpoint, seconds, InterpolationType.TRAPEZOIDAL,trapazoidalTime);
 	}
 	/**
 	 * SetSetpoint in degrees with time
@@ -113,10 +119,9 @@ public class InterpolationEngine {
 	 */
 	void StartBezierMotion(double setpoint,double seconds, double Control_0 , double Control_1)
 	{
-		BEZIER_P0 = Control_0;
-		BEZIER_P1 = Control_1;
-		setSetpointWithTime(setpoint, seconds, InterpolationType.BEZIER);
+		setSetpointWithTime(setpoint, seconds, InterpolationType.BEZIER,Control_0,Control_1);
 	}
+	
 	
 	/**
 	 * Update.
@@ -159,7 +164,7 @@ public class InterpolationEngine {
 		return ((x - in_min) * (out_max - out_min) / (in_max - in_min)) + out_min;
 	}
 	
-	private double getInterpolationUnitIncrement() {
+	public  double getInterpolationUnitIncrement() {
 		double interpElapsed = (double)(System.currentTimeMillis() - startTime);
 		if (interpElapsed < duration && duration > 0)
 		{
