@@ -26,6 +26,7 @@ import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.NonBowlerDevice;
 import com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace;
 import com.neuronrobotics.sdk.pid.IPIDEventListener;
+import com.neuronrobotics.sdk.pid.InterpolationType;
 import com.neuronrobotics.sdk.pid.PIDChannel;
 //import com.neuronrobotics.sdk.pid.PIDCommandException;
 import com.neuronrobotics.sdk.pid.PIDConfiguration;
@@ -1621,7 +1622,17 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		this.renderWrangler = renderWrangler;
 	}
 
-//	public void setCurrentJointSpaceTarget(double[] currentJointSpaceTarget) {
-//		this.currentJointSpaceTarget = currentJointSpaceTarget;
-//	}
+	public TransformNR getDeltaToTarget(TransformNR target) {
+		TransformNR startingPoint = getCurrentPoseTarget();
+		// create a transform thats a delta from the current pose to the new pose
+		return startingPoint.inverse().times(target);
+	}
+	
+	public TransformNR getTipAlongTrajectory(TransformNR startingPoint,TransformNR deltaToTarget,double unitIncrement) {
+		return startingPoint.times(deltaToTarget.scale(unitIncrement));
+	}
+	
+	public void blockingInterpolatedMove(TransformNR target, double seconds, InterpolationType type, double ...conf ) {
+		
+	}
 }
