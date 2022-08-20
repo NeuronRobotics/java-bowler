@@ -37,8 +37,7 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
 // TODO: Auto-generated Javadoc
 //import javax.swing.JFrame;
 //import javax.swing.JOptionPane;
-import com.srirobotics.robot.RunState;
-import com.srirobotics.ui.Main;
+
 
 /**
  * The Class AbstractKinematicsNR.
