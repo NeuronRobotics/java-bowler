@@ -24,7 +24,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice {
 	private HashMap<PIDConfiguration, InterpolationEngine> driveThreads = new HashMap<>();
 
 	/** The configs. */
-	private ArrayList<PIDConfiguration> configs = new ArrayList<PIDConfiguration>();
+	private HashMap<Integer, PIDConfiguration> configs = new HashMap<>();
 
 	/** The P dconfigs. */
 	private ArrayList<PDVelocityConfiguration> PDconfigs = new ArrayList<PDVelocityConfiguration>();
@@ -57,7 +57,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice {
 		getImplementation().setChannelCount(new Integer(numChannels));
 		GetAllPIDPosition();
 		for (int i = 0; i < numChannels; i++) {
-			configs.add(new PIDConfiguration());
+			configs.put(i, new PIDConfiguration());
 			PDconfigs.add(new PDVelocityConfiguration());
 		}
 
@@ -97,7 +97,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice {
 	 * neuronrobotics.sdk.pid.PIDConfiguration)
 	 */
 	public boolean ConfigurePIDController(PIDConfiguration config) {
-		configs.set(config.getGroup(), config);
+		configs.put(config.getGroup(), config);
 
 		return true;
 	}
@@ -130,7 +130,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice {
 	 */
 	@Override
 	public boolean killAllPidGroups() {
-		for (PIDConfiguration c : configs)
+		for (PIDConfiguration c : configs.values())
 			c.setEnabled(false);
 		return true;
 	}
@@ -238,16 +238,16 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice {
 	}
 
 	private InterpolationEngine getDriveThread(int i) {
-		for(PIDConfiguration c:driveThreads.keySet()) {
-			if (c.getGroup()==i) {
+		for (PIDConfiguration c : driveThreads.keySet()) {
+			if (c.getGroup() == i) {
 				return driveThreads.get(c);
 			}
 		}
-		for(PIDConfiguration c:driveThreads.keySet()) {
+		for (PIDConfiguration c : driveThreads.keySet()) {
 			System.err.println(c);
 		}
-		
-		throw new RuntimeException("Device is missing, id "+i);
+
+		throw new RuntimeException("Device is missing, id " + i);
 	}
 
 	/*
@@ -278,9 +278,9 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice {
 	 */
 	@Override
 	public float[] GetAllPIDPosition() {
-		if(backs==null) {
+		if (backs == null) {
 			backs = new float[numChannels];
-	
+
 			setChannels(new ArrayList<PIDChannel>());
 			// lastPacketTime = new long[back.length];
 			for (int i = 0; i < backs.length; i++) {
@@ -290,11 +290,14 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice {
 				getChannels().add(c);
 				PIDConfiguration conf = new PIDConfiguration();
 				conf.setGroup(i);
+				conf.setEnabled(true);
 				InterpolationEngine d = new InterpolationEngine();
 				driveThreads.put(conf, d);
-				configs.add(conf);
+				configs.put(i, conf);
 			}
 		}
+		for (int i = 0; i < backs.length; i++)
+			backs[i] = GetPIDPosition(i);
 		return backs;
 	}
 
@@ -349,7 +352,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice {
 				long time = System.currentTimeMillis();
 				for (PIDConfiguration key : driveThreads.keySet()) {
 					InterpolationEngine dr = driveThreads.get(key);
-					if (key.isEnabled())
+					if (key.isEnabled()) {
 						if (dr.update()) {
 							try {
 								firePIDEvent(new PIDEvent(key.getGroup(), (float) dr.getTicks(), time, 0));
@@ -359,6 +362,9 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice {
 								ex.printStackTrace();
 							}
 						}
+					}else {
+						System.err.println("Virtual Device "+key.getGroup()+" is disabled");
+					}
 				}
 			}
 		}
