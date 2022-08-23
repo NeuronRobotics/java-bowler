@@ -38,6 +38,8 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice {
 	/** The num channels. */
 	private int numChannels = 24;
 
+	private float[] backs;
+
 	/**
 	 * Instantiates a new virtual generic pid device.
 	 */
@@ -156,7 +158,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice {
 	 */
 	@Override
 	public boolean ResetPIDChannel(int group, float valueToSetCurrentTo) {
-		driveThreads.get(group).ResetEncoder(valueToSetCurrentTo);
+		getDriveThread(group).ResetEncoder(valueToSetCurrentTo);
 		float val = GetPIDPosition(group);
 		firePIDResetEvent(group, val);
 		return true;
@@ -173,7 +175,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice {
 		// new RuntimeException("Virtual setpoint, group="+group+"
 		// setpoint="+setpoint).printStackTrace();;
 		sync.setPause(true);
-		driveThreads.get(group).StartLinearMotion(setpoint, seconds);
+		getDriveThread(group).StartLinearMotion(setpoint, seconds);
 		sync.setPause(false);
 		return true;
 	}
@@ -196,7 +198,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice {
 					+ " sec: " + seconds);
 		if (seconds < 0.1 && seconds > -0.1) {
 			// System.out.println("Setting virtual velocity="+unitsPerSecond);
-			driveThreads.get(group).SetVelocity(unitsPerSecond);
+			getDriveThread(group).SetVelocity(unitsPerSecond);
 		} else {
 			SetPIDInterpolatedVelocity(group, unitsPerSecond, seconds);
 		}
@@ -229,10 +231,23 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice {
 	public boolean SetAllPIDSetPoint(float[] setpoints, double seconds) {
 		sync.setPause(true);
 		for (int i = 0; i < setpoints.length; i++) {
-			driveThreads.get(i).StartLinearMotion(setpoints[i], seconds);
+			getDriveThread(i).StartLinearMotion(setpoints[i], seconds);
 		}
 		sync.setPause(false);
 		return true;
+	}
+
+	private InterpolationEngine getDriveThread(int i) {
+		for(PIDConfiguration c:driveThreads.keySet()) {
+			if (c.getGroup()==i) {
+				return driveThreads.get(c);
+			}
+		}
+		for(PIDConfiguration c:driveThreads.keySet()) {
+			System.err.println(c);
+		}
+		
+		throw new RuntimeException("Device is missing, id "+i);
 	}
 
 	/*
@@ -243,7 +258,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice {
 	@Override
 	public float GetPIDPosition(int group) {
 		// TODO Auto-generated method stub
-		return (float) driveThreads.get(group).getPosition();
+		return (float) getDriveThread(group).getPosition();
 	}
 
 	/*
@@ -263,22 +278,24 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice {
 	 */
 	@Override
 	public float[] GetAllPIDPosition() {
-		// This is the trigger to populate the number of PID channels
-		float[] back = new float[numChannels];
-
-		setChannels(new ArrayList<PIDChannel>());
-		// lastPacketTime = new long[back.length];
-		for (int i = 0; i < back.length; i++) {
-			back[i] = 0;
-			PIDChannel c = new PIDChannel(this, i);
-			c.setCachedTargetValue(back[i]);
-			getChannels().add(c);
-			PIDConfiguration conf = new PIDConfiguration();
-			InterpolationEngine d = new InterpolationEngine();
-			driveThreads.put(conf, d);
-			configs.add(conf);
+		if(backs==null) {
+			backs = new float[numChannels];
+	
+			setChannels(new ArrayList<PIDChannel>());
+			// lastPacketTime = new long[back.length];
+			for (int i = 0; i < backs.length; i++) {
+				backs[i] = 0;
+				PIDChannel c = new PIDChannel(this, i);
+				c.setCachedTargetValue(backs[i]);
+				getChannels().add(c);
+				PIDConfiguration conf = new PIDConfiguration();
+				conf.setGroup(i);
+				InterpolationEngine d = new InterpolationEngine();
+				driveThreads.put(conf, d);
+				configs.add(conf);
+			}
 		}
-		return back;
+		return backs;
 	}
 
 	/**
