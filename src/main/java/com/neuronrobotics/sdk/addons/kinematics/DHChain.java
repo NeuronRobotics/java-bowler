@@ -185,7 +185,7 @@ public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector )
 		if(getLinks() == null)
 			return new TransformNR().getMatrixTransform();
 		if (jointSpaceVector.length!=getLinks().size())
-			throw new IndexOutOfBoundsException("DH links do not match defined links");
+			throw new IndexOutOfBoundsException("DH links do not match defined links. expected "+getLinks().size()+" got "+jointSpaceVector.length);
 		Matrix current = new TransformNR().getMatrixTransform();
 		
 		for(int i=0;i<getLinks().size();i++) {

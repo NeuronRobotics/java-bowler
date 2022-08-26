@@ -642,7 +642,11 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 		super.setGlobalToFiducialTransform(frameToBase);
 		if(getChain()!=null) {
 			getChain().setChain(null);// force an update of teh cached locations because base changed
-			getChain().getChain(getCurrentJointSpaceVector());//calculate new locations
+			try {
+				getChain().getChain(getCurrentJointSpaceVector());//calculate new locations
+			}catch(Exception e) {
+				throw new RuntimeException("Limb "+getScriptingName()+", "+e.getMessage());
+			}
 		}
 		runRenderWrangler();
 	}
