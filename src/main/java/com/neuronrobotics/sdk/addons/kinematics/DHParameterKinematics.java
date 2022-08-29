@@ -804,4 +804,8 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 			getAbstractLink(i).setUseLimits(b);
 		}
 	}
+
+	public TransformNR getLinkTip(int linkIndex) {
+		return getChain().getCachedChain().get(linkIndex);
+	}
 }
