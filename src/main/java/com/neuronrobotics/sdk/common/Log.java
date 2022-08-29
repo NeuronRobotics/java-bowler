@@ -15,6 +15,8 @@
 package com.neuronrobotics.sdk.common;
 
 import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -434,6 +436,14 @@ public class Log {
 	public static boolean isPrinting() {
 		// TODO Auto-generated method stub
 		return instance().systemprint;
+	}
+
+	public static void error(Throwable ex) {
+		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter(sw);
+		ex.printStackTrace(pw);
+		String sStackTrace = sw.toString(); // stack trace as a string
+		Log.error(sStackTrace);
 	}
 	
 }

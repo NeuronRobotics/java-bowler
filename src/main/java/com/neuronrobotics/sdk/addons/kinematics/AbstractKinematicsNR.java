@@ -599,6 +599,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 			double[] jointSpaceVect = dev.inverseKinematics(dev.inverseOffset(taskSpaceTransform));
 			return checkVector(dev, jointSpaceVect,seconds);
 		} catch (Throwable ex) {
+			Log.error(ex);
 			return false;
 		}
 	}
@@ -615,15 +616,18 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		double[] current = dev.getCurrentJointSpaceTarget();
 		for (int i = 0; i < jointSpaceVect.length; i++) {
 			AbstractLink link = dev.factory.getLink(dev.getLinkConfiguration(i));
-			double val = link.toLinkUnits(jointSpaceVect[i]);
+			double val = jointSpaceVect[i];
 			Double double1 = new Double(val);
 			if(double1.isNaN() ||double1.isInfinite() ) {
+				Log.error(dev.getScriptingName()+" Link "+i+" Invalid unput "+double1);
 				return false;
 			}
-			if (val > link.getUpperLimit()) {
+			if (val > link.getMaxEngineeringUnits()) {
+				Log.error(dev.getScriptingName()+" Link "+i+" can not reach "+val+" limited to "+link.getMaxEngineeringUnits());
 				return false;
 			}
-			if (val < link.getLowerLimit()) {
+			if (val < link.getMinEngineeringUnits()) {
+				Log.error(dev.getScriptingName()+" Link "+i+" can not reach "+val+" limited to "+link.getMinEngineeringUnits());
 				return false;
 			}
 			if(seconds>0) {
