@@ -600,6 +600,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 			return checkVector(dev, jointSpaceVect,seconds);
 		} catch (Throwable ex) {
 			Log.error(ex);
+			ex.printStackTrace();
 			return false;
 		}
 	}

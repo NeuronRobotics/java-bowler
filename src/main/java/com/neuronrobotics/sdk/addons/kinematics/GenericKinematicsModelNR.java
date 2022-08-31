@@ -39,7 +39,7 @@ public class GenericKinematicsModelNR extends AbstractKinematicsNR {
  * Instantiates a new generic kinematics model nr.
  */
 public GenericKinematicsModelNR() {
-		super(XmlFactory.getDefaultConfigurationStream("GenericKinematics.xml"),new LinkFactory( new VirtualGenericPIDDevice(1000000)));
+		super(XmlFactory.getDefaultConfigurationStream("GenericKinematics.xml"),new LinkFactory( new VirtualGenericPIDDevice(1000000,"GenericKinematicsDevice")));
 	}
 
 	/* (non-Javadoc)

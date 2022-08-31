@@ -37,7 +37,10 @@ public class MobileBase extends AbstractKinematicsNR {
 
 	/** The drivable. */
 	private final ArrayList<DHParameterKinematics> drivable = new ArrayList<DHParameterKinematics>();
-
+	
+	/** The drivable. */
+	private final ArrayList<IOnMobileBaseRenderChange> changeListeners = new ArrayList<IOnMobileBaseRenderChange>();
+	
 	/** The walking drive engine. */
 	private IDriveEngine walkingDriveEngine = new WalkingDriveEngine();
 
@@ -914,12 +917,35 @@ public class MobileBase extends AbstractKinematicsNR {
 		super.connect();
 		for(DHParameterKinematics kin:this.getAllDHChains()) {
 	    	for(int i=0;i<kin.getNumberOfLinks();i++) {
+	    		kin.addChangeListener(i, ev->{
+	    			fireIOnMobileBaseRenderChange();
+	    		} );
 	    		MobileBase m = kin.getDhLink(i).getSlaveMobileBase();
 	    		if(m!=null) {
 	    			m.connect();
+		    		m.addIOnMobileBaseRenderChange(new IOnMobileBaseRenderChange() {
+						@Override
+						public void event() {
+							fireIOnMobileBaseRenderChange();
+						}
+					});
 	    		}
+
 	    	}
+	    	kin.addJointSpaceListener(new IJointSpaceUpdateListenerNR() {
+				@Override
+				public void onJointSpaceUpdate(AbstractKinematicsNR source, double[] joints) {
+					fireIOnMobileBaseRenderChange();
+				}
+				
+				@Override
+				public void onJointSpaceTargetUpdate(AbstractKinematicsNR source, double[] joints) {}
+				
+				@Override
+				public void onJointSpaceLimit(AbstractKinematicsNR source, int axis, JointLimit event) {}
+			});
 	    }
+		
 		return isAvailable();
 	}
 
@@ -958,11 +984,27 @@ public class MobileBase extends AbstractKinematicsNR {
 		
 		
 	}
-
+	
+	private void fireIOnMobileBaseRenderChange() {
+		for(IOnMobileBaseRenderChange l:changeListeners)
+			l.event();
+	}
 	public void setHomeProvider(ICalcLimbHomeProvider homeProvider) {
 		this.homeProvider = homeProvider;
 	}
 
+	public void addIOnMobileBaseRenderChange(IOnMobileBaseRenderChange l) {
+		if(changeListeners.contains(l))
+			return;
+		changeListeners.add(l);
+	}
+	public void removeIOnMobileBaseRenderChange(IOnMobileBaseRenderChange l) {
+		if(changeListeners.contains(l))
+			changeListeners.remove(l);
+	}
+	public void clearIOnMobileBaseRenderChange() {
 
-
+		changeListeners.clear();
+	}
+	
 }

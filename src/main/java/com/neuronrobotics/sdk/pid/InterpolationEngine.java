@@ -31,6 +31,23 @@ public class InterpolationEngine {
 	private double TRAPEZOIDAL_time=0;
 	private double BEZIER_P0;
 	private double BEZIER_P1;
+	private double interpElapsed;
+	private double sinPortion;
+	private double lengthOfLinearMode;
+	private double unitLienear;
+	private double unitRamp;
+	private double unitStartRampDown;
+	private double increment;
+	private double sinPortion2;
+	private double increment2;
+	private double sinPortion3;
+	private double t;
+	private double p0;
+	private double p1;
+	private double p2;
+	private double p3;
+	private double setpointDiff;
+	private double newSetpoint;
 	
 
 	/**
@@ -165,29 +182,26 @@ public class InterpolationEngine {
 	}
 	
 	public  double getInterpolationUnitIncrement() {
-		double interpElapsed = (double)(System.currentTimeMillis() - startTime);
+		interpElapsed = (double)(System.currentTimeMillis() - startTime);
 		if (interpElapsed < duration && duration > 0)
 		{
 			
 			setUnitDuration(interpElapsed / duration);
 			if(type==InterpolationType.SINUSOIDAL) {
-				double sinPortion = (Math.cos(-Math.PI * getUnitDuration()) / 2) + 0.5;
+				sinPortion = (Math.cos(-Math.PI * getUnitDuration()) / 2) + 0.5;
 				setUnitDuration(1 - sinPortion);
 			}
 			if (type == InterpolationType.TRAPEZOIDAL)
 			{
-				double lengthOfLinearMode = duration - (TRAPEZOIDAL_time * 2);
-				double unitLienear = lengthOfLinearMode / duration;
-				double unitRamp = ((double)TRAPEZOIDAL_time) / duration;
-				double unitStartRampDown = unitLienear + unitRamp;
+				lengthOfLinearMode = duration - (TRAPEZOIDAL_time * 2);
+				unitLienear = lengthOfLinearMode / duration;
+				unitRamp = ((double)TRAPEZOIDAL_time) / duration;
+				unitStartRampDown = unitLienear + unitRamp;
 				if (getUnitDuration() < unitRamp)
 				{
-					// ramp up
-					// range from 1 to 0.5
-					double increment = 1 - (getUnitDuration()) / (unitRamp * 2);
-					// range 0 to 1
-					double sinPortion = 1 + Math.cos(-Math.PI * increment);
-					setUnitDuration(sinPortion * unitRamp);
+					increment = 1 - (getUnitDuration()) / (unitRamp * 2);
+					sinPortion2 = 1 + Math.cos(-Math.PI * increment);
+					setUnitDuration(sinPortion2 * unitRamp);
 				}
 				else if (getUnitDuration() > unitRamp && getUnitDuration() < unitStartRampDown)
 				{
@@ -195,21 +209,21 @@ public class InterpolationEngine {
 				}
 				else if (getUnitDuration() > unitStartRampDown)
 				{
-					double increment = (getUnitDuration() - unitStartRampDown) / (unitRamp * 2) + 0.5;
-					double sinPortion = 0.5 - ((Math.cos(-Math.PI * increment) / 2) + 0.5);
-					setUnitDuration((sinPortion * 2) * unitRamp + unitStartRampDown);
+					increment2 = (getUnitDuration() - unitStartRampDown) / (unitRamp * 2) + 0.5;
+					sinPortion3 = 0.5 - ((Math.cos(-Math.PI * increment2) / 2) + 0.5);
+					setUnitDuration((sinPortion3 * 2) * unitRamp + unitStartRampDown);
 				}
 			}
 			if (type == InterpolationType.BEZIER)
 			{
 				if (getUnitDuration() > 0 && getUnitDuration() < 1)
 				{
-					double t = getUnitDuration();
-					double P0 = 0;
-					double P1 = BEZIER_P0;
-					double P2 = BEZIER_P1;
-					double P3 = 1;
-					setUnitDuration(Math.pow((1 - t), 3) * P0 + 3 * t * Math.pow((1 - t), 2) * P1 + 3 * Math.pow(t, 2) * (1 - t) * P2 + Math.pow(t, 3) * P3);
+					t = getUnitDuration();
+					p0 = 0;
+					p1 = BEZIER_P0;
+					p2 = BEZIER_P1;
+					p3 = 1;
+					setUnitDuration(Math.pow((1 - t), 3) * p0 + 3 * t * Math.pow((1 - t), 2) * p1 + 3 * Math.pow(t, 2) * (1 - t) * p2 + Math.pow(t, 3) * p3);
 				}
 			}
 			return getUnitDuration();
@@ -225,8 +239,8 @@ public class InterpolationEngine {
 	private void interpolate() {
 		setUnitDuration(getInterpolationUnitIncrement());
 		if (getUnitDuration() < 1) {
-			double setpointDiff = endSetpoint - startSetpoint;
-			double newSetpoint = startSetpoint + (setpointDiff * getUnitDuration());
+			setpointDiff = endSetpoint - startSetpoint;
+			newSetpoint = startSetpoint + (setpointDiff * getUnitDuration());
 			setTicks(newSetpoint);
 		} else {
 			// If there is no interpoation to perform, set the setpoint to the end state
@@ -267,10 +281,10 @@ public class InterpolationEngine {
 	 * @param ticks the new ticks
 	 */
 	public void setTicks(double ticks) {
-		if(new Double(ticks).isNaN()) {
-			new RuntimeException("Ticks in virtual device can not be set to nan").printStackTrace();
-			return;
-		}
+//		if(new Double(ticks).isNaN()) {
+//			new RuntimeException("Ticks in virtual device can not be set to nan").printStackTrace();
+//			return;
+//		}
 		this.ticks = ticks;
 	}
 	

@@ -33,7 +33,7 @@ public class ExternalLinkProviderTest {
 	public void test() throws Exception {
 		//main(null);
 	}
-	static VirtualGenericPIDDevice virtual=new VirtualGenericPIDDevice();
+	static VirtualGenericPIDDevice virtual=new VirtualGenericPIDDevice("TestDevice");
 
 	private static class myLinkImplementation extends PidRotoryLink{
 		public myLinkImplementation( LinkConfiguration conf) {

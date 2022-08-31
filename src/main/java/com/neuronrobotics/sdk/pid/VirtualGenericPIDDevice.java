@@ -40,20 +40,27 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice {
 
 	private float[] backs;
 
+	private String myVirtualDevName;
+
 	/**
 	 * Instantiates a new virtual generic pid device.
+	 * @param myVirtualDevName 
 	 */
-	public VirtualGenericPIDDevice() {
-		this(1000000);
+	public VirtualGenericPIDDevice(String myVirtualDevName) {
+		this(1000000,myVirtualDevName);
 	}
 
 	/**
 	 * Instantiates a new virtual generic pid device.
 	 *
 	 * @param maxTicksPerSecond the max ticks per second
+	 * @param myVirtualDevName2 
 	 */
-	public VirtualGenericPIDDevice(double maxTicksPerSecond) {
+	public VirtualGenericPIDDevice(double maxTicksPerSecond, String myVirtualDevName) {
 		this.setMaxTicksPerSecond(maxTicksPerSecond);
+		if(myVirtualDevName == null)
+			throw new RuntimeException("Name of virtual device can not be null");
+		this.myVirtualDevName = myVirtualDevName;
 		getImplementation().setChannelCount(new Integer(numChannels));
 		GetAllPIDPosition();
 		for (int i = 0; i < numChannels; i++) {
@@ -62,7 +69,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice {
 		}
 
 		sync.start();
-
+		//new RuntimeException("Instantiation of VirtualGenericPIDDevice "+myVirtualDevName).printStackTrace();
 	}
 
 	/*
@@ -339,23 +346,26 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice {
 		 */
 		public void run() {
 			setName("Bowler Platform Virtual PID sync thread");
+			PIDEvent e= 	new PIDEvent();
+			long time;
 			while (true) {
 				try {
 					Thread.sleep(threadTime);
-				} catch (InterruptedException e) {
+				} catch (InterruptedException ex) {
 				}
 				while (isPause()) {
 					isPaused = true;
 					ThreadUtil.wait(10);
 				}
 				isPaused = false;
-				long time = System.currentTimeMillis();
+				time = System.currentTimeMillis();
 				for (PIDConfiguration key : driveThreads.keySet()) {
 					InterpolationEngine dr = driveThreads.get(key);
 					if (key.isEnabled()) {
 						if (dr.update()) {
 							try {
-								firePIDEvent(new PIDEvent(key.getGroup(), (float) dr.getTicks(), time, 0));
+								e.set(key.getGroup(), (float) dr.getTicks(), time, 0);
+								firePIDEvent(e);
 							} catch (NullPointerException ex) {
 								// initialization issue, let it work itself out
 							} catch (Exception ex) {

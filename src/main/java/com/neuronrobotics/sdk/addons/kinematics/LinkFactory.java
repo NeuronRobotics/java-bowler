@@ -212,11 +212,11 @@ public class LinkFactory {
 		case DUMMY:
 		case VIRTUAL:
 			String myVirtualDevName=c.getDeviceScriptingName();
-			virtual = (VirtualGenericPIDDevice)DeviceManager.getSpecificDevice(VirtualGenericPIDDevice.class, myVirtualDevName);
-			if(virtual==null){
-				virtual=new VirtualGenericPIDDevice();
-				DeviceManager.addConnection(virtual, myVirtualDevName);
-			}
+			virtual = (VirtualGenericPIDDevice)DeviceManager
+					.getSpecificDevice(
+							myVirtualDevName , 
+							() -> new VirtualGenericPIDDevice(myVirtualDevName)
+							);
 			tmp=new PidRotoryLink(	virtual.getPIDChannel(c.getHardwareIndex()),
 					c,true);
 			break;
@@ -243,11 +243,12 @@ public class LinkFactory {
 		
 		if(tmp==null){
 			String myVirtualDevName=c.getDeviceScriptingName();
-			virtual = (VirtualGenericPIDDevice)DeviceManager.getSpecificDevice(VirtualGenericPIDDevice.class, myVirtualDevName);
-			if(virtual==null){
-				virtual=new VirtualGenericPIDDevice();
-				DeviceManager.addConnection(virtual, myVirtualDevName);
-			}
+			virtual = (VirtualGenericPIDDevice)DeviceManager
+					.getSpecificDevice(
+							myVirtualDevName , 
+							() -> new VirtualGenericPIDDevice(myVirtualDevName)
+							);
+
 			if(!c.isPrismatic()){
 				tmp=new PidRotoryLink(	virtual.getPIDChannel(c.getHardwareIndex()),
 						c,true);

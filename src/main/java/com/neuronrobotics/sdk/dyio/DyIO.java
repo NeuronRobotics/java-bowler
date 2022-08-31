@@ -1069,7 +1069,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 				getPid().setAddress(getAddress());
 				getPid().connect();
 			}else{
-				pid=new VirtualGenericPIDDevice();
+				pid=new VirtualGenericPIDDevice("DyIO VirtualDevice");
 			}
 			
 			

@@ -21,6 +21,10 @@ public class PIDEvent {
 	/** The velocity. */
 	private int velocity;
 	
+	public PIDEvent(){
+		
+	}
+	
 	/**
 	 * Instantiates a new PID event.
 	 *
@@ -35,7 +39,20 @@ public class PIDEvent {
 		setTimeStamp(time);
 		setVelocity(velocity);
 	}
-	
+	/**
+	 * Sets new PID event.
+	 *
+	 * @param chan the chan
+	 * @param tick the tick
+	 * @param time the time
+	 * @param velocity the velocity
+	 */
+	public void set(int chan,float tick,long time,int velocity){
+		setGroup(chan);
+		setValue(tick);
+		setTimeStamp(time);
+		setVelocity(velocity);
+	}
 	/**
 	 * Instantiates a new PID event.
 	 *

@@ -101,7 +101,7 @@ public class PidDeviceServer extends BowlerAbstractServer implements IPIDEventLi
 	 */
 	public static void main(String [] args){
 		Log.enableInfoPrint();
-		PidDeviceServer srv = new PidDeviceServer(new MACAddress(), new VirtualGenericPIDDevice(10000) );
+		PidDeviceServer srv = new PidDeviceServer(new MACAddress(), new VirtualGenericPIDDevice(10000,"PID SERVER TEST") );
 		
 	}
 }
