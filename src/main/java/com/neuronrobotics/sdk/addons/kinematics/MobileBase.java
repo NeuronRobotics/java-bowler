@@ -19,12 +19,13 @@ import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.parallel.ParallelGroup;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
 import com.neuronrobotics.sdk.common.DeviceManager;
+import com.neuronrobotics.sdk.common.Log;
 
 // TODO: Auto-generated Javadoc
 /**
  * The Class MobileBase.
  */
-public class MobileBase extends AbstractKinematicsNR {
+public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurationChangeListener,IOnMobileBaseRenderChange, IJointSpaceUpdateListenerNR {
 
 	/** The legs. */
 	private final ArrayList<DHParameterKinematics> legs = new ArrayList<DHParameterKinematics>();
@@ -444,7 +445,12 @@ public class MobileBase extends AbstractKinematicsNR {
 	 */
 	@Override
 	public boolean connectDevice() {
-		// TODO Auto-generated method stub
+		for (DHParameterKinematics kin : getAllDHChains()) {
+			if(!kin.connect()) {
+				Log.error("Connection failed!");
+				return false;
+			}
+		}
 		return true;
 	}
 
@@ -808,21 +814,8 @@ public class MobileBase extends AbstractKinematicsNR {
 	 * Update positions.
 	 */
 	public void updatePositions() {
-//		for (DHParameterKinematics kin : getAppendages()) {
-//			// System.err.println("Updating arm: "+kin.getScriptingName());
-//			kin.updateCadLocations();
-//		}
-//		for (DHParameterKinematics kin : getDrivable()) {
-//			// System.err.println("Updating getDrivable:
-//			// "+kin.getScriptingName());
-//			kin.updateCadLocations();
-//		}
-//		for (DHParameterKinematics kin : getSteerable()) {
-//			// System.err.println("Updating getSteerable:
-//			// "+kin.getScriptingName());
-//			kin.updateCadLocations();
-//		}
 		runRenderWrangler();
+		fireIOnMobileBaseRenderChange();
 	}
 
 	/**
@@ -916,37 +909,30 @@ public class MobileBase extends AbstractKinematicsNR {
 	public boolean connect(){
 		super.connect();
 		for(DHParameterKinematics kin:this.getAllDHChains()) {
+	    	addListeners(kin);
 	    	for(int i=0;i<kin.getNumberOfLinks();i++) {
-	    		kin.addChangeListener(i, ev->{
-	    			fireIOnMobileBaseRenderChange();
-	    		} );
-	    		MobileBase m = kin.getDhLink(i).getSlaveMobileBase();
-	    		if(m!=null) {
-	    			m.connect();
-		    		m.addIOnMobileBaseRenderChange(new IOnMobileBaseRenderChange() {
-						@Override
-						public void event() {
-							fireIOnMobileBaseRenderChange();
-						}
-					});
-	    		}
-
-	    	}
-	    	kin.addJointSpaceListener(new IJointSpaceUpdateListenerNR() {
-				@Override
-				public void onJointSpaceUpdate(AbstractKinematicsNR source, double[] joints) {
-					fireIOnMobileBaseRenderChange();
+				MobileBase m = kin.getDhLink(i).getSlaveMobileBase();
+				if(m!=null) {
+					m.connect();
 				}
-				
-				@Override
-				public void onJointSpaceTargetUpdate(AbstractKinematicsNR source, double[] joints) {}
-				
-				@Override
-				public void onJointSpaceLimit(AbstractKinematicsNR source, int axis, JointLimit event) {}
-			});
+			}
 	    }
 		
 		return isAvailable();
+	}
+
+
+	private void addListeners(DHParameterKinematics kin) {
+		for(int i=0;i<kin.getNumberOfLinks();i++) {
+			kin.addChangeListener(i,this );
+			MobileBase m = kin.getDhLink(i).getSlaveMobileBase();
+			if(m!=null) {
+				m.connect();
+				m.addIOnMobileBaseRenderChange(this);
+			}
+
+		}
+		kin.addJointSpaceListener(this);
 	}
 
 	public static void main(String[] args) throws Exception {
@@ -1005,6 +991,41 @@ public class MobileBase extends AbstractKinematicsNR {
 	public void clearIOnMobileBaseRenderChange() {
 
 		changeListeners.clear();
+	}
+
+
+	@Override
+	public void event(LinkConfiguration newConf) {
+		// TODO Auto-generated method stub
+		fireIOnMobileBaseRenderChange();
+	}
+
+
+	@Override
+	public void event() {
+		// TODO Auto-generated method stub
+		fireIOnMobileBaseRenderChange();
+	}
+
+
+	@Override
+	public void onJointSpaceUpdate(AbstractKinematicsNR source, double[] joints) {
+		// TODO Auto-generated method stub
+		fireIOnMobileBaseRenderChange();
+	}
+
+
+	@Override
+	public void onJointSpaceTargetUpdate(AbstractKinematicsNR source, double[] joints) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void onJointSpaceLimit(AbstractKinematicsNR source, int axis, JointLimit event) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

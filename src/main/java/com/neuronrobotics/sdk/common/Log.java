@@ -156,13 +156,13 @@ public class Log {
 		}
 		//messages.add(m);
 		
-		if(isPrinting() && importance >= minprintlevel) {
+		if(isPrinting() && importance >= minprintlevel && systemprint) {
 			errStream.println(m);
 			if(errStream != System.err)
 				 System.err.println(m);
 		}
 		
-		if(debugprint) {
+		if(debugprint&& systemprint) {
 			outStream.println("# " + message);
 			if(outStream != System.out)
 				 System.out.println(m);
