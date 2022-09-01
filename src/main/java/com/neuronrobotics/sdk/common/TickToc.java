@@ -46,7 +46,8 @@ public class TickToc {
 		Pair start = events.remove(0);
 		Pair previous=null;
 		System.out.println("\n\n");
-		for(Pair p:events) {
+		for (int i = 0; i < events.size(); i++) {
+			Pair p = events.get(i);
 			p.print(start,previous);
 			previous=p;
 		}
