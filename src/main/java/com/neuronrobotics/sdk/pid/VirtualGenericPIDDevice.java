@@ -181,9 +181,9 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice {
 	public boolean SetPIDSetPoint(int group, float setpoint, double seconds) {
 		// new RuntimeException("Virtual setpoint, group="+group+"
 		// setpoint="+setpoint).printStackTrace();;
-		sync.setPause(true);
+		//sync.setPause(true);
 		getDriveThread(group).StartLinearMotion(setpoint, seconds);
-		sync.setPause(false);
+		//sync.setPause(false);
 		return true;
 	}
 
@@ -236,11 +236,11 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice {
 	 */
 	@Override
 	public boolean SetAllPIDSetPoint(float[] setpoints, double seconds) {
-		sync.setPause(true);
+		//sync.setPause(true);
 		for (int i = 0; i < setpoints.length; i++) {
 			getDriveThread(i).StartLinearMotion(setpoints[i], seconds);
 		}
-		sync.setPause(false);
+		//sync.setPause(false);
 		return true;
 	}
 
@@ -353,11 +353,11 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice {
 					Thread.sleep(threadTime);
 				} catch (InterruptedException ex) {
 				}
-				while (isPause()) {
-					isPaused = true;
-					ThreadUtil.wait(10);
-				}
-				isPaused = false;
+//				while (isPause()) {
+//					isPaused = true;
+//					ThreadUtil.wait(1);
+//				}
+//				isPaused = false;
 				time = System.currentTimeMillis();
 				for (PIDConfiguration key : driveThreads.keySet()) {
 					InterpolationEngine dr = driveThreads.get(key);
@@ -379,31 +379,31 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice {
 			}
 		}
 
-		/**
-		 * Checks if is pause.
-		 *
-		 * @return true, if is pause
-		 */
-		public boolean isPause() {
-			return pause;
-		}
+//		/**
+//		 * Checks if is pause.
+//		 *
+//		 * @return true, if is pause
+//		 */
+//		public boolean isPause() {
+//			return pause;
+//		}
 
 		/**
 		 * Sets the pause.
 		 *
 		 * @param pause the new pause
 		 */
-		public void setPause(boolean pause) {
-			if (pause)
-				isPaused = false;
-			this.pause = pause;
-//			while (!isPaused) {
-//				try {
-//					Thread.sleep(threadTime);
-//				} catch (InterruptedException e) {
-//				}
-//			}
-		}
+//		public void setPause(boolean pause) {
+//			if (pause)
+//				isPaused = false;
+//			this.pause = pause;
+////			while (!isPaused) {
+////				try {
+////					Thread.sleep(threadTime);
+////				} catch (InterruptedException e) {
+////				}
+////			}
+//		}
 	}
 
 	/*

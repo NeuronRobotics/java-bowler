@@ -63,7 +63,9 @@ public class TickToc {
 		TickToc.enabled = enabled;
 		if(!enabled)
 			clear();
-		else
+		else {
+			System.out.println("Start TickToc");
 			tic("Tick Tock start");
+		}
 	}
 }

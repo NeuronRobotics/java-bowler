@@ -57,10 +57,9 @@ public class InterpolationEngine {
 	 */
 	public void SetVelocity(double unitsPerSecond) {
 		//System.out.println("Setting velocity to "+unitsPerSecond+"ticks/second");
-		setPause(true);
+		//setPause(true);
 		
-		System.currentTimeMillis();
-		setPause(false);
+		//setPause(false);
 	}
 	
 	/**
@@ -104,7 +103,7 @@ public class InterpolationEngine {
 		type = mode;
 		if(seconds<0.001)
 			seconds = 0.001;// one ms garunteed
-		setPause(true);
+		//setPause(true);
 
 		duration = (long) (seconds*1000);
 		startTime=System.currentTimeMillis();
@@ -115,7 +114,7 @@ public class InterpolationEngine {
 			endSetpoint=setpoint;
 		startSetpoint = getTicks();
 		
-		setPause(false);
+		//setPause(false);
 	}
 	public void StartTrapezoidalMotion(double setpoint,double seconds, double trapazoidalTime) {
 
@@ -147,7 +146,7 @@ public class InterpolationEngine {
 	 */
 	public boolean update(){
 		interpolate();
-		if((getTicks()!=lastTick) && !isPause()) {
+		if((getTicks()!=lastTick)) {
 			lastTick=getTicks();
 			return true;
 		}	
@@ -160,7 +159,7 @@ public class InterpolationEngine {
 	 * @param value the value
 	 */
 	public synchronized  void ResetEncoder(double value) {
-		setPause(true);
+		//setPause(true);
 		//ThreadUtil.wait((int)(threadTime*2));
 		setTicks(value);
 		lastTick=value;
@@ -168,7 +167,7 @@ public class InterpolationEngine {
 		duration=0;
 		startTime=System.currentTimeMillis();
 		startSetpoint=value;
-		setPause(false);	
+		//setPause(false);	
 	}
 	
 
@@ -248,23 +247,23 @@ public class InterpolationEngine {
 		}
 	}
 	
-	/**
-	 * Checks if is pause.
-	 *
-	 * @return true, if is pause
-	 */
-	public boolean isPause() {
-		return pause;
-	}
-	
-	/**
-	 * Sets the pause.
-	 *
-	 * @param pause the new pause
-	 */
-	private void setPause(boolean pause) {
-		this.pause = pause;
-	}
+//	/**
+//	 * Checks if is pause.
+//	 *
+//	 * @return true, if is pause
+//	 */
+//	public boolean isPause() {
+//		return pause;
+//	}
+//	
+//	/**
+//	 * Sets the pause.
+//	 *
+//	 * @param pause the new pause
+//	 */
+//	private void setPause(boolean pause) {
+//		this.pause = pause;
+//	}
 	
 	/**
 	 * Gets the ticks.
