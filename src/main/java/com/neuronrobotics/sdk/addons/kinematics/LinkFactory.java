@@ -8,6 +8,7 @@ import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
 import com.neuronrobotics.sdk.common.DeviceManager;
 import com.neuronrobotics.sdk.common.IFlushable;
 import com.neuronrobotics.sdk.common.Log;
+import com.neuronrobotics.sdk.common.TickToc;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.peripherals.AnalogInputChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.CounterOutputChannel;
@@ -317,17 +318,21 @@ public class LinkFactory {
 		HashMap<String , Boolean> flushed=new HashMap<String, Boolean>();
  		for(LinkConfiguration c:getLinkConfigurations()){
  			String name = c.getDeviceScriptingName();
+ 			//TickToc.tic("Checking "+name+" for flush ");
 			// if a device is disconnected it is removed from the device manager. the factory should check all devices
-			if(DeviceManager.getSpecificDevice(IFlushable.class,name)==null){
+			Object specificDevice = DeviceManager.getSpecificDevice(IFlushable.class,name);
+			if(specificDevice==null){
 				getLink(c).flush(seconds);//links flushed directly because there is no flushable device
 			}else{
 				if(flushed.get(name)==null){
 					flushed.put(name,true);
-					IFlushable flushDevice = (IFlushable)DeviceManager.getSpecificDevice(IFlushable.class,name);
+					IFlushable flushDevice = (IFlushable)specificDevice;
+					
 					flushDevice.flush(seconds);
+					//TickToc.tic("Flushed "+name);
 				}
 			}
-			
+			//TickToc.tic("Done Checking "+name+" for flush ");
 			
 		}
 		//System.out.println("Flush Took "+(System.currentTimeMillis()-time)+"ms");
@@ -376,6 +381,7 @@ public class LinkFactory {
 			throw new IndexOutOfBoundsException("Expected "+links.size()+" links, got "+jointSpaceVect.length);
 		int i=0;
 		for(AbstractLink lin:links){
+			
 			try{
 				lin.setTargetEngineeringUnits(jointSpaceVect[i]);
 			}catch (Exception ee){

@@ -397,12 +397,12 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice {
 			if (pause)
 				isPaused = false;
 			this.pause = pause;
-			while (!isPaused) {
-				try {
-					Thread.sleep(threadTime);
-				} catch (InterruptedException e) {
-				}
-			}
+//			while (!isPaused) {
+//				try {
+//					Thread.sleep(threadTime);
+//				} catch (InterruptedException e) {
+//				}
+//			}
 		}
 	}
 

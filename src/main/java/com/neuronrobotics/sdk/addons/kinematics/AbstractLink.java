@@ -8,6 +8,7 @@ import com.neuronrobotics.sdk.addons.kinematics.imu.IMU;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.common.IFlushable;
 import com.neuronrobotics.sdk.common.Log;
+import com.neuronrobotics.sdk.common.TickToc;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 import com.neuronrobotics.sdk.pid.PIDLimitEventType;
 
@@ -277,12 +278,16 @@ public abstract class AbstractLink implements  IFlushable{
 	 * @param pos the new target engineering units
 	 */
 	public void setTargetEngineeringUnits(double pos) {
+		//TickToc.tic("Nan check link "+getLinkConfiguration().getLinkIndex());
 		if(new Double(pos).isNaN()) {
 			new RuntimeException("Setpopint in setTargetEngineeringUnits can not be set to nan").printStackTrace();
 			return;
 		}
+		//TickToc.tic("Nan check link done");
 		targetEngineeringUnits = pos;
-		setPosition(toLinkUnits(targetEngineeringUnits));
+		double linkUnits = toLinkUnits(targetEngineeringUnits);
+		//TickToc.tic("to link units");
+		setPosition(linkUnits);
 	}
 
 	/**
@@ -410,10 +415,13 @@ public abstract class AbstractLink implements  IFlushable{
 	 * @param val the new target value
 	 */
 	protected void setTargetValue(double val) {
+		//TickToc.tic("setTargetValue nan check");
+
 		if(new Double(val).isNaN()) {
 			new RuntimeException("Setpopint in virtual device can not be set to nan").printStackTrace();
 			return;
 		}
+		//TickToc.tic("setTargetValue nan check done ");
 		Log.info("Setting cached value :"+val);
 		this.targetValue = val;
 		for(LinkConfiguration c:slaveLinks){
@@ -421,6 +429,7 @@ public abstract class AbstractLink implements  IFlushable{
 			AbstractLink link = getSlaveFactory().getLink(c);
 			link.setTargetValue(targetValue);
 		}
+		//TickToc.tic("followers set ");
 	
 		double ub = getMaxEngineeringUnits();
 		double lb = getMinEngineeringUnits();
@@ -469,6 +478,7 @@ public abstract class AbstractLink implements  IFlushable{
 		}else{
 			Log.info("Abstract Link: limits disabled");
 		}
+		//TickToc.tic("link bound set done");
 	}
 
 	/**

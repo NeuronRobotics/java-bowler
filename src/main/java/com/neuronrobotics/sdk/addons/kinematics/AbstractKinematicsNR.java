@@ -24,6 +24,7 @@ import com.neuronrobotics.sdk.common.InvalidConnectionException;
 //import com.neuronrobotics.sdk.addons.kinematics.PidRotoryLink;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.NonBowlerDevice;
+import com.neuronrobotics.sdk.common.TickToc;
 import com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace;
 import com.neuronrobotics.sdk.pid.IPIDEventListener;
 import com.neuronrobotics.sdk.pid.InterpolationEngine;
@@ -575,17 +576,28 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 * @throws Exception If there is a workspace error
 	 */
 	public double[] setDesiredTaskSpaceTransform(TransformNR taskSpaceTransform, double seconds) throws Exception {
+		TickToc.tic("setDesiredTaskSpaceTransform start");
 		Log.info("Setting target pose: " + taskSpaceTransform);
 		setCurrentPoseTarget(taskSpaceTransform);
-
-		double[] jointSpaceVect = inverseKinematics(inverseOffset(taskSpaceTransform));
+		TickToc.tic("setCurrentPoseTarget");
+		TransformNR inverseOffset = inverseOffset(taskSpaceTransform);
+		TickToc.tic("inverseOffset");
+		double[] jointSpaceVect = inverseKinematics(inverseOffset);
+		TickToc.tic("inverseKinematics");
 		if(checkVector(this,jointSpaceVect,seconds)) {
+			TickToc.tic("checkVector success");
 			if (jointSpaceVect == null)
 				throw new RuntimeException("The kinematics model must return an array, not null");
+			
 			_setDesiredJointSpaceVector(jointSpaceVect, seconds,false);
+			TickToc.tic("_setDesiredJointSpaceVector complete");
 			return jointSpaceVect;
-		}
-		return getCurrentJointSpaceTarget();
+		}else
+			TickToc.tic("checkVector fail");
+		
+		double[] currentJointSpaceTarget2 = getCurrentJointSpaceTarget();
+		TickToc.tic("getCurrentJointSpaceTarget");
+		return currentJointSpaceTarget2;
 	}
 
 	/**
@@ -731,12 +743,15 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		//synchronized(AbstractKinematicsNR.class) {
 			int except = 0;
 			Exception e = null;
+			TickToc.tic("Set hardware values start");
 			do {
 				try {
 					factory.setCachedTargets(jointSpaceVect);
+					TickToc.tic("Cached targets ");
 					if (!isNoFlush()) {
 						//
 						factory.flush(seconds);
+						TickToc.tic("_setDesiredJointSpaceVector flush "+seconds);
 						//
 					}
 					except = 0;
@@ -749,13 +764,19 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 			} while (except > 0 && except < getRetryNumberBeforeFail());
 			if (e != null)
 				throw new RuntimeException("Limit On "+getScriptingName()+" "+e.getMessage());
+			TickToc.tic("Set hardware values done");
 			for(int i=0;i<getNumberOfLinks();i++)
 				getCurrentJointSpaceTarget()[i] = jointSpaceVect[i];
+			TickToc.tic("Copy Vector");
 			TransformNR fwd = forwardKinematics(getCurrentJointSpaceTarget());
+			TickToc.tic("FK from vector");
 			fireTargetJointsUpdate(getCurrentJointSpaceTarget(), fwd);
+			TickToc.tic("Joint space updates");
 			if(fireTaskUpdate) {
 				setCurrentPoseTarget(forwardOffset(fwd));	
+				TickToc.tic("task space updates");
 			}
+			
 		//}
 		return jointSpaceVect;
 	}
