@@ -711,7 +711,6 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 * @throws Exception If there is a workspace error
 	 */
 	public  double[] setDesiredJointSpaceVector(double[] jointSpaceVect, double seconds) throws Exception {
-		
 		return _setDesiredJointSpaceVector(jointSpaceVect,seconds,true);
 	}
 	/**

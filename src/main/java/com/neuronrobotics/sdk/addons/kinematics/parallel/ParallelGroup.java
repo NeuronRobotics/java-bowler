@@ -106,8 +106,9 @@ public class ParallelGroup extends DHParameterKinematics {
 					for (DHParameterKinematics d : getConstituantLimbs()) {
 						if (getTipOffset(d) != null) {
 							try {
+								//System.out.println("Setting Kinematics for follower "+d.getScriptingName());
 								double[] jointSpaceVect = compute(d, IKvalues, pose);
-								System.out.println(fk.getScriptingName()+" is Setting sublimb target "+d.getScriptingName());
+								//System.out.println(fk.getScriptingName()+" is Setting sublimb target "+d.getScriptingName());
 								d.throwExceptionOnJointLimit(false);
 								d.setDesiredJointSpaceVector(jointSpaceVect, 0);
 							} catch (Exception e) {
@@ -116,6 +117,7 @@ public class ParallelGroup extends DHParameterKinematics {
 							}
 						}
 					}
+					IKvalues.clear();
 				}
 			});
 		}
@@ -145,33 +147,31 @@ public class ParallelGroup extends DHParameterKinematics {
 		return true;
 	}
 
-	private double[] compute(DHParameterKinematics l, HashMap<String, double[]> IKvalues,
+	private double[] compute(DHParameterKinematics ldh, HashMap<String, double[]> IKvalues,
 			TransformNR taskSpaceTransform) throws Exception {
-		String scriptingName = l.getScriptingName();
-		if (IKvalues.get(scriptingName) != null) {
-			// existes already
-			return IKvalues.get(scriptingName);
+		String scriptingName = ldh.getScriptingName();
+		if (IKvalues.get(scriptingName) == null) {
+			//System.out.println("Perform IK "+ldh.getScriptingName());
+			if (getTipOffset().get(ldh) == null) {
+				// no offset, compute as normal
+				double[] jointSpaceVect = ldh.inverseKinematics(ldh.inverseOffset(taskSpaceTransform));
+				IKvalues.put(scriptingName, jointSpaceVect);
+			} else {
+				TransformNR offset = getTipOffset().get(ldh);
+				String refLimbName = tipOffsetRelativeToName.get(ldh);
+				int index = tipOffsetRelativeIndex.get(ldh);
+				DHParameterKinematics referencedLimb = findReferencedLimb(refLimbName);
+				if (referencedLimb == null)
+					throw new RuntimeException("Referenced limb missing, IK for " + ldh.getScriptingName()
+							+ " Failed looking for " + refLimbName);
+				double[] jointSpaceVectReferenced = compute(referencedLimb, IKvalues, taskSpaceTransform);
+	
+				TransformNR transformTOLinksTip = referencedLimb.getChain().getChain(jointSpaceVectReferenced).get(index)
+						.times(offset.inverse());
+				double[] jointSpaceVect = ldh.inverseKinematics(ldh.inverseOffset(transformTOLinksTip));
+				IKvalues.put(scriptingName, jointSpaceVect);
+			}
 		}
-		if (getTipOffset().get(l) == null) {
-			// no offset, compute as normal
-			double[] jointSpaceVect = l.inverseKinematics(l.inverseOffset(taskSpaceTransform));
-			IKvalues.put(scriptingName, jointSpaceVect);
-		} else {
-			TransformNR offset = getTipOffset().get(l);
-			String refLimbName = tipOffsetRelativeToName.get(l);
-			int index = tipOffsetRelativeIndex.get(l);
-			DHParameterKinematics referencedLimb = findReferencedLimb(refLimbName);
-			if (referencedLimb == null)
-				throw new RuntimeException("Referenced limb missing, IK for " + l.getScriptingName()
-						+ " Failed looking for " + refLimbName);
-			double[] jointSpaceVectReferenced = compute(referencedLimb, IKvalues, taskSpaceTransform);
-
-			TransformNR transformTOLinksTip = referencedLimb.getChain().getChain(jointSpaceVectReferenced).get(index)
-					.times(offset.inverse());
-			double[] jointSpaceVect = l.inverseKinematics(l.inverseOffset(transformTOLinksTip));
-			IKvalues.put(scriptingName, jointSpaceVect);
-		}
-
 		return IKvalues.get(scriptingName);
 	}
 
@@ -227,57 +227,12 @@ public class ParallelGroup extends DHParameterKinematics {
 
 	@Override
 	public TransformNR forwardKinematics(double[] jointSpaceVector) {
-		HashMap<DHParameterKinematics, TransformNR> tips = new HashMap<DHParameterKinematics, TransformNR>();
-
 		for (DHParameterKinematics l : getConstituantLimbs()) {
-			TransformNR fwd = l.getCurrentTaskSpaceTransform();
-			if (fwd == null)
-				throw new RuntimeException("Implementations of the kinematics need to return a transform not null");
-			// Log.info("Getting robot task space "+fwd);
-			tips.put(l, fwd);
+			if(l==getFKLimb())
+				return l.getCurrentTaskSpaceTransform();
 
-			// tips.get(l).times(tipOffset.get(l)));//apply tip offset
-			// TODO check to see if the TIps are alligned as you add them and
-			// throw an exception if a tip is misalligned
 		}
-//		if (getConstituantLimbs().size() > 3) {
-//			// we are assuming any passive links are encoded
-//			double dx = 0;
-//			double dy = 0;
-//			double dz = 0;
-//
-//			for (int i = 0; i < 3; i++) {
-//				TransformNR l = tips.get(getConstituantLimbs().get(i));
-//				Vec3d p1 = new Vec3d(l.getX(), l.getY(), l.getZ());
-//				dx += p1.x;
-//				dy += p1.y;
-//				dz += p1.z;
-//			}
-//			double x = dx /= 3;
-//			double y = dy /= 3;
-//			double z = dz /= 3;
-//
-//			double rotx = Math.atan2(y, z);
-//			double roty;
-//			if (z >= 0) {
-//				roty = -Math.atan2(x * Math.cos(rotx), z);
-//			} else {
-//				roty = Math.atan2(x * Math.cos(rotx), -z);
-//			}
-//			double rotz = Math.atan2(Math.cos(rotx), Math.sin(rotx) * Math.sin(roty));
-//
-//			return new TransformNR(x, y, x, new RotationNR(rotx, roty, rotz));
-//		} else if (getConstituantLimbs().size() == 2) {
-		try {
-			return tips.get(getFKLimb());// assume the first link is
-		}catch(Exception e) {
-			e.printStackTrace();
-			return new TransformNR();
-		}
-//															// in control or
-//															// orentation
-//		} else
-//			throw new RuntimeException("There needs to be at least 2 limbs for paralell");
+		throw new RuntimeException( "FK limb is missing!");
 	}
 
 	/**
