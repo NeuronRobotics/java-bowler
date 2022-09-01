@@ -43,7 +43,7 @@ public  class DHChain {
 	private DhInverseSolver is;
 	
 	/** The kin. */
-	private AbstractKinematicsNR kin;
+	public AbstractKinematicsNR kin;
 	
 	/** The factory. */
 	private LinkFactory factory;
@@ -181,7 +181,7 @@ public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector )
 	public Matrix forwardKinematicsMatrix(double[] jointSpaceVector, boolean store) {
 		return forwardKinematicsMatrix(jointSpaceVector,store?getCachedChain():null);
 	}
-	private Matrix forwardKinematicsMatrix(double[] jointSpaceVector, 	ArrayList<TransformNR>  chainToLoad) {
+	public Matrix forwardKinematicsMatrix(double[] jointSpaceVector, 	ArrayList<TransformNR>  chainToLoad) {
 		if(getLinks() == null)
 			return new TransformNR().getMatrixTransform();
 		if (jointSpaceVector.length!=getLinks().size())
