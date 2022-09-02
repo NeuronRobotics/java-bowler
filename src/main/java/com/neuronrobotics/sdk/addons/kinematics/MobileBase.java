@@ -929,7 +929,6 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 			if(m!=null) {
 				m.connect();
 				m.addIOnMobileBaseRenderChange(this);
-				m.getFactory().addIHardwareSyncPulseReciver(this);
 			}
 			
 		}

@@ -38,7 +38,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice  implements IHardw
 	private double maxTicksPerSecond;
 
 	/** The num channels. */
-	private int numChannels = 24;
+	private int numChannels = 40;
 
 	private float[] backs;
 
@@ -63,6 +63,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice  implements IHardw
 		if(myVirtualDevName == null)
 			throw new RuntimeException("Name of virtual device can not be null");
 		this.myVirtualDevName = myVirtualDevName;
+		setScriptingName(myVirtualDevName);
 		getImplementation().setChannelCount(new Integer(numChannels));
 		GetAllPIDPosition();
 		for (int i = 0; i < numChannels; i++) {
@@ -167,9 +168,11 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice  implements IHardw
 	 */
 	@Override
 	public boolean ResetPIDChannel(int group, float valueToSetCurrentTo) {
+		sync.setPause(true);
 		getDriveThread(group).ResetEncoder(valueToSetCurrentTo);
 		float val = GetPIDPosition(group);
 		firePIDResetEvent(group, val);
+		sync.setPause(false);
 		return true;
 	}
 
@@ -183,9 +186,9 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice  implements IHardw
 	public boolean SetPIDSetPoint(int group, float setpoint, double seconds) {
 		// new RuntimeException("Virtual setpoint, group="+group+"
 		// setpoint="+setpoint).printStackTrace();;
-		//sync.setPause(true);
+		sync.setPause(true);
 		getDriveThread(group).StartLinearMotion(setpoint, seconds);
-		//sync.setPause(false);
+		sync.setPause(false);
 		return true;
 	}
 
@@ -238,11 +241,11 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice  implements IHardw
 	 */
 	@Override
 	public boolean SetAllPIDSetPoint(float[] setpoints, double seconds) {
-		//sync.setPause(true);
+		sync.setPause(true);
 		for (int i = 0; i < setpoints.length; i++) {
 			getDriveThread(i).StartLinearMotion(setpoints[i], seconds);
 		}
-		//sync.setPause(false);
+		sync.setPause(false);
 		return true;
 	}
 
@@ -338,7 +341,9 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice  implements IHardw
 
 		/** The pause. */
 		private boolean sync = false;
-
+		private boolean pause = false;
+		private boolean updating = false;
+		private boolean dirty =false;
 		/*
 		 * (non-Javadoc)
 		 * 
@@ -353,13 +358,10 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice  implements IHardw
 					Thread.sleep(threadTime);
 				} catch (InterruptedException ex) {
 				}
-//				while (isPause()) {
-//					isPaused = true;
-//					ThreadUtil.wait(1);
-//				}
-//				isPaused = false;
+
 				sync=false;
 				time = System.currentTimeMillis();
+				updating=true;
 				for (PIDConfiguration key : interpolationEngines.keySet()) {
 					InterpolationEngine dr = interpolationEngines.get(key);
 					if (key.isEnabled()) {
@@ -378,36 +380,28 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice  implements IHardw
 						System.err.println("Virtual Device "+key.getGroup()+" is disabled");
 					}
 				}
-				if(sync)
+				updating=false;
+				while(isPause())
+					try {
+						Thread.sleep(1);
+					} catch (InterruptedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				if(dirty) {
+					dirty=false;
+				}else if(sync)
 					doSync();
 			}
 		}
-
-//		/**
-//		 * Checks if is pause.
-//		 *
-//		 * @return true, if is pause
-//		 */
-//		public boolean isPause() {
-//			return pause;
-//		}
-
-		/**
-		 * Sets the pause.
-		 *
-		 * @param pause the new pause
-		 */
-//		public void setPause(boolean pause) {
-//			if (pause)
-//				isPaused = false;
-//			this.pause = pause;
-////			while (!isPaused) {
-////				try {
-////					Thread.sleep(threadTime);
-////				} catch (InterruptedException e) {
-////				}
-////			}
-//		}
+		public boolean isPause() {
+			return pause;
+		}
+		public void setPause(boolean pause) {
+			this.pause = pause;
+			if(updating && pause)
+				dirty=true;
+		}
 	}
 
 	/*
