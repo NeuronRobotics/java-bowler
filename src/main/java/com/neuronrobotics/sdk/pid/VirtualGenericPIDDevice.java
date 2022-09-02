@@ -3,6 +3,8 @@ package com.neuronrobotics.sdk.pid;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.neuronrobotics.sdk.addons.kinematics.IHardwareSyncPulseProvider;
+import com.neuronrobotics.sdk.addons.kinematics.IHardwareSyncPulseReciver;
 import com.neuronrobotics.sdk.common.BowlerAbstractCommand;
 import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.common.InvalidConnectionException;
@@ -15,20 +17,20 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
 /**
  * The Class VirtualGenericPIDDevice.
  */
-public class VirtualGenericPIDDevice extends GenericPIDDevice {
+public class VirtualGenericPIDDevice extends GenericPIDDevice  implements IHardwareSyncPulseProvider{
 
 	/** The Constant threadTime. */
 	private static final long threadTime = 10;
 
 	/** The drive threads. */
-	private HashMap<PIDConfiguration, InterpolationEngine> driveThreads = new HashMap<>();
+	private HashMap<PIDConfiguration, InterpolationEngine> interpolationEngines = new HashMap<>();
 
 	/** The configs. */
 	private HashMap<Integer, PIDConfiguration> configs = new HashMap<>();
 
 	/** The P dconfigs. */
 	private ArrayList<PDVelocityConfiguration> PDconfigs = new ArrayList<PDVelocityConfiguration>();
-
+	
 	/** The sync. */
 	SyncThread sync = new SyncThread();
 
@@ -245,12 +247,12 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice {
 	}
 
 	private InterpolationEngine getDriveThread(int i) {
-		for (PIDConfiguration c : driveThreads.keySet()) {
+		for (PIDConfiguration c : interpolationEngines.keySet()) {
 			if (c.getGroup() == i) {
-				return driveThreads.get(c);
+				return interpolationEngines.get(c);
 			}
 		}
-		for (PIDConfiguration c : driveThreads.keySet()) {
+		for (PIDConfiguration c : interpolationEngines.keySet()) {
 			System.err.println(c);
 		}
 
@@ -299,7 +301,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice {
 				conf.setGroup(i);
 				conf.setEnabled(true);
 				InterpolationEngine d = new InterpolationEngine();
-				driveThreads.put(conf, d);
+				interpolationEngines.put(conf, d);
 				configs.put(i, conf);
 			}
 		}
@@ -335,9 +337,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice {
 	private class SyncThread extends Thread {
 
 		/** The pause. */
-		private boolean pause = false;
-
-		private boolean isPaused = false;
+		private boolean sync = false;
 
 		/*
 		 * (non-Javadoc)
@@ -358,14 +358,16 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice {
 //					ThreadUtil.wait(1);
 //				}
 //				isPaused = false;
+				sync=false;
 				time = System.currentTimeMillis();
-				for (PIDConfiguration key : driveThreads.keySet()) {
-					InterpolationEngine dr = driveThreads.get(key);
+				for (PIDConfiguration key : interpolationEngines.keySet()) {
+					InterpolationEngine dr = interpolationEngines.get(key);
 					if (key.isEnabled()) {
 						if (dr.update()) {
 							try {
 								e.set(key.getGroup(), (float) dr.getTicks(), time, 0);
 								firePIDEvent(e);
+								sync=true;
 							} catch (NullPointerException ex) {
 								// initialization issue, let it work itself out
 							} catch (Exception ex) {
@@ -376,6 +378,8 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice {
 						System.err.println("Virtual Device "+key.getGroup()+" is disabled");
 					}
 				}
+				if(sync)
+					doSync();
 			}
 		}
 

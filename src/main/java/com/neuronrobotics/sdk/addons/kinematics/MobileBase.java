@@ -25,7 +25,7 @@ import com.neuronrobotics.sdk.common.Log;
 /**
  * The Class MobileBase.
  */
-public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurationChangeListener,IOnMobileBaseRenderChange, IJointSpaceUpdateListenerNR {
+public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurationChangeListener,IOnMobileBaseRenderChange, IJointSpaceUpdateListenerNR,IHardwareSyncPulseReciver,IHardwareSyncPulseProvider {
 
 	/** The legs. */
 	private final ArrayList<DHParameterKinematics> legs = new ArrayList<DHParameterKinematics>();
@@ -929,10 +929,12 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 			if(m!=null) {
 				m.connect();
 				m.addIOnMobileBaseRenderChange(this);
+				m.getFactory().addIHardwareSyncPulseReciver(this);
 			}
-
+			
 		}
 		kin.addJointSpaceListener(this);
+		kin.getFactory().addIHardwareSyncPulseReciver(this);
 	}
 
 	public static void main(String[] args) throws Exception {
@@ -1026,6 +1028,12 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	public void onJointSpaceLimit(AbstractKinematicsNR source, int axis, JointLimit event) {
 		// TODO Auto-generated method stub
 		
+	}
+
+
+	@Override
+	public void sync() {
+		doSync();
 	}
 	
 }
