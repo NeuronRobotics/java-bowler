@@ -155,12 +155,12 @@ public abstract class AbstractPidNamespaceImp implements IExtendedPIDControl {
 			}
 		}
 		
-		synchronized(PIDEventListeners){
-			SetCachedPosition(e.getGroup(), e.getValue());
-			for(IPIDEventListener l: PIDEventListeners)
-				l.onPIDEvent(e);
+
+		SetCachedPosition(e.getGroup(), e.getValue());
+		for (int i = 0; i < PIDEventListeners.size(); i++) {
+			IPIDEventListener l = PIDEventListeners.get(i);
+			l.onPIDEvent(e);
 		}
-		//channels.get(e.getGroup()).firePIDEvent(e);
 	}
 	
 	/**

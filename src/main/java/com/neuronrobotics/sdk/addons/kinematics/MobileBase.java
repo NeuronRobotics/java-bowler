@@ -973,8 +973,10 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	}
 	
 	private void fireIOnMobileBaseRenderChange() {
-		for(IOnMobileBaseRenderChange l:changeListeners)
+		for (int i = 0; i < changeListeners.size(); i++) {
+			IOnMobileBaseRenderChange l = changeListeners.get(i);
 			l.event();
+		}
 	}
 	public void setHomeProvider(ICalcLimbHomeProvider homeProvider) {
 		this.homeProvider = homeProvider;

@@ -962,7 +962,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 *
 	 * @param frameToBase the new global to fiducial transform
 	 */
-	public void setGlobalToFiducialTransform(TransformNR frameToBase) {
+	public void setGlobalToFiducialTransform(TransformNR frameToBase, boolean fireUpdate) {
 		if (frameToBase == null) {
 			Log.error("Fiducial can not be null " + frameToBase);
 			new Exception("Fiducial can not be null ").printStackTrace(System.out);
@@ -970,15 +970,23 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		}
 		Log.info("Setting Global To Fiducial Transform " + frameToBase);
 		this.fiducial2RAS = frameToBase;
-		//synchronized (AbstractKinematicsNR.class) {
-			for (IRegistrationListenerNR r : regListeners) {
-				r.onFiducialToGlobalUpdate(this, frameToBase);
-			}
+		if(!fireUpdate)
+			return;
+		for (IRegistrationListenerNR r : regListeners) {
+			r.onFiducialToGlobalUpdate(this, frameToBase);
+		}
 
-			runRenderWrangler();
-		//}
+		runRenderWrangler();
+		
 	}
-
+	/**
+	 * Sets the global to fiducial transform.
+	 *
+	 * @param frameToBase the new global to fiducial transform
+	 */
+	public void setGlobalToFiducialTransform(TransformNR frameToBase) {
+		setGlobalToFiducialTransform(frameToBase, true);
+	}
 	/**
 	 * Inverse offset.
 	 *
