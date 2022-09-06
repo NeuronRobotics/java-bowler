@@ -3,7 +3,7 @@ package com.neuronrobotics.sdk.addons.kinematics;
 import java.util.HashMap;
 
 public class WristNormalizer {
-	double[] normalize(double[] calculated,double[] current, DHChain chain) {
+	public static double[] normalize(double[] calculated,double[] current, DHChain chain) {
 		AbstractKinematicsNR kin = chain.kin;
 		//DecimalFormat df = new DecimalFormat("000.00");
 		double[] alt1 = new double[] {calculated[0]-180,-calculated[1],calculated[2]-180};
@@ -27,10 +27,11 @@ public class WristNormalizer {
 				ret=tmp;
 			}
 		}
+		scores.clear();
 		return ret;
 	}
 	
-	void score(double[] calculated,double[] current,HashMap<double[],Double> scores,AbstractKinematicsNR kin ) {
+	private static void score(double[] calculated,double[] current,HashMap<double[],Double> scores,AbstractKinematicsNR kin ) {
 		double delt=0;
 		for(int i=0;i<3;i++) {
 			int i3 = i+3;
