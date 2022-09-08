@@ -79,8 +79,8 @@ public class InterpolationEngine {
 	 * @param setpoint the setpoint
 	 * @param seconds the seconds
 	 */
-	public void StartLinearMotion(double setpoint,double seconds){
-		setSetpointWithTime(setpoint, seconds, InterpolationType.LINEAR);
+	public void StartLinearMotion(double setpoint,double seconds,long startTimeMs){
+		setSetpointWithTime(startTimeMs,setpoint, seconds, InterpolationType.LINEAR);
 	}
 	/**
 	 * Sets the pid set point.
@@ -88,11 +88,11 @@ public class InterpolationEngine {
 	 * @param setpoint the setpoint
 	 * @param seconds the seconds
 	 */
-	public void StartSinusoidalMotion(double setpoint,double seconds){
-		setSetpointWithTime(setpoint, seconds, InterpolationType.SINUSOIDAL);
+	public void StartSinusoidalMotion(double setpoint,double seconds,long startTimeMs){
+		setSetpointWithTime(startTimeMs,setpoint, seconds, InterpolationType.SINUSOIDAL);
 	}
 
-	public void setSetpointWithTime(double setpoint,double seconds, InterpolationType mode,double ...conf) {
+	public void setSetpointWithTime(long startTimeMs ,double setpoint,double seconds, InterpolationType mode,double ...conf) {
 		if(InterpolationType.TRAPEZOIDAL==mode) {
 			TRAPEZOIDAL_time =conf[0];
 		}
@@ -106,7 +106,7 @@ public class InterpolationEngine {
 		//setPause(true);
 
 		duration = (long) (seconds*1000);
-		startTime=System.currentTimeMillis();
+		startTime=startTimeMs;
 		if(new Double(setpoint).isNaN()) {
 			new RuntimeException("Setpopint in virtual device can not be set to nan").printStackTrace();
 		
@@ -116,13 +116,13 @@ public class InterpolationEngine {
 		
 		//setPause(false);
 	}
-	public void StartTrapezoidalMotion(double setpoint,double seconds, double trapazoidalTime) {
+	public void StartTrapezoidalMotion(double setpoint,double seconds, double trapazoidalTime,long startTimeMs) {
 
 		if (trapazoidalTime * 2 > seconds) {
-			StartSinusoidalMotion(setpoint, seconds);
+			StartSinusoidalMotion(setpoint, seconds,startTimeMs);
 			return;
 		}
-		setSetpointWithTime(setpoint, seconds, InterpolationType.TRAPEZOIDAL,trapazoidalTime);
+		setSetpointWithTime(startTimeMs,setpoint, seconds, InterpolationType.TRAPEZOIDAL,trapazoidalTime);
 	}
 	/**
 	 * SetSetpoint in degrees with time
@@ -133,9 +133,9 @@ public class InterpolationEngine {
 	 * @param Control_1 On a scale of 0 to 1, where should the second control point in the equation go default= 1.0
 	 * use Bezier interpolation
 	 */
-	void StartBezierMotion(double setpoint,double seconds, double Control_0 , double Control_1)
+	void StartBezierMotion(double setpoint,double seconds, double Control_0 , double Control_1,long startTimeMs)
 	{
-		setSetpointWithTime(setpoint, seconds, InterpolationType.BEZIER,Control_0,Control_1);
+		setSetpointWithTime(startTimeMs,setpoint, seconds, InterpolationType.BEZIER,Control_0,Control_1);
 	}
 	
 	

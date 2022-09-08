@@ -17,7 +17,7 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
 /**
  * The Class VirtualGenericPIDDevice.
  */
-public class VirtualGenericPIDDevice extends GenericPIDDevice  implements IHardwareSyncPulseProvider{
+public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwareSyncPulseProvider {
 
 	/** The Constant threadTime. */
 	private static final long threadTime = 10;
@@ -30,7 +30,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice  implements IHardw
 
 	/** The P dconfigs. */
 	private ArrayList<PDVelocityConfiguration> PDconfigs = new ArrayList<PDVelocityConfiguration>();
-	
+
 	/** The sync. */
 	SyncThread sync = new SyncThread();
 
@@ -46,21 +46,22 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice  implements IHardw
 
 	/**
 	 * Instantiates a new virtual generic pid device.
-	 * @param myVirtualDevName 
+	 * 
+	 * @param myVirtualDevName
 	 */
 	public VirtualGenericPIDDevice(String myVirtualDevName) {
-		this(1000000,myVirtualDevName);
+		this(1000000, myVirtualDevName);
 	}
 
 	/**
 	 * Instantiates a new virtual generic pid device.
 	 *
 	 * @param maxTicksPerSecond the max ticks per second
-	 * @param myVirtualDevName2 
+	 * @param myVirtualDevName2
 	 */
 	public VirtualGenericPIDDevice(double maxTicksPerSecond, String myVirtualDevName) {
 		this.setMaxTicksPerSecond(maxTicksPerSecond);
-		if(myVirtualDevName == null)
+		if (myVirtualDevName == null)
 			throw new RuntimeException("Name of virtual device can not be null");
 		this.myVirtualDevName = myVirtualDevName;
 		setScriptingName(myVirtualDevName);
@@ -72,7 +73,8 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice  implements IHardw
 		}
 
 		sync.start();
-		//new RuntimeException("Instantiation of VirtualGenericPIDDevice "+myVirtualDevName).printStackTrace();
+		// new RuntimeException("Instantiation of VirtualGenericPIDDevice
+		// "+myVirtualDevName).printStackTrace();
 	}
 
 	/*
@@ -184,10 +186,9 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice  implements IHardw
 	 */
 	@Override
 	public boolean SetPIDSetPoint(int group, float setpoint, double seconds) {
-		// new RuntimeException("Virtual setpoint, group="+group+"
-		// setpoint="+setpoint).printStackTrace();;
+		long currentTimeMillis = System.currentTimeMillis();
 		sync.setPause(true);
-		getDriveThread(group).StartLinearMotion(setpoint, seconds);
+		getDriveThread(group).StartLinearMotion(setpoint, seconds,currentTimeMillis);
 		sync.setPause(false);
 		return true;
 	}
@@ -241,9 +242,10 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice  implements IHardw
 	 */
 	@Override
 	public boolean SetAllPIDSetPoint(float[] setpoints, double seconds) {
+		long start = System.currentTimeMillis();
 		sync.setPause(true);
 		for (int i = 0; i < setpoints.length; i++) {
-			getDriveThread(i).StartLinearMotion(setpoints[i], seconds);
+			getDriveThread(i).StartLinearMotion(setpoints[i], seconds,start);
 		}
 		sync.setPause(false);
 		return true;
@@ -341,9 +343,8 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice  implements IHardw
 
 		/** The pause. */
 		private boolean sync = false;
-		private boolean pause = false;
-		private boolean updating = false;
-		private boolean dirty =false;
+		private Boolean pause = false;
+
 		/*
 		 * (non-Javadoc)
 		 * 
@@ -351,56 +352,57 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice  implements IHardw
 		 */
 		public void run() {
 			setName("Bowler Platform Virtual PID sync thread");
-			PIDEvent e= 	new PIDEvent();
+			PIDEvent e = new PIDEvent();
 			long time;
 			while (true) {
 				try {
 					Thread.sleep(threadTime);
 				} catch (InterruptedException ex) {
 				}
-
-				sync=false;
-				time = System.currentTimeMillis();
-				updating=true;
-				for (PIDConfiguration key : interpolationEngines.keySet()) {
-					InterpolationEngine dr = interpolationEngines.get(key);
-					if (key.isEnabled()) {
-						if (dr.update()) {
-							try {
-								e.set(key.getGroup(), (float) dr.getTicks(), time, 0);
-								firePIDEvent(e);
-								sync=true;
-							} catch (NullPointerException ex) {
-								// initialization issue, let it work itself out
-							} catch (Exception ex) {
-								ex.printStackTrace();
+				if(!pause) {
+					sync = false;
+					time = System.currentTimeMillis();
+					synchronized (pause) {
+						for (PIDConfiguration key : interpolationEngines.keySet()) {
+							InterpolationEngine dr = interpolationEngines.get(key);
+							if (key.isEnabled()) {
+								if (dr.update()) {
+									try {
+										e.set(key.getGroup(), (float) dr.getTicks(), time, 0);
+										firePIDEvent(e);
+										sync = true;
+									} catch (NullPointerException ex) {
+										// initialization issue, let it work itself out
+									} catch (Exception ex) {
+										ex.printStackTrace();
+									}
+								}
+							} else {
+								System.err.println("Virtual Device " + key.getGroup() + " is disabled");
 							}
 						}
-					}else {
-						System.err.println("Virtual Device "+key.getGroup()+" is disabled");
 					}
-				}
-				updating=false;
-				while(isPause())
-					try {
-						Thread.sleep(1);
-					} catch (InterruptedException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-				if(dirty) {
-					dirty=false;
-				}else if(sync)
+				}else
+					while (isPause())
+						try {
+							Thread.sleep(1);
+						} catch (InterruptedException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+				if (sync)
 					doSync();
 			}
 		}
+
 		public boolean isPause() {
 			return pause;
 		}
+
 		public void setPause(boolean pause) {
-			this.pause = pause;
-			if(updating && pause)
-				dirty=true;
+			synchronized (this.pause) {	
+				this.pause = pause;
+			}
 		}
 	}
 

@@ -1681,7 +1681,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	
 	public InterpolationMoveState blockingInterpolatedMove(TransformNR target, double seconds, InterpolationType type, double ...conf ) {
 		InterpolationEngine engine = new InterpolationEngine();
-		
+		long currentTimeMillis = System.currentTimeMillis();
 		TransformNR delta =getDeltaToTarget(target);
 		TransformNR startingPoint = getCurrentPoseTarget();
 		if (checkTaskSpaceTransform(target)) {
@@ -1693,7 +1693,8 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 					seconds = bestTime;
 				}
 			}
-			engine.setSetpointWithTime(1,seconds,type,conf);
+			
+			engine.setSetpointWithTime(currentTimeMillis,1,seconds,type,conf);
 			double ms = seconds * 1000;
 			double msPerStep = 10;
 			double steps = ms / msPerStep;

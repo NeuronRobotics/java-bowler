@@ -94,32 +94,32 @@ public class ParallelGroup extends DHParameterKinematics {
 		} else {
 			clearReferencedLimb(limb);
 			DHParameterKinematics fk=getFKLimb();
-			fk.addPoseUpdateListener(new ITaskSpaceUpdateListenerNR() {
-				@Override
-				public void onTaskSpaceUpdate(AbstractKinematicsNR source, TransformNR pose) {
-
-				}
-				
-				@Override
-				public void onTargetTaskSpaceUpdate(AbstractKinematicsNR source, TransformNR pose) {
-					HashMap<String, double[]> IKvalues = new HashMap<>();
-					for (DHParameterKinematics d : getConstituantLimbs()) {
-						if (getTipOffset(d) != null) {
-							try {
-								//System.out.println("Setting Kinematics for follower "+d.getScriptingName());
-								double[] jointSpaceVect = compute(d, IKvalues, pose);
-								//System.out.println(fk.getScriptingName()+" is Setting sublimb target "+d.getScriptingName());
-								d.throwExceptionOnJointLimit(false);
-								d.setDesiredJointSpaceVector(jointSpaceVect, 0);
-							} catch (Exception e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						}
-					}
-					IKvalues.clear();
-				}
-			});
+//			fk.addPoseUpdateListener(new ITaskSpaceUpdateListenerNR() {
+//				@Override
+//				public void onTaskSpaceUpdate(AbstractKinematicsNR source, TransformNR pose) {
+//
+//				}
+//				
+//				@Override
+//				public void onTargetTaskSpaceUpdate(AbstractKinematicsNR source, TransformNR pose) {
+//					HashMap<String, double[]> IKvalues = new HashMap<>();
+//					for (DHParameterKinematics d : getConstituantLimbs()) {
+//						if (getTipOffset(d) != null) {
+//							try {
+//								//System.out.println("Setting Kinematics for follower "+d.getScriptingName());
+//								double[] jointSpaceVect = compute(d, IKvalues, pose);
+//								//System.out.println(fk.getScriptingName()+" is Setting sublimb target "+d.getScriptingName());
+//								d.throwExceptionOnJointLimit(false);
+//								d.setDesiredJointSpaceVector(jointSpaceVect, 0);
+//							} catch (Exception e) {
+//								// TODO Auto-generated catch block
+//								e.printStackTrace();
+//							}
+//						}
+//					}
+//					IKvalues.clear();
+//				}
+//			});
 		}
 	}
 
@@ -198,7 +198,10 @@ public class ParallelGroup extends DHParameterKinematics {
 			//System.out.println("Paralell set to " + currentPoseTarget);
 		}
 	}
-
+	public double[] getCurrentJointSpaceVector(DHParameterKinematics k) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	@Override
 	public double[] inverseKinematics(TransformNR taskSpaceTransform) throws Exception {
 
@@ -309,5 +312,7 @@ public class ParallelGroup extends DHParameterKinematics {
 		tipOffsetRelativeToName.clear();
 
 	}
+
+
 
 }

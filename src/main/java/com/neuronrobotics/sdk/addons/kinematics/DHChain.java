@@ -197,10 +197,8 @@ public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector )
 				step= getLinks().get(i).DhStep(Math.toRadians(jointSpaceVector[i]));
 			//Log.info( "Current:\n"+current+"Step:\n"+step);
 			current = current.times(step);
-			final Matrix update=current.copy();
-			final int index=i;
 			try {
-				final TransformNR pose =forwardOffset(new TransformNR(update));
+				final TransformNR pose =forwardOffset(new TransformNR(current));
 				
 				
 	
