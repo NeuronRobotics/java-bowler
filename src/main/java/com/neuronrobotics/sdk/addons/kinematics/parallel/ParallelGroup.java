@@ -121,8 +121,6 @@ public class ParallelGroup extends DHParameterKinematics {
 				}
 			});
 		}
-		
-		
 	}
 
 	public void clearReferencedLimb(DHParameterKinematics limb) {
