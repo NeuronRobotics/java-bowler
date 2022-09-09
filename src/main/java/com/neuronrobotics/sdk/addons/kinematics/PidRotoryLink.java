@@ -47,6 +47,7 @@ public class PidRotoryLink extends AbstractRotoryLink{
 	@Override
 	public void flushDevice(double time) {
 		channel.flush(time);
+		fireLinkListener(getCurrentPosition());
 	}
 	
 	/* (non-Javadoc)
@@ -55,6 +56,7 @@ public class PidRotoryLink extends AbstractRotoryLink{
 	@Override
 	public void flushAllDevice(double time) {
 		channel.getPid().flushPIDChannels(time);
+		fireLinkListener(getCurrentPosition());
 	}
 
 	/* (non-Javadoc)
@@ -63,7 +65,7 @@ public class PidRotoryLink extends AbstractRotoryLink{
 	@Override
 	public double getCurrentPosition() {
 		float val=channel.GetPIDPosition();
-		fireLinkListener(val);
+		
 		return val;
 	}
 

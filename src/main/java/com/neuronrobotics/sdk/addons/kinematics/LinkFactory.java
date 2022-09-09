@@ -181,31 +181,6 @@ public class LinkFactory implements IHardwareSyncPulseReciver,IHardwareSyncPulse
 				tmp = new PidPrismaticLink(getPid(c).getPIDChannel(c.getHardwareIndex()), c, false);
 			}
 			break;
-		case SERVO_PRISMATIC:
-			if (getDyio(c) != null) {
-				tmp = new ServoPrismaticLink(new ServoChannel(getDyio(c).getChannel(c.getHardwareIndex())), c);
-
-			}
-			break;
-		case SERVO_ROTORY:
-		case SERVO_TOOL:
-			if (getDyio(c) != null) {
-				tmp = new ServoRotoryLink(new ServoChannel(getDyio(c).getChannel(c.getHardwareIndex())), c);
-
-			}
-			break;
-		case STEPPER_PRISMATIC:
-			if (getDyio(c) != null) {
-				tmp = new StepperPrismaticLink(new CounterOutputChannel(getDyio(c).getChannel(c.getHardwareIndex())),
-						c);
-			}
-			break;
-		case STEPPER_TOOL:
-		case STEPPER_ROTORY:
-			if (getDyio(c) != null) {
-				tmp = new StepperRotoryLink(new CounterOutputChannel(getDyio(c).getChannel(c.getHardwareIndex())), c);
-			}
-			break;
 		case DUMMY:
 		case VIRTUAL:
 			String myVirtualDevName = c.getDeviceScriptingName();

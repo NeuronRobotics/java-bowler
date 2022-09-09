@@ -413,14 +413,6 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 		}
 		addPoseUpdateListener(this);
 		addJointSpaceListener(this);
-		try {
-			currentJointSpacePositions = null;
-			currentJointSpaceTarget=null;
-			// setDesiredJointSpaceVector(getCurrentJointSpaceVector(), 0);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	/*

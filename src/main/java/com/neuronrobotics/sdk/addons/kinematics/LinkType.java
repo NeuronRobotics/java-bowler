@@ -11,14 +11,9 @@ import java.util.NoSuchElementException;
  */
 public enum LinkType {
 	
-	/** The servo rotory. */
-	SERVO_ROTORY("servo-rotory"), 
-	
-	/** The servo tool. */
-	SERVO_TOOL("servo-tool"), 
-	
-	/** The servo prismatic. */
-	SERVO_PRISMATIC("servo-prismatic"), 
+
+
+
 	
 	/** The pid. */
 	PID("pid"),
@@ -41,14 +36,6 @@ public enum LinkType {
 	/** The virtual. */
 	VIRTUAL("virtual"),
 	
-	/** The stepper rotory. */
-	STEPPER_ROTORY("stepper-rotory"), 
-	
-	/** The stepper tool. */
-	STEPPER_TOOL("stepper-tool"), 
-
-	/** The stepper prismatic. */
-	STEPPER_PRISMATIC("stepper-prismatic"),
 	
 	/** The stepper rotory. */
 	GCODE_STEPPER_ROTORY("gcode-stepper-rotory"), 

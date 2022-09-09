@@ -171,7 +171,9 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 	@Override
 	public boolean ResetPIDChannel(int group, float valueToSetCurrentTo) {
 		sync.setPause(true);
+		synchronized(interpolationEngines) {
 		getDriveThread(group).ResetEncoder(valueToSetCurrentTo);
+		}
 		float val = GetPIDPosition(group);
 		firePIDResetEvent(group, val);
 		sync.setPause(false);
@@ -188,7 +190,9 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 	public boolean SetPIDSetPoint(int group, float setpoint, double seconds) {
 		long currentTimeMillis = System.currentTimeMillis();
 		sync.setPause(true);
+		synchronized(interpolationEngines) {
 		getDriveThread(group).StartLinearMotion(setpoint, seconds,currentTimeMillis);
+		}
 		sync.setPause(false);
 		return true;
 	}
@@ -244,8 +248,10 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 	public boolean SetAllPIDSetPoint(float[] setpoints, double seconds) {
 		long start = System.currentTimeMillis();
 		sync.setPause(true);
-		for (int i = 0; i < setpoints.length; i++) {
-			getDriveThread(i).StartLinearMotion(setpoints[i], seconds,start);
+		synchronized(interpolationEngines) {
+			for (int i = 0; i < setpoints.length; i++) {
+				getDriveThread(i).StartLinearMotion(setpoints[i], seconds,start);
+			}
 		}
 		sync.setPause(false);
 		return true;
@@ -297,21 +303,25 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 
 			setChannels(new ArrayList<PIDChannel>());
 			// lastPacketTime = new long[back.length];
-			for (int i = 0; i < backs.length; i++) {
-				backs[i] = 0;
-				PIDChannel c = new PIDChannel(this, i);
-				c.setCachedTargetValue(backs[i]);
-				getChannels().add(c);
-				PIDConfiguration conf = new PIDConfiguration();
-				conf.setGroup(i);
-				conf.setEnabled(true);
-				InterpolationEngine d = new InterpolationEngine();
-				interpolationEngines.put(conf, d);
-				configs.put(i, conf);
+			synchronized(interpolationEngines) {
+				for (int i = 0; i < backs.length; i++) {
+					backs[i] = 0;
+					PIDChannel c = new PIDChannel(this, i);
+					c.setCachedTargetValue(backs[i]);
+					getChannels().add(c);
+					PIDConfiguration conf = new PIDConfiguration();
+					conf.setGroup(i);
+					conf.setEnabled(true);
+					InterpolationEngine d = new InterpolationEngine();
+					interpolationEngines.put(conf, d);
+					configs.put(i, conf);
+				}
 			}
 		}
-		for (int i = 0; i < backs.length; i++)
-			backs[i] = GetPIDPosition(i);
+		synchronized(interpolationEngines) {
+			for (int i = 0; i < backs.length; i++)
+				backs[i] = GetPIDPosition(i);
+		}
 		return backs;
 	}
 
@@ -364,15 +374,16 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 				if(!pause) {
 					sync = false;
 					time = System.currentTimeMillis();
-					synchronized (pause) {
-						for (PIDConfiguration key : interpolationEngines.keySet()) {
-							InterpolationEngine dr = interpolationEngines.get(key);
-							if (key.isEnabled()) {
-								if (dr.update(time)) {
-									toUpdate[updateIndex++]=key;
+						synchronized(interpolationEngines) {
+							for (PIDConfiguration key : interpolationEngines.keySet()) {
+								InterpolationEngine dr = interpolationEngines.get(key);
+								if (key.isEnabled()) {
+									if (dr.update(time)) {
+										toUpdate[updateIndex++]=key;
+									}
+								} else {
+									//System.err.println("Virtual Device " + key.getGroup() + " is disabled");
 								}
-							} else {
-								//System.err.println("Virtual Device " + key.getGroup() + " is disabled");
 							}
 						}
 						for(int i=0;i<updateIndex;i++) {
@@ -389,7 +400,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 							}
 						}
 						updateIndex=0;
-					}
+					
 				}else
 					while (isPause())
 						try {
@@ -408,9 +419,8 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 		}
 
 		public void setPause(boolean pause) {
-			synchronized (this.pause) {	
-				this.pause = pause;
-			}
+			this.pause = pause;
+			
 		}
 	}
 

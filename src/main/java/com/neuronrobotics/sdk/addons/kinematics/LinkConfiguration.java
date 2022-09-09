@@ -1015,8 +1015,6 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	 */
 	public boolean isTool(){
 		 switch(getTypeEnum()){
-		case SERVO_TOOL:
-		case STEPPER_TOOL:
 		case PID_TOOL:
 		case GCODE_STEPPER_TOOL:
 		case GCODE_HEATER_TOOL:
@@ -1040,8 +1038,6 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 		 switch(getTypeEnum()){
 		case ANALOG_PRISMATIC:
 		case PID_PRISMATIC:
-		case SERVO_PRISMATIC:
-		case STEPPER_PRISMATIC:
 		case GCODE_STEPPER_PRISMATIC:
 			return true;
 		case USERDEFINED:

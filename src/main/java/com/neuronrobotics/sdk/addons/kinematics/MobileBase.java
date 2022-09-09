@@ -881,7 +881,6 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 		super.connect();
 
 		for (DHParameterKinematics kin : this.getAllDHChains()) {
-			addListeners(kin);
 			for (int i = 0; i < kin.getNumberOfLinks(); i++) {
 				MobileBase m = kin.getDhLink(i).getSlaveMobileBase();
 				if (m != null) {
@@ -900,12 +899,11 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 					// this represents motion of the mobile base
 					kin.setGlobalToFiducialTransform(regestration);
 				}
-				doSync();
 			}
 
 			@Override
 			public void onBaseToFiducialUpdate(AbstractKinematicsNR source, TransformNR regestration) {
-				doSync();
+
 			}
 		});
 		return isAvailable();
@@ -922,17 +920,7 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 		}
 		kin.addJointSpaceListener(this);
 		kin.getFactory().addIHardwareSyncPulseReciver(this);
-		kin.addRegistrationListener(new IRegistrationListenerNR() {
-			@Override
-			public void onFiducialToGlobalUpdate(AbstractKinematicsNR source, TransformNR regestration) {
-				doSync();
-			}
-
-			@Override
-			public void onBaseToFiducialUpdate(AbstractKinematicsNR source, TransformNR regestration) {
-				doSync();
-			}
-		});
+		
 	}
 
 	public static void main(String[] args) throws Exception {

@@ -47,6 +47,7 @@ public class PidPrismaticLink extends AbstractPrismaticLink{
 	@Override
 	public void flushDevice(double time) {
 		channel.flush(time);
+		fireLinkListener(getCurrentPosition());
 	}
 	
 	/* (non-Javadoc)
@@ -55,6 +56,7 @@ public class PidPrismaticLink extends AbstractPrismaticLink{
 	@Override
 	public void flushAllDevice(double time) {
 		channel.getPid().flushPIDChannels(time);
+		fireLinkListener(getCurrentPosition());
 	}
 
 
@@ -64,7 +66,6 @@ public class PidPrismaticLink extends AbstractPrismaticLink{
 	@Override
 	public double getCurrentPosition() {
 		float val=channel.GetPIDPosition();
-		fireLinkListener(val);
 		return val;
 	}
 

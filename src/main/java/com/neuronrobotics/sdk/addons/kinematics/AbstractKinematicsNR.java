@@ -73,10 +73,10 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 
 	/** The current joint space positions. */
 	/* This is in RAW joint level ticks */
-	protected double[] currentJointSpacePositions = null;
+	//protected double[] currentJointSpacePositions = null;
 
 	/** The current joint space target. */
-	public double[] currentJointSpaceTarget;
+//	public double[] currentJointSpaceTarget;
 
 	/** The current pose target. */
 	private TransformNR currentPoseTarget = new TransformNR();
@@ -522,7 +522,12 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		// Log.info("Getting global task space "+taskSpaceTransform);
 		return taskSpaceTransform;
 	}
-
+	public double readLinkValue(int index) {
+		return getFactory().getLink(getLinkConfiguration(index)).getCurrentEngineeringUnits();
+	}
+	public double readLinkTarget(int index) {
+		return getFactory().getLink(getLinkConfiguration(index)).getTargetEngineeringUnits();
+	}
 	/**
 	 * This takes a reading of the robots position and converts it to a joint pace
 	 * vector This vector is converted to Joint space and returned .
@@ -530,30 +535,13 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 * @return JointSpaceVector in mm,radians
 	 */
 	public double[] getCurrentJointSpaceVector() {
-		if (currentJointSpacePositions == null||currentJointSpacePositions.length!= getNumberOfLinks()) {
-			// Happens once and only once on the first initialization
-			currentJointSpacePositions = new double[getNumberOfLinks()];
-			
-			for (int i = 0; i < getNumberOfLinks(); i++) {
-				// double pos =
-				// currentLinkSpacePositions[getLinkConfigurations().get(i).getHardwareIndex()];
-				// Here the RAW values are converted to engineering units
-				try {
-					currentJointSpacePositions[i] = getFactory().getLink(getLinkConfiguration(i))
-							.getCurrentEngineeringUnits();
-				} catch (Exception ex) {
-					currentJointSpacePositions[i] = 0;
-				}
-			}
-			firePoseUpdate();
-		}
 		double[] jointSpaceVect = new double[getNumberOfLinks()];
 		for (int i = 0; i < getNumberOfLinks(); i++) {
 			// double pos =
 			// currentLinkSpacePositions[getLinkConfigurations().get(i).getHardwareIndex()];
 			// Here the RAW values are converted to engineering units
 			try {
-				jointSpaceVect[i] = currentJointSpacePositions[i];
+				jointSpaceVect[i] = readLinkValue(i);
 			}catch(Exception e) {
 				jointSpaceVect[i]=0;
 			}
@@ -561,7 +549,15 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 
 		return jointSpaceVect;
 	}
+	
+	public double[] getCurrentJointSpaceTarget() {
 
+		double[]	currentJointSpaceTarget=new double[getNumberOfLinks()];
+		for(int i=0;i<currentJointSpaceTarget.length;i++) {
+			currentJointSpaceTarget[i]=readLinkTarget(i);
+		}
+		return currentJointSpaceTarget;
+	}
 	public double getCurrentLinkEngineeringUnits(int linkIndex) {
 		return getFactory().getLink(getLinkConfiguration(linkIndex)).getCurrentEngineeringUnits();
 	}
@@ -764,9 +760,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 			} while (except > 0 && except < getRetryNumberBeforeFail());
 			if (e != null)
 				throw new RuntimeException("Limit On "+getScriptingName()+" "+e.getMessage());
-			TickToc.tic("Set hardware values done");
-			for(int i=0;i<getNumberOfLinks();i++)
-				getCurrentJointSpaceTarget()[i] = jointSpaceVect[i];
+
 			TickToc.tic("Copy Vector");
 			TransformNR fwd = forwardKinematics(getCurrentJointSpaceTarget());
 			TickToc.tic("FK from vector");
@@ -817,8 +811,6 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 			LinkConfiguration c = getLinkConfiguration(axis);
 
 			Log.info("Setting single target joint in mm/deg, axis=" + axis + " value=" + value);
-
-			getCurrentJointSpaceTarget()[axis] = value;
 			try {
 				getFactory().getLink(c).setTargetEngineeringUnits(value);
 			} catch (Exception ex) {
@@ -1101,24 +1093,26 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		for (LinkConfiguration c : getLinkConfigurations()) {
 			AbstractLink tmp = getFactory().getLink(c);
 			if (tmp == source) {// Check to see if this lines up with a known link
-				// Log.info("Got PID event "+source+" value="+engineeringUnitsValue);
-				if(new Double(engineeringUnitsValue).isNaN()) {
-					new RuntimeException("Link values can not ne NaN").printStackTrace();					
-					engineeringUnitsValue=0;
-				}
-				ArrayList<LinkConfiguration> linkConfigurations = getLinkConfigurations();
-				if(linkConfigurations!=null) {
-					int indexOf = linkConfigurations.indexOf(c);
-					if(currentJointSpacePositions!=null)
-						if(indexOf>=0 && indexOf<currentJointSpacePositions.length)
-							currentJointSpacePositions[indexOf] = engineeringUnitsValue;
-				}
+//				// Log.info("Got PID event "+source+" value="+engineeringUnitsValue);
+//				if(new Double(engineeringUnitsValue).isNaN()) {
+//					new RuntimeException("Link values can not ne NaN").printStackTrace();					
+//					engineeringUnitsValue=0;
+//				}
+//				ArrayList<LinkConfiguration> linkConfigurations = getLinkConfigurations();
+//				if(linkConfigurations!=null) {
+//					int indexOf = linkConfigurations.indexOf(c);
+//					if(currentJointSpacePositions!=null)
+//						if(indexOf>=0 && indexOf<currentJointSpacePositions.length)
+//							currentJointSpacePositions[indexOf] = engineeringUnitsValue;
+//				}
 				firePoseUpdate();
 				return;
 			}
 		}
 		Log.error("Got UKNOWN PID event " + source);
 	}
+	
+
 
 	/*
 	 * (non-Javadoc)
@@ -1638,11 +1632,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		getLinkConfiguration(linkIndex).clearChangeListener();
 	}
 
-	public double[] getCurrentJointSpaceTarget() {
-		if(currentJointSpaceTarget==null)
-			currentJointSpaceTarget=new double[getNumberOfLinks()];
-		return currentJointSpaceTarget;
-	}
+
 
 	public void runRenderWrangler() {
 		firePoseUpdate();
