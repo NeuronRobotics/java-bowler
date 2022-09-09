@@ -926,6 +926,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		for (IRegistrationListenerNR r : regListeners) {
 			r.onBaseToFiducialUpdate(this, baseToFiducial);
 		}
+		
 //		Platform.runLater(new Runnable() {
 //
 //			@Override
@@ -975,7 +976,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		for (IRegistrationListenerNR r : regListeners) {
 			r.onFiducialToGlobalUpdate(this, frameToBase);
 		}
-
+		
 		runRenderWrangler();
 		
 	}
