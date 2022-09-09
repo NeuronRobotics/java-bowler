@@ -56,10 +56,7 @@ public class InterpolationEngine {
 	 * @param unitsPerSecond the units per second
 	 */
 	public void SetVelocity(double unitsPerSecond) {
-		//System.out.println("Setting velocity to "+unitsPerSecond+"ticks/second");
-		//setPause(true);
-		
-		//setPause(false);
+
 	}
 	
 	/**
@@ -144,8 +141,8 @@ public class InterpolationEngine {
 	 *
 	 * @return true, if successful
 	 */
-	public boolean update(){
-		interpolate();
+	public boolean update(long time){
+		interpolate( time);
 		if((getTicks()!=lastTick)) {
 			lastTick=getTicks();
 			return true;
@@ -180,8 +177,8 @@ public class InterpolationEngine {
 		return ((x - in_min) * (out_max - out_min) / (in_max - in_min)) + out_min;
 	}
 	
-	public  double getInterpolationUnitIncrement() {
-		interpElapsed = (double)(System.currentTimeMillis() - startTime);
+	public  double getInterpolationUnitIncrement(long time) {
+		interpElapsed = (double)(time - startTime);
 		if (interpElapsed < duration && duration > 0)
 		{
 			
@@ -234,9 +231,10 @@ public class InterpolationEngine {
 	
 	/**
 	 * Interpolate.
+	 * @param time 
 	 */
-	private void interpolate() {
-		setUnitDuration(getInterpolationUnitIncrement());
+	private void interpolate(long time) {
+		setUnitDuration(getInterpolationUnitIncrement(time));
 		if (getUnitDuration() < 1) {
 			setpointDiff = endSetpoint - startSetpoint;
 			newSetpoint = startSetpoint + (setpointDiff * getUnitDuration());

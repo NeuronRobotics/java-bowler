@@ -366,7 +366,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 						for (PIDConfiguration key : interpolationEngines.keySet()) {
 							InterpolationEngine dr = interpolationEngines.get(key);
 							if (key.isEnabled()) {
-								if (dr.update()) {
+								if (dr.update(time)) {
 									try {
 										e.set(key.getGroup(), (float) dr.getTicks(), time, 0);
 										firePIDEvent(e);

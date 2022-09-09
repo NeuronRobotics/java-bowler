@@ -1706,7 +1706,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 				// of the translation
 				// the new tip point here calculated is multiplied by the starting point to get
 				// a global space tip target
-				TransformNR nextPoint = getTipAlongTrajectory(startingPoint,delta,engine.getInterpolationUnitIncrement());
+				TransformNR nextPoint = getTipAlongTrajectory(startingPoint,delta,engine.getInterpolationUnitIncrement(System.currentTimeMillis()));
 				// now the best time for this increment is calculated
 				double bestTime = getBestTime(nextPoint);
 				// error check for the best time being below the commanded time
