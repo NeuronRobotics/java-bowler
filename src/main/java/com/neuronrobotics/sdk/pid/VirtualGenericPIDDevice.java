@@ -353,6 +353,8 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 		public void run() {
 			setName("Bowler Platform Virtual PID sync thread");
 			PIDEvent e = new PIDEvent();
+			PIDConfiguration[] toUpdate = new PIDConfiguration[numChannels] ;
+			int updateIndex=0;
 			long time;
 			while (true) {
 				try {
@@ -367,20 +369,26 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 							InterpolationEngine dr = interpolationEngines.get(key);
 							if (key.isEnabled()) {
 								if (dr.update(time)) {
-									try {
-										e.set(key.getGroup(), (float) dr.getTicks(), time, 0);
-										firePIDEvent(e);
-										sync = true;
-									} catch (NullPointerException ex) {
-										// initialization issue, let it work itself out
-									} catch (Exception ex) {
-										ex.printStackTrace();
-									}
+									toUpdate[updateIndex++]=key;
 								}
 							} else {
-								System.err.println("Virtual Device " + key.getGroup() + " is disabled");
+								//System.err.println("Virtual Device " + key.getGroup() + " is disabled");
 							}
 						}
+						for(int i=0;i<updateIndex;i++) {
+							PIDConfiguration key=toUpdate[i];
+							toUpdate[i]=null;
+							try {
+								e.set(key.getGroup(), (float) interpolationEngines.get(key).getTicks(), time, 0);
+								firePIDEvent(e);
+								sync = true;
+							} catch (NullPointerException ex) {
+								// initialization issue, let it work itself out
+							} catch (Exception ex) {
+								ex.printStackTrace();
+							}
+						}
+						updateIndex=0;
 					}
 				}else
 					while (isPause())
