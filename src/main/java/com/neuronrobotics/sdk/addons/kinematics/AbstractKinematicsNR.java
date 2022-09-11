@@ -607,7 +607,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 			double[] jointSpaceVect = dev.inverseKinematics(dev.inverseOffset(taskSpaceTransform));
 			return checkVector(dev, jointSpaceVect,seconds);
 		} catch (Throwable ex) {
-			Log.error(ex);
+			//Log.error(ex);
 			//ex.printStackTrace();
 			return false;
 		}
