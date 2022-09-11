@@ -37,7 +37,11 @@ public class WristNormalizer {
 		score(option( alt1[0] +180, -alt1[1], alt1[2]-180 ), current, scores, kin);
 		
 		if (scores.size() > 0) {
-			double score = scores.get(calculated);
+			double[] start =calculated ;
+			if(scores.get(start)==null) {
+				start = (double[]) scores.keySet().toArray()[0];
+			}
+			double score=scores.get(start);
 			double[] ret = calculated;
 			for (double[] tmp : scores.keySet()) {
 				double delt = scores.get(tmp);
