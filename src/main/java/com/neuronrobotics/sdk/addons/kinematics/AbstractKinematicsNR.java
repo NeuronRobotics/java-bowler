@@ -961,7 +961,6 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 			new Exception("Fiducial can not be null ").printStackTrace(System.out);
 			return;
 		}
-		Log.info("Setting Global To Fiducial Transform " + frameToBase);
 		this.fiducial2RAS = frameToBase;
 		if(!fireUpdate)
 			return;
