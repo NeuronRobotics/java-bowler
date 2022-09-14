@@ -42,7 +42,7 @@ public class WristNormalizer {
 				start = (double[]) scores.keySet().toArray()[0];
 			}
 			double score=scores.get(start);
-			double[] ret = calculated;
+			double[] ret = start;
 			for (double[] tmp : scores.keySet()) {
 				double delt = scores.get(tmp);
 				if (delt < score) {
