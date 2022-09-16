@@ -907,7 +907,11 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 *
 	 * @param baseToFiducial the new base to zframe transform
 	 */
+	@Deprecated
 	public void setBaseToZframeTransform(TransformNR baseToFiducial) {
+		setRobotToFiducialTransform(baseToFiducial);
+	}
+	public void setRobotToFiducialTransform(TransformNR baseToFiducial) {
 		if (baseToFiducial == null) {
 			Log.error("Fiducial can not be null " + baseToFiducial);
 			new Exception().printStackTrace(System.out);
@@ -919,24 +923,14 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 			r.onBaseToFiducialUpdate(this, baseToFiducial);
 		}
 		
-//		Platform.runLater(new Runnable() {
-//
-//			@Override
-//			public void run() {
-//				
-//				TransformNR forwardOffset = forwardOffset(new TransformNR());
-//				if(forwardOffset!=null && getRootListener()!=null)
-//					TransformFactory.nrToObject(forwardOffset, getRootListener());
-//			}
-//		});
 		runRenderWrangler();
 	}
-
 	/**
 	 * Sets the zframe to global transform.
 	 *
 	 * @param fiducialToRAS the new zframe to global transform
 	 */
+	@Deprecated
 	private void setZframeToGlobalTransform(TransformNR fiducialToRAS) {
 		setGlobalToFiducialTransform(fiducialToRAS);
 	}
@@ -1390,14 +1384,6 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		}
 	}
 
-	/**
-	 * Sets the robot to fiducial transform.
-	 *
-	 * @param newTrans the new robot to fiducial transform
-	 */
-	public void setRobotToFiducialTransform(TransformNR newTrans) {
-		setBaseToZframeTransform(newTrans);
-	}
 
 	/**
 	 * Gets the dh parameters chain.

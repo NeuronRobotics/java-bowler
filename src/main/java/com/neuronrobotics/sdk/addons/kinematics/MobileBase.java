@@ -252,7 +252,7 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 		TransformNR IMUcenter = loadTransform("imuFromCentroid", doc);
 		if (IMUcenter != null)
 			setIMUFromCentroid(IMUcenter);
-
+		fireBaseUpdates();
 	}
 
 	public void initializeParalellGroups() {
