@@ -218,9 +218,7 @@ public class TransformNR {
    * @return the matrix string
    */
   public static String getMatrixString(Matrix matrix) {
-    if (!Log.isPrinting()) {
-      return "no print transform, enable Log.enableSystemPrint(true)";
-    }
+
     String s = "{\n";
     double[][] m = matrix.getArray();
 
