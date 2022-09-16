@@ -3,7 +3,7 @@ package com.neuronrobotics.sdk.addons.kinematics;
 import java.util.HashMap;
 
 public class WristNormalizer {
-	private static boolean strictMode = true;
+	private static boolean strictMode = false;
 	
 	public static double[] normalize(double[] calculated, double[] current, DHChain chain) {
 		AbstractKinematicsNR kin = chain.kin;
@@ -68,12 +68,13 @@ public class WristNormalizer {
 		for (int i = 0; i < 3; i++) {
 			int i3 = i + 3;
 			calculated[i] = calculated[i] % 360;
-			
-			if (calculated[i] > kin.getMaxEngineeringUnits(i3)) {
-				return;
-			}
-			if (calculated[i] < kin.getMinEngineeringUnits(i3)) {
-				return;
+			if(strictMode) {
+				if (calculated[i] > kin.getMaxEngineeringUnits(i3)) {
+					return;
+				}
+				if (calculated[i] < kin.getMinEngineeringUnits(i3)) {
+					return;
+				}
 			}
 			double measure = current[i] - calculated[i];
 			if (Math.abs(measure) > Math.abs(delt)) {
