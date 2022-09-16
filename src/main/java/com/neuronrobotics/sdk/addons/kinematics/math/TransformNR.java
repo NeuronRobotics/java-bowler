@@ -222,16 +222,17 @@ public class TransformNR {
     String s = "{\n";
     double[][] m = matrix.getArray();
 
+	DecimalFormat decimalFormat = new DecimalFormat("000.00");
     int across = m.length;
     int down = m[0].length;
 
     for (int i = 0; i < across; i++) {
       s += "{ ";
       for (int j = 0; j < down; j++) {
-        if (m[i][j] < 0)
-          s += new DecimalFormat("000.00").format(m[i][j]);
-        else
-          s += new DecimalFormat("0000.00").format(m[i][j]);
+        if (m[i][j] < 0) {
+			s += decimalFormat.format(m[i][j]);
+		} else
+          s += decimalFormat.format(m[i][j]);
         if (j < down - 1)
           s += ",";
         s += "\t";
