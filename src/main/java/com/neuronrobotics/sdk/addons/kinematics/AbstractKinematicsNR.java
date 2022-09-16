@@ -319,7 +319,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 					&& linkNode.getNodeName().contentEquals("ZframeToRAS")) {
 				Element eElement = (Element) linkNode;
 				try {
-					setZframeToGlobalTransform(new TransformNR(
+					setGlobalToFiducialTransform(new TransformNR(
 							Double.parseDouble(XmlFactory.getTagValue("x", eElement)),
 							Double.parseDouble(XmlFactory.getTagValue("y", eElement)),
 							Double.parseDouble(XmlFactory.getTagValue("z", eElement)),
@@ -329,13 +329,13 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 									Double.parseDouble(XmlFactory.getTagValue("rotz", eElement)) })));
 				} catch (Exception ex) {
 					ex.printStackTrace();
-					setZframeToGlobalTransform(new TransformNR());
+					setGlobalToFiducialTransform(new TransformNR());
 				}
 			} else if (linkNode.getNodeType() == Node.ELEMENT_NODE
 					&& linkNode.getNodeName().contentEquals("baseToZframe")) {
 				Element eElement = (Element) linkNode;
 				try {
-					setBaseToZframeTransform(new TransformNR(Double.parseDouble(XmlFactory.getTagValue("x", eElement)),
+					setRobotToFiducialTransform(new TransformNR(Double.parseDouble(XmlFactory.getTagValue("x", eElement)),
 							Double.parseDouble(XmlFactory.getTagValue("y", eElement)),
 							Double.parseDouble(XmlFactory.getTagValue("z", eElement)),
 							new RotationNR(new double[] { Double.parseDouble(XmlFactory.getTagValue("rotw", eElement)),
@@ -344,7 +344,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 									Double.parseDouble(XmlFactory.getTagValue("rotz", eElement)) })));
 				} catch (Exception ex) {
 					ex.printStackTrace();
-					setBaseToZframeTransform(new TransformNR());
+					setRobotToFiducialTransform(new TransformNR());
 				}
 			} else {
 				// System.err.println(linkNode.getNodeName());
@@ -902,15 +902,15 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		return fiducial2RAS;
 	}
 
-	/**
-	 * Sets the base to zframe transform.
-	 *
-	 * @param baseToFiducial the new base to zframe transform
-	 */
-	@Deprecated
-	public void setBaseToZframeTransform(TransformNR baseToFiducial) {
-		setRobotToFiducialTransform(baseToFiducial);
-	}
+//	/**
+//	 * Sets the base to zframe transform.
+//	 *
+//	 * @param baseToFiducial the new base to zframe transform
+//	 */
+//	@Deprecated
+//	public void setBaseToZframeTransform(TransformNR baseToFiducial) {
+//		setRobotToFiducialTransform(baseToFiducial);
+//	}
 	public void setRobotToFiducialTransform(TransformNR baseToFiducial) {
 		if (baseToFiducial == null) {
 			Log.error("Fiducial can not be null " + baseToFiducial);
@@ -925,15 +925,15 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		
 		runRenderWrangler();
 	}
-	/**
-	 * Sets the zframe to global transform.
-	 *
-	 * @param fiducialToRAS the new zframe to global transform
-	 */
-	@Deprecated
-	private void setZframeToGlobalTransform(TransformNR fiducialToRAS) {
-		setGlobalToFiducialTransform(fiducialToRAS);
-	}
+//	/**
+//	 * Sets the zframe to global transform.
+//	 *
+//	 * @param fiducialToRAS the new zframe to global transform
+//	 */
+//	@Deprecated
+//	private void setZframeToGlobalTransform(TransformNR fiducialToRAS) {
+//		setGlobalToFiducialTransform(fiducialToRAS);
+//	}
 
 	/**
 	 * Gets the robot to fiducial transform.

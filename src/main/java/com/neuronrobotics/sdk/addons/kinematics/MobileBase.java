@@ -613,7 +613,6 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	 */
 	public String getEmbedableXml() {
 		TransformNR location = getFiducialToGlobalTransform();
-		setGlobalToFiducialTransform(new TransformNR());
 
 		String allVitamins = "";
 		for (String key : getVitamins().keySet()) {
@@ -871,8 +870,8 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	 * @param frameToBase the new global to fiducial transform
 	 */
 	@Override	
-	public void setBaseToZframeTransform(TransformNR baseToFiducial)  {
-		super.setBaseToZframeTransform( baseToFiducial);
+	public void setRobotToFiducialTransform(TransformNR baseToFiducial)  {
+		super.setRobotToFiducialTransform( baseToFiducial);
 		fireBaseUpdates();
 	}
 	
@@ -910,16 +909,12 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 		addRegistrationListener(new IRegistrationListenerNR() {
 			@Override
 			public void onFiducialToGlobalUpdate(AbstractKinematicsNR source, TransformNR regestration) {
-				for (DHParameterKinematics kin : getAllDHChains()) {
-					// Log.debug("Motion of mobile base event ");
-					// this represents motion of the mobile base
-					kin.setGlobalToFiducialTransform(regestration);
-				}
+				fireBaseUpdates();
 			}
 
 			@Override
 			public void onBaseToFiducialUpdate(AbstractKinematicsNR source, TransformNR regestration) {
-
+				fireBaseUpdates();
 			}
 		});
 		return isAvailable();

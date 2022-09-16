@@ -68,6 +68,23 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 				getFactory().getDyio(lf).addConnectionEventListener(l);
 				return;
 			}
+		addConnectionEventListener(new IDeviceConnectionEventListener() {
+			
+			@Override
+			public void onDisconnect(BowlerAbstractDevice source) {
+				for(int i=0;i<getNumberOfLinks();i++) {
+					MobileBase m = getSlaveMobileBase(i);
+					if(m!=null)
+						m.disconnect();
+				}
+			}
+			
+			@Override
+			public void onConnect(BowlerAbstractDevice source) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 	}
 
 	/**
@@ -775,7 +792,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	 */
 	@Override
 	public void setRobotToFiducialTransform(TransformNR newTrans) {
-		super.setBaseToZframeTransform(newTrans);
+		super.setRobotToFiducialTransform(newTrans);
 	}
 	
 	public void refreshPose() {
