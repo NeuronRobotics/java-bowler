@@ -9,14 +9,15 @@ File buildDir = file(".");
 
 Properties props = new Properties()
 props.load(new FileInputStream(buildDir.getAbsolutePath()+"/src/main/resources/com/neuronrobotics/sdk/config/build.properties"))
-sourceSets {
-	
-	test {
-		java {
-			srcDirs = ["test/java/src","examples/java/src" ]  // Note @Peter's comment below
-		}
-	}
-}
+//sourceSets {
+//	
+//	test {
+//		java {
+//			srcDirs = ["test/java/src" ]  // Note @Peter's comment below
+//		}
+//	}
+//}
+
 manifest {
     attributes(	
     			"Manifest-Version": "1.0",
