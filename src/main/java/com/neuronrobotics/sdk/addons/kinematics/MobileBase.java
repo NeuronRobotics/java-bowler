@@ -862,6 +862,22 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	@Override
 	public void setGlobalToFiducialTransform(TransformNR frameToBase) {
 		super.setGlobalToFiducialTransform(frameToBase);
+		fireBaseUpdates();
+	}
+	
+	/**
+	 * Sets the global to fiducial transform.
+	 *
+	 * @param frameToBase the new global to fiducial transform
+	 */
+	@Override	
+	public void setBaseToZframeTransform(TransformNR baseToFiducial)  {
+		super.setBaseToZframeTransform( baseToFiducial);
+		fireBaseUpdates();
+	}
+	
+	private void fireBaseUpdates() {
+		TransformNR frameToBase = forwardOffset(new TransformNR()); 
 		for (DHParameterKinematics l : getAllDHChains()) {
 			l.setGlobalToFiducialTransform(frameToBase);
 		}
