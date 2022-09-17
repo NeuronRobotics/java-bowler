@@ -252,6 +252,9 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 		TransformNR IMUcenter = loadTransform("imuFromCentroid", doc);
 		if (IMUcenter != null)
 			setIMUFromCentroid(IMUcenter);
+		TransformNR baseToZframe = loadTransform("baseToZframe", doc);
+		setRobotToFiducialTransform(baseToZframe);
+		
 		fireBaseUpdates();
 	}
 
