@@ -1068,7 +1068,7 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 		return listeners;
 	}
 
-	private void fireChangeEvent() {
+	void fireChangeEvent() {
 		if(listeners!=null) {
 			for(int i=0;i<listeners.size();i++) {
 				try {

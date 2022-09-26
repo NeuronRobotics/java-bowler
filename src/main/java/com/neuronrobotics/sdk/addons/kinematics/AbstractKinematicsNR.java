@@ -277,7 +277,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 					Node nNode = dHParameters.item(x);
 					if (nNode.getNodeType() == Node.ELEMENT_NODE && nNode.getNodeName().contentEquals("DHParameters")) {
 						Element dhNode = (Element) nNode;
-						DHLink newLink = new DHLink(dhNode);
+						DHLink newLink = new DHLink(dhNode,newLinkConf);
 						getDhParametersChain().addLink(newLink);// 0->1
 						NodeList mobileBasesNodeList = dhNode.getChildNodes();
 						for (int j = 0; j < mobileBasesNodeList.getLength(); j++) {

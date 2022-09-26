@@ -66,6 +66,8 @@ public class DHLink {
 	
 	/** The embedable xml. */
 	private MobileBase slaveMobileBase=null;
+
+	private LinkConfiguration newLinkConf;
 	
 	
 	/**
@@ -88,8 +90,10 @@ public class DHLink {
 	 * Instantiates a new DH link.
 	 *
 	 * @param nNode the n node
+	 * @param newLinkConf 
 	 */
-	public DHLink(Element nNode) {
+	public DHLink(Element nNode, LinkConfiguration newLinkConf) {
+		this.newLinkConf = newLinkConf;
 		setDelta(XmlFactory.getTagValueDouble("Delta", nNode));
 		setTheta(Math.toRadians(XmlFactory.getTagValueDouble("Theta", nNode)));
 		setRadius(XmlFactory.getTagValueDouble("Radius", nNode));
@@ -548,6 +552,7 @@ public class DHLink {
 	 */
 	public void setDelta(double d) {
 		this.d = d;
+		newLinkConf.fireChangeEvent();
 	}
 
 	/**
@@ -568,6 +573,7 @@ public class DHLink {
 		this.radius = radius;
 		transX_J=null;
 		transX=null;
+		newLinkConf.fireChangeEvent();
 	}
 
 	/**
@@ -577,6 +583,7 @@ public class DHLink {
 	 */
 	public void setTheta(double theta) {
 		this.theta = theta;
+		newLinkConf.fireChangeEvent();
 	}
 
 	/**
@@ -588,6 +595,7 @@ public class DHLink {
 		this.alpha = alpha;
 		rotX=null;
 		rotX_J=null;
+		newLinkConf.fireChangeEvent();
 	}
 
 	/**
