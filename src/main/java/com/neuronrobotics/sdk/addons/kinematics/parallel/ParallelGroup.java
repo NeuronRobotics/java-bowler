@@ -2,14 +2,14 @@ package com.neuronrobotics.sdk.addons.kinematics.parallel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.function.Consumer;
 
-import com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR;
+import com.neuronrobotics.sdk.addons.kinematics.AbstractLink;
 import com.neuronrobotics.sdk.addons.kinematics.DHParameterKinematics;
-import com.neuronrobotics.sdk.addons.kinematics.ITaskSpaceUpdateListenerNR;
 import com.neuronrobotics.sdk.addons.kinematics.LinkConfiguration;
 import com.neuronrobotics.sdk.addons.kinematics.LinkFactory;
-import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
+
 
 public class ParallelGroup extends DHParameterKinematics {
 
@@ -224,6 +224,43 @@ public class ParallelGroup extends DHParameterKinematics {
 		}
 		IKvalues.clear();
 		return linkValues;
+	}
+	public void printError(TransformNR taskSpaceTransform) throws Exception {
+		printError(taskSpaceTransform,t -> {
+			System.out.println(t);
+		});
+	}
+	public void printError(TransformNR taskSpaceTransform, Consumer<String> printer) throws Exception {
+		int numBerOfLinks = 0;
+		for (DHParameterKinematics l : getConstituantLimbs()) {
+			numBerOfLinks += l.getNumberOfLinks();
+		}
+		double[] linkValues = new double[numBerOfLinks];
+		int limbOffset = 0;
+		HashMap<String, double[]> IKvalues = new HashMap<>();
+
+		for (DHParameterKinematics l : getConstituantLimbs()) {
+			// Use the built in IK model for the limb
+			double[] jointSpaceVect = compute(l, IKvalues, taskSpaceTransform);
+			// Load the link vector into the total vector
+			for (int i = 0; i < jointSpaceVect.length; i++) {
+				linkValues[limbOffset + i] = jointSpaceVect[i];
+				AbstractLink link = l.getFactory().getLink(l.getLinkConfiguration(i));
+				double val = link.toLinkUnits(jointSpaceVect[i]);
+				Double double1 = new Double(val);
+				if (double1.isNaN() || double1.isInfinite()) {
+					printer.accept("Fault on link " + i + " attempted to set " + double1);
+				}
+				if (val > link.getUpperLimit()) {
+					printer.accept("Fault on link " + i + " attempted to set " + jointSpaceVect[i]);
+				}
+				if (val < link.getLowerLimit()) {
+					printer.accept("Fault on link " + i + " attempted to set " + jointSpaceVect[i]);
+				}
+			}
+			limbOffset += jointSpaceVect.length;
+		}
+		IKvalues.clear();
 	}
 
 	@Override
