@@ -552,7 +552,7 @@ public class DHLink {
 	 */
 	public void setDelta(double d) {
 		this.d = d;
-		newLinkConf.fireChangeEvent();
+		if(newLinkConf!=null)newLinkConf.fireChangeEvent();
 	}
 
 	/**
@@ -573,7 +573,7 @@ public class DHLink {
 		this.radius = radius;
 		transX_J=null;
 		transX=null;
-		newLinkConf.fireChangeEvent();
+		if(newLinkConf!=null)newLinkConf.fireChangeEvent();
 	}
 
 	/**
@@ -583,7 +583,7 @@ public class DHLink {
 	 */
 	public void setTheta(double theta) {
 		this.theta = theta;
-		newLinkConf.fireChangeEvent();
+		if(newLinkConf!=null)newLinkConf.fireChangeEvent();
 	}
 
 	/**
@@ -595,7 +595,7 @@ public class DHLink {
 		this.alpha = alpha;
 		rotX=null;
 		rotX_J=null;
-		newLinkConf.fireChangeEvent();
+		if(newLinkConf!=null)newLinkConf.fireChangeEvent();
 	}
 
 	/**
