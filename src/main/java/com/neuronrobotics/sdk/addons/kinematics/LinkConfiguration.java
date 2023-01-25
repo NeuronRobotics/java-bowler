@@ -73,7 +73,7 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	private double velocityLimit = 100000000;
 	
 	/** The device scripting name. */
-	private String deviceScriptingName=name;
+	private String deviceScriptingName="exampleDevice";
 	private double deviceTheoreticalMax =180;
 	private double deviceTheoreticalMin =0;
 	private double mass=0.01;// KG
