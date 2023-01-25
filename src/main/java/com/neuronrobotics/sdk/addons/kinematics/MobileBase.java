@@ -820,6 +820,8 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 
 	/**
 	 * Sets the self source.
+	 * index 0 is GIT url
+	 * index 1 is filename
 	 *
 	 * @param selfSource the new self source
 	 */
