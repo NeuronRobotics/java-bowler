@@ -18,247 +18,254 @@ import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace;
 import com.neuronrobotics.sdk.pid.PIDConfiguration;
 
-
-
 // TODO: Auto-generated Javadoc
 /**
  * The Class LinkConfiguration.
  */
 public class LinkConfiguration implements ITransformNRChangeListener {
-	private ArrayList<ILinkConfigurationChangeListener> listeners=null;
+	private ArrayList<ILinkConfigurationChangeListener> listeners = null;
 	/** The name. */
-	private String name="newLink";// = getTagValue("name",eElement);
-	
+	private String name = "newLink";// = getTagValue("name",eElement);
+
 	/** The type. */
-	private String type="virtual";
-	
+	private String type = "virtual";
+
 	/** The index. */
-	private int index=0;// = Double.parseDouble(getTagValue("index",eElement));
-	
+	private int index = 0;// = Double.parseDouble(getTagValue("index",eElement));
+
 	/** The totla number of links. */
-	private int totlaNumberOfLinks=1;
-	
+	private int totlaNumberOfLinks = 1;
+
 	/** The link index. */
 	private int linkIndex = 0;
-	
+
 	/** The scale. */
-	//private double length;// = Double.parseDouble(getTagValue("length",eElement));
-	private double scale=1.0;// = Double.parseDouble(getTagValue("scale",eElement));
-	
+	// private double length;// =
+	// Double.parseDouble(getTagValue("length",eElement));
+	private double scale = 1.0;// = Double.parseDouble(getTagValue("scale",eElement));
+
 	/** The upper limit. */
-	private double upperLimit=100000;// = Double.parseDouble(getTagValue("upperLimit",eElement));
-	
+	private double upperLimit = 100000;// = Double.parseDouble(getTagValue("upperLimit",eElement));
+
 	/** The lower limit. */
-	private double lowerLimit=-100000;// = Double.parseDouble(getTagValue("lowerLimit",eElement));
-	
+	private double lowerLimit = -100000;// = Double.parseDouble(getTagValue("lowerLimit",eElement));
+
 	/** The k. */
-	private double k[] = new double[]{1,0,0};
-	
+	private double k[] = new double[] { 1, 0, 0 };
+
 	/** The inverted. */
-	private boolean inverted=false;
-	
+	private boolean inverted = false;
+
 	/** The is latch. */
-	private boolean isLatch=false;
-	
+	private boolean isLatch = false;
+
 	/** The index latch. */
-	private double indexLatch=0;
-	
+	private double indexLatch = 0;
+
 	/** The is stop on latch. */
-	private boolean isStopOnLatch=false;
-	
+	private boolean isStopOnLatch = false;
+
 	/** The homing ticks per second. */
-	private int homingTicksPerSecond=10000000;
-	
+	private int homingTicksPerSecond = 10000000;
+
 	/** The upper velocity. */
 	private double velocityLimit = 100000000;
-	
-	/** The device scripting name. */
-	private String deviceScriptingName="exampleDevice";
-	private double deviceTheoreticalMax =180;
-	private double deviceTheoreticalMin =0;
-	private double mass=0.01;// KG
-	private TransformNR centerOfMassFromCentroid=new TransformNR();
-	private TransformNR imuFromCentroid=new TransformNR();
-	/** The static offset. */
-	private double staticOffset=0;
-	
-	private ArrayList<LinkConfiguration> slaveLinks = new ArrayList<LinkConfiguration>();
-	
-	/**
-	 * This is the flag for setting the direction of the velocity lock out for limit switches
-	 */
-	private boolean invertVelocity=false;
-	
-	/**
-	 * This is the flag for setting the direction of the velocity lock out for limit switches
-	 */
-	private boolean invertLimitVelocityPolarity=false;
-	
 
-	private HashMap<String , String[]> vitamins= new HashMap<String, String[]>();
-	private HashMap<String , String> vitaminVariant= new HashMap<String, String>();
+	/** The device scripting name. */
+	private String deviceScriptingName = "exampleDevice";
+	private double deviceTheoreticalMax = 180;
+	private double deviceTheoreticalMin = 0;
+	private double mass = 0.01;// KG
+	private TransformNR centerOfMassFromCentroid = new TransformNR();
+	private TransformNR imuFromCentroid = new TransformNR();
+	/** The static offset. */
+	private double staticOffset = 0;
+
+	private ArrayList<LinkConfiguration> slaveLinks = new ArrayList<LinkConfiguration>();
+
+	/**
+	 * This is the flag for setting the direction of the velocity lock out for limit
+	 * switches
+	 */
+	private boolean invertVelocity = false;
+
+	/**
+	 * This is the flag for setting the direction of the velocity lock out for limit
+	 * switches
+	 */
+	private boolean invertLimitVelocityPolarity = false;
+
+	private HashMap<String, String[]> vitamins = new HashMap<String, String[]>();
+	private HashMap<String, String> vitaminVariant = new HashMap<String, String>();
 	private boolean passive = false;
-	private boolean newAbs=false;
+	private boolean newAbs = false;
+
 	/**
 	 * Instantiates a new link configuration.
 	 *
 	 * @param eElement the e element
 	 */
-	public LinkConfiguration(Element eElement){
-    	setName(XmlFactory.getTagValue("name",eElement));
-    	setHardwareIndex(Integer.parseInt(XmlFactory.getTagValue("index",eElement)));
-    	setScale(Double.parseDouble(XmlFactory.getTagValue("scale",eElement)));
-    	try{
-    		setDeviceTheoreticalMax(Double.parseDouble(XmlFactory.getTagValue("deviceTheoreticalMax",eElement)));
-    	}catch (Exception e){
-    		newAbs=true;
-    	}try{
-    		setDeviceTheoreticalMin(Double.parseDouble(XmlFactory.getTagValue("deviceTheoreticalMin",eElement)));
-    	}catch (Exception e){
-    		newAbs=true;
-    	}
-    	setUpperLimit(Double.parseDouble(XmlFactory.getTagValue("upperLimit",eElement)));
-    	setLowerLimit(Double.parseDouble(XmlFactory.getTagValue("lowerLimit",eElement)));
-    	try{
-    		setDeviceScriptingName(XmlFactory.getTagValue("deviceName",eElement));		
-    	}catch(NullPointerException e){
-    		// no device from connection engine specified
-    	}
-    	try{
-    		invertLimitVelocityPolarity=XmlFactory.getTagValue("invertLimitVelocityPolarity",eElement).contains("true");
-
-    	}catch(NullPointerException e){
-    		// no device from connection engine specified
-    	}
-    	try{
-    		setTypeString(XmlFactory.getTagValue("type",eElement));
-    		try {
-    			setTypeString(getTypeString());
-    		}catch(NoSuchElementException e) {
-    			setTypeString(LinkType.VIRTUAL.getName());
-    			setTypeString("virtual");
-    		}
-    	}catch (NullPointerException e){
-    		setTypeString(LinkType.PID.getName());
-    	}
-    	if(getTypeEnum()==LinkType.PID){
-    		try{
-		    	k[0]=Double.parseDouble(XmlFactory.getTagValue("pGain",eElement));
-		    	k[1]=Double.parseDouble(XmlFactory.getTagValue("iGain",eElement));
-		    	k[2]=Double.parseDouble(XmlFactory.getTagValue("dGain",eElement));
-		    	inverted=XmlFactory.getTagValue("isInverted",eElement).contains("true");
-		    	setHomingTicksPerSecond(Integer.parseInt(XmlFactory.getTagValue("homingTPS",eElement)));
-    		}catch (Exception ex){}
-    	}
-    	
-    	try{
-    		setUpperVelocity(Double.parseDouble(XmlFactory.getTagValue("upperVelocity",eElement)));
-    	}catch (Exception e){
-    		
-    	}
-    	try{
-    		setStaticOffset(Double.parseDouble(XmlFactory.getTagValue("staticOffset",eElement)));
-    	}catch (Exception e){
-    		
-    	}
-    	
-
-    	
-    	try{
-    		setMassKg(Double.parseDouble(XmlFactory.getTagValue("mass",eElement)));
-    	}catch (Exception e){
-    		
-    	}
-    	try{
-    		setElectroMechanicalType(XmlFactory.getTagValue("electroMechanicalType",eElement));
-    	}catch (Exception e){
-    		
-    	}
-    	
-    	try{
-    		setElectroMechanicalSize(XmlFactory.getTagValue("electroMechanicalSize",eElement));
-    	}catch (Exception e){
-    		
-    	}
-    	try{
-    		setShaftType(XmlFactory.getTagValue("shaftType",eElement));
-    	}catch (Exception e){
-    		
-    	}
-    	
-    	try{
-    		setShaftSize(XmlFactory.getTagValue("shaftSize",eElement));
-    	}catch (Exception e){
-    		
-    	}
-    	try{
-    		setPassive(Boolean.parseBoolean(XmlFactory.getTagValue("passive",eElement)));
-    	}catch (Exception e){
-    		
-    	}
-    	NodeList nodListofLinks = eElement.getChildNodes();
-		
-		for (int i = 0; i < nodListofLinks .getLength(); i++) {			
-		    Node linkNode = nodListofLinks.item(i);
-	    	try{
-	    		if (linkNode.getNodeType() == Node.ELEMENT_NODE && linkNode.getNodeName().contentEquals("centerOfMassFromCentroid")) {
-			    	Element cntr = (Element)linkNode;	    	    
-			    	setCenterOfMassFromCentroid(new TransformNR(	Double.parseDouble(XmlFactory.getTagValue("x",cntr)),
-								    			Double.parseDouble(XmlFactory.getTagValue("y",cntr)),
-								    			Double.parseDouble(XmlFactory.getTagValue("z",cntr)), 
-								    			new RotationNR(new double[]{	Double.parseDouble(XmlFactory.getTagValue("rotw",cntr)),
-								    							Double.parseDouble(XmlFactory.getTagValue("rotx",cntr)),
-								    							Double.parseDouble(XmlFactory.getTagValue("roty",cntr)),
-								    							Double.parseDouble(XmlFactory.getTagValue("rotz",cntr))})));	 
-			    }
-	    	}catch (Exception e){
-	    		
-	    	}
-	    	try{
-	    		if (linkNode.getNodeType() == Node.ELEMENT_NODE && linkNode.getNodeName().contentEquals("imuFromCentroid")) {
-			    	Element cntr = (Element)linkNode;	    	    
-			    	setimuFromCentroid(new TransformNR(	Double.parseDouble(XmlFactory.getTagValue("x",cntr)),
-								    			Double.parseDouble(XmlFactory.getTagValue("y",cntr)),
-								    			Double.parseDouble(XmlFactory.getTagValue("z",cntr)), 
-								    			new RotationNR(new double[]{	Double.parseDouble(XmlFactory.getTagValue("rotw",cntr)),
-								    							Double.parseDouble(XmlFactory.getTagValue("rotx",cntr)),
-								    							Double.parseDouble(XmlFactory.getTagValue("roty",cntr)),
-								    							Double.parseDouble(XmlFactory.getTagValue("rotz",cntr))})));	 
-			    }
-	    	}catch (Exception e){
-	    		
-	    	}try{
-	    		if (linkNode.getNodeType() == Node.ELEMENT_NODE && linkNode.getNodeName().contentEquals("vitamins")) {    	    
-			    	getVitamins((Element)linkNode)	 ;
-			    }
-	    	}catch (Exception e){
-	    		
-	    	}
+	public LinkConfiguration(Element eElement) {
+		setName(XmlFactory.getTagValue("name", eElement));
+		setHardwareIndex(Integer.parseInt(XmlFactory.getTagValue("index", eElement)));
+		setScale(Double.parseDouble(XmlFactory.getTagValue("scale", eElement)));
+		try {
+			setDeviceTheoreticalMax(Double.parseDouble(XmlFactory.getTagValue("deviceTheoreticalMax", eElement)));
+		} catch (Exception e) {
+			newAbs = true;
 		}
-    	isLatch=XmlFactory.getTagValue("isLatch",eElement).contains("true");
-    	setIndexLatch(Double.parseDouble(XmlFactory.getTagValue("indexLatch",eElement)));
-    	isStopOnLatch=XmlFactory.getTagValue("isStopOnLatch",eElement).contains("true");
-    	if(staticOffset>getUpperLimit() || staticOffset<getLowerLimit() )
-    	   Log.error("PID group "+getHardwareIndex()+" staticOffset is "+staticOffset+" but needs to be between "+getUpperLimit()+" and "+getLowerLimit());
-    	//System.out.println("Interted"+ inverted);
+		try {
+			setDeviceTheoreticalMin(Double.parseDouble(XmlFactory.getTagValue("deviceTheoreticalMin", eElement)));
+		} catch (Exception e) {
+			newAbs = true;
+		}
+		setUpperLimit(Double.parseDouble(XmlFactory.getTagValue("upperLimit", eElement)));
+		setLowerLimit(Double.parseDouble(XmlFactory.getTagValue("lowerLimit", eElement)));
+		try {
+			setDeviceScriptingName(XmlFactory.getTagValue("deviceName", eElement));
+		} catch (NullPointerException e) {
+			// no device from connection engine specified
+		}
+		try {
+			invertLimitVelocityPolarity = XmlFactory.getTagValue("invertLimitVelocityPolarity", eElement)
+					.contains("true");
+
+		} catch (NullPointerException e) {
+			// no device from connection engine specified
+		}
+		try {
+			setTypeString(XmlFactory.getTagValue("type", eElement));
+			try {
+				setTypeString(getTypeString());
+			} catch (NoSuchElementException e) {
+				setTypeString(LinkType.VIRTUAL.getName());
+				setTypeString("virtual");
+			}
+		} catch (NullPointerException e) {
+			setTypeString(LinkType.PID.getName());
+		}
+		if (getTypeEnum() == LinkType.PID) {
+			try {
+				k[0] = Double.parseDouble(XmlFactory.getTagValue("pGain", eElement));
+				k[1] = Double.parseDouble(XmlFactory.getTagValue("iGain", eElement));
+				k[2] = Double.parseDouble(XmlFactory.getTagValue("dGain", eElement));
+				inverted = XmlFactory.getTagValue("isInverted", eElement).contains("true");
+				setHomingTicksPerSecond(Integer.parseInt(XmlFactory.getTagValue("homingTPS", eElement)));
+			} catch (Exception ex) {
+			}
+		}
+
+		try {
+			setUpperVelocity(Double.parseDouble(XmlFactory.getTagValue("upperVelocity", eElement)));
+		} catch (Exception e) {
+
+		}
+		try {
+			setStaticOffset(Double.parseDouble(XmlFactory.getTagValue("staticOffset", eElement)));
+		} catch (Exception e) {
+
+		}
+
+		try {
+			setMassKg(Double.parseDouble(XmlFactory.getTagValue("mass", eElement)));
+		} catch (Exception e) {
+
+		}
+		try {
+			setElectroMechanicalType(XmlFactory.getTagValue("electroMechanicalType", eElement));
+		} catch (Exception e) {
+
+		}
+
+		try {
+			setElectroMechanicalSize(XmlFactory.getTagValue("electroMechanicalSize", eElement));
+		} catch (Exception e) {
+
+		}
+		try {
+			setShaftType(XmlFactory.getTagValue("shaftType", eElement));
+		} catch (Exception e) {
+
+		}
+
+		try {
+			setShaftSize(XmlFactory.getTagValue("shaftSize", eElement));
+		} catch (Exception e) {
+
+		}
+		try {
+			setPassive(Boolean.parseBoolean(XmlFactory.getTagValue("passive", eElement)));
+		} catch (Exception e) {
+
+		}
+		NodeList nodListofLinks = eElement.getChildNodes();
+
+		for (int i = 0; i < nodListofLinks.getLength(); i++) {
+			Node linkNode = nodListofLinks.item(i);
+			try {
+				if (linkNode.getNodeType() == Node.ELEMENT_NODE
+						&& linkNode.getNodeName().contentEquals("centerOfMassFromCentroid")) {
+					Element cntr = (Element) linkNode;
+					setCenterOfMassFromCentroid(new TransformNR(Double.parseDouble(XmlFactory.getTagValue("x", cntr)),
+							Double.parseDouble(XmlFactory.getTagValue("y", cntr)),
+							Double.parseDouble(XmlFactory.getTagValue("z", cntr)),
+							new RotationNR(new double[] { Double.parseDouble(XmlFactory.getTagValue("rotw", cntr)),
+									Double.parseDouble(XmlFactory.getTagValue("rotx", cntr)),
+									Double.parseDouble(XmlFactory.getTagValue("roty", cntr)),
+									Double.parseDouble(XmlFactory.getTagValue("rotz", cntr)) })));
+				}
+			} catch (Exception e) {
+
+			}
+			try {
+				if (linkNode.getNodeType() == Node.ELEMENT_NODE
+						&& linkNode.getNodeName().contentEquals("imuFromCentroid")) {
+					Element cntr = (Element) linkNode;
+					setimuFromCentroid(new TransformNR(Double.parseDouble(XmlFactory.getTagValue("x", cntr)),
+							Double.parseDouble(XmlFactory.getTagValue("y", cntr)),
+							Double.parseDouble(XmlFactory.getTagValue("z", cntr)),
+							new RotationNR(new double[] { Double.parseDouble(XmlFactory.getTagValue("rotw", cntr)),
+									Double.parseDouble(XmlFactory.getTagValue("rotx", cntr)),
+									Double.parseDouble(XmlFactory.getTagValue("roty", cntr)),
+									Double.parseDouble(XmlFactory.getTagValue("rotz", cntr)) })));
+				}
+			} catch (Exception e) {
+
+			}
+			try {
+				if (linkNode.getNodeType() == Node.ELEMENT_NODE && linkNode.getNodeName().contentEquals("vitamins")) {
+					getVitamins((Element) linkNode);
+				}
+			} catch (Exception e) {
+
+			}
+		}
+		isLatch = XmlFactory.getTagValue("isLatch", eElement).contains("true");
+		setIndexLatch(Double.parseDouble(XmlFactory.getTagValue("indexLatch", eElement)));
+		isStopOnLatch = XmlFactory.getTagValue("isStopOnLatch", eElement).contains("true");
+		if (staticOffset > getUpperLimit() || staticOffset < getLowerLimit())
+			Log.error("PID group " + getHardwareIndex() + " staticOffset is " + staticOffset
+					+ " but needs to be between " + getUpperLimit() + " and " + getLowerLimit());
+		// System.out.println("Interted"+ inverted);
 	}
-	
+
 	/**
 	 * Instantiates a new link configuration.
 	 *
 	 * @param args the args
 	 */
 	public LinkConfiguration(Object[] args) {
-		setName((String)args[6]);
-		setHardwareIndex((Integer)args[0]);
-    	setScale((Double)args[5]);
-    	setUpperLimit((Integer)args[4]);
-    	setLowerLimit((Integer)args[3]);
-    	setTypeString(LinkType.PID.getName());
+		setName((String) args[6]);
+		setHardwareIndex((Integer) args[0]);
+		setScale((Double) args[5]);
+		setUpperLimit((Integer) args[4]);
+		setLowerLimit((Integer) args[3]);
+		setTypeString(LinkType.PID.getName());
 
-    	setTotlaNumberOfLinks((Integer)args[1]);
-    	fireChangeEvent();
+		setTotlaNumberOfLinks((Integer) args[1]);
+		fireChangeEvent();
 	}
+
 	/**
 	 * Gets the vitamins.
 	 *
@@ -272,14 +279,12 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 				Node linkNode = nodListofLinks.item(i);
 				if (linkNode.getNodeType() == Node.ELEMENT_NODE && linkNode.getNodeName().contentEquals("vitamin")) {
 					Element e = (Element) linkNode;
-					setVitamin(XmlFactory.getTagValue("name",e),
-							XmlFactory.getTagValue("type",e),
-							XmlFactory.getTagValue("id",e)
-							);
-					try{
-						setVitaminVariant(XmlFactory.getTagValue("name",e),
-								XmlFactory.getTagValue("variant",e));
-					}catch(Exception ex){}
+					setVitamin(XmlFactory.getTagValue("name", e), XmlFactory.getTagValue("type", e),
+							XmlFactory.getTagValue("id", e));
+					try {
+						setVitaminVariant(XmlFactory.getTagValue("name", e), XmlFactory.getTagValue("variant", e));
+					} catch (Exception ex) {
+					}
 				}
 			}
 			return;
@@ -288,33 +293,38 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 		}
 		return;
 	}
-	
+
 	/**
 	 * Add a vitamin to this link
-	 * @param 	name the name of this vitamin, 
-				if the name already exists, the data will be overwritten. 
+	 * 
+	 * @param name the name of this vitamin, if the name already exists, the data
+	 *             will be overwritten.
 	 * @param type the vitamin type, this maps the the json filename
-	 * @param id the part ID, theis maps to the key in the json for the vitamin
+	 * @param id   the part ID, theis maps to the key in the json for the vitamin
 	 */
-	public void setVitamin(String name, String type, String id){
-		if(getVitamins().get(name)==null){
+	public void setVitamin(String name, String type, String id) {
+		if (getVitamins().get(name) == null) {
 			getVitamins().put(name, new String[2]);
 		}
-		getVitamins().get(name)[0]=type;
-		getVitamins().get(name)[1]=id;
+		getVitamins().get(name)[0] = type;
+		getVitamins().get(name)[1] = id;
 		fireChangeEvent();
 	}
+
 	/**
 	 * Set a purchasing code for a vitamin
-	 * @param name name of vitamin
+	 * 
+	 * @param name      name of vitamin
 	 * @param tagValue2 Purchaning code
 	 */
 	public void setVitaminVariant(String name, String tagValue2) {
 		vitaminVariant.put(name, tagValue2);
 		fireChangeEvent();
 	}
+
 	/**
 	 * Get a purchaing code for a vitamin
+	 * 
 	 * @param name name of vitamin
 	 * @return
 	 */
@@ -326,41 +336,75 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	 * Instantiates a new link configuration.
 	 */
 	public LinkConfiguration() {
-		//default values
+		// default values
+	}
+
+	public LinkConfiguration(LinkConfiguration from) {
+		setDeviceScriptingName(from.getDeviceScriptingName());
+
+		for(int i=0;i<from.slaveLinks.size();i++){
+			slaveLinks.add(new LinkConfiguration(from.slaveLinks.get(i)));
+		}
+		
+		for(String key: from.getVitamins().keySet()){
+			getVitamins().put(key, from.getVitamins().get(key));
+		}
+		setName(from.getName());
+		
+		setTypeString(getTypeString());
+		setHardwareIndex(getHardwareIndex());
+		setScale(getScale());
+		setUpperLimit(getUpperLimit());
+		setLowerLimit(getLowerLimit());
+		setUpperVelocity(getUpperVelocity());
+		setStaticOffset(getStaticOffset());
+		setDeviceTheoreticalMax(getDeviceTheoreticalMax());
+		setDeviceTheoreticalMin(getDeviceTheoreticalMin());
+		setLatch(isLatch());
+		setIndexLatch(getIndexLatch());
+		setStopOnLatch(isStopOnLatch());
+		setHomingTicksPerSecond(getHomingTicksPerSecond());
+		setPassive(isPassive());
+		setMassKg(getMassKg());
+		setCenterOfMassFromCentroid(getCenterOfMassFromCentroid());
+		setimuFromCentroid(getimuFromCentroid());
+
 	}
 
 	/**
 	 * Instantiates a new link configuration.
 	 *
-	 * @param home the home
+	 * @param home   the home
 	 * @param llimit the llimit
 	 * @param ulimit the ulimit
-	 * @param d the d
+	 * @param d      the d
 	 */
 	public LinkConfiguration(int home, int llimit, int ulimit, double d) {
-    	setScale(d);
-    	setUpperLimit(ulimit);
-    	setLowerLimit(llimit);
-    	setStaticOffset(home);
-    	fireChangeEvent();
+		setScale(d);
+		setUpperLimit(ulimit);
+		setLowerLimit(llimit);
+		setStaticOffset(home);
+		fireChangeEvent();
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
-	public String toString(){
-		String s="LinkConfiguration: \n\tName: "+getName();
-		if(deviceScriptingName!=null)
-			s="Device Name: \n\tName: "+getDeviceScriptingName();
-		s+=	"\n\tType: "+getTypeEnum()+" "+getTypeString();
-		s+=	"\n\tHardware Board Index: "+getHardwareIndex();
-		s+=	"\n\tScale: "+getScale();
-		s+=	"\n\tUpper Limit: "+getUpperLimit();
-		s+=	"\n\tLower Limit: "+getLowerLimit();
-		s+=	"\n\tHoming Ticks Per Second: "+getHomingTicksPerSecond();
+	public String toString() {
+		String s = "LinkConfiguration: \n\tName: " + getName();
+		if (deviceScriptingName != null)
+			s = "Device Name: \n\tName: " + getDeviceScriptingName();
+		s += "\n\tType: " + getTypeEnum() + " " + getTypeString();
+		s += "\n\tHardware Board Index: " + getHardwareIndex();
+		s += "\n\tScale: " + getScale();
+		s += "\n\tUpper Limit: " + getUpperLimit();
+		s += "\n\tLower Limit: " + getLowerLimit();
+		s += "\n\tHoming Ticks Per Second: " + getHomingTicksPerSecond();
 		return s;
 	}
-	
+
 	/**
 	 * Gets the xml.
 	 *
@@ -368,49 +412,41 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	 */
 	/*
 	 * 
-	 * Generate the xml configuration to generate a link of this configuration. 
+	 * Generate the xml configuration to generate a link of this configuration.
 	 */
-	public String getXml(){
-		String DevStr=deviceScriptingName!= null?"<deviceName>"+getDeviceScriptingName()+"</deviceName>\n":"";
-		String slaves="";
-		for(int i=0;i<slaveLinks.size();i++){
-			slaves+="\n\t<slaveLink>\n"+slaveLinks.get(i).getXml()+"\n\t</slaveLink>\n";
+	public String getXml() {
+		String DevStr = deviceScriptingName != null ? "<deviceName>" + getDeviceScriptingName() + "</deviceName>\n"
+				: "";
+		String slaves = "";
+		for (int i = 0; i < slaveLinks.size(); i++) {
+			slaves += "\n\t<slaveLink>\n" + slaveLinks.get(i).getXml() + "\n\t</slaveLink>\n";
 		}
-		String allVitamins="";
-		for(String key: getVitamins().keySet()){
+		String allVitamins = "";
+		for (String key : getVitamins().keySet()) {
 			String v = "\t\t<vitamin>\n";
-			v+=		"\t\t\t<name>"+key+"</name>\n"+
-					"\t\t\t<type>"+getVitamins().get(key)[0]+"</type>\n"+
-					"\t\t\t<id>"+getVitamins().get(key)[1]+"</id>\n";
-			if (getVitaminVariant(key)!=null){
-				v+=		"\t\t\t<variant>"+getVitamins().get(key)[1]+"</variant>\n";
+			v += "\t\t\t<name>" + key + "</name>\n" + "\t\t\t<type>" + getVitamins().get(key)[0] + "</type>\n"
+					+ "\t\t\t<id>" + getVitamins().get(key)[1] + "</id>\n";
+			if (getVitaminVariant(key) != null) {
+				v += "\t\t\t<variant>" + getVitamins().get(key)[1] + "</variant>\n";
 			}
-			v+="\t\t</vitamin>\n";
-			allVitamins+=v;
+			v += "\t\t</vitamin>\n";
+			allVitamins += v;
 		}
-		
-		return "\t<name>"+getName()+"</name>\n"+
-				"\t"+DevStr+
-				"\t<type>"+getTypeString()+"</type>\n"+
-				"\t<index>"+getHardwareIndex()+"</index>\n"+
-				"\t<scale>"+getScale()+"</scale>\n"+
-				"\t<upperLimit>"+getUpperLimit()+"</upperLimit>\n"+
-				"\t<lowerLimit>"+getLowerLimit()+"</lowerLimit>\n"+
-				"\t<upperVelocity>"+getUpperVelocity()+"</upperVelocity>\n"+
-				"\t<lowerVelocity>"+getLowerVelocity()+"</lowerVelocity>\n"+
-				"\t<staticOffset>"+getStaticOffset()+"</staticOffset>\n"+
-				"\t<deviceTheoreticalMax>"+getDeviceTheoreticalMax()+"</deviceTheoreticalMax>\n"+
-				"\t<deviceTheoreticalMin>"+getDeviceTheoreticalMin()+"</deviceTheoreticalMin>\n"+
-				"\t<isLatch>"+isLatch()+"</isLatch>\n"+
-				"\t<indexLatch>"+getIndexLatch()+"</indexLatch>\n"+
-				"\t<isStopOnLatch>"+isStopOnLatch()+"</isStopOnLatch>\n"+	
-				"\t<homingTPS>"+getHomingTicksPerSecond()+"</homingTPS>\n"+
-				"\n\t<vitamins>\n"+allVitamins+"\n\t</vitamins>\n"+
-				"\t<passive>"+isPassive()+"</passive>\n"+
-				"\t<mass>"+getMassKg()+"</mass>\n"+
-				"\t<centerOfMassFromCentroid>"+getCenterOfMassFromCentroid().getXml()+"</centerOfMassFromCentroid>\n"+
-				"\t<imuFromCentroid>"+getimuFromCentroid().getXml()+"</imuFromCentroid>\n"
-				+slaves;
+
+		return "\t<name>" + getName() + "</name>\n" + "\t" + DevStr + "\t<type>" + getTypeString() + "</type>\n"
+				+ "\t<index>" + getHardwareIndex() + "</index>\n" + "\t<scale>" + getScale() + "</scale>\n"
+				+ "\t<upperLimit>" + getUpperLimit() + "</upperLimit>\n" + "\t<lowerLimit>" + getLowerLimit()
+				+ "</lowerLimit>\n" + "\t<upperVelocity>" + getUpperVelocity() + "</upperVelocity>\n"
+				+ "\t<lowerVelocity>" + getLowerVelocity() + "</lowerVelocity>\n" + "\t<staticOffset>"
+				+ getStaticOffset() + "</staticOffset>\n" + "\t<deviceTheoreticalMax>" + getDeviceTheoreticalMax()
+				+ "</deviceTheoreticalMax>\n" + "\t<deviceTheoreticalMin>" + getDeviceTheoreticalMin()
+				+ "</deviceTheoreticalMin>\n" + "\t<isLatch>" + isLatch() + "</isLatch>\n" + "\t<indexLatch>"
+				+ getIndexLatch() + "</indexLatch>\n" + "\t<isStopOnLatch>" + isStopOnLatch() + "</isStopOnLatch>\n"
+				+ "\t<homingTPS>" + getHomingTicksPerSecond() + "</homingTPS>\n" + "\n\t<vitamins>\n" + allVitamins
+				+ "\n\t</vitamins>\n" + "\t<passive>" + isPassive() + "</passive>\n" + "\t<mass>" + getMassKg()
+				+ "</mass>\n" + "\t<centerOfMassFromCentroid>" + getCenterOfMassFromCentroid().getXml()
+				+ "</centerOfMassFromCentroid>\n" + "\t<imuFromCentroid>" + getimuFromCentroid().getXml()
+				+ "</imuFromCentroid>\n" + slaves;
 	}
 
 	/**
@@ -419,11 +455,11 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	 * @param name the new name
 	 */
 	public void setName(String name) {
-		Log.info("Setting controller name: "+name);
+		Log.info("Setting controller name: " + name);
 		this.name = name;
 		fireChangeEvent();
 	}
-	
+
 	/**
 	 * Gets the name.
 	 *
@@ -432,9 +468,10 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	public String getName() {
 		return name;
 	}
-	
+
 	/**
-	 * sets the hardware index for maping this kinematics link to its assocaited hardware index.
+	 * sets the hardware index for maping this kinematics link to its assocaited
+	 * hardware index.
 	 *
 	 * @param index the new hardware index
 	 */
@@ -442,9 +479,10 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 		this.index = index;
 		fireChangeEvent();
 	}
-	
+
 	/**
-	 * gets the hardware index for maping this kinematics link to its assocaited hardware index.
+	 * gets the hardware index for maping this kinematics link to its assocaited
+	 * hardware index.
 	 *
 	 * @return the hardware index
 	 */
@@ -461,7 +499,7 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 		this.scale = scale;
 		fireChangeEvent();
 	}
-	
+
 	/**
 	 * Gets the scale.
 	 *
@@ -488,7 +526,7 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 		this.deviceTheoreticalMin = deviceTheoreticalMin;
 		fireChangeEvent();
 	}
-	
+
 	/**
 	 * Sets the upper limit.
 	 *
@@ -496,16 +534,16 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	 */
 	public void setUpperLimit(double upperLimit) {
 		this.upperLimit = upperLimit;
-		if(upperLimit>getDeviceTheoreticalMax()) {
-			if(!newAbs)
-				this.upperLimit=getDeviceTheoreticalMax();	
+		if (upperLimit > getDeviceTheoreticalMax()) {
+			if (!newAbs)
+				this.upperLimit = getDeviceTheoreticalMax();
 			else
 				setDeviceTheoreticalMax(upperLimit);
-				
+
 		}
 		fireChangeEvent();
 	}
-	
+
 	/**
 	 * Gets the upper limit.
 	 *
@@ -514,7 +552,7 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	public double getUpperLimit() {
 		return upperLimit;
 	}
-	
+
 	/**
 	 * Sets the lower limit.
 	 *
@@ -522,18 +560,17 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	 */
 	public void setLowerLimit(double lowerLimit) {
 		this.lowerLimit = lowerLimit;
-		if(lowerLimit<getDeviceTheoreticalMin())
-		{
-			if(!newAbs) {
-				this.lowerLimit=getDeviceTheoreticalMin();	
-			}else {
+		if (lowerLimit < getDeviceTheoreticalMin()) {
+			if (!newAbs) {
+				this.lowerLimit = getDeviceTheoreticalMin();
+			} else {
 				setDeviceTheoreticalMin(lowerLimit);
 			}
 		}
-				
+
 		fireChangeEvent();
 	}
-	
+
 	/**
 	 * Gets the lower limit.
 	 *
@@ -542,7 +579,7 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	public double getLowerLimit() {
 		return lowerLimit;
 	}
-	
+
 	/**
 	 * Gets the kp.
 	 *
@@ -551,7 +588,7 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	public double getKP() {
 		return k[0];
 	}
-	
+
 	/**
 	 * Gets the ki.
 	 *
@@ -560,7 +597,7 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	public double getKI() {
 		return k[1];
 	}
-	
+
 	/**
 	 * Gets the kd.
 	 *
@@ -569,7 +606,7 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	public double getKD() {
 		return k[2];
 	}
-	
+
 	/**
 	 * Sets the kp.
 	 *
@@ -579,7 +616,7 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 		k[0] = kP;
 		fireChangeEvent();
 	}
-	
+
 	/**
 	 * Sets the ki.
 	 *
@@ -589,7 +626,7 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 		k[1] = kI;
 		fireChangeEvent();
 	}
-	
+
 	/**
 	 * Sets the kd.
 	 *
@@ -599,7 +636,7 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 		k[2] = kD;
 		fireChangeEvent();
 	}
-	
+
 	/**
 	 * Sets the inverted.
 	 *
@@ -609,7 +646,7 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 		this.inverted = inverted;
 		fireChangeEvent();
 	}
-	
+
 	/**
 	 * Checks if is inverted.
 	 *
@@ -618,22 +655,22 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	public boolean isInverted() {
 		return inverted;
 	}
-	
+
 	/**
 	 * Sets the index latch.
 	 *
 	 * @param indexLatch the new index latch
 	 */
 	public void setIndexLatch(double indexLatch) {
-		
-		if(indexLatch>getDeviceTheoreticalMax())
-			indexLatch= getDeviceTheoreticalMax();
-		if(indexLatch<getDeviceTheoreticalMin())
-			indexLatch=getDeviceTheoreticalMin();
+
+		if (indexLatch > getDeviceTheoreticalMax())
+			indexLatch = getDeviceTheoreticalMax();
+		if (indexLatch < getDeviceTheoreticalMin())
+			indexLatch = getDeviceTheoreticalMin();
 		this.indexLatch = indexLatch;
 		fireChangeEvent();
 	}
-	
+
 	/**
 	 * Gets the index latch.
 	 *
@@ -642,7 +679,7 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	public double getIndexLatch() {
 		return indexLatch;
 	}
-	
+
 	/**
 	 * Sets the latch.
 	 *
@@ -651,7 +688,7 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	public void setLatch(boolean isLatch) {
 		this.isLatch = isLatch;
 	}
-	
+
 	/**
 	 * Checks if is latch.
 	 *
@@ -660,7 +697,7 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	public boolean isLatch() {
 		return isLatch;
 	}
-	
+
 	/**
 	 * Sets the stop on latch.
 	 *
@@ -670,7 +707,7 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 		this.isStopOnLatch = isStopOnLatch;
 		fireChangeEvent();
 	}
-	
+
 	/**
 	 * Checks if is stop on latch.
 	 *
@@ -679,7 +716,7 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	public boolean isStopOnLatch() {
 		return isStopOnLatch;
 	}
-	
+
 	/**
 	 * Sets the homing ticks per second.
 	 *
@@ -689,7 +726,7 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 		this.homingTicksPerSecond = homingTicksPerSecond;
 		fireChangeEvent();
 	}
-	
+
 	/**
 	 * Gets the homing ticks per second.
 	 *
@@ -698,9 +735,7 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	public int getHomingTicksPerSecond() {
 		return homingTicksPerSecond;
 	}
-	
 
-	
 	/**
 	 * Gets the type.
 	 *
@@ -709,7 +744,7 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	LinkType getTypeEnum() {
 		return LinkType.fromString(type);
 	}
-	
+
 	/**
 	 * Sets the upper velocity.
 	 *
@@ -719,7 +754,7 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 		this.velocityLimit = upperVelocity;
 		fireChangeEvent();
 	}
-	
+
 	/**
 	 * Gets the upper velocity.
 	 *
@@ -729,7 +764,6 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 		return velocityLimit;
 	}
 
-	
 	/**
 	 * Gets the lower velocity.
 	 *
@@ -738,7 +772,7 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	public double getLowerVelocity() {
 		return -velocityLimit;
 	}
-	
+
 	/**
 	 * THis is the index of this link in its kinematics chain.
 	 *
@@ -747,7 +781,7 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	public int getLinkIndex() {
 		return linkIndex;
 	}
-	
+
 	/**
 	 * This sets the index of the link in itts kinematic chain.
 	 *
@@ -757,7 +791,7 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 		this.linkIndex = linkIndex;
 		fireChangeEvent();
 	}
-	
+
 	/**
 	 * Gets the totla number of links.
 	 *
@@ -766,7 +800,7 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	public int getTotlaNumberOfLinks() {
 		return totlaNumberOfLinks;
 	}
-	
+
 	/**
 	 * Sets the totla number of links.
 	 *
@@ -776,13 +810,13 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 		this.totlaNumberOfLinks = totlaNumberOfLinks;
 		fireChangeEvent();
 	}
-	
+
 	/**
 	 * Gets the pid configuration.
 	 *
 	 * @return the pid configuration
 	 */
-	public PIDConfiguration getPidConfiguration(){
+	public PIDConfiguration getPidConfiguration() {
 		PIDConfiguration pid = new PIDConfiguration();
 		pid.setKD(getKD());
 		pid.setGroup(getHardwareIndex());
@@ -793,7 +827,7 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 		pid.setInverted(isInverted());
 		return pid;
 	}
-	
+
 	/**
 	 * Sets the pid configuration.
 	 *
@@ -801,23 +835,23 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	 */
 	public void setPidConfiguration(IPidControlNamespace pid) {
 		PIDConfiguration conf = pid.getPIDConfiguration(getHardwareIndex());
-    	if(getTypeEnum()==LinkType.PID){
-	    	k[0]=conf.getKP();
-	    	k[1]=conf.getKI();
-	    	k[2]=conf.getKD();
-	    	inverted=conf.isInverted();
-	    	setHomingTicksPerSecond(10000);
-    	}
-    	
-    	isLatch=conf.isUseLatch();
-    	indexLatch=(int) conf.getIndexLatch();
-    	isStopOnLatch=conf.isStopOnIndex();
-    	fireChangeEvent();
+		if (getTypeEnum() == LinkType.PID) {
+			k[0] = conf.getKP();
+			k[1] = conf.getKI();
+			k[2] = conf.getKD();
+			inverted = conf.isInverted();
+			setHomingTicksPerSecond(10000);
+		}
+
+		isLatch = conf.isUseLatch();
+		indexLatch = (int) conf.getIndexLatch();
+		isStopOnLatch = conf.isStopOnIndex();
+		fireChangeEvent();
 //    	if(indexLatch>getUpperLimit() || indexLatch<getLowerLimit() )
 //    	    throw new RuntimeException("PID group "+getHardwareIndex()+" Index latch is "+indexLatch+" but needs to be between "+getUpperLimit()+" and "+getLowerLimit());
-    	
+
 	}
-	
+
 	/**
 	 * Gets the device scripting name.
 	 *
@@ -826,7 +860,7 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	public String getDeviceScriptingName() {
 		return deviceScriptingName;
 	}
-	
+
 	/**
 	 * Sets the device scripting name.
 	 *
@@ -836,7 +870,7 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 		this.deviceScriptingName = deviceScriptingName;
 		fireChangeEvent();
 	}
-	
+
 	/**
 	 * Gets the static offset.
 	 *
@@ -845,21 +879,20 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	public double getStaticOffset() {
 		return staticOffset;
 	}
-	
+
 	/**
 	 * Sets the static offset.
 	 *
 	 * @param staticOffset the new static offset
 	 */
 	public void setStaticOffset(double staticOffset) {
-		if(staticOffset>getUpperLimit())
-			staticOffset= getUpperLimit();
-		if(staticOffset<getLowerLimit())
-			staticOffset=getLowerLimit();
+		if (staticOffset > getUpperLimit())
+			staticOffset = getUpperLimit();
+		if (staticOffset < getLowerLimit())
+			staticOffset = getLowerLimit();
 		this.staticOffset = staticOffset;
 		fireChangeEvent();
 	}
-
 
 	public boolean isInvertLimitVelocityPolarity() {
 		return invertLimitVelocityPolarity;
@@ -882,25 +915,30 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	public double getMassKg() {
 		return mass;
 	}
+
 	public void setMassKg(double mass) {
 		this.mass = mass;
 		fireChangeEvent();
 	}
+
 	public TransformNR getCenterOfMassFromCentroid() {
 		return centerOfMassFromCentroid;
 	}
+
 	public void setCenterOfMassFromCentroid(TransformNR com) {
-		if(this.centerOfMassFromCentroid!=null)
+		if (this.centerOfMassFromCentroid != null)
 			this.centerOfMassFromCentroid.removeChangeListener(this);
 		this.centerOfMassFromCentroid = com;
 		this.centerOfMassFromCentroid.addChangeListener(this);
 		fireChangeEvent();
 	}
+
 	public TransformNR getimuFromCentroid() {
 		return imuFromCentroid;
 	}
+
 	public void setimuFromCentroid(TransformNR imu) {
-		if(this.imuFromCentroid!=null)
+		if (this.imuFromCentroid != null)
 			this.imuFromCentroid.removeChangeListener(this);
 		this.imuFromCentroid = imu;
 		this.imuFromCentroid.addChangeListener(this);
@@ -910,21 +948,23 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 //	private String electroMechanicalSize = "standardMicro";
 //	private String shaftType = "hobbyServoHorn";
 //	private String shaftSize = "standardMicro1";
-	
-	private String[] getCoreShaftPart(){
-		if(vitamins.get("shaft")==null){
-			vitamins.put("shaft", new String[]{"hobbyServoHorn","standardMicro1"});
+
+	private String[] getCoreShaftPart() {
+		if (vitamins.get("shaft") == null) {
+			vitamins.put("shaft", new String[] { "hobbyServoHorn", "standardMicro1" });
 		}
 		return vitamins.get("shaft");
 	}
-	private String[] getCoreEmPart(){
-		if(vitamins.get("electroMechanical")==null){
-			vitamins.put("electroMechanical", new String[]{"hobbyServo","standardMicro"});
+
+	private String[] getCoreEmPart() {
+		if (vitamins.get("electroMechanical") == null) {
+			vitamins.put("electroMechanical", new String[] { "hobbyServo", "standardMicro" });
 		}
 		return vitamins.get("electroMechanical");
 	}
+
 	public String getElectroMechanicalType() {
-		return getCoreEmPart()[0] ;
+		return getCoreEmPart()[0];
 	}
 
 	public void setElectroMechanicalType(String electroMechanicalType) {
@@ -933,7 +973,7 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	}
 
 	public String getElectroMechanicalSize() {
-		return getCoreEmPart()[1] ;
+		return getCoreEmPart()[1];
 	}
 
 	public void setElectroMechanicalSize(String electroMechanicalSize) {
@@ -968,11 +1008,11 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 		fireChangeEvent();
 	}
 
-	public HashMap<String , String[]> getVitamins() {
+	public HashMap<String, String[]> getVitamins() {
 		return vitamins;
 	}
 
-	public void setVitamins(HashMap<String , String[]> vitamins) {
+	public void setVitamins(HashMap<String, String[]> vitamins) {
 		this.vitamins = vitamins;
 		fireChangeEvent();
 	}
@@ -982,98 +1022,101 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	}
 
 	public void setTypeString(String typeString) {
-		if(typeString==null)
+		if (typeString == null)
 			throw new NullPointerException();
-		type=typeString;
+		type = typeString;
 		fireChangeEvent();
 	}
-	
-	 /**
+
+	/**
 	 * Checks if is virtual.
 	 *
 	 * @return true, if is virtual
 	 */
-	public boolean isVirtual(){
-		 switch(getTypeEnum()){
+	public boolean isVirtual() {
+		switch (getTypeEnum()) {
 
 		case DUMMY:
 		case VIRTUAL:
 			return true;
 		case USERDEFINED:
-			if(getTypeString().toLowerCase().contains("virtual")){
+			if (getTypeString().toLowerCase().contains("virtual")) {
 				return true;
 			}
 		default:
 			return false;
-		 }
-	 }
-	 
-	 /**
+		}
+	}
+
+	/**
 	 * Checks if is tool.
 	 *
 	 * @return true, if is tool
 	 */
-	public boolean isTool(){
-		 switch(getTypeEnum()){
+	public boolean isTool() {
+		switch (getTypeEnum()) {
 		case PID_TOOL:
 		case GCODE_STEPPER_TOOL:
 		case GCODE_HEATER_TOOL:
 			return true;
 		case USERDEFINED:
-			if(getTypeString().toLowerCase().contains("tool")){
-				return true;
-			}	
-		default:
-			return false;
-		 
-		 } 
-	 }
-	 
-	 /**
-	 * Checks if is prismatic.
-	 *
-	 * @return true, if is prismatic
-	 */
-	public boolean isPrismatic(){
-		 switch(getTypeEnum()){
-		case ANALOG_PRISMATIC:
-		case PID_PRISMATIC:
-		case GCODE_STEPPER_PRISMATIC:
-			return true;
-		case USERDEFINED:
-			if(getTypeString().toLowerCase().contains("prismatic")){
+			if (getTypeString().toLowerCase().contains("tool")) {
 				return true;
 			}
 		default:
 			return false;
 
-		 } 
-	 }
+		}
+	}
+
+	/**
+	 * Checks if is prismatic.
+	 *
+	 * @return true, if is prismatic
+	 */
+	public boolean isPrismatic() {
+		switch (getTypeEnum()) {
+		case ANALOG_PRISMATIC:
+		case PID_PRISMATIC:
+		case GCODE_STEPPER_PRISMATIC:
+			return true;
+		case USERDEFINED:
+			if (getTypeString().toLowerCase().contains("prismatic")) {
+				return true;
+			}
+		default:
+			return false;
+
+		}
+	}
 
 	public void addChangeListener(ILinkConfigurationChangeListener l) {
-		if(!getListeners().contains(l))
+		if (!getListeners().contains(l))
 			getListeners().add(l);
 	}
+
 	public void removeChangeListener(ILinkConfigurationChangeListener l) {
-		if(getListeners().contains(l))
+		if (getListeners().contains(l))
 			getListeners().remove(l);
 	}
+
 	public void clearChangeListener() {
 		getListeners().clear();
-		listeners=null;
+		listeners = null;
 	}
+
 	public ArrayList<ILinkConfigurationChangeListener> getListeners() {
-		if(listeners==null)
-			listeners=new ArrayList<ILinkConfigurationChangeListener>();
+		if (listeners == null)
+			listeners = new ArrayList<ILinkConfigurationChangeListener>();
 		return listeners;
 	}
 
 	void fireChangeEvent() {
-		if(listeners!=null) {
-			for(int i=0;i<listeners.size();i++) {
+		if (listeners != null) {
+			for (int i = 0; i < listeners.size(); i++) {
 				try {
 					listeners.get(i).event(this);
-				}catch (Throwable t) {
+				} catch (Throwable t) {
 					t.printStackTrace();
 				}
 			}
@@ -1084,5 +1127,5 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	public void event(TransformNR changed) {
 		fireChangeEvent();
 	}
-	
+
 }

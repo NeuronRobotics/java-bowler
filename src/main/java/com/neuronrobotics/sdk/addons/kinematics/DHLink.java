@@ -101,6 +101,13 @@ public class DHLink {
 		
 	}
 	
+	public DHLink(DHLink dhl) {
+		setDelta(dhl.getDelta());
+		setTheta(dhl.getTheta());
+		setRadius(dhl.getRadius());
+		setAlpha(dhl.getAlpha());
+	}
+
 	/**
 	 * Fire on link global position change.
 	 *
