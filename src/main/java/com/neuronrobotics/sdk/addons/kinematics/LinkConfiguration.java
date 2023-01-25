@@ -24,6 +24,7 @@ import com.neuronrobotics.sdk.pid.PIDConfiguration;
  */
 public class LinkConfiguration implements ITransformNRChangeListener {
 	private ArrayList<ILinkConfigurationChangeListener> listeners = null;
+	private boolean pauseEvents=false;
 	/** The name. */
 	private String name = "newLink";// = getTagValue("name",eElement);
 
@@ -351,23 +352,23 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 		}
 		setName(from.getName());
 		
-		setTypeString(getTypeString());
-		setHardwareIndex(getHardwareIndex());
-		setScale(getScale());
-		setUpperLimit(getUpperLimit());
-		setLowerLimit(getLowerLimit());
-		setUpperVelocity(getUpperVelocity());
-		setStaticOffset(getStaticOffset());
-		setDeviceTheoreticalMax(getDeviceTheoreticalMax());
-		setDeviceTheoreticalMin(getDeviceTheoreticalMin());
-		setLatch(isLatch());
-		setIndexLatch(getIndexLatch());
-		setStopOnLatch(isStopOnLatch());
-		setHomingTicksPerSecond(getHomingTicksPerSecond());
-		setPassive(isPassive());
-		setMassKg(getMassKg());
-		setCenterOfMassFromCentroid(getCenterOfMassFromCentroid());
-		setimuFromCentroid(getimuFromCentroid());
+		setTypeString(from.getTypeString());
+		setHardwareIndex(from.getHardwareIndex());
+		setScale(from.getScale());
+		setUpperLimit(from.getUpperLimit());
+		setLowerLimit(from.getLowerLimit());
+		setUpperVelocity(from.getUpperVelocity());
+		setStaticOffset(from.getStaticOffset());
+		setDeviceTheoreticalMax(from.getDeviceTheoreticalMax());
+		setDeviceTheoreticalMin(from.getDeviceTheoreticalMin());
+		setLatch(from.isLatch());
+		setIndexLatch(from.getIndexLatch());
+		setStopOnLatch(from.isStopOnLatch());
+		setHomingTicksPerSecond(from.getHomingTicksPerSecond());
+		setPassive(from.isPassive());
+		setMassKg(from.getMassKg());
+		setCenterOfMassFromCentroid(from.getCenterOfMassFromCentroid());
+		setimuFromCentroid(from.getimuFromCentroid());
 
 	}
 
@@ -1112,6 +1113,8 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	}
 
 	void fireChangeEvent() {
+		if(pauseEvents)
+			return;
 		if (listeners != null) {
 			for (int i = 0; i < listeners.size(); i++) {
 				try {
@@ -1126,6 +1129,14 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	@Override
 	public void event(TransformNR changed) {
 		fireChangeEvent();
+	}
+
+	public boolean isPauseEvents() {
+		return pauseEvents;
+	}
+
+	public void setPauseEvents(boolean pauseEvents) {
+		this.pauseEvents = pauseEvents;
 	}
 
 }

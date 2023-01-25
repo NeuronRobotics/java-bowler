@@ -21,8 +21,10 @@ public class MockRotoryLink extends AbstractRotoryLink {
 		setUpperLimit(355);
 		setScale(Math.PI/180);
 		setTargetValue(35);
+		conf.setPauseEvents(true);
 		conf.setDeviceTheoreticalMax(Integer.MAX_VALUE);
 		conf.setDeviceTheoreticalMin(Integer.MIN_VALUE);
+		conf.setPauseEvents(false);
 		}
 
 	/* (non-Javadoc)

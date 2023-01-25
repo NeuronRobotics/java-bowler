@@ -24,8 +24,10 @@ public class PidRotoryLink extends AbstractRotoryLink{
 	public PidRotoryLink(PIDChannel c,LinkConfiguration conf, boolean b) {
 		super(conf);
 		if(!b) {
+			conf.setPauseEvents(true);
 			conf.setDeviceTheoreticalMax(Integer.MAX_VALUE);
 			conf.setDeviceTheoreticalMin(Integer.MIN_VALUE);
+			conf.setPauseEvents(false);
 		}else {
 //			conf.setDeviceTheoreticalMax(conf.getUpperLimit());
 //			conf.setDeviceTheoreticalMin(conf.getLowerLimit());
