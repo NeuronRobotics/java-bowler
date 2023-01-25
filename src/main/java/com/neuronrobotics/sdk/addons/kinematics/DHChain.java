@@ -189,7 +189,9 @@ public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector )
 		Matrix current = new TransformNR().getMatrixTransform();
 		
 		for(int i=0;i<getLinks().size();i++) {
-			LinkConfiguration conf= getFactory().getLinkConfigurations().get(i);
+			LinkFactory factory2 = getFactory();
+			ArrayList<LinkConfiguration> linkConfigurations = factory2.getLinkConfigurations();
+			LinkConfiguration conf= linkConfigurations.get(i);
 			Matrix step;
 			if(conf.isPrismatic())
 				step= getLinks().get(i).DhStep(jointSpaceVector[i]);

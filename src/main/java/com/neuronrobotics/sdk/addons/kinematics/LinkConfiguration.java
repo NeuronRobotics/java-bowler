@@ -36,7 +36,7 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	private int index=0;// = Double.parseDouble(getTagValue("index",eElement));
 	
 	/** The totla number of links. */
-	private int totlaNumberOfLinks=0;
+	private int totlaNumberOfLinks=1;
 	
 	/** The link index. */
 	private int linkIndex = 0;
@@ -73,7 +73,7 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	private double velocityLimit = 100000000;
 	
 	/** The device scripting name. */
-	private String deviceScriptingName=null;
+	private String deviceScriptingName=name;
 	private double deviceTheoreticalMax =180;
 	private double deviceTheoreticalMin =0;
 	private double mass=0.01;// KG
