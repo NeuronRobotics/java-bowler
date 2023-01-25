@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import org.w3c.dom.Element;
 
 import Jama.Matrix;
+import javafx.scene.transform.Affine;
 
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
@@ -580,11 +581,20 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 		LinkFactory factory = getFactory();
 		// remove the link listener while the number of links could chnage
 		factory.removeLinkListener(this);
-		factory.getLink(newLink);// adds new link internally
+		AbstractLink link = factory.getLink(newLink);// adds new link internally
+		if(dhLink.getListener()==null)
+			throw new RuntimeException("FAIL the link listner must be set to 		dhLink.setListener(new Affine());");
+		link.setGlobalPositionListener(dhLink.getListener());
 		DHChain chain = getDhChain();
 		chain.addLink(dhLink);
 		// set the modified kinematics chain
 		setChain(chain);
+		if (newLink.isTool()) {
+			dhLink.setLinkType(DhLinkType.TOOL);
+		} else if (newLink.isPrismatic())
+			dhLink.setLinkType(DhLinkType.PRISMATIC);
+		else
+			dhLink.setLinkType(DhLinkType.ROTORY);
 		// once the new link configuration is set up, re add the listener
 		factory.addLinkListener(this);
 	}
