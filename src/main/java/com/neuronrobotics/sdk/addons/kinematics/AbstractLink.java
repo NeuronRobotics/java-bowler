@@ -348,6 +348,30 @@ public abstract class AbstractLink implements  IFlushable{
 			return toEngineeringUnits(getUpperLimit());
 	}
 	
+	/**
+	 * Sets the upper limit.
+	 *
+	 * @param upperLimit the new upper limit
+	 */
+	public void setMinEngineeringUnits(double minLimit ) {
+		if(conf.getScale()>0)
+			conf.setLowerLimit( toLinkUnits(minLimit));
+		else
+			conf.setUpperLimit( toLinkUnits(minLimit));
+	}
+	
+	/**
+	 * Sets the lower limit.
+	 *
+	 * @param lowerLimit the new lower limit
+	 */
+	public void setMaxEngineeringUnits(double maxLimit) {
+		if(conf.getScale()>0)
+			conf.setUpperLimit( toLinkUnits(maxLimit));
+		else
+			conf.setLowerLimit( toLinkUnits(maxLimit));
+	}
+	
 	
 	/**
 	 * Gets the max engineering units.

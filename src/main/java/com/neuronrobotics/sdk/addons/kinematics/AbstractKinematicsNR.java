@@ -1553,6 +1553,25 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 
 		return getAbstractLink(linkIndex).getMinEngineeringUnits();
 	}
+	
+	/**
+	 * Sets the max engineering units.
+	 *
+	 * @param maxLimit the max engineering units
+	 */
+	public void setMaxEngineeringUnits(int linkIndex, double maxLimit) {
+		getAbstractLink(linkIndex).setMaxEngineeringUnits(maxLimit);
+	}
+
+	/**
+	 * Sets the min engineering units.
+	 *
+	 * @param minLimit the min engineering units
+	 */
+	public void setMinEngineeringUnits(int linkIndex, double minLimit) {
+
+		getAbstractLink(linkIndex).setMinEngineeringUnits(minLimit);
+	}
 	public String getElectroMechanicalType(int linkIndex) {
 		return getLinkConfiguration(linkIndex).getElectroMechanicalType() ;
 	}
