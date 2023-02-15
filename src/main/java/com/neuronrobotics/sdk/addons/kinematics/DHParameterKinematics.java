@@ -597,6 +597,8 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 			dhLink.setLinkType(DhLinkType.ROTORY);
 		// once the new link configuration is set up, re add the listener
 		factory.addLinkListener(this);
+		chain.setFactory(factory);
+
 		link.flush(0);
 	}
 
