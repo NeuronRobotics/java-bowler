@@ -33,7 +33,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 
 	/** The sync. */
 	private SyncThread sync = new SyncThread();
-	private boolean runSync =false;
+	private boolean runSync =true;
 
 	/** The max ticks per second. */
 	private double maxTicksPerSecond;
