@@ -32,7 +32,8 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 	private ArrayList<PDVelocityConfiguration> PDconfigs = new ArrayList<PDVelocityConfiguration>();
 
 	/** The sync. */
-	SyncThread sync = new SyncThread();
+	private SyncThread sync = new SyncThread();
+	private boolean runSync =false;
 
 	/** The max ticks per second. */
 	private double maxTicksPerSecond;
@@ -366,7 +367,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 			PIDConfiguration[] toUpdate = new PIDConfiguration[numChannels] ;
 			int updateIndex=0;
 			long time;
-			while (true) {
+			while (runSync) {
 				try {
 					Thread.sleep(threadTime);
 				} catch (InterruptedException ex) {
@@ -442,7 +443,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 	@Override
 	public void disconnect() {
 		fireDisconnectEvent();
-
+		runSync=false;
 	}
 
 }
