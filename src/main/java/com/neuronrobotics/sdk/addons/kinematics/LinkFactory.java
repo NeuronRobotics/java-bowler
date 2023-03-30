@@ -24,9 +24,8 @@ import com.neuronrobotics.sdk.pid.VirtualGenericPIDDevice;
 /**
  * A factory for creating Link objects.
  */
-public class LinkFactory implements IHardwareSyncPulseReciver,IHardwareSyncPulseProvider {
+public class LinkFactory implements IHardwareSyncPulseReciver, IHardwareSyncPulseProvider {
 	private static HashMap<String, INewLinkProvider> userLinkProviders = new HashMap<String, INewLinkProvider>();
-
 
 	/** The links. */
 	private ArrayList<AbstractLink> links = new ArrayList<AbstractLink>();
@@ -155,63 +154,66 @@ public class LinkFactory implements IHardwareSyncPulseReciver,IHardwareSyncPulse
 		AbstractLink tmp = null;
 		// Log.info("Loading link: "+c.getName()+" type = "+c.getTypeEnum()+" device=
 		// "+c.getDeviceScriptingName());
+		try {
+			switch (c.getTypeEnum()) {
 
-		switch (c.getTypeEnum()) {
-
-		case ANALOG_PRISMATIC:
-			if (getDyio(c) != null) {
-				tmp = new AnalogPrismaticLink(new AnalogInputChannel(getDyio(c).getChannel(c.getHardwareIndex())), c);
-				tmp.setUseLimits(false);
-			}
-			break;
-		case ANALOG_ROTORY:
-			if (getDyio(c) != null) {
-				tmp = new AnalogRotoryLink(new AnalogInputChannel(getDyio(c).getChannel(c.getHardwareIndex())), c);
-				tmp.setUseLimits(false);
-			}
-			break;
-		case PID_TOOL:
-		case PID:
-			if (getPid(c) != null) {
-				tmp = new PidRotoryLink(getPid(c).getPIDChannel(c.getHardwareIndex()), c, false);
-			}
-			break;
-		case PID_PRISMATIC:
-			if (getPid(c) != null) {
-				tmp = new PidPrismaticLink(getPid(c).getPIDChannel(c.getHardwareIndex()), c, false);
-			}
-			break;
-		case DUMMY:
-		case VIRTUAL:
-			String myVirtualDevName = c.getDeviceScriptingName();
-			tmp = new PidRotoryLink(getVirtual(myVirtualDevName).getPIDChannel(c.getHardwareIndex()), c, true);
-			break;
-		case GCODE_HEATER_TOOL:
-			if (getGCODE(c) != null) {
-				tmp = getGCODE(c).getHeater(c);
-			}
-			break;
-		case GCODE_STEPPER_PRISMATIC:
-		case GCODE_STEPPER_ROTORY:
-		case GCODE_STEPPER_TOOL:
-			if (getGCODE(c) != null) {
-				tmp = getGCODE(c).getLink(c);
-			}
-			break;
-		case USERDEFINED:
-			if (userLinkProviders.containsKey(c.getTypeString())) {
-				INewLinkProvider iNewLinkProvider = userLinkProviders.get(c.getTypeString());
-				tmp = iNewLinkProvider.generate(c);
-				if(IHardwareSyncPulseProvider.class.isInstance(iNewLinkProvider)) {
-					IHardwareSyncPulseProvider r=(IHardwareSyncPulseProvider)iNewLinkProvider;
-					r.addIHardwareSyncPulseReciver(this);
+			case ANALOG_PRISMATIC:
+				if (getDyio(c) != null) {
+					tmp = new AnalogPrismaticLink(new AnalogInputChannel(getDyio(c).getChannel(c.getHardwareIndex())),
+							c);
+					tmp.setUseLimits(false);
 				}
+				break;
+			case ANALOG_ROTORY:
+				if (getDyio(c) != null) {
+					tmp = new AnalogRotoryLink(new AnalogInputChannel(getDyio(c).getChannel(c.getHardwareIndex())), c);
+					tmp.setUseLimits(false);
+				}
+				break;
+			case PID_TOOL:
+			case PID:
+				if (getPid(c) != null) {
+					tmp = new PidRotoryLink(getPid(c).getPIDChannel(c.getHardwareIndex()), c, false);
+				}
+				break;
+			case PID_PRISMATIC:
+				if (getPid(c) != null) {
+					tmp = new PidPrismaticLink(getPid(c).getPIDChannel(c.getHardwareIndex()), c, false);
+				}
+				break;
+			case DUMMY:
+			case VIRTUAL:
+				String myVirtualDevName = c.getDeviceScriptingName();
+				tmp = new PidRotoryLink(getVirtual(myVirtualDevName).getPIDChannel(c.getHardwareIndex()), c, true);
+				break;
+			case GCODE_HEATER_TOOL:
+				if (getGCODE(c) != null) {
+					tmp = getGCODE(c).getHeater(c);
+				}
+				break;
+			case GCODE_STEPPER_PRISMATIC:
+			case GCODE_STEPPER_ROTORY:
+			case GCODE_STEPPER_TOOL:
+				if (getGCODE(c) != null) {
+					tmp = getGCODE(c).getLink(c);
+				}
+				break;
+			case USERDEFINED:
+				if (userLinkProviders.containsKey(c.getTypeString())) {
+					INewLinkProvider iNewLinkProvider = userLinkProviders.get(c.getTypeString());
+					tmp = iNewLinkProvider.generate(c);
+					if (IHardwareSyncPulseProvider.class.isInstance(iNewLinkProvider)) {
+						IHardwareSyncPulseProvider r = (IHardwareSyncPulseProvider) iNewLinkProvider;
+						r.addIHardwareSyncPulseReciver(this);
+					}
+				}
+				break;
+			default:
+				break;
 			}
-			break;
-		default:
-			break;
+		} catch (Throwable t) {
+			t.printStackTrace();
 		}
-
 		if (tmp == null) {
 			String myVirtualDevName = c.getDeviceScriptingName();
 			if (!c.isPrismatic()) {
@@ -407,21 +409,17 @@ public class LinkFactory implements IHardwareSyncPulseReciver,IHardwareSyncPulse
 		getLinkConfigurations().remove(i);
 	}
 
-
-
 	@Override
 	public void sync() {
 		doSync();
 	}
 
 	public VirtualGenericPIDDevice getVirtual(String myVirtualDevName) {
-		return (VirtualGenericPIDDevice) DeviceManager.getSpecificDevice(myVirtualDevName,
-				() -> {
-					VirtualGenericPIDDevice virtualGenericPIDDevice = new VirtualGenericPIDDevice(myVirtualDevName);
-					virtualGenericPIDDevice.addIHardwareSyncPulseReciver(this);
-					return virtualGenericPIDDevice;
-				});
+		return (VirtualGenericPIDDevice) DeviceManager.getSpecificDevice(myVirtualDevName, () -> {
+			VirtualGenericPIDDevice virtualGenericPIDDevice = new VirtualGenericPIDDevice(myVirtualDevName);
+			virtualGenericPIDDevice.addIHardwareSyncPulseReciver(this);
+			return virtualGenericPIDDevice;
+		});
 	}
-
 
 }
