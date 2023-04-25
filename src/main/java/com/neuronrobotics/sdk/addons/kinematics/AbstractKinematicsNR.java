@@ -958,7 +958,8 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		this.fiducial2RAS = frameToBase;
 		if(!fireUpdate)
 			return;
-		for (IRegistrationListenerNR r : regListeners) {
+		for (int i = 0; i < regListeners.size(); i++) {
+			IRegistrationListenerNR r = regListeners.get(i);
 			r.onFiducialToGlobalUpdate(this, frameToBase);
 		}
 		
