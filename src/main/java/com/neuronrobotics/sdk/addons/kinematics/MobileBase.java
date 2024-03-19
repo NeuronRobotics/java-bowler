@@ -93,7 +93,13 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 		}
 		return tipList;
 	}
-
+	public DHParameterKinematics getLimb(AbstractLink l) {
+		for(DHParameterKinematics k:getAllDHChains()) {
+			if(k.getLinkIndex(l)>=0)
+				return k;
+		}
+		return null;
+	}
 	public boolean pose(TransformNR newAbsolutePose) throws Exception {
 		HashMap<DHParameterKinematics, TransformNR> tipLocations = getTipLocations();
 
