@@ -42,13 +42,13 @@ public class PausableTime extends TimeKeeper {
 	
 	public void sleep(long durationMS) {
 		try {
-			Thread.sleep(durationMS);
+			super.sleep(durationMS);
 		} catch (InterruptedException e) {
 			throw new RuntimeException(e);
 		}
 		while(paused) {
 			try {
-				Thread.sleep(1);
+				super.sleep(1);
 			} catch (InterruptedException e) {
 				throw new RuntimeException(e);
 			}

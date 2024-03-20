@@ -208,7 +208,7 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter, IFlu
 		while(ret.contentEquals("") && 
 				(currentTimeMillis()-start)<getTimeoutMs()){
 			
-			ThreadUtil.wait(10);
+			wait(10);
 			ret = getLine();
 		}
 		if((currentTimeMillis()-start)<getTimeoutMs()){

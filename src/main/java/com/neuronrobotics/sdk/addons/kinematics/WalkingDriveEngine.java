@@ -56,10 +56,10 @@ public class WalkingDriveEngine implements IDriveEngine {
 				try {
 					// lift leg above home
 					legs.get(i).setDesiredTaskSpaceTransform(home[i], seconds/10);
-					ThreadUtil.wait((int) (seconds*100));
+					source.wait((int) (seconds*100));
 					//step to new target 
 					legs.get(i).setDesiredTaskSpaceTransform(feetLocations[i], seconds/10);
-					ThreadUtil.wait((int) (seconds*100));
+					source.wait((int) (seconds*100));
 					//set new target for the coordinated motion step at the end
 					feetLocations[i].translateX(newPose.getX());
 					feetLocations[i].translateY(newPose.getY());

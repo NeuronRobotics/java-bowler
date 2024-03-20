@@ -108,7 +108,7 @@ public class BowlerCamDevice extends BowlerAbstractDevice {
 			ir.start();
 			long start = currentTimeMillis();
 			while(((currentTimeMillis()-start)<200) && ir.isDone()==false){
-				ThreadUtil.wait(5);
+				wait(5);
 			}
 			if(!ir.isDone())
 				Log.error("Image read timed out");
@@ -304,7 +304,7 @@ public class BowlerCamDevice extends BowlerAbstractDevice {
 		send(new BlobCommand());
 		while(gotLastMark == false && isAvailable()){
 			try {
-				Thread.sleep(10);
+				sleep(10);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -375,7 +375,7 @@ public class BowlerCamDevice extends BowlerAbstractDevice {
 					if(diff<mspf) {
 						try {
 							////System.out.print(" sleeping: "+(mspf-diff));
-							Thread.sleep(mspf-diff);
+							getTimeProvider().sleep(mspf-diff);
 						} catch (InterruptedException e) {
 						}
 					}

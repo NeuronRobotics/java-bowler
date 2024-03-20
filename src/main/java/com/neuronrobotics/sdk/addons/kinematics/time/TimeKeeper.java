@@ -1,5 +1,7 @@
 package com.neuronrobotics.sdk.addons.kinematics.time;
 
+import com.neuronrobotics.sdk.util.ThreadUtil;
+
 public class TimeKeeper {
 	private static ITimeProvider mostRecent;
 	
@@ -9,6 +11,7 @@ public class TimeKeeper {
 			t= new ITimeProvider() {};
 		clock = t;
 		setMostRecent(clock);
+		ThreadUtil.wait(1);
 	}
 	public  ITimeProvider getTimeProvider() {
 		return clock;

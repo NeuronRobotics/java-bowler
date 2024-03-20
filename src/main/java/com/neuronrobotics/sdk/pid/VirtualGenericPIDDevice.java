@@ -377,7 +377,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 			long time;
 			while (runSync) {
 				try {
-					sleep(threadTime);
+					getTimeProvider().sleep(threadTime);
 				} catch (InterruptedException ex) {
 					return;
 				}
@@ -414,7 +414,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 				}else
 					while (isPause())
 						try {
-							sleep(1);
+							getTimeProvider().sleep(1);
 						} catch (InterruptedException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();

@@ -1200,7 +1200,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		joint.SetPIDSetPoint(tps, 0);
 		Log.info("Homing output to value: " + tps);
 		while ((currentTimeMillis() < homeTime + 3000)) {
-			ThreadUtil.wait(100);
+			wait(100);
 		}
 		joint.removePIDEventListener(listen);
 	}
@@ -1728,7 +1728,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 					// incremental tip failed, fault
 					return InterpolationMoveState.FAULT;
 				}
-				ThreadUtil.wait((int) msPerStep);
+				wait((int) msPerStep);
 			}
 		}else {
 			return InterpolationMoveState.FAULT;
