@@ -113,9 +113,17 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	private IMU imu = new IMU();
 	
 	private Runnable renderWrangler=null;
+	
 	public int getLinkIndex(AbstractLink l) {
 		for (int i=0;i<getNumberOfLinks();i++) {
 			if(getAbstractLink(i)==l)
+				return i;
+		}
+		return -1;
+	}
+	public int getLinkIndex(LinkConfiguration l) {
+		for (int i=0;i<getNumberOfLinks();i++) {
+			if(getAbstractLink(i).getLinkConfiguration()==l)
 				return i;
 		}
 		return -1;

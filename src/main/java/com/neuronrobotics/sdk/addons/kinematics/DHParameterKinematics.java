@@ -795,6 +795,12 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	public DHLink getDhLink(int i) {
 		return getDhChain().getLinks().get(i);
 	}
+	public DHLink getDhLink(AbstractLink myLink) {
+		return getDhChain().getLinks().get(getLinkIndex(myLink));
+	}
+	public DHLink getDhLink(LinkConfiguration myLink) {
+		return getDhChain().getLinks().get(getLinkIndex(myLink));
+	}
 	public Object getListener(int i) {
 		return getDhChain().getLinks().get(i).getListener();
 	}
