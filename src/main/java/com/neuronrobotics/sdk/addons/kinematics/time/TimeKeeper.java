@@ -1,9 +1,11 @@
 package com.neuronrobotics.sdk.addons.kinematics.time;
 
-import com.neuronrobotics.sdk.util.ThreadUtil;
+import java.util.ArrayList;
+
 
 public class TimeKeeper {
 	private static ITimeProvider mostRecent;
+	private ArrayList<Runnable> timebaseChangeListener =new ArrayList<>();
 	
 	private  ITimeProvider clock = new ITimeProvider() {};
 	public  void setTimeProvider(ITimeProvider t) {
@@ -11,12 +13,32 @@ public class TimeKeeper {
 			t= new ITimeProvider() {};
 		clock = t;
 		setMostRecent(clock);
-		ThreadUtil.wait(1);
+		for(int i=0;i<timebaseChangeListener.size();i++) {
+			try {
+				timebaseChangeListener.get(i).run();
+			}catch(Throwable tr) {
+				tr.printStackTrace(System.out);
+			}
+			
+		}
 	}
 	public  ITimeProvider getTimeProvider() {
 		return clock;
 	}
 	
+	public void addTimeBaseChangeListener(Runnable r) {
+		if(timebaseChangeListener.contains(r))
+			return;
+		timebaseChangeListener.add(r);
+	}
+	public void removeTimeBaseChangeListener(Runnable r) {
+		if(timebaseChangeListener.contains(r))
+			timebaseChangeListener.remove(r);
+	}
+	
+	public void cleaarTimeBaseChangeListener() {
+		timebaseChangeListener.clear();
+	}
 	public  void sleep(long time) throws InterruptedException {
 		getTimeProvider().sleep(time);
 	}
@@ -58,7 +80,7 @@ public class TimeKeeper {
 	/**
 	 * @param mostRecent the mostRecent to set
 	 */
-	public static void setMostRecent(ITimeProvider mostRecent) {
+	private static void setMostRecent(ITimeProvider mostRecent) {
 		TimeKeeper.mostRecent = mostRecent;
 	}
 	
