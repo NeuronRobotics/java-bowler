@@ -203,15 +203,15 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter, IFlu
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		long start = System.currentTimeMillis();
+		long start = currentTimeMillis();
 		String ret= "";
 		while(ret.contentEquals("") && 
-				(System.currentTimeMillis()-start)<getTimeoutMs()){
+				(currentTimeMillis()-start)<getTimeoutMs()){
 			
 			ThreadUtil.wait(10);
 			ret = getLine();
 		}
-		if((System.currentTimeMillis()-start)<getTimeoutMs()){
+		if((currentTimeMillis()-start)<getTimeoutMs()){
 			Log.error("GCODE TIMEOUT: "+line);
 		}
 		Log.info("S>>"+line);

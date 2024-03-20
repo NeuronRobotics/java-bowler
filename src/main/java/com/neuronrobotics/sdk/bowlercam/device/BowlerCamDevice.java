@@ -106,8 +106,8 @@ public class BowlerCamDevice extends BowlerAbstractDevice {
 			//System.out.println("Reading: "+urls.get(cam) );
 			ImageReader ir = new ImageReader(cam);
 			ir.start();
-			long start = System.currentTimeMillis();
-			while(((System.currentTimeMillis()-start)<200) && ir.isDone()==false){
+			long start = currentTimeMillis();
+			while(((currentTimeMillis()-start)<200) && ir.isDone()==false){
 				ThreadUtil.wait(5);
 			}
 			if(!ir.isDone())
@@ -353,7 +353,7 @@ public class BowlerCamDevice extends BowlerAbstractDevice {
 		 */
 		public void run() {
 			//System.out.println("Starting auto capture on: "+getImageServerURL(cam));
-			long st = System.currentTimeMillis();
+			long st = currentTimeMillis();
 			while(running && isAvailable()) {
 				//System.out.println("Getting image from: "+getImageServerURL(cam));
 				try {
@@ -370,7 +370,7 @@ public class BowlerCamDevice extends BowlerAbstractDevice {
 					e.printStackTrace();
 				}
 				if(mspf != 0) {
-					long diff = System.currentTimeMillis() - st;
+					long diff = currentTimeMillis() - st;
 					////System.out.print("\nMS diff: "+diff);
 					if(diff<mspf) {
 						try {
@@ -379,7 +379,7 @@ public class BowlerCamDevice extends BowlerAbstractDevice {
 						} catch (InterruptedException e) {
 						}
 					}
-					st =  System.currentTimeMillis() ;
+					st =  currentTimeMillis() ;
 				}
 			}
 		}

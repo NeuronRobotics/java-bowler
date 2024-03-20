@@ -17,6 +17,7 @@ import org.w3c.dom.NodeList;
 import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.parallel.ParallelGroup;
+import com.neuronrobotics.sdk.addons.kinematics.time.ITimeProvider;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
 import com.neuronrobotics.sdk.common.DeviceManager;
 import com.neuronrobotics.sdk.common.Log;
@@ -1019,6 +1020,13 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	@Override
 	public void sync() {
 		doSync();
+	}
+	@Override
+	public  void setTimeProvider(ITimeProvider t) {
+		super.setTimeProvider(t);
+		for(DHParameterKinematics k:getAllDHChains()) {
+			k.setTimeProvider(getTimeProvider());
+		}
 	}
 
 }

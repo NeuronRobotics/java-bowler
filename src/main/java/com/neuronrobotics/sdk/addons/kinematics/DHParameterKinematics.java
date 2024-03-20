@@ -12,6 +12,7 @@ import Jama.Matrix;
 import javafx.scene.transform.Affine;
 
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
+import com.neuronrobotics.sdk.addons.kinematics.time.ITimeProvider;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
 import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
 import com.neuronrobotics.sdk.common.IDeviceConnectionEventListener;
@@ -835,5 +836,10 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 
 	public TransformNR getLinkTip(int linkIndex) {
 		return getChain().getCachedChain().get(linkIndex);
+	}
+	@Override
+	public  void setTimeProvider(ITimeProvider t) {
+		super.setTimeProvider(t);
+		getDhChain().setTimeProvider(t);
 	}
 }

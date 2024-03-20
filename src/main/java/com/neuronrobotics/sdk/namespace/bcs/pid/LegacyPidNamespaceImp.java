@@ -42,7 +42,7 @@ public class LegacyPidNamespaceImp extends AbstractPidNamespaceImp {
 		//Log.debug("\nPID ASYNC<<"+data);
 		if(data.getRPC().contains("_pid")){
 			
-			PIDEvent e =new PIDEvent(data);
+			PIDEvent e =new PIDEvent(data,getDevice().currentTimeMillis());
 	
 			firePIDEvent(e);
 		}
@@ -50,7 +50,7 @@ public class LegacyPidNamespaceImp extends AbstractPidNamespaceImp {
 			int [] pos = new int[getNumberOfChannels()];
 			for(int i=0;i<getNumberOfChannels();i++) {
 				pos[i] = ByteList.convertToInt( data.getData().getBytes(i*4, 4),true);
-				PIDEvent e =new PIDEvent(i,pos[i],System.currentTimeMillis(),0);
+				PIDEvent e =new PIDEvent(i,pos[i],getDevice().currentTimeMillis(),0);
 				firePIDEvent(e);
 			}	
 		}

@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import com.neuronrobotics.sdk.addons.kinematics.gcodebridge.IGcodeExecuter;
 import com.neuronrobotics.sdk.addons.kinematics.imu.IMU;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
+import com.neuronrobotics.sdk.addons.kinematics.time.ITimeProvider;
+import com.neuronrobotics.sdk.addons.kinematics.time.TimeKeeper;
 import com.neuronrobotics.sdk.common.IFlushable;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.TickToc;
@@ -19,7 +21,7 @@ import javafx.scene.transform.Affine;
  * The Class AbstractLink.
  */
 // Kevin Shouldn't the Link's channel be kept in this level of Abstraction? The way I designg AbstractCartesianPositonDevice  Requires this
-public abstract class AbstractLink implements  IFlushable{
+public abstract class AbstractLink extends TimeKeeper implements  IFlushable{
 
 	/** The target value. */
 	private double targetValue=0;
@@ -476,7 +478,7 @@ public abstract class AbstractLink implements  IFlushable{
 							conf.getHardwareIndex(),
 							targetValue ,
 							PIDLimitEventType.UPPERLIMIT,
-							System.currentTimeMillis()
+							currentTimeMillis()
 							)
 					);
 			if(isUseLimits())throw new RuntimeException("Joint hit Upper software bound\n"+execpt);
@@ -494,7 +496,7 @@ public abstract class AbstractLink implements  IFlushable{
 							conf.getHardwareIndex(),
 							targetValue ,
 							PIDLimitEventType.LOWERLIMIT,
-							System.currentTimeMillis()
+							currentTimeMillis()
 							)
 					);
 			if(isUseLimits())throw new RuntimeException("Joint hit Lower software bound\n"+execpt);
@@ -691,5 +693,10 @@ public abstract class AbstractLink implements  IFlushable{
 	}
 	public void clearChangeListener() {
 		conf.clearChangeListener();
+	}
+	@Override
+	public  void setTimeProvider(ITimeProvider t) {
+		super.setTimeProvider(t);
+		imu.setTimeProvider(getTimeProvider());
 	}
 }

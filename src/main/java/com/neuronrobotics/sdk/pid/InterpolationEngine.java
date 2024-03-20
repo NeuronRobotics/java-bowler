@@ -1,10 +1,13 @@
 package com.neuronrobotics.sdk.pid;
 
+import com.neuronrobotics.sdk.addons.kinematics.time.ITimeProvider;
+import com.neuronrobotics.sdk.addons.kinematics.time.TimeKeeper;
+
 // TODO: Auto-generated Javadoc
 /**
  * The Class LinearInterpolationEngine.
  */
-public class InterpolationEngine {
+public class InterpolationEngine extends TimeKeeper{
 	private InterpolationType type = InterpolationType.LINEAR;
 	/** The ticks. */
 	private double ticks=0;
@@ -48,6 +51,10 @@ public class InterpolationEngine {
 	private double p3;
 	private double setpointDiff;
 	private double newSetpoint;
+	
+	public InterpolationEngine(ITimeProvider t) {
+		setTimeProvider(t);
+	}
 	
 
 	/**
@@ -162,7 +169,7 @@ public class InterpolationEngine {
 		lastTick=value;
 		endSetpoint=value;
 		duration=0;
-		startTime=System.currentTimeMillis();
+		startTime=currentTimeMillis();
 		startSetpoint=value;
 		//setPause(false);	
 	}
