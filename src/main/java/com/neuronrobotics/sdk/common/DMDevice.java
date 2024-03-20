@@ -1,4 +1,4 @@
-1package com.neuronrobotics.sdk.common;
+package com.neuronrobotics.sdk.common;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
