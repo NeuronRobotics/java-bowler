@@ -837,6 +837,15 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	public TransformNR getLinkTip(int linkIndex) {
 		return getChain().getCachedChain().get(linkIndex);
 	}
+	public MobileBase getFollowerMobileBase(int linkIndex) {
+		return  getDhLink(linkIndex).getSlaveMobileBase();
+	}
+	public MobileBase getFollowerMobileBase(AbstractLink myLink) {
+		return  getDhLink(myLink).getSlaveMobileBase();
+	}
+	public MobileBase getFollowerMobileBase(LinkConfiguration myLink) {
+		return  getDhLink(myLink).getSlaveMobileBase();
+	}
 	@Override
 	public  void setTimeProvider(ITimeProvider t) {
 		super.setTimeProvider(t);
