@@ -963,7 +963,8 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	private void fireIOnMobileBaseRenderChange() {
 		for (int i = 0; i < changeListeners.size(); i++) {
 			IOnMobileBaseRenderChange l = changeListeners.get(i);
-			l.onIOnMobileBaseRenderChange();
+			if(l!=null)
+				l.onIOnMobileBaseRenderChange();
 		}
 	}
 
