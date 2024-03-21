@@ -724,14 +724,14 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 		possible.addAll(getDrivable());
 		for(DHParameterKinematics kin:possible) {
 			for(int i=0;i<kin.getNumberOfLinks();i++) {
+			
 				MobileBase mb = kin.getFollowerMobileBase(i);
 				if(mb!=null) {
 					if(mb.isWheel(link))
 						return true;
 				}
 			}
-			// check to see if the last link is the wheel
-			if(kin.getAbstractLink(kin.getNumberOfLinks()-1)==link) {
+			if(kin.getAbstractLink(kin.getNumberOfLinks()-1)==link){
 				return true;
 			}
 		}
@@ -749,10 +749,10 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 						return true;
 				}
 			}
-			// check to see if the last link is the foot
-			if(kin.getAbstractLink(kin.getNumberOfLinks()-1)==link) {
+			if(kin.getAbstractLink(kin.getNumberOfLinks()-1)==link){
 				return true;
 			}
+
 		}
 		return false;
 	}
