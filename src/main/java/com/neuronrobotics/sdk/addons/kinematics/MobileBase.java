@@ -717,6 +717,45 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 		xml += l.getEmbedableXml();
 		return xml;
 	}
+	
+	public boolean isWheel(AbstractLink link) {
+		ArrayList<DHParameterKinematics> possible= new ArrayList<>();
+		possible.addAll(getSteerable());
+		possible.addAll(getDrivable());
+		for(DHParameterKinematics kin:possible) {
+			for(int i=0;i<kin.getNumberOfLinks();i++) {
+				MobileBase mb = kin.getFollowerMobileBase(i);
+				if(mb!=null) {
+					if(mb.isWheel(link))
+						return true;
+				}
+			}
+			// check to see if the last link is the wheel
+			if(kin.getAbstractLink(kin.getNumberOfLinks()-1)==link) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean isFoot(AbstractLink link) {
+		ArrayList<DHParameterKinematics> possible= new ArrayList<>();
+		possible.addAll(legs);
+		for(DHParameterKinematics kin:possible) {
+			for(int i=0;i<kin.getNumberOfLinks();i++) {
+				MobileBase mb = kin.getFollowerMobileBase(i);
+				if(mb!=null) {
+					if(mb.isFoot(link))
+						return true;
+				}
+			}
+			// check to see if the last link is the foot
+			if(kin.getAbstractLink(kin.getNumberOfLinks()-1)==link) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	/**
 	 * Gets the steerable.
