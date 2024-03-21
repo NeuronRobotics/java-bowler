@@ -3,7 +3,7 @@ package com.neuronrobotics.sdk.common;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-@SuppressWarnings("resource") 
+
 public class DMDevice extends NonBowlerDevice {
 	private Object wrapped = null;
 	Method methodConnect = null;
@@ -17,8 +17,8 @@ public class DMDevice extends NonBowlerDevice {
 		if(!wrappable(o))
 			throw new RuntimeException("This object is not wrappable! ");
 		setWrapped(o);
-		methodConnect = getWrapped().getClass().getMethod("connect",(Class<?>) null);
-		methodDisconnect = getWrapped().getClass().getMethod("disconnect",(Class<?>) null);
+		methodConnect = getWrapped().getClass().getMethod("connect", null);
+		methodDisconnect = getWrapped().getClass().getMethod("disconnect", null);
 		hasGetName = methodExists(getWrapped(), "getName");
 		hasIsAvailible = methodExists(getWrapped(), "isAvailable");
 		methodGetName = null;
@@ -30,7 +30,7 @@ public class DMDevice extends NonBowlerDevice {
 		if (hasGetName) {
 			if (methodGetName == null)
 				try {
-					methodGetName = getWrapped().getClass().getMethod("getName",(Class<?>) null);
+					methodGetName = getWrapped().getClass().getMethod("getName", null);
 					
 				} catch (Exception e) {
 					return super.getScriptingName();
@@ -41,7 +41,7 @@ public class DMDevice extends NonBowlerDevice {
 		if (methodGetName == null)
 			return super.getScriptingName();
 		try {
-			super.setScriptingName( (String) methodGetName.invoke(getWrapped(),(Class<?>) null));
+			super.setScriptingName( (String) methodGetName.invoke(getWrapped(), null));
 		} catch (Exception e) {
 			return super.getScriptingName();
 		}
@@ -57,7 +57,7 @@ public class DMDevice extends NonBowlerDevice {
 	@Override
 	public void disconnectDeviceImp() {
 		try {
-			methodDisconnect.invoke(getWrapped(), (Class<?>)null);
+			methodDisconnect.invoke(getWrapped(), null);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -74,13 +74,13 @@ public class DMDevice extends NonBowlerDevice {
 		if(hasIsAvailible) {
 			if(isAvaibleMeth==null) {
 				try {
-					isAvaibleMeth = getWrapped().getClass().getMethod("isAvailable",(Class<?>) null);	
+					isAvaibleMeth = getWrapped().getClass().getMethod("isAvailable", null);	
 				} catch (Exception e) {
 					//true
 				}
 			}
 			try {
-				return (boolean) isAvaibleMeth.invoke(getWrapped(), (Class<?>)null);
+				return (boolean) isAvaibleMeth.invoke(getWrapped(), null);
 			} catch (Exception e) {
 				//true
 			}
@@ -91,7 +91,7 @@ public class DMDevice extends NonBowlerDevice {
 	@Override
 	public boolean connectDeviceImp() {
 		try {
-			Object value = methodConnect.invoke(getWrapped(), (Class<?>)null);
+			Object value = methodConnect.invoke(getWrapped(), null);
 			try {
 				return (Boolean) value;
 			} catch (Exception e) {
