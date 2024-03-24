@@ -333,6 +333,19 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	private String getParallelGroup(Element e) {
 		return getTag(e, "parallelGroup");
 	}
+	
+	private String findNameTag(Node e) {
+		NodeList firstLevelList = e.getChildNodes();
+		for(int i=0;i<firstLevelList.getLength();i++) {
+			Node tester = firstLevelList.item(i);
+			if(tester.getNodeType()!=Node.ELEMENT_NODE)
+				continue;
+			Element elementTester = (Element)tester;
+			if(elementTester.getNodeName().contentEquals("name"))
+				return elementTester.getChildNodes().item(0).getNodeValue();
+		}
+		return null;
+	}
 
 	/**
 	 * Gets the localTag
@@ -343,19 +356,25 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	 */
 	private String getTag(Element e, String tagname) {
 		try {
+			String nameOfElement = findNameTag(e);
+			if(tagname.contentEquals("name"))
+				return nameOfElement;
+			//System.out.println("Searching for "+tagname+" in "+nameOfElement);
 			NodeList nodListofLinks = e.getElementsByTagName(tagname);
-
 			for (int i = 0; i < nodListofLinks.getLength(); i++) {
+				boolean isDirectChild=true;
 				Node linkNode = nodListofLinks.item(i);
-				String nameParent = linkNode.getParentNode().getNodeName();
-				boolean isMobileBase = !nameParent.contains("link");
-				if (linkNode.getNodeType() == Node.ELEMENT_NODE && linkNode.getNodeName().contentEquals(tagname)
-						&& isMobileBase) {
-					String value = linkNode.getChildNodes().item(0).getNodeValue();
-					// System.out.println("Loading tag "+tagname+" from "+nameParent+" value
-					// "+value);
-					return value;
-				}
+				Node parentNode = linkNode.getParentNode();
+				String parentName = findNameTag(parentNode);
+				isDirectChild=nameOfElement.contentEquals(parentName);
+				if(!isDirectChild)
+					continue;
+				if(linkNode.getNodeType() != Node.ELEMENT_NODE)
+					continue;
+				if(!linkNode.getNodeName().contentEquals(tagname))
+					continue;
+				String nodeValue = linkNode.getChildNodes().item(0).getNodeValue();
+				return nodeValue;
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -876,11 +895,13 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	}
 
 	public double getMassKg() {
+		
 		return mass;
 	}
 
 	public void setMassKg(double mass) {
 		System.out.println("Mass of device " + getScriptingName() + " is " + mass);
+		//new RuntimeException().printStackTrace();
 		this.mass = mass;
 	}
 
