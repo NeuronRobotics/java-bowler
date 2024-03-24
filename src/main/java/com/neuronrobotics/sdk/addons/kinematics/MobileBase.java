@@ -51,7 +51,7 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	private String[] walkingEngine = new String[] { "https://github.com/madhephaestus/carl-the-hexapod.git",
 			"WalkingDriveEngine.groovy" };
 
-	private HashMap<String, String[]> vitamins = new HashMap<String, String[]>();
+	private ArrayList<VitaminLocation> vitamins = new ArrayList<>();
 	private HashMap<String, String> vitaminVariant = new HashMap<String, String>();
 
 	/** The self source. */
@@ -547,7 +547,7 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 		}
 	}
 
-	public HashMap<String, String[]> getVitamins() {
+	public ArrayList<VitaminLocation> getVitamins() {
 		return vitamins;
 	}
 
@@ -559,19 +559,7 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	private void getVitamins(Element doc) {
 
 		try {
-			NodeList nodListofLinks = doc.getChildNodes();
-			for (int i = 0; i < nodListofLinks.getLength(); i++) {
-				Node linkNode = nodListofLinks.item(i);
-				if (linkNode.getNodeType() == Node.ELEMENT_NODE && linkNode.getNodeName().contentEquals("vitamin")) {
-					Element e = (Element) linkNode;
-					setVitamin(XmlFactory.getTagValue("name", e), XmlFactory.getTagValue("type", e),
-							XmlFactory.getTagValue("id", e));
-					try {
-						setVitaminVariant(XmlFactory.getTagValue("name", e), XmlFactory.getTagValue("variant", e));
-					} catch (Exception ex) {
-					}
-				}
-			}
+			vitamins = VitaminLocation.getVitamins(doc);
 			return;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -587,12 +575,16 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	 * @param type the vitamin type, this maps the the json filename
 	 * @param id   the part ID, theis maps to the key in the json for the vitamin
 	 */
-	public void setVitamin(String name, String type, String id) {
-		if (getVitamins().get(name) == null) {
-			getVitamins().put(name, new String[2]);
-		}
-		getVitamins().get(name)[0] = type;
-		getVitamins().get(name)[1] = id;
+	public void setVitamin(VitaminLocation location) {
+		if(vitamins.contains(location))
+			return;
+		vitamins.add(location);
+		
+	}
+	public void removeVitamin(VitaminLocation loc) {
+		if(vitamins.contains(loc))
+			vitamins.remove(loc);
+		//fireChangeEvent();
 	}
 
 	/**
@@ -643,17 +635,17 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	public String getEmbedableXml() {
 		TransformNR location = getFiducialToGlobalTransform();
 
-		String allVitamins = "";
-		for (String key : getVitamins().keySet()) {
-			String v = "\t\t<vitamin>\n";
-			v += "\t\t\t<name>" + key + "</name>\n" + "\t\t\t<type>" + getVitamins().get(key)[0] + "</type>\n"
-					+ "\t\t\t<id>" + getVitamins().get(key)[1] + "</id>\n";
-			if (getVitaminVariant(key) != null) {
-				v += "\t\t\t<variant>" + getVitamins().get(key)[1] + "</variant>\n";
-			}
-			v += "\t\t</vitamin>\n";
-			allVitamins += v;
-		}
+//		String allVitamins = "";
+//		for (String key : getVitamins().keySet()) {
+//			String v = "\t\t<vitamin>\n";
+//			v += "\t\t\t<name>" + key + "</name>\n" + "\t\t\t<type>" + getVitamins().get(key)[0] + "</type>\n"
+//					+ "\t\t\t<id>" + getVitamins().get(key)[1] + "</id>\n";
+//			if (getVitaminVariant(key) != null) {
+//				v += "\t\t\t<variant>" + getVitamins().get(key)[1] + "</variant>\n";
+//			}
+//			v += "\t\t</vitamin>\n";
+//			allVitamins += v;
+//		}
 		String xml = "<mobilebase>\n";
 
 		xml += "\t<cadEngine>\n";
@@ -711,7 +703,7 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 		xml += "\n</baseToZframe>\n" + "\t<mass>" + getMassKg() + "</mass>\n" + "\t<centerOfMassFromCentroid>"
 				+ getCenterOfMassFromCentroid().getXml() + "</centerOfMassFromCentroid>\n" + "\t<imuFromCentroid>"
 				+ getIMUFromCentroid().getXml() + "</imuFromCentroid>\n";
-		xml += "\n<vitamins>\n" + allVitamins + "\n</vitamins>\n";
+		xml += VitaminLocation.getAllXML(vitamins);
 		xml += "\n</mobilebase>\n";
 		setGlobalToFiducialTransform(location);
 		return xml;

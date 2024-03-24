@@ -54,20 +54,24 @@
 	</vitamins>
 	<passive>false</passive>
 	<mass>0.001</mass>
-	<centerOfMassFromCentroid>	<x>0.0</x>
+	<centerOfMassFromCentroid>
+	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
 	<rotw>1.0</rotw>
 	<rotx>0.0</rotx>
 	<roty>0.0</roty>
-	<rotz>0.0</rotz></centerOfMassFromCentroid>
-	<imuFromCentroid>	<x>0.0</x>
+	<rotz>0.0</rotz>
+</centerOfMassFromCentroid>
+	<imuFromCentroid>
+	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
 	<rotw>1.0</rotw>
 	<rotx>0.0</rotx>
 	<roty>0.0</roty>
-	<rotz>0.0</rotz></imuFromCentroid>
+	<rotz>0.0</rotz>
+</imuFromCentroid>
 
 	<DHParameters>
 		<Delta>16.0</Delta>
@@ -110,20 +114,24 @@
 	</vitamins>
 	<passive>false</passive>
 	<mass>0.001</mass>
-	<centerOfMassFromCentroid>	<x>0.0</x>
+	<centerOfMassFromCentroid>
+	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
 	<rotw>1.0</rotw>
 	<rotx>0.0</rotx>
 	<roty>0.0</roty>
-	<rotz>0.0</rotz></centerOfMassFromCentroid>
-	<imuFromCentroid>	<x>0.0</x>
+	<rotz>0.0</rotz>
+</centerOfMassFromCentroid>
+	<imuFromCentroid>
+	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
 	<rotw>1.0</rotw>
 	<rotx>0.0</rotx>
 	<roty>0.0</roty>
-	<rotz>0.0</rotz></imuFromCentroid>
+	<rotz>0.0</rotz>
+</imuFromCentroid>
 
 	<DHParameters>
 		<Delta>0.0</Delta>
@@ -166,20 +174,24 @@
 	</vitamins>
 	<passive>false</passive>
 	<mass>0.001</mass>
-	<centerOfMassFromCentroid>	<x>0.0</x>
+	<centerOfMassFromCentroid>
+	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
 	<rotw>1.0</rotw>
 	<rotx>0.0</rotx>
 	<roty>0.0</roty>
-	<rotz>0.0</rotz></centerOfMassFromCentroid>
-	<imuFromCentroid>	<x>0.0</x>
+	<rotz>0.0</rotz>
+</centerOfMassFromCentroid>
+	<imuFromCentroid>
+	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
 	<rotw>1.0</rotw>
 	<rotx>0.0</rotx>
 	<roty>0.0</roty>
-	<rotz>0.0</rotz></imuFromCentroid>
+	<rotz>0.0</rotz>
+</imuFromCentroid>
 
 	<DHParameters>
 		<Delta>0.0</Delta>
@@ -222,20 +234,24 @@
 	</vitamins>
 	<passive>false</passive>
 	<mass>0.001</mass>
-	<centerOfMassFromCentroid>	<x>0.0</x>
+	<centerOfMassFromCentroid>
+	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
 	<rotw>1.0</rotw>
 	<rotx>0.0</rotx>
 	<roty>0.0</roty>
-	<rotz>0.0</rotz></centerOfMassFromCentroid>
-	<imuFromCentroid>	<x>0.0</x>
+	<rotz>0.0</rotz>
+</centerOfMassFromCentroid>
+	<imuFromCentroid>
+	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
 	<rotw>1.0</rotw>
 	<rotx>0.0</rotx>
 	<roty>0.0</roty>
-	<rotz>0.0</rotz></imuFromCentroid>
+	<rotz>0.0</rotz>
+</imuFromCentroid>
 
 	<DHParameters>
 		<Delta>0.0</Delta>
@@ -247,16 +263,19 @@
 </link>
 
 <ZframeToRAS
->	<x>0.0</x>
+>
+	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
 	<rotw>1.0</rotw>
 	<rotx>-0.0</rotx>
 	<roty>-0.0</roty>
 	<rotz>-0.0</rotz>
+
 </ZframeToRAS>
 
 <baseToZframe>
+
 	<x>-75.00000000000001</x>
 	<y>-23.069999999999993</y>
 	<z>38.0952380952381</z>
@@ -264,6 +283,7 @@
 	<rotx>0.017903047010183144</rotx>
 	<roty>0.0077571528961058725</roty>
 	<rotz>0.9983199043252653</rotz>
+
 </baseToZframe>
 
 </appendage>
@@ -311,20 +331,24 @@
 	</vitamins>
 	<passive>false</passive>
 	<mass>0.001</mass>
-	<centerOfMassFromCentroid>	<x>0.0</x>
+	<centerOfMassFromCentroid>
+	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
 	<rotw>1.0</rotw>
 	<rotx>0.0</rotx>
 	<roty>0.0</roty>
-	<rotz>0.0</rotz></centerOfMassFromCentroid>
-	<imuFromCentroid>	<x>0.0</x>
+	<rotz>0.0</rotz>
+</centerOfMassFromCentroid>
+	<imuFromCentroid>
+	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
 	<rotw>1.0</rotw>
 	<rotx>0.0</rotx>
 	<roty>0.0</roty>
-	<rotz>0.0</rotz></imuFromCentroid>
+	<rotz>0.0</rotz>
+</imuFromCentroid>
 
 	<DHParameters>
 		<Delta>0.0</Delta>
@@ -367,20 +391,24 @@
 	</vitamins>
 	<passive>false</passive>
 	<mass>0.05</mass>
-	<centerOfMassFromCentroid>	<x>0.0</x>
+	<centerOfMassFromCentroid>
+	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
 	<rotw>1.0</rotw>
 	<rotx>0.0</rotx>
 	<roty>0.0</roty>
-	<rotz>0.0</rotz></centerOfMassFromCentroid>
-	<imuFromCentroid>	<x>0.0</x>
+	<rotz>0.0</rotz>
+</centerOfMassFromCentroid>
+	<imuFromCentroid>
+	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
 	<rotw>1.0</rotw>
 	<rotx>0.0</rotx>
 	<roty>0.0</roty>
-	<rotz>0.0</rotz></imuFromCentroid>
+	<rotz>0.0</rotz>
+</imuFromCentroid>
 
 	<DHParameters>
 		<Delta>0.0</Delta>
@@ -392,16 +420,19 @@
 </link>
 
 <ZframeToRAS
->	<x>0.0</x>
+>
+	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
 	<rotw>1.0</rotw>
 	<rotx>-0.0</rotx>
 	<roty>-0.0</roty>
 	<rotz>-0.0</rotz>
+
 </ZframeToRAS>
 
 <baseToZframe>
+
 	<x>-78.5</x>
 	<y>-73.75</y>
 	<z>0.0</z>
@@ -409,6 +440,7 @@
 	<rotx>-0.9999619021083685</rotx>
 	<roty>2.258102901239317E-6</roty>
 	<rotz>2.587955605911594E-4</rotz>
+
 </baseToZframe>
 
 </steerable>
@@ -456,20 +488,24 @@
 	</vitamins>
 	<passive>true</passive>
 	<mass>0.001</mass>
-	<centerOfMassFromCentroid>	<x>0.0</x>
+	<centerOfMassFromCentroid>
+	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
 	<rotw>1.0</rotw>
 	<rotx>0.0</rotx>
 	<roty>0.0</roty>
-	<rotz>0.0</rotz></centerOfMassFromCentroid>
-	<imuFromCentroid>	<x>0.0</x>
+	<rotz>0.0</rotz>
+</centerOfMassFromCentroid>
+	<imuFromCentroid>
+	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
 	<rotw>1.0</rotw>
 	<rotx>0.0</rotx>
 	<roty>0.0</roty>
-	<rotz>0.0</rotz></imuFromCentroid>
+	<rotz>0.0</rotz>
+</imuFromCentroid>
 
 	<DHParameters>
 		<Delta>24.0</Delta>
@@ -532,20 +568,24 @@
 	</vitamins>
 	<passive>false</passive>
 	<mass>0.05</mass>
-	<centerOfMassFromCentroid>	<x>0.0</x>
+	<centerOfMassFromCentroid>
+	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
 	<rotw>1.0</rotw>
 	<rotx>0.0</rotx>
 	<roty>0.0</roty>
-	<rotz>0.0</rotz></centerOfMassFromCentroid>
-	<imuFromCentroid>	<x>0.0</x>
+	<rotz>0.0</rotz>
+</centerOfMassFromCentroid>
+	<imuFromCentroid>
+	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
 	<rotw>1.0</rotw>
 	<rotx>0.0</rotx>
 	<roty>0.0</roty>
-	<rotz>0.0</rotz></imuFromCentroid>
+	<rotz>0.0</rotz>
+</imuFromCentroid>
 
 	<DHParameters>
 		<Delta>0.0</Delta>
@@ -557,38 +597,7 @@
 </link>
 
 <ZframeToRAS
->	<x>0.0</x>
-	<y>0.0</y>
-	<z>0.0</z>
-	<rotw>1.0</rotw>
-	<rotx>-0.0</rotx>
-	<roty>-0.0</roty>
-	<rotz>-0.0</rotz>
-</ZframeToRAS>
-
-<baseToZframe>
-	<x>-74.0</x>
-	<y>0.0</y>
-	<z>29.0</z>
-	<rotw>0.7071067811865476</rotw>
-	<rotx>-0.7071067811865475</rotx>
-	<roty>-8.120692378444618E-12</roty>
-	<rotz>-8.120692378444618E-12</rotz>
-</baseToZframe>
-
-</drivable>
-
-<ZframeToRAS>
-	<x>0.2951945417837649</x>
-	<y>-75.50000000000001</y>
-	<z>-6.460453388562168</z>
-	<rotw>4.866904542229674E-17</rotw>
-	<rotx>0.43837065166596395</rotx>
-	<roty>-9.978614964896946E-17</roty>
-	<rotz>-0.898794287786676</rotz>
-</ZframeToRAS>
-
-<baseToZframe>
+>
 	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
@@ -596,22 +605,65 @@
 	<rotx>-0.0</rotx>
 	<roty>-0.0</roty>
 	<rotz>-0.0</rotz>
+
+</ZframeToRAS>
+
+<baseToZframe>
+
+	<x>-74.0</x>
+	<y>0.0</y>
+	<z>29.0</z>
+	<rotw>0.7071067811865476</rotw>
+	<rotx>-0.7071067811865475</rotx>
+	<roty>-8.120692378444618E-12</roty>
+	<rotz>-8.120692378444618E-12</rotz>
+
+</baseToZframe>
+
+</drivable>
+
+<ZframeToRAS>
+
+	<x>0.2951945417837649</x>
+	<y>-75.50000000000001</y>
+	<z>-6.460453388562168</z>
+	<rotw>4.866904542229674E-17</rotw>
+	<rotx>0.43837065166596395</rotx>
+	<roty>-9.978614964896946E-17</roty>
+	<rotz>-0.898794287786676</rotz>
+
+</ZframeToRAS>
+
+<baseToZframe>
+
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+
 </baseToZframe>
 	<mass>0.001</mass>
-	<centerOfMassFromCentroid>	<x>0.0</x>
+	<centerOfMassFromCentroid>
+	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
 	<rotw>1.0</rotw>
 	<rotx>-0.0</rotx>
 	<roty>-0.0</roty>
-	<rotz>-0.0</rotz></centerOfMassFromCentroid>
-	<imuFromCentroid>	<x>0.0</x>
+	<rotz>-0.0</rotz>
+</centerOfMassFromCentroid>
+	<imuFromCentroid>
+	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
 	<rotw>1.0</rotw>
 	<rotx>-0.0</rotx>
 	<roty>-0.0</roty>
-	<rotz>-0.0</rotz></imuFromCentroid>
+	<rotz>-0.0</rotz>
+</imuFromCentroid>
 
 <vitamins>
 
@@ -655,20 +707,24 @@
 	</vitamins>
 	<passive>false</passive>
 	<mass>0.001</mass>
-	<centerOfMassFromCentroid>	<x>0.0</x>
+	<centerOfMassFromCentroid>
+	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
 	<rotw>1.0</rotw>
 	<rotx>0.0</rotx>
 	<roty>0.0</roty>
-	<rotz>0.0</rotz></centerOfMassFromCentroid>
-	<imuFromCentroid>	<x>0.0</x>
+	<rotz>0.0</rotz>
+</centerOfMassFromCentroid>
+	<imuFromCentroid>
+	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
 	<rotw>1.0</rotw>
 	<rotx>0.0</rotx>
 	<roty>0.0</roty>
-	<rotz>0.0</rotz></imuFromCentroid>
+	<rotz>0.0</rotz>
+</imuFromCentroid>
 
 	<DHParameters>
 		<Delta>30.0</Delta>
@@ -711,20 +767,24 @@
 	</vitamins>
 	<passive>false</passive>
 	<mass>0.05</mass>
-	<centerOfMassFromCentroid>	<x>0.0</x>
+	<centerOfMassFromCentroid>
+	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
 	<rotw>1.0</rotw>
 	<rotx>0.0</rotx>
 	<roty>0.0</roty>
-	<rotz>0.0</rotz></centerOfMassFromCentroid>
-	<imuFromCentroid>	<x>0.0</x>
+	<rotz>0.0</rotz>
+</centerOfMassFromCentroid>
+	<imuFromCentroid>
+	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
 	<rotw>1.0</rotw>
 	<rotx>0.0</rotx>
 	<roty>0.0</roty>
-	<rotz>0.0</rotz></imuFromCentroid>
+	<rotz>0.0</rotz>
+</imuFromCentroid>
 
 	<DHParameters>
 		<Delta>0.0</Delta>
@@ -736,16 +796,19 @@
 </link>
 
 <ZframeToRAS
->	<x>0.0</x>
+>
+	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
 	<rotw>1.0</rotw>
 	<rotx>-0.0</rotx>
 	<roty>-0.0</roty>
 	<rotz>-0.0</rotz>
+
 </ZframeToRAS>
 
 <baseToZframe>
+
 	<x>28.0</x>
 	<y>-51.5</y>
 	<z>29.000000000000032</z>
@@ -753,6 +816,7 @@
 	<rotx>0.7071067811864402</rotx>
 	<roty>3.895273510727024E-7</roty>
 	<rotz>-3.895273510727023E-7</rotz>
+
 </baseToZframe>
 
 </steerable>
@@ -800,20 +864,24 @@
 	</vitamins>
 	<passive>true</passive>
 	<mass>0.001</mass>
-	<centerOfMassFromCentroid>	<x>0.0</x>
+	<centerOfMassFromCentroid>
+	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
 	<rotw>1.0</rotw>
 	<rotx>0.0</rotx>
 	<roty>0.0</roty>
-	<rotz>0.0</rotz></centerOfMassFromCentroid>
-	<imuFromCentroid>	<x>0.0</x>
+	<rotz>0.0</rotz>
+</centerOfMassFromCentroid>
+	<imuFromCentroid>
+	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
 	<rotw>1.0</rotw>
 	<rotx>0.0</rotx>
 	<roty>0.0</roty>
-	<rotz>0.0</rotz></imuFromCentroid>
+	<rotz>0.0</rotz>
+</imuFromCentroid>
 
 	<DHParameters>
 		<Delta>-25.0</Delta>
@@ -876,20 +944,24 @@
 	</vitamins>
 	<passive>false</passive>
 	<mass>0.05</mass>
-	<centerOfMassFromCentroid>	<x>0.0</x>
+	<centerOfMassFromCentroid>
+	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
 	<rotw>1.0</rotw>
 	<rotx>0.0</rotx>
 	<roty>0.0</roty>
-	<rotz>0.0</rotz></centerOfMassFromCentroid>
-	<imuFromCentroid>	<x>0.0</x>
+	<rotz>0.0</rotz>
+</centerOfMassFromCentroid>
+	<imuFromCentroid>
+	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
 	<rotw>1.0</rotw>
 	<rotx>0.0</rotx>
 	<roty>0.0</roty>
-	<rotz>0.0</rotz></imuFromCentroid>
+	<rotz>0.0</rotz>
+</imuFromCentroid>
 
 	<DHParameters>
 		<Delta>0.0</Delta>
@@ -901,38 +973,7 @@
 </link>
 
 <ZframeToRAS
->	<x>0.0</x>
-	<y>0.0</y>
-	<z>0.0</z>
-	<rotw>1.0</rotw>
-	<rotx>-0.0</rotx>
-	<roty>-0.0</roty>
-	<rotz>-0.0</rotz>
-</ZframeToRAS>
-
-<baseToZframe>
-	<x>-73.0</x>
-	<y>0.0</y>
-	<z>29.0</z>
-	<rotw>0.7071067811637124</rotw>
-	<rotx>-0.7071067811637123</rotx>
-	<roty>-5.682767991797112E-6</roty>
-	<rotz>-5.682767991797108E-6</rotz>
-</baseToZframe>
-
-</drivable>
-
-<ZframeToRAS>
-	<x>0.2952267711251224</x>
-	<y>76.5</y>
-	<z>-6.460478568916969</z>
-	<rotw>4.86689829712371E-17</rotw>
-	<rotx>0.4383710601144136</rotx>
-	<roty>-9.978618010838941E-17</roty>
-	<rotz>-0.89879408857322</rotz>
-</ZframeToRAS>
-
-<baseToZframe>
+>
 	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
@@ -940,22 +981,65 @@
 	<rotx>-0.0</rotx>
 	<roty>-0.0</roty>
 	<rotz>-0.0</rotz>
+
+</ZframeToRAS>
+
+<baseToZframe>
+
+	<x>-73.0</x>
+	<y>0.0</y>
+	<z>29.0</z>
+	<rotw>0.7071067811637124</rotw>
+	<rotx>-0.7071067811637123</rotx>
+	<roty>-5.682767991797112E-6</roty>
+	<rotz>-5.682767991797108E-6</rotz>
+
+</baseToZframe>
+
+</drivable>
+
+<ZframeToRAS>
+
+	<x>0.2952267711251224</x>
+	<y>76.5</y>
+	<z>-6.460478568916969</z>
+	<rotw>4.86689829712371E-17</rotw>
+	<rotx>0.4383710601144136</rotx>
+	<roty>-9.978618010838941E-17</roty>
+	<rotz>-0.89879408857322</rotz>
+
+</ZframeToRAS>
+
+<baseToZframe>
+
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+
 </baseToZframe>
 	<mass>0.001</mass>
-	<centerOfMassFromCentroid>	<x>0.0</x>
+	<centerOfMassFromCentroid>
+	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
 	<rotw>1.0</rotw>
 	<rotx>-0.0</rotx>
 	<roty>-0.0</roty>
-	<rotz>-0.0</rotz></centerOfMassFromCentroid>
-	<imuFromCentroid>	<x>0.0</x>
+	<rotz>-0.0</rotz>
+</centerOfMassFromCentroid>
+	<imuFromCentroid>
+	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
 	<rotw>1.0</rotw>
 	<rotx>-0.0</rotx>
 	<roty>-0.0</roty>
-	<rotz>-0.0</rotz></imuFromCentroid>
+	<rotz>-0.0</rotz>
+</imuFromCentroid>
 
 <vitamins>
 
@@ -999,20 +1083,24 @@
 	</vitamins>
 	<passive>false</passive>
 	<mass>0.001</mass>
-	<centerOfMassFromCentroid>	<x>0.0</x>
+	<centerOfMassFromCentroid>
+	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
 	<rotw>1.0</rotw>
 	<rotx>0.0</rotx>
 	<roty>0.0</roty>
-	<rotz>0.0</rotz></centerOfMassFromCentroid>
-	<imuFromCentroid>	<x>0.0</x>
+	<rotz>0.0</rotz>
+</centerOfMassFromCentroid>
+	<imuFromCentroid>
+	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
 	<rotw>1.0</rotw>
 	<rotx>0.0</rotx>
 	<roty>0.0</roty>
-	<rotz>0.0</rotz></imuFromCentroid>
+	<rotz>0.0</rotz>
+</imuFromCentroid>
 
 	<DHParameters>
 		<Delta>30.0</Delta>
@@ -1055,20 +1143,24 @@
 	</vitamins>
 	<passive>false</passive>
 	<mass>0.001</mass>
-	<centerOfMassFromCentroid>	<x>0.0</x>
+	<centerOfMassFromCentroid>
+	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
 	<rotw>1.0</rotw>
 	<rotx>0.0</rotx>
 	<roty>0.0</roty>
-	<rotz>0.0</rotz></centerOfMassFromCentroid>
-	<imuFromCentroid>	<x>0.0</x>
+	<rotz>0.0</rotz>
+</centerOfMassFromCentroid>
+	<imuFromCentroid>
+	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
 	<rotw>1.0</rotw>
 	<rotx>0.0</rotx>
 	<roty>0.0</roty>
-	<rotz>0.0</rotz></imuFromCentroid>
+	<rotz>0.0</rotz>
+</imuFromCentroid>
 
 	<DHParameters>
 		<Delta>0.0</Delta>
@@ -1080,16 +1172,19 @@
 </link>
 
 <ZframeToRAS
->	<x>0.0</x>
+>
+	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
 	<rotw>1.0</rotw>
 	<rotx>-0.0</rotx>
 	<roty>-0.0</roty>
 	<rotz>-0.0</rotz>
+
 </ZframeToRAS>
 
 <baseToZframe>
+
 	<x>28.0</x>
 	<y>51.5</y>
 	<z>29.0</z>
@@ -1097,6 +1192,7 @@
 	<rotx>0.7071067811865442</rotx>
 	<roty>6.818941599633328E-8</roty>
 	<rotz>-6.818941599633326E-8</rotz>
+
 </baseToZframe>
 
 </steerable>
@@ -1144,20 +1240,24 @@
 	</vitamins>
 	<passive>false</passive>
 	<mass>0.001</mass>
-	<centerOfMassFromCentroid>	<x>0.0</x>
+	<centerOfMassFromCentroid>
+	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
 	<rotw>1.0</rotw>
 	<rotx>0.0</rotx>
 	<roty>0.0</roty>
-	<rotz>0.0</rotz></centerOfMassFromCentroid>
-	<imuFromCentroid>	<x>0.0</x>
+	<rotz>0.0</rotz>
+</centerOfMassFromCentroid>
+	<imuFromCentroid>
+	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
 	<rotw>1.0</rotw>
 	<rotx>0.0</rotx>
 	<roty>0.0</roty>
-	<rotz>0.0</rotz></imuFromCentroid>
+	<rotz>0.0</rotz>
+</imuFromCentroid>
 
 	<DHParameters>
 		<Delta>0.0</Delta>
@@ -1200,20 +1300,24 @@
 	</vitamins>
 	<passive>false</passive>
 	<mass>0.05</mass>
-	<centerOfMassFromCentroid>	<x>0.0</x>
+	<centerOfMassFromCentroid>
+	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
 	<rotw>1.0</rotw>
 	<rotx>0.0</rotx>
 	<roty>0.0</roty>
-	<rotz>0.0</rotz></centerOfMassFromCentroid>
-	<imuFromCentroid>	<x>0.0</x>
+	<rotz>0.0</rotz>
+</centerOfMassFromCentroid>
+	<imuFromCentroid>
+	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
 	<rotw>1.0</rotw>
 	<rotx>0.0</rotx>
 	<roty>0.0</roty>
-	<rotz>0.0</rotz></imuFromCentroid>
+	<rotz>0.0</rotz>
+</imuFromCentroid>
 
 	<DHParameters>
 		<Delta>0.0</Delta>
@@ -1225,16 +1329,19 @@
 </link>
 
 <ZframeToRAS
->	<x>0.0</x>
+>
+	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
 	<rotw>1.0</rotw>
 	<rotx>-0.0</rotx>
 	<roty>-0.0</roty>
 	<rotz>-0.0</rotz>
+
 </ZframeToRAS>
 
 <baseToZframe>
+
 	<x>-78.5</x>
 	<y>73.75</y>
 	<z>0.0</z>
@@ -1242,11 +1349,13 @@
 	<rotx>-0.9999619021083685</rotx>
 	<roty>2.2581029012393413E-6</roty>
 	<rotz>2.587955605911622E-4</rotz>
+
 </baseToZframe>
 
 </steerable>
 
 <ZframeToRAS>
+
 	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
@@ -1254,9 +1363,11 @@
 	<rotx>-0.0</rotx>
 	<roty>-0.0</roty>
 	<rotz>-0.0</rotz>
+
 </ZframeToRAS>
 
 <baseToZframe>
+
 	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
@@ -1264,24 +1375,44 @@
 	<rotx>-0.0</rotx>
 	<roty>-0.0</roty>
 	<rotz>-0.0</rotz>
+
 </baseToZframe>
 	<mass>0.1</mass>
-	<centerOfMassFromCentroid>	<x>0.0</x>
+	<centerOfMassFromCentroid>
+	<x>0.0</x>
 	<y>0.0</y>
 	<z>40.0</z>
 	<rotw>1.0</rotw>
 	<rotx>0.0</rotx>
 	<roty>0.0</roty>
-	<rotz>0.0</rotz></centerOfMassFromCentroid>
-	<imuFromCentroid>	<x>0.0</x>
+	<rotz>0.0</rotz>
+</centerOfMassFromCentroid>
+	<imuFromCentroid>
+	<x>0.0</x>
 	<y>0.0</y>
 	<z>0.0</z>
 	<rotw>1.0</rotw>
 	<rotx>0.0</rotx>
 	<roty>0.0</roty>
-	<rotz>0.0</rotz></imuFromCentroid>
+	<rotz>0.0</rotz>
+</imuFromCentroid>
 
 <vitamins>
+
+<vitamin>
+<name>test1</name>
+<type>hobbyServo</type>
+<id>mg92b</id>
+<pose>
+	<x>0.0</x>
+	<y>1.0</y>
+	<z>4.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+</pose>
+</vitamin>
 
 </vitamins>
 

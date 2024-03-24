@@ -326,14 +326,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 					&& linkNode.getNodeName().contentEquals("ZframeToRAS")) {
 				Element eElement = (Element) linkNode;
 				try {
-					setGlobalToFiducialTransform(new TransformNR(
-							Double.parseDouble(XmlFactory.getTagValue("x", eElement)),
-							Double.parseDouble(XmlFactory.getTagValue("y", eElement)),
-							Double.parseDouble(XmlFactory.getTagValue("z", eElement)),
-							new RotationNR(new double[] { Double.parseDouble(XmlFactory.getTagValue("rotw", eElement)),
-									Double.parseDouble(XmlFactory.getTagValue("rotx", eElement)),
-									Double.parseDouble(XmlFactory.getTagValue("roty", eElement)),
-									Double.parseDouble(XmlFactory.getTagValue("rotz", eElement)) })));
+					setGlobalToFiducialTransform(XmlFactory.getTransform(eElement));
 				} catch (Exception ex) {
 					ex.printStackTrace();
 					setGlobalToFiducialTransform(new TransformNR());
@@ -342,13 +335,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 					&& linkNode.getNodeName().contentEquals("baseToZframe")) {
 				Element eElement = (Element) linkNode;
 				try {
-					setRobotToFiducialTransform(new TransformNR(Double.parseDouble(XmlFactory.getTagValue("x", eElement)),
-							Double.parseDouble(XmlFactory.getTagValue("y", eElement)),
-							Double.parseDouble(XmlFactory.getTagValue("z", eElement)),
-							new RotationNR(new double[] { Double.parseDouble(XmlFactory.getTagValue("rotw", eElement)),
-									Double.parseDouble(XmlFactory.getTagValue("rotx", eElement)),
-									Double.parseDouble(XmlFactory.getTagValue("roty", eElement)),
-									Double.parseDouble(XmlFactory.getTagValue("rotz", eElement)) })));
+					setRobotToFiducialTransform(XmlFactory.getTransform(eElement));
 				} catch (Exception ex) {
 					ex.printStackTrace();
 					setRobotToFiducialTransform(new TransformNR());

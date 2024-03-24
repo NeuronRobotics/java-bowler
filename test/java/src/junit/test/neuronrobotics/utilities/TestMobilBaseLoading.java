@@ -11,6 +11,8 @@ import java.nio.file.Paths;
 import org.junit.Test;
 
 import com.neuronrobotics.sdk.addons.kinematics.MobileBase;
+import com.neuronrobotics.sdk.addons.kinematics.VitaminLocation;
+import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 
 public class TestMobilBaseLoading {
 
@@ -20,7 +22,11 @@ public class TestMobilBaseLoading {
 		
 		String content = new String(Files.readAllBytes(Paths.get(file.getAbsolutePath())));
 		MobileBase base = new MobileBase(new FileInputStream(file));
-		
+		base.getAllDHChains().get(0).getLinkConfiguration(0).getVitamins();
+//		base.setVitamin(new VitaminLocation("test1", "hobbyServo", "mg92b", new TransformNR(0, 1, 4)));
+//		base.setVitamin(new VitaminLocation("test2", "hobbyServo", "mg92b", new TransformNR(0, 1, 4)));
+//		base.setVitamin(new VitaminLocation("test1", "hobbyServo", "mg92b", new TransformNR(0, 1, 4)));
+
 		if(Math.abs(0.1-base.getMassKg())>0.0001) {
 			fail("Base mass failed to load! expected "+0.1+" got "+base.getMassKg());
 		}

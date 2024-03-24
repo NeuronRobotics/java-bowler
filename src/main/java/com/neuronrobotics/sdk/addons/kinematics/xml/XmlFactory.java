@@ -12,6 +12,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
+import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
+
 // TODO: Auto-generated Javadoc
 /**
  * A factory for creating Xml objects.
@@ -51,6 +54,17 @@ public class XmlFactory {
 			throw new RuntimeException(e);
 		}
 	    return doc;
+	}
+	
+	public static TransformNR getTransform(Element eElement) {
+		return new TransformNR(
+				Double.parseDouble(XmlFactory.getTagValue("x", eElement)),
+				Double.parseDouble(XmlFactory.getTagValue("y", eElement)),
+				Double.parseDouble(XmlFactory.getTagValue("z", eElement)),
+				new RotationNR(new double[] { Double.parseDouble(XmlFactory.getTagValue("rotw", eElement)),
+						Double.parseDouble(XmlFactory.getTagValue("rotx", eElement)),
+						Double.parseDouble(XmlFactory.getTagValue("roty", eElement)),
+						Double.parseDouble(XmlFactory.getTagValue("rotz", eElement)) }));
 	}
 	
 	
