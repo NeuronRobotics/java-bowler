@@ -100,6 +100,9 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	private HashMap<String, String> vitaminVariant = new HashMap<String, String>();
 	private boolean passive = false;
 	private boolean newAbs = false;
+	private Runnable changeListener = ()->{
+		fireChangeEvent();
+	};
 
 	/**
 	 * Instantiates a new link configuration.
@@ -283,6 +286,7 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 		return;
 	}
 
+
 	/**
 	 * Add a vitamin to this link
 	 * 
@@ -291,15 +295,30 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	 * @param type the vitamin type, this maps the the json filename
 	 * @param id   the part ID, theis maps to the key in the json for the vitamin
 	 */
-	public void setVitamin(VitaminLocation loc) {
-		if(vitamins.contains(loc))
+	@Deprecated
+	public void setVitamin(VitaminLocation location) {
+		addVitamin(location);
+		
+	}
+	/**
+	 * Add a vitamin to this link
+	 * 
+	 * @param name the name of this vitamin, if the name already exists, the data
+	 *             will be overwritten.
+	 * @param type the vitamin type, this maps the the json filename
+	 * @param id   the part ID, theis maps to the key in the json for the vitamin
+	 */
+	public void addVitamin(VitaminLocation location) {
+		if(vitamins.contains(location))
 			return;
-		vitamins.add(loc);
+		vitamins.add(location);
+		location.addChangeListener(changeListener);
 		fireChangeEvent();
 	}
 	public void removeVitamin(VitaminLocation loc) {
 		if(vitamins.contains(loc))
 			vitamins.remove(loc);
+		loc.removeChangeListener(changeListener);
 		fireChangeEvent();
 	}
 
@@ -1000,8 +1019,13 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 		return vitamins;
 	}
 
-	public void setVitamins(ArrayList<VitaminLocation> vitamins) {
-		this.vitamins = vitamins;
+	public void setVitamins(ArrayList<VitaminLocation> v) {
+		if(vitamins!=null)
+			for(VitaminLocation l:vitamins)
+				l.removeChangeListener(changeListener);
+		this.vitamins = v;
+		for(VitaminLocation l:vitamins)
+			l.addChangeListener(changeListener);
 		fireChangeEvent();
 	}
 
