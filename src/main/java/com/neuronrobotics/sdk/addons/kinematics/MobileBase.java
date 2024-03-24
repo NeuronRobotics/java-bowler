@@ -575,7 +575,20 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	 * @param type the vitamin type, this maps the the json filename
 	 * @param id   the part ID, theis maps to the key in the json for the vitamin
 	 */
+	@Deprecated
 	public void setVitamin(VitaminLocation location) {
+		addVitamin(location);
+		
+	}
+	/**
+	 * Add a vitamin to this link
+	 * 
+	 * @param name the name of this vitamin, if the name already exists, the data
+	 *             will be overwritten.
+	 * @param type the vitamin type, this maps the the json filename
+	 * @param id   the part ID, theis maps to the key in the json for the vitamin
+	 */
+	public void addVitamin(VitaminLocation location) {
 		if(vitamins.contains(location))
 			return;
 		vitamins.add(location);
