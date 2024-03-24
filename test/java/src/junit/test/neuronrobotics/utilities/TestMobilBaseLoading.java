@@ -22,7 +22,10 @@ public class TestMobilBaseLoading {
 		
 		String content = new String(Files.readAllBytes(Paths.get(file.getAbsolutePath())));
 		MobileBase base = new MobileBase(new FileInputStream(file));
-		base.getAllDHChains().get(0).getLinkConfiguration(0).getVitamins();
+//		base.getAllDHChains()
+//				.get(0)
+//				.getLinkConfiguration(0)
+//				.setVitamin(new VitaminLocation("test1", "hobbyServo", "mg92b", new TransformNR(0, 1, 4)));
 //		base.setVitamin(new VitaminLocation("test1", "hobbyServo", "mg92b", new TransformNR(0, 1, 4)));
 //		base.setVitamin(new VitaminLocation("test2", "hobbyServo", "mg92b", new TransformNR(0, 1, 4)));
 //		base.setVitamin(new VitaminLocation("test1", "hobbyServo", "mg92b", new TransformNR(0, 1, 4)));
