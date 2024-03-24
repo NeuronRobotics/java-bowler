@@ -6,15 +6,17 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.neuronrobotics.sdk.addons.kinematics.math.ITransformNRChangeListener;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
 
-public class VitaminLocation {
+public class VitaminLocation implements ITransformNRChangeListener {
+	ArrayList<Runnable> listeners=new  ArrayList<>();
 
 	private String name;
 	private String type;
 	private String size;
-	private TransformNR location;
+	private TransformNR location=null;
 
 	public VitaminLocation(String name, String type, String size, TransformNR location) {
 		this.setName(name);
@@ -45,12 +47,33 @@ public class VitaminLocation {
 				
 	}
 	
+	public void addChangeListener(Runnable r) {
+		if(listeners.contains(r))
+			return;
+		listeners.add(r);
+	}
+	public void removeChangeListener(Runnable r) {
+		if(listeners.contains(r))
+			listeners.remove(r);
+	}
+	void fireChangeEvent() {
+		if (listeners != null) {
+			for (int i = 0; i < listeners.size(); i++) {
+				try {
+					listeners.get(i).run();
+				} catch (Throwable t) {
+					t.printStackTrace();
+				}
+			}
+		}
+	
+	}
 	public String getXML() {
 		
 		return "\n<vitamin>\n"+
 				"<name>"+name+"</name>\n"+
 				"<type>"+type+"</type>\n"+
-				"<size>"+size+"</size>\n"+
+				"<id>"+size+"</id>\n"+
 				"<pose>"+location.getXml()+"</pose>\n"+
 		"</vitamin>\n"
 		;
@@ -86,6 +109,7 @@ public class VitaminLocation {
 	 * @return the name
 	 */
 	public String getName() {
+		
 		return name;
 	}
 
@@ -96,6 +120,7 @@ public class VitaminLocation {
 		if (name==null)
 			throw new RuntimeException("Name can not be null");
 		this.name = name;
+		fireChangeEvent();
 	}
 
 	/**
@@ -113,6 +138,7 @@ public class VitaminLocation {
 		if (type==null)
 			throw new RuntimeException("type can not be null");
 		this.type = type;
+		fireChangeEvent();
 	}
 
 	/**
@@ -129,6 +155,7 @@ public class VitaminLocation {
 		if (size==null)
 			throw new RuntimeException("size can not be null");
 		this.size = size;
+		fireChangeEvent();
 	}
 
 	/**
@@ -141,10 +168,18 @@ public class VitaminLocation {
 	/**
 	 * @param location the location to set
 	 */
-	public void setLocation(TransformNR location) {
+	public void setLocation(TransformNR l) {
 		if (location==null)
 			throw new RuntimeException("location can not be null");
-		this.location = location;
+		if(l!=null)
+			l.removeChangeListener(this);
+		this.location = l;
+		location.addChangeListener(this);
+	}
+
+	@Override
+	public void event(TransformNR changed) {
+		fireChangeEvent();
 	}
 
 }
