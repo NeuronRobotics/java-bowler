@@ -70,12 +70,12 @@ public class VitaminLocation implements ITransformNRChangeListener {
 	}
 	public String getXML() {
 		
-		return "\n<vitamin>\n"+
-				"<name>"+name+"</name>\n"+
-				"<type>"+type+"</type>\n"+
-				"<id>"+size+"</id>\n"+
-				"<pose>"+location.getXml()+"</pose>\n"+
-		"</vitamin>\n"
+		return "\n\t\t<vitamin>\n"+
+				"\t\t\t<name>"+name+"</name>\n"+
+				"\t\t\t<type>"+type+"</type>\n"+
+				"\t\t\t<id>"+size+"</id>\n"+
+				"\t\t\t<pose>"+location.getXml()+"\t\t\t</pose>\n"+
+		"\t\t</vitamin>\n"
 		;
 	}
 	public static ArrayList<VitaminLocation> getVitamins(Element doc) {
@@ -97,11 +97,11 @@ public class VitaminLocation implements ITransformNRChangeListener {
 	
 	public static String getAllXML(ArrayList<VitaminLocation> list) {
 		
-		String vitamins="\n<vitamins>\n";
+		String vitamins="\n\t<vitamins>\n";
 		for(VitaminLocation loc:list) {
 			vitamins+=loc.getXML();
 		}
-		return vitamins+"\n</vitamins>\n";
+		return vitamins+"\n\t</vitamins>\n";
 		
 	}
 

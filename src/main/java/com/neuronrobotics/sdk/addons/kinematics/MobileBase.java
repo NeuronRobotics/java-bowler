@@ -344,7 +344,7 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 			if(elementTester.getNodeName().contentEquals("name"))
 				return elementTester.getChildNodes().item(0).getNodeValue();
 		}
-		return null;
+		return "parentNoName";
 	}
 
 	/**
@@ -708,7 +708,7 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 		}
 
 		xml += "\n<ZframeToRAS>\n";
-		xml += getFiducialToGlobalTransform().getXml();
+		xml += new TransformNR().getXml();
 		xml += "\n</ZframeToRAS>\n";
 
 		xml += "\n<baseToZframe>\n";
