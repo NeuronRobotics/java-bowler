@@ -22,7 +22,7 @@ import com.neuronrobotics.sdk.pid.PIDConfiguration;
 /**
  * The Class LinkConfiguration.
  */
-public class LinkConfiguration implements ITransformNRChangeListener {
+public class LinkConfiguration implements ITransformNRChangeListener,IVitaminHolder {
 	private ArrayList<ILinkConfigurationChangeListener> listeners = null;
 	private boolean pauseEvents=false;
 	/** The name. */

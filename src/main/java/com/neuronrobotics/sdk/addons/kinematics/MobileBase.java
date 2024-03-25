@@ -27,7 +27,7 @@ import com.neuronrobotics.sdk.common.Log;
  * The Class MobileBase.
  */
 public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurationChangeListener,
-		IOnMobileBaseRenderChange, IJointSpaceUpdateListenerNR, IHardwareSyncPulseReciver, IHardwareSyncPulseProvider {
+		IOnMobileBaseRenderChange, IJointSpaceUpdateListenerNR, IHardwareSyncPulseReciver, IHardwareSyncPulseProvider,IVitaminHolder {
 
 	/** The legs. */
 	private final ArrayList<DHParameterKinematics> legs = new ArrayList<DHParameterKinematics>();
