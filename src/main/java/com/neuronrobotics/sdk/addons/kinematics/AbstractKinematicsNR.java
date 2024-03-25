@@ -16,6 +16,8 @@ import Jama.Matrix;
 import com.neuronrobotics.sdk.addons.kinematics.imu.IMU;
 import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
+import com.neuronrobotics.sdk.addons.kinematics.time.ITimeProvider;
+import com.neuronrobotics.sdk.addons.kinematics.time.TimeKeeper;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
 import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
 import com.neuronrobotics.sdk.common.BowlerDatagram;
@@ -256,16 +258,6 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	}
 
 	/**
-	 * Gets the date.
-	 *
-	 * @return the date
-	 */
-	private String getDate() {
-		Timestamp t = new Timestamp(System.currentTimeMillis());
-		return t.toString().split("\\ ")[0];
-	}
-
-	/**
 	 * Load XML configuration file, then store in LinkConfiguration (ArrayList
 	 * type).
 	 *
@@ -334,14 +326,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 					&& linkNode.getNodeName().contentEquals("ZframeToRAS")) {
 				Element eElement = (Element) linkNode;
 				try {
-					setGlobalToFiducialTransform(new TransformNR(
-							Double.parseDouble(XmlFactory.getTagValue("x", eElement)),
-							Double.parseDouble(XmlFactory.getTagValue("y", eElement)),
-							Double.parseDouble(XmlFactory.getTagValue("z", eElement)),
-							new RotationNR(new double[] { Double.parseDouble(XmlFactory.getTagValue("rotw", eElement)),
-									Double.parseDouble(XmlFactory.getTagValue("rotx", eElement)),
-									Double.parseDouble(XmlFactory.getTagValue("roty", eElement)),
-									Double.parseDouble(XmlFactory.getTagValue("rotz", eElement)) })));
+					setGlobalToFiducialTransform(XmlFactory.getTransform(eElement));
 				} catch (Exception ex) {
 					ex.printStackTrace();
 					setGlobalToFiducialTransform(new TransformNR());
@@ -350,13 +335,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 					&& linkNode.getNodeName().contentEquals("baseToZframe")) {
 				Element eElement = (Element) linkNode;
 				try {
-					setRobotToFiducialTransform(new TransformNR(Double.parseDouble(XmlFactory.getTagValue("x", eElement)),
-							Double.parseDouble(XmlFactory.getTagValue("y", eElement)),
-							Double.parseDouble(XmlFactory.getTagValue("z", eElement)),
-							new RotationNR(new double[] { Double.parseDouble(XmlFactory.getTagValue("rotw", eElement)),
-									Double.parseDouble(XmlFactory.getTagValue("rotx", eElement)),
-									Double.parseDouble(XmlFactory.getTagValue("roty", eElement)),
-									Double.parseDouble(XmlFactory.getTagValue("rotz", eElement)) })));
+					setRobotToFiducialTransform(XmlFactory.getTransform(eElement));
 				} catch (Exception ex) {
 					ex.printStackTrace();
 					setRobotToFiducialTransform(new TransformNR());
@@ -1199,16 +1178,16 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 
 			@Override
 			public void onPIDEvent(PIDEvent e) {
-				homeTime = System.currentTimeMillis();
+				homeTime = currentTimeMillis();
 			}
 		};
 		joint.addPIDEventListener(listen);
-		homeTime = System.currentTimeMillis();
+		homeTime = currentTimeMillis();
 
 		joint.SetPIDSetPoint(tps, 0);
 		Log.info("Homing output to value: " + tps);
-		while ((System.currentTimeMillis() < homeTime + 3000)) {
-			ThreadUtil.wait(100);
+		while ((currentTimeMillis() < homeTime + 3000)) {
+			wait(100);
 		}
 		joint.removePIDEventListener(listen);
 	}
@@ -1691,8 +1670,8 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	}
 	
 	public InterpolationMoveState blockingInterpolatedMove(TransformNR target, double seconds, InterpolationType type, double ...conf ) {
-		InterpolationEngine engine = new InterpolationEngine();
-		long currentTimeMillis = System.currentTimeMillis();
+		InterpolationEngine engine = new InterpolationEngine(getTimeProvider());
+		long currentTimeMillis = currentTimeMillis();
 		TransformNR delta =getDeltaToTarget(target);
 		TransformNR startingPoint = getCurrentPoseTarget();
 		if (checkTaskSpaceTransform(target)) {
@@ -1717,7 +1696,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 				// of the translation
 				// the new tip point here calculated is multiplied by the starting point to get
 				// a global space tip target
-				TransformNR nextPoint = getTipAlongTrajectory(startingPoint,delta,engine.getInterpolationUnitIncrement(System.currentTimeMillis()));
+				TransformNR nextPoint = getTipAlongTrajectory(startingPoint,delta,engine.getInterpolationUnitIncrement(currentTimeMillis()));
 				// now the best time for this increment is calculated
 				double bestTime = getBestTime(nextPoint);
 				// error check for the best time being below the commanded time
@@ -1736,11 +1715,20 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 					// incremental tip failed, fault
 					return InterpolationMoveState.FAULT;
 				}
-				ThreadUtil.wait((int) msPerStep);
+				wait((int) msPerStep);
 			}
 		}else {
 			return InterpolationMoveState.FAULT;
 		}
 		return InterpolationMoveState.READY;
+	}
+	@Override
+	public  void setTimeProvider(ITimeProvider t) {
+		super.setTimeProvider(t);
+		imu.setTimeProvider(getTimeProvider());
+		for(int i=0;i<getNumberOfLinks();i++) {
+			AbstractLink l = getAbstractLink(i);
+			l.setTimeProvider(getTimeProvider());
+		}
 	}
 }

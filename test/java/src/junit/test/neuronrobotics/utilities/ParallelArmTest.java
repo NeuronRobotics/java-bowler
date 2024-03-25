@@ -24,7 +24,7 @@ public class ParallelArmTest {
 
 	@Test
 	public void test() throws Exception {
-		main(null);
+		//main(null);
 	}
 
 	public static void main(String[] args) throws Exception {

@@ -2,12 +2,14 @@ package com.neuronrobotics.sdk.addons.kinematics.imu;
 
 import java.util.ArrayList;
 
-public class IMU {
+import com.neuronrobotics.sdk.addons.kinematics.time.TimeKeeper;
+
+public class IMU extends TimeKeeper{
 	private ArrayList<IMUUpdateListener> virtualListeneras = new ArrayList<IMUUpdateListener>();
 	private ArrayList<IMUUpdateListener> hardwareListeneras = new ArrayList<IMUUpdateListener>();
 	
-	private IMUUpdate virtualState=new IMUUpdate(0.0,0.0,0.0,0.0,0.0,0.0);
-	private IMUUpdate hardwareState=new IMUUpdate(null,null,null,null,null,null);
+	private IMUUpdate virtualState=new IMUUpdate(0.0,0.0,0.0,0.0,0.0,0.0,currentTimeMillis());
+	private IMUUpdate hardwareState=new IMUUpdate(null,null,null,null,null,null,currentTimeMillis());
 	
 	public void addhardwareListeners(IMUUpdateListener l){
 		if(!hardwareListeneras.contains(l))

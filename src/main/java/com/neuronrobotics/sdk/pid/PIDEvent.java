@@ -58,12 +58,12 @@ public class PIDEvent {
 	 *
 	 * @param data the data
 	 */
-	public PIDEvent(BowlerDatagram data){
+	public PIDEvent(BowlerDatagram data, long timestamp){
 		if(!data.getRPC().contains("_pid"))
 			throw new RuntimeException("Datagram is not a PID event");
 		setGroup(data.getData().getByte(0));
 		setValue(ByteList.convertToInt(data.getData().getBytes(1, 4),true));
-		setTimeStamp(System.currentTimeMillis());
+		setTimeStamp(timestamp);
 		setVelocity(ByteList.convertToInt(data.getData().getBytes(9, 4),true));
 	}
 	

@@ -204,7 +204,7 @@ public class ServoChannel extends DyIOAbstractPeripheral implements IChannelEven
 	 */
 	@Override
 	public void onChannelEvent(DyIOChannelEvent e) {
-		firePositionUpdate(e.getUnsignedValue(), System.currentTimeMillis());
+		firePositionUpdate(e.getUnsignedValue(), e.getChannel().getDevice().currentTimeMillis());
 	}
 	
 }

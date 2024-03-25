@@ -17,6 +17,7 @@ import org.w3c.dom.NodeList;
 import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.parallel.ParallelGroup;
+import com.neuronrobotics.sdk.addons.kinematics.time.ITimeProvider;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
 import com.neuronrobotics.sdk.common.DeviceManager;
 import com.neuronrobotics.sdk.common.Log;
@@ -26,7 +27,7 @@ import com.neuronrobotics.sdk.common.Log;
  * The Class MobileBase.
  */
 public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurationChangeListener,
-		IOnMobileBaseRenderChange, IJointSpaceUpdateListenerNR, IHardwareSyncPulseReciver, IHardwareSyncPulseProvider {
+		IOnMobileBaseRenderChange, IJointSpaceUpdateListenerNR, IHardwareSyncPulseReciver, IHardwareSyncPulseProvider,IVitaminHolder {
 
 	/** The legs. */
 	private final ArrayList<DHParameterKinematics> legs = new ArrayList<DHParameterKinematics>();
@@ -50,7 +51,7 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	private String[] walkingEngine = new String[] { "https://github.com/madhephaestus/carl-the-hexapod.git",
 			"WalkingDriveEngine.groovy" };
 
-	private HashMap<String, String[]> vitamins = new HashMap<String, String[]>();
+	private ArrayList<VitaminLocation> vitamins = new ArrayList<>();
 	private HashMap<String, String> vitaminVariant = new HashMap<String, String>();
 
 	/** The self source. */
@@ -332,6 +333,19 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	private String getParallelGroup(Element e) {
 		return getTag(e, "parallelGroup");
 	}
+	
+	private String findNameTag(Node e) {
+		NodeList firstLevelList = e.getChildNodes();
+		for(int i=0;i<firstLevelList.getLength();i++) {
+			Node tester = firstLevelList.item(i);
+			if(tester.getNodeType()!=Node.ELEMENT_NODE)
+				continue;
+			Element elementTester = (Element)tester;
+			if(elementTester.getNodeName().contentEquals("name"))
+				return elementTester.getChildNodes().item(0).getNodeValue();
+		}
+		return "parentNoName";
+	}
 
 	/**
 	 * Gets the localTag
@@ -342,19 +356,25 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	 */
 	private String getTag(Element e, String tagname) {
 		try {
+			String nameOfElement = findNameTag(e);
+			if(tagname.contentEquals("name"))
+				return nameOfElement;
+			//System.out.println("Searching for "+tagname+" in "+nameOfElement);
 			NodeList nodListofLinks = e.getElementsByTagName(tagname);
-
 			for (int i = 0; i < nodListofLinks.getLength(); i++) {
+				boolean isDirectChild=true;
 				Node linkNode = nodListofLinks.item(i);
-				String nameParent = linkNode.getParentNode().getNodeName();
-				boolean isMobileBase = !nameParent.contains("link");
-				if (linkNode.getNodeType() == Node.ELEMENT_NODE && linkNode.getNodeName().contentEquals(tagname)
-						&& isMobileBase) {
-					String value = linkNode.getChildNodes().item(0).getNodeValue();
-					// System.out.println("Loading tag "+tagname+" from "+nameParent+" value
-					// "+value);
-					return value;
-				}
+				Node parentNode = linkNode.getParentNode();
+				String parentName = findNameTag(parentNode);
+				isDirectChild=nameOfElement.contentEquals(parentName);
+				if(!isDirectChild)
+					continue;
+				if(linkNode.getNodeType() != Node.ELEMENT_NODE)
+					continue;
+				if(!linkNode.getNodeName().contentEquals(tagname))
+					continue;
+				String nodeValue = linkNode.getChildNodes().item(0).getNodeValue();
+				return nodeValue;
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -527,7 +547,7 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 		}
 	}
 
-	public HashMap<String, String[]> getVitamins() {
+	public ArrayList<VitaminLocation> getVitamins() {
 		return vitamins;
 	}
 
@@ -539,19 +559,7 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	private void getVitamins(Element doc) {
 
 		try {
-			NodeList nodListofLinks = doc.getChildNodes();
-			for (int i = 0; i < nodListofLinks.getLength(); i++) {
-				Node linkNode = nodListofLinks.item(i);
-				if (linkNode.getNodeType() == Node.ELEMENT_NODE && linkNode.getNodeName().contentEquals("vitamin")) {
-					Element e = (Element) linkNode;
-					setVitamin(XmlFactory.getTagValue("name", e), XmlFactory.getTagValue("type", e),
-							XmlFactory.getTagValue("id", e));
-					try {
-						setVitaminVariant(XmlFactory.getTagValue("name", e), XmlFactory.getTagValue("variant", e));
-					} catch (Exception ex) {
-					}
-				}
-			}
+			vitamins = VitaminLocation.getVitamins(doc);
 			return;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -567,12 +575,29 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	 * @param type the vitamin type, this maps the the json filename
 	 * @param id   the part ID, theis maps to the key in the json for the vitamin
 	 */
-	public void setVitamin(String name, String type, String id) {
-		if (getVitamins().get(name) == null) {
-			getVitamins().put(name, new String[2]);
-		}
-		getVitamins().get(name)[0] = type;
-		getVitamins().get(name)[1] = id;
+	@Deprecated
+	public void setVitamin(VitaminLocation location) {
+		addVitamin(location);
+		
+	}
+	/**
+	 * Add a vitamin to this link
+	 * 
+	 * @param name the name of this vitamin, if the name already exists, the data
+	 *             will be overwritten.
+	 * @param type the vitamin type, this maps the the json filename
+	 * @param id   the part ID, theis maps to the key in the json for the vitamin
+	 */
+	public void addVitamin(VitaminLocation location) {
+		if(vitamins.contains(location))
+			return;
+		vitamins.add(location);
+		
+	}
+	public void removeVitamin(VitaminLocation loc) {
+		if(vitamins.contains(loc))
+			vitamins.remove(loc);
+		//fireChangeEvent();
 	}
 
 	/**
@@ -623,17 +648,17 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	public String getEmbedableXml() {
 		TransformNR location = getFiducialToGlobalTransform();
 
-		String allVitamins = "";
-		for (String key : getVitamins().keySet()) {
-			String v = "\t\t<vitamin>\n";
-			v += "\t\t\t<name>" + key + "</name>\n" + "\t\t\t<type>" + getVitamins().get(key)[0] + "</type>\n"
-					+ "\t\t\t<id>" + getVitamins().get(key)[1] + "</id>\n";
-			if (getVitaminVariant(key) != null) {
-				v += "\t\t\t<variant>" + getVitamins().get(key)[1] + "</variant>\n";
-			}
-			v += "\t\t</vitamin>\n";
-			allVitamins += v;
-		}
+//		String allVitamins = "";
+//		for (String key : getVitamins().keySet()) {
+//			String v = "\t\t<vitamin>\n";
+//			v += "\t\t\t<name>" + key + "</name>\n" + "\t\t\t<type>" + getVitamins().get(key)[0] + "</type>\n"
+//					+ "\t\t\t<id>" + getVitamins().get(key)[1] + "</id>\n";
+//			if (getVitaminVariant(key) != null) {
+//				v += "\t\t\t<variant>" + getVitamins().get(key)[1] + "</variant>\n";
+//			}
+//			v += "\t\t</vitamin>\n";
+//			allVitamins += v;
+//		}
 		String xml = "<mobilebase>\n";
 
 		xml += "\t<cadEngine>\n";
@@ -683,7 +708,7 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 		}
 
 		xml += "\n<ZframeToRAS>\n";
-		xml += getFiducialToGlobalTransform().getXml();
+		xml += new TransformNR().getXml();
 		xml += "\n</ZframeToRAS>\n";
 
 		xml += "\n<baseToZframe>\n";
@@ -691,7 +716,7 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 		xml += "\n</baseToZframe>\n" + "\t<mass>" + getMassKg() + "</mass>\n" + "\t<centerOfMassFromCentroid>"
 				+ getCenterOfMassFromCentroid().getXml() + "</centerOfMassFromCentroid>\n" + "\t<imuFromCentroid>"
 				+ getIMUFromCentroid().getXml() + "</imuFromCentroid>\n";
-		xml += "\n<vitamins>\n" + allVitamins + "\n</vitamins>\n";
+		xml += VitaminLocation.getAllXML(vitamins);
 		xml += "\n</mobilebase>\n";
 		setGlobalToFiducialTransform(location);
 		return xml;
@@ -715,6 +740,45 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 		}
 		xml += l.getEmbedableXml();
 		return xml;
+	}
+	
+	public boolean isWheel(AbstractLink link) {
+		ArrayList<DHParameterKinematics> possible= new ArrayList<>();
+		possible.addAll(getSteerable());
+		possible.addAll(getDrivable());
+		for(DHParameterKinematics kin:possible) {
+			for(int i=0;i<kin.getNumberOfLinks();i++) {
+			
+				MobileBase mb = kin.getFollowerMobileBase(i);
+				if(mb!=null) {
+					if(mb.isWheel(link))
+						return true;
+				}
+			}
+			if(kin.getAbstractLink(kin.getNumberOfLinks()-1)==link){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean isFoot(AbstractLink link) {
+		ArrayList<DHParameterKinematics> possible= new ArrayList<>();
+		possible.addAll(legs);
+		for(DHParameterKinematics kin:possible) {
+			for(int i=0;i<kin.getNumberOfLinks();i++) {
+				MobileBase mb = kin.getFollowerMobileBase(i);
+				if(mb!=null) {
+					if(mb.isFoot(link))
+						return true;
+				}
+			}
+			if(kin.getAbstractLink(kin.getNumberOfLinks()-1)==link){
+				return true;
+			}
+
+		}
+		return false;
 	}
 
 	/**
@@ -836,11 +900,13 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	}
 
 	public double getMassKg() {
+		
 		return mass;
 	}
 
 	public void setMassKg(double mass) {
 		System.out.println("Mass of device " + getScriptingName() + " is " + mass);
+		//new RuntimeException().printStackTrace();
 		this.mass = mass;
 	}
 
@@ -962,7 +1028,8 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	private void fireIOnMobileBaseRenderChange() {
 		for (int i = 0; i < changeListeners.size(); i++) {
 			IOnMobileBaseRenderChange l = changeListeners.get(i);
-			l.onIOnMobileBaseRenderChange();
+			if(l!=null)
+				l.onIOnMobileBaseRenderChange();
 		}
 	}
 
@@ -1019,6 +1086,13 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	@Override
 	public void sync() {
 		doSync();
+	}
+	@Override
+	public  void setTimeProvider(ITimeProvider t) {
+		super.setTimeProvider(t);
+		for(DHParameterKinematics k:getAllDHChains()) {
+			k.setTimeProvider(getTimeProvider());
+		}
 	}
 
 }

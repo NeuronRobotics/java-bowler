@@ -22,7 +22,7 @@ import com.neuronrobotics.sdk.pid.PIDConfiguration;
 /**
  * The Class LinkConfiguration.
  */
-public class LinkConfiguration implements ITransformNRChangeListener {
+public class LinkConfiguration implements ITransformNRChangeListener,IVitaminHolder {
 	private ArrayList<ILinkConfigurationChangeListener> listeners = null;
 	private boolean pauseEvents=false;
 	/** The name. */
@@ -96,10 +96,13 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	 */
 	private boolean invertLimitVelocityPolarity = false;
 
-	private HashMap<String, String[]> vitamins = new HashMap<String, String[]>();
+	private ArrayList<VitaminLocation> vitamins = new ArrayList<VitaminLocation>();
 	private HashMap<String, String> vitaminVariant = new HashMap<String, String>();
 	private boolean passive = false;
 	private boolean newAbs = false;
+	private Runnable changeListener = ()->{
+		fireChangeEvent();
+	};
 
 	/**
 	 * Instantiates a new link configuration.
@@ -275,25 +278,14 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	protected void getVitamins(Element doc) {
 
 		try {
-			NodeList nodListofLinks = doc.getChildNodes();
-			for (int i = 0; i < nodListofLinks.getLength(); i++) {
-				Node linkNode = nodListofLinks.item(i);
-				if (linkNode.getNodeType() == Node.ELEMENT_NODE && linkNode.getNodeName().contentEquals("vitamin")) {
-					Element e = (Element) linkNode;
-					setVitamin(XmlFactory.getTagValue("name", e), XmlFactory.getTagValue("type", e),
-							XmlFactory.getTagValue("id", e));
-					try {
-						setVitaminVariant(XmlFactory.getTagValue("name", e), XmlFactory.getTagValue("variant", e));
-					} catch (Exception ex) {
-					}
-				}
-			}
+			vitamins=VitaminLocation.getVitamins(doc);
 			return;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return;
 	}
+
 
 	/**
 	 * Add a vitamin to this link
@@ -303,12 +295,30 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 	 * @param type the vitamin type, this maps the the json filename
 	 * @param id   the part ID, theis maps to the key in the json for the vitamin
 	 */
-	public void setVitamin(String name, String type, String id) {
-		if (getVitamins().get(name) == null) {
-			getVitamins().put(name, new String[2]);
-		}
-		getVitamins().get(name)[0] = type;
-		getVitamins().get(name)[1] = id;
+	@Deprecated
+	public void setVitamin(VitaminLocation location) {
+		addVitamin(location);
+		
+	}
+	/**
+	 * Add a vitamin to this link
+	 * 
+	 * @param name the name of this vitamin, if the name already exists, the data
+	 *             will be overwritten.
+	 * @param type the vitamin type, this maps the the json filename
+	 * @param id   the part ID, theis maps to the key in the json for the vitamin
+	 */
+	public void addVitamin(VitaminLocation location) {
+		if(vitamins.contains(location))
+			return;
+		vitamins.add(location);
+		location.addChangeListener(changeListener);
+		fireChangeEvent();
+	}
+	public void removeVitamin(VitaminLocation loc) {
+		if(vitamins.contains(loc))
+			vitamins.remove(loc);
+		loc.removeChangeListener(changeListener);
 		fireChangeEvent();
 	}
 
@@ -347,9 +357,7 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 			slaveLinks.add(new LinkConfiguration(from.slaveLinks.get(i)));
 		}
 		
-		for(String key: from.getVitamins().keySet()){
-			getVitamins().put(key, from.getVitamins().get(key));
-		}
+		vitamins.addAll(from.vitamins);
 		setName(from.getName());
 		
 		setTypeString(from.getTypeString());
@@ -422,29 +430,23 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 		for (int i = 0; i < slaveLinks.size(); i++) {
 			slaves += "\n\t<slaveLink>\n" + slaveLinks.get(i).getXml() + "\n\t</slaveLink>\n";
 		}
-		String allVitamins = "";
-		for (String key : getVitamins().keySet()) {
-			String v = "\t\t<vitamin>\n";
-			v += "\t\t\t<name>" + key + "</name>\n" + "\t\t\t<type>" + getVitamins().get(key)[0] + "</type>\n"
-					+ "\t\t\t<id>" + getVitamins().get(key)[1] + "</id>\n";
-			if (getVitaminVariant(key) != null) {
-				v += "\t\t\t<variant>" + getVitamins().get(key)[1] + "</variant>\n";
-			}
-			v += "\t\t</vitamin>\n";
-			allVitamins += v;
-		}
 
-		return "\t<name>" + getName() + "</name>\n" + "\t" + DevStr + "\t<type>" + getTypeString() + "</type>\n"
-				+ "\t<index>" + getHardwareIndex() + "</index>\n" + "\t<scale>" + getScale() + "</scale>\n"
-				+ "\t<upperLimit>" + getUpperLimit() + "</upperLimit>\n" + "\t<lowerLimit>" + getLowerLimit()
-				+ "</lowerLimit>\n" + "\t<upperVelocity>" + getUpperVelocity() + "</upperVelocity>\n"
-				+ "\t<lowerVelocity>" + getLowerVelocity() + "</lowerVelocity>\n" + "\t<staticOffset>"
+
+		String vitamnsString = VitaminLocation.getAllXML(vitamins);
+		return "\t<name>" + getName() + "</name>\n" + "\t" + 
+		DevStr + "\t<type>" + getTypeString() + "</type>\n"+
+		"\t<index>" + getHardwareIndex() + "</index>\n" + 
+		"\t<scale>" + getScale() + "</scale>\n"
+		+ "\t<upperLimit>" + getUpperLimit() + "</upperLimit>\n" + 
+		"\t<lowerLimit>" + getLowerLimit()+ "</lowerLimit>\n" + 
+		"\t<upperVelocity>" + getUpperVelocity() + "</upperVelocity>\n"+
+		"\t<lowerVelocity>" + getLowerVelocity() + "</lowerVelocity>\n" + 
+		"\t<staticOffset>"
 				+ getStaticOffset() + "</staticOffset>\n" + "\t<deviceTheoreticalMax>" + getDeviceTheoreticalMax()
 				+ "</deviceTheoreticalMax>\n" + "\t<deviceTheoreticalMin>" + getDeviceTheoreticalMin()
 				+ "</deviceTheoreticalMin>\n" + "\t<isLatch>" + isLatch() + "</isLatch>\n" + "\t<indexLatch>"
 				+ getIndexLatch() + "</indexLatch>\n" + "\t<isStopOnLatch>" + isStopOnLatch() + "</isStopOnLatch>\n"
-				+ "\t<homingTPS>" + getHomingTicksPerSecond() + "</homingTPS>\n" + "\n\t<vitamins>\n" + allVitamins
-				+ "\n\t</vitamins>\n" + "\t<passive>" + isPassive() + "</passive>\n" + "\t<mass>" + getMassKg()
+				+ "\t<homingTPS>" + getHomingTicksPerSecond() + "</homingTPS>\n" + vitamnsString+ "\t<passive>" + isPassive() + "</passive>\n" + "\t<mass>" + getMassKg()
 				+ "</mass>\n" + "\t<centerOfMassFromCentroid>" + getCenterOfMassFromCentroid().getXml()
 				+ "</centerOfMassFromCentroid>\n" + "\t<imuFromCentroid>" + getimuFromCentroid().getXml()
 				+ "</imuFromCentroid>\n" + slaves;
@@ -950,53 +952,57 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 //	private String shaftType = "hobbyServoHorn";
 //	private String shaftSize = "standardMicro1";
 
-	private String[] getCoreShaftPart() {
-		if (vitamins.get("shaft") == null) {
-			vitamins.put("shaft", new String[] { "hobbyServoHorn", "standardMicro1" });
-		}
-		return vitamins.get("shaft");
+	private VitaminLocation getCoreShaftPart() {
+		for(VitaminLocation loc:vitamins)
+			if(loc.getName().contentEquals("shaft"))
+				return loc;
+		VitaminLocation e = new VitaminLocation("shaft", "hobbyServoHorn", "standardMicro1", new TransformNR());
+		vitamins.add(e);
+		return e;
 	}
 
-	private String[] getCoreEmPart() {
-		if (vitamins.get("electroMechanical") == null) {
-			vitamins.put("electroMechanical", new String[] { "hobbyServo", "standardMicro" });
-		}
-		return vitamins.get("electroMechanical");
+	private VitaminLocation getCoreEmPart() {
+		for(VitaminLocation loc:vitamins)
+			if(loc.getName().contentEquals("electroMechanical"))
+				return loc;
+		VitaminLocation e = new VitaminLocation("electroMechanical", "hobbyServoHorn", "mg92b", new TransformNR());
+		vitamins.add(e);
+		return e;
 	}
 
 	public String getElectroMechanicalType() {
-		return getCoreEmPart()[0];
+		return getCoreEmPart().getType();
 	}
 
 	public void setElectroMechanicalType(String electroMechanicalType) {
-		getCoreEmPart()[0] = electroMechanicalType;
+		getCoreEmPart().setType(electroMechanicalType);
 		fireChangeEvent();
 	}
 
 	public String getElectroMechanicalSize() {
-		return getCoreEmPart()[1];
+		return getCoreEmPart().getSize();
 	}
 
 	public void setElectroMechanicalSize(String electroMechanicalSize) {
-		getCoreEmPart()[1] = electroMechanicalSize;
+		getCoreEmPart().setSize(electroMechanicalSize);
 		fireChangeEvent();
 	}
 
 	public String getShaftType() {
-		return getCoreShaftPart()[0];
+		return getCoreShaftPart().getType();
 	}
 
 	public void setShaftType(String shaftType) {
-		getCoreShaftPart()[0] = shaftType;
+		getCoreShaftPart().setType(shaftType);;
 		fireChangeEvent();
 	}
 
 	public String getShaftSize() {
-		return getCoreShaftPart()[1];
+		return getCoreShaftPart().getSize();
 	}
 
 	public void setShaftSize(String shaftSize) {
-		getCoreShaftPart()[1] = shaftSize;
+		getCoreShaftPart().setSize(shaftSize);
 		fireChangeEvent();
 	}
 
@@ -1009,12 +1015,17 @@ public class LinkConfiguration implements ITransformNRChangeListener {
 		fireChangeEvent();
 	}
 
-	public HashMap<String, String[]> getVitamins() {
+	public ArrayList<VitaminLocation>getVitamins() {
 		return vitamins;
 	}
 
-	public void setVitamins(HashMap<String, String[]> vitamins) {
-		this.vitamins = vitamins;
+	public void setVitamins(ArrayList<VitaminLocation> v) {
+		if(vitamins!=null)
+			for(VitaminLocation l:vitamins)
+				l.removeChangeListener(changeListener);
+		this.vitamins = v;
+		for(VitaminLocation l:vitamins)
+			l.addChangeListener(changeListener);
 		fireChangeEvent();
 	}
 

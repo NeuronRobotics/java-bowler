@@ -106,9 +106,9 @@ public class BowlerCamDevice extends BowlerAbstractDevice {
 			//System.out.println("Reading: "+urls.get(cam) );
 			ImageReader ir = new ImageReader(cam);
 			ir.start();
-			long start = System.currentTimeMillis();
-			while(((System.currentTimeMillis()-start)<200) && ir.isDone()==false){
-				ThreadUtil.wait(5);
+			long start = currentTimeMillis();
+			while(((currentTimeMillis()-start)<200) && ir.isDone()==false){
+				wait(5);
 			}
 			if(!ir.isDone())
 				Log.error("Image read timed out");
@@ -304,7 +304,7 @@ public class BowlerCamDevice extends BowlerAbstractDevice {
 		send(new BlobCommand());
 		while(gotLastMark == false && isAvailable()){
 			try {
-				Thread.sleep(10);
+				sleep(10);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -353,7 +353,7 @@ public class BowlerCamDevice extends BowlerAbstractDevice {
 		 */
 		public void run() {
 			//System.out.println("Starting auto capture on: "+getImageServerURL(cam));
-			long st = System.currentTimeMillis();
+			long st = currentTimeMillis();
 			while(running && isAvailable()) {
 				//System.out.println("Getting image from: "+getImageServerURL(cam));
 				try {
@@ -370,16 +370,16 @@ public class BowlerCamDevice extends BowlerAbstractDevice {
 					e.printStackTrace();
 				}
 				if(mspf != 0) {
-					long diff = System.currentTimeMillis() - st;
+					long diff = currentTimeMillis() - st;
 					////System.out.print("\nMS diff: "+diff);
 					if(diff<mspf) {
 						try {
 							////System.out.print(" sleeping: "+(mspf-diff));
-							Thread.sleep(mspf-diff);
+							getTimeProvider().sleep(mspf-diff);
 						} catch (InterruptedException e) {
 						}
 					}
-					st =  System.currentTimeMillis() ;
+					st =  currentTimeMillis() ;
 				}
 			}
 		}

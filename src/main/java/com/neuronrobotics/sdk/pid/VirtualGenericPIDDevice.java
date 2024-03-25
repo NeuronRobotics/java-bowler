@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import com.neuronrobotics.sdk.addons.kinematics.IHardwareSyncPulseProvider;
 import com.neuronrobotics.sdk.addons.kinematics.IHardwareSyncPulseReciver;
+import com.neuronrobotics.sdk.addons.kinematics.time.ITimeProvider;
 import com.neuronrobotics.sdk.common.BowlerAbstractCommand;
 import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.common.InvalidConnectionException;
@@ -189,7 +190,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 	 */
 	@Override
 	public boolean SetPIDSetPoint(int group, float setpoint, double seconds) {
-		long currentTimeMillis = System.currentTimeMillis();
+		long currentTimeMillis = currentTimeMillis();
 		sync.setPause(true);
 		synchronized(interpolationEngines) {
 		getDriveThread(group).StartLinearMotion(setpoint, seconds,currentTimeMillis);
@@ -247,7 +248,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 	 */
 	@Override
 	public boolean SetAllPIDSetPoint(float[] setpoints, double seconds) {
-		long start = System.currentTimeMillis();
+		long start = currentTimeMillis();
 		sync.setPause(true);
 		synchronized(interpolationEngines) {
 			for (int i = 0; i < setpoints.length; i++) {
@@ -313,7 +314,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 					PIDConfiguration conf = new PIDConfiguration();
 					conf.setGroup(i);
 					conf.setEnabled(true);
-					InterpolationEngine d = new InterpolationEngine();
+					InterpolationEngine d = new InterpolationEngine(getTimeProvider());
 					interpolationEngines.put(conf, d);
 					configs.put(i, conf);
 				}
@@ -324,6 +325,13 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 				backs[i] = GetPIDPosition(i);
 		}
 		return backs;
+	}
+	@Override
+	public  void setTimeProvider(ITimeProvider t) {
+		super.setTimeProvider(t);
+		for(InterpolationEngine e:interpolationEngines.values()) {
+			e.setTimeProvider(getTimeProvider());
+		}
 	}
 
 	/**
@@ -369,12 +377,13 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 			long time;
 			while (runSync) {
 				try {
-					Thread.sleep(threadTime);
+					getTimeProvider().sleep(threadTime);
 				} catch (InterruptedException ex) {
+					return;
 				}
 				if(!pause) {
 					sync = false;
-					time = System.currentTimeMillis();
+					time = currentTimeMillis();
 						synchronized(interpolationEngines) {
 							for (PIDConfiguration key : interpolationEngines.keySet()) {
 								InterpolationEngine dr = interpolationEngines.get(key);
@@ -405,10 +414,11 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 				}else
 					while (isPause())
 						try {
-							Thread.sleep(1);
+							getTimeProvider().sleep(1);
 						} catch (InterruptedException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
+							return;
 						}
 				if (sync)
 					doSync();

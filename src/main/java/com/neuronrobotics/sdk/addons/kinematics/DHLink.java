@@ -221,15 +221,15 @@ public class DHLink {
 	/**
 	 * Dh step prismatic.
 	 *
-	 * @param jointValue the joint value
+	 * @param radians the joint value in radians
 	 * @return the matrix
 	 */
-	public Matrix DhStep(double jointValue) {
+	public Matrix DhStep(double radians) {
 		switch(type){
 		case PRISMATIC:
-			return DhStep(0,jointValue);
+			return DhStep(0,radians);
 		case ROTORY:
-			return DhStep(jointValue,0);
+			return DhStep(radians,0);
 		default:
 		case TOOL:
 			return DhStep(0,0);
@@ -240,7 +240,7 @@ public class DHLink {
 	/**
 	 * Dh step.
 	 *
-	 * @param rotory the rotory
+	 * @param rotory the rotory value in radians
 	 * @param prismatic the prismatic
 	 * @return the matrix
 	 */
@@ -336,7 +336,7 @@ public class DHLink {
 	/**
 	 * Sets the matrix.
 	 *
-	 * @param rotory the rotory
+	 * @param rotory the rotory value in radians
 	 * @param prismatic the prismatic
 	 */
 	private void setMatrix(double rotory,double prismatic){

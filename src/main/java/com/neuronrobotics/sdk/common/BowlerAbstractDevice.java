@@ -33,6 +33,7 @@ package com.neuronrobotics.sdk.common;
 
 import java.util.ArrayList;
 
+import com.neuronrobotics.sdk.addons.kinematics.time.TimeKeeper;
 import com.neuronrobotics.sdk.commands.bcs.core.PingCommand;
 import com.neuronrobotics.sdk.commands.neuronrobotics.dyio.InfoFirmwareRevisionCommand;
 
@@ -44,7 +45,7 @@ import com.neuronrobotics.sdk.commands.neuronrobotics.dyio.InfoFirmwareRevisionC
  * @author rbreznak
  *
  */
-public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
+public abstract class BowlerAbstractDevice extends TimeKeeper implements IBowlerDatagramListener {
 	
 	/** The keep alive. */
 	private boolean keepAlive = true;

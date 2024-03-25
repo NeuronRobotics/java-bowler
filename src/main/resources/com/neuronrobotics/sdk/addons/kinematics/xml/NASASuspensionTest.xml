@@ -1,0 +1,1726 @@
+<root>
+<mobilebase>
+	<cadEngine>
+		<git>https://github.com/NeuronRobotics/NASACurisoity.git</git>
+		<file>bodyCad.groovy</file>
+	</cadEngine>
+	<driveEngine>
+		<git>https://github.com/NeuronRobotics/NASACurisoity.git</git>
+		<file>DriveEngine.groovy</file>
+	</driveEngine>
+
+<name>NASA_Curiosity</name>
+<appendage>
+
+<name>RobotArm</name>
+	<cadEngine>
+		<git>https://github.com/NeuronRobotics/NASACurisoity.git</git>
+		<file>armCad.groovy</file>
+	</cadEngine>
+	<kinematics>
+		<git>https://github.com/madhephaestus/carl-the-hexapod.git</git>
+		<file>DefaultDhSolver.groovy</file>
+	</kinematics>
+<link>
+	<name>basePan</name>
+	<deviceName>dyio</deviceName>
+	<type>servo-rotory</type>
+	<index>4</index>
+	<scale>0.001</scale>
+	<upperLimit>1000000.0</upperLimit>
+	<lowerLimit>-1000000.0</lowerLimit>
+	<upperVelocity>1.0E8</upperVelocity>
+	<lowerVelocity>-1.0E8</lowerVelocity>
+	<staticOffset>0.0</staticOffset>
+	<deviceTheoreticalMax>2.147483647E9</deviceTheoreticalMax>
+	<deviceTheoreticalMin>-2.147483648E9</deviceTheoreticalMin>
+	<isLatch>true</isLatch>
+	<indexLatch>180.0</indexLatch>
+	<isStopOnLatch>false</isStopOnLatch>
+	<homingTPS>10000000</homingTPS>
+
+	<vitamins>
+
+		<vitamin>
+			<name>electroMechanical</name>
+			<type>hobbyServo</type>
+			<id>standardMicro</id>
+			<pose>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+			</pose>
+		</vitamin>
+
+		<vitamin>
+			<name>shaft</name>
+			<type>hobbyServoHorn</type>
+			<id>standardMicro1</id>
+			<pose>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+			</pose>
+		</vitamin>
+
+	</vitamins>
+	<passive>false</passive>
+	<mass>0.001</mass>
+	<centerOfMassFromCentroid>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>0.0</rotx>
+	<roty>0.0</roty>
+	<rotz>0.0</rotz>
+</centerOfMassFromCentroid>
+	<imuFromCentroid>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>0.0</rotx>
+	<roty>0.0</roty>
+	<rotz>0.0</rotz>
+</imuFromCentroid>
+
+	<DHParameters>
+		<Delta>16.0</Delta>
+		<Theta>0.0</Theta>
+		<Radius>0.0</Radius>
+		<Alpha>-90.0</Alpha>
+	</DHParameters>
+
+</link>
+<link>
+	<name>baseTilt</name>
+	<deviceName>dyio</deviceName>
+	<type>servo-rotory</type>
+	<index>5</index>
+	<scale>0.001</scale>
+	<upperLimit>1000000.0</upperLimit>
+	<lowerLimit>-1000000.0</lowerLimit>
+	<upperVelocity>1.0E8</upperVelocity>
+	<lowerVelocity>-1.0E8</lowerVelocity>
+	<staticOffset>0.0</staticOffset>
+	<deviceTheoreticalMax>2.147483647E9</deviceTheoreticalMax>
+	<deviceTheoreticalMin>-2.147483648E9</deviceTheoreticalMin>
+	<isLatch>true</isLatch>
+	<indexLatch>128.0</indexLatch>
+	<isStopOnLatch>false</isStopOnLatch>
+	<homingTPS>10000000</homingTPS>
+
+	<vitamins>
+
+		<vitamin>
+			<name>electroMechanical</name>
+			<type>hobbyServo</type>
+			<id>standardMicro</id>
+			<pose>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+			</pose>
+		</vitamin>
+
+		<vitamin>
+			<name>shaft</name>
+			<type>hobbyServoHorn</type>
+			<id>standardMicro1</id>
+			<pose>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+			</pose>
+		</vitamin>
+
+	</vitamins>
+	<passive>false</passive>
+	<mass>0.001</mass>
+	<centerOfMassFromCentroid>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>0.0</rotx>
+	<roty>0.0</roty>
+	<rotz>0.0</rotz>
+</centerOfMassFromCentroid>
+	<imuFromCentroid>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>0.0</rotx>
+	<roty>0.0</roty>
+	<rotz>0.0</rotz>
+</imuFromCentroid>
+
+	<DHParameters>
+		<Delta>0.0</Delta>
+		<Theta>-90.0</Theta>
+		<Radius>60.0</Radius>
+		<Alpha>0.0</Alpha>
+	</DHParameters>
+
+</link>
+<link>
+	<name>elbow</name>
+	<deviceName>dyio</deviceName>
+	<type>servo-rotory</type>
+	<index>6</index>
+	<scale>0.001</scale>
+	<upperLimit>100000.0</upperLimit>
+	<lowerLimit>-100000.0</lowerLimit>
+	<upperVelocity>1.0E8</upperVelocity>
+	<lowerVelocity>-1.0E8</lowerVelocity>
+	<staticOffset>0.0</staticOffset>
+	<deviceTheoreticalMax>2.147483647E9</deviceTheoreticalMax>
+	<deviceTheoreticalMin>-2.147483648E9</deviceTheoreticalMin>
+	<isLatch>true</isLatch>
+	<indexLatch>121.0</indexLatch>
+	<isStopOnLatch>false</isStopOnLatch>
+	<homingTPS>10000000</homingTPS>
+
+	<vitamins>
+
+		<vitamin>
+			<name>electroMechanical</name>
+			<type>hobbyServo</type>
+			<id>standardMicro</id>
+			<pose>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+			</pose>
+		</vitamin>
+
+		<vitamin>
+			<name>shaft</name>
+			<type>hobbyServoHorn</type>
+			<id>standardMicro1</id>
+			<pose>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+			</pose>
+		</vitamin>
+
+	</vitamins>
+	<passive>false</passive>
+	<mass>0.001</mass>
+	<centerOfMassFromCentroid>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>0.0</rotx>
+	<roty>0.0</roty>
+	<rotz>0.0</rotz>
+</centerOfMassFromCentroid>
+	<imuFromCentroid>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>0.0</rotx>
+	<roty>0.0</roty>
+	<rotz>0.0</rotz>
+</imuFromCentroid>
+
+	<DHParameters>
+		<Delta>0.0</Delta>
+		<Theta>90.0</Theta>
+		<Radius>50.0</Radius>
+		<Alpha>0.0</Alpha>
+	</DHParameters>
+
+</link>
+<link>
+	<name>mahliApxs</name>
+	<deviceName>dyio</deviceName>
+	<type>servo-rotory</type>
+	<index>7</index>
+	<scale>0.001</scale>
+	<upperLimit>120000.0</upperLimit>
+	<lowerLimit>-120000.0</lowerLimit>
+	<upperVelocity>1.0E8</upperVelocity>
+	<lowerVelocity>-1.0E8</lowerVelocity>
+	<staticOffset>0.0</staticOffset>
+	<deviceTheoreticalMax>2.147483647E9</deviceTheoreticalMax>
+	<deviceTheoreticalMin>-2.147483648E9</deviceTheoreticalMin>
+	<isLatch>false</isLatch>
+	<indexLatch>0.0</indexLatch>
+	<isStopOnLatch>false</isStopOnLatch>
+	<homingTPS>10000000</homingTPS>
+
+	<vitamins>
+
+		<vitamin>
+			<name>electroMechanical</name>
+			<type>hobbyServo</type>
+			<id>standardMicro</id>
+			<pose>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+			</pose>
+		</vitamin>
+
+		<vitamin>
+			<name>shaft</name>
+			<type>hobbyServoHorn</type>
+			<id>standardMicro1</id>
+			<pose>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+			</pose>
+		</vitamin>
+
+	</vitamins>
+	<passive>false</passive>
+	<mass>0.001</mass>
+	<centerOfMassFromCentroid>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>0.0</rotx>
+	<roty>0.0</roty>
+	<rotz>0.0</rotz>
+</centerOfMassFromCentroid>
+	<imuFromCentroid>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>0.0</rotx>
+	<roty>0.0</roty>
+	<rotz>0.0</rotz>
+</imuFromCentroid>
+
+	<DHParameters>
+		<Delta>0.0</Delta>
+		<Theta>0.0</Theta>
+		<Radius>0.0</Radius>
+		<Alpha>0.0</Alpha>
+	</DHParameters>
+
+</link>
+
+<ZframeToRAS
+>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+
+</ZframeToRAS>
+
+<baseToZframe>
+
+	<x>-75.00000000000001</x>
+	<y>-23.069999999999993</y>
+	<z>38.0952380952381</z>
+	<rotw>0.05455892332782112</rotw>
+	<rotx>0.017903047010183144</rotx>
+	<roty>0.0077571528961058725</roty>
+	<rotz>0.9983199043252653</rotz>
+
+</baseToZframe>
+
+</appendage>
+<steerable>
+
+<name>Front_Left</name>
+	<cadEngine>
+		<git>https://github.com/NeuronRobotics/NASACurisoity.git</git>
+		<file>steer_wheel.groovy</file>
+	</cadEngine>
+	<kinematics>
+		<git>https://github.com/madhephaestus/carl-the-hexapod.git</git>
+		<file>DefaultDhSolver.groovy</file>
+	</kinematics>
+<link>
+	<name>fl_steer</name>
+	<deviceName>dyio</deviceName>
+	<type>servo-rotory</type>
+	<index>0</index>
+	<scale>2.0</scale>
+	<upperLimit>255.0</upperLimit>
+	<lowerLimit>0.0</lowerLimit>
+	<upperVelocity>178.0</upperVelocity>
+	<lowerVelocity>-178.0</lowerVelocity>
+	<staticOffset>128.0</staticOffset>
+	<deviceTheoreticalMax>2.147483647E9</deviceTheoreticalMax>
+	<deviceTheoreticalMin>-2.147483648E9</deviceTheoreticalMin>
+	<isLatch>true</isLatch>
+	<indexLatch>105.0</indexLatch>
+	<isStopOnLatch>false</isStopOnLatch>
+	<homingTPS>10000000</homingTPS>
+
+	<vitamins>
+
+		<vitamin>
+			<name>electroMechanical</name>
+			<type>hobbyServo</type>
+			<id>standardMicro</id>
+			<pose>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+			</pose>
+		</vitamin>
+
+		<vitamin>
+			<name>shaft</name>
+			<type>hobbyServoHorn</type>
+			<id>standardMicro1</id>
+			<pose>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+			</pose>
+		</vitamin>
+
+	</vitamins>
+	<passive>false</passive>
+	<mass>0.001</mass>
+	<centerOfMassFromCentroid>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>0.0</rotx>
+	<roty>0.0</roty>
+	<rotz>0.0</rotz>
+</centerOfMassFromCentroid>
+	<imuFromCentroid>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>0.0</rotx>
+	<roty>0.0</roty>
+	<rotz>0.0</rotz>
+</imuFromCentroid>
+
+	<DHParameters>
+		<Delta>0.0</Delta>
+		<Theta>0.0</Theta>
+		<Radius>0.0</Radius>
+		<Alpha>-90.0</Alpha>
+	</DHParameters>
+
+</link>
+<link>
+	<name>fl_wheel</name>
+	<deviceName>pid</deviceName>
+	<type>pid</type>
+	<index>0</index>
+	<scale>0.33</scale>
+	<upperLimit>1000000.0</upperLimit>
+	<lowerLimit>-1000000.0</lowerLimit>
+	<upperVelocity>436.7392582541836</upperVelocity>
+	<lowerVelocity>-436.7392582541836</lowerVelocity>
+	<staticOffset>133.7089552238806</staticOffset>
+	<deviceTheoreticalMax>2.147483647E9</deviceTheoreticalMax>
+	<deviceTheoreticalMin>-2.147483648E9</deviceTheoreticalMin>
+	<isLatch>true</isLatch>
+	<indexLatch>105.0</indexLatch>
+	<isStopOnLatch>false</isStopOnLatch>
+	<homingTPS>10000000</homingTPS>
+
+	<vitamins>
+
+		<vitamin>
+			<name>electroMechanical</name>
+			<type>hobbyServo</type>
+			<id>standardMicro</id>
+			<pose>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+			</pose>
+		</vitamin>
+
+		<vitamin>
+			<name>shaft</name>
+			<type>hobbyServoHorn</type>
+			<id>standardMicro1</id>
+			<pose>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+			</pose>
+		</vitamin>
+
+	</vitamins>
+	<passive>false</passive>
+	<mass>0.05</mass>
+	<centerOfMassFromCentroid>
+	<x>-18.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>0.0</rotx>
+	<roty>0.0</roty>
+	<rotz>0.0</rotz>
+</centerOfMassFromCentroid>
+	<imuFromCentroid>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>0.0</rotx>
+	<roty>0.0</roty>
+	<rotz>0.0</rotz>
+</imuFromCentroid>
+
+	<DHParameters>
+		<Delta>0.0</Delta>
+		<Theta>0.0</Theta>
+		<Radius>18.0</Radius>
+		<Alpha>-90.0</Alpha>
+	</DHParameters>
+
+</link>
+
+<ZframeToRAS
+>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+
+</ZframeToRAS>
+
+<baseToZframe>
+
+	<x>-78.5</x>
+	<y>-73.75</y>
+	<z>0.0</z>
+	<rotw>0.008725098943435386</rotw>
+	<rotx>-0.9999619021083685</rotx>
+	<roty>2.258102901239317E-6</roty>
+	<rotz>2.587955605911594E-4</rotz>
+
+</baseToZframe>
+
+</steerable>
+<steerable>
+
+<name>Back_Left</name>
+	<cadEngine>
+		<git>https://github.com/NeuronRobotics/NASACurisoity.git</git>
+		<file>steer_wheel.groovy</file>
+	</cadEngine>
+	<kinematics>
+		<git>https://github.com/madhephaestus/carl-the-hexapod.git</git>
+		<file>DefaultDhSolver.groovy</file>
+	</kinematics>
+<link>
+	<name>leftRocker</name>
+	<deviceName>virtual</deviceName>
+	<type>virtual</type>
+	<index>1</index>
+	<scale>1.0</scale>
+	<upperLimit>147.0</upperLimit>
+	<lowerLimit>88.2910447761194</lowerLimit>
+	<upperVelocity>233.7089552238806</upperVelocity>
+	<lowerVelocity>-233.7089552238806</lowerVelocity>
+	<staticOffset>128.0</staticOffset>
+	<deviceTheoreticalMax>2.147483647E9</deviceTheoreticalMax>
+	<deviceTheoreticalMin>-2.147483648E9</deviceTheoreticalMin>
+	<isLatch>true</isLatch>
+	<indexLatch>105.0</indexLatch>
+	<isStopOnLatch>false</isStopOnLatch>
+	<homingTPS>10000000</homingTPS>
+
+	<vitamins>
+
+		<vitamin>
+			<name>electroMechanical</name>
+			<type>hobbyServo</type>
+			<id>standardMicro</id>
+			<pose>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+			</pose>
+		</vitamin>
+
+		<vitamin>
+			<name>shaft</name>
+			<type>hobbyServoHorn</type>
+			<id>standardMicro1</id>
+			<pose>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+			</pose>
+		</vitamin>
+
+	</vitamins>
+	<passive>true</passive>
+	<mass>0.001</mass>
+	<centerOfMassFromCentroid>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>0.0</rotx>
+	<roty>0.0</roty>
+	<rotz>0.0</rotz>
+</centerOfMassFromCentroid>
+	<imuFromCentroid>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>0.0</rotx>
+	<roty>0.0</roty>
+	<rotz>0.0</rotz>
+</imuFromCentroid>
+
+	<DHParameters>
+		<Delta>24.0</Delta>
+		<Theta>0.0</Theta>
+		<Radius>45.0</Radius>
+		<Alpha>90.0</Alpha>
+
+		<mobilebase>
+	<cadEngine>
+		<git>https://github.com/madhephaestus/carl-the-hexapod.git</git>
+		<file>ThreeDPrintCad.groovy</file>
+	</cadEngine>
+	<driveEngine>
+		<git>https://github.com/madhephaestus/carl-the-hexapod.git</git>
+		<file>WalkingDriveEngine.groovy</file>
+	</driveEngine>
+
+<name>fixedWheelLeft</name>
+<drivable>
+
+<name>Center_Left</name>
+	<cadEngine>
+		<git>https://github.com/NeuronRobotics/NASACurisoity.git</git>
+		<file>fixed_wheel.groovy</file>
+	</cadEngine>
+	<kinematics>
+		<git>https://github.com/madhephaestus/carl-the-hexapod.git</git>
+		<file>DefaultDhSolver.groovy</file>
+	</kinematics>
+<link>
+	<name>cl_wheel</name>
+	<deviceName>pid</deviceName>
+	<type>pid</type>
+	<index>1</index>
+	<scale>0.33</scale>
+	<upperLimit>1000000.0</upperLimit>
+	<lowerLimit>-1000000.0</lowerLimit>
+	<upperVelocity>465.28403437358656</upperVelocity>
+	<lowerVelocity>-465.28403437358656</lowerVelocity>
+	<staticOffset>162.25373134328353</staticOffset>
+	<deviceTheoreticalMax>2.147483647E9</deviceTheoreticalMax>
+	<deviceTheoreticalMin>-2.147483648E9</deviceTheoreticalMin>
+	<isLatch>true</isLatch>
+	<indexLatch>171.0</indexLatch>
+	<isStopOnLatch>false</isStopOnLatch>
+	<homingTPS>10000000</homingTPS>
+
+	<vitamins>
+
+		<vitamin>
+			<name>electroMechanical</name>
+			<type>hobbyServo</type>
+			<id>standardMicro</id>
+			<pose>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+			</pose>
+		</vitamin>
+
+		<vitamin>
+			<name>shaft</name>
+			<type>hobbyServoHorn</type>
+			<id>standardMicro1</id>
+			<pose>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+			</pose>
+		</vitamin>
+
+	</vitamins>
+	<passive>false</passive>
+	<mass>0.051</mass>
+	<centerOfMassFromCentroid>
+	<x>-18.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>0.0</rotx>
+	<roty>0.0</roty>
+	<rotz>0.0</rotz>
+</centerOfMassFromCentroid>
+	<imuFromCentroid>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>0.0</rotx>
+	<roty>0.0</roty>
+	<rotz>0.0</rotz>
+</imuFromCentroid>
+
+	<DHParameters>
+		<Delta>0.0</Delta>
+		<Theta>0.0</Theta>
+		<Radius>18.0</Radius>
+		<Alpha>-90.0</Alpha>
+	</DHParameters>
+
+</link>
+
+<ZframeToRAS
+>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+
+</ZframeToRAS>
+
+<baseToZframe>
+
+	<x>-74.0</x>
+	<y>0.0</y>
+	<z>29.0</z>
+	<rotw>0.7071067811865476</rotw>
+	<rotx>-0.7071067811865475</rotx>
+	<roty>-8.120692378444618E-12</roty>
+	<rotz>-8.120692378444618E-12</rotz>
+
+</baseToZframe>
+
+</drivable>
+
+<ZframeToRAS>
+
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+
+</ZframeToRAS>
+
+<baseToZframe>
+
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+
+</baseToZframe>
+	<mass>0.001</mass>
+	<centerOfMassFromCentroid>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+</centerOfMassFromCentroid>
+	<imuFromCentroid>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+</imuFromCentroid>
+
+	<vitamins>
+
+	</vitamins>
+
+</mobilebase>
+
+	</DHParameters>
+
+</link>
+<link>
+	<name>bl_steer</name>
+	<deviceName>dyio</deviceName>
+	<type>servo-rotory</type>
+	<index>1</index>
+	<scale>1.0</scale>
+	<upperLimit>255.0</upperLimit>
+	<lowerLimit>0.0</lowerLimit>
+	<upperVelocity>233.7089552238806</upperVelocity>
+	<lowerVelocity>-233.7089552238806</lowerVelocity>
+	<staticOffset>133.7089552238806</staticOffset>
+	<deviceTheoreticalMax>2.147483647E9</deviceTheoreticalMax>
+	<deviceTheoreticalMin>-2.147483648E9</deviceTheoreticalMin>
+	<isLatch>true</isLatch>
+	<indexLatch>105.0</indexLatch>
+	<isStopOnLatch>false</isStopOnLatch>
+	<homingTPS>10000000</homingTPS>
+
+	<vitamins>
+
+		<vitamin>
+			<name>electroMechanical</name>
+			<type>hobbyServo</type>
+			<id>standardMicro</id>
+			<pose>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+			</pose>
+		</vitamin>
+
+		<vitamin>
+			<name>shaft</name>
+			<type>hobbyServoHorn</type>
+			<id>standardMicro1</id>
+			<pose>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+			</pose>
+		</vitamin>
+
+	</vitamins>
+	<passive>false</passive>
+	<mass>0.001</mass>
+	<centerOfMassFromCentroid>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>0.0</rotx>
+	<roty>0.0</roty>
+	<rotz>0.0</rotz>
+</centerOfMassFromCentroid>
+	<imuFromCentroid>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>0.0</rotx>
+	<roty>0.0</roty>
+	<rotz>0.0</rotz>
+</imuFromCentroid>
+
+	<DHParameters>
+		<Delta>30.0</Delta>
+		<Theta>0.0</Theta>
+		<Radius>0.0</Radius>
+		<Alpha>-90.0</Alpha>
+	</DHParameters>
+
+</link>
+<link>
+	<name>bl_wheel</name>
+	<deviceName>pid</deviceName>
+	<type>pid</type>
+	<index>2</index>
+	<scale>0.33</scale>
+	<upperLimit>1000000.0</upperLimit>
+	<lowerLimit>-1000000.0</lowerLimit>
+	<upperVelocity>447.8731410788662</upperVelocity>
+	<lowerVelocity>-447.8731410788662</lowerVelocity>
+	<staticOffset>144.84283804856315</staticOffset>
+	<deviceTheoreticalMax>2.147483647E9</deviceTheoreticalMax>
+	<deviceTheoreticalMin>-2.147483648E9</deviceTheoreticalMin>
+	<isLatch>true</isLatch>
+	<indexLatch>124.0</indexLatch>
+	<isStopOnLatch>false</isStopOnLatch>
+	<homingTPS>10000000</homingTPS>
+
+	<vitamins>
+
+		<vitamin>
+			<name>electroMechanical</name>
+			<type>hobbyServo</type>
+			<id>standardMicro</id>
+			<pose>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+			</pose>
+		</vitamin>
+
+		<vitamin>
+			<name>shaft</name>
+			<type>hobbyServoHorn</type>
+			<id>standardMicro1</id>
+			<pose>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+			</pose>
+		</vitamin>
+
+	</vitamins>
+	<passive>false</passive>
+	<mass>0.05</mass>
+	<centerOfMassFromCentroid>
+	<x>-18.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>0.0</rotx>
+	<roty>0.0</roty>
+	<rotz>0.0</rotz>
+</centerOfMassFromCentroid>
+	<imuFromCentroid>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>0.0</rotx>
+	<roty>0.0</roty>
+	<rotz>0.0</rotz>
+</imuFromCentroid>
+
+	<DHParameters>
+		<Delta>0.0</Delta>
+		<Theta>0.0</Theta>
+		<Radius>18.0</Radius>
+		<Alpha>-90.0</Alpha>
+	</DHParameters>
+
+</link>
+
+<ZframeToRAS
+>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+
+</ZframeToRAS>
+
+<baseToZframe>
+
+	<x>28.0</x>
+	<y>-51.5</y>
+	<z>29.000000000000032</z>
+	<rotw>0.7071067811864403</rotw>
+	<rotx>0.7071067811864402</rotx>
+	<roty>3.895273510727024E-7</roty>
+	<rotz>-3.895273510727023E-7</rotz>
+
+</baseToZframe>
+
+</steerable>
+<steerable>
+
+<name>Back_Right</name>
+	<cadEngine>
+		<git>https://github.com/NeuronRobotics/NASACurisoity.git</git>
+		<file>steer_wheel.groovy</file>
+	</cadEngine>
+	<kinematics>
+		<git>https://github.com/madhephaestus/carl-the-hexapod.git</git>
+		<file>DefaultDhSolver.groovy</file>
+	</kinematics>
+<link>
+	<name>rightRocker</name>
+	<deviceName>virtual</deviceName>
+	<type>virtual</type>
+	<index>2</index>
+	<scale>1.0</scale>
+	<upperLimit>149.0</upperLimit>
+	<lowerLimit>90.0</lowerLimit>
+	<upperVelocity>233.7089552238806</upperVelocity>
+	<lowerVelocity>-233.7089552238806</lowerVelocity>
+	<staticOffset>128.0</staticOffset>
+	<deviceTheoreticalMax>2.147483647E9</deviceTheoreticalMax>
+	<deviceTheoreticalMin>-2.147483648E9</deviceTheoreticalMin>
+	<isLatch>true</isLatch>
+	<indexLatch>105.0</indexLatch>
+	<isStopOnLatch>false</isStopOnLatch>
+	<homingTPS>10000000</homingTPS>
+
+	<vitamins>
+
+		<vitamin>
+			<name>electroMechanical</name>
+			<type>hobbyServo</type>
+			<id>standardMicro</id>
+			<pose>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+			</pose>
+		</vitamin>
+
+		<vitamin>
+			<name>shaft</name>
+			<type>hobbyServoHorn</type>
+			<id>standardMicro1</id>
+			<pose>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+			</pose>
+		</vitamin>
+
+	</vitamins>
+	<passive>true</passive>
+	<mass>0.001</mass>
+	<centerOfMassFromCentroid>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>0.0</rotx>
+	<roty>0.0</roty>
+	<rotz>0.0</rotz>
+</centerOfMassFromCentroid>
+	<imuFromCentroid>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>0.0</rotx>
+	<roty>0.0</roty>
+	<rotz>0.0</rotz>
+</imuFromCentroid>
+
+	<DHParameters>
+		<Delta>-25.0</Delta>
+		<Theta>0.0</Theta>
+		<Radius>45.0</Radius>
+		<Alpha>90.0</Alpha>
+
+		<mobilebase>
+	<cadEngine>
+		<git>https://github.com/madhephaestus/carl-the-hexapod.git</git>
+		<file>ThreeDPrintCad.groovy</file>
+	</cadEngine>
+	<driveEngine>
+		<git>https://github.com/madhephaestus/carl-the-hexapod.git</git>
+		<file>WalkingDriveEngine.groovy</file>
+	</driveEngine>
+
+<name>fixedWheelRight</name>
+<drivable>
+
+<name>Center_Right</name>
+	<cadEngine>
+		<git>https://github.com/NeuronRobotics/NASACurisoity.git</git>
+		<file>fixed_wheel.groovy</file>
+	</cadEngine>
+	<kinematics>
+		<git>https://github.com/madhephaestus/carl-the-hexapod.git</git>
+		<file>DefaultDhSolver.groovy</file>
+	</kinematics>
+<link>
+	<name>cr_wheel</name>
+	<deviceName>pid</deviceName>
+	<type>pid</type>
+	<index>4</index>
+	<scale>0.33</scale>
+	<upperLimit>1000000.0</upperLimit>
+	<lowerLimit>-1000000.0</lowerLimit>
+	<upperVelocity>425.3213478064224</upperVelocity>
+	<lowerVelocity>-425.3213478064224</lowerVelocity>
+	<staticOffset>122.2910447761194</staticOffset>
+	<deviceTheoreticalMax>2.147483647E9</deviceTheoreticalMax>
+	<deviceTheoreticalMin>-2.147483648E9</deviceTheoreticalMin>
+	<isLatch>true</isLatch>
+	<indexLatch>128.0</indexLatch>
+	<isStopOnLatch>false</isStopOnLatch>
+	<homingTPS>10000000</homingTPS>
+
+	<vitamins>
+
+		<vitamin>
+			<name>electroMechanical</name>
+			<type>hobbyServo</type>
+			<id>standardMicro</id>
+			<pose>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+			</pose>
+		</vitamin>
+
+		<vitamin>
+			<name>shaft</name>
+			<type>hobbyServoHorn</type>
+			<id>standardMicro1</id>
+			<pose>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+			</pose>
+		</vitamin>
+
+	</vitamins>
+	<passive>false</passive>
+	<mass>0.05</mass>
+	<centerOfMassFromCentroid>
+	<x>-18.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>0.0</rotx>
+	<roty>0.0</roty>
+	<rotz>0.0</rotz>
+</centerOfMassFromCentroid>
+	<imuFromCentroid>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>0.0</rotx>
+	<roty>0.0</roty>
+	<rotz>0.0</rotz>
+</imuFromCentroid>
+
+	<DHParameters>
+		<Delta>0.0</Delta>
+		<Theta>0.0</Theta>
+		<Radius>18.0</Radius>
+		<Alpha>-90.0</Alpha>
+	</DHParameters>
+
+</link>
+
+<ZframeToRAS
+>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+
+</ZframeToRAS>
+
+<baseToZframe>
+
+	<x>-73.0</x>
+	<y>0.0</y>
+	<z>29.0</z>
+	<rotw>0.7071067811637124</rotw>
+	<rotx>-0.7071067811637123</rotx>
+	<roty>-5.682767991797112E-6</roty>
+	<rotz>-5.682767991797108E-6</rotz>
+
+</baseToZframe>
+
+</drivable>
+
+<ZframeToRAS>
+
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+
+</ZframeToRAS>
+
+<baseToZframe>
+
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+
+</baseToZframe>
+	<mass>0.001</mass>
+	<centerOfMassFromCentroid>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+</centerOfMassFromCentroid>
+	<imuFromCentroid>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+</imuFromCentroid>
+
+	<vitamins>
+
+	</vitamins>
+
+</mobilebase>
+
+	</DHParameters>
+
+</link>
+<link>
+	<name>br_steer</name>
+	<deviceName>dyio</deviceName>
+	<type>servo-rotory</type>
+	<index>2</index>
+	<scale>1.0</scale>
+	<upperLimit>255.0</upperLimit>
+	<lowerLimit>0.0</lowerLimit>
+	<upperVelocity>233.7089552238806</upperVelocity>
+	<lowerVelocity>-233.7089552238806</lowerVelocity>
+	<staticOffset>133.7089552238806</staticOffset>
+	<deviceTheoreticalMax>2.147483647E9</deviceTheoreticalMax>
+	<deviceTheoreticalMin>-2.147483648E9</deviceTheoreticalMin>
+	<isLatch>true</isLatch>
+	<indexLatch>105.0</indexLatch>
+	<isStopOnLatch>false</isStopOnLatch>
+	<homingTPS>10000000</homingTPS>
+
+	<vitamins>
+
+		<vitamin>
+			<name>electroMechanical</name>
+			<type>hobbyServo</type>
+			<id>standardMicro</id>
+			<pose>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+			</pose>
+		</vitamin>
+
+		<vitamin>
+			<name>shaft</name>
+			<type>hobbyServoHorn</type>
+			<id>standardMicro1</id>
+			<pose>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+			</pose>
+		</vitamin>
+
+	</vitamins>
+	<passive>false</passive>
+	<mass>0.001</mass>
+	<centerOfMassFromCentroid>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>0.0</rotx>
+	<roty>0.0</roty>
+	<rotz>0.0</rotz>
+</centerOfMassFromCentroid>
+	<imuFromCentroid>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>0.0</rotx>
+	<roty>0.0</roty>
+	<rotz>0.0</rotz>
+</imuFromCentroid>
+
+	<DHParameters>
+		<Delta>30.0</Delta>
+		<Theta>0.0</Theta>
+		<Radius>0.0</Radius>
+		<Alpha>-90.0</Alpha>
+	</DHParameters>
+
+</link>
+<link>
+	<name>br_wheel</name>
+	<deviceName>pid</deviceName>
+	<type>pid</type>
+	<index>3</index>
+	<scale>0.33</scale>
+	<upperLimit>1000000.0</upperLimit>
+	<lowerLimit>-1000000.0</lowerLimit>
+	<upperVelocity>412.25607714480515</upperVelocity>
+	<lowerVelocity>-412.25607714480515</lowerVelocity>
+	<staticOffset>109.22577411450214</staticOffset>
+	<deviceTheoreticalMax>2.147483647E9</deviceTheoreticalMax>
+	<deviceTheoreticalMin>-2.147483648E9</deviceTheoreticalMin>
+	<isLatch>true</isLatch>
+	<indexLatch>133.0</indexLatch>
+	<isStopOnLatch>false</isStopOnLatch>
+	<homingTPS>10000000</homingTPS>
+
+	<vitamins>
+
+		<vitamin>
+			<name>electroMechanical</name>
+			<type>hobbyServo</type>
+			<id>standardMicro</id>
+			<pose>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+			</pose>
+		</vitamin>
+
+		<vitamin>
+			<name>shaft</name>
+			<type>hobbyServoHorn</type>
+			<id>standardMicro1</id>
+			<pose>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+			</pose>
+		</vitamin>
+
+	</vitamins>
+	<passive>false</passive>
+	<mass>0.05</mass>
+	<centerOfMassFromCentroid>
+	<x>-18.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>0.0</rotx>
+	<roty>0.0</roty>
+	<rotz>0.0</rotz>
+</centerOfMassFromCentroid>
+	<imuFromCentroid>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>0.0</rotx>
+	<roty>0.0</roty>
+	<rotz>0.0</rotz>
+</imuFromCentroid>
+
+	<DHParameters>
+		<Delta>0.0</Delta>
+		<Theta>0.0</Theta>
+		<Radius>18.0</Radius>
+		<Alpha>-90.0</Alpha>
+	</DHParameters>
+
+</link>
+
+<ZframeToRAS
+>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+
+</ZframeToRAS>
+
+<baseToZframe>
+
+	<x>28.0</x>
+	<y>51.5</y>
+	<z>29.0</z>
+	<rotw>0.7071067811865444</rotw>
+	<rotx>0.7071067811865442</rotx>
+	<roty>6.818941599633328E-8</roty>
+	<rotz>-6.818941599633326E-8</rotz>
+
+</baseToZframe>
+
+</steerable>
+<steerable>
+
+<name>Front_Right</name>
+	<cadEngine>
+		<git>https://github.com/NeuronRobotics/NASACurisoity.git</git>
+		<file>steer_wheel.groovy</file>
+	</cadEngine>
+	<kinematics>
+		<git>https://github.com/madhephaestus/carl-the-hexapod.git</git>
+		<file>DefaultDhSolver.groovy</file>
+	</kinematics>
+<link>
+	<name>fr_steer</name>
+	<deviceName>dyio</deviceName>
+	<type>servo-rotory</type>
+	<index>3</index>
+	<scale>1.0</scale>
+	<upperLimit>255.0</upperLimit>
+	<lowerLimit>0.0</lowerLimit>
+	<upperVelocity>233.7089552238806</upperVelocity>
+	<lowerVelocity>-233.7089552238806</lowerVelocity>
+	<staticOffset>133.7089552238806</staticOffset>
+	<deviceTheoreticalMax>2.147483647E9</deviceTheoreticalMax>
+	<deviceTheoreticalMin>-2.147483648E9</deviceTheoreticalMin>
+	<isLatch>true</isLatch>
+	<indexLatch>105.0</indexLatch>
+	<isStopOnLatch>false</isStopOnLatch>
+	<homingTPS>10000000</homingTPS>
+
+	<vitamins>
+
+		<vitamin>
+			<name>electroMechanical</name>
+			<type>hobbyServo</type>
+			<id>standardMicro</id>
+			<pose>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+			</pose>
+		</vitamin>
+
+		<vitamin>
+			<name>shaft</name>
+			<type>hobbyServoHorn</type>
+			<id>standardMicro1</id>
+			<pose>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+			</pose>
+		</vitamin>
+
+	</vitamins>
+	<passive>false</passive>
+	<mass>0.001</mass>
+	<centerOfMassFromCentroid>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>0.0</rotx>
+	<roty>0.0</roty>
+	<rotz>0.0</rotz>
+</centerOfMassFromCentroid>
+	<imuFromCentroid>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>0.0</rotx>
+	<roty>0.0</roty>
+	<rotz>0.0</rotz>
+</imuFromCentroid>
+
+	<DHParameters>
+		<Delta>0.0</Delta>
+		<Theta>0.0</Theta>
+		<Radius>0.0</Radius>
+		<Alpha>-90.0</Alpha>
+	</DHParameters>
+
+</link>
+<link>
+	<name>fr_wheel</name>
+	<deviceName>pid</deviceName>
+	<type>pid</type>
+	<index>5</index>
+	<scale>0.33</scale>
+	<upperLimit>1000000.0</upperLimit>
+	<lowerLimit>-1000000.0</lowerLimit>
+	<upperVelocity>423.4183627317955</upperVelocity>
+	<lowerVelocity>-423.4183627317955</lowerVelocity>
+	<staticOffset>120.38805970149252</staticOffset>
+	<deviceTheoreticalMax>2.147483647E9</deviceTheoreticalMax>
+	<deviceTheoreticalMin>-2.147483648E9</deviceTheoreticalMin>
+	<isLatch>true</isLatch>
+	<indexLatch>135.0</indexLatch>
+	<isStopOnLatch>false</isStopOnLatch>
+	<homingTPS>10000000</homingTPS>
+
+	<vitamins>
+
+		<vitamin>
+			<name>electroMechanical</name>
+			<type>hobbyServo</type>
+			<id>standardMicro</id>
+			<pose>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+			</pose>
+		</vitamin>
+
+		<vitamin>
+			<name>shaft</name>
+			<type>hobbyServoHorn</type>
+			<id>standardMicro1</id>
+			<pose>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+			</pose>
+		</vitamin>
+
+	</vitamins>
+	<passive>false</passive>
+	<mass>0.05</mass>
+	<centerOfMassFromCentroid>
+	<x>-18.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>0.0</rotx>
+	<roty>0.0</roty>
+	<rotz>0.0</rotz>
+</centerOfMassFromCentroid>
+	<imuFromCentroid>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>0.0</rotx>
+	<roty>0.0</roty>
+	<rotz>0.0</rotz>
+</imuFromCentroid>
+
+	<DHParameters>
+		<Delta>0.0</Delta>
+		<Theta>0.0</Theta>
+		<Radius>18.0</Radius>
+		<Alpha>-90.0</Alpha>
+	</DHParameters>
+
+</link>
+
+<ZframeToRAS
+>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+
+</ZframeToRAS>
+
+<baseToZframe>
+
+	<x>-78.5</x>
+	<y>73.75</y>
+	<z>0.0</z>
+	<rotw>0.008725098943435386</rotw>
+	<rotx>-0.9999619021083685</rotx>
+	<roty>2.2581029012393413E-6</roty>
+	<rotz>2.587955605911622E-4</rotz>
+
+</baseToZframe>
+
+</steerable>
+
+<ZframeToRAS>
+
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+
+</ZframeToRAS>
+
+<baseToZframe>
+
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+
+</baseToZframe>
+	<mass>0.1</mass>
+	<centerOfMassFromCentroid>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>40.0</z>
+	<rotw>1.0</rotw>
+	<rotx>0.0</rotx>
+	<roty>0.0</roty>
+	<rotz>0.0</rotz>
+</centerOfMassFromCentroid>
+	<imuFromCentroid>
+	<x>0.0</x>
+	<y>0.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>0.0</rotx>
+	<roty>0.0</roty>
+	<rotz>0.0</rotz>
+</imuFromCentroid>
+
+	<vitamins>
+
+	</vitamins>
+
+</mobilebase>
+
+</root>

@@ -97,7 +97,20 @@ public class TransformNR {
     this.setZ(z);
     this.setRotation(q);
   }
-
+  /**
+   * Instantiates a new transform nr.
+   *
+   * @param x the x
+   * @param y the y
+   * @param z the z
+   * @param q the q
+   */
+  public TransformNR(double x, double y, double z) {
+    this.setX(x);
+    this.setY(y);
+    this.setZ(z);
+    this.setRotation(new RotationNR());
+  }
   /**
    * Instantiates a new transform nr.
    *
@@ -209,6 +222,11 @@ public class TransformNR {
     } catch (Exception ex) {
       return "Transform error" + ex.getLocalizedMessage();
     }
+  }
+  public String toPositionString() {
+	DecimalFormat decimalFormat = new DecimalFormat("000.00");
+
+	  return decimalFormat.format(x)+" "+decimalFormat.format(y)+" "+decimalFormat.format(z);
   }
 
   /**
@@ -456,7 +474,7 @@ public class TransformNR {
    */
   public String getXml() {
     String xml =
-        "\t<x>" + getX() + "</x>\n" + "\t<y>" + getY() + "</y>\n" + "\t<z>" + getZ() + "</z>\n";
+        "\n\t<x>" + getX() + "</x>\n" + "\t<y>" + getY() + "</y>\n" + "\t<z>" + getZ() + "</z>\n";
     if (Double.isNaN(getRotation().getRotationMatrix2QuaturnionW())
         || Double.isNaN(getRotation().getRotationMatrix2QuaturnionX())
         || Double.isNaN(getRotation().getRotationMatrix2QuaturnionY())
@@ -467,7 +485,7 @@ public class TransformNR {
     xml += "\t<rotw>" + getRotation().getRotationMatrix2QuaturnionW() + "</rotw>\n" + "\t<rotx>"
         + getRotation().getRotationMatrix2QuaturnionX() + "</rotx>\n" + "\t<roty>"
         + getRotation().getRotationMatrix2QuaturnionY() + "</roty>\n" + "\t<rotz>"
-        + getRotation().getRotationMatrix2QuaturnionZ() + "</rotz>";
+        + getRotation().getRotationMatrix2QuaturnionZ() + "</rotz>\n";
 
     return xml;
   }
