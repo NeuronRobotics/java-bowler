@@ -223,11 +223,23 @@ public class TransformNR {
       return "Transform error" + ex.getLocalizedMessage();
     }
   }
+  public String toSimpleString() {
+	  return toPositionString()+" "+toAngleString();
+  }
   public String toPositionString() {
 	DecimalFormat decimalFormat = new DecimalFormat("000.00");
 
-	  return decimalFormat.format(x)+" "+decimalFormat.format(y)+" "+decimalFormat.format(z);
+	  return 	"x="+decimalFormat.format(x)+" "+
+	  			"y="+decimalFormat.format(y)+" "+
+	  			"z="+decimalFormat.format(z);
   }
+  public String toAngleString() {
+		DecimalFormat decimalFormat = new DecimalFormat("000.00");
+
+		  return 	"az="+decimalFormat.format(Math.toDegrees(getRotation().getRotationAzimuth()))+" "+
+		  "el="+decimalFormat.format(Math.toDegrees(getRotation().getRotationElevation()))+" "+
+		  "tl="+decimalFormat.format(Math.toDegrees(getRotation().getRotationTilt()));
+	  }
 
   /**
    * Gets the matrix string.
