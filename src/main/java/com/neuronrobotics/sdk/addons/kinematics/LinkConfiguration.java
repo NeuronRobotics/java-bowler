@@ -952,7 +952,7 @@ public class LinkConfiguration implements ITransformNRChangeListener,IVitaminHol
 //	private String shaftType = "hobbyServoHorn";
 //	private String shaftSize = "standardMicro1";
 
-	private VitaminLocation getCoreShaftPart() {
+	public VitaminLocation getShaftVitamin() {
 		for(VitaminLocation loc:vitamins)
 			if(loc.getName().contentEquals("shaft"))
 				return loc;
@@ -961,7 +961,7 @@ public class LinkConfiguration implements ITransformNRChangeListener,IVitaminHol
 		return e;
 	}
 
-	private VitaminLocation getCoreEmPart() {
+	public VitaminLocation getElectroMechanicalVitamin() {
 		for(VitaminLocation loc:vitamins)
 			if(loc.getName().contentEquals("electroMechanical"))
 				return loc;
@@ -971,38 +971,38 @@ public class LinkConfiguration implements ITransformNRChangeListener,IVitaminHol
 	}
 
 	public String getElectroMechanicalType() {
-		return getCoreEmPart().getType();
+		return getElectroMechanicalVitamin().getType();
 	}
 
 	public void setElectroMechanicalType(String electroMechanicalType) {
-		getCoreEmPart().setType(electroMechanicalType);
+		getElectroMechanicalVitamin().setType(electroMechanicalType);
 		fireChangeEvent();
 	}
 
 	public String getElectroMechanicalSize() {
-		return getCoreEmPart().getSize();
+		return getElectroMechanicalVitamin().getSize();
 	}
 
 	public void setElectroMechanicalSize(String electroMechanicalSize) {
-		getCoreEmPart().setSize(electroMechanicalSize);
+		getElectroMechanicalVitamin().setSize(electroMechanicalSize);
 		fireChangeEvent();
 	}
 
 	public String getShaftType() {
-		return getCoreShaftPart().getType();
+		return getShaftVitamin().getType();
 	}
 
 	public void setShaftType(String shaftType) {
-		getCoreShaftPart().setType(shaftType);;
+		getShaftVitamin().setType(shaftType);;
 		fireChangeEvent();
 	}
 
 	public String getShaftSize() {
-		return getCoreShaftPart().getSize();
+		return getShaftVitamin().getSize();
 	}
 
 	public void setShaftSize(String shaftSize) {
-		getCoreShaftPart().setSize(shaftSize);
+		getShaftVitamin().setSize(shaftSize);
 		fireChangeEvent();
 	}
 

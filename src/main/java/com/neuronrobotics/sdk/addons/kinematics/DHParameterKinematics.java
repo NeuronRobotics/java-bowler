@@ -861,4 +861,25 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 		super.setTimeProvider(t);
 		getDhChain().setTimeProvider(t);
 	}
+	
+	public VitaminLocation getShaftVitamin(int index) {
+		return getLinkConfiguration(index).getShaftVitamin();
+	}
+
+	public VitaminLocation getElectroMechanicalVitamin(int index) {
+		return getLinkConfiguration(index).getElectroMechanicalVitamin();
+	}
+	public ArrayList<VitaminLocation> getVitamins(int index) {
+		return getLinkConfiguration(index).getVitamins();
+	}
+	
+	public void addVitamin(int index,VitaminLocation location) {
+		getLinkConfiguration(index).addVitamin(location);
+	}
+	public void removeVitamin(int index,VitaminLocation loc) {
+		getLinkConfiguration(index).removeVitamin(loc);
+	}
+	public IVitaminHolder getVitaminHolder(int index) {
+		return getLinkConfiguration(index);
+	}
 }

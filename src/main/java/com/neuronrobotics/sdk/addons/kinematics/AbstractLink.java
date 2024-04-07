@@ -21,7 +21,7 @@ import javafx.scene.transform.Affine;
  * The Class AbstractLink.
  */
 // Kevin Shouldn't the Link's channel be kept in this level of Abstraction? The way I designg AbstractCartesianPositonDevice  Requires this
-public abstract class AbstractLink extends TimeKeeper implements  IFlushable{
+public abstract class AbstractLink extends TimeKeeper implements  IFlushable,IVitaminHolder {
 
 	/** The target value. */
 	private double targetValue=0;
@@ -45,6 +45,24 @@ public abstract class AbstractLink extends TimeKeeper implements  IFlushable{
 	 * The object for communicating IMU information and registering it with the hardware
 	 */
 	private IMU imu = new IMU();
+	
+	public VitaminLocation getShaftVitamin() {
+		return conf.getShaftVitamin();
+	}
+
+	public VitaminLocation getElectroMechanicalVitamin() {
+		return conf.getElectroMechanicalVitamin();
+	}
+	public ArrayList<VitaminLocation> getVitamins() {
+		return conf.getVitamins();
+	}
+	public void addVitamin(VitaminLocation location) {
+		conf.addVitamin(location);
+	}
+	public void removeVitamin(VitaminLocation loc) {
+		conf.removeVitamin(loc);
+	}
+	
 	/**
 	 * Override this method to specify a larger range
 	 * @return the maximum value possible for a link
