@@ -62,6 +62,9 @@ public abstract class AbstractLink extends TimeKeeper implements  IFlushable,IVi
 	public void removeVitamin(VitaminLocation loc) {
 		conf.removeVitamin(loc);
 	}
+	public ArrayList<VitaminLocation>getNonActuatorVitamins(){
+		return conf.getNonActuatorVitamins();
+	}
 	
 	/**
 	 * Override this method to specify a larger range

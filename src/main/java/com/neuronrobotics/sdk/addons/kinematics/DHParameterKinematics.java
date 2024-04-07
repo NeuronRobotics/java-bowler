@@ -870,14 +870,16 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 		return getLinkConfiguration(index).getElectroMechanicalVitamin();
 	}
 	public ArrayList<VitaminLocation> getVitamins(int index) {
-		return getLinkConfiguration(index).getVitamins();
+		return getVitaminHolder(index).getVitamins();
 	}
-	
+	public ArrayList<VitaminLocation>getNonActuatorVitamins(int index){
+		return getLinkConfiguration(index).getNonActuatorVitamins();
+	}
 	public void addVitamin(int index,VitaminLocation location) {
-		getLinkConfiguration(index).addVitamin(location);
+		getVitaminHolder(index).addVitamin(location);
 	}
 	public void removeVitamin(int index,VitaminLocation loc) {
-		getLinkConfiguration(index).removeVitamin(loc);
+		getVitaminHolder(index).removeVitamin(loc);
 	}
 	public IVitaminHolder getVitaminHolder(int index) {
 		return getLinkConfiguration(index);

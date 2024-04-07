@@ -951,7 +951,13 @@ public class LinkConfiguration implements ITransformNRChangeListener,IVitaminHol
 //	private String electroMechanicalSize = "standardMicro";
 //	private String shaftType = "hobbyServoHorn";
 //	private String shaftSize = "standardMicro1";
-
+	public ArrayList<VitaminLocation>getNonActuatorVitamins() {
+		ArrayList<VitaminLocation> back = new ArrayList<>();
+		back.addAll(vitamins);
+		back.remove(getShaftVitamin());
+		back.remove(getElectroMechanicalVitamin());
+		return back;
+	}
 	public VitaminLocation getShaftVitamin() {
 		for(VitaminLocation loc:vitamins)
 			if(loc.getName().contentEquals("shaft"))
