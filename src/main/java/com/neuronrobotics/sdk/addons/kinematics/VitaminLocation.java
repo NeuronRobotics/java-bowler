@@ -169,12 +169,17 @@ public class VitaminLocation implements ITransformNRChangeListener {
 	 * @param location the location to set
 	 */
 	public void setLocation(TransformNR l) {
+		if(l==location) {
+			fireChangeEvent();
+			return;
+		}			
 		if (l==null)
 			throw new RuntimeException("location can not be null");
 		if(l!=null)
 			l.removeChangeListener(this);
 		this.location = l;
 		location.addChangeListener(this);
+		fireChangeEvent();
 	}
 
 	@Override
