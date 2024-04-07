@@ -64,6 +64,7 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 
 	private HashMap<String, ParallelGroup> parallelGroups = new HashMap<String, ParallelGroup>();
 	private ICalcLimbHomeProvider homeProvider = null;
+	private Runnable configurationUpdate = ()->{};
 
 	/**
 	 * Instantiates a new mobile base.
@@ -71,6 +72,14 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	public MobileBase() {
 	}// used for building new bases live
 
+	public void fireConfigurationUpdate() {
+		if(configurationUpdate!=null)
+			try {
+				configurationUpdate.run();
+			}catch(Throwable t) {
+				t.printStackTrace();
+			}
+	}
 	/**
 	 * Calc home.
 	 *
@@ -212,6 +221,7 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 		removeLimFromParallel(limb);
 		ParallelGroup g = getParallelGroup(name);
 		g.addLimb(limb, tipOffset, relativeLimb, relativeIndex);
+		fireConfigurationUpdate();
 	}
 
 	private void removeLimFromParallel(DHParameterKinematics limb) {
@@ -222,6 +232,7 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 		if (g.getConstituantLimbs().size() == 0) {
 			getParallelGroups().remove(g.getNameOfParallelGroup());
 		}
+		fireConfigurationUpdate();
 	}
 
 	/**
@@ -592,12 +603,12 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 		if(vitamins.contains(location))
 			return;
 		vitamins.add(location);
-		
+		fireConfigurationUpdate();
 	}
 	public void removeVitamin(VitaminLocation loc) {
 		if(vitamins.contains(loc))
 			vitamins.remove(loc);
-		//fireChangeEvent();
+		fireConfigurationUpdate();//fireChangeEvent();
 	}
 
 	/**
@@ -816,6 +827,7 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	 */
 	public void setWalkingDriveEngine(IDriveEngine walkingDriveEngine) {
 		this.walkingDriveEngine = walkingDriveEngine;
+		fireConfigurationUpdate();
 	}
 
 	/**
@@ -877,6 +889,7 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	public void setGitWalkingEngine(String[] walkingEngine) {
 		if (walkingEngine != null && walkingEngine[0] != null && walkingEngine[1] != null)
 			this.walkingEngine = walkingEngine;
+		fireConfigurationUpdate();
 	}
 
 	/**
@@ -897,6 +910,7 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	 */
 	public void setGitSelfSource(String[] selfSource) {
 		this.selfSource = selfSource;
+		fireConfigurationUpdate();
 	}
 
 	public double getMassKg() {
@@ -908,6 +922,7 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 		System.out.println("Mass of device " + getScriptingName() + " is " + mass);
 		//new RuntimeException().printStackTrace();
 		this.mass = mass;
+		fireConfigurationUpdate();
 	}
 
 	public TransformNR getCenterOfMassFromCentroid() {
@@ -916,6 +931,7 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 
 	public void setCenterOfMassFromCentroid(TransformNR centerOfMassFromCentroid) {
 		this.centerOfMassFromCentroid = centerOfMassFromCentroid;
+		fireConfigurationUpdate();
 	}
 
 	public TransformNR getIMUFromCentroid() {
@@ -924,10 +940,12 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 
 	public void setIMUFromCentroid(TransformNR centerOfMassFromCentroid) {
 		this.IMUFromCentroid = centerOfMassFromCentroid;
+		fireConfigurationUpdate();
 	}
 
 	public void setFiducialToGlobalTransform(TransformNR globe) {
 		setGlobalToFiducialTransform(globe);
+		fireConfigurationUpdate();
 	}
 
 
@@ -942,6 +960,7 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	public void shutDownParallel(ParallelGroup group) {
 		group.close();
 		parallelGroups.remove(group.getNameOfParallelGroup());
+		fireConfigurationUpdate();
 	}
 
 	private HashMap<String, ParallelGroup> getParallelGroups() {
@@ -1057,6 +1076,7 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	public void event(LinkConfiguration newConf) {
 		// TODO Auto-generated method stub
 		fireIOnMobileBaseRenderChange();
+		fireConfigurationUpdate();
 	}
 
 	@Override
@@ -1093,6 +1113,20 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 		for(DHParameterKinematics k:getAllDHChains()) {
 			k.setTimeProvider(getTimeProvider());
 		}
+	}
+
+	/**
+	 * @return the configurationUpdate
+	 */
+	public Runnable getConfigurationUpdate() {
+		return configurationUpdate;
+	}
+
+	/**
+	 * @param configurationUpdate the configurationUpdate to set
+	 */
+	public void setConfigurationUpdate(Runnable configurationUpdate) {
+		this.configurationUpdate = configurationUpdate;
 	}
 
 }
