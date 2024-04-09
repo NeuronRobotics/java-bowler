@@ -6,7 +6,7 @@ public enum VitaminFrame {
 	// the place on the link where the previous one ends, where the shaft for the motor that turns it should be
 	LinkOrigin("origin"), 
 	// The tip of the previous link. the place where the motor that turns a link would be mounted. if the first link this would be the limbs root
-	LastLinkTip("lastlink");
+	previousLinkTip("lastlink");
 
 	private String text;
 

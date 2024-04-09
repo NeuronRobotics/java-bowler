@@ -52,7 +52,7 @@ public class VitaminLocation implements ITransformNRChangeListener {
 			//use default
 		}
 		if(name.contentEquals("electroMechanical")) {
-			setFrame(VitaminFrame.LastLinkTip);
+			setFrame(VitaminFrame.previousLinkTip);
 		}
 		if(name.contentEquals("shaft")) {
 			setFrame(VitaminFrame.LinkOrigin);
