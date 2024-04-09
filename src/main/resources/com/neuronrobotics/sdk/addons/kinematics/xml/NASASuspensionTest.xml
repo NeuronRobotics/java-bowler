@@ -54,6 +54,7 @@
 	<roty>-0.0</roty>
 	<rotz>-0.0</rotz>
 			</pose>
+			<frame>lastlink</frame>
 		</vitamin>
 
 		<vitamin>
@@ -69,6 +70,7 @@
 	<roty>-0.0</roty>
 	<rotz>-0.0</rotz>
 			</pose>
+			<frame>origin</frame>
 		</vitamin>
 
 	</vitamins>
@@ -134,6 +136,7 @@
 	<roty>-0.0</roty>
 	<rotz>-0.0</rotz>
 			</pose>
+			<frame>lastlink</frame>
 		</vitamin>
 
 		<vitamin>
@@ -149,6 +152,7 @@
 	<roty>-0.0</roty>
 	<rotz>-0.0</rotz>
 			</pose>
+			<frame>origin</frame>
 		</vitamin>
 
 	</vitamins>
@@ -214,6 +218,7 @@
 	<roty>-0.0</roty>
 	<rotz>-0.0</rotz>
 			</pose>
+			<frame>lastlink</frame>
 		</vitamin>
 
 		<vitamin>
@@ -229,6 +234,7 @@
 	<roty>-0.0</roty>
 	<rotz>-0.0</rotz>
 			</pose>
+			<frame>origin</frame>
 		</vitamin>
 
 	</vitamins>
@@ -294,6 +300,7 @@
 	<roty>-0.0</roty>
 	<rotz>-0.0</rotz>
 			</pose>
+			<frame>lastlink</frame>
 		</vitamin>
 
 		<vitamin>
@@ -309,6 +316,7 @@
 	<roty>-0.0</roty>
 	<rotz>-0.0</rotz>
 			</pose>
+			<frame>origin</frame>
 		</vitamin>
 
 	</vitamins>
@@ -411,6 +419,7 @@
 	<roty>-0.0</roty>
 	<rotz>-0.0</rotz>
 			</pose>
+			<frame>lastlink</frame>
 		</vitamin>
 
 		<vitamin>
@@ -426,6 +435,7 @@
 	<roty>-0.0</roty>
 	<rotz>-0.0</rotz>
 			</pose>
+			<frame>origin</frame>
 		</vitamin>
 
 	</vitamins>
@@ -491,6 +501,7 @@
 	<roty>-0.0</roty>
 	<rotz>-0.0</rotz>
 			</pose>
+			<frame>lastlink</frame>
 		</vitamin>
 
 		<vitamin>
@@ -506,6 +517,7 @@
 	<roty>-0.0</roty>
 	<rotz>-0.0</rotz>
 			</pose>
+			<frame>origin</frame>
 		</vitamin>
 
 	</vitamins>
@@ -608,6 +620,7 @@
 	<roty>-0.0</roty>
 	<rotz>-0.0</rotz>
 			</pose>
+			<frame>lastlink</frame>
 		</vitamin>
 
 		<vitamin>
@@ -623,6 +636,7 @@
 	<roty>-0.0</roty>
 	<rotz>-0.0</rotz>
 			</pose>
+			<frame>origin</frame>
 		</vitamin>
 
 	</vitamins>
@@ -708,6 +722,7 @@
 	<roty>-0.0</roty>
 	<rotz>-0.0</rotz>
 			</pose>
+			<frame>lastlink</frame>
 		</vitamin>
 
 		<vitamin>
@@ -723,6 +738,7 @@
 	<roty>-0.0</roty>
 	<rotz>-0.0</rotz>
 			</pose>
+			<frame>origin</frame>
 		</vitamin>
 
 	</vitamins>
@@ -867,6 +883,7 @@
 	<roty>-0.0</roty>
 	<rotz>-0.0</rotz>
 			</pose>
+			<frame>lastlink</frame>
 		</vitamin>
 
 		<vitamin>
@@ -882,6 +899,7 @@
 	<roty>-0.0</roty>
 	<rotz>-0.0</rotz>
 			</pose>
+			<frame>origin</frame>
 		</vitamin>
 
 	</vitamins>
@@ -947,6 +965,7 @@
 	<roty>-0.0</roty>
 	<rotz>-0.0</rotz>
 			</pose>
+			<frame>lastlink</frame>
 		</vitamin>
 
 		<vitamin>
@@ -962,6 +981,7 @@
 	<roty>-0.0</roty>
 	<rotz>-0.0</rotz>
 			</pose>
+			<frame>origin</frame>
 		</vitamin>
 
 	</vitamins>
@@ -1064,6 +1084,7 @@
 	<roty>-0.0</roty>
 	<rotz>-0.0</rotz>
 			</pose>
+			<frame>lastlink</frame>
 		</vitamin>
 
 		<vitamin>
@@ -1079,6 +1100,7 @@
 	<roty>-0.0</roty>
 	<rotz>-0.0</rotz>
 			</pose>
+			<frame>origin</frame>
 		</vitamin>
 
 	</vitamins>
@@ -1164,6 +1186,7 @@
 	<roty>-0.0</roty>
 	<rotz>-0.0</rotz>
 			</pose>
+			<frame>lastlink</frame>
 		</vitamin>
 
 		<vitamin>
@@ -1179,6 +1202,7 @@
 	<roty>-0.0</roty>
 	<rotz>-0.0</rotz>
 			</pose>
+			<frame>origin</frame>
 		</vitamin>
 
 	</vitamins>
@@ -1323,6 +1347,7 @@
 	<roty>-0.0</roty>
 	<rotz>-0.0</rotz>
 			</pose>
+			<frame>lastlink</frame>
 		</vitamin>
 
 		<vitamin>
@@ -1338,6 +1363,7 @@
 	<roty>-0.0</roty>
 	<rotz>-0.0</rotz>
 			</pose>
+			<frame>origin</frame>
 		</vitamin>
 
 	</vitamins>
@@ -1403,6 +1429,7 @@
 	<roty>-0.0</roty>
 	<rotz>-0.0</rotz>
 			</pose>
+			<frame>lastlink</frame>
 		</vitamin>
 
 		<vitamin>
@@ -1418,6 +1445,7 @@
 	<roty>-0.0</roty>
 	<rotz>-0.0</rotz>
 			</pose>
+			<frame>origin</frame>
 		</vitamin>
 
 	</vitamins>
@@ -1520,6 +1548,7 @@
 	<roty>-0.0</roty>
 	<rotz>-0.0</rotz>
 			</pose>
+			<frame>lastlink</frame>
 		</vitamin>
 
 		<vitamin>
@@ -1535,6 +1564,7 @@
 	<roty>-0.0</roty>
 	<rotz>-0.0</rotz>
 			</pose>
+			<frame>origin</frame>
 		</vitamin>
 
 	</vitamins>
@@ -1600,6 +1630,7 @@
 	<roty>-0.0</roty>
 	<rotz>-0.0</rotz>
 			</pose>
+			<frame>lastlink</frame>
 		</vitamin>
 
 		<vitamin>
@@ -1615,6 +1646,7 @@
 	<roty>-0.0</roty>
 	<rotz>-0.0</rotz>
 			</pose>
+			<frame>origin</frame>
 		</vitamin>
 
 	</vitamins>

@@ -18,6 +18,8 @@ public class VitaminLocation implements ITransformNRChangeListener {
 	private String size;
 	private TransformNR location=null;
 
+	private VitaminFrame frame=VitaminFrame.DefaultFrame;
+
 	public VitaminLocation(String name, String type, String size, TransformNR location) {
 		this.setName(name);
 		this.setType(type);
@@ -44,7 +46,17 @@ public class VitaminLocation implements ITransformNRChangeListener {
 		if(tf==null)
 			tf=new TransformNR();
 		setLocation(tf);
-				
+		try {
+			setFrame(VitaminFrame.fromString( XmlFactory.getTagValue("frame", vitamins)));
+		}catch(NullPointerException ex) {
+			//use default
+		}
+		if(name.contentEquals("electroMechanical")) {
+			setFrame(VitaminFrame.LastLinkTip);
+		}
+		if(name.contentEquals("shaft")) {
+			setFrame(VitaminFrame.LinkOrigin);
+		}
 	}
 	
 	public void addChangeListener(Runnable r) {
@@ -75,6 +87,7 @@ public class VitaminLocation implements ITransformNRChangeListener {
 				"\t\t\t<type>"+type+"</type>\n"+
 				"\t\t\t<id>"+size+"</id>\n"+
 				"\t\t\t<pose>"+location.getXml()+"\t\t\t</pose>\n"+
+				"\t\t\t<frame>"+getFrame().getText()+"</frame>\n"+
 		"\t\t</vitamin>\n"
 		;
 	}
@@ -185,6 +198,36 @@ public class VitaminLocation implements ITransformNRChangeListener {
 	@Override
 	public void event(TransformNR changed) {
 		fireChangeEvent();
+	}
+
+	/**
+	 * 	
+	// the MobilBase root, or the tip of the link
+	DefaultFrame("default"), 
+	// the place on the link where the previous one ends, where the shaft for the motor that turns it should be
+	LinkOrigin("origin"), 
+	// The tip of the previous link. the place where the motor that turns a link would be mounted. if the first link this would be the limbs root
+	LastLinkTip("lastlink");
+	 * @return the frame
+	 */
+	public VitaminFrame getFrame() {
+		return frame;
+	}
+
+	/**
+	// the MobilBase root, or the tip of the link
+	DefaultFrame("default"), 
+	// the place on the link where the previous one ends, where the shaft for the motor that turns it should be
+	LinkOrigin("origin"), 
+	// The tip of the previous link. the place where the motor that turns a link would be mounted. if the first link this would be the limbs root
+	LastLinkTip("lastlink");
+	 * @param frame the frame to set
+	 */
+	public void setFrame(VitaminFrame frame) {
+		
+		this.frame = frame;
+		fireChangeEvent();
+
 	}
 
 }
