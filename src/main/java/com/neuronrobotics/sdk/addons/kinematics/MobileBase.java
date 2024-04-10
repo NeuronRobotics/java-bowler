@@ -571,6 +571,11 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 
 		try {
 			vitamins = VitaminLocation.getVitamins(doc);
+			for(VitaminLocation vl:vitamins) {
+				vl.addChangeListener(()->{
+					fireConfigurationUpdate();
+				});
+			}
 			return;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -603,6 +608,9 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 		if(vitamins.contains(location))
 			return;
 		vitamins.add(location);
+		location.addChangeListener(()->{
+			fireConfigurationUpdate();
+		});
 		fireConfigurationUpdate();
 	}
 	public void removeVitamin(VitaminLocation loc) {
