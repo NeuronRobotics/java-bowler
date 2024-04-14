@@ -49,13 +49,12 @@ public class VitaminLocation implements ITransformNRChangeListener {
 		try {
 			setFrame(VitaminFrame.fromString( XmlFactory.getTagValue("frame", vitamins)));
 		}catch(NullPointerException ex) {
-			//use default
-		}
-		if(name.contentEquals("electroMechanical")) {
-			setFrame(VitaminFrame.previousLinkTip);
-		}
-		if(name.contentEquals("shaft")) {
-			setFrame(VitaminFrame.LinkOrigin);
+			if(name.contentEquals("electroMechanical")) {
+				setFrame(VitaminFrame.previousLinkTip);
+			}
+			if(name.contentEquals("shaft")) {
+				setFrame(VitaminFrame.LinkOrigin);
+			}
 		}
 	}
 	
