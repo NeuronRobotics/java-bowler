@@ -6,11 +6,13 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.google.gson.annotations.Expose;
 import com.neuronrobotics.sdk.addons.kinematics.math.ITransformNRChangeListener;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
 
 public class VitaminLocation implements ITransformNRChangeListener {
+	@Expose (serialize = false, deserialize = false)
 	ArrayList<Runnable> listeners=new  ArrayList<>();
 
 	private String name;
@@ -19,7 +21,12 @@ public class VitaminLocation implements ITransformNRChangeListener {
 	private TransformNR location=null;
 
 	private VitaminFrame frame=VitaminFrame.DefaultFrame;
-
+	public VitaminLocation() {
+		this.setName("NO NAME");
+		this.setType("NO TYPE");
+		this.setSize("NO SIZE");
+		this.setLocation(new TransformNR());
+	}
 	public VitaminLocation(String name, String type, String size, TransformNR location) {
 		this.setName(name);
 		this.setType(type);
