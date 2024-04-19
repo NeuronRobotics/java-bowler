@@ -720,4 +720,8 @@ public abstract class AbstractLink extends TimeKeeper implements  IFlushable,IVi
 		super.setTimeProvider(t);
 		imu.setTimeProvider(getTimeProvider());
 	}
+	@Override
+	public String toString() {
+		return "Bowler Link "+getLinkConfiguration().getDeviceScriptingName()+" "+getLinkConfiguration().getLinkIndex();
+	}
 }

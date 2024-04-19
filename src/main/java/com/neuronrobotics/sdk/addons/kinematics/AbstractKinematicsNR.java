@@ -1731,4 +1731,8 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 			l.setTimeProvider(getTimeProvider());
 		}
 	}
+	@Override
+	public String toString() {
+		return "Bowler Device "+getScriptingName();
+	}
 }

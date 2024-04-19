@@ -33,7 +33,14 @@ public class VitaminLocation implements ITransformNRChangeListener {
 		this.setSize(size);
 		this.setLocation(location);
 	}
-
+	public VitaminLocation(String name, String type, String size, TransformNR location,IVitaminHolder h) {
+		this(name,type,size,location);
+		try {
+			h.addVitamin(this);
+		}catch(Throwable t){
+			System.out.println("Vitamin "+name+" exists in "+h);
+		}
+	}
 	public VitaminLocation(Element vitamins) {
 		setName(XmlFactory.getTagValue("name", vitamins));
 		setType(XmlFactory.getTagValue("type", vitamins));
