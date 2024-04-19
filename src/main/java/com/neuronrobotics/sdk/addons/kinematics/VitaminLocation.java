@@ -21,12 +21,12 @@ public class VitaminLocation implements ITransformNRChangeListener {
 	private TransformNR location=null;
 
 	private VitaminFrame frame=VitaminFrame.DefaultFrame;
-	public VitaminLocation() {
-		this.setName("NO NAME");
-		this.setType("NO TYPE");
-		this.setSize("NO SIZE");
-		this.setLocation(new TransformNR());
-	}
+//	public VitaminLocation() {
+//		this.setName("NO NAME");
+//		this.setType("NO TYPE");
+//		this.setSize("NO SIZE");
+//		this.setLocation(new TransformNR());
+//	}
 	public VitaminLocation(String name, String type, String size, TransformNR location) {
 		this.setName(name);
 		this.setType(type);
