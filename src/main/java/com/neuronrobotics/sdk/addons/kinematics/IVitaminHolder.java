@@ -4,7 +4,15 @@ import java.util.ArrayList;
 
 public interface IVitaminHolder {
 	ArrayList<VitaminLocation> getVitamins() ;
-	void addVitamin(VitaminLocation location);
+	default void addVitamin(VitaminLocation location) {
+		for(VitaminLocation v:getVitamins()) {
+			if(v.getName().contentEquals(location.getName())) {
+				new RuntimeException("Vitamin Name "+v.getName()+"already exists");
+			}
+		}
+		addVitaminInternal( location);
+	}
+	void addVitaminInternal(VitaminLocation location);
 	void removeVitamin(VitaminLocation loc);
 	default ArrayList<VitaminLocation> getVitamins(VitaminFrame frame){
 		ArrayList<VitaminLocation> copy = new ArrayList<>();
@@ -12,7 +20,6 @@ public interface IVitaminHolder {
 			if(v.getFrame()==frame)
 				copy.add(v);
 		}
-		
 		return copy;
 	}
 	default ArrayList<VitaminLocation> getOriginVitamins(){
