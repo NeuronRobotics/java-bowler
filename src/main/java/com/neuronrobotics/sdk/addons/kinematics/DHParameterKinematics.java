@@ -87,6 +87,10 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 				
 			}
 		});
+		for(int i=0;i<getNumberOfLinks();i++) {
+			getElectroMechanicalVitamin(i);
+			getShaftVitamin(i);
+		}
 	}
 
 	/**
@@ -105,6 +109,10 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 				getFactory().getDyio(lf).addConnectionEventListener(l);
 				return;
 			}
+		for(int i=0;i<getNumberOfLinks();i++) {
+			getElectroMechanicalVitamin(i);
+			getShaftVitamin(i);
+		}
 	}
 
 	/**
