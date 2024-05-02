@@ -902,7 +902,8 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 
 	/**
 	 * Gets the self source.
-	 *
+	 * index 0 is GIT url
+	 * index 1 is filename
 	 * @return the self source
 	 */
 	public String[] getGitSelfSource() {
