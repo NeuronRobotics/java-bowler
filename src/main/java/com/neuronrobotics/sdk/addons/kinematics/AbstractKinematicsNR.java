@@ -729,7 +729,9 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 			throw new IndexOutOfBoundsException("Vector must be " + getNumberOfLinks()
 					+ " links, actual number of links = " + jointSpaceVect.length);
 		}
-
+		double best = getBestTime(jointSpaceVect);
+		if(seconds<best)
+			seconds=best;
 		//synchronized(AbstractKinematicsNR.class) {
 			int except = 0;
 			Exception e = null;
