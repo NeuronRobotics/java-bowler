@@ -224,6 +224,8 @@ public class VitaminLocation implements ITransformNRChangeListener {
 	 * @return the frame
 	 */
 	public VitaminFrame getFrame() {
+		if(frame==null)
+			return VitaminFrame.DefaultFrame;
 		return frame;
 	}
 
@@ -237,7 +239,8 @@ public class VitaminLocation implements ITransformNRChangeListener {
 	 * @param frame the frame to set
 	 */
 	public void setFrame(VitaminFrame frame) {
-		
+		if(frame==null)
+			throw new NullPointerException("Frame can not be null");
 		this.frame = frame;
 		fireChangeEvent();
 
