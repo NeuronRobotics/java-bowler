@@ -372,9 +372,9 @@ public class RotationNR {
 			return getStorage().getAngles(getOrder(), getConvention())[index];
 		} catch (CardanEulerSingularityException e) {
 			try {
-				return eulerFix( Math.toRadians(5),  index);
+				return eulerFix( Math.toRadians(0.001),  index);
 			} catch (CardanEulerSingularityException ex) {
-				return eulerFix(  Math.toRadians(-5),  index);
+				return eulerFix(  Math.toRadians(-0.001),  index);
 	
 			}
 		}
