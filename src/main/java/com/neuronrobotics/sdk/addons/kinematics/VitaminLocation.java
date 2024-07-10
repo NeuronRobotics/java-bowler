@@ -19,6 +19,7 @@ public class VitaminLocation implements ITransformNRChangeListener {
 	private String type;
 	private String size;
 	private TransformNR location=null;
+	private boolean isScript =false;
 
 	private VitaminFrame frame=VitaminFrame.DefaultFrame;
 //	public VitaminLocation() {
@@ -45,7 +46,12 @@ public class VitaminLocation implements ITransformNRChangeListener {
 		setName(XmlFactory.getTagValue("name", vitamins));
 		setType(XmlFactory.getTagValue("type", vitamins));
 		setSize(XmlFactory.getTagValue("id", vitamins));
-
+		String scriptyness=XmlFactory.getTagValue("id", vitamins);
+		if(scriptyness==null) {
+			isScript=false;
+		}else{
+			setScript(Boolean.parseBoolean(scriptyness));
+		}
 		NodeList nodListofLinks = vitamins.getChildNodes();
 		TransformNR tf=null;
 		for (int i = 0; i < nodListofLinks.getLength(); i++) {
@@ -101,6 +107,7 @@ public class VitaminLocation implements ITransformNRChangeListener {
 				"\t\t\t<id>"+size+"</id>\n"+
 				"\t\t\t<pose>"+location.getXml()+"\t\t\t</pose>\n"+
 				"\t\t\t<frame>"+getFrame().getText()+"</frame>\n"+
+				"\t\t\t<script>"+isScript()+"</script>\n"+
 		"\t\t</vitamin>\n"
 		;
 	}
@@ -244,6 +251,13 @@ public class VitaminLocation implements ITransformNRChangeListener {
 		this.frame = frame;
 		fireChangeEvent();
 
+	}
+	public boolean isScript() {
+		return isScript;
+	}
+	public void setScript(boolean isScript) {
+		this.isScript = isScript;
+		fireChangeEvent();
 	}
 
 }

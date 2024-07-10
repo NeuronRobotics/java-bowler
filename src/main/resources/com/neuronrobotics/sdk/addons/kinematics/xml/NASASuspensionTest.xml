@@ -55,6 +55,7 @@
 	<rotz>-0.0</rotz>
 			</pose>
 			<frame>lastlink</frame>
+			<script>false</script>
 		</vitamin>
 
 		<vitamin>
@@ -71,6 +72,7 @@
 	<rotz>-0.0</rotz>
 			</pose>
 			<frame>origin</frame>
+			<script>false</script>
 		</vitamin>
 
 	</vitamins>
@@ -137,6 +139,7 @@
 	<rotz>-0.0</rotz>
 			</pose>
 			<frame>lastlink</frame>
+			<script>false</script>
 		</vitamin>
 
 		<vitamin>
@@ -153,6 +156,7 @@
 	<rotz>-0.0</rotz>
 			</pose>
 			<frame>origin</frame>
+			<script>false</script>
 		</vitamin>
 
 	</vitamins>
@@ -219,6 +223,7 @@
 	<rotz>-0.0</rotz>
 			</pose>
 			<frame>lastlink</frame>
+			<script>false</script>
 		</vitamin>
 
 		<vitamin>
@@ -235,6 +240,7 @@
 	<rotz>-0.0</rotz>
 			</pose>
 			<frame>origin</frame>
+			<script>false</script>
 		</vitamin>
 
 	</vitamins>
@@ -301,6 +307,7 @@
 	<rotz>-0.0</rotz>
 			</pose>
 			<frame>lastlink</frame>
+			<script>false</script>
 		</vitamin>
 
 		<vitamin>
@@ -317,6 +324,7 @@
 	<rotz>-0.0</rotz>
 			</pose>
 			<frame>origin</frame>
+			<script>false</script>
 		</vitamin>
 
 	</vitamins>
@@ -420,6 +428,7 @@
 	<rotz>-0.0</rotz>
 			</pose>
 			<frame>lastlink</frame>
+			<script>false</script>
 		</vitamin>
 
 		<vitamin>
@@ -436,6 +445,7 @@
 	<rotz>-0.0</rotz>
 			</pose>
 			<frame>origin</frame>
+			<script>false</script>
 		</vitamin>
 
 	</vitamins>
@@ -502,6 +512,7 @@
 	<rotz>-0.0</rotz>
 			</pose>
 			<frame>lastlink</frame>
+			<script>false</script>
 		</vitamin>
 
 		<vitamin>
@@ -518,6 +529,7 @@
 	<rotz>-0.0</rotz>
 			</pose>
 			<frame>origin</frame>
+			<script>false</script>
 		</vitamin>
 
 	</vitamins>
@@ -621,6 +633,7 @@
 	<rotz>-0.0</rotz>
 			</pose>
 			<frame>lastlink</frame>
+			<script>false</script>
 		</vitamin>
 
 		<vitamin>
@@ -637,6 +650,7 @@
 	<rotz>-0.0</rotz>
 			</pose>
 			<frame>origin</frame>
+			<script>false</script>
 		</vitamin>
 
 	</vitamins>
@@ -723,6 +737,7 @@
 	<rotz>-0.0</rotz>
 			</pose>
 			<frame>lastlink</frame>
+			<script>false</script>
 		</vitamin>
 
 		<vitamin>
@@ -739,6 +754,7 @@
 	<rotz>-0.0</rotz>
 			</pose>
 			<frame>origin</frame>
+			<script>false</script>
 		</vitamin>
 
 	</vitamins>
@@ -884,6 +900,7 @@
 	<rotz>-0.0</rotz>
 			</pose>
 			<frame>lastlink</frame>
+			<script>false</script>
 		</vitamin>
 
 		<vitamin>
@@ -900,6 +917,7 @@
 	<rotz>-0.0</rotz>
 			</pose>
 			<frame>origin</frame>
+			<script>false</script>
 		</vitamin>
 
 	</vitamins>
@@ -966,6 +984,7 @@
 	<rotz>-0.0</rotz>
 			</pose>
 			<frame>lastlink</frame>
+			<script>false</script>
 		</vitamin>
 
 		<vitamin>
@@ -982,6 +1001,7 @@
 	<rotz>-0.0</rotz>
 			</pose>
 			<frame>origin</frame>
+			<script>false</script>
 		</vitamin>
 
 	</vitamins>
@@ -1085,6 +1105,7 @@
 	<rotz>-0.0</rotz>
 			</pose>
 			<frame>lastlink</frame>
+			<script>false</script>
 		</vitamin>
 
 		<vitamin>
@@ -1101,6 +1122,7 @@
 	<rotz>-0.0</rotz>
 			</pose>
 			<frame>origin</frame>
+			<script>false</script>
 		</vitamin>
 
 	</vitamins>
@@ -1187,6 +1209,7 @@
 	<rotz>-0.0</rotz>
 			</pose>
 			<frame>lastlink</frame>
+			<script>false</script>
 		</vitamin>
 
 		<vitamin>
@@ -1203,6 +1226,7 @@
 	<rotz>-0.0</rotz>
 			</pose>
 			<frame>origin</frame>
+			<script>false</script>
 		</vitamin>
 
 	</vitamins>
@@ -1348,6 +1372,7 @@
 	<rotz>-0.0</rotz>
 			</pose>
 			<frame>lastlink</frame>
+			<script>false</script>
 		</vitamin>
 
 		<vitamin>
@@ -1364,6 +1389,7 @@
 	<rotz>-0.0</rotz>
 			</pose>
 			<frame>origin</frame>
+			<script>false</script>
 		</vitamin>
 
 	</vitamins>
@@ -1430,6 +1456,7 @@
 	<rotz>-0.0</rotz>
 			</pose>
 			<frame>lastlink</frame>
+			<script>false</script>
 		</vitamin>
 
 		<vitamin>
@@ -1446,6 +1473,7 @@
 	<rotz>-0.0</rotz>
 			</pose>
 			<frame>origin</frame>
+			<script>false</script>
 		</vitamin>
 
 	</vitamins>
@@ -1549,6 +1577,7 @@
 	<rotz>-0.0</rotz>
 			</pose>
 			<frame>lastlink</frame>
+			<script>false</script>
 		</vitamin>
 
 		<vitamin>
@@ -1565,6 +1594,7 @@
 	<rotz>-0.0</rotz>
 			</pose>
 			<frame>origin</frame>
+			<script>false</script>
 		</vitamin>
 
 	</vitamins>
@@ -1631,6 +1661,7 @@
 	<rotz>-0.0</rotz>
 			</pose>
 			<frame>lastlink</frame>
+			<script>false</script>
 		</vitamin>
 
 		<vitamin>
@@ -1647,6 +1678,7 @@
 	<rotz>-0.0</rotz>
 			</pose>
 			<frame>origin</frame>
+			<script>false</script>
 		</vitamin>
 
 	</vitamins>
