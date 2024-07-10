@@ -28,14 +28,15 @@ public class VitaminLocation implements ITransformNRChangeListener {
 //		this.setSize("NO SIZE");
 //		this.setLocation(new TransformNR());
 //	}
-	public VitaminLocation(String name, String type, String size, TransformNR location) {
+	public VitaminLocation(boolean isScript,String name, String type, String size, TransformNR location) {
 		this.setName(name);
 		this.setType(type);
 		this.setSize(size);
 		this.setLocation(location);
+		setScript(isScript);
 	}
-	public VitaminLocation(String name, String type, String size, TransformNR location,IVitaminHolder h) {
-		this(name,type,size,location);
+	public VitaminLocation(boolean isScript,String name, String type, String size, TransformNR location,IVitaminHolder h) {
+		this(isScript,name,type,size,location);
 		try {
 			h.addVitamin(this);
 		}catch(Throwable t){

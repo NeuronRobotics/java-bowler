@@ -24,7 +24,7 @@ public class GsonVitaminLoad {
 				.disableHtmlEscaping()
 				.setPrettyPrinting()
 				.create();
-		VitaminLocation src = new VitaminLocation("Tester", "hobbyServo","mg92b",new TransformNR());
+		VitaminLocation src = new VitaminLocation(false,"Tester", "hobbyServo","mg92b",new TransformNR());
 		String content = gson.toJson(src);
 		System.out.println(content);
 	}

@@ -961,7 +961,7 @@ public class LinkConfiguration implements ITransformNRChangeListener, IVitaminHo
 			if (loc.getName().contentEquals("shaft"))
 				return loc;
 		if (makeNew) {
-			VitaminLocation e = new VitaminLocation("shaft", "hobbyServoHorn", "standardMicro1", new TransformNR());
+			VitaminLocation e = new VitaminLocation(false,"shaft", "hobbyServoHorn", "standardMicro1", new TransformNR());
 			e.setFrame(VitaminFrame.LinkOrigin);
 			vitamins.add(e);
 			return e;
@@ -974,7 +974,7 @@ public class LinkConfiguration implements ITransformNRChangeListener, IVitaminHo
 			if (loc.getName().contentEquals("electroMechanical"))
 				return loc;
 		if (makeNew) {
-			VitaminLocation e = new VitaminLocation("electroMechanical", "hobbyServo", "mg92b", new TransformNR());
+			VitaminLocation e = new VitaminLocation(false,"electroMechanical", "hobbyServo", "mg92b", new TransformNR());
 			e.setFrame(VitaminFrame.previousLinkTip);
 			vitamins.add(e);
 			return e;

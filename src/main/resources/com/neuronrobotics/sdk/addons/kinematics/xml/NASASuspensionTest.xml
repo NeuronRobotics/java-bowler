@@ -1783,6 +1783,22 @@
 
 	<vitamins>
 
+		<vitamin>
+			<name>script</name>
+			<type>https://github.com/madhephaestus/TestRepo.git</type>
+			<id>myFile.groovy</id>
+			<pose>
+	<x>13.0</x>
+	<y>-18.0</y>
+	<z>0.0</z>
+	<rotw>1.0</rotw>
+	<rotx>-0.0</rotx>
+	<roty>-0.0</roty>
+	<rotz>-0.0</rotz>
+			</pose>
+			<frame>default</frame>
+			<script>true</script>
+		</vitamin>
 	</vitamins>
 
 </mobilebase>
