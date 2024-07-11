@@ -47,7 +47,10 @@ public class VitaminLocation implements ITransformNRChangeListener {
 		setName(XmlFactory.getTagValue("name", vitamins));
 		setType(XmlFactory.getTagValue("type", vitamins));
 		setSize(XmlFactory.getTagValue("id", vitamins));
-		String scriptyness=XmlFactory.getTagValue("script", vitamins);
+		String scriptyness=null;
+		try {
+			scriptyness=XmlFactory.getTagValue("script", vitamins);
+		}catch(Exception ex) {}//ignore
 		if(scriptyness==null) {
 			isScript=false;
 		}else{
