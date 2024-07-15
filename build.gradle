@@ -1,6 +1,9 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
-apply plugin: 'maven'
+if (project == rootProject) {
+	apply plugin: 'maven'
+}
+apply plugin: 'java-library'
 apply plugin: 'signing'
 	
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
@@ -31,7 +34,7 @@ manifest {
         		
     )
 }
-
+if (project == rootProject)
 jar.archiveName = "nrsdk-"+props."app.version"+"-jar-with-dependencies.jar"
 
 //apply from: 'http://gradle-plugins.mihosoft.eu/latest/vlicenseheader.gradle'
@@ -44,23 +47,23 @@ repositories {
 	
 dependencies {
 	//TODO change as many of these as possible to Maven repositories
-    compile fileTree (dir: 'libs', includes: ['*.jar'])
-	testCompile 'junit:junit:4.12'
-	compile 'com.google.code.gson:gson:2.5'
+    api fileTree (dir: 'libs', includes: ['*.jar'])
+	testImplementation 'junit:junit:4.12'
+	implementation 'com.google.code.gson:gson:2.5'
 	
-	compile 'gov.nist.math:jama:1.0.2'
-	compile 'com.miglayout:miglayout-swing:4.1'
-	compile 'org.igniterealtime.smack:smack:3.2.1'
+	api 'gov.nist.math:jama:1.0.2'
+	implementation 'com.miglayout:miglayout-swing:4.1'
+	implementation 'org.igniterealtime.smack:smack:3.2.1'
 
-	compile 'org.igniterealtime.smack:smackx:3.2.1'
-	compile 'org.apache.commons:commons-lang3:3.2.1'
-	compile 'org.usb4java:usb4java:1.2.0'
-	compile 'org.usb4java:usb4java-javax:1.2.0'
+	implementation 'org.igniterealtime.smack:smackx:3.2.1'
+	implementation 'org.apache.commons:commons-lang3:3.2.1'
+	api 'org.usb4java:usb4java:1.2.0'
+	api 'org.usb4java:usb4java-javax:1.2.0'
 
 	//compile fileTree (dir: '../doychinNRJAVASERISL/nrjavaserial/build/libs', includes: ['*.jar'])
-	compile "com.neuronrobotics:nrjavaserial:5.1.1"
+	api "com.neuronrobotics:nrjavaserial:5.1.1"
 	// https://mvnrepository.com/artifact/org.apache.commons/commons-math3
-	compile group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
+	api group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
 
 
 	
@@ -75,11 +78,13 @@ archivesBaseName = "java-bowler"
 version = props."app.version"
 
 task javadocJar(type: Jar) {
+	if (project == rootProject)
 	classifier = 'javadoc'
 	from javadoc
 }
 
 task sourcesJar(type: Jar) {
+	if (project == rootProject)
 	classifier = 'sources'
 	from sourceSets.main.allSource
 }
