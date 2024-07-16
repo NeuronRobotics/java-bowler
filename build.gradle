@@ -43,9 +43,9 @@ jar.archiveName = "nrsdk-"+props."app.version"+"-jar-with-dependencies.jar"
 
 repositories {
 	mavenCentral()
-	maven {
-		url "https://repository.ow2.org/nexus/content/repositories/public/"
-	}
+//	maven {
+//		url "https://repository.ow2.org/nexus/content/repositories/public/"
+//	}
 }
 	
 dependencies {
@@ -71,7 +71,7 @@ dependencies {
 	api group: 'net.sf.bluecove', name: 'bluecove-gpl', version: '2.1.0'
 	api group: 'io.ultreia', name: 'bluecove', version: '2.1.1'
 	// https://mvnrepository.com/artifact/motej/motej
-	api group: 'motej', name: 'motej', version: '0.9-2008.02.05-patched', ext: 'pom'
+	//api group: 'motej', name: 'motej', version: '0.9-2008.02.05-patched', ext: 'pom'
 	
 	
 }
