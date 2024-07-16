@@ -64,7 +64,9 @@ dependencies {
 	api "com.neuronrobotics:nrjavaserial:5.1.1"
 	// https://mvnrepository.com/artifact/org.apache.commons/commons-math3
 	api group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
-
+	// https://mvnrepository.com/artifact/net.sf.bluecove/bluecove-gpl
+	api group: 'net.sf.bluecove', name: 'bluecove-gpl', version: '2.1.0'
+	api group: 'io.ultreia', name: 'bluecove', version: '2.1.1'
 
 	
 }
