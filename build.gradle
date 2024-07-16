@@ -67,7 +67,9 @@ dependencies {
 	// https://mvnrepository.com/artifact/net.sf.bluecove/bluecove-gpl
 	api group: 'net.sf.bluecove', name: 'bluecove-gpl', version: '2.1.0'
 	api group: 'io.ultreia', name: 'bluecove', version: '2.1.1'
-
+	// https://mvnrepository.com/artifact/motej/motej
+	api group: 'motej', name: 'motej', version: '0.9-2008.02.05-patched', ext: 'pom'
+	
 	
 }
 
