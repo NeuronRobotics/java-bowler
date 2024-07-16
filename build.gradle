@@ -43,6 +43,9 @@ jar.archiveName = "nrsdk-"+props."app.version"+"-jar-with-dependencies.jar"
 
 repositories {
 	mavenCentral()
+	maven {
+		url "https://repository.ow2.org/nexus/content/repositories/public/"
+	}
 }
 	
 dependencies {
