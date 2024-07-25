@@ -61,11 +61,11 @@ public class RotationNR {
 	 * Instantiates a new rotation nr.
 	 *
 	 ** @param tilt
-	 *            the tilt
+	 *            the tilt in Degrees
 	 * @param azimuth
-	 *            the azimuth
+	 *            the azimuth in Degrees 
 	 * @param elevation
-	 *            the elevation
+	 *            the elevation in Degrees
 	 */
 	// create a new object with the given simplified rotations
 	public RotationNR(double tilt, double azimuth, double elevation) {
