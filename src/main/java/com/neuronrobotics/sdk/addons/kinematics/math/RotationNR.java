@@ -33,7 +33,9 @@ public class RotationNR {
 @Expose (serialize = true, deserialize = true)
 	double z=0;
 	//private Rotation storage = new Rotation(1, 0, 0, 0, false);
+@Expose (serialize = false, deserialize = false)
 	private static RotationOrder order = RotationOrder.ZYX;
+@Expose (serialize = false, deserialize = false)
 	private static RotationConvention convention = RotationConvention.VECTOR_OPERATOR;
 	
 
@@ -307,7 +309,10 @@ public class RotationNR {
 			throw new RuntimeException("Value can not be NaN");
 		if (Double.isNaN(z))
 			throw new RuntimeException("Value can not be NaN");
-		setStorage(new Rotation(w,- x, -y, -z, true));
+		this.w=w;
+		this.x= -x;
+		this.y= -y;
+		this.z= -z;
 	}
 
 	/**
@@ -329,22 +334,21 @@ public class RotationNR {
 		setStorage(new Rotation(getOrder(), getConvention(), Math.toRadians(azumeth), Math.toRadians(elevation),
 				Math.toRadians(tilt)));
 	}
-
 	/**
 	 * Gets the rotation tilt.
 	 *
-	 * @return the rotation tilt
+	 * @return the rotation tilt in radians
 	 */
-	public double getRotationTilt() {
+	public double getRotationTiltRadians() {
 		return getAngle(2);
 	}
 
 	/**
 	 * Gets the rotation elevation.
 	 *
-	 * @return the rotation elevation
+	 * @return the rotation elevation in radians
 	 */
-	public double getRotationElevation() {
+	public double getRotationElevationRadians() {
 		return getAngle(1);
 
 	}
@@ -352,10 +356,69 @@ public class RotationNR {
 	/**
 	 * Gets the rotation azimuth.
 	 *
-	 * @return the rotation azimuth
+	 * @return the rotation azimuth in radians
 	 */
-	public double getRotationAzimuth() {
+	
+	public double getRotationAzimuthRadians() {
 		return getAngle(0);
+	}
+	/**
+	 * Gets the rotation tilt.
+	 *
+	 * @return the rotation tilt in degrees
+	 */
+	public double getRotationTiltDegrees() {
+		return Math.toDegrees(getRotationTiltRadians());
+	}
+
+	/**
+	 * Gets the rotation elevation.
+	 *
+	 * @return the rotation elevation in degrees
+	 */
+	public double getRotationElevationDegrees() {
+		return Math.toDegrees(getRotationElevationRadians());
+
+	}
+
+	/**
+	 * Gets the rotation azimuth.
+	 *
+	 * @return the rotation azimuth in degrees
+	 */
+	
+	public double getRotationAzimuthDegrees() {
+		return Math.toDegrees( getRotationAzimuthRadians());
+	}
+	/**
+	 * Gets the rotation tilt.
+	 *
+	 * @return the rotation tilt in radians
+	 */
+	@Deprecated
+	public double getRotationTilt() {
+		return getRotationTiltRadians();
+	}
+
+	/**
+	 * Gets the rotation elevation.
+	 *
+	 * @return the rotation elevation in radians
+	 */
+	@Deprecated
+	public double getRotationElevation() {
+		return getRotationElevationRadians();
+
+	}
+
+	/**
+	 * Gets the rotation azimuth.
+	 *
+	 * @return the rotation azimuth in radians
+	 */
+	@Deprecated
+	public double getRotationAzimuth() {
+		return  getRotationAzimuthRadians();
 	}
 	private void simpilfyAngles(double [] angles){
 		double epsilon=1.0E-7;
@@ -443,11 +506,11 @@ public class RotationNR {
 		RotationNR.convention = convention;
 	}
 
-	public Rotation getStorage() {
+	private Rotation getStorage() {
 		return new Rotation(w,x,y,z,false);
 	}
 
-	public void setStorage(Rotation storage) {
+	private void setStorage(Rotation storage) {
 		w=storage.getQ0();
 		x=storage.getQ1();
 		y=storage.getQ2();

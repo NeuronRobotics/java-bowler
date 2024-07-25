@@ -13,6 +13,7 @@ import Jama.Matrix;
  * The Class TransformNR.
  */
 public class TransformNR {
+@Expose (serialize = false, deserialize = false)
   private ArrayList<ITransformNRChangeListener> listeners=null;
   /** The x. */
 @Expose (serialize = true, deserialize = true)
@@ -117,6 +118,17 @@ public class TransformNR {
     this.setY(y);
     this.setZ(z);
     this.setRotation(new RotationNR());
+  }
+  /**
+   * Instantiates a new transform nr.
+   *
+   * @param rot A pure rotation
+   */
+  public TransformNR(RotationNR rot) {
+    this.setX(0);
+    this.setY(0);
+    this.setZ(0);
+    this.setRotation(rot);
   }
   /**
    * Instantiates a new transform nr.
