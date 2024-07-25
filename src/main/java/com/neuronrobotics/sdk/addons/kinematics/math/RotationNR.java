@@ -7,6 +7,7 @@ import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 import org.apache.commons.math3.geometry.euclidean.threed.RotationConvention;
 import org.apache.commons.math3.geometry.euclidean.threed.RotationOrder;
 
+import com.google.gson.annotations.Expose;
 import com.neuronrobotics.sdk.common.Log;
 
 // TODO: Auto-generated Javadoc
@@ -22,7 +23,16 @@ public class RotationNR {
 
 	/** The rotation matrix. */
 	// double[][] rotationMatrix = ;
-	private Rotation storage = new Rotation(1, 0, 0, 0, false);
+
+@Expose (serialize = true, deserialize = true)
+	double w=1;
+@Expose (serialize = true, deserialize = true)
+	double x=0;
+@Expose (serialize = true, deserialize = true)
+	double y=0;
+@Expose (serialize = true, deserialize = true)
+	double z=0;
+	//private Rotation storage = new Rotation(1, 0, 0, 0, false);
 	private static RotationOrder order = RotationOrder.ZYX;
 	private static RotationConvention convention = RotationConvention.VECTOR_OPERATOR;
 	
@@ -42,7 +52,7 @@ public class RotationNR {
 	 *            instance
 	 */
 	public RotationNR(Rotation store) {
-		storage = store;
+		setStorage(store);
 	}
 
 	/**
@@ -387,7 +397,7 @@ public class RotationNR {
 	 * @return the rotation matrix2 quaturnion w
 	 */
 	public double getRotationMatrix2QuaturnionW() {
-		return getStorage().getQ0();
+		return w;
 	}
 
 	/**
@@ -396,7 +406,7 @@ public class RotationNR {
 	 * @return the rotation matrix2 quaturnion x
 	 */
 	public double getRotationMatrix2QuaturnionX() {
-		return -getStorage().getQ1();
+		return -x;
 	}
 
 	/**
@@ -405,7 +415,7 @@ public class RotationNR {
 	 * @return the rotation matrix2 quaturnion y
 	 */
 	public double getRotationMatrix2QuaturnionY() {
-		return -getStorage().getQ2();
+		return -y;
 	}
 
 	/**
@@ -414,7 +424,7 @@ public class RotationNR {
 	 * @return the rotation matrix2 quaturnion z
 	 */
 	public double getRotationMatrix2QuaturnionZ() {
-		return -getStorage().getQ3();
+		return -z;
 	}
 
 	public static RotationOrder getOrder() {
@@ -434,11 +444,14 @@ public class RotationNR {
 	}
 
 	public Rotation getStorage() {
-		return storage;
+		return new Rotation(w,x,y,z,false);
 	}
 
 	public void setStorage(Rotation storage) {
-		this.storage = storage;
+		w=storage.getQ0();
+		x=storage.getQ1();
+		y=storage.getQ2();
+		z=storage.getQ3();
 	}
 
 	public void set(double[][] poseRot) {

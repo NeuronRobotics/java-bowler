@@ -3,6 +3,8 @@ package com.neuronrobotics.sdk.addons.kinematics.math;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+
+import com.google.gson.annotations.Expose;
 import com.neuronrobotics.sdk.common.Log;
 import Jama.Matrix;
 
@@ -13,15 +15,20 @@ import Jama.Matrix;
 public class TransformNR {
   private ArrayList<ITransformNRChangeListener> listeners=null;
   /** The x. */
+@Expose (serialize = true, deserialize = true)
   private double x;
 
   /** The y. */
+@Expose (serialize = true, deserialize = true)
   private double y;
 
   /** The z. */
+@Expose (serialize = true, deserialize = true)
   private double z;
 
   /** The rotation. */
+
+@Expose (serialize = true, deserialize = true)
   private RotationNR rotation;
 
 
