@@ -62,27 +62,27 @@ public class RotationNR {
 	 *
 	 ** @param tilt
 	 *            the tilt
-	 * @param azumeth
-	 *            the azumeth
+	 * @param azimuth
+	 *            the azimuth
 	 * @param elevation
 	 *            the elevation
 	 */
 	// create a new object with the given simplified rotations
-	public RotationNR(double tilt, double azumeth, double elevation) {
+	public RotationNR(double tilt, double azimuth, double elevation) {
 		if (Double.isNaN(tilt))
 			throw new RuntimeException("Value can not be NaN");
-		if (Double.isNaN(azumeth))
+		if (Double.isNaN(azimuth))
 			throw new RuntimeException("Value can not be NaN");
 		if (Double.isNaN(elevation))
 			throw new RuntimeException("Value can not be NaN");
 		if (elevation > 90 || elevation < -90) {
 			throw new RuntimeException("Elevation can not be greater than 90 nor less than -90");
 		}
-		loadFromAngles(tilt, azumeth, elevation);
+		loadFromAngles(tilt, azimuth, elevation);
 		if (Double.isNaN(getRotationMatrix2QuaturnionW()) || Double.isNaN(getRotationMatrix2QuaturnionX())
 				|| Double.isNaN(getRotationMatrix2QuaturnionY()) || Double.isNaN(getRotationMatrix2QuaturnionZ())) {
 			Log.error("Failing to set proper angle, jittering");
-			loadFromAngles(tilt + Math.random() * .02 + .001, azumeth + Math.random() * .02 + .001,
+			loadFromAngles(tilt + Math.random() * .02 + .001, azimuth + Math.random() * .02 + .001,
 					elevation + Math.random() * .02 + .001);
 		}
 
@@ -330,8 +330,8 @@ public class RotationNR {
 		return n >= low && n <= high;
 	}
 
-	private void loadFromAngles(double tilt, double azumeth, double elevation) {
-		setStorage(new Rotation(getOrder(), getConvention(), Math.toRadians(azumeth), Math.toRadians(elevation),
+	private void loadFromAngles(double tilt, double azimuth, double elevation) {
+		setStorage(new Rotation(getOrder(), getConvention(), Math.toRadians(azimuth), Math.toRadians(elevation),
 				Math.toRadians(tilt)));
 	}
 	/**
