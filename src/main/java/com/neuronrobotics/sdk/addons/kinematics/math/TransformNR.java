@@ -441,13 +441,13 @@ public class TransformNR {
   }
   
 	public TransformNR set(double tx, double ty, double tz, double[][] poseRot) {
-		if (Double.isNaN(tx))
+		if (!Double.isFinite(tx))
 			throw new RuntimeException("Value can not be NaN");
 		x = tx;
-		if (Double.isNaN(ty))
+		if (!Double.isFinite(ty))
 			throw new RuntimeException("Value can not be NaN");
 		y = ty;
-		if (Double.isNaN(tz))
+		if (!Double.isFinite(tz))
 			throw new RuntimeException("Value can not be NaN");
 		z = tz;
 		getRotation().set(poseRot);
@@ -461,7 +461,7 @@ public class TransformNR {
    * @param tx the new x
    */
   public TransformNR setX(double tx) {
-    if (Double.isNaN(tx))
+    if (!Double.isFinite(tx))
       throw new RuntimeException("Value can not be NaN");
     x = tx;
     fireChangeEvent();
@@ -474,7 +474,7 @@ public class TransformNR {
    * @param ty the new y
    */
   public TransformNR setY(double ty) {
-    if (Double.isNaN(ty))
+    if (!Double.isFinite(ty))
       throw new RuntimeException("Value can not be NaN");
     y = ty;
     fireChangeEvent();
@@ -487,7 +487,7 @@ public class TransformNR {
    * @param tz the new z
    */
   public TransformNR setZ(double tz) {
-    if (Double.isNaN(tz))
+    if (!Double.isFinite(tz))
       throw new RuntimeException("Value can not be NaN");
     z = tz;
     fireChangeEvent();
@@ -506,10 +506,10 @@ public class TransformNR {
   public String getXml() {
     String xml =
         "\n\t<x>" + getX() + "</x>\n" + "\t<y>" + getY() + "</y>\n" + "\t<z>" + getZ() + "</z>\n";
-    if (Double.isNaN(getRotation().getRotationMatrix2QuaturnionW())
-        || Double.isNaN(getRotation().getRotationMatrix2QuaturnionX())
-        || Double.isNaN(getRotation().getRotationMatrix2QuaturnionY())
-        || Double.isNaN(getRotation().getRotationMatrix2QuaturnionZ())) {
+    if (!Double.isFinite(getRotation().getRotationMatrix2QuaturnionW())
+        || !Double.isFinite(getRotation().getRotationMatrix2QuaturnionX())
+        || !Double.isFinite(getRotation().getRotationMatrix2QuaturnionY())
+        || !Double.isFinite(getRotation().getRotationMatrix2QuaturnionZ())) {
       xml += "\n\t<!-- ERROR a NaN was detected and replaced with a valid rotation -->\n";
       setRotation(new RotationNR());
     }

@@ -69,12 +69,12 @@ public class RotationNR {
 	 */
 	// create a new object with the given simplified rotations
 	public RotationNR(double tilt, double azimuth, double elevation) {
-		if (Double.isNaN(tilt))
-			throw new RuntimeException("Value can not be NaN");
-		if (Double.isNaN(azimuth))
-			throw new RuntimeException("Value can not be NaN");
-		if (Double.isNaN(elevation))
-			throw new RuntimeException("Value can not be NaN");
+		if (!Double.isFinite(tilt))
+			throw new RuntimeException("Value can not be "+tilt);
+		if (!Double.isFinite(azimuth))
+			throw new RuntimeException("Value can not be "+azimuth);
+		if (!Double.isFinite(elevation))
+			throw new RuntimeException("Value can not be "+elevation);
 		if (elevation > 90 || elevation < -90) {
 			throw new RuntimeException("Elevation can not be greater than 90 nor less than -90");
 		}
@@ -86,6 +86,9 @@ public class RotationNR {
 					elevation + Math.random() * .02 + .001);
 		}
 
+	}
+	public RotationNR(EulerAxis axis, double rot) {
+		this(axis==EulerAxis.tilt?rot:0,axis==EulerAxis.azimuth?rot:0,axis==EulerAxis.elevation?rot:0);
 	}
 
 	/**
