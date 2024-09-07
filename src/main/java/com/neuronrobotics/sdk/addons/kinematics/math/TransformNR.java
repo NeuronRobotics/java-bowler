@@ -45,6 +45,14 @@ public class TransformNR {
     this.setZ(m.get(2, 3));
     this.setRotation(new RotationNR(m));
   }
+  /**
+   * Instantiates a new transform nr.
+   *
+   * @param m the m
+   */
+  public TransformNR(TransformNR  in) {
+    this(in.getMatrixTransform());
+  }
 
   /**
    * Instantiates a new transform nr.
