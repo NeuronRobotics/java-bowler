@@ -343,7 +343,7 @@ public abstract class BowlerAbstractConnection {
 				@Override
 				public void run() {
 					if(isConnected()){
-						//System.out.println("WARNING: Bowler devices should be shut down before exit");
+						//com.neuronrobotics.sdk.common.Log.error("WARNING: Bowler devices should be shut down before exit");
 						disconnect();
 					}
 				}
@@ -867,7 +867,7 @@ public abstract class BowlerAbstractConnection {
 					if(tmpNs.length() ==  namespacePacket.getData().size()){
 						//Done with the packet
 						BowlerDatagramFactory.freePacket(namespacePacket);
-						//System.out.println("Ns = "+tmpNs+" len = "+tmpNs.length()+" data = "+b.getData().size());
+						//com.neuronrobotics.sdk.common.Log.error("Ns = "+tmpNs+" len = "+tmpNs.length()+" data = "+b.getData().size());
 						namespacePacket = send(new NamespaceCommand(),addr,5);
 						
 						num= namespacePacket.getData().getByte(0);
@@ -995,7 +995,7 @@ public abstract class BowlerAbstractConnection {
 			BowlerDatagram b = send(new  RpcCommand(namespaceIndex),addr,5);
 			
 			if(!b.getRPC().contains("_rpc")){
-				System.err.println(b);
+				com.neuronrobotics.sdk.common.Log.error(b);
 				throw new RuntimeException("This RPC index request has failed");
 			}
 			//int ns = b.getData().getByte(0);// gets the index of the namespace
@@ -1017,7 +1017,7 @@ public abstract class BowlerAbstractConnection {
 			for (int i=0;i<numRpcs;i++){
 				b = send(new RpcCommand(namespaceIndex,i),addr,5);
 				if(!b.getRPC().contains("_rpc")){
-					System.err.println(b);
+					com.neuronrobotics.sdk.common.Log.error(b);
 					throw new RuntimeException("This RPC section failed");
 				}
 				String rpcStr = new String(b.getData().getBytes(3, 4));
@@ -1025,7 +1025,7 @@ public abstract class BowlerAbstractConnection {
 				BowlerDatagramFactory.freePacket(b);
 				b = send(new RpcArgumentsCommand(namespaceIndex,i),addr,5);
 				if(!b.getRPC().contains("args")){
-					System.err.println(b);
+					com.neuronrobotics.sdk.common.Log.error(b);
 					throw new RuntimeException("This RPC section failed");
 				}
 				byte []data = b.getData().getBytes(2);
@@ -1096,7 +1096,7 @@ public abstract class BowlerAbstractConnection {
 			BowlerDatagram ret;
 			try{
 				ret = send( command,addr,switchParser);
-				//System.out.println(ret);
+				//com.neuronrobotics.sdk.common.Log.error(ret);
 				if(ret != null){
 					addr.setValues(ret.getAddress());
 					//if(!ret.getRPC().contains("_err"))
@@ -1249,7 +1249,7 @@ public abstract class BowlerAbstractConnection {
 	 */
 	private void runHeartBeat(){
 		if((msSinceLastSend())>heartBeatTime){
-			//System.out.println("Heartbeat");
+			//com.neuronrobotics.sdk.common.Log.error("Heartbeat");
 			try{
 				if(!ping(new MACAddress())){
 					Log.debug("Ping failed, disconnecting");
@@ -1549,7 +1549,7 @@ public abstract class BowlerAbstractConnection {
 				
 				while(outgoing.size()>0){
 					byte[] b =outgoing.popList(getChunkSize());
-					//System.out.println("Writing "+new ByteList(data));
+					//com.neuronrobotics.sdk.common.Log.error("Writing "+new ByteList(data));
 					getDataOuts().write( b );
 					getDataOuts().flush();
 				}

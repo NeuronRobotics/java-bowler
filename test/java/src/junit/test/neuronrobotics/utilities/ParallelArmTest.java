@@ -53,7 +53,7 @@ public class ParallelArmTest {
 					kin.setDesiredJointSpaceVector(new double[]{0,0,0}, 0);
 					kin.setDesiredTaskSpaceTransform(Tip, 0);
 					
-					System.out.println("Arm "+kin.getScriptingName()+"setting to : "+Tip);
+					com.neuronrobotics.sdk.common.Log.error("Arm "+kin.getScriptingName()+"setting to : "+Tip);
 				}
 				assertEquals(Tip.getX(), group.getCurrentTaskSpaceTransform().getX(), 1);
 				group.setDesiredTaskSpaceTransform(Tip.copy(), 0);
@@ -61,7 +61,7 @@ public class ParallelArmTest {
 					TransformNR TipOffset = group.getTipOffset().get(limb);
 					TransformNR newTip = limb.getCurrentTaskSpaceTransform().times(TipOffset);
 	
-					System.out.println("Expected tip to be " + Tip.getX() + " and got: " + newTip.getX());
+					com.neuronrobotics.sdk.common.Log.error("Expected tip to be " + Tip.getX() + " and got: " + newTip.getX());
 					assertTrue(!Double.isNaN(Tip.getX()));
 					assertEquals(Tip.getX(), newTip.getX(), 1);
 				}

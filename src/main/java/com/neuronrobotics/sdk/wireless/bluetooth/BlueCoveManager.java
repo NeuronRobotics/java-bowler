@@ -174,19 +174,19 @@ public class BlueCoveManager implements DiscoveryListener {
 	 */
 	public synchronized RemoteDevice getDevice(String name){
 		String addr = name.substring(name.indexOf('_')+1);
-		//System.out.println("Getting device with address: "+addr);
+		//com.neuronrobotics.sdk.common.Log.error("Getting device with address: "+addr);
 		String [] s=getAvailableSerialDevices(false);
 		for (int i=0;i<s.length;i++){
 			if(s[i].contains(addr)){
 				try {
 					RemoteDevice dev =  deviceList.get(i);
-					//System.out.println("Found device: "+s[i]);
+					//com.neuronrobotics.sdk.common.Log.error("Found device: "+s[i]);
 					return dev;
 				}catch(Exception e) {
 					e.printStackTrace();
 				}
 			}else {
-				//System.out.println("Non matching device: "+s[i]);
+				//com.neuronrobotics.sdk.common.Log.error("Non matching device: "+s[i]);
 			}
 		}
 		return null;
@@ -273,7 +273,7 @@ public class BlueCoveManager implements DiscoveryListener {
 		}
 		
 		if (records.size()==0){
-			System.err.println("No compatible records");
+			com.neuronrobotics.sdk.common.Log.error("No compatible records");
 			return false;
 		}
 		//Log.info("Found SPP:RFCOMM services OK!");
@@ -283,7 +283,7 @@ public class BlueCoveManager implements DiscoveryListener {
 				StreamConnection c =(StreamConnection) Connector.open(url);
 				conn = c;
 			}catch (IOException ex){
-				System.err.println("Failed to connect to "+url);
+				com.neuronrobotics.sdk.common.Log.error("Failed to connect to "+url);
 				if(!ex.getMessage().contains("Device or resource busy"))
 					throw ex;
 			}
@@ -295,7 +295,7 @@ public class BlueCoveManager implements DiscoveryListener {
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.err.println("No connection");
+			com.neuronrobotics.sdk.common.Log.error("No connection");
 			return false;
 		}
 	}

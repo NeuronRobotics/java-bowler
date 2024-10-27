@@ -37,7 +37,7 @@ public class TestMobilBaseLoading {
 		if(!content.contentEquals(read)) {
 			File out = new File("src/main/resources/com/neuronrobotics/sdk/addons/kinematics/xml/NASASuspensionTestOUTPUT.xml");
 			Files.write( Paths.get(out.getAbsolutePath()), read.getBytes());
-			System.out.println("diff "+file.getAbsolutePath()+" "+out.getAbsolutePath());
+			com.neuronrobotics.sdk.common.Log.error("diff "+file.getAbsolutePath()+" "+out.getAbsolutePath());
 			fail("What was loaded failed to match the source");
 		}
 	}

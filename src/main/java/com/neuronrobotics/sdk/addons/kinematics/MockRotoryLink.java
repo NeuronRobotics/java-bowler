@@ -33,7 +33,7 @@ public class MockRotoryLink extends AbstractRotoryLink {
 	@Override
 	public void cacheTargetValueDevice() {
 		val=getTargetValue();
-		//System.out.println("Cacheing value="+val);
+		//com.neuronrobotics.sdk.common.Log.error("Cacheing value="+val);
 	}
 
 	/* (non-Javadoc)
@@ -42,7 +42,7 @@ public class MockRotoryLink extends AbstractRotoryLink {
 	@Override
 	public void flushDevice(double time) {
 		val=getTargetValue();
-		//System.out.println("Flushing value="+val);
+		//com.neuronrobotics.sdk.common.Log.error("Flushing value="+val);
 	}
 
 	/* (non-Javadoc)
@@ -61,7 +61,7 @@ public class MockRotoryLink extends AbstractRotoryLink {
 	public void flushAllDevice(double time) {
 		// TODO Auto-generated method stub
 		val=getTargetValue();
-		//System.out.println("Flushing all Values");
+		//com.neuronrobotics.sdk.common.Log.error("Flushing all Values");
 	}
 
 }

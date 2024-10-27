@@ -157,7 +157,7 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 		NodeList nodListofLinks = doc.getElementsByTagName("root");
 
 		if (nodListofLinks.getLength() != 1) {
-			// System.out.println("Found "+nodListofLinks.getLength());
+			// com.neuronrobotics.sdk.common.Log.error("Found "+nodListofLinks.getLength());
 			throw new RuntimeException("one mobile base is needed per level");
 		}
 		NodeList rootNode = nodListofLinks.item(0).getChildNodes();
@@ -370,7 +370,7 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 			String nameOfElement = findNameTag(e);
 			if(tagname.contentEquals("name"))
 				return nameOfElement;
-			//System.out.println("Searching for "+tagname+" in "+nameOfElement);
+			//com.neuronrobotics.sdk.common.Log.error("Searching for "+tagname+" in "+nameOfElement);
 			NodeList nodListofLinks = e.getElementsByTagName(tagname);
 			for (int i = 0; i < nodListofLinks.getLength(); i++) {
 				boolean isDirectChild=true;
@@ -407,7 +407,7 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 			if (linkNode.getNodeType() == Node.ELEMENT_NODE && linkNode.getNodeName().contentEquals(tag)) {
 				Element e = (Element) linkNode;
 				final String name = getname(e);
-				// System.out.println("Loading arm "+name);
+				// com.neuronrobotics.sdk.common.Log.error("Loading arm "+name);
 				DHParameterKinematics kin = (DHParameterKinematics) DeviceManager
 						.getSpecificDevice(DHParameterKinematics.class, name);
 				if (kin == null) {
@@ -416,9 +416,9 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 				}
 				kin.setScriptingName(name);
 				String parallel = getParallelGroup(e);
-				// System.out.println("paralell "+parallel);
+				// com.neuronrobotics.sdk.common.Log.error("paralell "+parallel);
 				if (parallel != null) {
-					System.out.println("Loading Paralell group " + parallel + " limb " + name);
+					com.neuronrobotics.sdk.common.Log.error("Loading Paralell group " + parallel + " limb " + name);
 					TransformNR paraOffset = loadTransform("parallelGroupTipOffset", e);
 					String relativeName = getTag(e, "relativeTo");
 					int index = 0;
@@ -928,7 +928,7 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	}
 
 	public void setMassKg(double mass) {
-		System.out.println("Mass of device " + getScriptingName() + " is " + mass);
+		com.neuronrobotics.sdk.common.Log.error("Mass of device " + getScriptingName() + " is " + mass);
 		//new RuntimeException().printStackTrace();
 		this.mass = mass;
 		fireConfigurationUpdate();
@@ -1046,7 +1046,7 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 			TransformNR TipOffset = group.getTipOffset().get(limb);
 			TransformNR newTip = limb.getCurrentTaskSpaceTransform().times(TipOffset);
 
-			System.out.println("Expected tip to be " + Tip.getX() + " and got: " + newTip.getX());
+			com.neuronrobotics.sdk.common.Log.error("Expected tip to be " + Tip.getX() + " and got: " + newTip.getX());
 			// assertTrue(!Double.isNaN(Tip.getX()));
 			// assertEquals(Tip.getX(), newTip.getX(), .1);
 		}

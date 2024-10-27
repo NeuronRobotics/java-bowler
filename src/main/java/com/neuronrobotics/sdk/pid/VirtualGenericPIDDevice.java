@@ -216,7 +216,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 					+ unitsPerSecond + ", when max is" + getMaxTicksPerSecond() + " set: " + getMaxTicksPerSecond()
 					+ " sec: " + seconds);
 		if (seconds < 0.1 && seconds > -0.1) {
-			// System.out.println("Setting virtual velocity="+unitsPerSecond);
+			// com.neuronrobotics.sdk.common.Log.error("Setting virtual velocity="+unitsPerSecond);
 			getDriveThread(group).SetVelocity(unitsPerSecond);
 		} else {
 			SetPIDInterpolatedVelocity(group, unitsPerSecond, seconds);
@@ -266,7 +266,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 			}
 		}
 		for (PIDConfiguration c : interpolationEngines.keySet()) {
-			System.err.println(c);
+			com.neuronrobotics.sdk.common.Log.error(c.toString());
 		}
 
 		throw new RuntimeException("Device is missing, id " + i);
@@ -392,7 +392,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 										toUpdate[updateIndex++]=key;
 									}
 								} else {
-									//System.err.println("Virtual Device " + key.getGroup() + " is disabled");
+									//com.neuronrobotics.sdk.common.Log.error("Virtual Device " + key.getGroup() + " is disabled");
 								}
 							}
 						}

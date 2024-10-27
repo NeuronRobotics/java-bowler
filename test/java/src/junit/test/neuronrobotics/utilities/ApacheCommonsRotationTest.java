@@ -20,9 +20,9 @@ public class ApacheCommonsRotationTest {
 		};
 		RotationConvention[] conventions = { RotationConvention.FRAME_TRANSFORM, RotationConvention.VECTOR_OPERATOR };
 		for (RotationConvention convention : conventions) {
-			System.out.println("\n\nUsing convention " + convention.toString());
+			com.neuronrobotics.sdk.common.Log.error("\n\nUsing convention " + convention.toString());
 			for (RotationOrder order : list) {
-				System.out.println("\n\nUsing rotationOrder " + order.toString());
+				com.neuronrobotics.sdk.common.Log.error("\n\nUsing rotationOrder " + order.toString());
 				
 				double tilt = Math.toRadians((Math.random() * 359) - 179.5);
 				double elevation = Math.toRadians((Math.random() * 180) -90);

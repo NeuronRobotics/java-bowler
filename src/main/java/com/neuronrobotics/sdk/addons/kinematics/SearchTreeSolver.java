@@ -65,11 +65,11 @@ public class SearchTreeSolver implements DhInverseSolver {
 			
 			if(vect<10 && orent< .05){
 				done = true;
-				System.out.println("SearchTreeSolver Success stats: \n\tIterations = "+i+" out of "+iter+"\n"+conf);
+				com.neuronrobotics.sdk.common.Log.error("SearchTreeSolver Success stats: \n\tIterations = "+i+" out of "+iter+"\n"+conf);
 			}
 			if(i++==iter){
 				done = true;
-				System.err.println("SearchTreeSolver FAILED stats: \n\tIterations = "+i+" out of "+iter+"\n"+conf);
+				com.neuronrobotics.sdk.common.Log.error("SearchTreeSolver FAILED stats: \n\tIterations = "+i+" out of "+iter+"\n"+conf);
 			}
 		}while(! done);
 
@@ -213,7 +213,7 @@ public class SearchTreeSolver implements DhInverseSolver {
 				}
 				i++;
 			}
-			//System.out.println("Selecting "+best+" config");
+			//com.neuronrobotics.sdk.common.Log.error("Selecting "+best+" config");
 			return configurations.get(best);
 		}
 	}

@@ -44,11 +44,11 @@ public class NRBootLoader extends BowlerAbstractDevice {
 	@Override
 	public boolean connect() {
 		if(super.connect()) {
-			//System.out.println("Connect OK");
+			//com.neuronrobotics.sdk.common.Log.error("Connect OK");
 			try {
 				getBootloaderID();
 			}catch (Exception e) {
-				//System.out.println("Failed bootloader test");
+				//com.neuronrobotics.sdk.common.Log.error("Failed bootloader test");
 				disconnect();
 			}
 		}
@@ -95,7 +95,7 @@ public class NRBootLoader extends BowlerAbstractDevice {
 					return true;
 			}
 		}
-		System.err.println("\nFailed to send 10 times!\n");
+		com.neuronrobotics.sdk.common.Log.error("\nFailed to send 10 times!\n");
 		return false;
 	}
 	
@@ -132,7 +132,7 @@ public class NRBootLoader extends BowlerAbstractDevice {
 	 */
 	public void onAllResponse(BowlerDatagram data) {
 		// TODO Auto-generated method stub
-		////System.out.println(data);
+		////com.neuronrobotics.sdk.common.Log.error(data);
 	}
 
 	/* (non-Javadoc)

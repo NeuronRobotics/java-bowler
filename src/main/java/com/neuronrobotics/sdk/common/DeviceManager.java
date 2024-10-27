@@ -58,7 +58,7 @@ public class DeviceManager {
 	 */
 	private static void addConnectionBAD(final BowlerAbstractDevice newDevice, String name) {
 		if (DeviceManager.getSpecificDevice(name) == newDevice) {
-			System.out.println("Device " + name + " is already in the manager");
+			com.neuronrobotics.sdk.common.Log.error("Device " + name + " is already in the manager");
 			return;
 		}
 		if ( DMDevice.class.isInstance(newDevice)) {
@@ -68,7 +68,7 @@ public class DeviceManager {
 				if(DMDevice.class.isInstance(sDev)) {
 					DMDevice inside = (DMDevice) sDev;
 					if (inside.getWrapped() == incoming.getWrapped()) {
-						System.out.println("Wrapped Device " + name + " is already in the manager");
+						com.neuronrobotics.sdk.common.Log.error("Wrapped Device " + name + " is already in the manager");
 						return;
 					}
 				}

@@ -32,7 +32,7 @@ public class ProgramSectionCommand extends BowlerAbstractCommand {
 	 */
 	public ProgramSectionCommand(int channel, int address, ByteList byteData) {
 		setOpCode("prog");
-		System.out.println("Sending to address "+hex(address)+" size = "+byteData.size());
+		com.neuronrobotics.sdk.common.Log.error("Sending to address "+hex(address)+" size = "+byteData.size());
 		setMethod(BowlerMethod.CRITICAL);
 		getCallingDataStorage().add(channel);
 		getCallingDataStorage().addAs32(address);

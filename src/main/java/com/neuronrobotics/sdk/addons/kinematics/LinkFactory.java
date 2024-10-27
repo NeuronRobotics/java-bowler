@@ -302,7 +302,7 @@ public class LinkFactory implements IHardwareSyncPulseReciver, IHardwareSyncPuls
 			// TickToc.tic("Done Checking "+name+" for flush ");
 
 		}
-		// System.out.println("Flush Took "+(System.currentTimeMillis()-time)+"ms");
+		// com.neuronrobotics.sdk.common.Log.error("Flush Took "+(System.currentTimeMillis()-time)+"ms");
 	}
 
 	/**

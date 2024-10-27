@@ -162,7 +162,7 @@ public class MACAddress implements ISendable {
 	 * @param address2 the new values
 	 */
 	public void setValues(MACAddress address2) {
-		//System.out.println("Setting new values: "+address2);
+		//com.neuronrobotics.sdk.common.Log.error("Setting new values: "+address2);
 		for(int i=0; i<6; i++) {
 			address[i] = address2.address[i];	
 		}

@@ -278,7 +278,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 				localConfigsFromXml.add(newLinkConf);
 
 				NodeList dHParameters = linkNode.getChildNodes();
-				// System.out.println("Link "+newLinkConf.getName()+" has "+dHParameters
+				// com.neuronrobotics.sdk.common.Log.error("Link "+newLinkConf.getName()+" has "+dHParameters
 				// .getLength()+" children");
 				for (int x = 0; x < dHParameters.getLength(); x++) {
 					Node nNode = dHParameters.item(x);
@@ -309,9 +309,9 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 					} else {
 						if (nNode.getNodeType() == Node.ELEMENT_NODE
 								&& nNode.getNodeName().contentEquals("slaveLink")) {
-							// System.out.println("Slave link found: ");
+							// com.neuronrobotics.sdk.common.Log.error("Slave link found: ");
 							LinkConfiguration jc = new LinkConfiguration((Element) nNode);
-							// System.out.println(jc);
+							// com.neuronrobotics.sdk.common.Log.error(jc);
 							newLinkConf.getSlaveLinks().add(jc);
 						}
 					}
@@ -341,7 +341,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 					setRobotToFiducialTransform(new TransformNR());
 				}
 			} else {
-				// System.err.println(linkNode.getNodeName());
+				// com.neuronrobotics.sdk.common.Log.error(linkNode.getNodeName());
 				// Log.error("Node not known: "+linkNode.getNodeName());
 			}
 		}
@@ -977,9 +977,9 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 * @return the transform nr
 	 */
 	public TransformNR inverseOffset(TransformNR t) {
-		// System.out.println("RobotToFiducialTransform
+		// com.neuronrobotics.sdk.common.Log.error("RobotToFiducialTransform
 		// "+getRobotToFiducialTransform());
-		// System.out.println("FiducialToRASTransform "+getFiducialToRASTransform());
+		// com.neuronrobotics.sdk.common.Log.error("FiducialToRASTransform "+getFiducialToRASTransform());
 		Matrix globalToFeducialInverse = getFiducialToGlobalTransform().getMatrixTransform().inverse();
 		Matrix feducialToLimbInverse = getRobotToFiducialTransform().getMatrixTransform().inverse();
 

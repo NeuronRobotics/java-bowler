@@ -110,7 +110,7 @@ public abstract class BowlerAbstractDevice extends TimeKeeper implements IBowler
 		if(!getDisconnectListeners().contains(l)) {
 			getDisconnectListeners().add(l);
 		}
-//		System.err.println(getScriptingName()+" Adding listener "+l.getClass());
+//		com.neuronrobotics.sdk.common.Log.error(getScriptingName()+" Adding listener "+l.getClass());
 //		l.trace.printStackTrace();
 //		new Exception().printStackTrace();
 		BowlerAbstractDevice bad = this;
@@ -239,7 +239,7 @@ public abstract class BowlerAbstractDevice extends TimeKeeper implements IBowler
 	 * @return  the device's address
 	 */
 	public MACAddress getAddress() {
-		//System.out.println();
+		//com.neuronrobotics.sdk.common.Log.error();
 		return address;
 	}
 	
@@ -427,7 +427,7 @@ public abstract class BowlerAbstractDevice extends TimeKeeper implements IBowler
 		 ArrayList<String> names = getNamespaces();
 		 
 		 for (String s:names){
-			 System.out.println(getRpcList(s));
+			 com.neuronrobotics.sdk.common.Log.error(getRpcList(s));
 		 }
 		 
 	}

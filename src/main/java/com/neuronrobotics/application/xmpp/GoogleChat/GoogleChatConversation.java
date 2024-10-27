@@ -42,17 +42,17 @@ public class GoogleChatConversation implements  MessageListener,IConversation{
 	public void processMessage(Chat chat, Message message) {
 		Message msg = new Message(message.getFrom(), Message.Type.chat);
 	    if(message.getType().equals(Message.Type.chat) && message.getBody() != null) {
-	        System.out.println("Received: " + message.getBody());
+	        com.neuronrobotics.sdk.common.Log.error("Received: " + message.getBody());
 	        try {
 	        	msg.setBody(onMessage(message.getBody(),chat, message.getFrom()));
-	        	System.out.println("Sending: "+msg.getBody());
+	        	com.neuronrobotics.sdk.common.Log.error("Sending: "+msg.getBody());
 	            chat.sendMessage(msg);
 	        } catch (XMPPException ex) {
 	            ex.printStackTrace();
-	            System.out.println("Failed to send message");
+	            com.neuronrobotics.sdk.common.Log.error("Failed to send message");
 	        }
 	    } else {
-	        System.out.println("I got a message I didn't understand\n\n"+message.getType());
+	        com.neuronrobotics.sdk.common.Log.error("I got a message I didn't understand\n\n"+message.getType());
 	    }
 	}
 

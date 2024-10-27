@@ -133,7 +133,7 @@ public class PPMReaderChannel  extends DyIOAbstractPeripheral implements IChanne
 	private void updateValues() {
 		if(getChannel().getDevice().isLegacyParser()){
 			BowlerDatagram b=null;
-			//System.out.println("Updating value map");
+			//com.neuronrobotics.sdk.common.Log.error("Updating value map");
 			try {
 				b= getChannel().getDevice().send(new GetValueCommand(23));
 			}catch (Exception e) {

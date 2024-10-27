@@ -43,7 +43,7 @@ public class NetworkServerTest extends BowlerAbstractServer {
 			new NetworkServerTest();
 		}catch (Exception e){
 			e.printStackTrace();
-			System.err.println("###SERVER Failed out!");
+			com.neuronrobotics.sdk.common.Log.error("###SERVER Failed out!");
 			System.exit(1);
 		}
 	}

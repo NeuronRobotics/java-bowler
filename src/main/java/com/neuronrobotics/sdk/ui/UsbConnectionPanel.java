@@ -121,7 +121,7 @@ public class UsbConnectionPanel extends AbstractConnectionPanel implements IUsbD
 	 * @see com.neuronrobotics.sdk.ui.AbstractConnectionPanel#refresh()
 	 */
 	public void refresh() {	
-		//System.err.println("Refreshing USB");
+		//com.neuronrobotics.sdk.common.Log.error("Refreshing USB");
 		connectionCbo.removeAllItems();
 
 		List<UsbDevice> prts=null;

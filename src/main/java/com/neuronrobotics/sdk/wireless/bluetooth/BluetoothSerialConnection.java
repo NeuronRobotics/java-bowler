@@ -118,7 +118,7 @@ public class BluetoothSerialConnection extends BowlerAbstractConnection{
 				throw new MissingNativeLibraryException(e.getMessage());
 	        }catch (Exception e) {
 	        	setConnected(false);
-	        	System.err.println("Failed to connect on port:"+bluetoothAddress+" exception: ");
+	        	com.neuronrobotics.sdk.common.Log.error("Failed to connect on port:"+bluetoothAddress+" exception: ");
 	        	e.printStackTrace();
 				return false;
 			}

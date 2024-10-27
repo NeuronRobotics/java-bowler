@@ -75,7 +75,7 @@ public class TCPConnectionPanel extends AbstractConnectionPanel {
 //		try {
 //			s = new Socket("google.com", 80);
 //			connectionCbo.addItem(s.getLocalAddress().getHostAddress());
-//			//System.out.println(s.getLocalAddress().getHostAddress());
+//			//com.neuronrobotics.sdk.common.Log.error(s.getLocalAddress().getHostAddress());
 //			s.close();
 //		} catch (UnknownHostException e) {
 //			// TODO Auto-generated catch block

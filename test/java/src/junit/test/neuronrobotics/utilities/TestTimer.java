@@ -37,7 +37,7 @@ public class TestTimer {
 				t.initialize(500+(i++), new IthreadedTimoutListener() {
 					@Override
 					public void onTimeout(String message) {
-						System.out.println(message);
+						com.neuronrobotics.sdk.common.Log.error(message);
 						timerTimedOut++;
 					}
 				});

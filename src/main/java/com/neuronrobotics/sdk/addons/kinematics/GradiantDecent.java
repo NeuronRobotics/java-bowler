@@ -83,7 +83,7 @@ public class GradiantDecent implements DhInverseSolver{
 			}
 		}while(++iter<200 && notArrived && stopped == false);//preincrement and check
 		if(debug){
-			System.out.println("Numer of iterations #"+iter+" \n\tStalled = "+stopped+" \n\tArrived = "+!notArrived+" \n\tFinal offset= "+vect+" \n\tFinal orent= "+orent);
+			com.neuronrobotics.sdk.common.Log.error("Numer of iterations #"+iter+" \n\tStalled = "+stopped+" \n\tArrived = "+!notArrived+" \n\tFinal offset= "+vect+" \n\tFinal orent= "+orent);
 		}
 		return inv;
 	}

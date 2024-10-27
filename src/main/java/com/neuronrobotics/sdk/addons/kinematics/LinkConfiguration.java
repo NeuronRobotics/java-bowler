@@ -250,7 +250,7 @@ public class LinkConfiguration implements ITransformNRChangeListener, IVitaminHo
 		if (staticOffset > getUpperLimit() || staticOffset < getLowerLimit())
 			Log.error("PID group " + getHardwareIndex() + " staticOffset is " + staticOffset
 					+ " but needs to be between " + getUpperLimit() + " and " + getLowerLimit());
-		// System.out.println("Interted"+ inverted);
+		// com.neuronrobotics.sdk.common.Log.error("Interted"+ inverted);
 	}
 
 	/**

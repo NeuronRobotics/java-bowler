@@ -77,11 +77,11 @@ public class IntelHexParser {
 	    	 if (l.getRecordType()==4){
 	    		 byte[] haddr=l.getDataBytes();
 	    		 highAddress = ByteList.convertToInt(haddr, false)*65536;
-	    		 ////System.out.println("High Address :" + highAddress);
+	    		 ////com.neuronrobotics.sdk.common.Log.error("High Address :" + highAddress);
 	    	 } if (l.getRecordType()==0){
 	    		 
 	    		 l.setHighAddress(highAddress);
-	    		 ////System.out.println(l);
+	    		 ////com.neuronrobotics.sdk.common.Log.error(l);
 	    		 
 	    		 currentAddress=l.getStartAddress();
 	    		 checkAddressValidity(currentAddress,type);

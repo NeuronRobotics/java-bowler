@@ -24,15 +24,15 @@ public class PacketValidationTest {
 	public void packetTest() {
 		Log.enableInfoPrint();
 		BowlerDatagram bd = BowlerDatagramFactory.build(new MACAddress(), new PingCommand());
-		System.out.println(bd);
+		com.neuronrobotics.sdk.common.Log.error(bd.toString());
 		
 		ByteList data = new ByteList(bd.getBytes());
-		System.out.println(data);
+		com.neuronrobotics.sdk.common.Log.error(data.toString());
 		
 		BowlerDatagram back = BowlerDatagramFactory.build(data);
 		if (back == null)
 			fail();
-		System.out.println(back);
+		com.neuronrobotics.sdk.common.Log.error(back.toString());
 	}
 
 }

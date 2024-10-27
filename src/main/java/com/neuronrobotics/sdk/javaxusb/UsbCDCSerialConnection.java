@@ -321,14 +321,14 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 																		// robotics
 																		// devices
 				// Dump information about the device itself
-				// System.out.println("Device: "+device.getProductString());
+				// com.neuronrobotics.sdk.common.Log.error("Device: "+device.getProductString());
 				addrs.add(device);
 
 				// Dump device descriptor
-				// System.out.println(device.getUsbDeviceDescriptor());
+				// com.neuronrobotics.sdk.common.Log.error(device.getUsbDeviceDescriptor());
 			}
 
-			// System.out.println();
+			// com.neuronrobotics.sdk.common.Log.error();
 
 			// Dump child devices if device is a hub
 			if (device.isUsbHub()) {
@@ -434,9 +434,9 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 			e.printStackTrace();
 		}
 
-		// System.out.println(mDevice);
+		// com.neuronrobotics.sdk.common.Log.error(mDevice);
 		// Dump device descriptor
-		// System.out.println(mDevice.getUsbDeviceDescriptor());
+		// com.neuronrobotics.sdk.common.Log.error(mDevice.getUsbDeviceDescriptor());
 
 		// Process all configurations
 		for (UsbConfiguration configuration : (List<UsbConfiguration>) mDevice
@@ -445,7 +445,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 			for (UsbInterface iface : (List<UsbInterface>) configuration
 					.getUsbInterfaces()) {
 				// Dump the interface descriptor
-				// System.out.println(iface.getUsbInterfaceDescriptor());
+				// com.neuronrobotics.sdk.common.Log.error(iface.getUsbInterfaceDescriptor());
 
 				if (iface.getUsbInterfaceDescriptor().bInterfaceClass() == 2) {
 					// controlInterface = iface;
@@ -470,11 +470,11 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 									.getUsbEndpoints()) {
 								if (endpoint.getUsbEndpointDescriptor()
 										.bEndpointAddress() == 0x03) {
-									// System.out.println("Data out Endpipe");
+									// com.neuronrobotics.sdk.common.Log.error("Data out Endpipe");
 									dataOutEndpoint = endpoint;
 
 								} else {
-									// System.out.println("Data in Endpipe");
+									// com.neuronrobotics.sdk.common.Log.error("Data in Endpipe");
 									dataInEndpoint = endpoint;
 								}
 							}
@@ -590,7 +590,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 			if (r != LibUsb.SUCCESS && r != LibUsb.ERROR_NOT_SUPPORTED
 					&& r != LibUsb.ERROR_NOT_FOUND)
 				throw new LibUsbException("Unable to detach kernel     driver", r);
-			// System.out.println("Kernel detatched for device "+mDevice);
+			// com.neuronrobotics.sdk.common.Log.error("Kernel detatched for device "+mDevice);
 		//}
 	}
 	

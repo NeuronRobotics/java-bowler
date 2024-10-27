@@ -92,7 +92,7 @@ public class XmlFactory {
 		
 	    NodeList nlList= eElement.getElementsByTagName(sTag).item(0).getChildNodes();
 	    Node nValue = (Node) nlList.item(0); 
-	   // System.out.println("\t\t"+sTag+" = "+nValue.getNodeValue());
+	   // com.neuronrobotics.sdk.common.Log.error("\t\t"+sTag+" = "+nValue.getNodeValue());
 	    return nValue.getNodeValue();    
 	}
 	
@@ -106,7 +106,7 @@ public class XmlFactory {
 	public static Double getTagValueDouble(String sTag, Element eElement){
 	    NodeList nlList= eElement.getElementsByTagName(sTag).item(0).getChildNodes();
 	    Node nValue = (Node) nlList.item(0); 
-	   // System.out.println("\t\t"+sTag+" = "+nValue.getNodeValue());
+	   // com.neuronrobotics.sdk.common.Log.error("\t\t"+sTag+" = "+nValue.getNodeValue());
 	    return Double.parseDouble(nValue.getNodeValue());    
 	}
 }

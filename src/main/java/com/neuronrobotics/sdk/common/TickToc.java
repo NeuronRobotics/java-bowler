@@ -23,7 +23,7 @@ public class TickToc {
 				m=m+" from last event "+df.format(diffms/1000.0)+" seconds ";
 			}
 			m=m+" "+message;
-			System.out.println(m);
+			com.neuronrobotics.sdk.common.Log.error(m);
 		}
 	}
 
@@ -45,7 +45,7 @@ public class TickToc {
 		events.add(new Pair(System.currentTimeMillis(), "Toc end event"));
 		Pair start = events.remove(0);
 		Pair previous=null;
-		System.out.println("\n\n");
+		com.neuronrobotics.sdk.common.Log.error("\n\n");
 		for (int i = 0; i < events.size(); i++) {
 			Pair p = events.get(i);
 			p.print(start,previous);
@@ -65,7 +65,7 @@ public class TickToc {
 		if(!enabled)
 			clear();
 		else {
-			System.out.println("Start TickToc");
+			com.neuronrobotics.sdk.common.Log.error("Start TickToc");
 			tic("Tick Tock start");
 		}
 	}

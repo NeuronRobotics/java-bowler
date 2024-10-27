@@ -262,13 +262,13 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter, IFlu
 	public void loadCurrent(){
 		String m114 =runLine("M114");
 		String[] currentPosStr = m114.split("Count")[0].split(" ");// get the current position
-		//System.out.println("Fush with current = "+m114);
+		//com.neuronrobotics.sdk.common.Log.error("Fush with current = "+m114);
 		for(String s:currentPosStr){
 			for(LinkConfiguration l:links.keySet()){
 				IGCodeChannel thisLink = links.get(l);
 				if(s.contains(thisLink.getAxis())){
 					String [] parts = s.split(":");
-					///System.out.println("Found axis = "+s);
+					///com.neuronrobotics.sdk.common.Log.error("Found axis = "+s);
 					thisLink.setValue(Double.parseDouble(parts[1]));
 				}
 			}

@@ -19,16 +19,16 @@ public class BluetoothConector {
 		DyIO dyio;
 		BlueCoveManager manager = new BlueCoveManager();
 		String devices[] = manager.getAvailableSerialDevices(true);
-		System.out.println("Devices: ");
+		com.neuronrobotics.sdk.common.Log.error("Devices: ");
 		for (String d: devices) {
-			System.out.println(d);
+			com.neuronrobotics.sdk.common.Log.error(d);
 		}
 		if (devices.length > 0) {
-			System.out.println("Connecting to : "+devices[0]);
+			com.neuronrobotics.sdk.common.Log.error("Connecting to : "+devices[0]);
 			dyio = new DyIO(new BluetoothSerialConnection(manager, devices[0]));
 			dyio.connect();
 			if(dyio.ping() )
-				System.out.println("All OK!");
+				com.neuronrobotics.sdk.common.Log.error("All OK!");
 			
 		}
 		System.exit(0);

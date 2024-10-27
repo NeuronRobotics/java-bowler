@@ -143,7 +143,7 @@ public class GCodeInterpreter {
 		nextLine.storeWord('G', 0);
 		nextLine.storeWord('M', 0);
 		nextLine.storeWord('P', lineNumber);
-		System.out.println("GCODE: "+line);
+		com.neuronrobotics.sdk.common.Log.error("GCODE: "+line);
 		
 		for(int i=0;i<tokens.length;i++){
 			tokens[i] = tokens[i].trim();
@@ -163,7 +163,7 @@ public class GCodeInterpreter {
 				nextLine.storeWord(code, val);
 			}
 		}
-		//System.out.println(nextLine);
+		//com.neuronrobotics.sdk.common.Log.error(nextLine);
 		executeLine(line);
 	}
 

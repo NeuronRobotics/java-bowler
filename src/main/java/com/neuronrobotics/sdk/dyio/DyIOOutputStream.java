@@ -52,7 +52,7 @@ public class DyIOOutputStream extends OutputStream {
 		}
 		//Bypassing the channel on transmit to prevent re-transmits
 		//chan.getDevice().send(new SetChannelValueCommand(chan.getNumber(),bl));
-		//System.out.println("Sending ByteList: "+bl.asString());
+		//com.neuronrobotics.sdk.common.Log.error("Sending ByteList: "+bl.asString());
 		while(bl.size()>0){
 			ByteList b;
 			if(bl.size()>20){
@@ -60,7 +60,7 @@ public class DyIOOutputStream extends OutputStream {
 			}else{
 				b = new ByteList(bl.popList(bl.size()));
 			}
-			//System.out.println("Sending ByteList: "+b.asString());
+			//com.neuronrobotics.sdk.common.Log.error("Sending ByteList: "+b.asString());
 			chan.setValue(b);
 		}
 	}

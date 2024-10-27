@@ -28,7 +28,7 @@ public class UDPClientTest extends BowlerAbstractDevice implements IBowlerDatagr
 		clnt=new UDPBowlerConnection();
 		
 //		ArrayList<InetAddress>  addrs = clnt.getAllAddresses();
-//		System.out.println("Availiable servers: "+addrs);
+//		com.neuronrobotics.sdk.common.Log.error("Availiable servers: "+addrs);
 //		if (addrs.size()==0)
 //			throw new RuntimeException();
 //		clnt.setAddress(addrs.get(0));
@@ -42,15 +42,15 @@ public class UDPClientTest extends BowlerAbstractDevice implements IBowlerDatagr
 		setConnection(clnt);
 		connect();
 		
-		System.out.println("Pinging");
+		com.neuronrobotics.sdk.common.Log.error("Pinging");
 		long start = System.currentTimeMillis();
 		int numPings=10;
 		for(int i=0;i<numPings;i++)
 			if (!ping())
 				throw new RuntimeException("Ping failed!");
-		System.out.println("Ping average = "+(System.currentTimeMillis()-start)/numPings+"ms");
+		com.neuronrobotics.sdk.common.Log.error("Ping average = "+(System.currentTimeMillis()-start)/numPings+"ms");
 		clnt.disconnect();
-		System.out.println("done");
+		com.neuronrobotics.sdk.common.Log.error("done");
 		System.exit(0);
 	}
 	
@@ -82,7 +82,7 @@ public class UDPClientTest extends BowlerAbstractDevice implements IBowlerDatagr
 			new UDPClientTest();
 		}catch (Exception e){
 			e.printStackTrace();
-			System.err.println("###Client Failed out!");
+			com.neuronrobotics.sdk.common.Log.error("###Client Failed out!");
 			System.exit(1);
 		}
 	}

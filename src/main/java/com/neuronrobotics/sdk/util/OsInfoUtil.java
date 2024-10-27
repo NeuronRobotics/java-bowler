@@ -12,7 +12,7 @@ public class OsInfoUtil {
 	 * @return true, if is 64 bit
 	 */
 	public static boolean is64Bit() {
-		// //System.out.println("Arch: "+getOsArch());
+		// //com.neuronrobotics.sdk.common.Log.error("Arch: "+getOsArch());
 		return getOsArch().startsWith("x86_64")
 				|| getOsArch().startsWith("amd64");
 	}
@@ -54,7 +54,7 @@ public class OsInfoUtil {
 	 * @return true, if is windows
 	 */
 	public static boolean isWindows() {
-		// //System.out.println("OS name: "+getOsName());
+		// //com.neuronrobotics.sdk.common.Log.error("OS name: "+getOsName());
 		return getOsName().toLowerCase().startsWith("windows")
 				|| getOsName().toLowerCase().startsWith("microsoft")
 				|| getOsName().toLowerCase().startsWith("ms");

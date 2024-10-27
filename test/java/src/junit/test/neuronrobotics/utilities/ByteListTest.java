@@ -37,23 +37,23 @@ public class ByteListTest {
 			for(int i= 0;i<testAray.length;i++){
 				tester.add(testAray[i]);
 			}
-			System.out.println("Read test");
+			com.neuronrobotics.sdk.common.Log.error("Read test");
 			for(int i= 0;i<testAray.length;i++){
 				assertTrue(tester.getByte(i) == testAray[i]);
 			}
 			
-			System.out.println("Iterator test");
+			com.neuronrobotics.sdk.common.Log.error("Iterator test");
 			int k=0;
 			for(Byte b: tester){
-				//System.out.println("Expecting "+testAray[k]+" Got "+b );
+				//com.neuronrobotics.sdk.common.Log.error("Expecting "+testAray[k]+" Got "+b );
 				assertTrue(b == testAray[k++]);
 			}
 			
-			System.out.println("Pop test");
+			com.neuronrobotics.sdk.common.Log.error("Pop test");
 			for(int i= 0;i<testAray.length;i++){
 				assertTrue(tester.pop() == testAray[i]);
 			}
-			System.out.println("Looped through index "+j);
+			com.neuronrobotics.sdk.common.Log.error("Looped through index "+j);
 		}
 		
 		//fail("Not yet implemented");

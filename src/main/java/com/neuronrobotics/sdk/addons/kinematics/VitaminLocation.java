@@ -50,7 +50,7 @@ public class VitaminLocation implements ITransformNRChangeListener {
 		try {
 			h.addVitamin(this);
 		}catch(Throwable t){
-			System.out.println("Vitamin "+name+" exists in "+h);
+			com.neuronrobotics.sdk.common.Log.error("Vitamin "+name+" exists in "+h);
 		}
 	}
 	public VitaminLocation(Element vitamins) {

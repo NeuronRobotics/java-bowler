@@ -161,7 +161,7 @@ public class UDPBowlerConnection extends BowlerAbstractConnection{
 		long start = System.currentTimeMillis();
 		//Log.info("Waiting for UDP packet");
 		udpSock.setSoTimeout(1);// Timeout the socket after 1 ms
-		//System.err.println("Timeout set "+(System.currentTimeMillis()-start));
+		//com.neuronrobotics.sdk.common.Log.error("Timeout set "+(System.currentTimeMillis()-start));
 		start = System.currentTimeMillis();
 		try{
 			udpSock.receive(receivePacket);
@@ -174,7 +174,7 @@ public class UDPBowlerConnection extends BowlerAbstractConnection{
 			ex.printStackTrace();
 			return null;
 		}
-		//System.err.println("Recv "+(System.currentTimeMillis()-start));
+		//com.neuronrobotics.sdk.common.Log.error("Recv "+(System.currentTimeMillis()-start));
 		start = System.currentTimeMillis();
 		Log.info("Got UDP packet");
 		if(addrs== null)
@@ -186,10 +186,10 @@ public class UDPBowlerConnection extends BowlerAbstractConnection{
 		for (int i=0;i<receivePacket.getLength();i++){
 			bytesToPacketBuffer.add(data[i]);
 		}
-		//System.err.println("copy "+(System.currentTimeMillis()-start));
+		//com.neuronrobotics.sdk.common.Log.error("copy "+(System.currentTimeMillis()-start));
 		start = System.currentTimeMillis();
 		BowlerDatagram bd= BowlerDatagramFactory.build(bytesToPacketBuffer);
-		//System.err.println("build "+(System.currentTimeMillis()-start));
+		//com.neuronrobotics.sdk.common.Log.error("build "+(System.currentTimeMillis()-start));
 		return bd;
 	}
 	

@@ -244,7 +244,7 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 		setMethod(BowlerMethod.get(raw.getByte(7)));
 		if(getMethod() == null){
 			setMethod(BowlerMethod.STATUS);
-			System.err.println("Method was invalid!! Value="+raw.getUnsigned(7));
+			com.neuronrobotics.sdk.common.Log.error("Method was invalid!! Value="+raw.getUnsigned(7));
 			Log.error("Method was invalid!! Value="+raw.getUnsigned(7));
 		}
 			

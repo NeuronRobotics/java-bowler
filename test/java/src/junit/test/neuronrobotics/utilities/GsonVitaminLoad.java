@@ -26,7 +26,7 @@ public class GsonVitaminLoad {
 				.create();
 		VitaminLocation src = new VitaminLocation(false,"Tester", "hobbyServo","mg92b",new TransformNR());
 		String content = gson.toJson(src);
-		System.out.println(content);
+		com.neuronrobotics.sdk.common.Log.error(content);
 	}
 
 }

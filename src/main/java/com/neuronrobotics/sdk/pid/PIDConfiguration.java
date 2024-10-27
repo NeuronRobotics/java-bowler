@@ -146,7 +146,7 @@ public class PIDConfiguration {
 			setLowerHystersys(((double)ByteList.convertToInt(conf.getData().getBytes(30, 4),true))/1000);
 			
 		}catch(Exception e){
-			System.err.println("No latch value sent");
+			com.neuronrobotics.sdk.common.Log.error("No latch value sent");
 		}
 	}
 	

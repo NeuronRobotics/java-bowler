@@ -89,8 +89,8 @@ public class Log {
 	 *
 	 * @param message the message to log as an error
 	 */
-	public static void error(String message) {
-		instance().add(message, ERROR);
+	public static void error(Object message) {
+		instance().add(message.toString(), ERROR);
 	}
 	
 	/**
@@ -165,7 +165,7 @@ public class Log {
 		if(debugprint&& systemprint) {
 			outStream.println("# " + message);
 			if(outStream != System.out)
-				 System.out.println(m);
+				 System.err.println(m);
 		}
 		
 		

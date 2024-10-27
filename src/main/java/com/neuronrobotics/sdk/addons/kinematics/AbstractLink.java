@@ -125,7 +125,7 @@ public abstract class AbstractLink extends TimeKeeper implements  IFlushable,IVi
 		this.conf=conf;
 		slaveLinks = conf.getSlaveLinks();
 		if(slaveLinks.size()>0)
-			System.out.println(conf.getName()+" has slaves: "+slaveLinks.size());
+			com.neuronrobotics.sdk.common.Log.error(conf.getName()+" has slaves: "+slaveLinks.size());
 		for(LinkConfiguration c:slaveLinks){
 			//generate the links
 			getSlaveFactory().getLink(c);

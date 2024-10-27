@@ -169,7 +169,7 @@ public class UDPConnectionPanel extends AbstractConnectionPanel {
 		public void run() {
 			setName("Bowler Platform UDP searcher");
 			isRunning = true;
-			//System.out.println("Searching for UDP devices, please wait...");
+			//com.neuronrobotics.sdk.common.Log.error("Searching for UDP devices, please wait...");
 			int prt;
 			try {
 				prt=new Integer(port.getText());
@@ -180,7 +180,7 @@ public class UDPConnectionPanel extends AbstractConnectionPanel {
 			clnt=new UDPBowlerConnection(prt);
 			ArrayList<InetAddress>  addrs = clnt.getAllAddresses();
 //			if (addrs.size()>0)
-//				System.out.println("Bowler servers: "+addrs);
+//				com.neuronrobotics.sdk.common.Log.error("Bowler servers: "+addrs);
 			connectionCbo.removeAllItems();
 			for (InetAddress i:addrs) {
 				connectionCbo.addItem(i.getHostAddress());
