@@ -14,11 +14,15 @@ import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
 public class VitaminLocation implements ITransformNRChangeListener {
 	@Expose (serialize = false, deserialize = false)
 	ArrayList<Runnable> listeners=new  ArrayList<>();
-
+	@Expose(serialize = true, deserialize = true)
 	private String name;
+	@Expose(serialize = true, deserialize = true)
 	private String type;
+	@Expose(serialize = true, deserialize = true)
 	private String size;
+	@Expose(serialize = true, deserialize = true)
 	private TransformNR location=null;
+	@Expose(serialize = true, deserialize = true)
 	private boolean isScript =false;
 
 	private VitaminFrame frame=VitaminFrame.DefaultFrame;
