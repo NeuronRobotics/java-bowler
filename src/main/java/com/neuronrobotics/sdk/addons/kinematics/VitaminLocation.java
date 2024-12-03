@@ -49,6 +49,13 @@ public class VitaminLocation implements ITransformNRChangeListener {
 		this.setLocation(location);
 		setScript(isScript);
 	}
+	public VitaminLocation(VitaminLocation loc, String name2) {
+		this.setName(name2);
+		this.setType(loc.type);
+		this.setSize(loc.size);
+		this.setLocation(loc.location);
+		setScript(loc.isScript);
+	}
 	public VitaminLocation(boolean isScript,String name, String type, String size, TransformNR location,IVitaminHolder h) {
 		this(isScript,name,type,size,location);
 		try {
@@ -96,6 +103,7 @@ public class VitaminLocation implements ITransformNRChangeListener {
 		}
 	}
 	
+
 	public void addChangeListener(Runnable r) {
 		if(listeners.contains(r))
 			return;
