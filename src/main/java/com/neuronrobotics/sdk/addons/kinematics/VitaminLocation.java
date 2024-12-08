@@ -163,6 +163,9 @@ public class VitaminLocation implements ITransformNRChangeListener {
 		return vitamins+"\n\t</vitamins>\n";
 		
 	}
+	public String toString() {
+		return getXML();
+	}
 
 	/**
 	 * @return the name
