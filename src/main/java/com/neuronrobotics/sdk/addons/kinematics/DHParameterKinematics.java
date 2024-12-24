@@ -847,7 +847,10 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 		return getChain().getCachedChain().get(linkIndex);
 	}
 	public MobileBase getFollowerMobileBase(int linkIndex) {
+		if(getDhChain().getLinks().size()<=linkIndex)
+			return null;
 		return  getDhLink(linkIndex).getSlaveMobileBase();
+		
 	}
 	public MobileBase getFollowerMobileBase(AbstractLink myLink) {
 		return  getDhLink(myLink).getSlaveMobileBase();
