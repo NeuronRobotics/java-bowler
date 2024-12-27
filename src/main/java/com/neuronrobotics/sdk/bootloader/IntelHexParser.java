@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 import com.neuronrobotics.sdk.common.ByteList;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class IntelHexParser.
  *

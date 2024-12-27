@@ -11,7 +11,7 @@ import com.neuronrobotics.sdk.common.Log;
 //import com.neuronrobotics.sdk.network.BowlerTCPServer;
 import com.neuronrobotics.sdk.network.UDPBowlerConnection;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class UDPClientTest.
  */
@@ -35,7 +35,7 @@ public class UDPClientTest extends BowlerAbstractDevice implements IBowlerDatagr
 		try {
 			clnt.setAddress(InetAddress.getByName("192.168.1.10"));
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
+			// Auto-generated catch block
 			e.printStackTrace();
 			System.exit(0);
 		}
@@ -59,7 +59,7 @@ public class UDPClientTest extends BowlerAbstractDevice implements IBowlerDatagr
 	 */
 	@Override
 	public void onAllResponse(BowlerDatagram data) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		
 	}
 
@@ -68,7 +68,7 @@ public class UDPClientTest extends BowlerAbstractDevice implements IBowlerDatagr
 	 */
 	@Override
 	public void onAsyncResponse(BowlerDatagram data) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		
 	}
 	
@@ -92,7 +92,7 @@ public class UDPClientTest extends BowlerAbstractDevice implements IBowlerDatagr
 	 */
 	@Override
 	public boolean isAvailable() throws InvalidConnectionException {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return clnt.isConnected();
 	}
 }

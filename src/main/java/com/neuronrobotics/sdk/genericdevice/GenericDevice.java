@@ -7,7 +7,7 @@ import com.neuronrobotics.sdk.common.BowlerMethod;
 import com.neuronrobotics.sdk.common.InvalidConnectionException;
 import com.neuronrobotics.sdk.common.MACAddress;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * This is a basic device with only bcs.core
  * @author hephaestus
@@ -38,7 +38,7 @@ public class GenericDevice extends BowlerAbstractDevice {
 	 * @see com.neuronrobotics.sdk.common.BowlerAbstractDevice#onAllResponse(com.neuronrobotics.sdk.common.BowlerDatagram)
 	 */
 	public void onAllResponse(BowlerDatagram data) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 
 	}
 
@@ -47,7 +47,7 @@ public class GenericDevice extends BowlerAbstractDevice {
 	 * @see com.neuronrobotics.sdk.common.IBowlerDatagramListener#onAsyncResponse(com.neuronrobotics.sdk.common.BowlerDatagram)
 	 */
 	public void onAsyncResponse(BowlerDatagram data) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 
 	}
 

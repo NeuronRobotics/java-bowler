@@ -22,7 +22,7 @@ import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.MissingNativeLibraryException;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class BluetoothSerialConnection.
  */
@@ -72,7 +72,7 @@ public class BluetoothSerialConnection extends BowlerAbstractConnection{
 					String d = device.getBluetoothAddress();
 					Log.info("Device selected: "+d);
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
+					// Auto-generated catch block
 					e.printStackTrace();
 				}
 			}

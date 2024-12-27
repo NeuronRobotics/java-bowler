@@ -13,7 +13,7 @@
  * limitations under the License.
  ******************************************************************************/
 package com.neuronrobotics.sdk.common;
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * This interface is implemented by objects that can serialise themselves into a byte array.
  * @author rbreznak

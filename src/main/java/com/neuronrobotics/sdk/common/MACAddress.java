@@ -13,7 +13,7 @@
  * limitations under the License.
  ******************************************************************************/
 package com.neuronrobotics.sdk.common;
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * A mac address object. This object represents a MAC Address.
  * @author rbreznak

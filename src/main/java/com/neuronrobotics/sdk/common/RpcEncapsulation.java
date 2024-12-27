@@ -2,7 +2,7 @@ package com.neuronrobotics.sdk.common;
 
 import com.neuronrobotics.sdk.common.device.server.IBowlerCommandProcessor;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class RpcEncapsulation.
  */

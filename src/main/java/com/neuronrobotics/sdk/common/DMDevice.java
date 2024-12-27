@@ -50,7 +50,7 @@ public class DMDevice extends NonBowlerDevice {
 
 	@Override
 	public ArrayList<String> getNamespacesImp() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return new ArrayList<String>();
 	}
 
@@ -59,7 +59,7 @@ public class DMDevice extends NonBowlerDevice {
 		try {
 			methodDisconnect.invoke(getWrapped(), null);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			// Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -99,7 +99,7 @@ public class DMDevice extends NonBowlerDevice {
 			}
 			return true;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			// Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;

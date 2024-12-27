@@ -51,7 +51,7 @@ import com.neuronrobotics.sdk.pid.PIDConfiguration;
 import com.neuronrobotics.sdk.pid.VirtualGenericPIDDevice;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The DyIO class is an encapsulation of all of the functionality of the DyIO module into one object. This 
  * object has one connection to one DyIO module and wraps all of the commands in an accessible API. 
@@ -1310,7 +1310,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	 */
 	@Override
 	public boolean ConfigurePDVelovityController(PDVelocityConfiguration config) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return getPid().ConfigurePDVelovityController(config);
 	}
 
@@ -1319,7 +1319,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	 */
 	@Override
 	public PDVelocityConfiguration getPDVelocityConfiguration(int group) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return getPid().getPDVelocityConfiguration(group);
 	}
 
@@ -1328,7 +1328,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	 */
 	@Override
 	public int getPIDChannelCount() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return getPid().getPIDChannelCount();
 	}
 	

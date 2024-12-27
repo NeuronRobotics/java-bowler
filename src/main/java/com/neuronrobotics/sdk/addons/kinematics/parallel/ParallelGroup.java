@@ -112,7 +112,7 @@ public class ParallelGroup extends DHParameterKinematics {
 //								d.throwExceptionOnJointLimit(false);
 //								d.setDesiredJointSpaceVector(jointSpaceVect, 0);
 //							} catch (Exception e) {
-//								// TODO Auto-generated catch block
+//								// Auto-generated catch block
 //								e.printStackTrace();
 //							}
 //						}
@@ -131,7 +131,7 @@ public class ParallelGroup extends DHParameterKinematics {
 
 	@Override
 	public void disconnectDevice() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		for (DHParameterKinematics l : getConstituantLimbs()) {
 			l.disconnect();
 		}
@@ -141,7 +141,7 @@ public class ParallelGroup extends DHParameterKinematics {
 
 	@Override
 	public boolean connectDevice() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return true;
 	}
 
@@ -199,7 +199,7 @@ public class ParallelGroup extends DHParameterKinematics {
 		}
 	}
 	public double[] getCurrentJointSpaceVector(DHParameterKinematics k) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return null;
 	}
 	@Override

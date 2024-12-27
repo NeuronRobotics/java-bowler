@@ -33,7 +33,7 @@ import com.neuronrobotics.sdk.dyio.IChannelEventListener;
 import com.neuronrobotics.sdk.dyio.InvalidChannelOperationException;
 
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class UARTChannel.
  */
@@ -272,7 +272,7 @@ public class UARTChannel implements ISendable {
 		 * @see com.neuronrobotics.sdk.dyio.peripherals.DyIOAbstractPeripheral#hasAsync()
 		 */
 		public boolean hasAsync() {
-			// TODO Auto-generated method stub
+			// Auto-generated method stub
 			return true;
 		}
 		
@@ -354,7 +354,7 @@ public class UARTChannel implements ISendable {
 		 * @see com.neuronrobotics.sdk.dyio.peripherals.DyIOAbstractPeripheral#hasAsync()
 		 */
 		public boolean hasAsync() {
-			// TODO Auto-generated method stub
+			// Auto-generated method stub
 			return true;
 		}
 

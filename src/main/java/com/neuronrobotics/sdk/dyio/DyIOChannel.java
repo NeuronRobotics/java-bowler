@@ -30,7 +30,7 @@ import com.neuronrobotics.sdk.common.InvalidResponseException;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.peripherals.DyIOAbstractPeripheral;
 import com.neuronrobotics.sdk.util.ThreadUtil;
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * A DyIO channel. This represents a single DyIO pchannel.
  * @author Kevin Harrington, Robert Breznak

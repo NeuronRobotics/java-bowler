@@ -12,7 +12,7 @@ import com.neuronrobotics.sdk.common.BowlerDatagramFactory;
 import com.neuronrobotics.sdk.common.MACAddress;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class BowlerDatagramFactoryTests.
  */

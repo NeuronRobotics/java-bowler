@@ -48,7 +48,7 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
 
 
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * Connections create a bridge between a device and the SDK. Each connection is encapsulated to allow maximum
  * reuse and system changes without the need to restart / reconfigure.
@@ -261,10 +261,10 @@ public abstract class BowlerAbstractConnection {
 				 if(dataIns!=null)
 					 getDataIns().read();
 			} catch (NullPointerException e) {
-				// TODO Auto-generated catch block
+				// Auto-generated catch block
 				//e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				// Auto-generated catch block
 				//e.printStackTrace();
 			}
 		}

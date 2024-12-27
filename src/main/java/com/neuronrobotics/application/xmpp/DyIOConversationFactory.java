@@ -3,7 +3,7 @@ package com.neuronrobotics.application.xmpp;
 import com.neuronrobotics.application.xmpp.GoogleChat.IChatLog;
 
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * A factory for creating DyIOConversation objects.
  */

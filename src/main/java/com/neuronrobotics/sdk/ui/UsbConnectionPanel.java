@@ -44,7 +44,7 @@ import com.neuronrobotics.sdk.javaxusb.IUsbDeviceEventListener;
 import com.neuronrobotics.sdk.javaxusb.UsbCDCSerialConnection;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class UsbConnectionPanel.
  */
@@ -132,13 +132,13 @@ public class UsbConnectionPanel extends AbstractConnectionPanel implements IUsbD
 				e1.printStackTrace();
 				throw new RuntimeException(e1);
 			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
+				// Auto-generated catch block
 				e.printStackTrace();
 			} catch (UsbDisconnectedException e) {
-				// TODO Auto-generated catch block
+				// Auto-generated catch block
 				e.printStackTrace();
 			} catch (SecurityException e) {
-				// TODO Auto-generated catch block
+				// Auto-generated catch block
 				e.printStackTrace();
 			}
 			for(int i=0;i<prts.size();i++) {

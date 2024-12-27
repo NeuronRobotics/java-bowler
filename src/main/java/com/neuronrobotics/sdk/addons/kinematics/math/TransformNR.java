@@ -8,7 +8,7 @@ import com.google.gson.annotations.Expose;
 import com.neuronrobotics.sdk.common.Log;
 import Jama.Matrix;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class TransformNR.
  */

@@ -16,7 +16,7 @@ package com.neuronrobotics.sdk.dyio;
 
 import com.neuronrobotics.sdk.common.ByteList;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * a DyIO Channel Event.
  * 
@@ -51,7 +51,7 @@ public class DyIOChannelEvent {
 	 * @param integer the integer
 	 */
 	public DyIOChannelEvent(DyIOChannel c, Integer integer) {
-		// TODO Auto-generated constructor stub
+		// Auto-generated constructor stub
 		this.channel =c;
 		this.integer = integer;
 		

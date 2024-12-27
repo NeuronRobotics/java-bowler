@@ -14,7 +14,7 @@
  ******************************************************************************/
 package com.neuronrobotics.sdk.common;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * This connection is thrown in the case of an invalid connection.
  *

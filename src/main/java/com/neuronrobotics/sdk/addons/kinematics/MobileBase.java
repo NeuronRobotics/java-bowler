@@ -22,7 +22,7 @@ import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
 import com.neuronrobotics.sdk.common.DeviceManager;
 import com.neuronrobotics.sdk.common.Log;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class MobileBase.
  */
@@ -480,7 +480,7 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	 */
 	@Override
 	public double[] inverseKinematics(TransformNR taskSpaceTransform) throws Exception {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return new double[getNumberOfLinks()];
 	}
 
@@ -492,7 +492,7 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	 */
 	@Override
 	public TransformNR forwardKinematics(double[] jointSpaceVector) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return new TransformNR();
 	}
 
@@ -1083,32 +1083,32 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 
 	@Override
 	public void event(LinkConfiguration newConf) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		fireIOnMobileBaseRenderChange();
 		fireConfigurationUpdate();
 	}
 
 	@Override
 	public void onIOnMobileBaseRenderChange() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		fireIOnMobileBaseRenderChange();
 	}
 
 	@Override
 	public void onJointSpaceUpdate(AbstractKinematicsNR source, double[] joints) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		fireIOnMobileBaseRenderChange();
 	}
 
 	@Override
 	public void onJointSpaceTargetUpdate(AbstractKinematicsNR source, double[] joints) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 
 	}
 
 	@Override
 	public void onJointSpaceLimit(AbstractKinematicsNR source, int axis, JointLimit event) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 
 	}
 

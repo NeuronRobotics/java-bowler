@@ -27,7 +27,7 @@ import com.neuronrobotics.sdk.common.Log;
 
 
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class BowlerTCPServer.
  */
@@ -55,7 +55,7 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 			socket.setSoTimeout(1000);
 			
 		} catch (SocketException e) {
-			// TODO Auto-generated catch block
+			// Auto-generated catch block
 			e.printStackTrace();
 		}
 		setSynchronusPacketTimeoutTime(sleepTime);
@@ -109,7 +109,7 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 			}
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			// Auto-generated catch block
 			e.printStackTrace();
 		}
 		

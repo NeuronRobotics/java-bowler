@@ -15,7 +15,7 @@ import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.common.DeviceManager;
 import com.neuronrobotics.sdk.dyio.IChannelEventListener;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * This class is a wrapper for the DyIO PPM signal reader.
  * This manages taking Channel 23 and using it to read values from the VEX rc controller (others might be supported as well)

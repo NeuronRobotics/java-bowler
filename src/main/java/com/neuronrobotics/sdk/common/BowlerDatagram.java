@@ -31,7 +31,7 @@
  */
 package com.neuronrobotics.sdk.common;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * Formats data into a Bowler packet. 
  * 
@@ -677,7 +677,7 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	 * @param opCode the new rpc
 	 */
 	public void setRpc(String opCode) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		
 	}
 

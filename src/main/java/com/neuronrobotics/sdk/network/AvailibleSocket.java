@@ -16,7 +16,7 @@ package com.neuronrobotics.sdk.network;
 
 import java.net.InetAddress;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class AvailibleSocket.
  */

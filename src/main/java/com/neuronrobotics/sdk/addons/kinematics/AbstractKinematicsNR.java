@@ -37,7 +37,7 @@ import com.neuronrobotics.sdk.pid.PIDConfiguration;
 import com.neuronrobotics.sdk.pid.PIDEvent;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 import com.neuronrobotics.sdk.util.ThreadUtil;
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 //import javax.swing.JFrame;
 //import javax.swing.JOptionPane;
 
@@ -170,7 +170,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 */
 	@Override
 	public ArrayList<String> getNamespacesImp() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		ArrayList<String> back = new ArrayList<String>();
 		back.add("bcs.cartesian.*");
 		return back;

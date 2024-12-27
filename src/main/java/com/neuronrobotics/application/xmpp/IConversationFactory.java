@@ -1,6 +1,6 @@
 package com.neuronrobotics.application.xmpp;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * A factory for creating IConversation objects.
  */

@@ -1,6 +1,6 @@
 package com.neuronrobotics.sdk.addons.kinematics;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class AbstractPrismaticLink.
  */
@@ -13,7 +13,7 @@ public abstract class AbstractPrismaticLink extends AbstractLink {
 	 */
 	public AbstractPrismaticLink(LinkConfiguration conf) {
 		super(conf);
-		// TODO Auto-generated constructor stub
+		// Auto-generated constructor stub
 	}
 	
 	/**

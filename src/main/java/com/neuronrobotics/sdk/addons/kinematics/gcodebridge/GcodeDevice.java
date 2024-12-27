@@ -133,13 +133,13 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter, IFlu
 			try {
 				outs.flush();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				// Auto-generated catch block
 				e.printStackTrace();
 			}
 			try {
 				outs.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				// Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -147,7 +147,7 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter, IFlu
 			try {
 				ins.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				// Auto-generated catch block
 				e.printStackTrace();
 			}
 		outs=null;
@@ -170,7 +170,7 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter, IFlu
 
 	@Override
 	public ArrayList<String> getNamespacesImp() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return new ArrayList<String>();
 	}
 	@SuppressWarnings("resource")
@@ -183,7 +183,7 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter, IFlu
 				ret =s.hasNext() ? s.next() : "";
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			// Auto-generated catch block
 			e.printStackTrace();
 		}
 	    return ret;
@@ -200,7 +200,7 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter, IFlu
 				outs.flush();
 			//}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			// Auto-generated catch block
 			e.printStackTrace();
 		}
 		long start = currentTimeMillis();
@@ -221,7 +221,7 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter, IFlu
 
 	@Override
 	public void runFile(File gcode) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		
 	}
 

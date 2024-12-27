@@ -37,7 +37,7 @@ import com.neuronrobotics.sdk.addons.kinematics.time.TimeKeeper;
 import com.neuronrobotics.sdk.commands.bcs.core.PingCommand;
 import com.neuronrobotics.sdk.commands.neuronrobotics.dyio.InfoFirmwareRevisionCommand;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * AbstractDevices are used to model devices that are connected to the Bowler network. AbstractDevice
  * implementations should encapsulate command generation and provide higher-level actions to users.  
@@ -125,7 +125,7 @@ public abstract class BowlerAbstractDevice extends TimeKeeper implements IBowler
 			
 			@Override
 			public void onConnect(BowlerAbstractConnection source) {
-				// TODO Auto-generated method stub
+				// Auto-generated method stub
 				l.onConnect(bad);
 			}
 		});
@@ -167,7 +167,7 @@ public abstract class BowlerAbstractDevice extends TimeKeeper implements IBowler
 				
 				@Override
 				public void onConnect(BowlerAbstractConnection source) {
-					// TODO Auto-generated method stub
+					// Auto-generated method stub
 					getDisconnectListeners().get(index).onConnect(bad);
 				}
 			});

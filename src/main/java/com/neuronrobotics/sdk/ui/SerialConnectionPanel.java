@@ -31,7 +31,7 @@ import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.MissingNativeLibraryException;
 import com.neuronrobotics.sdk.serial.SerialConnection;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class SerialConnectionPanel.
  */

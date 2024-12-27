@@ -1,6 +1,6 @@
 package com.neuronrobotics.sdk.addons.kinematics;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class MockRotoryLink.
  */
@@ -50,7 +50,7 @@ public class MockRotoryLink extends AbstractRotoryLink {
 	 */
 	@Override
 	public double getCurrentPosition() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return 35;
 	}
 
@@ -59,7 +59,7 @@ public class MockRotoryLink extends AbstractRotoryLink {
 	 */
 	@Override
 	public void flushAllDevice(double time) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		val=getTargetValue();
 		//com.neuronrobotics.sdk.common.Log.error("Flushing all Values");
 	}

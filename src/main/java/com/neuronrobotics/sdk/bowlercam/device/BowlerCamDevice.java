@@ -21,7 +21,7 @@ import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class BowlerCamDevice.
  */
@@ -76,7 +76,7 @@ public class BowlerCamDevice extends BowlerAbstractDevice {
 	 * @see com.neuronrobotics.sdk.common.BowlerAbstractDevice#onAllResponse(com.neuronrobotics.sdk.common.BowlerDatagram)
 	 */
 	public void onAllResponse(BowlerDatagram data) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 
 	}
 	
@@ -182,7 +182,7 @@ public class BowlerCamDevice extends BowlerAbstractDevice {
 						image = ByteArrayToImage(tmp.getBytes());
 					}
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
+					// Auto-generated catch block
 					e1.printStackTrace();
 					image=null;
 				}
@@ -306,7 +306,7 @@ public class BowlerCamDevice extends BowlerAbstractDevice {
 			try {
 				sleep(10);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
+				// Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

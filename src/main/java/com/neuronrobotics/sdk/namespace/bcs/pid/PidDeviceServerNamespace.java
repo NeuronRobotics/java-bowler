@@ -14,7 +14,7 @@ import com.neuronrobotics.sdk.pid.PIDCommandException;
 import com.neuronrobotics.sdk.pid.PIDConfiguration;
 
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class PidDeviceServerNamespace.
  */
@@ -193,7 +193,7 @@ public class PidDeviceServerNamespace extends BowlerAbstractDeviceServerNamespac
 									(Integer)data[1], 
 									(Integer)data[2]);
 						} catch (PIDCommandException e) {
-							// TODO Auto-generated catch block
+							// Auto-generated catch block
 							e.printStackTrace();
 							return new Object[]{data[0],new Integer(66)};
 						}

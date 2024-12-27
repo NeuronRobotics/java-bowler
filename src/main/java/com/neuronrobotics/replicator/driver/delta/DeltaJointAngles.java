@@ -1,6 +1,6 @@
 package com.neuronrobotics.replicator.driver.delta;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class DeltaJointAngles.
  */

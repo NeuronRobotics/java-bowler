@@ -30,7 +30,7 @@ import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.Log;
 
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class BowlerUDPServer.
  */
@@ -97,7 +97,7 @@ public class BowlerUDPServer extends BowlerAbstractConnection {
 			setConnected(true);
 			
 		} catch (SocketException e) {
-			// TODO Auto-generated catch block
+			// Auto-generated catch block
 			e.printStackTrace();
 		}
 		return isConnected();	

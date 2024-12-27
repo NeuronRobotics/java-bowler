@@ -10,7 +10,7 @@ import org.apache.commons.math3.geometry.euclidean.threed.RotationOrder;
 import com.google.gson.annotations.Expose;
 import com.neuronrobotics.sdk.common.Log;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * This class is to represent a 3x3 rotation sub-matrix This class also contains
  * static methods for dealing with 3x3 rotations.

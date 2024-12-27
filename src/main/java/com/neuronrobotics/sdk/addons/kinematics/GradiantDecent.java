@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class GradiantDecent.
  */
@@ -25,7 +25,7 @@ public class GradiantDecent implements DhInverseSolver{
 	 */
 	public GradiantDecent(DHChain dhChain, boolean debug) {
 		this.dhChain = dhChain;
-		// TODO Auto-generated constructor stub
+		// Auto-generated constructor stub
 		this.debug = debug;
 	}
 	

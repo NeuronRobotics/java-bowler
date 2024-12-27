@@ -3,7 +3,7 @@ package com.neuronrobotics.test.nrdk;
 import com.neuronrobotics.sdk.genericdevice.GenericDevice;
 import com.neuronrobotics.sdk.serial.SerialConnection;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class SimpleConnection.
  */

@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.neuronrobotics.sdk.common.ISendable;
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * An enumeration of all the possible DyIO channel modes.
  * @author rbreznak

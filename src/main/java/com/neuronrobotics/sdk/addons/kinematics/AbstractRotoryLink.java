@@ -1,6 +1,6 @@
 package com.neuronrobotics.sdk.addons.kinematics;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class AbstractRotoryLink.
  */
@@ -13,7 +13,7 @@ public abstract class AbstractRotoryLink extends AbstractLink {
 	 */
 	public AbstractRotoryLink(LinkConfiguration conf) {
 		super(conf);
-		// TODO Auto-generated constructor stub
+		// Auto-generated constructor stub
 	}
 	
 	/**

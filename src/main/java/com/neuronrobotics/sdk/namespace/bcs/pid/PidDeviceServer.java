@@ -11,7 +11,7 @@ import com.neuronrobotics.sdk.pid.PIDEvent;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 import com.neuronrobotics.sdk.pid.VirtualGenericPIDDevice;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class PidDeviceServer.
  */
@@ -36,7 +36,7 @@ public class PidDeviceServer extends BowlerAbstractServer implements IPIDEventLi
 		try {
 			startNetworkServer(1865);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			// Auto-generated catch block
 			e.printStackTrace();
 			//System.exit(1);
 		}

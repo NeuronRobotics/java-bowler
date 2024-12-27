@@ -15,7 +15,7 @@
 package com.neuronrobotics.sdk.dyio;
 
 import com.neuronrobotics.sdk.common.BowlerDatagram;
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * An asyncrono event.
  * @author rbreznak

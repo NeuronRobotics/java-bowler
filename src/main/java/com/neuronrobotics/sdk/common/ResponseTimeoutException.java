@@ -13,7 +13,7 @@
  * limitations under the License.
  ******************************************************************************/
 package com.neuronrobotics.sdk.common;
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * This excepion is thrown when a device fails to respond to an asynchronous packet in time.
  * @author rvreznak

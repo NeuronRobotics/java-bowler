@@ -4,7 +4,7 @@ import com.neuronrobotics.sdk.common.Log;
 
 import Jama.Matrix;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * This class is to represent a 3x3 rotation sub-matrix This class also contains
  * static methods for dealing with 3x3 rotations.

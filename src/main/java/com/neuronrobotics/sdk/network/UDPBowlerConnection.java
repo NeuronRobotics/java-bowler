@@ -33,7 +33,7 @@ import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.MACAddress;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class UDPBowlerConnection.
  */
@@ -206,7 +206,7 @@ public class UDPBowlerConnection extends BowlerAbstractConnection{
 			if(IPAddressSet == null)
 				IPAddressSet=InetAddress.getByAddress(new byte[]{(byte) 255,(byte) 255,(byte) 255,(byte) 255});
 		} catch (UnknownHostException e1) {
-			// TODO Auto-generated catch block
+			// Auto-generated catch block
 			e1.printStackTrace();
 		}
 		if(connect()){
@@ -243,7 +243,7 @@ public class UDPBowlerConnection extends BowlerAbstractConnection{
 			
 			setConnected(true);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			// Auto-generated catch block
 			e.printStackTrace();
 			setConnected(false);
 		}
@@ -271,7 +271,7 @@ public class UDPBowlerConnection extends BowlerAbstractConnection{
 	 */
 	@Override
 	public boolean waitingForConnection() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return false;
 	}
 	
@@ -296,7 +296,7 @@ public class UDPBowlerConnection extends BowlerAbstractConnection{
 				//wait for all devices to report back
 				try {Thread.sleep(3000);} catch (InterruptedException e) {}
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				// Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

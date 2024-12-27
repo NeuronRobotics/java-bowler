@@ -24,7 +24,7 @@ import com.neuronrobotics.sdk.dyio.DyIOChannel;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.dyio.IDyIOChannel;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class DyIOAbstractPeripheral.
  */
@@ -218,7 +218,7 @@ public abstract class DyIOAbstractPeripheral implements IDyIOChannel {
 					try {
 						Thread.sleep(30);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
+						// Auto-generated catch block
 						e.printStackTrace();
 					}
 				}

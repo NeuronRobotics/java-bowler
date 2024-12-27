@@ -1,6 +1,6 @@
 package com.neuronrobotics.sdk.common;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The listener interface for receiving ISynchronousDatagram events.
  * The class that is interested in processing a ISynchronousDatagram

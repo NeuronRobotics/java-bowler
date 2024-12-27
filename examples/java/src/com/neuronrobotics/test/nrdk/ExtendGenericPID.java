@@ -8,7 +8,7 @@ import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.pid.GenericPIDDevice;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class ExtendGenericPID.
  */
@@ -31,7 +31,7 @@ public class ExtendGenericPID {
 			com.neuronrobotics.sdk.common.Log.error("All OK!");
 			System.exit(0);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			// Auto-generated catch block
 			e.printStackTrace();
 			pid.disconnect();
 			System.exit(1);

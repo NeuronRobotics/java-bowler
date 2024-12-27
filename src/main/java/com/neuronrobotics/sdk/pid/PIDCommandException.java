@@ -1,6 +1,6 @@
 package com.neuronrobotics.sdk.pid;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class PIDCommandException.
  */

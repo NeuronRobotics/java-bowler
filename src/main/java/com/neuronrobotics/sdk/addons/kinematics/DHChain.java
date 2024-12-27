@@ -16,7 +16,7 @@ import com.neuronrobotics.sdk.addons.kinematics.time.ITimeProvider;
 import com.neuronrobotics.sdk.addons.kinematics.time.TimeKeeper;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
 import com.neuronrobotics.sdk.common.Log;
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 
 /**
  * The Class DHChain.
@@ -282,7 +282,7 @@ public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector )
 	 * @return the upper limits
 	 */
 	public double[] getUpperLimits() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return upperLimits;
 	}
 
@@ -292,7 +292,7 @@ public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector )
 	 * @return the lower limits
 	 */
 	public double[] getlowerLimits() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return lowerLimits;
 	}
 

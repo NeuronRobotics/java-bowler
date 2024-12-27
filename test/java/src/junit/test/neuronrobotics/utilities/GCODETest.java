@@ -145,7 +145,7 @@ public class GCODETest {
 				arm.setDesiredTaskSpaceTransform(new TransformNR(10, 10, 0, new RotationNR()), 1);
 				arm.setDesiredTaskSpaceTransform(new TransformNR(), 1);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
+				// Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

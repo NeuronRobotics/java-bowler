@@ -14,7 +14,7 @@ import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.NoConnectionAvailableException;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class VirtualGenericPIDDevice.
  */
@@ -279,7 +279,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 	 */
 	@Override
 	public float GetPIDPosition(int group) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return (float) getDriveThread(group).getPosition();
 	}
 
@@ -416,7 +416,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 						try {
 							getTimeProvider().sleep(1);
 						} catch (InterruptedException e1) {
-							// TODO Auto-generated catch block
+							// Auto-generated catch block
 							e1.printStackTrace();
 							return;
 						}

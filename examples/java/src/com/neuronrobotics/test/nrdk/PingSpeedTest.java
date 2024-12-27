@@ -9,7 +9,7 @@ import com.neuronrobotics.sdk.network.UDPBowlerConnection;
 import com.neuronrobotics.sdk.serial.SerialConnection;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class PingSpeedTest.
  */
@@ -30,7 +30,7 @@ public class PingSpeedTest {
 //			//c = new BowlerTCPClient("192.168.1.10", 1866);
 //			c = new UDPBowlerConnection(InetAddress.getByName("130.215.49.37"), 1865);
 //		} catch (Exception e) {
-//			// TODO Auto-generated catch block
+//			// Auto-generated catch block
 //			e.printStackTrace();
 //			System.exit(1);
 //		}

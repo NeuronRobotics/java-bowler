@@ -28,7 +28,7 @@ import com.neuronrobotics.sdk.common.MissingNativeLibraryException;
 import com.neuronrobotics.sdk.genericdevice.GenericDevice;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * SerialConnection manages a connection to a serial port on the host system. This class is responsible for
  * abstracting all of the aspects of a serial connection including:
@@ -276,7 +276,7 @@ public class SerialConnection extends BowlerAbstractConnection {
 	 */
 	@Override
 	public boolean waitingForConnection() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return false;
 	}
 	

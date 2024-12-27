@@ -29,7 +29,7 @@ import com.neuronrobotics.application.xmpp.IConversationFactory;
 
 
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class GoogleChatEngine.
  */
@@ -175,7 +175,7 @@ public class GoogleChatEngine implements ChatManagerListener {
 	 */
 	@Override
 	public void chatCreated(Chat arg0, boolean arg1) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		arg0.addMessageListener( getNewMessageListener());
 		googleChats.add(new GoogleChat(arg0));
 	}

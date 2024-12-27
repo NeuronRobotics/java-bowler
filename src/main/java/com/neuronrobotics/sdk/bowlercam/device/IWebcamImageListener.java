@@ -2,7 +2,7 @@ package com.neuronrobotics.sdk.bowlercam.device;
 
 import java.awt.image.BufferedImage;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The listener interface for receiving IWebcamImage events.
  * The class that is interested in processing a IWebcamImage

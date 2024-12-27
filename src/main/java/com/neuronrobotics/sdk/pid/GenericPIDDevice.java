@@ -13,7 +13,7 @@ import com.neuronrobotics.sdk.namespace.bcs.pid.IExtendedPIDControl;
 import com.neuronrobotics.sdk.namespace.bcs.pid.LegacyPidNamespaceImp;
 import com.neuronrobotics.sdk.namespace.bcs.pid.PidNamespaceImp;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * This class is a generic implementation of the PID system. This can be used as a template, superclass or internal object class for 
  * use with and device that implements the IPIDControl interface. 

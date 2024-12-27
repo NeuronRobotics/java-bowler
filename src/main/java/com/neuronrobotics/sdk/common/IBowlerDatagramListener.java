@@ -13,7 +13,7 @@
  * limitations under the License.
  ******************************************************************************/
 package com.neuronrobotics.sdk.common;
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * Interface for classes to implement when they wich to be notified of a response datagram.
  * @author rbreznak

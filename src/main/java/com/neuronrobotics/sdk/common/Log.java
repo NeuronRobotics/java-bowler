@@ -22,7 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.neuronrobotics.sdk.config.SDKBuildInfo;
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * This class is the Logging Class for the NRsdk.
  * @author rbreznak
@@ -434,7 +434,7 @@ public class Log {
 	 * @return true, if is printing
 	 */
 	public static boolean isPrinting() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return instance().systemprint;
 	}
 

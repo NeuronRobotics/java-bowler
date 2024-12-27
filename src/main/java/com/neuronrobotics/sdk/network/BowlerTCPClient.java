@@ -30,7 +30,7 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
 
 
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class BowlerTCPClient.
  */
@@ -136,7 +136,7 @@ public class BowlerTCPClient extends BowlerAbstractConnection{
 		try {
 			tcpSock.setSoTimeout(1000);
 		} catch (SocketException e) {
-			// TODO Auto-generated catch block
+			// Auto-generated catch block
 			e.printStackTrace();
 		}
 		connect();
@@ -199,7 +199,7 @@ public class BowlerTCPClient extends BowlerAbstractConnection{
 			available= udp.getAllAddresses();
 	        udp.disconnect();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			// Auto-generated catch block
 			e.printStackTrace();
 		}
 		return available;
@@ -228,7 +228,7 @@ public class BowlerTCPClient extends BowlerAbstractConnection{
 					return true;
 				
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				// Auto-generated catch block
 				e.printStackTrace();
 			}
 			disconnect();
@@ -243,7 +243,7 @@ public class BowlerTCPClient extends BowlerAbstractConnection{
 	 */
 	@Override
 	public boolean waitingForConnection() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return false;
 	}
 

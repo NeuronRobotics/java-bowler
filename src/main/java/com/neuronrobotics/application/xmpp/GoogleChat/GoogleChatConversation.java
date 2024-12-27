@@ -8,7 +8,7 @@ import org.jivesoftware.smack.packet.Message;
 import com.neuronrobotics.application.xmpp.IConversation;
 
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class GoogleChatConversation.
  */

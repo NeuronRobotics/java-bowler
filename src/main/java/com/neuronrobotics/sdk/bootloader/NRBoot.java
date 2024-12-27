@@ -10,7 +10,7 @@ import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
 import com.neuronrobotics.sdk.serial.SerialConnection;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class NRBoot.
  */
@@ -225,7 +225,7 @@ public class NRBoot {
 	 * @return the progress max
 	 */
 	public int getProgressMax() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return progressMax;
 	}
 	

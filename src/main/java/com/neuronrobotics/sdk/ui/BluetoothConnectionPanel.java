@@ -33,7 +33,7 @@ import com.neuronrobotics.sdk.util.ProcessMonitor;
 import com.neuronrobotics.sdk.wireless.bluetooth.BlueCoveManager;
 import com.neuronrobotics.sdk.wireless.bluetooth.BluetoothSerialConnection;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class BluetoothConnectionPanel.
  */
@@ -138,7 +138,7 @@ public class BluetoothConnectionPanel extends AbstractConnectionPanel {
 			
 			
 			public void onUpdate(double value) {
-				// TODO Auto-generated method stub
+				// Auto-generated method stub
 				
 			}
 			

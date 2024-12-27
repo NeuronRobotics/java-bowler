@@ -19,7 +19,7 @@ import javax.swing.JPanel;
 
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class AbstractConnectionPanel.
  */

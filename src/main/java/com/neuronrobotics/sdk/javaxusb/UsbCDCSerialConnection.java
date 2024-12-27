@@ -49,7 +49,7 @@ import com.neuronrobotics.sdk.util.OsInfoUtil;
 //import com.neuronrobotics.sdk.util.OsInfoUtil;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class UsbCDCSerialConnection.
  */
@@ -131,13 +131,13 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 			MyDeviceString=getUniqueID(device);
 			
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
+			// Auto-generated catch block
 			e.printStackTrace();
 		} catch (UsbDisconnectedException e) {
-			// TODO Auto-generated catch block
+			// Auto-generated catch block
 			e.printStackTrace();
 		} catch (UsbException e) {
-			// TODO Auto-generated catch block
+			// Auto-generated catch block
 			e.printStackTrace();
 		}
 		setup();
@@ -227,10 +227,10 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 				}
 			}
 		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
+			// Auto-generated catch block
 			e.printStackTrace();
 		} catch (UsbException e) {
-			// TODO Auto-generated catch block
+			// Auto-generated catch block
 			e.printStackTrace();
 		}
 		if(thread!=null)
@@ -283,16 +283,16 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 				}
 			}
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
+			// Auto-generated catch block
 			e.printStackTrace();
 		} catch (UsbDisconnectedException e) {
-			// TODO Auto-generated catch block
+			// Auto-generated catch block
 			e.printStackTrace();
 		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
+			// Auto-generated catch block
 			e.printStackTrace();
 		} catch (UsbException e) {
-			// TODO Auto-generated catch block
+			// Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
@@ -398,16 +398,16 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 				}
 			}
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
+			// Auto-generated catch block
 			e.printStackTrace();
 		} catch (UsbDisconnectedException e) {
-			// TODO Auto-generated catch block
+			// Auto-generated catch block
 			e.printStackTrace();
 		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
+			// Auto-generated catch block
 			e.printStackTrace();
 		} catch (UsbException e) {
-			// TODO Auto-generated catch block
+			// Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -458,7 +458,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 						kernelDetatch(mDevice);
 
 					} catch (Exception e1) {
-						// TODO Auto-generated catch block
+						// Auto-generated catch block
 						e1.printStackTrace();
 						return false;
 					}
@@ -479,16 +479,16 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 								}
 							}
 						} catch (UsbClaimException e) {
-							// TODO Auto-generated catch block
+							// Auto-generated catch block
 							e.printStackTrace();
 						} catch (UsbNotActiveException e) {
-							// TODO Auto-generated catch block
+							// Auto-generated catch block
 							e.printStackTrace();
 						} catch (UsbDisconnectedException e) {
-							// TODO Auto-generated catch block
+							// Auto-generated catch block
 							e.printStackTrace();
 						} catch (UsbException e) {
-							// TODO Auto-generated catch block
+							// Auto-generated catch block
 							e.printStackTrace();
 						}
 					} else {
@@ -566,13 +566,13 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 			try {
 				kDev = findDevice(mDevice.getSerialNumberString());
 			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
+				// Auto-generated catch block
 				e.printStackTrace();
 			} catch (UsbDisconnectedException e) {
-				// TODO Auto-generated catch block
+				// Auto-generated catch block
 				e.printStackTrace();
 			} catch (UsbException e) {
-				// TODO Auto-generated catch block
+				// Auto-generated catch block
 				e.printStackTrace();
 			}
 			if (kDev == null)
@@ -607,10 +607,10 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 				camOutpipe.close();
 			camOutpipe=null;
 		}  catch (UsbDisconnectedException e) {
-			// TODO Auto-generated catch block
+			// Auto-generated catch block
 			e.printStackTrace();
 		} catch (UsbException e) {
-			// TODO Auto-generated catch block
+			// Auto-generated catch block
 			e.printStackTrace();
 		}
 		if(dataInterface!=null){
@@ -619,10 +619,10 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 					dataInterface.release();
 					dataInterface=null;
 				}  catch (UsbDisconnectedException e) {
-					// TODO Auto-generated catch block
+					// Auto-generated catch block
 					e.printStackTrace();
 				} catch (UsbException e) {
-					// TODO Auto-generated catch block
+					// Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -699,7 +699,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 				ThreadUtil.wait(1);
 			}
 
-		} catch (Exception e) {// TODO Auto-generated catch block
+		} catch (Exception e) {// Auto-generated catch block
 			//e.printStackTrace();
 			disconnect();
 			throw new BowlerRuntimeException(
@@ -766,16 +766,16 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 				disconnect();
 				return null;
 			} catch (UsbNotActiveException e) {
-				// TODO Auto-generated catch block
+				// Auto-generated catch block
 				e.printStackTrace();
 			} catch (UsbNotOpenException e) {
-				// TODO Auto-generated catch block
+				// Auto-generated catch block
 				e.printStackTrace();
 			} catch (UsbDisconnectedException e) {
-				// TODO Auto-generated catch block
+				// Auto-generated catch block
 				e.printStackTrace();
 			} catch (UsbException e) {
-				// TODO Auto-generated catch block
+				// Auto-generated catch block
 				e.printStackTrace();
 			}
 			break;
@@ -816,7 +816,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 	 */
 	@Override
 	public boolean waitingForConnection() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return false;
 	}
 
@@ -825,7 +825,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 	 */
 	@Override
 	public void dataEventOccurred(UsbDeviceDataEvent arg0) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 
 	}
 
@@ -859,7 +859,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 	 */
 	@Override
 	public void onDeviceEvent(UsbDevice device) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 
 	}
 

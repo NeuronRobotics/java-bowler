@@ -18,7 +18,7 @@ import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace;
 import com.neuronrobotics.sdk.pid.PIDConfiguration;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class LinkConfiguration.
  */

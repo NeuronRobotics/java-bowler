@@ -3,7 +3,7 @@ package com.neuronrobotics.sdk.addons.kinematics;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 import com.neuronrobotics.sdk.pid.PIDLimitEventType;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class JointLimit.
  */

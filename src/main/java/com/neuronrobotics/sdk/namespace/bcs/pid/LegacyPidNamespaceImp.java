@@ -19,7 +19,7 @@ import com.neuronrobotics.sdk.pid.PIDConfiguration;
 import com.neuronrobotics.sdk.pid.PIDEvent;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class LegacyPidNamespaceImp.
  */
@@ -106,7 +106,7 @@ public class LegacyPidNamespaceImp extends AbstractPidNamespaceImp {
 	 */
 	@Override
 	public PDVelocityConfiguration getPDVelocityConfiguration(int group) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return new PDVelocityConfiguration(getDevice().send(new ConfigurePDVelocityCommand(group)));
 	}
 

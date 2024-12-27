@@ -2,7 +2,7 @@ package com.neuronrobotics.sdk.common;
 
 import java.util.ArrayList;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class NamespaceEncapsulation.
  */

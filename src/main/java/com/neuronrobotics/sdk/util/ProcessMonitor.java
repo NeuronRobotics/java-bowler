@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import javax.swing.Timer;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class ProcessMonitor.
  */

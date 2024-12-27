@@ -15,7 +15,7 @@ import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.common.BowlerDatagramFactory;
 import com.neuronrobotics.sdk.common.ByteList;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class NRBootLoader.
  *
@@ -121,7 +121,7 @@ public class NRBootLoader extends BowlerAbstractDevice {
 			getConnection().sendAsync(bd);
 			getConnection().getDataOuts().flush();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			// Auto-generated catch block
 			e.printStackTrace();
 		}
 		disconnect();
@@ -131,7 +131,7 @@ public class NRBootLoader extends BowlerAbstractDevice {
 	 * @see com.neuronrobotics.sdk.common.IBowlerDatagramListener#onAllResponse(com.neuronrobotics.sdk.common.BowlerDatagram)
 	 */
 	public void onAllResponse(BowlerDatagram data) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		////com.neuronrobotics.sdk.common.Log.error(data);
 	}
 
@@ -139,7 +139,7 @@ public class NRBootLoader extends BowlerAbstractDevice {
 	 * @see com.neuronrobotics.sdk.common.IBowlerDatagramListener#onAsyncResponse(com.neuronrobotics.sdk.common.BowlerDatagram)
 	 */
 	public void onAsyncResponse(BowlerDatagram data) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 
 	}
 }

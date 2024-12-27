@@ -1,6 +1,6 @@
 package com.neuronrobotics.sdk.dyio.peripherals;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 //import com.neuronrobotics.sdk.dyio.IChannelEventListener;
 
 /**

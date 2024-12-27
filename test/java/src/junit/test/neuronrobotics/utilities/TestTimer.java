@@ -10,7 +10,7 @@ import com.neuronrobotics.sdk.common.IthreadedTimoutListener;
 import com.neuronrobotics.sdk.common.ThreadedTimeout;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class TestTimer.
  */

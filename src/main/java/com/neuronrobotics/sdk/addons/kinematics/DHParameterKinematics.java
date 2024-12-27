@@ -17,7 +17,7 @@ import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
 import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
 import com.neuronrobotics.sdk.common.IDeviceConnectionEventListener;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class DHParameterKinematics.
  */
@@ -83,7 +83,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 			
 			@Override
 			public void onConnect(BowlerAbstractDevice source) {
-				// TODO Auto-generated method stub
+				// Auto-generated method stub
 				
 			}
 		});
@@ -507,7 +507,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	 */
 	@Override
 	public void disconnectDevice() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		removePoseUpdateListener(this);
 		removeJointSpaceUpdateListener(this);
 	}
@@ -520,7 +520,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	 */
 	@Override
 	public boolean connectDevice() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return true;
 	}
 
@@ -547,7 +547,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	 */
 	@Override
 	public void onTargetTaskSpaceUpdate(AbstractKinematicsNR source, TransformNR pose) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		// TransformFactory.getTransform(pose, getCurrentTargetObject());
 	}
 
@@ -692,7 +692,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	 */
 	@Override
 	public void onJointSpaceTargetUpdate(AbstractKinematicsNR source, double[] joints) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 
 	}
 
@@ -706,7 +706,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	 */
 	@Override
 	public void onJointSpaceLimit(AbstractKinematicsNR source, int axis, JointLimit event) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 
 	}
 

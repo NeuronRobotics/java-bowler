@@ -33,7 +33,7 @@ import com.neuronrobotics.sdk.util.IMonitorable;
 import com.neuronrobotics.sdk.util.IProgressMonitorListener;
 import com.neuronrobotics.sdk.util.ProcessMonitor;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class UDPConnectionPanel.
  */
@@ -138,7 +138,7 @@ public class UDPConnectionPanel extends AbstractConnectionPanel {
 			
 			
 			public void onUpdate(double value) {
-				// TODO Auto-generated method stub
+				// Auto-generated method stub
 				
 			}
 			

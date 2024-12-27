@@ -2,7 +2,7 @@ package com.neuronrobotics.sdk.addons.kinematics;
 
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class WheeledDriveEngine.
  */
@@ -13,7 +13,7 @@ public class WheeledDriveEngine implements IDriveEngine {
 	 */
 	@Override
 	public void DriveArc(MobileBase source, TransformNR newPose, double seconds) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		
 	}
 
@@ -22,7 +22,7 @@ public class WheeledDriveEngine implements IDriveEngine {
 	 */
 	@Override
 	public void DriveVelocityStraight(MobileBase source, double cmPerSecond) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		
 	}
 
@@ -32,7 +32,7 @@ public class WheeledDriveEngine implements IDriveEngine {
 	@Override
 	public void DriveVelocityArc(MobileBase source, double degreesPerSecond,
 			double cmRadius) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		
 	}
 

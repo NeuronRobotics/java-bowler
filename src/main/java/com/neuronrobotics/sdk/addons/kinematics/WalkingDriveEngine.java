@@ -6,7 +6,7 @@ import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class WalkingDriveEngine.
  */
@@ -64,7 +64,7 @@ public class WalkingDriveEngine implements IDriveEngine {
 					feetLocations[i].translateX(newPose.getX());
 					feetLocations[i].translateY(newPose.getY());
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
+					// Auto-generated catch block
 					e.printStackTrace();
 				}
 				
@@ -76,7 +76,7 @@ public class WalkingDriveEngine implements IDriveEngine {
 			try {
 				legs.get(i).setDesiredTaskSpaceTransform(feetLocations[i], seconds);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
+				// Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -89,7 +89,7 @@ public class WalkingDriveEngine implements IDriveEngine {
 	 */
 	@Override
 	public void DriveVelocityStraight(MobileBase source, double cmPerSecond) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		
 	}
 
@@ -99,7 +99,7 @@ public class WalkingDriveEngine implements IDriveEngine {
 	@Override
 	public void DriveVelocityArc(MobileBase source, double degreesPerSecond,
 			double cmRadius) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		
 	}
 

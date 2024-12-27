@@ -18,7 +18,7 @@ import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.peripherals.DyIOPeripheralException;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class CreateArm.
  */

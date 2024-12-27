@@ -16,7 +16,7 @@ import com.neuronrobotics.sdk.common.DeviceManager;
 import com.neuronrobotics.sdk.dyio.IChannelEventListener;
 
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class DyIOConversation.
  */
@@ -207,7 +207,7 @@ public class DyIOConversation implements IConversation, MessageListener, IChanne
             try {
 				chat.sendMessage(msg);
 			} catch (XMPPException e1) {
-				// TODO Auto-generated catch block
+				// Auto-generated catch block
 				e1.printStackTrace();
 			}
 		}
@@ -268,7 +268,7 @@ public class DyIOConversation implements IConversation, MessageListener, IChanne
 	 */
 	@Override
 	public void onChannelEvent(DyIOChannelEvent e) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		
 	}
 

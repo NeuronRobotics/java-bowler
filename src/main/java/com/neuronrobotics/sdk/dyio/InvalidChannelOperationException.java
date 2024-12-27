@@ -16,7 +16,7 @@ package com.neuronrobotics.sdk.dyio;
 
 import com.neuronrobotics.sdk.common.BowlerRuntimeException;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class InvalidChannelOperationException.
  */

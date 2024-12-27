@@ -30,7 +30,7 @@ import com.neuronrobotics.sdk.network.BowlerTCPServer;
 import com.neuronrobotics.sdk.network.BowlerUDPServer;
 import com.neuronrobotics.sdk.network.UDPBowlerConnection;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class BowlerAbstractServer.
  */
@@ -177,7 +177,7 @@ public abstract class BowlerAbstractServer implements
 						addServer(new BowlerTCPServer(s));
 						Log.warning("Got a connection!");
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
+						// Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -260,7 +260,7 @@ public abstract class BowlerAbstractServer implements
 			try {
 				udpServer.reconnect();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				// Auto-generated catch block
 				e.printStackTrace();
 			}
 			return;

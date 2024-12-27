@@ -10,14 +10,14 @@ public class GCodeHeater extends AbstractLink  implements IGCodeChannel {
 	private double value =0;
 	public GCodeHeater(LinkConfiguration conf, String gcodeAxis,GcodeDevice device) {
 		super(conf);
-		// TODO Auto-generated constructor stub
+		// Auto-generated constructor stub
 		this.axis = gcodeAxis;
 		this.device = device;
 	}
 
 	@Override
 	public void cacheTargetValueDevice() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 
 	}
 
@@ -38,13 +38,13 @@ public class GCodeHeater extends AbstractLink  implements IGCodeChannel {
 
 	@Override
 	public double getCurrentPosition() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return value;
 	}
 
 	@Override
 	public String getAxis() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return axis;
 	}
 

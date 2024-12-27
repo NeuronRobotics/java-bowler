@@ -25,7 +25,7 @@ import java.util.Vector;
 
 import com.neuronrobotics.sdk.config.SDKBuildInfo;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class ByteList.
  */
@@ -360,7 +360,7 @@ public class ByteList implements ISendable,Iterable<Byte> {
 	 * @return true, if successful
 	 */
 	public boolean addAll(int index, Collection<? extends Byte> c) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return false;
 	}
 	
@@ -696,7 +696,7 @@ public class ByteList implements ISendable,Iterable<Byte> {
 
 				@Override
 				public Byte next() {
-					// TODO Auto-generated method stub
+					// Auto-generated method stub
 					return data[readIndex++];
 				}
 

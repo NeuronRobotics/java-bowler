@@ -36,7 +36,7 @@ import com.neuronrobotics.sdk.common.MissingNativeLibraryException;
 
 
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 //import com.intel.bluetooth.test.SimpleClient.CancelThread;
 
 /**

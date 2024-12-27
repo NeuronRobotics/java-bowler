@@ -20,7 +20,7 @@ import com.neuronrobotics.sdk.pid.GenericPIDDevice;
 import com.neuronrobotics.sdk.pid.ILinkFactoryProvider;
 import com.neuronrobotics.sdk.pid.VirtualGenericPIDDevice;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * A factory for creating Link objects.
  */
@@ -393,7 +393,7 @@ public class LinkFactory implements IHardwareSyncPulseReciver, IHardwareSyncPuls
 	 * @param l the l
 	 */
 	public void removeLinkListener(AbstractKinematicsNR l) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		for (AbstractLink lin : links) {
 			lin.removeLinkListener(l);
 		}

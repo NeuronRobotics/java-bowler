@@ -1,6 +1,6 @@
 package com.neuronrobotics.sdk.bootloader;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Enum NRBootCoreType.
  */

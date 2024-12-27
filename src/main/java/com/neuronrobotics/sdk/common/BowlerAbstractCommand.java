@@ -31,7 +31,7 @@
  */
 package com.neuronrobotics.sdk.common;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * This class encapsulates the generation of a Bowler RPC. 
  * Each command should represent a unique RPC.
