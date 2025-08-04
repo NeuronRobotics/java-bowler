@@ -808,6 +808,14 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	public ArrayList<DHParameterKinematics> getSteerable() {
 		return steerable;
 	}
+	/**
+	 * Gets the drivable.
+	 *
+	 * @return the drivable
+	 */
+	public ArrayList<DHParameterKinematics> getFixed() {
+		return getDrivable();
+	}
 
 	/**
 	 * Gets the drivable.
