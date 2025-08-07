@@ -1146,4 +1146,49 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 		this.configurationUpdate = configurationUpdate;
 	}
 
+	public DHParameterKinematics getLimbByName(String name) {
+		for(DHParameterKinematics d:getAllDHChains()) {
+			if(d.getScriptingName().contentEquals(name))
+				return d;
+			for(int i=0;i<d.getNumberOfLinks();i++) {
+				MobileBase mb= d.getSlaveMobileBase(i);
+				if(mb!=null) {
+					DHParameterKinematics test = mb.getLimbByName(name);
+					if(test!=null)
+						return test;
+				}
+			}
+		}
+		return null;
+	}
+	public void deleteLimbByName(String name) {
+		ArrayList<DHParameterKinematics> allDHChains = getAllDHChains();
+		for (int j = 0; j < allDHChains.size(); j++) {
+			DHParameterKinematics d = allDHChains.get(j);
+			if(d.getScriptingName().contentEquals(name)) {
+				if(legs.contains(d))
+					legs.remove(d);
+				if(appendages.contains(d))
+					appendages.remove(d);
+				if(drivable.contains(d))
+					drivable.remove(d);
+				if(steerable.contains(d))
+					steerable.remove(d);
+				return ;
+			}
+			for(int i=0;i<d.getNumberOfLinks();i++) {
+				MobileBase mb= d.getSlaveMobileBase(i);
+				if(mb!=null) {
+					mb.deleteLimbByName(name);
+					return;
+				}
+			}
+		}
+	}
+
+	public void zero() throws Exception {
+		for(DHParameterKinematics k:getAllDHChains()) {
+			k.zero();
+		}
+	}
 }

@@ -896,4 +896,28 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	public IVitaminHolder getVitaminHolder(int index) {
 		return getLinkConfiguration(index);
 	}
+	
+	@Override
+	public boolean connect() {
+		boolean back = super.connect();
+		for(int i=0;i<getNumberOfLinks();i++) {
+			MobileBase mb =getFollowerMobileBase(i);
+			if(mb!=null) {
+				mb.connect();
+			}
+		}
+		return back;
+	}
+
+	public void zero() throws Exception {
+		double[] vect = getCurrentJointSpaceTarget();
+		for(int i=0;i<getNumberOfLinks();i++) {
+			vect[i]=0;
+			MobileBase mb =getFollowerMobileBase(i);
+			if(mb!=null) {
+				mb.zero();
+			}
+		}
+		setDesiredJointSpaceVector(vect,0);
+	}
 }
