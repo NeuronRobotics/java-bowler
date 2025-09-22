@@ -5,6 +5,7 @@ package com.neuronrobotics.sdk.bootloader;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import com.neuronrobotics.sdk.common.ByteList;
 
@@ -39,7 +40,7 @@ public class IntelHexParser {
 	 */
 	public static String hex(long n) {
 	    // call toUpperCase() if that's required
-	    return String.format("0x%8s", Long.toHexString(n)).replace(' ', '0');
+	    return String.format(Locale.US,"0x%8s", Long.toHexString(n)).replace(' ', '0');
 	}
 	
 	/**
