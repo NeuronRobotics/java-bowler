@@ -84,6 +84,8 @@ public class Log {
 	private Thread logFileThread = null;
 	
 	private File log=null;
+
+	private ByteList incoming;
 	
 
 	/**
@@ -169,8 +171,7 @@ public class Log {
 		
 		if( systemprint) {
 			outStream.println(m.toString());
-			if(outStream != System.out)
-				errStream.println(m);
+			errStream.println(m);
 		}
 		
 		
@@ -453,11 +454,11 @@ public class Log {
 
 		instance.log=logfile;
 		instance.logFileThread=new Thread(()->{
-			ByteList incoming = new ByteList();
+			instance.incoming = new ByteList();
 			OutputStream stream =  new OutputStream() {
 				@Override
 				public void write(int b) throws IOException {
-					incoming.add(b);
+					instance.incoming.add(b);
 				}
 			};
 			System.setOut(new PrintStream(stream));
@@ -465,10 +466,10 @@ public class Log {
 			setOutStream(new PrintStream(stream));
 			while (instance.log!=null) {
 				ThreadUtil.wait(150);
-				if (incoming.size() > 0)
+				if (instance.incoming.size() > 0)
 					try {
-						String text = incoming.asString();
-						incoming.clear();
+						String text = instance.incoming.asString();
+						instance.incoming.clear();
 						if (text != null && text.length() > 0){
 							Files.writeString(instance.log.toPath(), text, StandardCharsets.UTF_8, 
 					                 StandardOpenOption.CREATE, StandardOpenOption.APPEND);
@@ -481,5 +482,23 @@ public class Log {
 		});
 		instance.logFileThread.start();
 	}
-	
+	public static void flush() {
+		setOutStream(outStream);
+		System.setOut(outStream);
+		System.setErr(outStream);
+		while(instance.incoming.size() > 0) {
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		try {
+			instance.logFileThread.join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }
