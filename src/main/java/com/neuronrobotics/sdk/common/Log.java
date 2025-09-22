@@ -75,6 +75,8 @@ public class Log {
 	
 	/** The out stream. */
 	private static PrintStream outStream = System.out;
+	/** The out stream. */
+	private static PrintStream errStream = System.err;	
 	
 	/** The use colored prints. */
 	private boolean useColoredPrints=false;
@@ -168,7 +170,7 @@ public class Log {
 		if( systemprint) {
 			outStream.println(m.toString());
 			if(outStream != System.out)
-				 System.err.println(m);
+				errStream.println(m);
 		}
 		
 		
@@ -458,6 +460,8 @@ public class Log {
 					incoming.add(b);
 				}
 			};
+			System.setOut(new PrintStream(stream));
+			System.setErr(new PrintStream(stream));
 			setOutStream(new PrintStream(stream));
 			while (instance.log!=null) {
 				ThreadUtil.wait(150);
