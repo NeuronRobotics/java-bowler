@@ -471,7 +471,7 @@ public class Log {
 						String text = instance.incoming.asString();
 						instance.incoming.clear();
 						if (text != null && text.length() > 0){
-							Files.writeString(instance.log.toPath(), text, StandardCharsets.UTF_8, 
+							Files.writeString(logfile.toPath(), text, StandardCharsets.UTF_8, 
 					                 StandardOpenOption.CREATE, StandardOpenOption.APPEND);
 						}
 						text = null;
@@ -486,6 +486,7 @@ public class Log {
 		setOutStream(outStream);
 		System.setOut(outStream);
 		System.setErr(outStream);
+		instance.log=null;
 		while(instance.incoming.size() > 0) {
 			try {
 				Thread.sleep(10);
