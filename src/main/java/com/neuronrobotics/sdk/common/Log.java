@@ -471,7 +471,8 @@ public class Log {
 						String text = instance.incoming.asString();
 						instance.incoming.clear();
 						if (text != null && text.length() > 0){
-							Files.writeString(logfile.toPath(), text, StandardCharsets.UTF_8, StandardOpenOption.APPEND);
+							//Files.writeString(logfile.toPath(), text, StandardCharsets.UTF_8, StandardOpenOption.APPEND); // java 11+
+							Files.write(logfile.toPath(), text.getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
 						}
 						text = null;
 					} catch (Exception e) {
