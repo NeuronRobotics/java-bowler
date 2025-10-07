@@ -169,9 +169,10 @@ public class Log {
 		//messages.add(m);
 
 		
-		if( systemprint && log==null) {
+		if( systemprint) {
 			outStream.println(m.toString());
 		}
+		
 		
 		
 	}
