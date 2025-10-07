@@ -169,9 +169,8 @@ public class Log {
 		//messages.add(m);
 
 		
-		if( systemprint) {
+		if( systemprint && log==null) {
 			outStream.println(m.toString());
-			errStream.println(m);
 		}
 		
 		
@@ -473,6 +472,7 @@ public class Log {
 						if (text != null && text.length() > 0){
 							//Files.writeString(logfile.toPath(), text, StandardCharsets.UTF_8, StandardOpenOption.APPEND); // java 11+
 							Files.write(logfile.toPath(), text.getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+							errStream.println(text);
 						}
 						text = null;
 					} catch (Exception e) {
