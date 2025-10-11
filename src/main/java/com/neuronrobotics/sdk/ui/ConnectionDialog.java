@@ -25,7 +25,7 @@ import com.neuronrobotics.sdk.dyio.DyIOCommunicationException;
 import com.neuronrobotics.sdk.serial.SerialConnection;
 import com.neuronrobotics.sdk.util.OsInfoUtil;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class ConnectionDialog.
  */

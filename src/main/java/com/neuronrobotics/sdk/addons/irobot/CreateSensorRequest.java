@@ -17,7 +17,7 @@ package com.neuronrobotics.sdk.addons.irobot;
 import java.util.HashMap;
 import java.util.Map;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Enum CreateSensorRequest.
  */

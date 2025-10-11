@@ -16,7 +16,7 @@ import com.neuronrobotics.sdk.common.DeviceManager;
 import com.neuronrobotics.sdk.dyio.IChannelEventListener;
 
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class DyIOConversation.
  */
@@ -43,24 +43,24 @@ public class DyIOConversation implements IConversation, MessageListener, IChanne
 	public void processMessage(Chat chat, Message message) {
 		Message msg = new Message(message.getFrom(), Message.Type.chat);
 	    if(message.getType().equals(Message.Type.chat) && message.getBody() != null) {
-	        System.out.println("Received: " + message.getBody()+" from: "+message.getFrom());
+	        com.neuronrobotics.sdk.common.Log.error("Received: " + message.getBody()+" from: "+message.getFrom());
 	        if(log!=null){
 	        	log.onLogEvent(""+message.getFrom()+">> "+ message.getBody());
 	        }
 	        try {
 	        	String ret =onMessage(message.getBody(),chat, message.getFrom());
 	        	msg.setBody(ret);
-	        	System.out.println("Sending: "+msg.getBody());
+	        	com.neuronrobotics.sdk.common.Log.error("Sending: "+msg.getBody());
 	        	 if(log!=null){
 	 	        	log.onLogEvent(""+message.getFrom()+"<< "+ ret);
 	 	        }
 	            chat.sendMessage(msg);
 	        } catch (XMPPException ex) {
 	            ex.printStackTrace();
-	            System.out.println("Failed to send message");
+	            com.neuronrobotics.sdk.common.Log.error("Failed to send message");
 	        }
 	    } else {
-	        System.out.println("I got a message I didn't understand\n\n"+message.getType());
+	        com.neuronrobotics.sdk.common.Log.error("I got a message I didn't understand\n\n"+message.getType());
 	    }
 	}
 
@@ -146,11 +146,11 @@ public class DyIOConversation implements IConversation, MessageListener, IChanne
 		for(ChatAsyncListener l:listeners ){
 			if(l.getFrom().equals(from) && l.getChat()==c){
 				back = l;
-				System.out.println("Found old listener");
+				com.neuronrobotics.sdk.common.Log.error("Found old listener");
 			}
 		}
 		if(back == null){
-			System.out.println("Adding new listener");
+			com.neuronrobotics.sdk.common.Log.error("Adding new listener");
 			back = new ChatAsyncListener(c, from);
 			listeners.add(back);
 		}
@@ -203,11 +203,11 @@ public class DyIOConversation implements IConversation, MessageListener, IChanne
 			Message msg = new Message(getFrom(), Message.Type.chat);
 			String body = "asyncData "+e.getChannel().getChannelNumber()+" "+e.getValue();
 			msg.setBody(body);
-			System.err.println("async: "+msg.getBody());
+			com.neuronrobotics.sdk.common.Log.error("async: "+msg.getBody());
             try {
 				chat.sendMessage(msg);
 			} catch (XMPPException e1) {
-				// TODO Auto-generated catch block
+				// Auto-generated catch block
 				e1.printStackTrace();
 			}
 		}
@@ -268,7 +268,7 @@ public class DyIOConversation implements IConversation, MessageListener, IChanne
 	 */
 	@Override
 	public void onChannelEvent(DyIOChannelEvent e) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		
 	}
 

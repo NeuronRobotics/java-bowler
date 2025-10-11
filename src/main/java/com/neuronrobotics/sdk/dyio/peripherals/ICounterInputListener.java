@@ -14,7 +14,7 @@
  ******************************************************************************/
 package com.neuronrobotics.sdk.dyio.peripherals;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The listener interface for receiving ICounterInput events.
  * The class that is interested in processing a ICounterInput

@@ -11,7 +11,7 @@ import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.namespace.bcs.pid.IExtendedPIDControl;
 import com.neuronrobotics.sdk.pid.GenericPIDDevice;
 import com.neuronrobotics.sdk.pid.VirtualGenericPIDDevice;
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 //import com.neuronrobotics.sdk.pid.IPIDControl;
 
 /**
@@ -92,7 +92,7 @@ public GenericKinematicsModelNR() {
 	 */
 	@Override
 	public void disconnectDevice() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		
 	}
 	
@@ -101,7 +101,7 @@ public GenericKinematicsModelNR() {
 	 */
 	@Override
 	public boolean connectDevice() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return false;
 	}
 

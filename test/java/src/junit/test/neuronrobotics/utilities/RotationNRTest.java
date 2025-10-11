@@ -22,7 +22,7 @@ import com.neuronrobotics.sdk.addons.kinematics.parallel.ParallelGroup;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class RotationNRTest.
  */
@@ -52,10 +52,10 @@ public class RotationNRTest {
 
 		for (RotationConvention conv : conventions) {
 			RotationNR.setConvention(conv);
-			System.out.println("\n\nUsing convention " + conv.toString());
+			com.neuronrobotics.sdk.common.Log.error("\n\nUsing convention " + conv.toString());
 			for (RotationOrder ro : list) {
 				RotationNR.setOrder(ro);
-				System.out.println("\n\nUsing rotationOrder " + ro.toString());
+				com.neuronrobotics.sdk.common.Log.error("\n\nUsing rotationOrder " + ro.toString());
 				//
 				for (int i = 0; i < iterations; i++) {
 
@@ -65,22 +65,22 @@ public class RotationNRTest {
 					try {
 						RotationNR rotTest = new RotationNR(Math.toDegrees(tilt), Math.toDegrees(azumus),
 								Math.toDegrees(elevation));
-						System.out.println("\n\nTest #" + i);
-						System.out.println("Testing Az=" + Math.toDegrees(azumus) + " El=" + Math.toDegrees(elevation)
+						com.neuronrobotics.sdk.common.Log.error("\n\nTest #" + i);
+						com.neuronrobotics.sdk.common.Log.error("Testing Az=" + Math.toDegrees(azumus) + " El=" + Math.toDegrees(elevation)
 								+ " Tl=" + Math.toDegrees(tilt));
-						System.out.println("Got     Az=" + Math.toDegrees(rotTest.getRotationAzimuth()) + " El="
+						com.neuronrobotics.sdk.common.Log.error("Got     Az=" + Math.toDegrees(rotTest.getRotationAzimuth()) + " El="
 								+ Math.toDegrees(rotTest.getRotationElevation()) + " Tl="
 								+ Math.toDegrees(rotTest.getRotationTilt()));
 
 						if (!RotationNR.bound(tilt - .01, tilt + .01, rotTest.getRotationTilt())) {
 							failCount++;
-							System.err.println("Rotation Tilt is not consistant. expected " + Math.toDegrees(tilt)
+							com.neuronrobotics.sdk.common.Log.error("Rotation Tilt is not consistant. expected " + Math.toDegrees(tilt)
 									+ " got " + Math.toDegrees(rotTest.getRotationTilt()) + " \t\tOff By "
 									+ (Math.toDegrees(tilt) - Math.toDegrees(rotTest.getRotationTilt())));
 						}
 						if (!RotationNR.bound(elevation - .01, elevation + .01, rotTest.getRotationElevation())) {
 							failCount++;
-							System.err.println("Rotation Elevation is not consistant. expected "
+							com.neuronrobotics.sdk.common.Log.error("Rotation Elevation is not consistant. expected "
 									+ Math.toDegrees(elevation) + " got "
 									+ Math.toDegrees(rotTest.getRotationElevation()) + " \t\tOff By "
 									+ (Math.toDegrees(elevation) + Math.toDegrees(rotTest.getRotationElevation()))
@@ -89,14 +89,14 @@ public class RotationNRTest {
 						}
 						if (!RotationNR.bound(azumus - .01, azumus + .01, rotTest.getRotationAzimuth())) {
 							failCount++;
-							System.err.println("Rotation azumus is not consistant. expected " + Math.toDegrees(azumus)
+							com.neuronrobotics.sdk.common.Log.error("Rotation azumus is not consistant. expected " + Math.toDegrees(azumus)
 									+ " got " + Math.toDegrees(rotTest.getRotationAzimuth()) + " \t\tOff By "
 									+ (Math.toDegrees(azumus) - Math.toDegrees(rotTest.getRotationAzimuth())));
 						}
 						ThreadUtil.wait(20);
 					} catch (NumberFormatException ex) {
 						if (elevation >= Math.PI / 2 || elevation <= -Math.PI / 2) {
-							System.out.println("Invalid numbers rejected ok");
+							com.neuronrobotics.sdk.common.Log.error("Invalid numbers rejected ok");
 						}
 					}
 
@@ -104,7 +104,7 @@ public class RotationNRTest {
 
 				// frame();
 				// frame2();
-				System.out.println("Frame test passed with " + ro);
+				com.neuronrobotics.sdk.common.Log.error("Frame test passed with " + ro);
 				// return;
 			}
 		}
@@ -126,10 +126,10 @@ public class RotationNRTest {
 		Log.enableDebugPrint();
 		for (RotationConvention conv : conventions) {
 			RotationNR.setConvention(conv);
-			System.out.println("\n\nUsing convention " + conv.toString());
+			com.neuronrobotics.sdk.common.Log.error("\n\nUsing convention " + conv.toString());
 			for (RotationOrder ro : list) {
 				RotationNR.setOrder(ro);
-				System.out.println("\n\nUsing rotationOrder " + ro.toString());
+				com.neuronrobotics.sdk.common.Log.error("\n\nUsing rotationOrder " + ro.toString());
 				failCount = 0;
 				for (int i = 0; i < iterations; i++) {
 
@@ -154,7 +154,7 @@ public class RotationNRTest {
 					RotationNR newRot = new RotationNR(rotation);
 					RotationNRLegacy oldRot = new RotationNRLegacy(rotation);
 					double[][] rotationMatrix = newRot.getRotationMatrix();
-					System.out.println("Testing pure azumeth \nrotation " + rotationAngleDegrees + "\n as radian "
+					com.neuronrobotics.sdk.common.Log.error("Testing pure azumeth \nrotation " + rotationAngleDegrees + "\n as radian "
 							+ Math.toRadians(rotationAngleDegrees) + "\n     Az " + oldRot.getRotationAzimuth()
 							+ "\n     El " + oldRot.getRotationElevation() + "\n     Tl " + oldRot.getRotationTilt()
 							+ "\n New Az " + newRot.getRotationAzimuth() + "\n New El " + newRot.getRotationElevation()
@@ -163,7 +163,7 @@ public class RotationNRTest {
 					assertArrayEquals(rotation[1], rotationMatrix[1], 0.001);
 					assertArrayEquals(rotation[2], rotationMatrix[2], 0.001);
 
-					System.out.println(
+					com.neuronrobotics.sdk.common.Log.error(
 							"Testing Quaturnion \nrotation " + "\n     qw " + oldRot.getRotationMatrix2QuaturnionW()
 									+ "\n     qx " + oldRot.getRotationMatrix2QuaturnionX() + "\n     qy "
 									+ oldRot.getRotationMatrix2QuaturnionY() + "\n     qz "
@@ -197,7 +197,7 @@ public class RotationNRTest {
 								oldRot.getRotationAzimuth(), oldRot.getRotationElevation(), oldRot.getRotationTilt() },
 								0.001);
 					} else {
-						System.err.println("Legacy angle would fail here " + rotationAngleDegrees);
+						com.neuronrobotics.sdk.common.Log.error("Legacy angle would fail here " + rotationAngleDegrees);
 					}
 					// Check the new rotation against the known value
 					assertArrayEquals(new double[] { Math.toRadians(rotationAngleDegrees), 0, 0 }, new double[] {
@@ -206,7 +206,7 @@ public class RotationNRTest {
 				}
 				// frame();
 				// frame2();
-				System.out.println("Frame test passed with " + ro);
+				com.neuronrobotics.sdk.common.Log.error("Frame test passed with " + ro);
 				// return;
 			}
 		}
@@ -223,10 +223,10 @@ public class RotationNRTest {
 		int iterations = 100;
 		for (RotationConvention conv : conventions) {
 			RotationNR.setConvention(conv);
-			System.out.println("\n\nUsing convention " + conv.toString());
+			com.neuronrobotics.sdk.common.Log.error("\n\nUsing convention " + conv.toString());
 			for (RotationOrder ro : list) {
 				RotationNR.setOrder(ro);
-				System.out.println("\n\nUsing rotationOrder " + ro.toString());
+				com.neuronrobotics.sdk.common.Log.error("\n\nUsing rotationOrder " + ro.toString());
 				failCount = 0;
 				for (int i = 0; i < iterations; i++) {
 
@@ -251,7 +251,7 @@ public class RotationNRTest {
 					RotationNR newRot = new RotationNR(rotation);
 					RotationNRLegacy oldRot = new RotationNRLegacy(rotation);
 					double[][] rotationMatrix = newRot.getRotationMatrix();
-					System.out.println("Testing pure elevation \nrotation " + rotationAngleDegrees + "\n as radian "
+					com.neuronrobotics.sdk.common.Log.error("Testing pure elevation \nrotation " + rotationAngleDegrees + "\n as radian "
 							+ Math.toRadians(rotationAngleDegrees) + "\n     Az " + oldRot.getRotationAzimuth()
 							+ "\n     El " + oldRot.getRotationElevation() + "\n     Tl " + oldRot.getRotationTilt()
 							+ "\n New Az " + newRot.getRotationAzimuth() + "\n New El " + newRot.getRotationElevation()
@@ -260,7 +260,7 @@ public class RotationNRTest {
 					assertArrayEquals(rotation[1], rotationMatrix[1], 0.001);
 					assertArrayEquals(rotation[2], rotationMatrix[2], 0.001);
 
-					System.out.println(
+					com.neuronrobotics.sdk.common.Log.error(
 							"Testing Quaturnion \nrotation " + "\n     qw " + oldRot.getRotationMatrix2QuaturnionW()
 									+ "\n     qx " + oldRot.getRotationMatrix2QuaturnionX() + "\n     qy "
 									+ oldRot.getRotationMatrix2QuaturnionY() + "\n     qz "
@@ -300,7 +300,7 @@ public class RotationNRTest {
 				}
 				// frame();
 				// frame2();
-				System.out.println("Frame test passed with " + ro);
+				com.neuronrobotics.sdk.common.Log.error("Frame test passed with " + ro);
 				// return;
 			}
 		}
@@ -317,10 +317,10 @@ public class RotationNRTest {
 		int iterations = 100;
 		for (RotationConvention conv : conventions) {
 			RotationNR.setConvention(conv);
-			System.out.println("\n\nUsing convention " + conv.toString());
+			com.neuronrobotics.sdk.common.Log.error("\n\nUsing convention " + conv.toString());
 			for (RotationOrder ro : list) {
 				RotationNR.setOrder(ro);
-				System.out.println("\n\nUsing rotationOrder " + ro.toString());
+				com.neuronrobotics.sdk.common.Log.error("\n\nUsing rotationOrder " + ro.toString());
 				failCount = 0;
 				for (int i = 0; i < iterations; i++) {
 
@@ -345,7 +345,7 @@ public class RotationNRTest {
 					RotationNR newRot = new RotationNR(rotation);
 					RotationNRLegacy oldRot = new RotationNRLegacy(rotation);
 					double[][] rotationMatrix = newRot.getRotationMatrix();
-					System.out.println("Testing pure tilt \nrotation " + rotationAngleDegrees + "\n as radian "
+					com.neuronrobotics.sdk.common.Log.error("Testing pure tilt \nrotation " + rotationAngleDegrees + "\n as radian "
 							+ Math.toRadians(rotationAngleDegrees) + "\n     Az " + oldRot.getRotationAzimuth()
 							+ "\n     El " + oldRot.getRotationElevation() + "\n     Tl " + oldRot.getRotationTilt()
 							+ "\n New Az " + newRot.getRotationAzimuth() + "\n New El " + newRot.getRotationElevation()
@@ -354,7 +354,7 @@ public class RotationNRTest {
 					assertArrayEquals(rotation[1], rotationMatrix[1], 0.001);
 					assertArrayEquals(rotation[2], rotationMatrix[2], 0.001);
 
-					System.out.println(
+					com.neuronrobotics.sdk.common.Log.error(
 							"Testing Quaturnion \nrotation " + "\n     qw " + oldRot.getRotationMatrix2QuaturnionW()
 									+ "\n     qx " + oldRot.getRotationMatrix2QuaturnionX() + "\n     qy "
 									+ oldRot.getRotationMatrix2QuaturnionY() + "\n     qz "
@@ -391,7 +391,7 @@ public class RotationNRTest {
 				}
 				// frame();
 				// frame2();
-				System.out.println("Frame test passed with " + ro);
+				com.neuronrobotics.sdk.common.Log.error("Frame test passed with " + ro);
 				// return;
 			}
 		}

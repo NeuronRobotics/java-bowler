@@ -133,13 +133,13 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter, IFlu
 			try {
 				outs.flush();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				// Auto-generated catch block
 				e.printStackTrace();
 			}
 			try {
 				outs.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				// Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -147,7 +147,7 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter, IFlu
 			try {
 				ins.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				// Auto-generated catch block
 				e.printStackTrace();
 			}
 		outs=null;
@@ -170,7 +170,7 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter, IFlu
 
 	@Override
 	public ArrayList<String> getNamespacesImp() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return new ArrayList<String>();
 	}
 	@SuppressWarnings("resource")
@@ -183,7 +183,7 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter, IFlu
 				ret =s.hasNext() ? s.next() : "";
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			// Auto-generated catch block
 			e.printStackTrace();
 		}
 	    return ret;
@@ -200,18 +200,18 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter, IFlu
 				outs.flush();
 			//}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			// Auto-generated catch block
 			e.printStackTrace();
 		}
-		long start = System.currentTimeMillis();
+		long start = currentTimeMillis();
 		String ret= "";
 		while(ret.contentEquals("") && 
-				(System.currentTimeMillis()-start)<getTimeoutMs()){
+				(currentTimeMillis()-start)<getTimeoutMs()){
 			
-			ThreadUtil.wait(10);
+			wait(10);
 			ret = getLine();
 		}
-		if((System.currentTimeMillis()-start)<getTimeoutMs()){
+		if((currentTimeMillis()-start)<getTimeoutMs()){
 			Log.error("GCODE TIMEOUT: "+line);
 		}
 		Log.info("S>>"+line);
@@ -221,7 +221,7 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter, IFlu
 
 	@Override
 	public void runFile(File gcode) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		
 	}
 
@@ -262,13 +262,13 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter, IFlu
 	public void loadCurrent(){
 		String m114 =runLine("M114");
 		String[] currentPosStr = m114.split("Count")[0].split(" ");// get the current position
-		//System.out.println("Fush with current = "+m114);
+		//com.neuronrobotics.sdk.common.Log.error("Fush with current = "+m114);
 		for(String s:currentPosStr){
 			for(LinkConfiguration l:links.keySet()){
 				IGCodeChannel thisLink = links.get(l);
 				if(s.contains(thisLink.getAxis())){
 					String [] parts = s.split(":");
-					///System.out.println("Found axis = "+s);
+					///com.neuronrobotics.sdk.common.Log.error("Found axis = "+s);
 					thisLink.setValue(Double.parseDouble(parts[1]));
 				}
 			}

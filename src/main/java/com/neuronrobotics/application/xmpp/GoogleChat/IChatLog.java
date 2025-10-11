@@ -1,6 +1,6 @@
 package com.neuronrobotics.application.xmpp.GoogleChat;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Interface IChatLog.
  */

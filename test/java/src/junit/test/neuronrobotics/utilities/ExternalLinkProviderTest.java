@@ -38,7 +38,7 @@ public class ExternalLinkProviderTest {
 	private static class myLinkImplementation extends PidRotoryLink{
 		public myLinkImplementation( LinkConfiguration conf) {
 			super(virtual.getPIDChannel(conf.getHardwareIndex()), conf,true);
-			System.out.println("Loading MY link");
+			com.neuronrobotics.sdk.common.Log.error("Loading MY link");
 		}
 	}
 
@@ -53,7 +53,7 @@ public class ExternalLinkProviderTest {
 				
 				@Override
 				public AbstractLink generate(LinkConfiguration conf) {
-					System.out.println("Loading my type link factory call");
+					com.neuronrobotics.sdk.common.Log.error("Loading my type link factory call");
 					return new myLinkImplementation(conf);
 				}
 			};
@@ -62,7 +62,7 @@ public class ExternalLinkProviderTest {
 			
 			
 			MobileBase pArm = new MobileBase(new FileInputStream(f));
-			//System.out.println(pArm.getXml());
+			//com.neuronrobotics.sdk.common.Log.error(pArm.getXml());
 			
 			try{
 				String xmlParsed = pArm.getXml();
@@ -81,7 +81,7 @@ public class ExternalLinkProviderTest {
 			pArm.disconnect();
 			System.exit(0);
 		}else
-			System.err.println("No config file");
+			com.neuronrobotics.sdk.common.Log.error("No config file");
 		
 	}
 

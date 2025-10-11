@@ -3,25 +3,33 @@ package com.neuronrobotics.sdk.addons.kinematics.math;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+
+import com.google.gson.annotations.Expose;
 import com.neuronrobotics.sdk.common.Log;
 import Jama.Matrix;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class TransformNR.
  */
 public class TransformNR {
+@Expose (serialize = false, deserialize = false)
   private ArrayList<ITransformNRChangeListener> listeners=null;
   /** The x. */
+@Expose (serialize = true, deserialize = true)
   private double x;
 
   /** The y. */
+@Expose (serialize = true, deserialize = true)
   private double y;
 
   /** The z. */
+@Expose (serialize = true, deserialize = true)
   private double z;
 
   /** The rotation. */
+
+@Expose (serialize = true, deserialize = true)
   private RotationNR rotation;
 
 
@@ -36,6 +44,14 @@ public class TransformNR {
     this.setY(m.get(1, 3));
     this.setZ(m.get(2, 3));
     this.setRotation(new RotationNR(m));
+  }
+  /**
+   * Instantiates a new transform nr.
+   *
+   * @param m the m
+   */
+  public TransformNR(TransformNR  in) {
+    this(in.getMatrixTransform());
   }
 
   /**
@@ -97,7 +113,31 @@ public class TransformNR {
     this.setZ(z);
     this.setRotation(q);
   }
-
+  /**
+   * Instantiates a new transform nr.
+   *
+   * @param x the x
+   * @param y the y
+   * @param z the z
+   * @param q the q
+   */
+  public TransformNR(double x, double y, double z) {
+    this.setX(x);
+    this.setY(y);
+    this.setZ(z);
+    this.setRotation(new RotationNR());
+  }
+  /**
+   * Instantiates a new transform nr.
+   *
+   * @param rot A pure rotation
+   */
+  public TransformNR(RotationNR rot) {
+    this.setX(0);
+    this.setY(0);
+    this.setZ(0);
+    this.setRotation(rot);
+  }
   /**
    * Instantiates a new transform nr.
    *
@@ -210,6 +250,23 @@ public class TransformNR {
       return "Transform error" + ex.getLocalizedMessage();
     }
   }
+  public String toSimpleString() {
+	  return toPositionString()+" "+toAngleString();
+  }
+  public String toPositionString() {
+	DecimalFormat decimalFormat = new DecimalFormat("000.00");
+
+	  return 	"x="+decimalFormat.format(x)+" "+
+	  			"y="+decimalFormat.format(y)+" "+
+	  			"z="+decimalFormat.format(z);
+  }
+  public String toAngleString() {
+		DecimalFormat decimalFormat = new DecimalFormat("000.00");
+
+		  return 	"az="+decimalFormat.format(Math.toDegrees(getRotation().getRotationAzimuth()))+" "+
+		  "el="+decimalFormat.format(Math.toDegrees(getRotation().getRotationElevation()))+" "+
+		  "tl="+decimalFormat.format(Math.toDegrees(getRotation().getRotationTilt()));
+	  }
 
   /**
    * Gets the matrix string.
@@ -392,13 +449,13 @@ public class TransformNR {
   }
   
 	public TransformNR set(double tx, double ty, double tz, double[][] poseRot) {
-		if (Double.isNaN(tx))
+		if (!Double.isFinite(tx))
 			throw new RuntimeException("Value can not be NaN");
 		x = tx;
-		if (Double.isNaN(ty))
+		if (!Double.isFinite(ty))
 			throw new RuntimeException("Value can not be NaN");
 		y = ty;
-		if (Double.isNaN(tz))
+		if (!Double.isFinite(tz))
 			throw new RuntimeException("Value can not be NaN");
 		z = tz;
 		getRotation().set(poseRot);
@@ -412,7 +469,7 @@ public class TransformNR {
    * @param tx the new x
    */
   public TransformNR setX(double tx) {
-    if (Double.isNaN(tx))
+    if (!Double.isFinite(tx))
       throw new RuntimeException("Value can not be NaN");
     x = tx;
     fireChangeEvent();
@@ -425,7 +482,7 @@ public class TransformNR {
    * @param ty the new y
    */
   public TransformNR setY(double ty) {
-    if (Double.isNaN(ty))
+    if (!Double.isFinite(ty))
       throw new RuntimeException("Value can not be NaN");
     y = ty;
     fireChangeEvent();
@@ -438,7 +495,7 @@ public class TransformNR {
    * @param tz the new z
    */
   public TransformNR setZ(double tz) {
-    if (Double.isNaN(tz))
+    if (!Double.isFinite(tz))
       throw new RuntimeException("Value can not be NaN");
     z = tz;
     fireChangeEvent();
@@ -456,18 +513,18 @@ public class TransformNR {
    */
   public String getXml() {
     String xml =
-        "\t<x>" + getX() + "</x>\n" + "\t<y>" + getY() + "</y>\n" + "\t<z>" + getZ() + "</z>\n";
-    if (Double.isNaN(getRotation().getRotationMatrix2QuaturnionW())
-        || Double.isNaN(getRotation().getRotationMatrix2QuaturnionX())
-        || Double.isNaN(getRotation().getRotationMatrix2QuaturnionY())
-        || Double.isNaN(getRotation().getRotationMatrix2QuaturnionZ())) {
+        "\n\t<x>" + getX() + "</x>\n" + "\t<y>" + getY() + "</y>\n" + "\t<z>" + getZ() + "</z>\n";
+    if (!Double.isFinite(getRotation().getRotationMatrix2QuaturnionW())
+        || !Double.isFinite(getRotation().getRotationMatrix2QuaturnionX())
+        || !Double.isFinite(getRotation().getRotationMatrix2QuaturnionY())
+        || !Double.isFinite(getRotation().getRotationMatrix2QuaturnionZ())) {
       xml += "\n\t<!-- ERROR a NaN was detected and replaced with a valid rotation -->\n";
       setRotation(new RotationNR());
     }
     xml += "\t<rotw>" + getRotation().getRotationMatrix2QuaturnionW() + "</rotw>\n" + "\t<rotx>"
         + getRotation().getRotationMatrix2QuaturnionX() + "</rotx>\n" + "\t<roty>"
         + getRotation().getRotationMatrix2QuaturnionY() + "</roty>\n" + "\t<rotz>"
-        + getRotation().getRotationMatrix2QuaturnionZ() + "</rotz>";
+        + getRotation().getRotationMatrix2QuaturnionZ() + "</rotz>\n";
 
     return xml;
   }

@@ -10,7 +10,7 @@ import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
 import com.neuronrobotics.sdk.serial.SerialConnection;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class NRBoot.
  */
@@ -42,7 +42,7 @@ public class NRBoot {
     		//JOptionPane.showMessageDialog(null, message, message, JOptionPane.ERROR_MESSAGE);
     		throw e;
 		}
-		//System.out.println("Connection to bowler device ready");
+		//com.neuronrobotics.sdk.common.Log.error("Connection to bowler device ready");
 	}
 	
 	/**
@@ -54,10 +54,10 @@ public class NRBoot {
 		this.boot=new NRBootLoader(new SerialConnection(serialPort));
 		boot.connect();
 		if (boot.ping()){
-			//System.out.println("Connection to bowler device ready");
+			//com.neuronrobotics.sdk.common.Log.error("Connection to bowler device ready");
 			return;
 		}
-		//System.out.println("Not a Bowler Device");
+		//com.neuronrobotics.sdk.common.Log.error("Not a Bowler Device");
 		boot.disconnect();
 		boot=null;
 	}
@@ -72,12 +72,12 @@ public class NRBoot {
 		
 		String id = getDevice().getBootloaderID();
 		if (id==null){
-			System.err.println("Device is not a bootloader");
+			com.neuronrobotics.sdk.common.Log.error("Device is not a bootloader");
 			return false;
 		}else if (id.contains(core.getType().getReadableName())) {
-			//System.out.println("Bootloader ID:"+core.getType().getReadableName());
+			//com.neuronrobotics.sdk.common.Log.error("Bootloader ID:"+core.getType().getReadableName());
 		}else{
-			System.err.println("##core is Invalid##\nExpected:"+core.getType().getReadableName()+" got: "+id);
+			com.neuronrobotics.sdk.common.Log.error("##core is Invalid##\nExpected:"+core.getType().getReadableName()+" got: "+id);
 			return false;
 		}
 		
@@ -110,13 +110,13 @@ public class NRBoot {
 	 */
 	private void send(IntelHexParser parse,int core){
 		boot.erase(core);
-		//System.out.println("Writing to flash");
+		//com.neuronrobotics.sdk.common.Log.error("Writing to flash");
 		int printLine=0;
 		ByteData line = parse.getNext();
 		while (line != null){
 	
 			if(!boot.write(core, line)){
-				//System.out.println("Failed to write, is the device in bootloader mode?");
+				//com.neuronrobotics.sdk.common.Log.error("Failed to write, is the device in bootloader mode?");
 				return;
 			}
 
@@ -225,7 +225,7 @@ public class NRBoot {
 	 * @return the progress max
 	 */
 	public int getProgressMax() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return progressMax;
 	}
 	

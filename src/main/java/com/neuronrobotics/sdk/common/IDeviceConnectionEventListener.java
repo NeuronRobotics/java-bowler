@@ -3,7 +3,7 @@ package com.neuronrobotics.sdk.common;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The listener interface for receiving IDeviceConnectionEvent events.
  * The class that is interested in processing a IDeviceConnectionEvent

@@ -12,11 +12,12 @@ import Jama.Matrix;
 import javafx.scene.transform.Affine;
 
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
+import com.neuronrobotics.sdk.addons.kinematics.time.ITimeProvider;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
 import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
 import com.neuronrobotics.sdk.common.IDeviceConnectionEventListener;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class DHParameterKinematics.
  */
@@ -82,10 +83,11 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 			
 			@Override
 			public void onConnect(BowlerAbstractDevice source) {
-				// TODO Auto-generated method stub
+				// Auto-generated method stub
 				
 			}
 		});
+		makeDefaultVitamins();
 	}
 
 	/**
@@ -104,6 +106,14 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 				getFactory().getDyio(lf).addConnectionEventListener(l);
 				return;
 			}
+		makeDefaultVitamins();
+	}
+
+	private void makeDefaultVitamins() {
+		for(int i=0;i<getNumberOfLinks();i++) {
+			getLinkConfiguration(i).getShaftVitamin(true);
+			getLinkConfiguration(i).getElectroMechanicalVitamin(true);
+		}
 	}
 
 	/**
@@ -497,7 +507,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	 */
 	@Override
 	public void disconnectDevice() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		removePoseUpdateListener(this);
 		removeJointSpaceUpdateListener(this);
 	}
@@ -510,7 +520,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	 */
 	@Override
 	public boolean connectDevice() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return true;
 	}
 
@@ -537,7 +547,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	 */
 	@Override
 	public void onTargetTaskSpaceUpdate(AbstractKinematicsNR source, TransformNR pose) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		// TransformFactory.getTransform(pose, getCurrentTargetObject());
 	}
 
@@ -682,7 +692,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	 */
 	@Override
 	public void onJointSpaceTargetUpdate(AbstractKinematicsNR source, double[] joints) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 
 	}
 
@@ -696,7 +706,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	 */
 	@Override
 	public void onJointSpaceLimit(AbstractKinematicsNR source, int axis, JointLimit event) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 
 	}
 
@@ -835,5 +845,79 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 
 	public TransformNR getLinkTip(int linkIndex) {
 		return getChain().getCachedChain().get(linkIndex);
+	}
+	public MobileBase getFollowerMobileBase(int linkIndex) {
+		if(getDhChain().getLinks().size()<=linkIndex)
+			return null;
+		return  getDhLink(linkIndex).getSlaveMobileBase();
+		
+	}
+	public MobileBase getFollowerMobileBase(AbstractLink myLink) {
+		return  getDhLink(myLink).getSlaveMobileBase();
+	}
+	public MobileBase getFollowerMobileBase(LinkConfiguration myLink) {
+		return  getDhLink(myLink).getSlaveMobileBase();
+	}
+	
+	public TransformNR getDHStep(int myLink) {
+		return new TransformNR(getDhLink(myLink).DhStep(0));
+	}
+	public TransformNR getDHStep(AbstractLink myLink) {
+		return new TransformNR(getDhLink(myLink).DhStep(0));
+	}
+	public TransformNR getDHStep(LinkConfiguration myLink) {
+		return new TransformNR(getDhLink(myLink).DhStep(0));
+	}
+	@Override
+	public  void setTimeProvider(ITimeProvider t) {
+		super.setTimeProvider(t);
+		getDhChain().setTimeProvider(t);
+	}
+	
+	public VitaminLocation getShaftVitamin(int index) {
+		return getLinkConfiguration(index).getShaftVitamin();
+	}
+
+	public VitaminLocation getElectroMechanicalVitamin(int index) {
+		return getLinkConfiguration(index).getElectroMechanicalVitamin();
+	}
+	public ArrayList<VitaminLocation> getVitamins(int index) {
+		return getVitaminHolder(index).getVitamins();
+	}
+	public ArrayList<VitaminLocation>getNonActuatorVitamins(int index){
+		return getLinkConfiguration(index).getNonActuatorVitamins();
+	}
+	public void addVitamin(int index,VitaminLocation location) {
+		getVitaminHolder(index).addVitamin(location);
+	}
+	public void removeVitamin(int index,VitaminLocation loc) {
+		getVitaminHolder(index).removeVitamin(loc);
+	}
+	public IVitaminHolder getVitaminHolder(int index) {
+		return getLinkConfiguration(index);
+	}
+	
+	@Override
+	public boolean connect() {
+		boolean back = super.connect();
+		for(int i=0;i<getNumberOfLinks();i++) {
+			MobileBase mb =getFollowerMobileBase(i);
+			if(mb!=null) {
+				mb.connect();
+			}
+		}
+		return back;
+	}
+
+	public void zero() throws Exception {
+		double[] vect = getCurrentJointSpaceTarget();
+		for(int i=0;i<getNumberOfLinks();i++) {
+			vect[i]=0;
+			MobileBase mb =getFollowerMobileBase(i);
+			if(mb!=null) {
+				mb.zero();
+			}
+		}
+		setDesiredJointSpaceVector(vect,0);
 	}
 }

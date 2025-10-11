@@ -6,7 +6,7 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class Core.
  */
@@ -55,14 +55,14 @@ public class Core {
 		        try {
 					tmp.add(new hexLine(strLine));
 				} catch (Exception e) {
-					System.err.println("This is not a valid hex file");
+					com.neuronrobotics.sdk.common.Log.error("This is not a valid hex file");
 				}
 		     }
 		     //Close the input stream
 		     in.close();
 			setLines(tmp);
 		}catch (Exception e) {
-			////System.out.println("File not found!!");
+			////com.neuronrobotics.sdk.common.Log.error("File not found!!");
 		}
 	}
 

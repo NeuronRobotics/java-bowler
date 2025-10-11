@@ -3,7 +3,7 @@ package com.neuronrobotics.application.xmpp;
 import com.neuronrobotics.application.xmpp.GoogleChat.IChatLog;
 
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * A factory for creating DyIOConversation objects.
  */
@@ -26,7 +26,7 @@ public class DyIOConversationFactory implements  IConversationFactory{
 	 */
 	@Override
 	public IConversation getConversation() {
-		System.out.println("Getting DyIO conversation");
+		com.neuronrobotics.sdk.common.Log.error("Getting DyIO conversation");
 		return new DyIOConversation(log);
 	}
 }

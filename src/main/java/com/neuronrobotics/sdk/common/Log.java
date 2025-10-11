@@ -14,15 +14,22 @@
  ******************************************************************************/
 package com.neuronrobotics.sdk.common;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.neuronrobotics.sdk.config.SDKBuildInfo;
-// TODO: Auto-generated Javadoc
+import com.neuronrobotics.sdk.util.ThreadUtil;
+//  Auto-generated Javadoc
 /**
  * This class is the Logging Class for the NRsdk.
  * @author rbreznak
@@ -68,12 +75,17 @@ public class Log {
 	
 	/** The out stream. */
 	private static PrintStream outStream = System.out;
-	
-	/** The err stream. */
-	private static PrintStream errStream = System.err;
+	/** The out stream. */
+	private static PrintStream errStream = System.err;	
 	
 	/** The use colored prints. */
 	private boolean useColoredPrints=false;
+	
+	private Thread logFileThread = null;
+	
+	private File log=null;
+
+	private ByteList incoming;
 	
 
 	/**
@@ -89,8 +101,8 @@ public class Log {
 	 *
 	 * @param message the message to log as an error
 	 */
-	public static void error(String message) {
-		instance().add(message, ERROR);
+	public static void error(Object message) {
+		instance().add(message.toString(), ERROR);
 	}
 	
 	/**
@@ -155,18 +167,12 @@ public class Log {
 			m.init(message, importance);
 		}
 		//messages.add(m);
+
 		
-		if(isPrinting() && importance >= minprintlevel && systemprint) {
-			errStream.println(m);
-			if(errStream != System.err)
-				 System.err.println(m);
+		if( systemprint) {
+			outStream.println(m.toString());
 		}
 		
-		if(debugprint&& systemprint) {
-			outStream.println("# " + message);
-			if(outStream != System.out)
-				 System.out.println(m);
-		}
 		
 		
 	}
@@ -187,6 +193,9 @@ public class Log {
 	public static void enableDebugPrint() {
 		Log.enableSystemPrint(true);
 		Log.setMinimumPrintLevel(DEBUG);
+	}
+	public static void disablePrint() {
+		Log.enableSystemPrint(false);
 	}
 	
 	/**
@@ -305,23 +314,7 @@ public class Log {
 		return "";
 	}
 	
-	/**
-	 * get the current error PrintStream.
-	 *
-	 * @return the current Error PrintStream
-	 */
-	public static PrintStream getErrStream() {
-		return errStream;
-	}
-	
-	/**
-	 * set the current error PrintStream.
-	 *
-	 * @param newerrStream the new err stream
-	 */
-	public static void setErrStream(PrintStream newerrStream) {
-		errStream = newerrStream;
-	}
+
 	
 	/**
 	 * Get the current output PrintStream.
@@ -395,7 +388,7 @@ public class Log {
 		 */
 		public String toString() {
 			//return "\t\t\t\t[" + dateFormat.format(datetime) + "] " + " " + getImportance(importance) +" "+callingClass+ " :\n"+ message;
-			return getImportanceColor(importance)+"\t\t\t\t[" + dateFormat.format(datetime) + "] " + " " + getImportance(importance) +" "+callingClass+ " :\n"+ message+getColorNormalizationCode();
+			return getImportanceColor(importance)+"[" + dateFormat.format(datetime) + "] " + " " + getImportance(importance) +" "+callingClass+ " :\t\t\t\t"+ message+getColorNormalizationCode();
 		}
 	}
 	
@@ -434,7 +427,7 @@ public class Log {
 	 * @return true, if is printing
 	 */
 	public static boolean isPrinting() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return instance().systemprint;
 	}
 
@@ -445,5 +438,69 @@ public class Log {
 		String sStackTrace = sw.toString(); // stack trace as a string
 		Log.error(sStackTrace);
 	}
-	
+
+	public static void setFile(File logfile) {
+		instance().systemprint=true;
+		instance.log=null;
+		if(instance.logFileThread!=null) {
+			instance.logFileThread.interrupt();
+			try {
+				instance.logFileThread.join();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		instance.log=logfile;
+		instance.logFileThread=new Thread(()->{
+			instance.incoming = new ByteList();
+			OutputStream stream =  new OutputStream() {
+				@Override
+				public void write(int b) throws IOException {
+					instance.incoming.add(b);
+				}
+			};
+			System.setOut(new PrintStream(stream));
+			System.setErr(new PrintStream(stream));
+			setOutStream(new PrintStream(stream));
+			while (instance.log!=null) {
+				ThreadUtil.wait(150);
+				if (instance.incoming.size() > 0)
+					try {
+						String text = instance.incoming.asString();
+						instance.incoming.clear();
+						if (text != null && text.length() > 0){
+							//Files.writeString(logfile.toPath(), text, StandardCharsets.UTF_8, StandardOpenOption.APPEND); // java 11+
+							Files.write(logfile.toPath(), text.getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+							errStream.println(text);
+						}
+						text = null;
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+			}
+		});
+		instance.logFileThread.start();
+	}
+	public static void flush() {
+		setOutStream(outStream);
+		System.setOut(outStream);
+		System.setErr(outStream);
+		instance.log=null;
+		while(instance.incoming.size() > 0) {
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		try {
+			instance.logFileThread.join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

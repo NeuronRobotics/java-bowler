@@ -28,7 +28,7 @@ import com.neuronrobotics.sdk.common.MissingNativeLibraryException;
 import com.neuronrobotics.sdk.genericdevice.GenericDevice;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * SerialConnection manages a connection to a serial port on the host system. This class is responsible for
  * abstracting all of the aspects of a serial connection including:
@@ -219,27 +219,27 @@ public class SerialConnection extends BowlerAbstractConnection {
 		List <String> ports = SerialConnection.getAvailableSerialPorts();
 		//Start by searching through all available serial connections for DyIOs connected to the system
 		for(String s: ports){
-			System.out.println("Searching "+s);
+			com.neuronrobotics.sdk.common.Log.error("Searching "+s);
 		}
 		for(String s: ports){
 				try{
 					SerialConnection connection = new SerialConnection(s);
 					GenericDevice d = new GenericDevice(connection);
 					d.connect();
-					System.out.println("Pinging port: "+connection+" ");
+					com.neuronrobotics.sdk.common.Log.error("Pinging port: "+connection+" ");
 					if(d.ping()){
 						String addr = d.getAddress().toString();
 						if(addr.equalsIgnoreCase(mac.toString())){
 							connection.disconnect();
-							System.out.println("Device FOUND on port: "+connection+" "+addr);
+							com.neuronrobotics.sdk.common.Log.error("Device FOUND on port: "+connection+" "+addr);
 							return connection;
 						}
-						System.err.println("Device not on port: "+connection+" "+addr);
+						com.neuronrobotics.sdk.common.Log.error("Device not on port: "+connection+" "+addr);
 					}
 					connection.disconnect();
 				}catch(Exception EX){
 					EX.printStackTrace();
-					System.err.println("Serial port "+s+" is not a DyIO");
+					com.neuronrobotics.sdk.common.Log.error("Serial port "+s+" is not a DyIO");
 				}
 
 		}
@@ -276,7 +276,7 @@ public class SerialConnection extends BowlerAbstractConnection {
 	 */
 	@Override
 	public boolean waitingForConnection() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return false;
 	}
 	

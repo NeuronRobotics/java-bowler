@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class NonBowlerDevice.
  */
@@ -66,7 +66,7 @@ public abstract class  NonBowlerDevice extends BowlerAbstractDevice {
 	 */
 	@Override
 	public void onAsyncResponse(BowlerDatagram data) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		
 	}
 	

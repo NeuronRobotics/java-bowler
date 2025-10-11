@@ -45,12 +45,14 @@ public class TickToc {
 		events.add(new Pair(System.currentTimeMillis(), "Toc end event"));
 		Pair start = events.remove(0);
 		Pair previous=null;
-		System.out.println("\n\n");
+
 		for (int i = 0; i < events.size(); i++) {
 			Pair p = events.get(i);
 			p.print(start,previous);
 			previous=p;
 		}
+		System.out.println("End TickToc "+System.currentTimeMillis()+"\n\n");
+
 		clear();
 	}
 
@@ -65,7 +67,7 @@ public class TickToc {
 		if(!enabled)
 			clear();
 		else {
-			System.out.println("Start TickToc");
+			System.out.println("\n\nStart TickToc "+System.currentTimeMillis());
 			tic("Tick Tock start");
 		}
 	}

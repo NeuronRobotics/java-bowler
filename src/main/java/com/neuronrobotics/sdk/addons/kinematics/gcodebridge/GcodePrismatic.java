@@ -9,7 +9,7 @@ public class GcodePrismatic extends AbstractPrismaticLink implements IGCodeChann
 	private double value =0;
 	public GcodePrismatic(LinkConfiguration conf, GcodeDevice device, String linkAxis) {
 		super(conf);
-		// TODO Auto-generated constructor stub
+		// Auto-generated constructor stub
 		this.device = device;
 		axis=linkAxis;
 		//loadCurrent();

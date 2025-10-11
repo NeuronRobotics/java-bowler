@@ -22,7 +22,7 @@ import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.MissingNativeLibraryException;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class BluetoothSerialConnection.
  */
@@ -72,7 +72,7 @@ public class BluetoothSerialConnection extends BowlerAbstractConnection{
 					String d = device.getBluetoothAddress();
 					Log.info("Device selected: "+d);
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
+					// Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -118,7 +118,7 @@ public class BluetoothSerialConnection extends BowlerAbstractConnection{
 				throw new MissingNativeLibraryException(e.getMessage());
 	        }catch (Exception e) {
 	        	setConnected(false);
-	        	System.err.println("Failed to connect on port:"+bluetoothAddress+" exception: ");
+	        	com.neuronrobotics.sdk.common.Log.error("Failed to connect on port:"+bluetoothAddress+" exception: ");
 	        	e.printStackTrace();
 				return false;
 			}

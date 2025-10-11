@@ -11,7 +11,7 @@ import com.neuronrobotics.sdk.common.Log;
 //import com.neuronrobotics.sdk.network.BowlerTCPServer;
 import com.neuronrobotics.sdk.network.UDPBowlerConnection;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class UDPClientTest.
  */
@@ -28,29 +28,29 @@ public class UDPClientTest extends BowlerAbstractDevice implements IBowlerDatagr
 		clnt=new UDPBowlerConnection();
 		
 //		ArrayList<InetAddress>  addrs = clnt.getAllAddresses();
-//		System.out.println("Availiable servers: "+addrs);
+//		com.neuronrobotics.sdk.common.Log.error("Availiable servers: "+addrs);
 //		if (addrs.size()==0)
 //			throw new RuntimeException();
 //		clnt.setAddress(addrs.get(0));
 		try {
 			clnt.setAddress(InetAddress.getByName("192.168.1.10"));
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
+			// Auto-generated catch block
 			e.printStackTrace();
 			System.exit(0);
 		}
 		setConnection(clnt);
 		connect();
 		
-		System.out.println("Pinging");
+		com.neuronrobotics.sdk.common.Log.error("Pinging");
 		long start = System.currentTimeMillis();
 		int numPings=10;
 		for(int i=0;i<numPings;i++)
 			if (!ping())
 				throw new RuntimeException("Ping failed!");
-		System.out.println("Ping average = "+(System.currentTimeMillis()-start)/numPings+"ms");
+		com.neuronrobotics.sdk.common.Log.error("Ping average = "+(System.currentTimeMillis()-start)/numPings+"ms");
 		clnt.disconnect();
-		System.out.println("done");
+		com.neuronrobotics.sdk.common.Log.error("done");
 		System.exit(0);
 	}
 	
@@ -59,7 +59,7 @@ public class UDPClientTest extends BowlerAbstractDevice implements IBowlerDatagr
 	 */
 	@Override
 	public void onAllResponse(BowlerDatagram data) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		
 	}
 
@@ -68,7 +68,7 @@ public class UDPClientTest extends BowlerAbstractDevice implements IBowlerDatagr
 	 */
 	@Override
 	public void onAsyncResponse(BowlerDatagram data) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		
 	}
 	
@@ -82,7 +82,7 @@ public class UDPClientTest extends BowlerAbstractDevice implements IBowlerDatagr
 			new UDPClientTest();
 		}catch (Exception e){
 			e.printStackTrace();
-			System.err.println("###Client Failed out!");
+			com.neuronrobotics.sdk.common.Log.error("###Client Failed out!");
 			System.exit(1);
 		}
 	}
@@ -92,7 +92,7 @@ public class UDPClientTest extends BowlerAbstractDevice implements IBowlerDatagr
 	 */
 	@Override
 	public boolean isAvailable() throws InvalidConnectionException {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return clnt.isConnected();
 	}
 }

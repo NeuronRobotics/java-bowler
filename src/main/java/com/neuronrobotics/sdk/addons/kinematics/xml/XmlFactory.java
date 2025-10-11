@@ -12,7 +12,10 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-// TODO: Auto-generated Javadoc
+import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
+import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
+
+//  Auto-generated Javadoc
 /**
  * A factory for creating Xml objects.
  */
@@ -53,6 +56,17 @@ public class XmlFactory {
 	    return doc;
 	}
 	
+	public static TransformNR getTransform(Element eElement) {
+		return new TransformNR(
+				Double.parseDouble(XmlFactory.getTagValue("x", eElement)),
+				Double.parseDouble(XmlFactory.getTagValue("y", eElement)),
+				Double.parseDouble(XmlFactory.getTagValue("z", eElement)),
+				new RotationNR(new double[] { Double.parseDouble(XmlFactory.getTagValue("rotw", eElement)),
+						Double.parseDouble(XmlFactory.getTagValue("rotx", eElement)),
+						Double.parseDouble(XmlFactory.getTagValue("roty", eElement)),
+						Double.parseDouble(XmlFactory.getTagValue("rotz", eElement)) }));
+	}
+	
 	
 	/**
 	 * Gets the all nodes from tag.
@@ -78,7 +92,7 @@ public class XmlFactory {
 		
 	    NodeList nlList= eElement.getElementsByTagName(sTag).item(0).getChildNodes();
 	    Node nValue = (Node) nlList.item(0); 
-	   // System.out.println("\t\t"+sTag+" = "+nValue.getNodeValue());
+	   // com.neuronrobotics.sdk.common.Log.error("\t\t"+sTag+" = "+nValue.getNodeValue());
 	    return nValue.getNodeValue();    
 	}
 	
@@ -92,7 +106,7 @@ public class XmlFactory {
 	public static Double getTagValueDouble(String sTag, Element eElement){
 	    NodeList nlList= eElement.getElementsByTagName(sTag).item(0).getChildNodes();
 	    Node nValue = (Node) nlList.item(0); 
-	   // System.out.println("\t\t"+sTag+" = "+nValue.getNodeValue());
+	   // com.neuronrobotics.sdk.common.Log.error("\t\t"+sTag+" = "+nValue.getNodeValue());
 	    return Double.parseDouble(nValue.getNodeValue());    
 	}
 }

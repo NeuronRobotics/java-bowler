@@ -13,7 +13,7 @@
  * limitations under the License.
  ******************************************************************************/
 package com.neuronrobotics.sdk.common;
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * his exception is thrown in the case of the reception of a malformed datagram.
  * @author rbreznak

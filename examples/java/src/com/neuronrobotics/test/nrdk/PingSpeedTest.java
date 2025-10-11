@@ -9,7 +9,7 @@ import com.neuronrobotics.sdk.network.UDPBowlerConnection;
 import com.neuronrobotics.sdk.serial.SerialConnection;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class PingSpeedTest.
  */
@@ -30,13 +30,13 @@ public class PingSpeedTest {
 //			//c = new BowlerTCPClient("192.168.1.10", 1866);
 //			c = new UDPBowlerConnection(InetAddress.getByName("130.215.49.37"), 1865);
 //		} catch (Exception e) {
-//			// TODO Auto-generated catch block
+//			// Auto-generated catch block
 //			e.printStackTrace();
 //			System.exit(1);
 //		}
 		if(c==null)
 			System.exit(1);
-		System.out.println("Starting test");
+		com.neuronrobotics.sdk.common.Log.error("Starting test");
 		Log.enableInfoPrint();
 		GenericDevice dev = new GenericDevice(c);
 		dev.connect();
@@ -51,10 +51,10 @@ public class PingSpeedTest {
 			
 			double ms=System.currentTimeMillis()-start;
 			avg +=ms;			
-			System.out.println("Average cycle time: "+(int)(avg/i)+"ms\t\t\t this loop was: "+ms);
+			com.neuronrobotics.sdk.common.Log.error("Average cycle time: "+(int)(avg/i)+"ms\t\t\t this loop was: "+ms);
 			dev.getNamespaces();
 		}
-		System.out.println("Average cycle time for ping: "+(avg/i)+" ms");	
+		com.neuronrobotics.sdk.common.Log.error("Average cycle time for ping: "+(avg/i)+" ms");	
 		dev.disconnect();
 		System.exit(0);
 	}

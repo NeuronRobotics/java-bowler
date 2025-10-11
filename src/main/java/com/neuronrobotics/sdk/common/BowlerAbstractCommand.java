@@ -31,7 +31,7 @@
  */
 package com.neuronrobotics.sdk.common;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * This class encapsulates the generation of a Bowler RPC. 
  * Each command should represent a unique RPC.
@@ -129,7 +129,7 @@ public abstract class BowlerAbstractCommand implements ISendable {
 		if( data.getRPC().equals("_err")) {
 			Integer zone=Integer.valueOf(data.getData().getByte(0));
 			Integer section=Integer.valueOf(data.getData().getByte(1));
-			//System.err.println("Failed!!\n"+data);
+			//com.neuronrobotics.sdk.common.Log.error("Failed!!\n"+data);
 			switch(zone) {
 			default:
 				throw new InvalidResponseException("Unknown error. (" + zone + " " + section + ")");

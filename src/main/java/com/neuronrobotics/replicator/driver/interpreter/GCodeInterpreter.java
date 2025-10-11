@@ -11,7 +11,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import com.neuronrobotics.sdk.common.Log;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * An extensible G-code interpreter. Parses a stream containing G-code commands,
  * stores register values, and executes handlers. The default handler set
@@ -143,7 +143,7 @@ public class GCodeInterpreter {
 		nextLine.storeWord('G', 0);
 		nextLine.storeWord('M', 0);
 		nextLine.storeWord('P', lineNumber);
-		System.out.println("GCODE: "+line);
+		com.neuronrobotics.sdk.common.Log.error("GCODE: "+line);
 		
 		for(int i=0;i<tokens.length;i++){
 			tokens[i] = tokens[i].trim();
@@ -163,7 +163,7 @@ public class GCodeInterpreter {
 				nextLine.storeWord(code, val);
 			}
 		}
-		//System.out.println(nextLine);
+		//com.neuronrobotics.sdk.common.Log.error(nextLine);
 		executeLine(line);
 	}
 

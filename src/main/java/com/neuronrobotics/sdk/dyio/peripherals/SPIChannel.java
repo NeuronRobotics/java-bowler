@@ -11,7 +11,7 @@ import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.common.DeviceManager;
 import com.neuronrobotics.sdk.dyio.IChannelEventListener;
 import com.neuronrobotics.sdk.util.ThreadUtil;
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 
 /**
  * This class wraps ports 0,1, and 2 as an SPI interface.

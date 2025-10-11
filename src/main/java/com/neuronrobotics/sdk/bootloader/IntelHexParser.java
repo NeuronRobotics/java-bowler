@@ -5,10 +5,11 @@ package com.neuronrobotics.sdk.bootloader;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import com.neuronrobotics.sdk.common.ByteList;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class IntelHexParser.
  *
@@ -39,7 +40,7 @@ public class IntelHexParser {
 	 */
 	public static String hex(long n) {
 	    // call toUpperCase() if that's required
-	    return String.format("0x%8s", Long.toHexString(n)).replace(' ', '0');
+	    return String.format(Locale.US,"0x%8s", Long.toHexString(n)).replace(' ', '0');
 	}
 	
 	/**
@@ -77,11 +78,11 @@ public class IntelHexParser {
 	    	 if (l.getRecordType()==4){
 	    		 byte[] haddr=l.getDataBytes();
 	    		 highAddress = ByteList.convertToInt(haddr, false)*65536;
-	    		 ////System.out.println("High Address :" + highAddress);
+	    		 ////com.neuronrobotics.sdk.common.Log.error("High Address :" + highAddress);
 	    	 } if (l.getRecordType()==0){
 	    		 
 	    		 l.setHighAddress(highAddress);
-	    		 ////System.out.println(l);
+	    		 ////com.neuronrobotics.sdk.common.Log.error(l);
 	    		 
 	    		 currentAddress=l.getStartAddress();
 	    		 checkAddressValidity(currentAddress,type);

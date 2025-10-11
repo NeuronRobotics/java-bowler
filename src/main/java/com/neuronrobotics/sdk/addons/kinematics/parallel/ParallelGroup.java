@@ -90,7 +90,7 @@ public class ParallelGroup extends DHParameterKinematics {
 			tipOffsetRelativeToName.put(limb, name);
 			tipOffsetRelativeIndex.put(limb, index);
 			getTipOffset().put(limb, tip);
-			System.out.println("Limb "+limb.getScriptingName()+" set relative to "+name);
+			com.neuronrobotics.sdk.common.Log.error("Limb "+limb.getScriptingName()+" set relative to "+name);
 		} else {
 			clearReferencedLimb(limb);
 			DHParameterKinematics fk=getFKLimb();
@@ -106,13 +106,13 @@ public class ParallelGroup extends DHParameterKinematics {
 //					for (DHParameterKinematics d : getConstituantLimbs()) {
 //						if (getTipOffset(d) != null) {
 //							try {
-//								//System.out.println("Setting Kinematics for follower "+d.getScriptingName());
+//								//com.neuronrobotics.sdk.common.Log.error("Setting Kinematics for follower "+d.getScriptingName());
 //								double[] jointSpaceVect = compute(d, IKvalues, pose);
-//								//System.out.println(fk.getScriptingName()+" is Setting sublimb target "+d.getScriptingName());
+//								//com.neuronrobotics.sdk.common.Log.error(fk.getScriptingName()+" is Setting sublimb target "+d.getScriptingName());
 //								d.throwExceptionOnJointLimit(false);
 //								d.setDesiredJointSpaceVector(jointSpaceVect, 0);
 //							} catch (Exception e) {
-//								// TODO Auto-generated catch block
+//								// Auto-generated catch block
 //								e.printStackTrace();
 //							}
 //						}
@@ -131,7 +131,7 @@ public class ParallelGroup extends DHParameterKinematics {
 
 	@Override
 	public void disconnectDevice() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		for (DHParameterKinematics l : getConstituantLimbs()) {
 			l.disconnect();
 		}
@@ -141,7 +141,7 @@ public class ParallelGroup extends DHParameterKinematics {
 
 	@Override
 	public boolean connectDevice() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return true;
 	}
 
@@ -149,7 +149,7 @@ public class ParallelGroup extends DHParameterKinematics {
 			TransformNR taskSpaceTransform) throws Exception {
 		String scriptingName = ldh.getScriptingName();
 		if (IKvalues.get(scriptingName) == null) {
-			//System.out.println("Perform IK "+ldh.getScriptingName());
+			//com.neuronrobotics.sdk.common.Log.error("Perform IK "+ldh.getScriptingName());
 			if (getTipOffset().get(ldh) == null) {
 				// no offset, compute as normal
 				double[] jointSpaceVect = ldh.inverseKinematics(ldh.inverseOffset(taskSpaceTransform));
@@ -180,7 +180,7 @@ public class ParallelGroup extends DHParameterKinematics {
 				// FOund the referenced limb
 				referencedLimb = lm;
 			}else {
-				//System.out.println("Searching for "+refLimbName+" no match with "+lm.getScriptingName());
+				//com.neuronrobotics.sdk.common.Log.error("Searching for "+refLimbName+" no match with "+lm.getScriptingName());
 			}
 		}
 		return referencedLimb;
@@ -195,11 +195,11 @@ public class ParallelGroup extends DHParameterKinematics {
 	public void setCurrentPoseTarget(TransformNR currentPoseTarget) {
 		if (checkTaskSpaceTransform(currentPoseTarget)) {
 			super.setCurrentPoseTarget(currentPoseTarget);
-			//System.out.println("Paralell set to " + currentPoseTarget);
+			//com.neuronrobotics.sdk.common.Log.error("Paralell set to " + currentPoseTarget);
 		}
 	}
 	public double[] getCurrentJointSpaceVector(DHParameterKinematics k) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return null;
 	}
 	@Override
@@ -227,7 +227,7 @@ public class ParallelGroup extends DHParameterKinematics {
 	}
 	public void printError(TransformNR taskSpaceTransform) throws Exception {
 		printError(taskSpaceTransform,t -> {
-			System.out.println(t);
+			com.neuronrobotics.sdk.common.Log.error(t);
 		});
 	}
 	public void printError(TransformNR taskSpaceTransform, Consumer<String> printer) throws Exception {

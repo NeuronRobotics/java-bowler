@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class PIDChannel.
  */
@@ -281,7 +281,7 @@ public class PIDChannel {
 	 * @return true, if is available
 	 */
 	public boolean isAvailable() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return pid.isAvailable();
 	}
 
@@ -291,7 +291,7 @@ public class PIDChannel {
 	 * @return the group
 	 */
 	public int getGroup() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return index;
 	}
 	

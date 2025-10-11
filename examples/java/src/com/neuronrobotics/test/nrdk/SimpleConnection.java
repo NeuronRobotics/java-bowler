@@ -3,7 +3,7 @@ package com.neuronrobotics.test.nrdk;
 import com.neuronrobotics.sdk.genericdevice.GenericDevice;
 import com.neuronrobotics.sdk.serial.SerialConnection;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class SimpleConnection.
  */
@@ -16,7 +16,7 @@ public class SimpleConnection {
 	 */
 	public static void main(String[] args) {
 		SerialConnection s = null;
-		System.out.println("Connecting and disconnecting");
+		com.neuronrobotics.sdk.common.Log.error("Connecting and disconnecting");
 		
 		//Windows
 		//s=new SerialConnection("COM5");
@@ -41,7 +41,7 @@ public class SimpleConnection {
 			avg +=ms;
 			start = System.currentTimeMillis();
 		}
-		System.out.println("Average cycle time for ping: "+(avg/i)+" ms");
+		com.neuronrobotics.sdk.common.Log.error("Average cycle time for ping: "+(avg/i)+" ms");
         dyio.disconnect();
 		System.exit(0);
         //while(true);

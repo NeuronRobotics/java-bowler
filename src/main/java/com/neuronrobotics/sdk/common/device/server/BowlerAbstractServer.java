@@ -30,7 +30,7 @@ import com.neuronrobotics.sdk.network.BowlerTCPServer;
 import com.neuronrobotics.sdk.network.BowlerUDPServer;
 import com.neuronrobotics.sdk.network.UDPBowlerConnection;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class BowlerAbstractServer.
  */
@@ -129,7 +129,7 @@ public abstract class BowlerAbstractServer implements
 			throw new RuntimeException("No namespaces defined");
 		}
 		for (BowlerAbstractDeviceServerNamespace n : getNamespaces()) {
-			// System.out.println("Checking "+n.getNamespaces().get(0));
+			// com.neuronrobotics.sdk.common.Log.error("Checking "+n.getNamespaces().get(0));
 			if (n.checkRpc(data)) {
 				BowlerDatagram d = n.process(data);
 				if (d != null) {
@@ -177,7 +177,7 @@ public abstract class BowlerAbstractServer implements
 						addServer(new BowlerTCPServer(s));
 						Log.warning("Got a connection!");
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
+						// Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -260,7 +260,7 @@ public abstract class BowlerAbstractServer implements
 			try {
 				udpServer.reconnect();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				// Auto-generated catch block
 				e.printStackTrace();
 			}
 			return;
@@ -329,7 +329,7 @@ public abstract class BowlerAbstractServer implements
 					run = true;
 				}
 				if (localServers.get(i).getClass() != BowlerUDPServer.class) {
-					// System.out.println("Sending packet to "+getServers().get(i).getClass());
+					// com.neuronrobotics.sdk.common.Log.error("Sending packet to "+getServers().get(i).getClass());
 					if (run && localServers.get(i).isConnected()) {
 						// Log.warning("ASYNC<<\r\n"+data );
 						String classString = localServers.get(i).getClass()

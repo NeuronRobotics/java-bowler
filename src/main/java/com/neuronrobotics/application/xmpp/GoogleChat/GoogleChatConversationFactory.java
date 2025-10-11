@@ -4,7 +4,7 @@ import com.neuronrobotics.application.xmpp.IConversation;
 import com.neuronrobotics.application.xmpp.IConversationFactory;
 
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * A factory for creating GoogleChatConversation objects.
  */

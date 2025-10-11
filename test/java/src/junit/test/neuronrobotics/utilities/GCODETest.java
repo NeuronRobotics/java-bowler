@@ -64,7 +64,7 @@ public class GCODETest {
 
 			String response = device.runLine("M105");
 			if (response.length() > 0)
-				System.out.println("Gcode line run: " + response);
+				com.neuronrobotics.sdk.common.Log.error("Gcode line run: " + response);
 			else {
 				fail("No response");
 			}
@@ -140,12 +140,12 @@ public class GCODETest {
 																					// was
 																					// created
 			}
-			System.out.println("Moving using the kinematics");
+			com.neuronrobotics.sdk.common.Log.error("Moving using the kinematics");
 			try {
 				arm.setDesiredTaskSpaceTransform(new TransformNR(10, 10, 0, new RotationNR()), 1);
 				arm.setDesiredTaskSpaceTransform(new TransformNR(), 1);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
+				// Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -266,19 +266,19 @@ public class GCODETest {
 			GcodeDevice device = GCODECONTOLLER.cast(DeviceManager.getSpecificDevice(GCODECONTOLLER, GCODE));
 			String response = device.runLine("G90");// Absolute mode
 			if (response.length() > 0)
-				System.out.println("Gcode line run: " + response);
+				com.neuronrobotics.sdk.common.Log.error("Gcode line run: " + response);
 			else {
 				fail("No response");
 			}
 			response = device.runLine("G1 X100.2 Y100.2 Z0 E10 F6000");
 			if (response.length() > 0)
-				System.out.println("Gcode line run: " + response);
+				com.neuronrobotics.sdk.common.Log.error("Gcode line run: " + response);
 			else {
 				fail("No response");
 			}
 			response = device.runLine("G1 X0 Y0 Z0 E0 F3000");
 			if (response.length() > 0)
-				System.out.println("Gcode line run: " + response);
+				com.neuronrobotics.sdk.common.Log.error("Gcode line run: " + response);
 			else {
 				fail("No response");
 			}

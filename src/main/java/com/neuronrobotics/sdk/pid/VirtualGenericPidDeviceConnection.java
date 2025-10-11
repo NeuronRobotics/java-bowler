@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class VirtualGenericPidDeviceConnection.
  */
@@ -15,13 +15,13 @@ public class VirtualGenericPidDeviceConnection extends BowlerAbstractConnection 
 	 */
 	@Override
 	public boolean connect() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return true;
 	}
 
 //	@Override
 //	public boolean reconnect() throws IOException {
-//		// TODO Auto-generated method stub
+//		// Auto-generated method stub
 //		return false;
 //	}
 
@@ -30,7 +30,7 @@ public class VirtualGenericPidDeviceConnection extends BowlerAbstractConnection 
  */
 @Override
 	public boolean waitingForConnection() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return false;
 	}
 

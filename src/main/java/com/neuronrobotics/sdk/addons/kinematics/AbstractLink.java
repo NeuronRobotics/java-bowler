@@ -3,23 +3,20 @@ package com.neuronrobotics.sdk.addons.kinematics;
 import java.util.ArrayList;
 
 
-import com.neuronrobotics.sdk.addons.kinematics.gcodebridge.IGcodeExecuter;
 import com.neuronrobotics.sdk.addons.kinematics.imu.IMU;
-import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
+import com.neuronrobotics.sdk.addons.kinematics.time.ITimeProvider;
+import com.neuronrobotics.sdk.addons.kinematics.time.TimeKeeper;
 import com.neuronrobotics.sdk.common.IFlushable;
 import com.neuronrobotics.sdk.common.Log;
-import com.neuronrobotics.sdk.common.TickToc;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 import com.neuronrobotics.sdk.pid.PIDLimitEventType;
 
-import javafx.scene.transform.Affine;
-
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class AbstractLink.
  */
 // Kevin Shouldn't the Link's channel be kept in this level of Abstraction? The way I designg AbstractCartesianPositonDevice  Requires this
-public abstract class AbstractLink implements  IFlushable{
+public abstract class AbstractLink extends TimeKeeper implements  IFlushable,IVitaminHolder {
 
 	/** The target value. */
 	private double targetValue=0;
@@ -43,6 +40,27 @@ public abstract class AbstractLink implements  IFlushable{
 	 * The object for communicating IMU information and registering it with the hardware
 	 */
 	private IMU imu = new IMU();
+	
+	public VitaminLocation getShaftVitamin() {
+		return conf.getShaftVitamin();
+	}
+
+	public VitaminLocation getElectroMechanicalVitamin() {
+		return conf.getElectroMechanicalVitamin();
+	}
+	public ArrayList<VitaminLocation> getVitamins() {
+		return conf.getVitamins();
+	}
+	public void addVitaminInternal(VitaminLocation location) {
+		conf.addVitamin(location);
+	}
+	public void removeVitamin(VitaminLocation loc) {
+		conf.removeVitamin(loc);
+	}
+	public ArrayList<VitaminLocation>getNonActuatorVitamins(){
+		return conf.getNonActuatorVitamins();
+	}
+	
 	/**
 	 * Override this method to specify a larger range
 	 * @return the maximum value possible for a link
@@ -102,7 +120,7 @@ public abstract class AbstractLink implements  IFlushable{
 		this.conf=conf;
 		slaveLinks = conf.getSlaveLinks();
 		if(slaveLinks.size()>0)
-			System.out.println(conf.getName()+" has slaves: "+slaveLinks.size());
+			com.neuronrobotics.sdk.common.Log.error(conf.getName()+" has slaves: "+slaveLinks.size());
 		for(LinkConfiguration c:slaveLinks){
 			//generate the links
 			getSlaveFactory().getLink(c);
@@ -476,7 +494,7 @@ public abstract class AbstractLink implements  IFlushable{
 							conf.getHardwareIndex(),
 							targetValue ,
 							PIDLimitEventType.UPPERLIMIT,
-							System.currentTimeMillis()
+							currentTimeMillis()
 							)
 					);
 			if(isUseLimits())throw new RuntimeException("Joint hit Upper software bound\n"+execpt);
@@ -494,7 +512,7 @@ public abstract class AbstractLink implements  IFlushable{
 							conf.getHardwareIndex(),
 							targetValue ,
 							PIDLimitEventType.LOWERLIMIT,
-							System.currentTimeMillis()
+							currentTimeMillis()
 							)
 					);
 			if(isUseLimits())throw new RuntimeException("Joint hit Lower software bound\n"+execpt);
@@ -691,5 +709,14 @@ public abstract class AbstractLink implements  IFlushable{
 	}
 	public void clearChangeListener() {
 		conf.clearChangeListener();
+	}
+	@Override
+	public  void setTimeProvider(ITimeProvider t) {
+		super.setTimeProvider(t);
+		imu.setTimeProvider(getTimeProvider());
+	}
+	@Override
+	public String toString() {
+		return "Bowler Link "+getLinkConfiguration().getDeviceScriptingName()+" "+getLinkConfiguration().getLinkIndex();
 	}
 }

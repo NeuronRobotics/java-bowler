@@ -15,7 +15,7 @@ import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.common.BowlerDatagramFactory;
 import com.neuronrobotics.sdk.common.ByteList;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class NRBootLoader.
  *
@@ -44,11 +44,11 @@ public class NRBootLoader extends BowlerAbstractDevice {
 	@Override
 	public boolean connect() {
 		if(super.connect()) {
-			//System.out.println("Connect OK");
+			//com.neuronrobotics.sdk.common.Log.error("Connect OK");
 			try {
 				getBootloaderID();
 			}catch (Exception e) {
-				//System.out.println("Failed bootloader test");
+				//com.neuronrobotics.sdk.common.Log.error("Failed bootloader test");
 				disconnect();
 			}
 		}
@@ -95,7 +95,7 @@ public class NRBootLoader extends BowlerAbstractDevice {
 					return true;
 			}
 		}
-		System.err.println("\nFailed to send 10 times!\n");
+		com.neuronrobotics.sdk.common.Log.error("\nFailed to send 10 times!\n");
 		return false;
 	}
 	
@@ -121,7 +121,7 @@ public class NRBootLoader extends BowlerAbstractDevice {
 			getConnection().sendAsync(bd);
 			getConnection().getDataOuts().flush();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			// Auto-generated catch block
 			e.printStackTrace();
 		}
 		disconnect();
@@ -131,15 +131,15 @@ public class NRBootLoader extends BowlerAbstractDevice {
 	 * @see com.neuronrobotics.sdk.common.IBowlerDatagramListener#onAllResponse(com.neuronrobotics.sdk.common.BowlerDatagram)
 	 */
 	public void onAllResponse(BowlerDatagram data) {
-		// TODO Auto-generated method stub
-		////System.out.println(data);
+		// Auto-generated method stub
+		////com.neuronrobotics.sdk.common.Log.error(data);
 	}
 
 	/* (non-Javadoc)
 	 * @see com.neuronrobotics.sdk.common.IBowlerDatagramListener#onAsyncResponse(com.neuronrobotics.sdk.common.BowlerDatagram)
 	 */
 	public void onAsyncResponse(BowlerDatagram data) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 
 	}
 }

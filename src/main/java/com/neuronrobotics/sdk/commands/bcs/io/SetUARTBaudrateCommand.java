@@ -20,7 +20,7 @@ import com.neuronrobotics.sdk.common.BowlerMethod;
 import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.InvalidResponseException;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class SetUARTBaudrateCommand.
  */
@@ -49,7 +49,7 @@ public class SetUARTBaudrateCommand extends BowlerAbstractCommand {
 		if(!data.getRPC().equals("_rdy")) {
 			throw new InvalidResponseException("Could not set the UART passthough baudrate.");
 		}
-		//System.out.println("Baudrate set return: \n"+data);
+		//com.neuronrobotics.sdk.common.Log.error("Baudrate set return: \n"+data);
 		return data;
 	}
 }

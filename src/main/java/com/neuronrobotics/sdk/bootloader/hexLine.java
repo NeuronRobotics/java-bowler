@@ -3,7 +3,7 @@ package com.neuronrobotics.sdk.bootloader;
 //import java.util.Queue;
 import java.util.ArrayList;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class hexLine.
  */

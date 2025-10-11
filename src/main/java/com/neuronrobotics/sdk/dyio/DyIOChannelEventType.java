@@ -13,7 +13,7 @@
  * limitations under the License.
  ******************************************************************************/
 package com.neuronrobotics.sdk.dyio;
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * Enumeration of the types of Channel Events a DyIO can have.
  * @author rbreznak

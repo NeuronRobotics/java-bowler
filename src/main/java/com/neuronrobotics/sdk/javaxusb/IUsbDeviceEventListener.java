@@ -2,7 +2,7 @@ package com.neuronrobotics.sdk.javaxusb;
 
 import javax.usb.UsbDevice;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The listener interface for receiving IUsbDeviceEvent events.
  * The class that is interested in processing a IUsbDeviceEvent

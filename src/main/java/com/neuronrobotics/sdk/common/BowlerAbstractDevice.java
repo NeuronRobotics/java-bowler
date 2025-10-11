@@ -33,10 +33,11 @@ package com.neuronrobotics.sdk.common;
 
 import java.util.ArrayList;
 
+import com.neuronrobotics.sdk.addons.kinematics.time.TimeKeeper;
 import com.neuronrobotics.sdk.commands.bcs.core.PingCommand;
 import com.neuronrobotics.sdk.commands.neuronrobotics.dyio.InfoFirmwareRevisionCommand;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * AbstractDevices are used to model devices that are connected to the Bowler network. AbstractDevice
  * implementations should encapsulate command generation and provide higher-level actions to users.  
@@ -44,7 +45,7 @@ import com.neuronrobotics.sdk.commands.neuronrobotics.dyio.InfoFirmwareRevisionC
  * @author rbreznak
  *
  */
-public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
+public abstract class BowlerAbstractDevice extends TimeKeeper implements IBowlerDatagramListener {
 	
 	/** The keep alive. */
 	private boolean keepAlive = true;
@@ -109,7 +110,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 		if(!getDisconnectListeners().contains(l)) {
 			getDisconnectListeners().add(l);
 		}
-//		System.err.println(getScriptingName()+" Adding listener "+l.getClass());
+//		com.neuronrobotics.sdk.common.Log.error(getScriptingName()+" Adding listener "+l.getClass());
 //		l.trace.printStackTrace();
 //		new Exception().printStackTrace();
 		BowlerAbstractDevice bad = this;
@@ -124,7 +125,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 			
 			@Override
 			public void onConnect(BowlerAbstractConnection source) {
-				// TODO Auto-generated method stub
+				// Auto-generated method stub
 				l.onConnect(bad);
 			}
 		});
@@ -166,7 +167,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 				
 				@Override
 				public void onConnect(BowlerAbstractConnection source) {
-					// TODO Auto-generated method stub
+					// Auto-generated method stub
 					getDisconnectListeners().get(index).onConnect(bad);
 				}
 			});
@@ -238,7 +239,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 	 * @return  the device's address
 	 */
 	public MACAddress getAddress() {
-		//System.out.println();
+		//com.neuronrobotics.sdk.common.Log.error();
 		return address;
 	}
 	
@@ -426,7 +427,7 @@ public abstract class BowlerAbstractDevice implements IBowlerDatagramListener {
 		 ArrayList<String> names = getNamespaces();
 		 
 		 for (String s:names){
-			 System.out.println(getRpcList(s));
+			 com.neuronrobotics.sdk.common.Log.error(getRpcList(s));
 		 }
 		 
 	}

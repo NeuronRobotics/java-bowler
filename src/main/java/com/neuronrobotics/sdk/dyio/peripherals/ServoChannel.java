@@ -25,7 +25,7 @@ import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.common.DeviceManager;
 import com.neuronrobotics.sdk.dyio.IChannelEventListener;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class ServoChannel.
  */
@@ -204,7 +204,7 @@ public class ServoChannel extends DyIOAbstractPeripheral implements IChannelEven
 	 */
 	@Override
 	public void onChannelEvent(DyIOChannelEvent e) {
-		firePositionUpdate(e.getUnsignedValue(), System.currentTimeMillis());
+		firePositionUpdate(e.getUnsignedValue(), e.getChannel().getDevice().currentTimeMillis());
 	}
 	
 }

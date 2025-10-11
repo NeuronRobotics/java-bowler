@@ -30,7 +30,7 @@ import com.neuronrobotics.sdk.common.InvalidResponseException;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.peripherals.DyIOAbstractPeripheral;
 import com.neuronrobotics.sdk.util.ThreadUtil;
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * A DyIO channel. This represents a single DyIO pchannel.
  * @author Kevin Harrington, Robert Breznak
@@ -262,7 +262,7 @@ public class DyIOChannel implements IDyIOChannel {
 			return;
 		}
 		BowlerDatagram bd = getDevice().send(new GetChannelModeCommand(number));
-		//System.out.println(bd);
+		//com.neuronrobotics.sdk.common.Log.error(bd);
 		fireModeChangeEvent(DyIOChannelMode.get(bd.getData().getByte(1)));
 		throw new RuntimeException();
 	}
@@ -526,11 +526,11 @@ public class DyIOChannel implements IDyIOChannel {
 											"schm",
 											new Object[]{getChannelNumber(),mode.getValue(),async?1:0});
 					ByteList currentModes = (ByteList) args[0];
-					//System.out.println("Setting # "+getChannelNumber()+" to "+mode);
+					//com.neuronrobotics.sdk.common.Log.error("Setting # "+getChannelNumber()+" to "+mode);
 					for (int j=0;j<getDevice().getChannels().size();j++){
 						DyIOChannelMode cm = DyIOChannelMode.get(currentModes.getByte(j));
 						if(getDevice().getChannel(j).getCurrentMode()!=cm ){
-							//System.err.println("Setting # "+j+" to "+cm);
+							//com.neuronrobotics.sdk.common.Log.error("Setting # "+j+" to "+cm);
 							getDevice().getChannel(j).fireModeChangeEvent(cm); 
 						}
 					}

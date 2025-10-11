@@ -21,7 +21,7 @@ import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class BowlerCamDevice.
  */
@@ -76,7 +76,7 @@ public class BowlerCamDevice extends BowlerAbstractDevice {
 	 * @see com.neuronrobotics.sdk.common.BowlerAbstractDevice#onAllResponse(com.neuronrobotics.sdk.common.BowlerDatagram)
 	 */
 	public void onAllResponse(BowlerDatagram data) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 
 	}
 	
@@ -89,7 +89,7 @@ public class BowlerCamDevice extends BowlerAbstractDevice {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public BufferedImage getHighSpeedImage(int cam) throws MalformedURLException, IOException {
-		//System.out.println("Getting HighSpeedImage");
+		//com.neuronrobotics.sdk.common.Log.error("Getting HighSpeedImage");
 		while(urls.size()<(cam+1) && isAvailable()){
 			Log.info("Adding dummy url: "+urls.size());
 			urls.add(null);
@@ -99,16 +99,16 @@ public class BowlerCamDevice extends BowlerAbstractDevice {
 			images.add(null);
 		}
 		if(urls.get(cam) == null){
-			//System.out.println("URL List element is empty: "+urls);
+			//com.neuronrobotics.sdk.common.Log.error("URL List element is empty: "+urls);
 			urls.set(cam,getImageServerURL(cam));
 		}
 		try {
-			//System.out.println("Reading: "+urls.get(cam) );
+			//com.neuronrobotics.sdk.common.Log.error("Reading: "+urls.get(cam) );
 			ImageReader ir = new ImageReader(cam);
 			ir.start();
-			long start = System.currentTimeMillis();
-			while(((System.currentTimeMillis()-start)<200) && ir.isDone()==false){
-				ThreadUtil.wait(5);
+			long start = currentTimeMillis();
+			while(((currentTimeMillis()-start)<200) && ir.isDone()==false){
+				wait(5);
 			}
 			if(!ir.isDone())
 				Log.error("Image read timed out");
@@ -175,14 +175,14 @@ public class BowlerCamDevice extends BowlerAbstractDevice {
 				tmp.add(imgData);
 			}
 			if(index == (total)){
-				////System.out.println("Making image");
+				////com.neuronrobotics.sdk.common.Log.error("Making image");
 		        BufferedImage image=null;
 				try {
 					synchronized(tmp) {
 						image = ByteArrayToImage(tmp.getBytes());
 					}
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
+					// Auto-generated catch block
 					e1.printStackTrace();
 					image=null;
 				}
@@ -191,7 +191,7 @@ public class BowlerCamDevice extends BowlerAbstractDevice {
 				}
 				images.set(camera, image);
 				fireIWebcamImageListenerEvent(camera,images.get(camera));
-				//System.out.println("Image OK");
+				//com.neuronrobotics.sdk.common.Log.error("Image OK");
 			}
 			
 		}
@@ -304,9 +304,9 @@ public class BowlerCamDevice extends BowlerAbstractDevice {
 		send(new BlobCommand());
 		while(gotLastMark == false && isAvailable()){
 			try {
-				Thread.sleep(10);
+				sleep(10);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
+				// Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -345,41 +345,41 @@ public class BowlerCamDevice extends BowlerAbstractDevice {
 				return;
 			}
 			mspf = (int)(1000.0/((double)fps));
-			//System.out.println("MS/frame: "+mspf);
+			//com.neuronrobotics.sdk.common.Log.error("MS/frame: "+mspf);
 		}
 		
 		/* (non-Javadoc)
 		 * @see java.lang.Thread#run()
 		 */
 		public void run() {
-			//System.out.println("Starting auto capture on: "+getImageServerURL(cam));
-			long st = System.currentTimeMillis();
+			//com.neuronrobotics.sdk.common.Log.error("Starting auto capture on: "+getImageServerURL(cam));
+			long st = currentTimeMillis();
 			while(running && isAvailable()) {
-				//System.out.println("Getting image from: "+getImageServerURL(cam));
+				//com.neuronrobotics.sdk.common.Log.error("Getting image from: "+getImageServerURL(cam));
 				try {
-					//System.out.println("Capturing");
+					//com.neuronrobotics.sdk.common.Log.error("Capturing");
 					BufferedImage im =getHighSpeedImage(cam);
 					if(scale>1.01||scale<.99)
 						im = resize(im, scale);
 					if(im!=null){
-						//System.out.println("Fireing");
+						//com.neuronrobotics.sdk.common.Log.error("Fireing");
 						fireIWebcamImageListenerEvent(cam,im);
 					}
-					//System.out.println("ok");
+					//com.neuronrobotics.sdk.common.Log.error("ok");
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 				if(mspf != 0) {
-					long diff = System.currentTimeMillis() - st;
+					long diff = currentTimeMillis() - st;
 					////System.out.print("\nMS diff: "+diff);
 					if(diff<mspf) {
 						try {
 							////System.out.print(" sleeping: "+(mspf-diff));
-							Thread.sleep(mspf-diff);
+							getTimeProvider().sleep(mspf-diff);
 						} catch (InterruptedException e) {
 						}
 					}
-					st =  System.currentTimeMillis() ;
+					st =  currentTimeMillis() ;
 				}
 			}
 		}
@@ -388,7 +388,7 @@ public class BowlerCamDevice extends BowlerAbstractDevice {
 		 * Kill.
 		 */
 		public void kill() {
-			//System.out.println("Killing auto capture on cam: "+cam);
+			//com.neuronrobotics.sdk.common.Log.error("Killing auto capture on cam: "+cam);
 			running = false;
 		}
 	}

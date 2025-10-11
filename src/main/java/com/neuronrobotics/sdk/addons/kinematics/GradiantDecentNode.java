@@ -3,7 +3,7 @@ package com.neuronrobotics.sdk.addons.kinematics;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class GradiantDecentNode.
  */
@@ -228,7 +228,7 @@ public class GradiantDecentNode{
 	public void jitter(){
 		double jitterAmmount = 10;
 		double jitter=(Math.random()*jitterAmmount)-(jitterAmmount /2) ;
-		System.out.println("Jittering Link #"+getIndex()+" jitter:"+jitter+" current offset:"+offset);
+		com.neuronrobotics.sdk.common.Log.error("Jittering Link #"+getIndex()+" jitter:"+jitter+" current offset:"+offset);
 		offset += jitter;
 		jointSpaceVector[getIndex()] = myStart+offset;
 	}

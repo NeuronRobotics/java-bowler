@@ -14,7 +14,7 @@
  ******************************************************************************/
 package com.neuronrobotics.sdk.addons.irobot;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The listener interface for receiving ICreateSensor events.
  * The class that is interested in processing a ICreateSensor

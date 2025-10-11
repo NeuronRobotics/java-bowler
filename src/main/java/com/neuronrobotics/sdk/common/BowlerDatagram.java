@@ -31,7 +31,7 @@
  */
 package com.neuronrobotics.sdk.common;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * Formats data into a Bowler packet. 
  * 
@@ -244,7 +244,7 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 		setMethod(BowlerMethod.get(raw.getByte(7)));
 		if(getMethod() == null){
 			setMethod(BowlerMethod.STATUS);
-			System.err.println("Method was invalid!! Value="+raw.getUnsigned(7));
+			com.neuronrobotics.sdk.common.Log.error("Method was invalid!! Value="+raw.getUnsigned(7));
 			Log.error("Method was invalid!! Value="+raw.getUnsigned(7));
 		}
 			
@@ -677,7 +677,7 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	 * @param opCode the new rpc
 	 */
 	public void setRpc(String opCode) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		
 	}
 

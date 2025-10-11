@@ -4,7 +4,7 @@ import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class ConnectionDialogTest.
  */
@@ -16,16 +16,16 @@ public class ConnectionDialogTest {
 	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
-		System.out.println("Starting");
+		com.neuronrobotics.sdk.common.Log.error("Starting");
 		DyIO dyio=new DyIO();
 		if (!ConnectionDialog.getBowlerDevice(dyio)){
-			System.err.println("Dialog failed");
+			com.neuronrobotics.sdk.common.Log.error("Dialog failed");
 			System.exit(1);
 		}
 		Log.enableDebugPrint();
 		dyio.ping();
         dyio.disconnect();
-		System.out.println("Connection OK!");
+		com.neuronrobotics.sdk.common.Log.error("Connection OK!");
 		System.exit(0);
 		//while(true);
 	}

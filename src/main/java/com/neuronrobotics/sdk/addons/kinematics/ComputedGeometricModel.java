@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class ComputedGeometricModel.
  */

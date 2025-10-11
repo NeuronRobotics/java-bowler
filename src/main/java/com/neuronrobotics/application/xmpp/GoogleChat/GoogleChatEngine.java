@@ -29,7 +29,7 @@ import com.neuronrobotics.application.xmpp.IConversationFactory;
 
 
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class GoogleChatEngine.
  */
@@ -136,10 +136,10 @@ public class GoogleChatEngine implements ChatManagerListener {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		//System.out.println("Parsing File...");
+		//com.neuronrobotics.sdk.common.Log.error("Parsing File...");
 		NodeList nList = doc.getElementsByTagName("login");
 		for (int temp = 0; temp < nList.getLength(); temp++) {
-			//System.out.println("Leg # "+temp);
+			//com.neuronrobotics.sdk.common.Log.error("Leg # "+temp);
 			Element eElement = (Element)nList.item(temp);
 			username = getTagValue("username",eElement);
 	    	password = getTagValue("password",eElement);
@@ -157,7 +157,7 @@ public class GoogleChatEngine implements ChatManagerListener {
 	public static String getTagValue(String sTag, Element eElement){
 	    NodeList nlList= eElement.getElementsByTagName(sTag).item(0).getChildNodes();
 	    Node nValue = (Node) nlList.item(0); 
-	    //System.out.println("\t\t"+sTag+" = "+nValue.getNodeValue());
+	    //com.neuronrobotics.sdk.common.Log.error("\t\t"+sTag+" = "+nValue.getNodeValue());
 	    return nValue.getNodeValue();    
 	}
 	
@@ -175,7 +175,7 @@ public class GoogleChatEngine implements ChatManagerListener {
 	 */
 	@Override
 	public void chatCreated(Chat arg0, boolean arg1) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		arg0.addMessageListener( getNewMessageListener());
 		googleChats.add(new GoogleChat(arg0));
 	}

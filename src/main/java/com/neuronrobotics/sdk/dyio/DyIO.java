@@ -51,7 +51,7 @@ import com.neuronrobotics.sdk.pid.PIDConfiguration;
 import com.neuronrobotics.sdk.pid.VirtualGenericPIDDevice;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The DyIO class is an encapsulation of all of the functionality of the DyIO module into one object. This 
  * object has one connection to one DyIO module and wraps all of the commands in an accessible API. 
@@ -311,7 +311,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	public ArrayList<DyIOChannel> getChannels() {
 		ArrayList<DyIOChannel> c = new ArrayList<DyIOChannel>();
 		for(DyIOChannel chan:getInternalChannels() ) {
-			//System.out.println(this.getClass()+" Adding channel: "+chan.getChannelNumber()+" as mode: "+chan.getMode());
+			//com.neuronrobotics.sdk.common.Log.error(this.getClass()+" Adding channel: "+chan.getChannelNumber()+" as mode: "+chan.getMode());
 			c.add(chan);
 		}
 		return c;
@@ -501,7 +501,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 				Log.info("\n\nUpdating channel: "+i);
 				getInternalChannels().get(i).update(this, i, cm, editable);
 			}catch(IndexOutOfBoundsException e){
-				//System.out.println("New channel "+i);
+				//com.neuronrobotics.sdk.common.Log.error("New channel "+i);
 				getInternalChannels().add(new DyIOChannel(this, i, cm, editable));
 				DyIOChannel dc =getInternalChannels().get(i);
 				dc.fireModeChangeEvent(dc.getCurrentMode());
@@ -576,7 +576,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	 *            - the event to fire to all listeners
 	 */
 	public void fireDyIOEvent(IDyIOEvent e) {
-		//System.out.println("DyIO Event: "+e);
+		//com.neuronrobotics.sdk.common.Log.error("DyIO Event: "+e);
 		for(IDyIOEventListener l : listeners) {
 			l.onDyIOEvent(e);
 		}
@@ -646,12 +646,12 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	 * @param seconds the seconds
 	 */
 	public void flushCache(double seconds) {
-		//System.out.println("Updating all channels");
+		//com.neuronrobotics.sdk.common.Log.error("Updating all channels");
 		Integer [] values = new Integer[getInternalChannels().size()];
 		int i=0;
 		for(DyIOChannel d:getInternalChannels()) {
 			values[i++]=d.getCachedValue();
-			//System.out.println("Flushing chan "+d+" to "+d.getCachedValue());
+			//com.neuronrobotics.sdk.common.Log.error("Flushing chan "+d+" to "+d.getCachedValue());
 		}
 		if(isLegacyParser()){
 			for(int j=0;j<5;j++) {
@@ -659,7 +659,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 					send(new SetAllChannelValuesCommand(seconds,values));
 					return;
 				}catch (InvalidResponseException e1) {
-					System.err.println("Failed to update all, retrying");
+					com.neuronrobotics.sdk.common.Log.error("Failed to update all, retrying");
 				}
 			}
 		}else{
@@ -1096,7 +1096,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 			if(b== null)
 				checkFirmwareRev();
 		}catch(Exception e){
-			System.err.println("DyIO is out of date");
+			com.neuronrobotics.sdk.common.Log.error("DyIO is out of date");
 			checkFirmwareRev();
 		}
 	}
@@ -1124,7 +1124,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 			if(b== null)
 				checkFirmwareRev();
 		}catch(Exception e){
-			System.err.println("DyIO is out of date");
+			com.neuronrobotics.sdk.common.Log.error("DyIO is out of date");
 			checkFirmwareRev();
 		}	
 	}
@@ -1310,7 +1310,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	 */
 	@Override
 	public boolean ConfigurePDVelovityController(PDVelocityConfiguration config) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return getPid().ConfigurePDVelovityController(config);
 	}
 
@@ -1319,7 +1319,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	 */
 	@Override
 	public PDVelocityConfiguration getPDVelocityConfiguration(int group) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return getPid().getPDVelocityConfiguration(group);
 	}
 
@@ -1328,7 +1328,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	 */
 	@Override
 	public int getPIDChannelCount() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return getPid().getPIDChannelCount();
 	}
 	

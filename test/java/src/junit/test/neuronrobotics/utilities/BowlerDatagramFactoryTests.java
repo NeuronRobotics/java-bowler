@@ -12,7 +12,7 @@ import com.neuronrobotics.sdk.common.BowlerDatagramFactory;
 import com.neuronrobotics.sdk.common.MACAddress;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class BowlerDatagramFactoryTests.
  */
@@ -39,13 +39,13 @@ public class BowlerDatagramFactoryTests {
 			if(b.isFree()){
 				fail();//if any packets not marked as allocated
 			}
-			//System.out.println(b);
+			//com.neuronrobotics.sdk.common.Log.error(b);
 		}
 		ThreadUtil.wait((int) ((double)BowlerDatagramFactory.getPacketTimeout())*2);//wait for packets to timeout
 		for(BowlerDatagram b:myList){
 			if(b.isFree())
 				fail();//if any packets not marked as free too soon
-			//System.out.println(b);
+			//com.neuronrobotics.sdk.common.Log.error(b);
 		}
 		ThreadUtil.wait((int) ((double)BowlerDatagramFactory.getPacketTimeout())*2);//wait for packets to timeout
 		for(BowlerDatagram b:myList){

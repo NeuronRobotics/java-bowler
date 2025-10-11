@@ -1,6 +1,6 @@
 package com.neuronrobotics.sdk.bowlercam.device;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class ItemMarker.
  */

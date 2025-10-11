@@ -2,7 +2,7 @@ package com.neuronrobotics.sdk.ui;
 
 import javax.swing.ImageIcon;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * A factory for creating ConnectionImageIcon objects.
  */

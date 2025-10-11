@@ -1,6 +1,6 @@
 package com.neuronrobotics.replicator.driver.interpreter;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /** 
  * An empty code handler, for noting that "do nothing" is the correct action.
  * Presently used for absolute positioning and programming in mm, because those are the internal representations.

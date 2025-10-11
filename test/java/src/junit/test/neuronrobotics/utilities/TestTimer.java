@@ -10,7 +10,7 @@ import com.neuronrobotics.sdk.common.IthreadedTimoutListener;
 import com.neuronrobotics.sdk.common.ThreadedTimeout;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class TestTimer.
  */
@@ -37,7 +37,7 @@ public class TestTimer {
 				t.initialize(500+(i++), new IthreadedTimoutListener() {
 					@Override
 					public void onTimeout(String message) {
-						System.out.println(message);
+						com.neuronrobotics.sdk.common.Log.error(message);
 						timerTimedOut++;
 					}
 				});

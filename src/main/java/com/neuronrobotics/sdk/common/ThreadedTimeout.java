@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class ThreadedTimeout.
  */

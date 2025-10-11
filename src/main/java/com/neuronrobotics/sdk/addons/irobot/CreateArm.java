@@ -18,7 +18,7 @@ import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.peripherals.DyIOPeripheralException;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class CreateArm.
  */
@@ -350,7 +350,7 @@ public class CreateArm {
 		x -= (l3*cos(orentation*M_PI/180));
 		y -= (l3*sin(orentation*M_PI/180));
 		if (sqrt(x*x+y*y) > l1+l2) {
-			System.err.println("Hypotenus too long"+x+" "+y+"\r\n");
+			com.neuronrobotics.sdk.common.Log.error("Hypotenus too long"+x+" "+y+"\r\n");
 			return;
 		}
 		double elbow = 0;

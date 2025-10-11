@@ -26,7 +26,7 @@ import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.network.BowlerTCPClient;
 
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class TCPConnectionPanel.
  */
@@ -75,13 +75,13 @@ public class TCPConnectionPanel extends AbstractConnectionPanel {
 //		try {
 //			s = new Socket("google.com", 80);
 //			connectionCbo.addItem(s.getLocalAddress().getHostAddress());
-//			//System.out.println(s.getLocalAddress().getHostAddress());
+//			//com.neuronrobotics.sdk.common.Log.error(s.getLocalAddress().getHostAddress());
 //			s.close();
 //		} catch (UnknownHostException e) {
-//			// TODO Auto-generated catch block
+//			// Auto-generated catch block
 //			//e.printStackTrace();
 //		} catch (IOException e) {
-//			// TODO Auto-generated catch block
+//			// Auto-generated catch block
 //			//e.printStackTrace();
 //		}
 	

@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class SDKBuildInfo.
  */
@@ -117,7 +117,7 @@ public class SDKBuildInfo {
 			}
 		} catch (IOException e) {
 		}
-		// System.out.println("Manifest:\n"+s);
+		// com.neuronrobotics.sdk.common.Log.error("Manifest:\n"+s);
 		return "";
 	}
 

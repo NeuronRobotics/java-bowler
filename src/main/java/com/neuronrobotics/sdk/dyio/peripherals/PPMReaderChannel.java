@@ -15,7 +15,7 @@ import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.common.DeviceManager;
 import com.neuronrobotics.sdk.dyio.IChannelEventListener;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * This class is a wrapper for the DyIO PPM signal reader.
  * This manages taking Channel 23 and using it to read values from the VEX rc controller (others might be supported as well)
@@ -133,7 +133,7 @@ public class PPMReaderChannel  extends DyIOAbstractPeripheral implements IChanne
 	private void updateValues() {
 		if(getChannel().getDevice().isLegacyParser()){
 			BowlerDatagram b=null;
-			//System.out.println("Updating value map");
+			//com.neuronrobotics.sdk.common.Log.error("Updating value map");
 			try {
 				b= getChannel().getDevice().send(new GetValueCommand(23));
 			}catch (Exception e) {

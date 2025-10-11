@@ -8,7 +8,7 @@ import com.neuronrobotics.sdk.common.device.server.BowlerAbstractServer;
 import com.neuronrobotics.sdk.network.BowlerUDPServer;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class NetworkServerTest.
  */
@@ -43,7 +43,7 @@ public class NetworkServerTest extends BowlerAbstractServer {
 			new NetworkServerTest();
 		}catch (Exception e){
 			e.printStackTrace();
-			System.err.println("###SERVER Failed out!");
+			com.neuronrobotics.sdk.common.Log.error("###SERVER Failed out!");
 			System.exit(1);
 		}
 	}

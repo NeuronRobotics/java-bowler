@@ -2,7 +2,7 @@ package com.neuronrobotics.replicator.driver.interpreter;
 import java.util.Arrays;
 
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /** 
  * Encapsulates the register information in a line of G code, stored as double-precision floating point values.
  *

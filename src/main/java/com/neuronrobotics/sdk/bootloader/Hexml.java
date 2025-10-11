@@ -15,7 +15,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
  
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class Hexml.
  */
@@ -48,11 +48,11 @@ public class Hexml {
 		doc = dBuilder.parse(hexml);
 		doc.getDocumentElement().normalize();
 
-		////System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+		////com.neuronrobotics.sdk.common.Log.error("Root element :" + doc.getDocumentElement().getNodeName());
 		loadRevision(doc);
 		//NodeList nList = doc.getElementsByTagName("revision");
 		//revision = getTagValue("revision",(Element)nList.item(0));
-		////System.out.println("Revision is:"+revision);
+		////com.neuronrobotics.sdk.common.Log.error("Revision is:"+revision);
 		NodeList nList = doc.getElementsByTagName("core");
 		for (int temp = 0; temp < nList.getLength(); temp++) {
 		    Node nNode = nList.item(temp);	    
@@ -62,7 +62,7 @@ public class Hexml {
 			    //int word = Integer.parseInt(getTagValue("wordSize",eElement));
 			    NRBootCoreType type = NRBootCoreType.find(getTagValue("type",eElement));
 			    if (type == null) {
-			    	System.err.println("Failed to get a core type for: "+getTagValue("type",eElement));
+			    	com.neuronrobotics.sdk.common.Log.error("Failed to get a core type for: "+getTagValue("type",eElement));
 			    	continue;
 			    }
 			    String hexFile = getTagValue("hex",eElement);
@@ -72,12 +72,12 @@ public class Hexml {
 			    	try {
 						lines.add(new hexLine(tokens[i]));
 					} catch (Exception e) {
-						// TODO Auto-generated catch block
+						// Auto-generated catch block
 						e.printStackTrace();
 					}
 			    }
 			    Core tmp = new Core(index, lines, type);
-			    ////System.out.println("Adding new core: "+tmp);
+			    ////com.neuronrobotics.sdk.common.Log.error("Adding new core: "+tmp);
 			    cores.add(tmp);
 		    }
 		 }

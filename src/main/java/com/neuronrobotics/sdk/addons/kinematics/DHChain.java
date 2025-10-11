@@ -12,14 +12,16 @@ import org.w3c.dom.NodeList;
 import Jama.Matrix;
 
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
+import com.neuronrobotics.sdk.addons.kinematics.time.ITimeProvider;
+import com.neuronrobotics.sdk.addons.kinematics.time.TimeKeeper;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
 import com.neuronrobotics.sdk.common.Log;
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 
 /**
  * The Class DHChain.
  */
-public  class DHChain {
+public  class DHChain extends TimeKeeper{
 	
 	/** The links. */
 	private ArrayList<DHLink> links = new ArrayList<DHLink>();
@@ -114,9 +116,7 @@ public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector )
 		
 		if(getLinks() == null)
 			return null;
-		long start = System.currentTimeMillis();
-		
-		
+	
 		//is = new GradiantDecent(this,debug);
 		//is = new SearchTreeSolver(this,debug);
 		if(getInverseSolver() == null)
@@ -282,7 +282,7 @@ public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector )
 	 * @return the upper limits
 	 */
 	public double[] getUpperLimits() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return upperLimits;
 	}
 
@@ -292,7 +292,7 @@ public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector )
 	 * @return the lower limits
 	 */
 	public double[] getlowerLimits() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return lowerLimits;
 	}
 
@@ -482,6 +482,14 @@ public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector )
 		upperLimits = factory.getUpperLimits();
 		lowerLimits = factory.getLowerLimits();
 		this.factory = factory;
+	}
+	@Override
+	public  void setTimeProvider(ITimeProvider t) {
+		super.setTimeProvider(t);
+		for(DHLink l:getLinks()) {
+			if (l.getSlaveMobileBase()!=null)
+				l.getSlaveMobileBase().setTimeProvider(getTimeProvider());
+		}
 	}
 
 }

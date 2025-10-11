@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 
 
-// TODO: Auto-generated Javadoc
+//  Auto-generated Javadoc
 /**
  * The Class GradiantDecent.
  */
@@ -25,7 +25,7 @@ public class GradiantDecent implements DhInverseSolver{
 	 */
 	public GradiantDecent(DHChain dhChain, boolean debug) {
 		this.dhChain = dhChain;
-		// TODO Auto-generated constructor stub
+		// Auto-generated constructor stub
 		this.debug = debug;
 	}
 	
@@ -83,7 +83,7 @@ public class GradiantDecent implements DhInverseSolver{
 			}
 		}while(++iter<200 && notArrived && stopped == false);//preincrement and check
 		if(debug){
-			System.out.println("Numer of iterations #"+iter+" \n\tStalled = "+stopped+" \n\tArrived = "+!notArrived+" \n\tFinal offset= "+vect+" \n\tFinal orent= "+orent);
+			com.neuronrobotics.sdk.common.Log.error("Numer of iterations #"+iter+" \n\tStalled = "+stopped+" \n\tArrived = "+!notArrived+" \n\tFinal offset= "+vect+" \n\tFinal orent= "+orent);
 		}
 		return inv;
 	}
