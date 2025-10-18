@@ -77,7 +77,8 @@ public class Log {
 	private static PrintStream outStream = System.out;
 	/** The out stream. */
 	private static PrintStream errStream = System.err;	
-	
+	/** The out stream. */
+	private static PrintStream mirrorStream = System.out;		
 	/** The use colored prints. */
 	private boolean useColoredPrints=false;
 	
@@ -85,8 +86,8 @@ public class Log {
 	
 	private File log=null;
 
-	private ByteList incoming;
-	
+	private ByteList incomingErr;
+	private ByteList incomingOut;
 
 	/**
 	 * Instantiates a new log.
@@ -454,22 +455,44 @@ public class Log {
 
 		instance.log=logfile;
 		instance.logFileThread=new Thread(()->{
-			instance.incoming = new ByteList();
-			OutputStream stream =  new OutputStream() {
+			instance.incomingErr = new ByteList();
+			
+			OutputStream streamErr =  new OutputStream() {
 				@Override
 				public void write(int b) throws IOException {
-					instance.incoming.add(b);
+					instance.incomingErr.add(b);
 				}
 			};
-			System.setOut(new PrintStream(stream));
-			System.setErr(new PrintStream(stream));
-			setOutStream(new PrintStream(stream));
+			instance.incomingOut = new ByteList();
+			
+			OutputStream streamOut =  new OutputStream() {
+				@Override
+				public void write(int b) throws IOException {
+					instance.incomingOut.add(b);
+				}
+			};
+			System.setOut(new PrintStream(streamOut));
+			System.setErr(new PrintStream(streamErr));
+			setOutStream(new PrintStream(streamErr));
 			while (instance.log!=null) {
 				ThreadUtil.wait(150);
-				if (instance.incoming.size() > 0)
+				if (instance.incomingOut.size() > 0)
 					try {
-						String text = instance.incoming.asString();
-						instance.incoming.clear();
+						String text = instance.incomingOut.asString();
+						instance.incomingOut.clear();
+						if (text != null && text.length() > 0){
+							//Files.writeString(logfile.toPath(), text, StandardCharsets.UTF_8, StandardOpenOption.APPEND); // java 11+
+							Files.write(logfile.toPath(), text.getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+							mirrorStream.println(text);
+						}
+						text = null;
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				if (instance.incomingErr.size() > 0)
+					try {
+						String text = instance.incomingErr.asString();
+						instance.incomingErr.clear();
 						if (text != null && text.length() > 0){
 							//Files.writeString(logfile.toPath(), text, StandardCharsets.UTF_8, StandardOpenOption.APPEND); // java 11+
 							Files.write(logfile.toPath(), text.getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
@@ -488,7 +511,7 @@ public class Log {
 		System.setOut(outStream);
 		System.setErr(outStream);
 		instance.log=null;
-		while(instance.incoming.size() > 0) {
+		while(instance.incomingOut.size() > 0 ||instance.incomingErr.size() > 0 ) {
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException e) {
@@ -502,5 +525,13 @@ public class Log {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	public static PrintStream getMirrorStream() {
+		return mirrorStream;
+	}
+
+	public static void setMirrorStream(PrintStream mirrorStream) {
+		Log.mirrorStream = mirrorStream;
 	}
 }
