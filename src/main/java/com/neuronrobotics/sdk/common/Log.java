@@ -389,7 +389,7 @@ public class Log {
 		 */
 		public String toString() {
 			//return "\t\t\t\t[" + dateFormat.format(datetime) + "] " + " " + getImportance(importance) +" "+callingClass+ " :\n"+ message;
-			return getImportanceColor(importance)+"[" + dateFormat.format(datetime) + "] " + " " + getImportance(importance) +" "+callingClass+ " :\t\t\t\t"+ message+getColorNormalizationCode();
+			return getImportanceColor(importance)+"[" + dateFormat.format(datetime) + "] " + " " + getImportance(importance) +" "+callingClass+ " :\n\t"+ message+getColorNormalizationCode();
 		}
 	}
 	
