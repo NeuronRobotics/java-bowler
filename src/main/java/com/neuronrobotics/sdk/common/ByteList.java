@@ -421,7 +421,7 @@ public class ByteList implements ISendable,Iterable<Byte> {
 		
 		if(isUseStaticBuffer()){
 			int tmpRead = staticBufferReadPointer;
-			//Allign the start pointer
+			//Align the start pointer
 			if(start != 0){
 				for(int i=0;i<start;i++){
 					tmpRead++;
