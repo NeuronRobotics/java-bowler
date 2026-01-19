@@ -333,7 +333,8 @@ public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector )
 	 */
 	public DhInverseSolver getInverseSolver() {
 		if(is==null){
-			is=new DhInverseSolver() {
+			Log.error(new RuntimeException("No Solver defined!"));
+			return new DhInverseSolver() {
 				
 				@Override
 				public double[] inverseKinematics(TransformNR target,
