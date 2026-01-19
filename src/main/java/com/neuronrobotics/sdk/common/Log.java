@@ -475,11 +475,7 @@ public class Log {
 			System.setErr(new PrintStream(streamErr));
 			setOutStream(new PrintStream(streamErr));
 			while (instance.log!=null) {
-				try {
-					Thread.sleep(149);
-				} catch (InterruptedException e) {
-					return;
-				}
+				ThreadUtil.wait(150);
 				if (instance.incomingOut.size() > 0)
 					try {
 						String text = instance.incomingOut.asString();
