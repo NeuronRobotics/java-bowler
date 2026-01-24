@@ -73,10 +73,13 @@ public class Log {
 	
 	/** The out stream. */
 	private static PrintStream outStream = System.out;
+
 	/** The out stream. */
 	private static PrintStream errStream = System.err;	
+
 	/** The out stream. */
 	private static PrintStream mirrorStream = System.out;		
+
 	/** The use colored prints. */
 	private boolean useColoredPrints = false;
 	
@@ -88,6 +91,7 @@ public class Log {
 	private ByteList incomingOut;
 
 	private String lastCallingClass = "";
+
 	/**
 	 * Instantiates a new log.
 	 */
@@ -158,20 +162,16 @@ public class Log {
 	 */
 	private void add(String message, int importance) {
 		
-		if (importance < minprintlevel) {
+		if (importance < minprintlevel)
 			return;
-		}
+
 		if (m == null)
 			m = new Message(message, importance);
-		else{
+		else
 			m.init(message, importance);
-		}
-		//messages.add(m);
 
-		
-		if (systemprint) {
+		if (systemprint)
 			outStream.println(m.toString());
-		}
 	}
 	
 	/**
@@ -186,11 +186,11 @@ public class Log {
 	/**
 	 * Enable printing of debug output.
 	 */
-	
 	public static void enableDebugPrint() {
 		Log.enableSystemPrint(true);
 		Log.setMinimumPrintLevel(DEBUG);
 	}
+
 	public static void disablePrint() {
 		Log.enableSystemPrint(false);
 	}
@@ -200,7 +200,6 @@ public class Log {
 	 *
 	 * @param flag the flag
 	 */
-	
 	public static void enableDebugPrint(boolean flag) {
 		Log.enableSystemPrint(flag);
 		Log.setMinimumPrintLevel(DEBUG);
@@ -209,7 +208,6 @@ public class Log {
 	/**
 	 * Enable printing of debug output.
 	 */
-	
 	public static void enableInfoPrint() {
 		Log.enableSystemPrint(true);
 		Log.setMinimumPrintLevel(INFO);
@@ -218,7 +216,6 @@ public class Log {
 	/**
 	 * Enable printing of debug output.
 	 */
-	
 	public static void enableWarningPrint() {
 		Log.enableSystemPrint(true);
 		Log.setMinimumPrintLevel(WARNING);
@@ -227,12 +224,10 @@ public class Log {
 	/**
 	 * Enable printing of debug output.
 	 */
-	
 	public static void enableErrorPrint() {
 		Log.enableSystemPrint(true);
 		Log.setMinimumPrintLevel(ERROR);
 	}
-	
 	
 	/**
 	 * Set the minimum level of importance to dsplay.
@@ -286,6 +281,7 @@ public class Log {
 			return "Log";
 		}
 	}
+
 	/**
 	 * Get a string describing the given importance level.
 	 *
@@ -310,9 +306,7 @@ public class Log {
 		}
 		return "";
 	}
-	
 
-	
 	/**
 	 * Get the current output PrintStream.
 	 *
@@ -388,18 +382,19 @@ public class Log {
 
 			// First logfile line
 			if (lastCallingClass.isEmpty()) {
-				lastCallingClass = "\n[" + dateFormat.format(datetime) + "] ======== Log file opened ========";
+
+				lastCallingClass = "\n======== [" + dateFormat.format(datetime) + "] " + message + " ========";
 				dateFormat = new SimpleDateFormat("HH:mm:ss.SS");
 
-				return lastCallingClass.toString();
+				return lastCallingClass;
 			}
 
 			if (lastCallingClass.equals(getImportance(importance) + " " + callingClass))
-				return getImportanceColor(importance) + "  [" + dateFormat.format(datetime) + "] " + message + getColorNormalizationCode();
+				return getImportanceColor(importance) + "  [" + dateFormat.format(datetime) + "] " +  getColorNormalizationCode() + message;
 
 			lastCallingClass = getImportance(importance) + " " + callingClass;
 
-			return "\n" + getImportanceColor(importance) + lastCallingClass + ":\n  [" + dateFormat.format(datetime) + "] " + message + getColorNormalizationCode();
+			return "\n" + getImportanceColor(importance) + lastCallingClass + ":\n  [" + dateFormat.format(datetime) + "] " + getColorNormalizationCode() + message;
 		}
 	}
 	
@@ -482,12 +477,14 @@ public class Log {
 			System.setOut(new PrintStream(streamOut));
 			System.setErr(new PrintStream(streamErr));
 			setOutStream(new PrintStream(streamErr));
+
 			while (instance.log != null) {
 				try {
 					Thread.sleep(149);
 				} catch (InterruptedException e) {
 					return;
 				}
+
 				if (instance.incomingOut.size() > 0)
 					try {
 						String text = instance.incomingOut.asString();
@@ -501,6 +498,7 @@ public class Log {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
+
 				if (instance.incomingErr.size() > 0)
 					try {
 						String text = instance.incomingErr.asString();
@@ -518,12 +516,13 @@ public class Log {
 		});
 		instance.logFileThread.start();
 	}
+
 	public static void flush() {
 		setOutStream(outStream);
 		System.setOut(outStream);
 		System.setErr(outStream);
 		instance.log = null;
-		while((instance.incomingOut.size() > 0) || (instance.incomingErr.size() > 0 )) {
+		while ((instance.incomingOut.size() > 0) || (instance.incomingErr.size() > 0 )) {
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException e) {
