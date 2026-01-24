@@ -309,7 +309,7 @@ public class DyIOChannel implements IDyIOChannel {
 	 */
 	public Collection<DyIOChannelMode> getAvailableModes() {
 		if(myModes== null)
-			myModes = getDevice().getAvailibleChannelModes(getChannelNumber());
+			myModes = getDevice().getAvailableChannelModes(getChannelNumber());
 		
 		for(int i=0;i<myModes.size();i++){
 			if(myModes.get(i) == DyIOChannelMode.SERVO_OUT){
@@ -490,7 +490,7 @@ public class DyIOChannel implements IDyIOChannel {
 		
 		if(!canBeMode(mode)){
 			if(mode == DyIOChannelMode.SERVO_OUT)
-				new RuntimeException("\nChannel: "+getChannelNumber()+" can not be mode '"+mode+"' in current configuration. \nCheck the power switch settings and availible modes.").printStackTrace();
+				new RuntimeException("\nChannel: "+getChannelNumber()+" can not be mode '"+mode+"' in current configuration. \nCheck the power switch settings and available modes.").printStackTrace();
 			else
 				new RuntimeException("\nChannel: "+getChannelNumber()+" can not be mode '"+mode+"'.").printStackTrace();
 			mode=getMode();

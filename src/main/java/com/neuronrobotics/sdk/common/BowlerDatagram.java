@@ -77,7 +77,7 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	
 	//private long timestamp;
 	
-	private boolean isPackedAvailibleForLoading = true;
+	private boolean isPackedAvailableForLoading = true;
 	
 	/** The timeout. */
 	private ThreadedTimeout timeout=new ThreadedTimeout();
@@ -601,7 +601,7 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 	 * @return true, if is free
 	 */
 	public boolean isFree() {
-		return isPackedAvailibleForLoading;
+		return isPackedAvailableForLoading;
 	}
 
 
@@ -642,7 +642,7 @@ public class BowlerDatagram implements ISendable,IthreadedTimoutListener {
 		}else{
 			setToFree();
 		}
-		this.isPackedAvailibleForLoading = isFree;
+		this.isPackedAvailableForLoading = isFree;
 	}
 
 	/* (non-Javadoc)

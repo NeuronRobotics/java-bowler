@@ -1362,12 +1362,12 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 	}
 	
 	/**
-	 * Gets the availible channel modes.
+	 * Gets the available channel modes.
 	 *
 	 * @param channel the channel
-	 * @return the availible channel modes
+	 * @return the available channel modes
 	 */
-	public ArrayList<DyIOChannelMode> getAvailibleChannelModes(int channel){
+	public ArrayList<DyIOChannelMode> getAvailableChannelModes(int channel){
 		ArrayList<DyIOChannelMode> modes = new ArrayList<DyIOChannelMode>();
 		ByteList m;
 		
@@ -1387,7 +1387,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace,I
 			m = (ByteList)args[0];
 			//Log.setMinimumPrintLevel(l);
 		}
-		String modeString = " Availible modes on "+channel;
+		String modeString = " Available modes on " + channel;
 		for(int i=0;i<m.size();i++){
 			DyIOChannelMode tmpMode = DyIOChannelMode.get(m.getByte(i));
 			modeString +="\r\n\t"+tmpMode.toString()+"\r\n\t";
