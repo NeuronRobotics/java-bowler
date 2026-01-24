@@ -97,7 +97,7 @@ public abstract class AbstractPidNamespaceImp implements IExtendedPIDControl {
 	}
 
 	/**
-	 * Gets the number of PID channels availible to the system. It is determined by how many PID channels the device reports
+	 * Gets the number of PID channels available to the system. It is determined by how many PID channels the device reports
 	 * back after a calling GetAllPIDPosition();
 	 *
 	 * @return the number of channels

@@ -13,7 +13,7 @@ public class EmptyCodeHandler extends CodeHandler {
 	 */
 	public void execute(GCodeLineData prev, GCodeLineData line) throws Exception {
 		
-		//throw new RuntimeException("No handler availible "+line);
+		//throw new RuntimeException("No handler available " + line);
 	}
 }
 

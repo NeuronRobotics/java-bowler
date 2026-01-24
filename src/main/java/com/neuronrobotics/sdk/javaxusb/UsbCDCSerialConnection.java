@@ -703,8 +703,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 			//e.printStackTrace();
 			disconnect();
 			throw new BowlerRuntimeException(
-					"Connection is no longer availible "
-							+ e.getLocalizedMessage());
+				"Connection is no longer available " + e.getLocalizedMessage());
 		}
 
 		return;

@@ -4,7 +4,7 @@ import com.neuronrobotics.sdk.addons.kinematics.time.TimeKeeper;
 
 /**
  * This is a state object for the IMU
- * any function that returns null has no new data availible.
+ * any function that returns null has no new data available.
  * @author hephaestus
  *
  */

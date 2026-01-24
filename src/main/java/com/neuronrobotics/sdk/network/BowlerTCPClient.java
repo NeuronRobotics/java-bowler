@@ -83,7 +83,7 @@ public class BowlerTCPClient extends BowlerAbstractConnection{
 			Log.error("No such host");
 			throw e;
 		} catch (Exception e) {
-			Log.error("Port un-availible");
+			Log.error("Port un-available");
 			throw e;
 		}
 	}
@@ -188,7 +188,7 @@ public class BowlerTCPClient extends BowlerAbstractConnection{
 	/**
 	 * This will broadcast out 1 packet on UDP socket 1865.
 	 * It will wait for devices to respond and makes a list of 
-	 * the availible TCP sockets
+	 * the available TCP sockets
 	 * @return list of devices that responded 
 	 */
 	public static ArrayList<InetAddress> getAvailableSockets() {

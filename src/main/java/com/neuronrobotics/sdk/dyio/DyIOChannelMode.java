@@ -169,7 +169,7 @@ public enum DyIOChannelMode implements ISendable {
 			if(cm.toSlug().toLowerCase().contentEquals(slug.toLowerCase()))
 				return cm;
 		}
-		throw new RuntimeException("No mode availible for slug: "+slug);
+		throw new RuntimeException("No mode available for slug: "+slug);
 	}
     
     /* (non-Javadoc)

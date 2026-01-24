@@ -18,9 +18,9 @@ import java.net.InetAddress;
 
 //  Auto-generated Javadoc
 /**
- * The Class AvailibleSocket.
+ * The Class AvailableSocket.
  */
-public class AvailibleSocket {
+public class AvailableSocket {
 	
 	/** The tcp addr. */
 	private InetAddress tcpAddr=null;
