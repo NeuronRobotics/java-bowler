@@ -36,9 +36,11 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
  *
  */
 public class Log {
-
+	
+	
+	
 	/** The Constant LOG. */
-	public static final int LOG = -1;
+	public static final int LOG =-1;
 	
 	/** The Constant INFO. */
 	public static final int INFO = 0;
@@ -61,7 +63,7 @@ public class Log {
 	
 	/** The date format. */
 	private DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss:SS");
-
+	
 	/** The minprintlevel. */
 	private int minprintlevel = WARNING;
 	
@@ -73,24 +75,19 @@ public class Log {
 	
 	/** The out stream. */
 	private static PrintStream outStream = System.out;
-
 	/** The out stream. */
 	private static PrintStream errStream = System.err;	
-
 	/** The out stream. */
 	private static PrintStream mirrorStream = System.out;		
-
 	/** The use colored prints. */
-	private boolean useColoredPrints = false;
+	private boolean useColoredPrints=false;
 	
 	private Thread logFileThread = null;
 	
-	private File log = null;
+	private File log=null;
 
 	private ByteList incomingErr;
 	private ByteList incomingOut;
-
-	private String lastCallingClass = "";
 
 	/**
 	 * Instantiates a new log.
@@ -162,16 +159,23 @@ public class Log {
 	 */
 	private void add(String message, int importance) {
 		
-		if (importance < minprintlevel)
+		if( importance < minprintlevel) {
 			return;
-
-		if (m == null)
+		}
+		if(m==null)
 			m = new Message(message, importance);
-		else
+		else{
 			m.init(message, importance);
+		}
+		//messages.add(m);
 
-		if (systemprint)
+		
+		if( systemprint) {
 			outStream.println(m.toString());
+		}
+		
+		
+		
 	}
 	
 	/**
@@ -186,11 +190,11 @@ public class Log {
 	/**
 	 * Enable printing of debug output.
 	 */
+	
 	public static void enableDebugPrint() {
 		Log.enableSystemPrint(true);
 		Log.setMinimumPrintLevel(DEBUG);
 	}
-
 	public static void disablePrint() {
 		Log.enableSystemPrint(false);
 	}
@@ -200,6 +204,7 @@ public class Log {
 	 *
 	 * @param flag the flag
 	 */
+	
 	public static void enableDebugPrint(boolean flag) {
 		Log.enableSystemPrint(flag);
 		Log.setMinimumPrintLevel(DEBUG);
@@ -208,6 +213,7 @@ public class Log {
 	/**
 	 * Enable printing of debug output.
 	 */
+	
 	public static void enableInfoPrint() {
 		Log.enableSystemPrint(true);
 		Log.setMinimumPrintLevel(INFO);
@@ -216,6 +222,7 @@ public class Log {
 	/**
 	 * Enable printing of debug output.
 	 */
+	
 	public static void enableWarningPrint() {
 		Log.enableSystemPrint(true);
 		Log.setMinimumPrintLevel(WARNING);
@@ -224,10 +231,12 @@ public class Log {
 	/**
 	 * Enable printing of debug output.
 	 */
+	
 	public static void enableErrorPrint() {
 		Log.enableSystemPrint(true);
 		Log.setMinimumPrintLevel(ERROR);
 	}
+	
 	
 	/**
 	 * Set the minimum level of importance to dsplay.
@@ -254,7 +263,7 @@ public class Log {
 	 * @return The log instance.
 	 */
 	public static Log instance() {
-		if (instance == null) {
+		if(instance == null) {
 			instance = new Log();
 		}
 		return instance;
@@ -281,7 +290,6 @@ public class Log {
 			return "Log";
 		}
 	}
-
 	/**
 	 * Get a string describing the given importance level.
 	 *
@@ -289,7 +297,7 @@ public class Log {
 	 * @return the importance
 	 */
 	public String getImportanceColor(int importance) {
-		if (isUseColoredPrints()) {
+		if(isUseColoredPrints()){
 			switch(importance) {
 			case INFO:
 				return "\033[92m";// green
@@ -306,7 +314,9 @@ public class Log {
 		}
 		return "";
 	}
+	
 
+	
 	/**
 	 * Get the current output PrintStream.
 	 *
@@ -360,41 +370,26 @@ public class Log {
 		 * @param message the message
 		 * @param importance the importance
 		 */
-		public void init(String message, int importance) {
+		public void init(String message, int importance){
 			this.message = message;
 			this.importance = importance;
 			datetime = new Date();
-
-			try
-			{
-				throw new Exception("Who called me?");
-			}
-			catch( Exception e )
-			{
-				callingClass = e.getStackTrace()[3].getClassName() + ":" + e.getStackTrace()[3].getMethodName();
-			}
+		      try
+		      {
+		         throw new Exception("Who called me?");
+		      }
+		      catch( Exception e )
+		      {
+		    	 callingClass= e.getStackTrace()[3].getClassName()+":"+e.getStackTrace()[3].getMethodName();
+		      }
 		}
 		
 		/* (non-Javadoc)
 		 * @see java.lang.Object#toString()
 		 */
 		public String toString() {
-
-			// First logfile line
-			if (lastCallingClass.isEmpty()) {
-
-				lastCallingClass = "\n======== [" + dateFormat.format(datetime) + "] " + message + " ========";
-				dateFormat = new SimpleDateFormat("HH:mm:ss.SS");
-
-				return lastCallingClass;
-			}
-
-			if (lastCallingClass.equals(getImportance(importance) + " " + callingClass))
-				return getImportanceColor(importance) + "  [" + dateFormat.format(datetime) + "] " +  getColorNormalizationCode() + message;
-
-			lastCallingClass = getImportance(importance) + " " + callingClass;
-
-			return "\n" + getImportanceColor(importance) + lastCallingClass + ":\n  [" + dateFormat.format(datetime) + "] " + getColorNormalizationCode() + message;
+			//return "\t\t\t\t[" + dateFormat.format(datetime) + "] " + " " + getImportance(importance) +" "+callingClass+ " :\n"+ message;
+			return getImportanceColor(importance)+"[" + dateFormat.format(datetime) + "] " + " " + getImportance(importance) +" "+callingClass+ " :\n\t"+ message+getColorNormalizationCode();
 		}
 	}
 	
@@ -403,8 +398,10 @@ public class Log {
 	 *
 	 * @return the color normalization code
 	 */
-	private String getColorNormalizationCode() {
-		return isUseColoredPrints() ? "\033[39m" : "";
+	private String getColorNormalizationCode(){
+		if(isUseColoredPrints())
+			return "\033[39m";
+		return "";
 	}
 	
 	/**
@@ -412,7 +409,7 @@ public class Log {
 	 *
 	 * @return true, if is use colored prints
 	 */
-	public static boolean isUseColoredPrints() {
+	public static  boolean isUseColoredPrints() {
 		return instance().useColoredPrints;
 	}
 	
@@ -444,9 +441,9 @@ public class Log {
 	}
 
 	public static void setFile(File logfile) {
-		instance().systemprint = true;
-		instance.log = null;
-		if (instance.logFileThread != null) {
+		instance().systemprint=true;
+		instance.log=null;
+		if(instance.logFileThread!=null) {
 			instance.logFileThread.interrupt();
 			try {
 				instance.logFileThread.join();
@@ -456,11 +453,11 @@ public class Log {
 			}
 		}
 
-		instance.log = logfile;
-		instance.logFileThread = new Thread(()->{
+		instance.log=logfile;
+		instance.logFileThread=new Thread(()->{
 			instance.incomingErr = new ByteList();
 			
-			OutputStream streamErr = new OutputStream() {
+			OutputStream streamErr =  new OutputStream() {
 				@Override
 				public void write(int b) throws IOException {
 					instance.incomingErr.add(b);
@@ -468,7 +465,7 @@ public class Log {
 			};
 			instance.incomingOut = new ByteList();
 			
-			OutputStream streamOut = new OutputStream() {
+			OutputStream streamOut =  new OutputStream() {
 				@Override
 				public void write(int b) throws IOException {
 					instance.incomingOut.add(b);
@@ -477,19 +474,17 @@ public class Log {
 			System.setOut(new PrintStream(streamOut));
 			System.setErr(new PrintStream(streamErr));
 			setOutStream(new PrintStream(streamErr));
-
-			while (instance.log != null) {
+			while (instance.log!=null) {
 				try {
 					Thread.sleep(149);
 				} catch (InterruptedException e) {
 					return;
 				}
-
 				if (instance.incomingOut.size() > 0)
 					try {
 						String text = instance.incomingOut.asString();
 						instance.incomingOut.clear();
-						if ((text != null) && (text.length() > 0)) {
+						if (text != null && text.length() > 0){
 							//Files.writeString(logfile.toPath(), text, StandardCharsets.UTF_8, StandardOpenOption.APPEND); // java 11+
 							Files.write(logfile.toPath(), text.getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
 							mirrorStream.println(text);
@@ -498,12 +493,11 @@ public class Log {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-
 				if (instance.incomingErr.size() > 0)
 					try {
 						String text = instance.incomingErr.asString();
 						instance.incomingErr.clear();
-						if ((text != null) && (text.length() > 0)) {
+						if (text != null && text.length() > 0){
 							//Files.writeString(logfile.toPath(), text, StandardCharsets.UTF_8, StandardOpenOption.APPEND); // java 11+
 							Files.write(logfile.toPath(), text.getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
 							errStream.println(text);
@@ -516,13 +510,12 @@ public class Log {
 		});
 		instance.logFileThread.start();
 	}
-
 	public static void flush() {
 		setOutStream(outStream);
 		System.setOut(outStream);
 		System.setErr(outStream);
-		instance.log = null;
-		while ((instance.incomingOut.size() > 0) || (instance.incomingErr.size() > 0 )) {
+		instance.log=null;
+		while(instance.incomingOut.size() > 0 ||instance.incomingErr.size() > 0 ) {
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException e) {
