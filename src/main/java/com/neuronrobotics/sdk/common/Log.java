@@ -97,7 +97,7 @@ public class Log {
 	 */
 	private Log() {
 		// private for singleton pattern
-		add(SDKBuildInfo.getSDKVersionString(), INFO);
+		// add(SDKBuildInfo.getSDKVersionString(), INFO);
 	}
 
 	/**
@@ -383,10 +383,10 @@ public class Log {
 			// First logfile line
 			if (lastCallingClass.isEmpty()) {
 
-				lastCallingClass = "\n======== [" + dateFormat.format(datetime) + "] " + message + " ========";
+				lastCallingClass = "======== [" + dateFormat.format(datetime) + "] " + message + " ========";
 				dateFormat = new SimpleDateFormat("HH:mm:ss.SS");
 
-				return lastCallingClass;
+				return lastCallingClass.toString();
 			}
 
 			if (lastCallingClass.equals(getImportance(importance) + " " + callingClass))
@@ -515,6 +515,7 @@ public class Log {
 			}
 		});
 		instance.logFileThread.start();
+        info(SDKBuildInfo.getSDKVersionString());
 	}
 
 	public static void flush() {
