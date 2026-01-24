@@ -386,15 +386,15 @@ public class Log {
 		 */
 		public String toString() {
 
-            // First logfile line
-            if (lastCallingClass.isEmpty()) {
+			// First logfile line
+			if (lastCallingClass.isEmpty()) {
 				lastCallingClass = "\n[" + dateFormat.format(datetime) + "] ======== Log file opened ========";
 				dateFormat = new SimpleDateFormat("HH:mm:ss.SS");
 
-                return lastCallingClass.toString();
-            }
+				return lastCallingClass.toString();
+			}
 
-            if (lastCallingClass.equals(getImportance(importance) + " " + callingClass))
+			if (lastCallingClass.equals(getImportance(importance) + " " + callingClass))
 				return getImportanceColor(importance) + "  [" + dateFormat.format(datetime) + "] " + message + getColorNormalizationCode();
 
 			lastCallingClass = getImportance(importance) + " " + callingClass;
