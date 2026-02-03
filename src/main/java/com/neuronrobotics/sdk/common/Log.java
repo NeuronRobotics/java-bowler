@@ -38,19 +38,19 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
 public class Log {
 
 	/** The Constant LOG. */
-	public static final int LOG = -1;
+	private static final int LOG = -1;
 	
 	/** The Constant INFO. */
-	public static final int INFO = 0;
+	private static final int INFO = 0;
 	
 	/** The Constant DEBUG. */
-	public static final int DEBUG = 1;
+	private static final int DEBUG = 1;
 	
 	/** The Constant WARNING. */
-	public static final int WARNING = 2;
+	private static final int WARNING = 2;
 	
 	/** The Constant ERROR. */
-	public static final int ERROR = 3;
+	private static final int ERROR = 3;
 	
 	/** The instance. */
 	private static Log instance;
