@@ -45,7 +45,7 @@ public class RpcEncapsulation {
 	 */
 	public RpcEncapsulation(int namespaceIndex,String namespace, String rpc, 
 			BowlerMethod downStreamMethod,BowlerDataType[] downstreamArguments, 
-			BowlerMethod upStreamMethod,BowlerDataType[] upstreamArguments){
+			BowlerMethod upStreamMethod,BowlerDataType[] upstreamArguments) {
 		this(namespaceIndex, namespace, rpc, downStreamMethod, downstreamArguments, upStreamMethod, upstreamArguments, null);
 	}
 	
@@ -63,7 +63,7 @@ public class RpcEncapsulation {
 	 */
 	public RpcEncapsulation(int namespaceIndex,String namespace, String rpc, 
 			BowlerMethod downStreamMethod,BowlerDataType[] downstreamArguments, 
-			BowlerMethod upStreamMethod,BowlerDataType[] upstreamArguments, IBowlerCommandProcessor processor){
+			BowlerMethod upStreamMethod,BowlerDataType[] upstreamArguments, IBowlerCommandProcessor processor) {
 		this.setProcessor(processor);
 		this.setNamespaceIndex(namespaceIndex);
 		this.setNamespace(namespace);
@@ -79,7 +79,7 @@ public class RpcEncapsulation {
 	 * @param upStreamMethod the up stream method
 	 * @param upstreamArguments the upstream arguments
 	 */
-	public void setArguments(BowlerMethod downStreamMethod,BowlerDataType[] downstreamArguments, BowlerMethod upStreamMethod,BowlerDataType[] upstreamArguments){
+	public void setArguments(BowlerMethod downStreamMethod,BowlerDataType[] downstreamArguments, BowlerMethod upStreamMethod,BowlerDataType[] upstreamArguments) {
 		this.setUpStreamMethod(upStreamMethod);
 		this.setDownstreamArguments(downstreamArguments);
 		this.setUpstreamArguments(upstreamArguments);
@@ -92,7 +92,7 @@ public class RpcEncapsulation {
 	 * @param doswnstreamData the doswnstream data
 	 * @return the command
 	 */
-	public BowlerAbstractCommand getCommand(Object [] doswnstreamData){
+	public BowlerAbstractCommand getCommand(Object [] doswnstreamData) {
 		return getCommand(doswnstreamData, downstreamArguments);
 	}
 	
@@ -102,7 +102,7 @@ public class RpcEncapsulation {
 	 * @param doswnstreamData the doswnstream data
 	 * @return the command upstream
 	 */
-	public BowlerAbstractCommand getCommandUpstream(Object [] doswnstreamData){
+	public BowlerAbstractCommand getCommandUpstream(Object [] doswnstreamData) {
 		return getCommand(doswnstreamData, upstreamArguments);
 	}
 	
@@ -114,16 +114,16 @@ public class RpcEncapsulation {
 	 * @param arguments the arguments
 	 * @return the command
 	 */
-	public BowlerAbstractCommand getCommand(Object [] doswnstreamData, BowlerDataType [] arguments){
+	public BowlerAbstractCommand getCommand(Object [] doswnstreamData, BowlerDataType [] arguments) {
 		BowlerAbstractCommand command = new BowlerAbstractCommand() {};
 		
 		command.setOpCode(getRpc());
 		command.setMethod(getDownstreamMethod());
 		command.setNamespaceIndex(getNamespaceIndex());
 		
-		for(int i=0;(i<arguments.length && i < doswnstreamData.length);i++ ){
-			try{
-				switch(arguments[i]){
+		for (int i = 0; ((i < arguments.length) && (i < doswnstreamData.length)); i++) {
+			try {
+				switch(arguments[i]) {
 				case ASCII:
 					command.getCallingDataStorage().add(doswnstreamData[i].toString());
 					command.getCallingDataStorage().add(0);
@@ -149,66 +149,64 @@ public class RpcEncapsulation {
 					command.getCallingDataStorage().addAs32(Integer.parseInt(doswnstreamData[i].toString()));
 					break;
 				case I32STR:
-					try{
+					try {
 						Integer [] data32 = (Integer [])doswnstreamData[i];
 						command.getCallingDataStorage().add(data32.length);
-						for(int i1=0;i1<data32.length;i1++){
+						for (int i1 = 0; i1 < data32.length; i1++)
 							command.getCallingDataStorage().addAs32(data32[i1]);
-						}
-					}catch (ClassCastException ex){
+
+					} catch (ClassCastException ex) {
 						int [] data32 = (int [])doswnstreamData[i];
 						command.getCallingDataStorage().add(data32.length);
-						for(int i1=0;i1<data32.length;i1++){
+						for (int i1 = 0; i1 < data32.length; i1++)
 							command.getCallingDataStorage().addAs32(data32[i1]);
-						}
+
 					}
 					break;
 				case FIXED1k_STR:
 					double [] dataDouble = (double [])doswnstreamData[i];
 					command.getCallingDataStorage().add(dataDouble.length);
-					for(int i1=0;i1<dataDouble.length;i1++){
-						command.getCallingDataStorage().addAs32((int) (dataDouble[i1]*1000.0));
-					}
+					for (int i1 = 0; i1 < dataDouble.length; i1++)
+						command.getCallingDataStorage().addAs32((int) (dataDouble[i1] * 1000.0));
+
 					break;
 				case INVALID:
 					break;
 				case STR:
-					try{
+					try {
 						ByteList data = (ByteList )doswnstreamData[i];
 						command.getCallingDataStorage().add(data.size());
-						for(int i1=0;i1<data.size();i1++){
+						for (int i1 = 0; i1 < data.size(); i1++) 
 							command.getCallingDataStorage().add(data.get(i1));
-						}
-					}catch (ClassCastException ex){
-						try{
+
+					} catch (ClassCastException ex) {
+						try {
 							Integer [] data32 = (Integer [])doswnstreamData[i];
 							command.getCallingDataStorage().add(data32.length);
-							for(int i1=0;i1<data32.length;i1++){
+							for (int i1 = 0; i1 < data32.length; i1++)
 								command.getCallingDataStorage().addAs32(data32[i1]);
-							}
-						}catch (ClassCastException ex1){
+
+						} catch (ClassCastException ex1) {
 							int [] data32 = (int [])doswnstreamData[i];
 							command.getCallingDataStorage().add(data32.length);
-							for(int i1=0;i1<data32.length;i1++){
+							for (int i1 = 0; i1 < data32.length; i1++)
 								command.getCallingDataStorage().addAs32(data32[i1]);
-							}
+
 						}
 					}
 					break;
 				default:
-					throw new RuntimeException("Unrecognized data type "+arguments[i]);
+					throw new RuntimeException("Unrecognized data type " + arguments[i]);
 				}
-			}catch(Exception e){
+			} catch(Exception e) {
 				e.printStackTrace();
 				Log.error("Expected : "+ arguments[i]+" got: "+doswnstreamData[i].getClass());
-				if(arguments.length != doswnstreamData.length){
+				if (arguments.length != doswnstreamData.length)
 					Log.error("Wrong size : "+ arguments.length+" got: "+doswnstreamData.length);
-				}else{
-					for(int j=0;j<arguments.length;j++){
-						Log.error("Valid : "+ arguments[j]+" got: "+doswnstreamData[i].getClass());
-					}
-				}
-				
+				else
+					for (int j = 0; j < arguments.length; j++)
+						Log.error("Valid : " + arguments[j] + " got: " + doswnstreamData[i].getClass());
+			
 			}
 
 		}
@@ -222,7 +220,7 @@ public class RpcEncapsulation {
 	 * @param datagram the datagram
 	 * @return the object[]
 	 */
-	public Object [] parseResponse(BowlerDatagram datagram){
+	public Object [] parseResponse(BowlerDatagram datagram) {
 		return parseResponse(datagram, upstreamArguments);
 	}
 	
@@ -232,7 +230,7 @@ public class RpcEncapsulation {
 	 * @param datagram the datagram
 	 * @return the object[]
 	 */
-	public Object [] parseResponseDownstream(BowlerDatagram datagram){
+	public Object [] parseResponseDownstream(BowlerDatagram datagram) {
 		return parseResponse(datagram, downstreamArguments);
 	}
 	
@@ -243,59 +241,59 @@ public class RpcEncapsulation {
 	 * @param arguments the arguments
 	 * @return the object[]
 	 */
-	public Object [] parseResponse(BowlerDatagram datagram, BowlerDataType [] arguments){
+	public Object [] parseResponse(BowlerDatagram datagram, BowlerDataType [] arguments) {
 		Object [] response = new Object[arguments.length];
-		int i=0;
-		try{
+		int i = 0;
+		try {
 			int numVals32;
 			ByteList data = datagram.getData();
-			for(i=0;(i<arguments.length);i++ ){
-				
-				switch(arguments[i]){
+
+			for (i = 0; (i < arguments.length); i++) {			
+				switch(arguments[i]) {
 				case ASCII:
 					String s = data.asString();
-					data.popList(s.length()+1);
+					data.popList(s.length() + 1);
 					response [i] = s;
 					break;
 				case FIXED100:
-					response [i] = new Double(ByteList.convertToInt(data.popList(4)))/100.0;
+					response [i] = ByteList.convertToInt(data.popList(4)) / 100.0;
 					break;
 				case FIXED1k:
-					response [i] = new Double(ByteList.convertToInt(data.popList(4)))/1000.0;
+					response [i] = ByteList.convertToInt(data.popList(4)) / 1000.0;
 					break;
 				case I08:
-					response [i] = new Integer(data.getUnsigned(0));
+					response [i] = data.getUnsigned(0);
 					data.pop();
 					break;
 				case BOOL:
-					response [i] = new Boolean(data.getUnsigned(0)!=0);
+					response [i] = data.getUnsigned(0) != 0;
 					data.pop();
 					break;
 				case I16:
-					response [i] = new Integer(ByteList.convertToInt(data.popList(2)));
+					response [i] = ByteList.convertToInt(data.popList(2));
 					break;
 				case I32:
-					response [i] = new Integer(ByteList.convertToInt(data.popList(4),true));
+					response [i] = ByteList.convertToInt(data.popList(4), true);
 					break;
 				case I32STR:
 					numVals32 = data.getUnsigned(0);
 					data.pop();
-					ByteList d32 = new ByteList(data.popList(numVals32*4));
+					ByteList d32 = new ByteList(data.popList(numVals32 * 4));
 					Integer [] i32Data = new Integer[numVals32];
 					response [i] = i32Data;
-					for(int j=0;j<numVals32;j++){
-						i32Data[j]=new Integer(ByteList.convertToInt(d32.popList(4)));
-					}
+					for (int j = 0; j < numVals32; j++)
+						i32Data[j] = ByteList.convertToInt(d32.popList(4));
+
 					break;
 				case FIXED1k_STR:
 					numVals32 = data.getUnsigned(0);
 					data.pop();
-					ByteList dStr = new ByteList(data.popList(numVals32*4));
+					ByteList dStr = new ByteList(data.popList(numVals32 * 4));
 					double [] dData = new double[numVals32];
 					response [i] = dData;
-					for(int j=0;j<numVals32;j++){
-						dData[j]=new Double(ByteList.convertToInt(dStr.popList(4)))/1000.0;
-					}
+					for (int j = 0; j < numVals32; j++)
+						dData[j] = ByteList.convertToInt(dStr.popList(4)) / 1000.0;
+
 					break;
 				case INVALID:
 					break;
@@ -304,11 +302,10 @@ public class RpcEncapsulation {
 					data.pop();
 					ByteList iData = new ByteList();
 					response [i] = iData;
-					if(numVals>0){
+					if (numVals > 0) {
 						ByteList d = new ByteList(data.popList(numVals));
-						for(int j=0;j<numVals;j++){
-							iData.add(new Integer(d.getUnsigned(j)));
-						}
+						for (int j = 0; j < numVals; j++)
+							iData.add(d.getUnsigned(j));
 						
 					}
 					
@@ -317,19 +314,17 @@ public class RpcEncapsulation {
 					throw new RuntimeException("Unrecognized data type"+arguments[i]);
 				}
 			}
-		}catch(java.lang.ClassCastException e){
+		} catch(java.lang.ClassCastException e) {
 			e.printStackTrace();
-			Log.error("Expected : "+ arguments[i]+" got: "+response[i].getClass());
-			if(arguments.length != response.length){
-				Log.error("Wrong size : "+ arguments.length+" got: "+response.length);
-			}else{
-				for(int j=0;j<arguments.length;j++){
-					Log.error("Valid : "+ arguments[j]+" got: "+response[i].getClass());
-				}
-			}
+			Log.error("Expected : " + arguments[i] + " got: " + response[i].getClass());
+			if (arguments.length != response.length)
+				Log.error("Wrong size : " + arguments.length + " got: " + response.length);
+			else
+				for (int j = 0; j < arguments.length; j++)
+					Log.error("Valid : " + arguments[j]+" got: " + response[i].getClass());
 			
-		}catch(RuntimeException ex){
-			Log.error("Failed to parse "+i+"\n"+datagram+"\nFrom "+this);
+		} catch(RuntimeException ex) {
+			Log.error("Failed to parse " + i + "\n" + datagram + "\nFrom " + this);
 			throw ex;
 		}
 		
@@ -406,11 +401,10 @@ public class RpcEncapsulation {
 	 * @param downstreamArguments the new downstream arguments
 	 */
 	public void setDownstreamArguments(BowlerDataType[] downstreamArguments) {
-		for(int i=0;i<downstreamArguments.length;i++){
-			if(downstreamArguments[i] == null){
+		for (int i = 0; i < downstreamArguments.length; i++)
+			if (downstreamArguments[i] == null)
 				throw new RuntimeException("RPC argument can not be null");
-			}
-		}
+
 		this.downstreamArguments = downstreamArguments;
 	}
 
@@ -429,13 +423,13 @@ public class RpcEncapsulation {
 	 * @param upstreamArguments the new upstream arguments
 	 */
 	public void setUpstreamArguments(BowlerDataType[] upstreamArguments) {
-		if(upstreamArguments== null)
+		if (upstreamArguments == null)
 			return;// asynchronus packets have no upstream
-		for(int i=0;i<upstreamArguments.length;i++){
-			if(upstreamArguments[i] == null){
+
+		for (int i = 0; i < upstreamArguments.length; i++)
+			if (upstreamArguments[i] == null)
 				throw new RuntimeException("RPC argument can not be null");
-			}
-		}
+
 		this.upstreamArguments = upstreamArguments;
 	}
 
@@ -461,20 +455,19 @@ public class RpcEncapsulation {
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
-	public String toString(){
-		String s=getNamespace()+" "+getRpc()+" "+getDownstreamMethod();
-		if(getDownstreamArguments()!=null){
-			s+=" (";
-			for(int i=0;i<getDownstreamArguments().length;i++){
-				
-				s+=getDownstreamArguments()[i]+ " ";
-			}
-			s+=") ";
-			s+=" "+getUpStreamMethod()+" (";
-			for(int i=0;i<getUpstreamArguments().length;i++){
-				s+=getUpstreamArguments()[i]+ " ";
-			}
-			s+=") ";
+	public String toString() {
+		String s=getNamespace() + " " + getRpc() + " " + getDownstreamMethod();
+		if (getDownstreamArguments() != null) {
+			s += " (";
+			for (int i=0;i<getDownstreamArguments().length;i++)
+				s+=getDownstreamArguments()[i] +  " ";
+
+			s += ") ";
+			s += " " + getUpStreamMethod() + " (";
+			for (int i = 0; i < getUpstreamArguments().length; i++)
+				s += getUpstreamArguments()[i] + " ";
+
+			s += ") ";
 		}
 		return s;	
 	}

@@ -250,9 +250,11 @@ public class TransformNR {
       return "Transform error" + ex.getLocalizedMessage();
     }
   }
+
   public String toSimpleString() {
 	  return toPositionString()+" "+toAngleString();
   }
+
   public String toPositionString() {
 	DecimalFormat decimalFormat = new DecimalFormat("000.00");
 
@@ -260,12 +262,13 @@ public class TransformNR {
 	  			"y="+decimalFormat.format(y)+" "+
 	  			"z="+decimalFormat.format(z);
   }
+
   public String toAngleString() {
 		DecimalFormat decimalFormat = new DecimalFormat("000.00");
 
-		  return 	"az="+decimalFormat.format(Math.toDegrees(getRotation().getRotationAzimuth()))+" "+
-		  "el="+decimalFormat.format(Math.toDegrees(getRotation().getRotationElevation()))+" "+
-		  "tl="+decimalFormat.format(Math.toDegrees(getRotation().getRotationTilt()));
+		  return 	"az=" + decimalFormat.format(Math.toDegrees(getRotation().getRotationAzimuthRadians())) + " " +
+		  "el=" + decimalFormat.format(Math.toDegrees(getRotation().getRotationElevationRadians())) + " " +
+		  "tl=" + decimalFormat.format(Math.toDegrees(getRotation().getRotationTiltRadians()));
 	  }
 
   /**
@@ -321,14 +324,13 @@ public class TransformNR {
     double[][] rotation = getRotationMatrixArray();
 
 
-    for (int i = 0; i < 3; i++) {
-      for (int j = 0; j < 3; j++) {
+    for (int i = 0; i < 3; i++)
+      for (int j = 0; j < 3; j++)
         transform[i][j] = rotation[i][j];
-      }
-    }
-    for (int i = 0; i < 3; i++) {
+
+    for (int i = 0; i < 3; i++)
       transform[3][i] = 0;
-    }
+
     transform[3][3] = 1;
     transform[0][3] = getX();
     transform[1][3] = getY();
@@ -400,9 +402,9 @@ public class TransformNR {
     if (t <= 0)
       return new TransformNR();
 
-    double tilt = Math.toDegrees(getRotation().getRotationTilt() * t);
-    double az = Math.toDegrees(getRotation().getRotationAzimuth() * t);
-    double ele = Math.toDegrees(getRotation().getRotationElevation() * t);
+    double tilt = Math.toDegrees(getRotation().getRotationTiltRadians() * t);
+    double az = Math.toDegrees(getRotation().getRotationAzimuthRadians() * t);
+    double ele = Math.toDegrees(getRotation().getRotationElevationRadians() * t);
     return new TransformNR(getX() * t, getY() * t, getZ() * t, new RotationNR(tilt, az, ele));
   }
 
@@ -572,52 +574,51 @@ public class TransformNR {
 	}
 
 	public void setTiltDegrees(double newAngleDegrees) {
-		double  e=0;
-		try{
-			e=Math.toDegrees(getRotation().getRotationElevation());
+		double e = 0;
+		try {
+			e = Math.toDegrees(getRotation().getRotationElevationRadians());
 		}catch(Exception ex){
 			ex.printStackTrace();
 		}
-		double  a=0;
-		try{
-			a=Math.toDegrees(getRotation().getRotationAzimuth());
-		}catch(Exception ex){
+		double a = 0;
+		try {
+			a = Math.toDegrees(getRotation().getRotationAzimuthRadians());
+		} catch(Exception ex){
 			ex.printStackTrace();
 		}
 		
 		setRotation(new RotationNR(newAngleDegrees, a, e));
-		
-		
+
 	}
 
 	public void setElevationDegrees(double newAngleDegrees) {
-		double  t=0;
-		try{
-			t=Math.toDegrees(getRotation().getRotationTilt());
-		}catch(Exception ex){
+		double  t = 0;
+		try {
+			t = Math.toDegrees(getRotation().getRotationTiltRadians());
+		} catch (Exception ex){
 			ex.printStackTrace();
 		}
 		
-		double  a=0;
-		try{
-			a=Math.toDegrees(getRotation().getRotationAzimuth());
-		}catch(Exception ex){
+		double a = 0;
+		try {
+			a = Math.toDegrees(getRotation().getRotationAzimuthRadians());
+		} catch(Exception ex){
 			ex.printStackTrace();
 		}
 		setRotation(new RotationNR(t, a, newAngleDegrees));
 	}
 
 	public void setAzimuthDegrees(double newAngleDegrees) {
-		double  t=0;
-		try{
-			t=Math.toDegrees(getRotation().getRotationTilt());
-		}catch(Exception ex){
+		double t = 0;
+		try {
+			t = Math.toDegrees(getRotation().getRotationTiltRadians());
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 			
-		double  e=0;
+		double e = 0;
 		try{
-			e=Math.toDegrees(getRotation().getRotationElevation());
+			e = Math.toDegrees(getRotation().getRotationElevationRadians());
 		}catch(Exception ex){
 			ex.printStackTrace();
 		}

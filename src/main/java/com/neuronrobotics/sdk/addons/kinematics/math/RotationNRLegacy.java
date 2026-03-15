@@ -272,8 +272,8 @@ public class RotationNRLegacy {
 		s += "]";
 		return "Quaturnion: " + "W=" + getRotationMatrix2QuaturnionW() + ", " + "x=" + getRotationMatrix2QuaturnionX()
 				+ ", " + "y=" + getRotationMatrix2QuaturnionY() + ", " + "z=" + getRotationMatrix2QuaturnionZ() + "\t"
-				+ "Rotation angle (degrees): " + "Azimuth=" + getRotationAzimuth() + ", " + "Elevation=" + getRotationElevation() + ", " + "Tilt="
-				+ getRotationTilt() + "";
+				+ "Rotation angle (degrees): " + "Azimuth=" + getRotationAzimuthRadians() + ", " + "Elevation=" + getRotationElevationRadians() + ", " + "Tilt="
+				+ getRotationTiltRadians() + "";
 	}
 
 	/**
@@ -552,7 +552,7 @@ public class RotationNRLegacy {
 	 *
 	 * @return the rotation tilt
 	 */
-	public double getRotationTilt() {
+	public double getRotationTiltRadians() {
 
 		return getRotAngle(0);
 
@@ -563,7 +563,7 @@ public class RotationNRLegacy {
 	 *
 	 * @return the rotation elevation
 	 */
-	public double getRotationElevation() {
+	public double getRotationElevationRadians() {
 
 		return getRotAngle(1);
 	}
@@ -573,7 +573,7 @@ public class RotationNRLegacy {
 	 *
 	 * @return the rotation azimuth
 	 */
-	public double getRotationAzimuth() {
+	public double getRotationAzimuthRadians() {
 
 		return getRotAngle(2);
 	}
