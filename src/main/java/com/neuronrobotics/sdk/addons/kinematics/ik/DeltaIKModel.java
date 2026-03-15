@@ -123,9 +123,9 @@ public class DeltaIKModel implements DhInverseSolver {
 			(2 * L1 *elX)	
 		);
 		jointSpaceVector[0]=-(90-(Math.toDegrees(theta1)+baseVectorAngle));
-		TransformNR reorent;
+		TransformNR reorient;
 		try {
-			reorent =new TransformNR(0,0,0,new RotationNR(0, -jointSpaceVector[0], 0));
+			reorient =new TransformNR(0,0,0,new RotationNR(0, -jointSpaceVector[0], 0));
 		}catch (Throwable t){
 			//t.printStackTrace()
 			throw new RuntimeException( "error calculating base angle: \nL1 "+L1+
@@ -138,7 +138,7 @@ public class DeltaIKModel implements DhInverseSolver {
 				
 				);
 		}
-		TransformNR sphericalElbowTartget = reorent.times(newCenter);
+		TransformNR sphericalElbowTartget = reorient.times(newCenter);
 		//com.neuronrobotics.sdk.common.Log.error( newCenter 
 		//com.neuronrobotics.sdk.common.Log.error( 	sphericalElbowTartget
 		sphericalElbowTartget = new TransformNR(0.0,-sphericalElbowTartget.getY(),0.0, new RotationNR()).times(sphericalElbowTartget);

@@ -61,8 +61,8 @@ public class CreateArm {
 	/** The xy thresh hold. */
 	private double xyThreshHold = .1;
 	
-	/** The orent thresh hold. */
-	private double orentThreshHold = 1;
+	/** The orient thresh hold. */
+	private double orientThreshHold = 1;
 	
 	/**
 	 * Instantiates a new creates the arm.
@@ -263,14 +263,14 @@ public class CreateArm {
 	/**
 	 * Gets the cartesian pose.
 	 *
-	 * @return pose vector, X,Y,Orentation
+	 * @return pose vector, X,Y,Orientation
 	 */
 	public double [] getCartesianPose(){
 		double [] angles =getAngles();
-		pose[2] = GetOrentation();
+		pose[2] = GetOrientation();
 		
-		pose[0]=(l1* cos(ToRadians(angles[0]))+l2* cos(ToRadians(angles[0])+ToRadians(angles[1]))+(l3* cos(ToRadians(GetOrentation()))));
-		pose[1]=(l1* sin(ToRadians(angles[0]))+l2* sin(ToRadians(angles[0])+ToRadians(angles[1]))+(l3* sin(ToRadians(GetOrentation()))));
+		pose[0]=(l1* cos(ToRadians(angles[0]))+l2* cos(ToRadians(angles[0])+ToRadians(angles[1]))+(l3* cos(ToRadians(GetOrientation()))));
+		pose[1]=(l1* sin(ToRadians(angles[0]))+l2* sin(ToRadians(angles[0])+ToRadians(angles[1]))+(l3* sin(ToRadians(GetOrientation()))));
 		double [] p = new double [3];
 		for ( int i = 0; i<3; i++){
 			p[i]=pose[i];
@@ -318,10 +318,10 @@ public class CreateArm {
 	 *
 	 * @param x the x
 	 * @param y the y
-	 * @param orentation the orentation
+	 * @param orientation the orientation
 	 */
-	public void setCartesianPose(double x, double y, double orentation){
-		setCartesianPose(x,y, orentation,(float).2);
+	public void setCartesianPose(double x, double y, double orientation){
+		setCartesianPose(x,y, orientation,(float).2);
 	}
 	
 	/**
@@ -329,26 +329,26 @@ public class CreateArm {
 	 *
 	 * @param x the x
 	 * @param y the y
-	 * @param orentation the orentation
+	 * @param orientation the orientation
 	 * @param time the time
 	 */
-	public void setCartesianPose(double x, double y, double orentation, float time){
-		if(orentation<-35)
-			orentation=-35;
-		if(orentation>35)
-			orentation=35;
-		if (!updateCartesian(x,y,orentation)){
+	public void setCartesianPose(double x, double y, double orientation, float time){
+		if(orientation<-35)
+			orientation=-35;
+		if(orientation>35)
+			orientation=35;
+		if (!updateCartesian(x,y,orientation)){
 			return;
 		}
 		
 		pose[0]=x;
 		pose[1]=y;
-		pose[2]=orentation;
+		pose[2]=orientation;
 		
-		Log.info("Setting Pose X: "+x+" Y: "+y+" Orentation: "+orentation );
+		Log.info("Setting Pose X: "+x+" Y: "+y+" Orientation: "+orientation );
 		
-		x -= (l3*cos(orentation*M_PI/180));
-		y -= (l3*sin(orentation*M_PI/180));
+		x -= (l3*cos(orientation*M_PI/180));
+		y -= (l3*sin(orientation*M_PI/180));
 		if (sqrt(x*x+y*y) > l1+l2) {
 			com.neuronrobotics.sdk.common.Log.error("Hypotenus too long"+x+" "+y+"\r\n");
 			return;
@@ -361,7 +361,7 @@ public class CreateArm {
 		shoulder =(atan2(y,x)+acos((x*x+y*y+l1*l1-l2*l2)/(2*l1*sqrt(x*x+y*y))));
 		shoulder *=(180.0/M_PI);
 		
-		double wrist = orentation-elbow-shoulder;
+		double wrist = orientation-elbow-shoulder;
 		setAngles(shoulder,elbow,wrist,time);
 		
 		
@@ -372,10 +372,10 @@ public class CreateArm {
 	 *
 	 * @param x the x
 	 * @param y the y
-	 * @param orentation the orentation
+	 * @param orientation the orientation
 	 * @return true, if successful
 	 */
-	private boolean updateCartesian(double x, double y, double orentation) {
+	private boolean updateCartesian(double x, double y, double orientation) {
 		if(((x>(pose[0]+xyThreshHold))) || (x<(pose[0]-xyThreshHold))){
 			Log.info("X changed");
 			return true;
@@ -388,8 +388,8 @@ public class CreateArm {
 		}else{
 			Log.info("Y set: "+y+" was: "+pose[1]);
 		}
-		if((orentation>pose[2]+orentThreshHold) || (orentation<pose[2]-orentThreshHold)){
-			Log.info("Orentation changed");
+		if((orientation>pose[2]+orientThreshHold) || (orientation<pose[2]-orientThreshHold)){
+			Log.info("Orientation changed");
 			return true;
 		}
 		Log.info("No signifigant change");
@@ -415,11 +415,11 @@ public class CreateArm {
 	}
 	
 	/**
-	 * Sets the cartesian orentation.
+	 * Sets the cartesian orientation.
 	 *
-	 * @param o the new cartesian orentation
+	 * @param o the new cartesian orientation
 	 */
-	public void setCartesianOrentation(double o){
+	public void setCartesianOrientation(double o){
 		setCartesianPose(pose[0], pose[1], o);
 	}
 	
@@ -488,11 +488,11 @@ public class CreateArm {
 	}
 	
 	/**
-	 * Gets the orentation.
+	 * Gets the orientation.
 	 *
 	 * @return the current approach orientation of the wrist
 	 */
-	public double GetOrentation() {
+	public double GetOrientation() {
 		double [] angles =getAngles();
 		return angles[0]+angles[1]+angles[2];
 	}

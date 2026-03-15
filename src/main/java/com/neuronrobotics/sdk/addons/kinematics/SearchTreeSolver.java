@@ -52,7 +52,7 @@ public class SearchTreeSolver implements DhInverseSolver {
 		searchTree step=new searchTree(jointSpaceVector,startingIncrement);;
 		boolean done = false;
 		configuration conf = new configuration(jointSpaceVector, target);
-//		double previousV =conf.getOffsetOrentationMagnitude();
+//		double previousV =conf.getOffsetOrientationMagnitude();
 //		double previousO =conf.getOffsetVectorMagnitude();
 		int iter = 1000;
 		int i = 0;
@@ -60,10 +60,10 @@ public class SearchTreeSolver implements DhInverseSolver {
 			double [] current = conf.getJoints();
 			conf = step.getBest(current);
 			
-			double vect = conf.getOffsetOrentationMagnitude();
-			double orent = conf.getOffsetVectorMagnitude();
+			double vect = conf.getOffsetOrientationMagnitude();
+			double orient = conf.getOffsetVectorMagnitude();
 			
-			if(vect<10 && orent< .05){
+			if(vect<10 && orient< .05){
 				done = true;
 				com.neuronrobotics.sdk.common.Log.error("SearchTreeSolver Success stats: \n\tIterations = "+i+" out of "+iter+"\n"+conf);
 			}
@@ -199,15 +199,15 @@ public class SearchTreeSolver implements DhInverseSolver {
 			
 			int best = 0;
 			int i=0;
-			double orent=configurations.get(0).getOffsetOrentationMagnitude();
+			double orient=configurations.get(0).getOffsetOrientationMagnitude();
 			double vect =configurations.get(0).getOffsetVectorMagnitude();
 			for(configuration c:configurations){
-				double tmpOrent = c.getOffsetOrentationMagnitude();
+				double tmpOrient = c.getOffsetOrientationMagnitude();
 				double tmpVector= c.getOffsetVectorMagnitude();
 				if(
-						tmpOrent<=orent && 
+						tmpOrient<=orient && 
 						tmpVector<=vect){
-					orent=tmpOrent;
+					orient=tmpOrient;
 					vect=tmpVector;
 					best = i;
 				}
@@ -257,7 +257,7 @@ public class SearchTreeSolver implements DhInverseSolver {
 		public TransformNR getTransform() {
 			if(transform == null){
 				transform = fk(getJoints());
-				o = transform.getOffsetOrentationMagnitude(target);
+				o = transform.getOffsetOrientationMagnitude(target);
 				v = transform.getOffsetVectorMagnitude(target);
 			}
 			return transform;
@@ -273,11 +273,11 @@ public class SearchTreeSolver implements DhInverseSolver {
 		}
 		
 		/**
-		 * Gets the offset orentation magnitude.
+		 * Gets the offset orientation magnitude.
 		 *
-		 * @return the offset orentation magnitude
+		 * @return the offset orientation magnitude
 		 */
-		public double getOffsetOrentationMagnitude(){
+		public double getOffsetOrientationMagnitude(){
 			getTransform();
 			return o;
 		}
@@ -313,7 +313,7 @@ public class SearchTreeSolver implements DhInverseSolver {
 		 */
 		public String toString(){
 			getTransform();
-			String s="\tTarget = "+target.toString()+"\n\tVector = "+v+"\n\tOrent "+o+"\n\tCurrent = "+getTransform().toString();	
+			String s="\tTarget = "+target.toString()+"\n\tVector = "+v+"\n\tOrient "+o+"\n\tCurrent = "+getTransform().toString();	
 			return s;
 		}
 	}

@@ -359,12 +359,12 @@ public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector )
 					double lengthRectangleAdjustedXY = lengthXYPlaneVect* Math.cos(angleRectangleAdjustedXY)-r;
 					
 					
-					double orentation = angleXYPlaneVect-angleRectangleAdjustedXY;
-					if(Math.abs(Math.toDegrees(orentation))<0.01){
-						orentation=0;
+					double orientation = angleXYPlaneVect-angleRectangleAdjustedXY;
+					if(Math.abs(Math.toDegrees(orientation))<0.01){
+						orientation=0;
 					}
-					double ySet = lengthRectangleAdjustedXY*Math.sin(orentation);
-					double xSet = lengthRectangleAdjustedXY*Math.cos(orentation);
+					double ySet = lengthRectangleAdjustedXY*Math.sin(orientation);
+					double xSet = lengthRectangleAdjustedXY*Math.cos(orientation);
 				
 					
 					double zSet = target.getZ() - links.get(0).getD();
@@ -396,7 +396,7 @@ public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector )
 					println( "x Correction: "+xSet);
 					println( "y Correction: "+ySet);
 					
-					println( "Orentation: "+Math.toDegrees(orentation));
+					println( "Orientation: "+Math.toDegrees(orientation));
 					println( "z: "+zSet);
 				*/
 					
@@ -420,7 +420,7 @@ public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector )
 					println( "l1 from x/y plane: "+Math.toDegrees(A+elevation));
 					println( "l2 from l1: "+Math.toDegrees(C));
 					*/
-					inv[0] = Math.toDegrees(orentation);
+					inv[0] = Math.toDegrees(orientation);
 					inv[1] = -Math.toDegrees((A+elevation+links.get(1).getTheta()));
 					if((int)links.get(1).getAlpha() ==180){
 						inv[2] = (Math.toDegrees(C))-180-//interior angle of the triangle, map to external angle
@@ -433,7 +433,7 @@ public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector )
 						inv[3] =(inv[1] -inv[2]);// keep it parallell
 						// We know the wrist twist will always be 0 for this model
 					if(links.size()>4)
-						inv[4] = inv[0];//keep the tool orentation paralell from the base
+						inv[4] = inv[0];//keep the tool orientation paralell from the base
 					
 					for(int i=0;i<inv.length;i++){
 						if(Math.abs(inv[i]) < 0.01){

@@ -36,8 +36,8 @@ public class GradiantDecentNode{
 	/** The inc vect. */
 	double incVect;
 	
-	/** The inc orent. */
-	double incOrent;
+	/** The inc orient. */
+	double incOrient;
 	
 	/** The integral size. */
 	//integral
@@ -46,20 +46,20 @@ public class GradiantDecentNode{
 	/** The integral index vect. */
 	int integralIndexVect = 0;
 	
-	/** The integral index orent. */
-	int integralIndexOrent = 0;
+	/** The integral index orient. */
+	int integralIndexOrient = 0;
 	
 	/** The integral total vect. */
 	double integralTotalVect = 0;
 	
-	/** The integral total orent. */
-	double integralTotalOrent = 0;
+	/** The integral total orient. */
+	double integralTotalOrient = 0;
 	
 	/** The int vect. */
 	double intVect[] = new double[integralSize]; 
 	
-	/** The int orent. */
-	double intOrent[] = new double[integralSize]; 
+	/** The int orient. */
+	double intOrient[] = new double[integralSize]; 
 	
 	/** The Kp. */
 	double Kp = 1;
@@ -88,62 +88,62 @@ public class GradiantDecentNode{
 		lower = l;
 		for(int i=0;i<integralSize;i++){
 			intVect[i]=0;
-			intOrent[i]=0;
+			intOrient[i]=0;
 		}
 	}
 	
 	/**
-	 * Step orent.
+	 * Step orient.
 	 *
 	 * @return true, if successful
 	 */
-	public boolean stepOrent(){
+	public boolean stepOrient(){
 		double none =  myStart+offset;
 		double start = offset;
 		jointSpaceVector[getIndex()]= bound (none);
 		TransformNR tmp =chain.forwardKinematics(jointSpaceVector);
 		tmp =chain.forwardKinematics(jointSpaceVector);
-		double noneOrent = tmp.getOffsetOrentationMagnitude(target);
+		double noneOrient = tmp.getOffsetOrientationMagnitude(target);
 		
-		double incOrentP = (noneOrent*10);//Multiply by magic number
+		double incOrientP = (noneOrient*10);//Multiply by magic number
 		//Remove old values off rolling buffer
-		integralTotalOrent-=intOrent[integralIndexOrent];
+		integralTotalOrient-=intOrient[integralIndexOrient];
 		//Store current values
-		intOrent[integralIndexOrent] =incOrentP;
+		intOrient[integralIndexOrient] =incOrientP;
 		//Add current values to totals
-		integralTotalOrent+=intOrent[integralIndexOrent];
+		integralTotalOrient+=intOrient[integralIndexOrient];
 		//Reset the index for next iteration
-		integralIndexOrent++;
-		if(integralIndexOrent==integralSize){
-			integralIndexOrent=0;
+		integralIndexOrient++;
+		if(integralIndexOrient==integralSize){
+			integralIndexOrient=0;
 		}
 		
 		//The 2 increment numbers
-		incOrent = incOrentP*Kp + (integralTotalOrent/integralSize)*Ki;
+		incOrient = incOrientP*Kp + (integralTotalOrient/integralSize)*Ki;
 		
-		double upO = myStart+offset+incOrent;
-		double downO =myStart+offset-incOrent;
+		double upO = myStart+offset+incOrient;
+		double downO =myStart+offset-incOrient;
 		
 		jointSpaceVector[getIndex()]= bound (upO);
 		tmp =chain.forwardKinematics(jointSpaceVector);
-		double upOrent = tmp.getOffsetOrentationMagnitude(target);
+		double upOrient = tmp.getOffsetOrientationMagnitude(target);
 		
 		jointSpaceVector[getIndex()]= bound (downO);
 		tmp =chain.forwardKinematics(jointSpaceVector);
-		double downOrent = tmp.getOffsetOrentationMagnitude(target);
+		double downOrient = tmp.getOffsetOrientationMagnitude(target);
 		
 
-		if( (upOrent>noneOrent && downOrent>noneOrent)){
+		if( (upOrient>noneOrient && downOrient>noneOrient)){
 			jointSpaceVector[getIndex()]=none;
 		}
 
-		if(( noneOrent>upOrent && downOrent>upOrent)){
+		if(( noneOrient>upOrient && downOrient>upOrient)){
 			jointSpaceVector[getIndex()]=upO;
-			offset+=incOrent;
+			offset+=incOrient;
 		}
-		if((upOrent>downOrent && noneOrent>downOrent )){
+		if((upOrient>downOrient && noneOrient>downOrient )){
 			jointSpaceVector[getIndex()]=downO;
-			offset-=incOrent;
+			offset-=incOrient;
 		}
 		
 		jointSpaceVector[getIndex()] = myStart+offset;
@@ -218,7 +218,7 @@ public class GradiantDecentNode{
 	 * @return true, if successful
 	 */
 	public boolean step() {
-		boolean back = stepOrent()||stepLin();
+		boolean back = stepOrient()||stepLin();
 		return back;
 	}
 	

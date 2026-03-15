@@ -339,12 +339,12 @@ public class TransformNR {
   }
 
   /**
-   * Gets the offset orentation magnitude.
+   * Gets the offset orientation magnitude.
    *
    * @param t the t
-   * @return the offset orentation magnitude
+   * @return the offset orientation magnitude
    */
-  public double getOffsetOrentationMagnitude(TransformNR t) {
+  public double getOffsetOrientationMagnitude(TransformNR t) {
     double x = getRotation().getRotationMatrix2QuaturnionX()
         - t.getRotation().getRotationMatrix2QuaturnionX();
     double y = getRotation().getRotationMatrix2QuaturnionY()
