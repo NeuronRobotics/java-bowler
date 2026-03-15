@@ -412,7 +412,7 @@ public class RotationNR {
 	private void simpilfyAngles(double [] angles){
 		double epsilon = 1.0E-7;
 		if ((Math.abs(angles[0] - Math.toRadians(180)) < epsilon) &&
-			Math.abs(angles[2] - Math.toRadians(180)) < epsilon)) {
+			(Math.abs(angles[2] - Math.toRadians(180)) < epsilon)) {
 			if (!(Math.abs(getRotationMatrix2QuaturnionZ()) > epsilon))
 				angles[0] = 0;
 
