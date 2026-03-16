@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.neuronrobotics.sdk.bootloader;
 
@@ -22,101 +22,108 @@ import com.neuronrobotics.sdk.common.ByteList;
  * @author hephaestus
  */
 public class NRBootLoader extends BowlerAbstractDevice {
-	
+
 	/**
 	 * Instantiates a new NR boot loader.
 	 *
-	 * @param serialConnection the serial connection
+	 * @param serialConnection
+	 *            the serial connection
 	 */
 	public NRBootLoader(BowlerAbstractConnection serialConnection) {
 		setConnection(serialConnection);
-		
-		if(!connect()) {
+
+		if (!connect()) {
 			throw new RuntimeException("Failed to connect bootloader");
 		}
-		//Log.enableDebugPrint(true);
-		//Log.enableSystemPrint(true);
+		// Log.enableDebugPrint(true);
+		// Log.enableSystemPrint(true);
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see com.neuronrobotics.sdk.common.BowlerAbstractDevice#connect()
 	 */
 	@Override
 	public boolean connect() {
-		if(super.connect()) {
-			//com.neuronrobotics.sdk.common.Log.error("Connect OK");
+		if (super.connect()) {
+			// com.neuronrobotics.sdk.common.Log.error("Connect OK");
 			try {
 				getBootloaderID();
-			}catch (Exception e) {
-				//com.neuronrobotics.sdk.common.Log.error("Failed bootloader test");
+			} catch (Exception e) {
+				// com.neuronrobotics.sdk.common.Log.error("Failed bootloader test");
 				disconnect();
 			}
 		}
 		getConnection().setSynchronusPacketTimeoutTime(3000);
 		return isAvailable();
-		//Log.enableDebugPrint(true);
-		//Log.enableSystemPrint(true);
+		// Log.enableDebugPrint(true);
+		// Log.enableSystemPrint(true);
 	}
-	
+
 	/**
 	 * Gets the bootloader id.
 	 *
 	 * @return the bootloader id
 	 */
-	public String getBootloaderID(){
+	public String getBootloaderID() {
 		BowlerDatagram back = send(new BootloaderIDCommand());
-		if (back==null)
+		if (back == null)
 			return null;
 		String s = new String();
-		for (Byte b : back.getData()){
-			s+=(char)b.byteValue();
-		}	
+		for (Byte b : back.getData()) {
+			s += (char) b.byteValue();
+		}
 		return s;
 	}
-	
+
 	/**
 	 * Write.
 	 *
-	 * @param core the core
-	 * @param flashData the flash data
+	 * @param core
+	 *            the core
+	 * @param flashData
+	 *            the flash data
 	 * @return true, if successful
 	 */
-	public boolean write(int core, ByteData flashData){
-		BowlerDatagram b=null;
-		for (int i=0;i<10;i++){
-			try{
-				b = send(new ProgramSectionCommand(core,(int) flashData.getStartAddress(),new ByteList(flashData.getData())));
-			}catch (Exception e){
+	public boolean write(int core, ByteData flashData) {
+		BowlerDatagram b = null;
+		for (int i = 0; i < 10; i++) {
+			try {
+				b = send(new ProgramSectionCommand(core, (int) flashData.getStartAddress(),
+						new ByteList(flashData.getData())));
+			} catch (Exception e) {
 				e.printStackTrace();
-				b=null;
+				b = null;
 			}
-			if (b!=null){
-				if(!b.getRPC().contains("_err"))
+			if (b != null) {
+				if (!b.getRPC().contains("_err"))
 					return true;
 			}
 		}
 		com.neuronrobotics.sdk.common.Log.error("\nFailed to send 10 times!\n");
 		return false;
 	}
-	
+
 	/**
 	 * Erase.
 	 *
-	 * @param core the core
+	 * @param core
+	 *            the core
 	 * @return true, if successful
 	 */
-	public boolean erase(int core){
+	public boolean erase(int core) {
 		return send(new EraseFlashCommand(core)) != null;
 	}
-	
+
 	/**
 	 * Reset.
 	 */
-	public void reset(){
-		//We expect this to fail the connection.
-		//No response is expected
-		//Disconnect afterwards
-		BowlerDatagram bd =BowlerDatagramFactory.build(getAddress(), new ResetChipCommand());
+	public void reset() {
+		// We expect this to fail the connection.
+		// No response is expected
+		// Disconnect afterwards
+		BowlerDatagram bd = BowlerDatagramFactory.build(getAddress(), new ResetChipCommand());
 		try {
 			getConnection().sendAsync(bd);
 			getConnection().getDataOuts().flush();
@@ -127,16 +134,23 @@ public class NRBootLoader extends BowlerAbstractDevice {
 		disconnect();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.common.IBowlerDatagramListener#onAllResponse(com.neuronrobotics.sdk.common.BowlerDatagram)
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.neuronrobotics.sdk.common.IBowlerDatagramListener#onAllResponse(com.
+	 * neuronrobotics.sdk.common.BowlerDatagram)
 	 */
 	public void onAllResponse(BowlerDatagram data) {
 		// Auto-generated method stub
-		////com.neuronrobotics.sdk.common.Log.error(data);
+		//// com.neuronrobotics.sdk.common.Log.error(data);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.common.IBowlerDatagramListener#onAsyncResponse(com.neuronrobotics.sdk.common.BowlerDatagram)
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.neuronrobotics.sdk.common.IBowlerDatagramListener#onAsyncResponse(com.
+	 * neuronrobotics.sdk.common.BowlerDatagram)
 	 */
 	public void onAsyncResponse(BowlerDatagram data) {
 		// Auto-generated method stub

@@ -10,7 +10,6 @@ import com.neuronrobotics.sdk.addons.kinematics.LinkConfiguration;
 import com.neuronrobotics.sdk.addons.kinematics.LinkFactory;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 
-
 public class ParallelGroup extends DHParameterKinematics {
 
 	private ArrayList<DHParameterKinematics> constituantLimbs = new ArrayList<DHParameterKinematics>();
@@ -18,16 +17,16 @@ public class ParallelGroup extends DHParameterKinematics {
 	private HashMap<DHParameterKinematics, String> tipOffsetRelativeToName = new HashMap<>();
 	private HashMap<DHParameterKinematics, Integer> tipOffsetRelativeIndex = new HashMap<>();
 	/** The cad engine. */
-	private String[] toolEngine = new String[] { "https://gist.github.com/33f2c10ab3adc5bd91f0a58ea7f24d14.git",
-			"parallelTool.groovy" };
+	private String[] toolEngine = new String[]{"https://gist.github.com/33f2c10ab3adc5bd91f0a58ea7f24d14.git",
+			"parallelTool.groovy"};
 	private String name;
-	
-	public TransformNR getTipOffsetFromThisLinkInLimb(DHParameterKinematics control,int index) {
+
+	public TransformNR getTipOffsetFromThisLinkInLimb(DHParameterKinematics control, int index) {
 		String name = control.getScriptingName();
-		for(DHParameterKinematics s:tipOffsetRelativeToName.keySet()) {
+		for (DHParameterKinematics s : tipOffsetRelativeToName.keySet()) {
 			String refName = tipOffsetRelativeToName.get(s);
-			if(refName.contentEquals(name)) {
-				if(index==tipOffsetRelativeIndex.get(s)) {
+			if (refName.contentEquals(name)) {
+				if (index == tipOffsetRelativeIndex.get(s)) {
 					return getTipOffset(s);
 				}
 			}
@@ -37,7 +36,7 @@ public class ParallelGroup extends DHParameterKinematics {
 
 	public ParallelGroup(String name) {
 		this.name = name;
-		if (name==null)
+		if (name == null)
 			throw new RuntimeException();
 	}
 
@@ -90,36 +89,40 @@ public class ParallelGroup extends DHParameterKinematics {
 			tipOffsetRelativeToName.put(limb, name);
 			tipOffsetRelativeIndex.put(limb, index);
 			getTipOffset().put(limb, tip);
-			com.neuronrobotics.sdk.common.Log.error("Limb "+limb.getScriptingName()+" set relative to "+name);
+			com.neuronrobotics.sdk.common.Log.error("Limb " + limb.getScriptingName() + " set relative to " + name);
 		} else {
 			clearReferencedLimb(limb);
-			DHParameterKinematics fk=getFKLimb();
-//			fk.addPoseUpdateListener(new ITaskSpaceUpdateListenerNR() {
-//				@Override
-//				public void onTaskSpaceUpdate(AbstractKinematicsNR source, TransformNR pose) {
-//
-//				}
-//				
-//				@Override
-//				public void onTargetTaskSpaceUpdate(AbstractKinematicsNR source, TransformNR pose) {
-//					HashMap<String, double[]> IKvalues = new HashMap<>();
-//					for (DHParameterKinematics d : getConstituantLimbs()) {
-//						if (getTipOffset(d) != null) {
-//							try {
-//								//com.neuronrobotics.sdk.common.Log.error("Setting Kinematics for follower "+d.getScriptingName());
-//								double[] jointSpaceVect = compute(d, IKvalues, pose);
-//								//com.neuronrobotics.sdk.common.Log.error(fk.getScriptingName()+" is Setting sublimb target "+d.getScriptingName());
-//								d.throwExceptionOnJointLimit(false);
-//								d.setDesiredJointSpaceVector(jointSpaceVect, 0);
-//							} catch (Exception e) {
-//								// Auto-generated catch block
-//								e.printStackTrace();
-//							}
-//						}
-//					}
-//					IKvalues.clear();
-//				}
-//			});
+			DHParameterKinematics fk = getFKLimb();
+			// fk.addPoseUpdateListener(new ITaskSpaceUpdateListenerNR() {
+			// @Override
+			// public void onTaskSpaceUpdate(AbstractKinematicsNR source, TransformNR pose)
+			// {
+			//
+			// }
+			//
+			// @Override
+			// public void onTargetTaskSpaceUpdate(AbstractKinematicsNR source, TransformNR
+			// pose) {
+			// HashMap<String, double[]> IKvalues = new HashMap<>();
+			// for (DHParameterKinematics d : getConstituantLimbs()) {
+			// if (getTipOffset(d) != null) {
+			// try {
+			// //com.neuronrobotics.sdk.common.Log.error("Setting Kinematics for follower
+			// "+d.getScriptingName());
+			// double[] jointSpaceVect = compute(d, IKvalues, pose);
+			// //com.neuronrobotics.sdk.common.Log.error(fk.getScriptingName()+" is Setting
+			// sublimb target "+d.getScriptingName());
+			// d.throwExceptionOnJointLimit(false);
+			// d.setDesiredJointSpaceVector(jointSpaceVect, 0);
+			// } catch (Exception e) {
+			// // Auto-generated catch block
+			// e.printStackTrace();
+			// }
+			// }
+			// }
+			// IKvalues.clear();
+			// }
+			// });
 		}
 	}
 
@@ -149,7 +152,8 @@ public class ParallelGroup extends DHParameterKinematics {
 			TransformNR taskSpaceTransform) throws Exception {
 		String scriptingName = ldh.getScriptingName();
 		if (IKvalues.get(scriptingName) == null) {
-			//com.neuronrobotics.sdk.common.Log.error("Perform IK "+ldh.getScriptingName());
+			// com.neuronrobotics.sdk.common.Log.error("Perform IK
+			// "+ldh.getScriptingName());
 			if (getTipOffset().get(ldh) == null) {
 				// no offset, compute as normal
 				double[] jointSpaceVect = ldh.inverseKinematics(ldh.inverseOffset(taskSpaceTransform));
@@ -163,9 +167,9 @@ public class ParallelGroup extends DHParameterKinematics {
 					throw new RuntimeException("Referenced limb missing, IK for " + ldh.getScriptingName()
 							+ " Failed looking for " + refLimbName);
 				double[] jointSpaceVectReferenced = compute(referencedLimb, IKvalues, taskSpaceTransform);
-	
-				TransformNR transformTOLinksTip = referencedLimb.getChain().getChain(jointSpaceVectReferenced).get(index)
-						.times(offset.inverse());
+
+				TransformNR transformTOLinksTip = referencedLimb.getChain().getChain(jointSpaceVectReferenced)
+						.get(index).times(offset.inverse());
 				double[] jointSpaceVect = ldh.inverseKinematics(ldh.inverseOffset(transformTOLinksTip));
 				IKvalues.put(scriptingName, jointSpaceVect);
 			}
@@ -179,8 +183,9 @@ public class ParallelGroup extends DHParameterKinematics {
 			if (lm.getScriptingName().toLowerCase().contentEquals(refLimbName.toLowerCase())) {
 				// FOund the referenced limb
 				referencedLimb = lm;
-			}else {
-				//com.neuronrobotics.sdk.common.Log.error("Searching for "+refLimbName+" no match with "+lm.getScriptingName());
+			} else {
+				// com.neuronrobotics.sdk.common.Log.error("Searching for "+refLimbName+" no
+				// match with "+lm.getScriptingName());
 			}
 		}
 		return referencedLimb;
@@ -189,13 +194,15 @@ public class ParallelGroup extends DHParameterKinematics {
 	/**
 	 * Sets the current pose target.
 	 *
-	 * @param currentPoseTarget the new current pose target
+	 * @param currentPoseTarget
+	 *            the new current pose target
 	 */
 	@Override
 	public void setCurrentPoseTarget(TransformNR currentPoseTarget) {
 		if (checkTaskSpaceTransform(currentPoseTarget)) {
 			super.setCurrentPoseTarget(currentPoseTarget);
-			//com.neuronrobotics.sdk.common.Log.error("Paralell set to " + currentPoseTarget);
+			// com.neuronrobotics.sdk.common.Log.error("Paralell set to " +
+			// currentPoseTarget);
 		}
 	}
 	public double[] getCurrentJointSpaceVector(DHParameterKinematics k) {
@@ -226,7 +233,7 @@ public class ParallelGroup extends DHParameterKinematics {
 		return linkValues;
 	}
 	public void printError(TransformNR taskSpaceTransform) throws Exception {
-		printError(taskSpaceTransform,t -> {
+		printError(taskSpaceTransform, t -> {
 			com.neuronrobotics.sdk.common.Log.error(t);
 		});
 	}
@@ -266,11 +273,11 @@ public class ParallelGroup extends DHParameterKinematics {
 	@Override
 	public TransformNR forwardKinematics(double[] jointSpaceVector) {
 		for (DHParameterKinematics l : getConstituantLimbs()) {
-			if(l==getFKLimb())
+			if (l == getFKLimb())
 				return l.getCurrentTaskSpaceTransform();
 
 		}
-		throw new RuntimeException( "FK limb is missing!");
+		throw new RuntimeException("FK limb is missing!");
 	}
 
 	/**
@@ -285,7 +292,8 @@ public class ParallelGroup extends DHParameterKinematics {
 	/**
 	 * Sets the cad engine.
 	 *
-	 * @param cadEngine the new cad engine
+	 * @param cadEngine
+	 *            the new cad engine
 	 */
 	public void setGitCadToolEngine(String[] cadEngine) {
 		if (cadEngine != null && cadEngine[0] != null && cadEngine[1] != null)
@@ -296,9 +304,10 @@ public class ParallelGroup extends DHParameterKinematics {
 		return constituantLimbs;
 	}
 
-//	public void setConstituantLimbs(ArrayList<DHParameterKinematics> constituantLimbs) {
-//		this.constituantLimbs = constituantLimbs;
-//	}
+	// public void setConstituantLimbs(ArrayList<DHParameterKinematics>
+	// constituantLimbs) {
+	// this.constituantLimbs = constituantLimbs;
+	// }
 
 	public HashMap<DHParameterKinematics, TransformNR> getTipOffset() {
 		return tipOffset;
@@ -326,7 +335,7 @@ public class ParallelGroup extends DHParameterKinematics {
 
 	public void removeLimb(DHParameterKinematics limb) {
 		if (constituantLimbs.contains(limb)) {
-			clearReferencedLimb( limb);
+			clearReferencedLimb(limb);
 			constituantLimbs.remove(limb);
 			setFactory(new LinkFactory());// clear the links
 			for (DHParameterKinematics remaining : constituantLimbs) {
@@ -349,7 +358,5 @@ public class ParallelGroup extends DHParameterKinematics {
 		tipOffsetRelativeToName.clear();
 
 	}
-
-
 
 }

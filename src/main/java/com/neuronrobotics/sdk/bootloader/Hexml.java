@@ -13,104 +13,111 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
- 
 
 //  Auto-generated Javadoc
 /**
  * The Class Hexml.
  */
 public class Hexml {
-	
+
 	/** The cores. */
 	ArrayList<Core> cores = new ArrayList<Core>();
-	
+
 	/** The revision. */
-	private String revision="";
-	
+	private String revision = "";
+
 	/**
 	 * Instantiates a new hexml.
 	 *
-	 * @param hexml the hexml
-	 * @throws ParserConfigurationException the parser configuration exception
-	 * @throws SAXException the SAX exception
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @param hexml
+	 *            the hexml
+	 * @throws ParserConfigurationException
+	 *             the parser configuration exception
+	 * @throws SAXException
+	 *             the SAX exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
-	public Hexml(File hexml) throws ParserConfigurationException, SAXException, IOException{
+	public Hexml(File hexml) throws ParserConfigurationException, SAXException, IOException {
 		/**
 		 * sample code from
 		 * http://www.mkyong.com/java/how-to-read-xml-file-in-java-dom-parser/
 		 */
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-	    DocumentBuilder dBuilder;
-	    Document doc = null;
-	
+		DocumentBuilder dBuilder;
+		Document doc = null;
+
 		dBuilder = dbFactory.newDocumentBuilder();
 		doc = dBuilder.parse(hexml);
 		doc.getDocumentElement().normalize();
 
-		////com.neuronrobotics.sdk.common.Log.error("Root element :" + doc.getDocumentElement().getNodeName());
+		//// com.neuronrobotics.sdk.common.Log.error("Root element :" +
+		//// doc.getDocumentElement().getNodeName());
 		loadRevision(doc);
-		//NodeList nList = doc.getElementsByTagName("revision");
-		//revision = getTagValue("revision",(Element)nList.item(0));
-		////com.neuronrobotics.sdk.common.Log.error("Revision is:"+revision);
+		// NodeList nList = doc.getElementsByTagName("revision");
+		// revision = getTagValue("revision",(Element)nList.item(0));
+		//// com.neuronrobotics.sdk.common.Log.error("Revision is:"+revision);
 		NodeList nList = doc.getElementsByTagName("core");
 		for (int temp = 0; temp < nList.getLength(); temp++) {
-		    Node nNode = nList.item(temp);	    
-		    if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-		    	Element eElement = (Element) nNode;
-			    int index = Integer.parseInt(getTagValue("index",eElement));
-			    //int word = Integer.parseInt(getTagValue("wordSize",eElement));
-			    NRBootCoreType type = NRBootCoreType.find(getTagValue("type",eElement));
-			    if (type == null) {
-			    	com.neuronrobotics.sdk.common.Log.error("Failed to get a core type for: "+getTagValue("type",eElement));
-			    	continue;
-			    }
-			    String hexFile = getTagValue("hex",eElement);
-			    ArrayList<hexLine> lines=new ArrayList<hexLine>();
-			    String[] tokens = hexFile.split("\n");
-			    for (int i=0;i<tokens.length;i++){
-			    	try {
+			Node nNode = nList.item(temp);
+			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+				Element eElement = (Element) nNode;
+				int index = Integer.parseInt(getTagValue("index", eElement));
+				// int word = Integer.parseInt(getTagValue("wordSize",eElement));
+				NRBootCoreType type = NRBootCoreType.find(getTagValue("type", eElement));
+				if (type == null) {
+					com.neuronrobotics.sdk.common.Log
+							.error("Failed to get a core type for: " + getTagValue("type", eElement));
+					continue;
+				}
+				String hexFile = getTagValue("hex", eElement);
+				ArrayList<hexLine> lines = new ArrayList<hexLine>();
+				String[] tokens = hexFile.split("\n");
+				for (int i = 0; i < tokens.length; i++) {
+					try {
 						lines.add(new hexLine(tokens[i]));
 					} catch (Exception e) {
 						// Auto-generated catch block
 						e.printStackTrace();
 					}
-			    }
-			    Core tmp = new Core(index, lines, type);
-			    ////com.neuronrobotics.sdk.common.Log.error("Adding new core: "+tmp);
-			    cores.add(tmp);
-		    }
-		 }
-
+				}
+				Core tmp = new Core(index, lines, type);
+				//// com.neuronrobotics.sdk.common.Log.error("Adding new core: "+tmp);
+				cores.add(tmp);
+			}
+		}
 
 	}
-	
+
 	/**
 	 * Load revision.
 	 *
-	 * @param doc the doc
+	 * @param doc
+	 *            the doc
 	 */
 	private void loadRevision(Document doc) {
-		try{
-				NodeList nlList= doc.getElementsByTagName("revision").item(0).getChildNodes();
-				Node nValue = (Node) nlList.item(0);
-				revision = nValue.getNodeValue();
-		}catch(NullPointerException e){
+		try {
+			NodeList nlList = doc.getElementsByTagName("revision").item(0).getChildNodes();
+			Node nValue = (Node) nlList.item(0);
+			revision = nValue.getNodeValue();
+		} catch (NullPointerException e) {
 			revision = "0.0.0";
 		}
 	}
-	
+
 	/**
 	 * Gets the tag value.
 	 *
-	 * @param sTag the s tag
-	 * @param eElement the e element
+	 * @param sTag
+	 *            the s tag
+	 * @param eElement
+	 *            the e element
 	 * @return the tag value
 	 */
-	private static String getTagValue(String sTag, Element eElement){
-	    NodeList nlList= eElement.getElementsByTagName(sTag).item(0).getChildNodes();
-	    Node nValue = (Node) nlList.item(0); 
-	    return nValue.getNodeValue();    
+	private static String getTagValue(String sTag, Element eElement) {
+		NodeList nlList = eElement.getElementsByTagName(sTag).item(0).getChildNodes();
+		Node nValue = (Node) nlList.item(0);
+		return nValue.getNodeValue();
 	}
 
 	/**
@@ -118,10 +125,10 @@ public class Hexml {
 	 *
 	 * @return the cores
 	 */
-	public ArrayList<Core> getCores(){
+	public ArrayList<Core> getCores() {
 		return cores;
 	}
-	
+
 	/**
 	 * Gets the revision.
 	 *

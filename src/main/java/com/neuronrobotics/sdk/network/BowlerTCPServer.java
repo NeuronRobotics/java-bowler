@@ -3,9 +3,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -13,7 +13,6 @@
  * limitations under the License.
  ******************************************************************************/
 package com.neuronrobotics.sdk.network;
-
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -25,14 +24,12 @@ import java.net.SocketException;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.Log;
 
-
-
 //  Auto-generated Javadoc
 /**
  * The Class BowlerTCPServer.
  */
-public class BowlerTCPServer extends BowlerAbstractConnection{
-	
+public class BowlerTCPServer extends BowlerAbstractConnection {
+
 	/** The sleep time. */
 	private int sleepTime = 5000;
 
@@ -42,18 +39,19 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 	/** The socket. */
 	private Socket socket;
 
-	
 	/**
 	 * Instantiates a new bowler tcp server.
 	 *
-	 * @param socket the socket
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @param socket
+	 *            the socket
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
-	public BowlerTCPServer(Socket socket) throws IOException{
+	public BowlerTCPServer(Socket socket) throws IOException {
 		this.socket = socket;
 		try {
 			socket.setSoTimeout(1000);
-			
+
 		} catch (SocketException e) {
 			// Auto-generated catch block
 			e.printStackTrace();
@@ -66,21 +64,22 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 		setConnected(true);
 		connect();
 	}
-	
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see com.neuronrobotics.sdk.common.BowlerAbstractConnection#connect()
 	 */
 	@Override
 	public boolean connect() {
-		
-		if(isConnected())
+
+		if (isConnected())
 			return true;
 		Log.warning("Connecting..");
 
-		return isConnected();	
+		return isConnected();
 	}
-	
+
 	/**
 	 * Checks if is connected.
 	 *
@@ -88,47 +87,50 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 	 */
 	@Override
 	public boolean isConnected() {
-		
+
 		return super.isConnected();
 	}
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see com.neuronrobotics.sdk.common.BowlerAbstractConnection#disconnect()
 	 */
 	@Override
 	public void disconnect() {
-		if(!isConnected())
+		if (!isConnected())
 			return;
 		Log.warning("Disconnecting Tcp Server..");
 		super.disconnect();
 		try {
-			
-			if(!socket.isClosed()){
+
+			if (!socket.isClosed()) {
 				socket.shutdownOutput(); // Sends the 'FIN' on the network
-			    while (getDataIns().read() >= 0) ; // "read()" returns '-1' when the 'FIN' is reached
-			    socket.close(); // Now we can close the Socket	
+				while (getDataIns().read() >= 0); // "read()" returns '-1' when the 'FIN' is reached
+				socket.close(); // Now we can close the Socket
 			}
-			
+
 		} catch (IOException e) {
 			// Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
-	
 
+	// /* (non-Javadoc)
+	// * @see com.neuronrobotics.sdk.common.BowlerAbstractConnection#reconnect()
+	// */
+	// @Override
+	// public boolean reconnect() {
+	// Log.warning("TCP Server Reconnect, just disconnecting");
+	// disconnect();
+	// return false;
+	// }
 
-//	/* (non-Javadoc)
-//	 * @see com.neuronrobotics.sdk.common.BowlerAbstractConnection#reconnect()
-//	 */
-//	@Override
-//	public boolean reconnect() {
-//		Log.warning("TCP Server Reconnect, just disconnecting");
-//		disconnect();
-//		return false;
-//	}
-	
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.common.BowlerAbstractConnection#waitingForConnection()
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.neuronrobotics.sdk.common.BowlerAbstractConnection#waitingForConnection()
 	 */
 	@Override
 	public boolean waitingForConnection() {
@@ -141,11 +143,9 @@ public class BowlerTCPServer extends BowlerAbstractConnection{
 	 * @return true, if is client connected
 	 */
 	public boolean isClientConnected() {
-		if(out==null)
+		if (out == null)
 			return true;
 		return !out.checkError();
 	}
-
-
 
 }

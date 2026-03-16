@@ -4,15 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.neuronrobotics.sdk.addons.kinematics.IHardwareSyncPulseProvider;
-import com.neuronrobotics.sdk.addons.kinematics.IHardwareSyncPulseReciver;
 import com.neuronrobotics.sdk.addons.kinematics.time.ITimeProvider;
 import com.neuronrobotics.sdk.common.BowlerAbstractCommand;
 import com.neuronrobotics.sdk.common.BowlerDatagram;
-import com.neuronrobotics.sdk.common.InvalidConnectionException;
 import com.neuronrobotics.sdk.common.InvalidResponseException;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.NoConnectionAvailableException;
-import com.neuronrobotics.sdk.util.ThreadUtil;
 
 //  Auto-generated Javadoc
 /**
@@ -34,7 +31,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 
 	/** The sync. */
 	private SyncThread sync = new SyncThread();
-	private boolean runSync =true;
+	private boolean runSync = true;
 
 	/** The max ticks per second. */
 	private double maxTicksPerSecond;
@@ -48,7 +45,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 
 	/**
 	 * Instantiates a new virtual generic pid device.
-	 * 
+	 *
 	 * @param myVirtualDevName
 	 */
 	public VirtualGenericPIDDevice(String myVirtualDevName) {
@@ -58,7 +55,8 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 	/**
 	 * Instantiates a new virtual generic pid device.
 	 *
-	 * @param maxTicksPerSecond the max ticks per second
+	 * @param maxTicksPerSecond
+	 *            the max ticks per second
 	 * @param myVirtualDevName2
 	 */
 	public VirtualGenericPIDDevice(double maxTicksPerSecond, String myVirtualDevName) {
@@ -81,7 +79,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.neuronrobotics.sdk.pid.GenericPIDDevice#ConfigurePDVelovityController(com
 	 * .neuronrobotics.sdk.pid.PDVelocityConfiguration)
@@ -95,7 +93,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.neuronrobotics.sdk.pid.GenericPIDDevice#getPDVelocityConfiguration(int)
 	 */
@@ -106,7 +104,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.neuronrobotics.sdk.pid.GenericPIDDevice#ConfigurePIDController(com.
 	 * neuronrobotics.sdk.pid.PIDConfiguration)
 	 */
@@ -118,7 +116,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.neuronrobotics.sdk.pid.GenericPIDDevice#getPIDConfiguration(int)
 	 */
 	public PIDConfiguration getPIDConfiguration(int group) {
@@ -127,7 +125,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.neuronrobotics.sdk.common.BowlerAbstractDevice#getNamespaces()
 	 */
 	@Override
@@ -139,7 +137,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.neuronrobotics.sdk.pid.GenericPIDDevice#killAllPidGroups()
 	 */
 	@Override
@@ -152,10 +150,13 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 	/**
 	 * since there is no connection, this is an easy to nip off com functionality.
 	 *
-	 * @param command the command
+	 * @param command
+	 *            the command
 	 * @return the bowler datagram
-	 * @throws NoConnectionAvailableException the no connection available exception
-	 * @throws InvalidResponseException       the invalid response exception
+	 * @throws NoConnectionAvailableException
+	 *             the no connection available exception
+	 * @throws InvalidResponseException
+	 *             the invalid response exception
 	 */
 	@Override
 	public BowlerDatagram send(BowlerAbstractCommand command)
@@ -167,14 +168,14 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.neuronrobotics.sdk.pid.GenericPIDDevice#ResetPIDChannel(int, int)
 	 */
 	@Override
 	public boolean ResetPIDChannel(int group, float valueToSetCurrentTo) {
 		sync.setPause(true);
-		synchronized(interpolationEngines) {
-		getDriveThread(group).ResetEncoder(valueToSetCurrentTo);
+		synchronized (interpolationEngines) {
+			getDriveThread(group).ResetEncoder(valueToSetCurrentTo);
 		}
 		float val = GetPIDPosition(group);
 		firePIDResetEvent(group, val);
@@ -184,7 +185,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.neuronrobotics.sdk.pid.GenericPIDDevice#SetPIDSetPoint(int, int,
 	 * double)
 	 */
@@ -192,8 +193,8 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 	public boolean SetPIDSetPoint(int group, float setpoint, double seconds) {
 		long currentTimeMillis = currentTimeMillis();
 		sync.setPause(true);
-		synchronized(interpolationEngines) {
-		getDriveThread(group).StartLinearMotion(setpoint, seconds,currentTimeMillis);
+		synchronized (interpolationEngines) {
+			getDriveThread(group).StartLinearMotion(setpoint, seconds, currentTimeMillis);
 		}
 		sync.setPause(false);
 		return true;
@@ -201,7 +202,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.neuronrobotics.sdk.pid.GenericPIDDevice#SetPDVelocity(int, int,
 	 * double)
 	 */
@@ -216,7 +217,8 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 					+ unitsPerSecond + ", when max is" + getMaxTicksPerSecond() + " set: " + getMaxTicksPerSecond()
 					+ " sec: " + seconds);
 		if (seconds < 0.1 && seconds > -0.1) {
-			// com.neuronrobotics.sdk.common.Log.error("Setting virtual velocity="+unitsPerSecond);
+			// com.neuronrobotics.sdk.common.Log.error("Setting virtual
+			// velocity="+unitsPerSecond);
 			getDriveThread(group).SetVelocity(unitsPerSecond);
 		} else {
 			SetPIDInterpolatedVelocity(group, unitsPerSecond, seconds);
@@ -226,7 +228,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace#
 	 * flushPIDChannels
 	 */
@@ -242,7 +244,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.neuronrobotics.sdk.pid.GenericPIDDevice#SetAllPIDSetPoint(int[],
 	 * double)
 	 */
@@ -250,9 +252,9 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 	public boolean SetAllPIDSetPoint(float[] setpoints, double seconds) {
 		long start = currentTimeMillis();
 		sync.setPause(true);
-		synchronized(interpolationEngines) {
+		synchronized (interpolationEngines) {
 			for (int i = 0; i < setpoints.length; i++) {
-				getDriveThread(i).StartLinearMotion(setpoints[i], seconds,start);
+				getDriveThread(i).StartLinearMotion(setpoints[i], seconds, start);
 			}
 		}
 		sync.setPause(false);
@@ -274,7 +276,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.neuronrobotics.sdk.pid.GenericPIDDevice#GetPIDPosition(int)
 	 */
 	@Override
@@ -285,7 +287,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.neuronrobotics.sdk.common.BowlerAbstractDevice#isAvailable()
 	 */
 	@Override
@@ -295,7 +297,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.neuronrobotics.sdk.pid.GenericPIDDevice#GetAllPIDPosition()
 	 */
 	@Override
@@ -305,7 +307,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 
 			setChannels(new ArrayList<PIDChannel>());
 			// lastPacketTime = new long[back.length];
-			synchronized(interpolationEngines) {
+			synchronized (interpolationEngines) {
 				for (int i = 0; i < backs.length; i++) {
 					backs[i] = 0;
 					PIDChannel c = new PIDChannel(this, i);
@@ -320,16 +322,16 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 				}
 			}
 		}
-		synchronized(interpolationEngines) {
+		synchronized (interpolationEngines) {
 			for (int i = 0; i < backs.length; i++)
 				backs[i] = GetPIDPosition(i);
 		}
 		return backs;
 	}
 	@Override
-	public  void setTimeProvider(ITimeProvider t) {
+	public void setTimeProvider(ITimeProvider t) {
 		super.setTimeProvider(t);
-		for(InterpolationEngine e:interpolationEngines.values()) {
+		for (InterpolationEngine e : interpolationEngines.values()) {
 			e.setTimeProvider(getTimeProvider());
 		}
 	}
@@ -337,7 +339,8 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 	/**
 	 * Sets the max ticks per second.
 	 *
-	 * @param maxTicksPerSecond the new max ticks per second
+	 * @param maxTicksPerSecond
+	 *            the new max ticks per second
 	 */
 	public void setMaxTicksPerSecond(double maxTicksPerSecond) {
 		this.maxTicksPerSecond = maxTicksPerSecond;
@@ -366,14 +369,14 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see java.lang.Thread#run()
 		 */
 		public void run() {
 			setName("Bowler Platform Virtual PID sync thread");
 			PIDEvent e = new PIDEvent();
-			PIDConfiguration[] toUpdate = new PIDConfiguration[numChannels] ;
-			int updateIndex=0;
+			PIDConfiguration[] toUpdate = new PIDConfiguration[numChannels];
+			int updateIndex = 0;
 			long time;
 			while (runSync) {
 				try {
@@ -381,37 +384,38 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 				} catch (InterruptedException ex) {
 					return;
 				}
-				if(!pause) {
+				if (!pause) {
 					sync = false;
 					time = currentTimeMillis();
-						synchronized(interpolationEngines) {
-							for (PIDConfiguration key : interpolationEngines.keySet()) {
-								InterpolationEngine dr = interpolationEngines.get(key);
-								if (key.isEnabled()) {
-									if (dr.update(time)) {
-										toUpdate[updateIndex++]=key;
-									}
-								} else {
-									//com.neuronrobotics.sdk.common.Log.error("Virtual Device " + key.getGroup() + " is disabled");
+					synchronized (interpolationEngines) {
+						for (PIDConfiguration key : interpolationEngines.keySet()) {
+							InterpolationEngine dr = interpolationEngines.get(key);
+							if (key.isEnabled()) {
+								if (dr.update(time)) {
+									toUpdate[updateIndex++] = key;
 								}
+							} else {
+								// com.neuronrobotics.sdk.common.Log.error("Virtual Device " + key.getGroup() +
+								// " is disabled");
 							}
 						}
-						for(int i=0;i<updateIndex;i++) {
-							PIDConfiguration key=toUpdate[i];
-							toUpdate[i]=null;
-							try {
-								e.set(key.getGroup(), (float) interpolationEngines.get(key).getTicks(), time, 0);
-								firePIDEvent(e);
-								sync = true;
-							} catch (NullPointerException ex) {
-								// initialization issue, let it work itself out
-							} catch (Exception ex) {
-								ex.printStackTrace();
-							}
+					}
+					for (int i = 0; i < updateIndex; i++) {
+						PIDConfiguration key = toUpdate[i];
+						toUpdate[i] = null;
+						try {
+							e.set(key.getGroup(), (float) interpolationEngines.get(key).getTicks(), time, 0);
+							firePIDEvent(e);
+							sync = true;
+						} catch (NullPointerException ex) {
+							// initialization issue, let it work itself out
+						} catch (Exception ex) {
+							ex.printStackTrace();
 						}
-						updateIndex=0;
-					
-				}else
+					}
+					updateIndex = 0;
+
+				} else
 					while (isPause())
 						try {
 							getTimeProvider().sleep(1);
@@ -431,13 +435,13 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 
 		public void setPause(boolean pause) {
 			this.pause = pause;
-			
+
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.neuronrobotics.sdk.pid.GenericPIDDevice#connect()
 	 */
 	@Override
@@ -453,7 +457,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 	@Override
 	public void disconnect() {
 		fireDisconnectEvent();
-		runSync=false;
+		runSync = false;
 	}
 
 }

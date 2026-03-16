@@ -23,14 +23,16 @@ public class PidDeviceServer extends BowlerAbstractServer implements IPIDEventLi
 	/**
 	 * Instantiates a new pid device server.
 	 *
-	 * @param mac the mac
-	 * @param device the device
+	 * @param mac
+	 *            the mac
+	 * @param device
+	 *            the device
 	 */
-	public PidDeviceServer(MACAddress mac,IPidControlNamespace device) {
+	public PidDeviceServer(MACAddress mac, IPidControlNamespace device) {
 		super(mac);
 		pidServer = new PidDeviceServerNamespace(mac, device);
 		addBowlerDeviceServerNamespace(pidServer);
-		
+
 		device.addPIDEventListener(this);
 		Log.info("Starting UDP");
 		try {
@@ -38,70 +40,69 @@ public class PidDeviceServer extends BowlerAbstractServer implements IPIDEventLi
 		} catch (IOException e) {
 			// Auto-generated catch block
 			e.printStackTrace();
-			//System.exit(1);
+			// System.exit(1);
 		}
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.pid.IPIDEventListener#onPIDEvent(com.neuronrobotics.sdk.pid.PIDEvent)
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.neuronrobotics.sdk.pid.IPIDEventListener#onPIDEvent(com.neuronrobotics.
+	 * sdk.pid.PIDEvent)
 	 */
 	@Override
 	public void onPIDEvent(PIDEvent e) {
-		Log.info("Pushing "+e);
-		pushAsyncPacket(2,//0 is core, 1 is rpc 
-				pidServer.getNamespace(), 
-				"_pid", 
-				new Object[]{
-					new Byte((byte) e.getGroup()),
-					new Integer((int)e.getValue()),
-					new Integer((int) e.getTimeStamp()),
-					new Integer(e.getVelocity())
-				}, 
-				new BowlerDataType[]{
-					BowlerDataType.I08,//channel
-					BowlerDataType.I32,//position
-					BowlerDataType.I32,//timestamp
-					BowlerDataType.I32//velocity
-				} );
+		Log.info("Pushing " + e);
+		pushAsyncPacket(2, // 0 is core, 1 is rpc
+				pidServer.getNamespace(), "_pid",
+				new Object[]{new Byte((byte) e.getGroup()), new Integer((int) e.getValue()),
+						new Integer((int) e.getTimeStamp()), new Integer(e.getVelocity())},
+				new BowlerDataType[]{BowlerDataType.I08, // channel
+						BowlerDataType.I32, // position
+						BowlerDataType.I32, // timestamp
+						BowlerDataType.I32// velocity
+				});
 	}
 
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.pid.IPIDEventListener#onPIDLimitEvent(com.neuronrobotics.sdk.pid.PIDLimitEvent)
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.neuronrobotics.sdk.pid.IPIDEventListener#onPIDLimitEvent(com.
+	 * neuronrobotics.sdk.pid.PIDLimitEvent)
 	 */
 	@Override
 	public void onPIDLimitEvent(PIDLimitEvent e) {
-		pushAsyncPacket(2,//0 is core, 1 is rpc 
-				pidServer.getNamespace(), 
-				"pidl", 
-				new Object[]{
-					new Byte((byte) e.getGroup()),
-					new Byte( e.getLimitType().getValue()),
-					new Integer((int) e.getValue()),
-					new Integer((int) e.getTimeStamp()),
-				}, 
-				new BowlerDataType[]{
-					BowlerDataType.I08,//channel
-					BowlerDataType.I08,//type
-					BowlerDataType.I32,//position
-					BowlerDataType.I32,//timestamp
-				} );
+		pushAsyncPacket(2, // 0 is core, 1 is rpc
+				pidServer.getNamespace(), "pidl",
+				new Object[]{new Byte((byte) e.getGroup()), new Byte(e.getLimitType().getValue()),
+						new Integer((int) e.getValue()), new Integer((int) e.getTimeStamp()),},
+				new BowlerDataType[]{BowlerDataType.I08, // channel
+						BowlerDataType.I08, // type
+						BowlerDataType.I32, // position
+						BowlerDataType.I32,// timestamp
+				});
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see com.neuronrobotics.sdk.pid.IPIDEventListener#onPIDReset(int, int)
 	 */
 	@Override
-	public void onPIDReset(int group, float currentValue) {}//used for object state not commands
+	public void onPIDReset(int group, float currentValue) {
+	}// used for object state not commands
 
-	
 	/**
 	 * The main method.
 	 *
-	 * @param args the arguments
+	 * @param args
+	 *            the arguments
 	 */
-	public static void main(String [] args){
+	public static void main(String[] args) {
 		Log.enableInfoPrint();
-		PidDeviceServer srv = new PidDeviceServer(new MACAddress(), new VirtualGenericPIDDevice(10000,"PID SERVER TEST") );
-		
+		PidDeviceServer srv = new PidDeviceServer(new MACAddress(),
+				new VirtualGenericPIDDevice(10000, "PID SERVER TEST"));
+
 	}
 }

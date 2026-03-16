@@ -1,7 +1,5 @@
 package com.neuronrobotics.application.xmpp.GoogleChat;
 
-
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -26,106 +24,114 @@ import org.xml.sax.SAXException;
 
 import com.neuronrobotics.application.xmpp.IConversationFactory;
 
-
-
-
 //  Auto-generated Javadoc
 /**
  * The Class GoogleChatEngine.
  */
 public class GoogleChatEngine implements ChatManagerListener {
-	
+
 	/** The username. */
 	private static String username = "user@gmail.com";
-	
+
 	/** The password. */
 	private static String password = "pass1234";
-	
-	
+
 	/** The host. */
 	private static String host = "talk.google.com";
-	
+
 	/** The service. */
 	private static String service = "gmail.com";
-	
+
 	/** The port. */
 	private static int port = 5222;
-	
+
 	/** The conn config. */
 	private ConnectionConfiguration connConfig;
-	
+
 	/** The connection. */
 	private XMPPConnection connection;
-	
+
 	/** The presence. */
 	private Presence presence;
-	
+
 	/** The chatmanager. */
 	private ChatManager chatmanager;
-	
+
 	/** The google chats. */
-	ArrayList<GoogleChat> googleChats = new ArrayList<GoogleChat> ();
-	
+	ArrayList<GoogleChat> googleChats = new ArrayList<GoogleChat>();
+
 	/** The responder. */
 	private IConversationFactory responder;
-	
+
 	/**
 	 * Instantiates a new google chat engine.
 	 *
-	 * @param responder the responder
-	 * @param user the user
-	 * @param pass the pass
-	 * @throws XMPPException the XMPP exception
+	 * @param responder
+	 *            the responder
+	 * @param user
+	 *            the user
+	 * @param pass
+	 *            the pass
+	 * @throws XMPPException
+	 *             the XMPP exception
 	 */
-	public GoogleChatEngine(IConversationFactory responder,String user,String pass) throws XMPPException {
-		username=user;
-        password=pass;
-        setup(responder);
+	public GoogleChatEngine(IConversationFactory responder, String user, String pass) throws XMPPException {
+		username = user;
+		password = pass;
+		setup(responder);
 	}
-	
+
 	/**
 	 * Instantiates a new google chat engine.
 	 *
-	 * @param responder the responder
-	 * @param config the config
-	 * @throws XMPPException the XMPP exception
+	 * @param responder
+	 *            the responder
+	 * @param config
+	 *            the config
+	 * @throws XMPPException
+	 *             the XMPP exception
 	 */
-	public GoogleChatEngine(IConversationFactory responder,InputStream config) throws XMPPException {
-        setLoginInfo(config);
-        setup(responder);
+	public GoogleChatEngine(IConversationFactory responder, InputStream config) throws XMPPException {
+		setLoginInfo(config);
+		setup(responder);
 	}
-	
+
 	/**
 	 * Sets the up.
 	 *
-	 * @param responder the new up
-	 * @throws XMPPException the XMPP exception
+	 * @param responder
+	 *            the new up
+	 * @throws XMPPException
+	 *             the XMPP exception
 	 */
 	private void setup(IConversationFactory responder) throws XMPPException {
-		this.responder=responder;
-		if((MessageListener.class.isInstance(responder)))
-			throw new RuntimeException("Instance of IConversationFactory must also implement org.jivesoftware.smack.MessageListener");
+		this.responder = responder;
+		if ((MessageListener.class.isInstance(responder)))
+			throw new RuntimeException(
+					"Instance of IConversationFactory must also implement org.jivesoftware.smack.MessageListener");
 		connConfig = new ConnectionConfiguration(host, port, service);
-        connection = new XMPPConnection(connConfig);
-        connection.connect();
-        connection.login(username, password);
-        presence = new Presence(Presence.Type.available);
-        connection.sendPacket(presence);
-        chatmanager = connection.getChatManager();
-        chatmanager.addChatListener(this);
+		connection = new XMPPConnection(connConfig);
+		connection.connect();
+		connection.login(username, password);
+		presence = new Presence(Presence.Type.available);
+		connection.sendPacket(presence);
+		chatmanager = connection.getChatManager();
+		chatmanager.addChatListener(this);
 	}
-	
+
 	/**
 	 * Sets the login info.
 	 *
-	 * @param config the new login info
+	 * @param config
+	 *            the new login info
 	 */
 	private void setLoginInfo(InputStream config) {
-		//InputStream config = GoogleChatEngine.class.getResourceAsStream("loginInfo.xml");
+		// InputStream config =
+		// GoogleChatEngine.class.getResourceAsStream("loginInfo.xml");
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-	    DocumentBuilder dBuilder;
-	    Document doc = null;
-	    try {
+		DocumentBuilder dBuilder;
+		Document doc = null;
+		try {
 			dBuilder = dbFactory.newDocumentBuilder();
 			doc = dBuilder.parse(config);
 			doc.getDocumentElement().normalize();
@@ -136,104 +142,112 @@ public class GoogleChatEngine implements ChatManagerListener {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		//com.neuronrobotics.sdk.common.Log.error("Parsing File...");
+		// com.neuronrobotics.sdk.common.Log.error("Parsing File...");
 		NodeList nList = doc.getElementsByTagName("login");
 		for (int temp = 0; temp < nList.getLength(); temp++) {
-			//com.neuronrobotics.sdk.common.Log.error("Leg # "+temp);
-			Element eElement = (Element)nList.item(temp);
-			username = getTagValue("username",eElement);
-	    	password = getTagValue("password",eElement);
-	    	
+			// com.neuronrobotics.sdk.common.Log.error("Leg # "+temp);
+			Element eElement = (Element) nList.item(temp);
+			username = getTagValue("username", eElement);
+			password = getTagValue("password", eElement);
+
 		}
 	}
-	
+
 	/**
 	 * Gets the tag value.
 	 *
-	 * @param sTag the s tag
-	 * @param eElement the e element
+	 * @param sTag
+	 *            the s tag
+	 * @param eElement
+	 *            the e element
 	 * @return the tag value
 	 */
-	public static String getTagValue(String sTag, Element eElement){
-	    NodeList nlList= eElement.getElementsByTagName(sTag).item(0).getChildNodes();
-	    Node nValue = (Node) nlList.item(0); 
-	    //com.neuronrobotics.sdk.common.Log.error("\t\t"+sTag+" = "+nValue.getNodeValue());
-	    return nValue.getNodeValue();    
+	public static String getTagValue(String sTag, Element eElement) {
+		NodeList nlList = eElement.getElementsByTagName(sTag).item(0).getChildNodes();
+		Node nValue = (Node) nlList.item(0);
+		// com.neuronrobotics.sdk.common.Log.error("\t\t"+sTag+" =
+		// "+nValue.getNodeValue());
+		return nValue.getNodeValue();
 	}
-	
+
 	/**
 	 * Gets the new message listener.
 	 *
 	 * @return the new message listener
 	 */
-	private MessageListener getNewMessageListener(){
-		return (MessageListener)responder.getConversation();
+	private MessageListener getNewMessageListener() {
+		return (MessageListener) responder.getConversation();
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.jivesoftware.smack.ChatManagerListener#chatCreated(org.jivesoftware.smack.Chat, boolean)
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * org.jivesoftware.smack.ChatManagerListener#chatCreated(org.jivesoftware.smack
+	 * .Chat, boolean)
 	 */
 	@Override
 	public void chatCreated(Chat arg0, boolean arg1) {
 		// Auto-generated method stub
-		arg0.addMessageListener( getNewMessageListener());
+		arg0.addMessageListener(getNewMessageListener());
 		googleChats.add(new GoogleChat(arg0));
 	}
-	
+
 	/**
 	 * Start chat.
 	 *
-	 * @param user the user
+	 * @param user
+	 *            the user
 	 * @return the google chat
 	 */
-	public GoogleChat startChat(String user){
-        Chat chat = chatmanager.createChat(user,getNewMessageListener());
-        GoogleChat c = new GoogleChat(chat);
-        googleChats.add(c);
+	public GoogleChat startChat(String user) {
+		Chat chat = chatmanager.createChat(user, getNewMessageListener());
+		GoogleChat c = new GoogleChat(chat);
+		googleChats.add(c);
 		return c;
 	}
-	
+
 	/**
 	 * Start chat.
 	 *
-	 * @param user the user
-	 * @param listener the listener
+	 * @param user
+	 *            the user
+	 * @param listener
+	 *            the listener
 	 * @return the google chat
 	 */
-	public GoogleChat startChat(String user, MessageListener listener){
-        Chat chat = chatmanager.createChat(user, listener);
-        GoogleChat c = new GoogleChat(chat);
-        googleChats.add(c);
+	public GoogleChat startChat(String user, MessageListener listener) {
+		Chat chat = chatmanager.createChat(user, listener);
+		GoogleChat c = new GoogleChat(chat);
+		googleChats.add(c);
 		return c;
 	}
-	
+
 	/**
 	 * Gets the chats.
 	 *
 	 * @return the chats
 	 */
-	public ArrayList<GoogleChat> getChats(){
+	public ArrayList<GoogleChat> getChats() {
 		ArrayList<GoogleChat> tmp = new ArrayList<GoogleChat>();
-		for(GoogleChat c:googleChats){
-			if(c!=null && c.isAlive() )
+		for (GoogleChat c : googleChats) {
+			if (c != null && c.isAlive())
 				tmp.add(c);
 		}
-		googleChats=tmp;
+		googleChats = tmp;
 		tmp = new ArrayList<GoogleChat>();
-		for(GoogleChat c:googleChats){
-			if(c!=null && c.isAlive() )
+		for (GoogleChat c : googleChats) {
+			if (c != null && c.isAlive())
 				tmp.add(c);
 		}
 		return tmp;
 	}
-	
+
 	/**
 	 * Disconnect.
 	 */
-	public void disconnect(){
+	public void disconnect() {
 		connection.disconnect();
 	}
-
-	
 
 }

@@ -3,9 +3,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,14 +25,15 @@ import com.neuronrobotics.sdk.common.InvalidResponseException;
  * The Class GetValueCommand.
  */
 public class GetValueCommand extends BowlerAbstractCommand {
-	
+
 	/** The channel. */
 	private int channel;
-	
+
 	/**
 	 * Instantiates a new gets the value command.
 	 *
-	 * @param channel the channel
+	 * @param channel
+	 *            the channel
 	 */
 	public GetValueCommand(int channel) {
 		this.channel = channel;
@@ -40,29 +41,36 @@ public class GetValueCommand extends BowlerAbstractCommand {
 		setMethod(BowlerMethod.GET);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see com.neuronrobotics.sdk.common.BowlerAbstractCommand#getCallingData()
 	 */
 	@Override
 	public byte[] getCallingData() {
 		return ByteList.wrap(channel);
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.common.BowlerAbstractCommand#parseResponse(com.neuronrobotics.sdk.common.BowlerDatagram)
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.neuronrobotics.sdk.common.BowlerAbstractCommand#parseResponse(com.
+	 * neuronrobotics.sdk.common.BowlerDatagram)
 	 */
 	@Override
 	public BowlerDatagram validate(BowlerDatagram data) throws InvalidResponseException {
 		super.validate(data);
-		if (data == null){
-			//com.neuronrobotics.sdk.common.Log.error("No response to Get Value Command\n"+data);
+		if (data == null) {
+			// com.neuronrobotics.sdk.common.Log.error("No response to Get Value
+			// Command\n"+data);
 			throw new InvalidResponseException("Get Channel Value did not respond.");
 		}
-		if(!data.getRPC().equals(getOpCode())) {
-			//com.neuronrobotics.sdk.common.Log.error("Wrong response to Get Value Command, expected:"+getOpCode()+", got:\n"+data);
-			throw new InvalidResponseException("Get Channel Value did not return with 'gchv'.\n"+data);
+		if (!data.getRPC().equals(getOpCode())) {
+			// com.neuronrobotics.sdk.common.Log.error("Wrong response to Get Value Command,
+			// expected:"+getOpCode()+", got:\n"+data);
+			throw new InvalidResponseException("Get Channel Value did not return with 'gchv'.\n" + data);
 		}
-		
+
 		return data;
 	}
 }

@@ -3,9 +3,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,21 +16,19 @@ package com.neuronrobotics.sdk.dyio.peripherals;
 
 //  Auto-generated Javadoc
 /**
- * The listener interface for receiving IDigitalInput events.
- * The class that is interested in processing a IDigitalInput
- * event implements this interface, and the object created
- * with that class is registered with a component using the
- * component's  addIDigitalInputListener  method. When
- * the IDigitalInput event occurs, that object's appropriate
- * method is invoked.
+ * The listener interface for receiving IDigitalInput events. The class that is
+ * interested in processing a IDigitalInput event implements this interface, and
+ * the object created with that class is registered with a component using the
+ * component's addIDigitalInputListener method. When the IDigitalInput event
+ * occurs, that object's appropriate method is invoked.
  *
  * @see DigitalInputChannel
  */
 public interface IDigitalInputListener {
-	
+
 	/**
 	 * IDigitalInputListener.
-	 * 
+	 *
 	 * @param source
 	 *            the channel the digital event came from
 	 * @param isHigh

@@ -3,9 +3,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,22 +21,23 @@ import java.net.InetAddress;
  * The Class AvailableSocket.
  */
 public class AvailableSocket {
-	
+
 	/** The tcp addr. */
-	private InetAddress tcpAddr=null;
-	
+	private InetAddress tcpAddr = null;
+
 	/** The port. */
-	private int port=0;
-	
+	private int port = 0;
+
 	/**
 	 * Sets the tcp addr.
 	 *
-	 * @param tcpAddr the new tcp addr
+	 * @param tcpAddr
+	 *            the new tcp addr
 	 */
 	public void setTcpAddr(InetAddress tcpAddr) {
 		this.tcpAddr = tcpAddr;
 	}
-	
+
 	/**
 	 * Gets the tcp addr.
 	 *
@@ -45,16 +46,17 @@ public class AvailableSocket {
 	public InetAddress getTcpAddr() {
 		return tcpAddr;
 	}
-	
+
 	/**
 	 * Sets the port.
 	 *
-	 * @param port the new port
+	 * @param port
+	 *            the new port
 	 */
 	public void setPort(int port) {
 		this.port = port;
 	}
-	
+
 	/**
 	 * Gets the port.
 	 *

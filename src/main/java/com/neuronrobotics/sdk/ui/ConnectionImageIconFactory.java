@@ -7,18 +7,19 @@ import javax.swing.ImageIcon;
  * A factory for creating ConnectionImageIcon objects.
  */
 public class ConnectionImageIconFactory {
-	
+
 	/**
 	 * Gets the icon.
 	 *
-	 * @param path the path
+	 * @param path
+	 *            the path
 	 * @return the icon
 	 */
-	public static ImageIcon getIcon(String path){
-		try{
+	public static ImageIcon getIcon(String path) {
+		try {
 			return new ImageIcon(AbstractConnectionPanel.class.getResource(path));
-		}catch (Exception e){
-			
+		} catch (Exception e) {
+
 		}
 		return new ImageIcon();
 	}

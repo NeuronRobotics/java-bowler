@@ -5,11 +5,12 @@ package com.neuronrobotics.application.xmpp.GoogleChat;
  * The Interface IChatLog.
  */
 public interface IChatLog {
-	
+
 	/**
 	 * On log event.
 	 *
-	 * @param newText the new text
+	 * @param newText
+	 *            the new text
 	 */
 	public void onLogEvent(String newText);
 }

@@ -9,49 +9,53 @@ public abstract class AbstractPrismaticLink extends AbstractLink {
 	/**
 	 * Instantiates a new abstract prismatic link.
 	 *
-	 * @param conf the conf
+	 * @param conf
+	 *            the conf
 	 */
 	public AbstractPrismaticLink(LinkConfiguration conf) {
 		super(conf);
 		// Auto-generated constructor stub
 	}
-	
+
 	/**
 	 * Increment displacment.
 	 *
-	 * @param inc the inc
+	 * @param inc
+	 *            the inc
 	 */
-	public void incrementDisplacment(double inc){
+	public void incrementDisplacment(double inc) {
 		incrementEngineeringUnits(inc);
 	}
-	
+
 	/**
 	 * Sets the target displacment.
 	 *
-	 * @param pos the new target displacment
+	 * @param pos
+	 *            the new target displacment
 	 */
 	public void setTargetDisplacment(double pos) {
 		setTargetEngineeringUnits(pos);
 	}
-	
+
 	/**
 	 * Sets the current as displacment.
 	 *
-	 * @param Displacment the new current as displacment
+	 * @param Displacment
+	 *            the new current as displacment
 	 */
 	public void setCurrentAsDisplacment(double Displacment) {
 		setCurrentEngineeringUnits(Displacment);
 	}
-	
+
 	/**
 	 * Gets the current displacment.
 	 *
 	 * @return the current displacment
 	 */
-	public double getCurrentDisplacment(){
+	public double getCurrentDisplacment() {
 		return getCurrentEngineeringUnits();
 	}
-	
+
 	/**
 	 * Gets the target displacment.
 	 *
@@ -60,7 +64,7 @@ public abstract class AbstractPrismaticLink extends AbstractLink {
 	public double getTargetDisplacment() {
 		return getTargetEngineeringUnits();
 	}
-	
+
 	/**
 	 * Gets the max displacment.
 	 *
@@ -69,7 +73,7 @@ public abstract class AbstractPrismaticLink extends AbstractLink {
 	public double getMaxDisplacment() {
 		return getMaxEngineeringUnits();
 	}
-	
+
 	/**
 	 * Gets the min displacment.
 	 *
@@ -78,7 +82,7 @@ public abstract class AbstractPrismaticLink extends AbstractLink {
 	public double getMinDisplacment() {
 		return getMinEngineeringUnits();
 	}
-	
+
 	/**
 	 * Checks if is max displacment.
 	 *
@@ -87,7 +91,7 @@ public abstract class AbstractPrismaticLink extends AbstractLink {
 	public boolean isMaxDisplacment() {
 		return isMaxEngineeringUnits();
 	}
-	
+
 	/**
 	 * Checks if is min displacment.
 	 *

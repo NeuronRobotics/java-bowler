@@ -24,18 +24,18 @@ public class RotationNR {
 	/** The rotation matrix. */
 	// double[][] rotationMatrix = ;
 
-@Expose (serialize = true, deserialize = true)
+	@Expose(serialize = true, deserialize = true)
 	double w = 1;
-@Expose (serialize = true, deserialize = true)
+	@Expose(serialize = true, deserialize = true)
 	double x = 0;
-@Expose (serialize = true, deserialize = true)
+	@Expose(serialize = true, deserialize = true)
 	double y = 0;
-@Expose (serialize = true, deserialize = true)
+	@Expose(serialize = true, deserialize = true)
 	double z = 0;
-	//private Rotation storage = new Rotation(1, 0, 0, 0, false);
-@Expose (serialize = false, deserialize = false)
+	// private Rotation storage = new Rotation(1, 0, 0, 0, false);
+	@Expose(serialize = false, deserialize = false)
 	private static RotationOrder order = RotationOrder.ZYX;
-@Expose (serialize = false, deserialize = false)
+	@Expose(serialize = false, deserialize = false)
 	private static RotationConvention convention = RotationConvention.VECTOR_OPERATOR;
 
 	/**
@@ -49,8 +49,8 @@ public class RotationNR {
 	 * org.apache.commons.math3.geometry.euclidean.threed.Rotation .
 	 *
 	 * @param store
-	 *			A org.apache.commons.math3.geometry.euclidean.threed.Rotation
-	 *			instance
+	 *            A org.apache.commons.math3.geometry.euclidean.threed.Rotation
+	 *            instance
 	 */
 	public RotationNR(Rotation store) {
 		setStorage(store);
@@ -59,9 +59,12 @@ public class RotationNR {
 	/**
 	 * Instantiates a new rotation nr.
 	 *
-	 ** @param tilt the tilt in Degrees
-	 * @param azimuth the azimuth in Degrees
-	 * @param elevation the elevation in Degrees
+	 ** @param tilt
+	 *            the tilt in Degrees
+	 * @param azimuth
+	 *            the azimuth in Degrees
+	 * @param elevation
+	 *            the elevation in Degrees
 	 */
 	// create a new object with the given simplified rotations
 	public RotationNR(double tilt, double azimuth, double elevation) {
@@ -89,13 +92,15 @@ public class RotationNR {
 	}
 
 	public RotationNR(EulerAxis axis, double rot) {
-		this((axis == EulerAxis.tilt) ? rot : 0, (axis == EulerAxis.azimuth) ? rot : 0, (axis == EulerAxis.elevation) ? rot : 0);
+		this((axis == EulerAxis.tilt) ? rot : 0, (axis == EulerAxis.azimuth) ? rot : 0,
+				(axis == EulerAxis.elevation) ? rot : 0);
 	}
 
 	/**
 	 * Instantiates a new rotation nr.
 	 *
-	 * @param rotationMatrix the rotation matrix
+	 * @param rotationMatrix
+	 *            the rotation matrix
 	 */
 	public RotationNR(double[][] rotationMatrix) {
 		loadRotations(rotationMatrix);
@@ -104,7 +109,8 @@ public class RotationNR {
 	/**
 	 * Instantiates a new rotation nr.
 	 *
-	 * @param values the values
+	 * @param values
+	 *            the values
 	 */
 	public RotationNR(double[] values) {
 		this(values[0], values[1], values[2], values[3]);
@@ -113,7 +119,8 @@ public class RotationNR {
 	/**
 	 * Get a rotation matrix with a rotation around X.
 	 *
-	 * @param rotationAngleDegrees in degrees
+	 * @param rotationAngleDegrees
+	 *            in degrees
 	 * @return the static matrix
 	 */
 	public static RotationNR getRotationX(double rotationAngleDegrees) {
@@ -139,7 +146,8 @@ public class RotationNR {
 	/**
 	 * Get a rotation matrix with a rotation around Y.
 	 *
-	 * @param rotationAngleDegrees in degrees
+	 * @param rotationAngleDegrees
+	 *            in degrees
 	 * @return the static matrix
 	 */
 	public static RotationNR getRotationY(double rotationAngleDegrees) {
@@ -165,7 +173,8 @@ public class RotationNR {
 	/**
 	 * Get a rotation matrix with a rotation around Z.
 	 *
-	 * @param rotationAngleDegrees in degrees
+	 * @param rotationAngleDegrees
+	 *            in degrees
 	 * @return the static matrix
 	 */
 	public static RotationNR getRotationZ(double rotationAngleDegrees) {
@@ -191,10 +200,14 @@ public class RotationNR {
 	/**
 	 * Instantiates a new rotation nr.
 	 *
-	 * @param w the w
-	 * @param x the x
-	 * @param y the y
-	 * @param z the z
+	 * @param w
+	 *            the w
+	 * @param x
+	 *            the x
+	 * @param y
+	 *            the y
+	 * @param z
+	 *            the z
 	 */
 	// create a new object with the given components
 	public RotationNR(double w, double x, double y, double z) {
@@ -204,7 +217,8 @@ public class RotationNR {
 	/**
 	 * Instantiates a new rotation nr.
 	 *
-	 * @param m the m
+	 * @param m
+	 *            the m
 	 */
 	public RotationNR(Matrix m) {
 		double[][] rotation = new double[3][3];
@@ -218,7 +232,8 @@ public class RotationNR {
 	/**
 	 * Load rotations.
 	 *
-	 * @param rotM the rot m
+	 * @param rotM
+	 *            the rot m
 	 */
 	private void loadRotations(double[][] rotM) {
 		if (rotM.length != 3)
@@ -248,12 +263,13 @@ public class RotationNR {
 	 */
 	// return a string representation of the invoking object
 	public String toString() {
-		try{
-			return "Quaturnion: " + "W=" + getRotationMatrix2QuaturnionW() + ", " + "x=" + getRotationMatrix2QuaturnionX()
-				+ ", " + "y=" + getRotationMatrix2QuaturnionY() + ", " + "z=" + getRotationMatrix2QuaturnionZ() + "\n"
-				+ "Rotation angle (degrees): " + "az= " + Math.toDegrees(getRotationAzimuthRadians()) + ", elev= "
-				+ Math.toDegrees(getRotationElevation()) + ", tilt=" + Math.toDegrees(getRotationTilt());
-		} catch(Exception ex){
+		try {
+			return "Quaturnion: " + "W=" + getRotationMatrix2QuaturnionW() + ", " + "x="
+					+ getRotationMatrix2QuaturnionX() + ", " + "y=" + getRotationMatrix2QuaturnionY() + ", " + "z="
+					+ getRotationMatrix2QuaturnionZ() + "\n" + "Rotation angle (degrees): " + "az= "
+					+ Math.toDegrees(getRotationAzimuthRadians()) + ", elev= " + Math.toDegrees(getRotationElevation())
+					+ ", tilt=" + Math.toDegrees(getRotationTilt());
+		} catch (Exception ex) {
 			return "Rotation error" + ex.getLocalizedMessage();
 		}
 	}
@@ -261,7 +277,8 @@ public class RotationNR {
 	/**
 	 * To string.
 	 *
-	 * @param array the array
+	 * @param array
+	 *            the array
 	 * @return the string
 	 */
 	// return a string representation of the invoking object
@@ -281,10 +298,14 @@ public class RotationNR {
 	/**
 	 * Quaternion2 rotation matrix.
 	 *
-	 * @param w the w
-	 * @param x the x
-	 * @param y the y
-	 * @param z the z
+	 * @param w
+	 *            the w
+	 * @param x
+	 *            the x
+	 * @param y
+	 *            the y
+	 * @param z
+	 *            the z
 	 */
 	protected void quaternion2RotationMatrix(double w, double x, double y, double z) {
 
@@ -309,9 +330,12 @@ public class RotationNR {
 	/**
 	 * Bound.
 	 *
-	 * @param low the low
-	 * @param high the high
-	 * @param n the n
+	 * @param low
+	 *            the low
+	 * @param high
+	 *            the high
+	 * @param n
+	 *            the n
 	 * @return true, if successful
 	 */
 	public static boolean bound(double low, double high, double n) {
@@ -375,7 +399,7 @@ public class RotationNR {
 	 */
 
 	public double getRotationAzimuthDegrees() {
-		return Math.toDegrees( getRotationAzimuthRadians());
+		return Math.toDegrees(getRotationAzimuthRadians());
 	}
 
 	/**
@@ -409,10 +433,10 @@ public class RotationNR {
 		return getRotationAzimuthRadians();
 	}
 
-	private void simpilfyAngles(double [] angles){
+	private void simpilfyAngles(double[] angles) {
 		double epsilon = 1.0E-7;
-		if ((Math.abs(angles[0] - Math.toRadians(180)) < epsilon) &&
-			(Math.abs(angles[2] - Math.toRadians(180)) < epsilon)) {
+		if ((Math.abs(angles[0] - Math.toRadians(180)) < epsilon)
+				&& (Math.abs(angles[2] - Math.toRadians(180)) < epsilon)) {
 			if (!(Math.abs(getRotationMatrix2QuaturnionZ()) > epsilon))
 				angles[0] = 0;
 
@@ -421,7 +445,7 @@ public class RotationNR {
 		}
 	}
 
-	private double eulerFix(double offsetSize, int index){
+	private double eulerFix(double offsetSize, int index) {
 		double offset = ((index == 1) ? offsetSize : 0);
 		TransformNR current = new TransformNR(0, 0, 0, this);
 		TransformNR newTf = current.times(new TransformNR(0, 0, 0, new RotationNR(0, 0, Math.toDegrees(offsetSize))));

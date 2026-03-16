@@ -5,18 +5,21 @@ import java.io.File;
 public interface IGcodeExecuter {
 	/**
 	 * Execute a single line of gcode
+	 *
 	 * @param line
 	 * @return
 	 */
 	public String runLine(String line);
 	/**
 	 * Run all the lines in a file
+	 *
 	 * @param gcode
 	 */
 	public void runFile(File gcode);
-	
+
 	/**
-	 * Return the configuration of the gcode device. 
+	 * Return the configuration of the gcode device.
+	 *
 	 * @return
 	 */
 	public GCodeDeviceConfiguration getConfiguration();

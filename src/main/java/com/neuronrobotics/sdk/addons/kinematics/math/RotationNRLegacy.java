@@ -8,7 +8,7 @@ import Jama.Matrix;
 /**
  * This class is to represent a 3x3 rotation sub-matrix This class also contains
  * static methods for dealing with 3x3 rotations.
- * 
+ *
  * @author Kevin Harrington
  *
  */
@@ -16,7 +16,7 @@ import Jama.Matrix;
 public class RotationNRLegacy {
 
 	/** The rotation matrix. */
-	double[][] rotationMatrix = new double[][] { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } };
+	double[][] rotationMatrix = new double[][]{{1, 0, 0}, {0, 1, 0}, {0, 0, 1}};
 
 	/**
 	 * Null constructor forms a.
@@ -47,7 +47,8 @@ public class RotationNRLegacy {
 		loadFromAngles(tilt, azumeth, elevation);
 		if (Double.isNaN(getRotationMatrix2QuaturnionW()) || Double.isNaN(getRotationMatrix2QuaturnionX())
 				|| Double.isNaN(getRotationMatrix2QuaturnionY()) || Double.isNaN(getRotationMatrix2QuaturnionZ())) {
-			// com.neuronrobotics.sdk.common.Log.error("Failing to set proper angle, jittering");
+			// com.neuronrobotics.sdk.common.Log.error("Failing to set proper angle,
+			// jittering");
 			loadFromAngles(tilt + Math.random() * .02 + .001, azumeth + Math.random() * .02 + .001,
 					elevation + Math.random() * .02 + .001);
 		}
@@ -70,7 +71,8 @@ public class RotationNRLegacy {
 		double s3 = Math.sin(bank / 2);
 		double c1c2 = c1 * c2;
 		double s1s2 = s1 * s2;
-		// com.neuronrobotics.sdk.common.Log.error("C1 ="+c1+" S1 ="+s1+" |C2 ="+c2+" S2 ="+s2+" |C3
+		// com.neuronrobotics.sdk.common.Log.error("C1 ="+c1+" S1 ="+s1+" |C2 ="+c2+" S2
+		// ="+s2+" |C3
 		// ="+c3+" S3 ="+s3);
 		w = c1c2 * c3 - s1s2 * s3;
 		x = c1c2 * s3 + s1s2 * c3;
@@ -255,7 +257,7 @@ public class RotationNRLegacy {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	// return a string representation of the invoking object
@@ -272,8 +274,8 @@ public class RotationNRLegacy {
 		s += "]";
 		return "Quaturnion: " + "W=" + getRotationMatrix2QuaturnionW() + ", " + "x=" + getRotationMatrix2QuaturnionX()
 				+ ", " + "y=" + getRotationMatrix2QuaturnionY() + ", " + "z=" + getRotationMatrix2QuaturnionZ() + "\t"
-				+ "Rotation angle (degrees): " + "Azimuth=" + getRotationAzimuthRadians() + ", " + "Elevation=" + getRotationElevationRadians() + ", " + "Tilt="
-				+ getRotationTiltRadians() + "";
+				+ "Rotation angle (degrees): " + "Azimuth=" + getRotationAzimuthRadians() + ", " + "Elevation="
+				+ getRotationElevationRadians() + ", " + "Tilt=" + getRotationTiltRadians() + "";
 	}
 
 	/**
@@ -519,14 +521,14 @@ public class RotationNRLegacy {
 		}
 
 		switch (index) {
-		case 0:
-			return tilt;
-		case 1:
-			return elev;
-		case 2:
-			return azumeth;
-		default:
-			return 0;
+			case 0 :
+				return tilt;
+			case 1 :
+				return elev;
+			case 2 :
+				return azumeth;
+			default :
+				return 0;
 		}
 
 	}
@@ -583,34 +585,34 @@ public class RotationNRLegacy {
 	 *
 	 * @return the rotation x
 	 */
-//	@Deprecated // use getRotationBank()
-//	public double getRotationX() {
-//
-//		return getRotAngle(0);
-//
-//	}
+	// @Deprecated // use getRotationBank()
+	// public double getRotationX() {
+	//
+	// return getRotAngle(0);
+	//
+	// }
 
 	/**
 	 * Gets the rotation y.
 	 *
 	 * @return the rotation y
 	 */
-//	@Deprecated // use getRotationAttitude()
-//	public double getRotationY() {
-//
-//		return getRotAngle(2);
-//	}
+	// @Deprecated // use getRotationAttitude()
+	// public double getRotationY() {
+	//
+	// return getRotAngle(2);
+	// }
 
 	/**
 	 * Gets the rotation z.
 	 *
 	 * @return the rotation z
 	 */
-//	@Deprecated // use getRotationHeading()
-//	public double getRotationZ() {
-//
-//		return getRotAngle(1);
-//	}
+	// @Deprecated // use getRotationHeading()
+	// public double getRotationZ() {
+	//
+	// return getRotAngle(1);
+	// }
 
 	/**
 	 * Gets the rotation matrix2 quaturnion w.

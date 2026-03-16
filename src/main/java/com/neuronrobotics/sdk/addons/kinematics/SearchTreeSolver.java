@@ -9,30 +9,32 @@ import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
  * The Class SearchTreeSolver.
  */
 public class SearchTreeSolver implements DhInverseSolver {
-	
+
 	/** The dh chain. */
 	private DHChain dhChain;
-	
+
 	/** The upper. */
-	private double [] upper;
-	
+	private double[] upper;
+
 	/** The lower. */
-	private double [] lower;
-	
+	private double[] lower;
+
 	/** The debug. */
 	private boolean debug;
-	
+
 	/** The starting increment. */
-	double startingIncrement = 1.5;//degrees
-	
+	double startingIncrement = 1.5;// degrees
+
 	/** The target. */
 	private TransformNR target;
-	
+
 	/**
 	 * Instantiates a new search tree solver.
 	 *
-	 * @param dhChain the dh chain
-	 * @param debug the debug
+	 * @param dhChain
+	 *            the dh chain
+	 * @param debug
+	 *            the debug
 	 */
 	public SearchTreeSolver(DHChain dhChain, boolean debug) {
 		this.setDhChain(dhChain);
@@ -41,41 +43,47 @@ public class SearchTreeSolver implements DhInverseSolver {
 		lower = dhChain.getlowerLimits();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.addons.kinematics.DhInverseSolver#inverseKinematics(com.neuronrobotics.sdk.addons.kinematics.math.TransformNR, double[], com.neuronrobotics.sdk.addons.kinematics.DHChain)
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.neuronrobotics.sdk.addons.kinematics.DhInverseSolver#inverseKinematics(
+	 * com.neuronrobotics.sdk.addons.kinematics.math.TransformNR, double[],
+	 * com.neuronrobotics.sdk.addons.kinematics.DHChain)
 	 */
 	@Override
-	public double[] inverseKinematics(TransformNR target,double[] jointSpaceVector, 
-			 DHChain chain ) {
+	public double[] inverseKinematics(TransformNR target, double[] jointSpaceVector, DHChain chain) {
 		ArrayList<DHLink> links = chain.getLinks();
 		setTarget(target);
-		searchTree step=new searchTree(jointSpaceVector,startingIncrement);;
+		searchTree step = new searchTree(jointSpaceVector, startingIncrement);;
 		boolean done = false;
 		configuration conf = new configuration(jointSpaceVector, target);
-//		double previousV =conf.getOffsetOrientationMagnitude();
-//		double previousO =conf.getOffsetVectorMagnitude();
+		// double previousV =conf.getOffsetOrientationMagnitude();
+		// double previousO =conf.getOffsetVectorMagnitude();
 		int iter = 1000;
 		int i = 0;
-		do{
-			double [] current = conf.getJoints();
+		do {
+			double[] current = conf.getJoints();
 			conf = step.getBest(current);
-			
+
 			double vect = conf.getOffsetOrientationMagnitude();
 			double orient = conf.getOffsetVectorMagnitude();
-			
-			if(vect<10 && orient< .05){
+
+			if (vect < 10 && orient < .05) {
 				done = true;
-				com.neuronrobotics.sdk.common.Log.error("SearchTreeSolver Success stats: \n\tIterations = "+i+" out of "+iter+"\n"+conf);
+				com.neuronrobotics.sdk.common.Log.error(
+						"SearchTreeSolver Success stats: \n\tIterations = " + i + " out of " + iter + "\n" + conf);
 			}
-			if(i++==iter){
+			if (i++ == iter) {
 				done = true;
-				com.neuronrobotics.sdk.common.Log.error("SearchTreeSolver FAILED stats: \n\tIterations = "+i+" out of "+iter+"\n"+conf);
+				com.neuronrobotics.sdk.common.Log.error(
+						"SearchTreeSolver FAILED stats: \n\tIterations = " + i + " out of " + iter + "\n" + conf);
 			}
-		}while(! done);
+		} while (!done);
 
 		return conf.getJoints();
 	}
-	
+
 	/**
 	 * Gets the target.
 	 *
@@ -88,7 +96,8 @@ public class SearchTreeSolver implements DhInverseSolver {
 	/**
 	 * Sets the target.
 	 *
-	 * @param target the new target
+	 * @param target
+	 *            the new target
 	 */
 	public void setTarget(TransformNR target) {
 		this.target = target;
@@ -106,163 +115,175 @@ public class SearchTreeSolver implements DhInverseSolver {
 	/**
 	 * Sets the dh chain.
 	 *
-	 * @param dhChain the new dh chain
+	 * @param dhChain
+	 *            the new dh chain
 	 */
 	public void setDhChain(DHChain dhChain) {
 		this.dhChain = dhChain;
 	}
-	
+
 	/**
 	 * Fk.
 	 *
-	 * @param jointSpaceVector the joint space vector
+	 * @param jointSpaceVector
+	 *            the joint space vector
 	 * @return the transform nr
 	 */
-	public TransformNR fk(double[] jointSpaceVector){
+	public TransformNR fk(double[] jointSpaceVector) {
 		return getDhChain().forwardKinematics(jointSpaceVector);
 	}
 
 	/**
 	 * The Class searchTree.
 	 */
-	private class searchTree{
-		
+	private class searchTree {
+
 		/** The nodes. */
-		//double[] start;
-		searchNode [] nodes;
-		
+		// double[] start;
+		searchNode[] nodes;
+
 		/**
 		 * Instantiates a new search tree.
 		 *
-		 * @param jointSpaceVector the joint space vector
-		 * @param startingIncrement the starting increment
+		 * @param jointSpaceVector
+		 *            the joint space vector
+		 * @param startingIncrement
+		 *            the starting increment
 		 */
-		public searchTree(double[] jointSpaceVector,double startingIncrement){
-			nodes = new searchNode [jointSpaceVector.length];
-			for(int i=0;i<jointSpaceVector.length;i++){
-				nodes[i] = new searchNode(i,jointSpaceVector[i],startingIncrement);
+		public searchTree(double[] jointSpaceVector, double startingIncrement) {
+			nodes = new searchNode[jointSpaceVector.length];
+			for (int i = 0; i < jointSpaceVector.length; i++) {
+				nodes[i] = new searchNode(i, jointSpaceVector[i], startingIncrement);
 			}
-			
+
 		}
-		
+
 		/**
 		 * Gets the best.
 		 *
-		 * @param jointSpaceVector the joint space vector
+		 * @param jointSpaceVector
+		 *            the joint space vector
 		 * @return the best
 		 */
-		public configuration getBest(double[] jointSpaceVector){
-			ArrayList<configuration> configurations = new ArrayList<configuration> ();
-			for(int i=0;i<jointSpaceVector.length;i++){
+		public configuration getBest(double[] jointSpaceVector) {
+			ArrayList<configuration> configurations = new ArrayList<configuration>();
+			for (int i = 0; i < jointSpaceVector.length; i++) {
 				nodes[i].setCurrent(jointSpaceVector[i]);
 			}
-			double [] tmp = new double[6];
+			double[] tmp = new double[6];
 			int num = 3;
-			for(int i=0;i<num;i++){
-				try{
-					tmp[0]=nodes[0].get(i);
-					for(int i1=0;i1<num;i1++){
-						try{
-							tmp[1]=nodes[1].get(i1);
-							for(int i2=0;i2<num;i2++){
-								try{
-									tmp[2]=nodes[2].get(i2);
-									for(int i3=0;i3<num;i3++){
-										try{
-											tmp[3]=nodes[3].get(i3);
-											for(int i4=0;i4<num;i4++){
-												try{
-													tmp[4]=nodes[4].get(i4);
-													for(int i5=0;i5<num;i5++){
-														try{
-															tmp[5]=nodes[5].get(i5);
+			for (int i = 0; i < num; i++) {
+				try {
+					tmp[0] = nodes[0].get(i);
+					for (int i1 = 0; i1 < num; i1++) {
+						try {
+							tmp[1] = nodes[1].get(i1);
+							for (int i2 = 0; i2 < num; i2++) {
+								try {
+									tmp[2] = nodes[2].get(i2);
+									for (int i3 = 0; i3 < num; i3++) {
+										try {
+											tmp[3] = nodes[3].get(i3);
+											for (int i4 = 0; i4 < num; i4++) {
+												try {
+													tmp[4] = nodes[4].get(i4);
+													for (int i5 = 0; i5 < num; i5++) {
+														try {
+															tmp[5] = nodes[5].get(i5);
 															boolean same = false;
-															configuration tempConf = new configuration(tmp.clone(),getTarget());
-															for(configuration c:configurations){
-																if(tempConf.same(c))
+															configuration tempConf = new configuration(tmp.clone(),
+																	getTarget());
+															for (configuration c : configurations) {
+																if (tempConf.same(c))
 																	same = true;
 															}
-															if(!same)
+															if (!same)
 																configurations.add(tempConf);
-														}catch(Exception ex){}
+														} catch (Exception ex) {
+														}
 													}
-												}catch(Exception ex){}
+												} catch (Exception ex) {
+												}
 											}
-										}catch(Exception ex){}
+										} catch (Exception ex) {
+										}
 									}
-								}catch(Exception ex){}
+								} catch (Exception ex) {
+								}
 							}
-						}catch(Exception ex){}
+						} catch (Exception ex) {
+						}
 					}
-				}catch(Exception ex){}
+				} catch (Exception ex) {
+				}
 			}
-			
+
 			int best = 0;
-			int i=0;
-			double orient=configurations.get(0).getOffsetOrientationMagnitude();
-			double vect =configurations.get(0).getOffsetVectorMagnitude();
-			for(configuration c:configurations){
+			int i = 0;
+			double orient = configurations.get(0).getOffsetOrientationMagnitude();
+			double vect = configurations.get(0).getOffsetVectorMagnitude();
+			for (configuration c : configurations) {
 				double tmpOrient = c.getOffsetOrientationMagnitude();
-				double tmpVector= c.getOffsetVectorMagnitude();
-				if(
-						tmpOrient<=orient && 
-						tmpVector<=vect){
-					orient=tmpOrient;
-					vect=tmpVector;
+				double tmpVector = c.getOffsetVectorMagnitude();
+				if (tmpOrient <= orient && tmpVector <= vect) {
+					orient = tmpOrient;
+					vect = tmpVector;
 					best = i;
 				}
 				i++;
 			}
-			//com.neuronrobotics.sdk.common.Log.error("Selecting "+best+" config");
+			// com.neuronrobotics.sdk.common.Log.error("Selecting "+best+" config");
 			return configurations.get(best);
 		}
 	}
-	
+
 	/**
 	 * The Class configuration.
 	 */
-	private class configuration{
-		
+	private class configuration {
+
 		/** The joints. */
 		private final double[] joints;
-		
+
 		/** The transform. */
 		private TransformNR transform;
-		
+
 		/** The target. */
 		private final TransformNR target;
-		
+
 		/** The o. */
 		double o;
-		
+
 		/** The v. */
 		double v;
 
 		/**
 		 * Instantiates a new configuration.
 		 *
-		 * @param joints the joints
-		 * @param t the t
+		 * @param joints
+		 *            the joints
+		 * @param t
+		 *            the t
 		 */
-		public configuration(double [] joints, TransformNR t){
+		public configuration(double[] joints, TransformNR t) {
 			this.joints = joints.clone();
 			target = t;
 		}
-		
+
 		/**
 		 * Gets the transform.
 		 *
 		 * @return the transform
 		 */
 		public TransformNR getTransform() {
-			if(transform == null){
+			if (transform == null) {
 				transform = fk(getJoints());
 				o = transform.getOffsetOrientationMagnitude(target);
 				v = transform.getOffsetVectorMagnitude(target);
 			}
 			return transform;
 		}
-		
+
 		/**
 		 * Gets the joints.
 		 *
@@ -271,147 +292,151 @@ public class SearchTreeSolver implements DhInverseSolver {
 		public double[] getJoints() {
 			return joints;
 		}
-		
+
 		/**
 		 * Gets the offset orientation magnitude.
 		 *
 		 * @return the offset orientation magnitude
 		 */
-		public double getOffsetOrientationMagnitude(){
+		public double getOffsetOrientationMagnitude() {
 			getTransform();
 			return o;
 		}
-		
+
 		/**
 		 * Gets the offset vector magnitude.
 		 *
 		 * @return the offset vector magnitude
 		 */
-		public double getOffsetVectorMagnitude(){
+		public double getOffsetVectorMagnitude() {
 			getTransform();
 			return v;
 		}
-		
+
 		/**
 		 * Same.
 		 *
-		 * @param c the c
+		 * @param c
+		 *            the c
 		 * @return true, if successful
 		 */
-		public boolean same(configuration c){
-			for(int i=0;i<6;i++){
-				if(		c.getJoints()[i]>getJoints()[i]+.1 ||
-						c.getJoints()[i]<getJoints()[i]-.1){
+		public boolean same(configuration c) {
+			for (int i = 0; i < 6; i++) {
+				if (c.getJoints()[i] > getJoints()[i] + .1 || c.getJoints()[i] < getJoints()[i] - .1) {
 					return false;
 				}
 			}
 			return true;
 		}
-		
-		/* (non-Javadoc)
+
+		/*
+		 * (non-Javadoc)
+		 *
 		 * @see java.lang.Object#toString()
 		 */
-		public String toString(){
+		public String toString() {
 			getTransform();
-			String s="\tTarget = "+target.toString()+"\n\tVector = "+v+"\n\tOrient "+o+"\n\tCurrent = "+getTransform().toString();	
+			String s = "\tTarget = " + target.toString() + "\n\tVector = " + v + "\n\tOrient " + o + "\n\tCurrent = "
+					+ getTransform().toString();
 			return s;
 		}
 	}
-	
+
 	/**
 	 * The Class searchNode.
 	 */
-	private class searchNode{
-		
+	private class searchNode {
+
 		/** The start. */
 		private double start;
-		
+
 		/** The starting increment. */
 		private final double startingIncrement;
-		
+
 		/** The link. */
 		private final int link;
-		
+
 		/**
 		 * Instantiates a new search node.
 		 *
-		 * @param link the link
-		 * @param start the start
-		 * @param inc the inc
+		 * @param link
+		 *            the link
+		 * @param start
+		 *            the start
+		 * @param inc
+		 *            the inc
 		 */
-		public searchNode(int link,double start, double inc){
+		public searchNode(int link, double start, double inc) {
 			this.link = link;
 			this.start = start;
 			startingIncrement = inc;
-			if (inc<0)
+			if (inc < 0)
 				throw new RuntimeException("Increment must be positive");
 		}
-		
+
 		/**
 		 * Sets the current.
 		 *
-		 * @param d the new current
+		 * @param d
+		 *            the new current
 		 */
 		public void setCurrent(double d) {
-			start=d;
+			start = d;
 		}
-		
+
 		/**
 		 * Gets the upper.
 		 *
 		 * @return the upper
 		 */
-		double getUpper(){
-			double b = start+startingIncrement;
-			if(		b>getDhChain().getUpperLimits()[link] ||
-					b<getDhChain().getlowerLimits()[link]
-			   ){
+		double getUpper() {
+			double b = start + startingIncrement;
+			if (b > getDhChain().getUpperLimits()[link] || b < getDhChain().getlowerLimits()[link]) {
 				throw new RuntimeException("Limit bounded");
 			}
 			return b;
 		}
-		
+
 		/**
 		 * Gets the lower.
 		 *
 		 * @return the lower
 		 */
-		double getLower(){
-			double b=  start-startingIncrement;
-			if(		b>getDhChain().getUpperLimits()[link] ||
-					b<getDhChain().getlowerLimits()[link]
-			   ){
+		double getLower() {
+			double b = start - startingIncrement;
+			if (b > getDhChain().getUpperLimits()[link] || b < getDhChain().getlowerLimits()[link]) {
 
 				throw new RuntimeException("Limit bounded");
 			}
 			return b;
 		}
-		
+
 		/**
 		 * Gets the none.
 		 *
 		 * @return the none
 		 */
-		double getNone(){
+		double getNone() {
 			return start;
 		}
-		
+
 		/**
 		 * Gets the.
 		 *
-		 * @param index the index
+		 * @param index
+		 *            the index
 		 * @return the double
 		 */
-		double get(int index){
-			switch(index){
-			case 0:
-				return getLower();
-			case 1:
-				return getUpper();
-			case 2:
-				return getNone();
-			default:
-				throw new RuntimeException("Index must be 0-2");
+		double get(int index) {
+			switch (index) {
+				case 0 :
+					return getLower();
+				case 1 :
+					return getUpper();
+				case 2 :
+					return getNone();
+				default :
+					throw new RuntimeException("Index must be 0-2");
 			}
 		}
 	}

@@ -1,45 +1,36 @@
 package com.neuronrobotics.sdk.common.device.server;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
-
-import javax.management.RuntimeErrorException;
 
 import com.neuronrobotics.sdk.common.BowlerAbstractCommand;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
-import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
 import com.neuronrobotics.sdk.common.BowlerDataType;
 import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.common.BowlerDatagramFactory;
 import com.neuronrobotics.sdk.common.BowlerMethod;
 import com.neuronrobotics.sdk.common.DeviceConnectionException;
-import com.neuronrobotics.sdk.common.DeviceManager;
 import com.neuronrobotics.sdk.common.IConnectionEventListener;
 import com.neuronrobotics.sdk.common.ISynchronousDatagramListener;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.MACAddress;
-import com.neuronrobotics.sdk.common.NamespaceEncapsulation;
 import com.neuronrobotics.sdk.common.RpcEncapsulation;
 import com.neuronrobotics.sdk.common.device.server.bcs.core.BcsCoreNamespaceImp;
 import com.neuronrobotics.sdk.common.device.server.bcs.rpc.BcsRpcNamespaceImp;
 import com.neuronrobotics.sdk.network.BowlerTCPServer;
 import com.neuronrobotics.sdk.network.BowlerUDPServer;
-import com.neuronrobotics.sdk.network.UDPBowlerConnection;
 
 //  Auto-generated Javadoc
 /**
  * The Class BowlerAbstractServer.
  */
-public abstract class BowlerAbstractServer implements
-		ISynchronousDatagramListener {
+public abstract class BowlerAbstractServer implements ISynchronousDatagramListener {
 
 	/** The servers. */
 	private ArrayList<BowlerAbstractConnection> servers = new ArrayList<BowlerAbstractConnection>();
-	
+
 	/** The local servers. */
 	private ArrayList<BowlerAbstractConnection> localServers = new ArrayList<BowlerAbstractConnection>();
 
@@ -48,10 +39,10 @@ public abstract class BowlerAbstractServer implements
 
 	/** The bcs core. */
 	private BcsCoreNamespaceImp bcsCore;
-	
+
 	/** The bcs rpc. */
 	private BcsRpcNamespaceImp bcsRpc;
-	
+
 	/** The udp server. */
 	private BowlerUDPServer udpServer;
 
@@ -61,7 +52,8 @@ public abstract class BowlerAbstractServer implements
 	/**
 	 * Instantiates a new bowler abstract server.
 	 *
-	 * @param mac the mac
+	 * @param mac
+	 *            the mac
 	 */
 	public BowlerAbstractServer(MACAddress mac) {
 		this.setMacAddress(mac);
@@ -87,15 +79,14 @@ public abstract class BowlerAbstractServer implements
 	/**
 	 * Adds the bowler device server namespace.
 	 *
-	 * @param ns the ns
+	 * @param ns
+	 *            the ns
 	 */
-	public void addBowlerDeviceServerNamespace(
-			BowlerAbstractDeviceServerNamespace ns) {
+	public void addBowlerDeviceServerNamespace(BowlerAbstractDeviceServerNamespace ns) {
 		setup();
 		if (!getNamespaces().contains(ns)) {
 			for (int i = 0; i < getNamespaces().size(); i++) {
-				if (getNamespaces().get(i).getNamespace()
-						.contains(ns.getNamespace())) {
+				if (getNamespaces().get(i).getNamespace().contains(ns.getNamespace())) {
 					Log.error("Duplicate Namespace" + ns.getNamespace());
 					return;
 				}
@@ -108,10 +99,10 @@ public abstract class BowlerAbstractServer implements
 	/**
 	 * Removes the bowler device server namespace.
 	 *
-	 * @param ns the ns
+	 * @param ns
+	 *            the ns
 	 */
-	public void removeBowlerDeviceServerNamespace(
-			BowlerAbstractDeviceServerNamespace ns) {
+	public void removeBowlerDeviceServerNamespace(BowlerAbstractDeviceServerNamespace ns) {
 		setup();
 		if (getNamespaces().contains(ns))
 			getNamespaces().remove(ns);
@@ -120,7 +111,8 @@ public abstract class BowlerAbstractServer implements
 	/**
 	 * Process local.
 	 *
-	 * @param data the data
+	 * @param data
+	 *            the data
 	 * @return the bowler datagram
 	 */
 	private BowlerDatagram processLocal(BowlerDatagram data) {
@@ -129,7 +121,8 @@ public abstract class BowlerAbstractServer implements
 			throw new RuntimeException("No namespaces defined");
 		}
 		for (BowlerAbstractDeviceServerNamespace n : getNamespaces()) {
-			// com.neuronrobotics.sdk.common.Log.error("Checking "+n.getNamespaces().get(0));
+			// com.neuronrobotics.sdk.common.Log.error("Checking
+			// "+n.getNamespaces().get(0));
 			if (n.checkRpc(data)) {
 				BowlerDatagram d = n.process(data);
 				if (d != null) {
@@ -157,8 +150,10 @@ public abstract class BowlerAbstractServer implements
 	/**
 	 * Start network server.
 	 *
-	 * @param port the port
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @param port
+	 *            the port
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public void startNetworkServer(final int port) throws IOException {
 		udpServer = new BowlerUDPServer(port);
@@ -170,9 +165,9 @@ public abstract class BowlerAbstractServer implements
 				while (true) {
 					Socket s;
 					try {
-						//ex.printStackTrace();
-						Log.warning("\n\nWaiting for UDP connection on port "+(port)+"...");
-						Log.warning("\n\nWaiting for TCP connection on port "+(port+1)+"...");
+						// ex.printStackTrace();
+						Log.warning("\n\nWaiting for UDP connection on port " + (port) + "...");
+						Log.warning("\n\nWaiting for TCP connection on port " + (port + 1) + "...");
 						s = serverSocket.accept();
 						addServer(new BowlerTCPServer(s));
 						Log.warning("Got a connection!");
@@ -189,7 +184,8 @@ public abstract class BowlerAbstractServer implements
 	/**
 	 * Start network server.
 	 *
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public void startNetworkServer() throws IOException {
 		startNetworkServer(1865);
@@ -199,7 +195,8 @@ public abstract class BowlerAbstractServer implements
 	/**
 	 * Adds the server.
 	 *
-	 * @param srv the srv
+	 * @param srv
+	 *            the srv
 	 */
 	public void addServer(BowlerAbstractConnection srv) {
 		if (!servers.contains(srv)) {
@@ -221,8 +218,12 @@ public abstract class BowlerAbstractServer implements
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.common.ISynchronousDatagramListener#onSyncReceive(com.neuronrobotics.sdk.common.BowlerDatagram)
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.neuronrobotics.sdk.common.ISynchronousDatagramListener#onSyncReceive(com.
+	 * neuronrobotics.sdk.common.BowlerDatagram)
 	 */
 	@Override
 	public BowlerDatagram onSyncReceive(BowlerDatagram data) {
@@ -253,7 +254,8 @@ public abstract class BowlerAbstractServer implements
 	/**
 	 * Removes the server.
 	 *
-	 * @param b the b
+	 * @param b
+	 *            the b
 	 */
 	private void removeServer(BowlerAbstractConnection b) {
 		if (b == udpServer) {
@@ -273,34 +275,35 @@ public abstract class BowlerAbstractServer implements
 
 	/**
 	 * THis is the scripting interface to Bowler devices. THis allows a user to
-	 * describe a namespace, rpc, and array or arguments to be paced into the
-	 * packet based on the data types of the argument. The response in likewise
-	 * unpacked into an array of objects.
+	 * describe a namespace, rpc, and array or arguments to be paced into the packet
+	 * based on the data types of the argument. The response in likewise unpacked
+	 * into an array of objects.
 	 *
-	 * @param namespaceIndex the namespace index
-	 * @param namespace            The string of the desired namespace
-	 * @param rpcString            The string of the desired RPC
-	 * @param arguments            An array of objects corresponding to the data to be stuffed
-	 *            into the packet.
-	 * @param asyncArguments the async arguments
-	 * @throws DeviceConnectionException             If the desired RPC's are not available then this will be
-	 *             thrown
+	 * @param namespaceIndex
+	 *            the namespace index
+	 * @param namespace
+	 *            The string of the desired namespace
+	 * @param rpcString
+	 *            The string of the desired RPC
+	 * @param arguments
+	 *            An array of objects corresponding to the data to be stuffed into
+	 *            the packet.
+	 * @param asyncArguments
+	 *            the async arguments
+	 * @throws DeviceConnectionException
+	 *             If the desired RPC's are not available then this will be thrown
 	 */
-	public void pushAsyncPacket(int namespaceIndex, String namespace,
-			String rpcString, Object[] arguments,
+	public void pushAsyncPacket(int namespaceIndex, String namespace, String rpcString, Object[] arguments,
 			BowlerDataType[] asyncArguments) {
 		if (arguments.length != asyncArguments.length) {
 			throw new RuntimeException(
 					"Arguments must match argument types exactly, your two arrays are different lengths");
 		}
-		RpcEncapsulation rpcl = new RpcEncapsulation(namespaceIndex, namespace,
-				rpcString, BowlerMethod.ASYNCHRONOUS, asyncArguments, null,
-				null);
-		BowlerAbstractCommand command = BowlerAbstractConnection.getCommand(
-				namespace, BowlerMethod.ASYNCHRONOUS, rpcString, arguments,
-				rpcl);
-		BowlerDatagram cmd = BowlerDatagramFactory.build(new MACAddress(),
-				command);
+		RpcEncapsulation rpcl = new RpcEncapsulation(namespaceIndex, namespace, rpcString, BowlerMethod.ASYNCHRONOUS,
+				asyncArguments, null, null);
+		BowlerAbstractCommand command = BowlerAbstractConnection.getCommand(namespace, BowlerMethod.ASYNCHRONOUS,
+				rpcString, arguments, rpcl);
+		BowlerDatagram cmd = BowlerDatagramFactory.build(new MACAddress(), command);
 		Log.debug("Async>>" + cmd);
 		pushAsyncPacket(cmd);
 	}
@@ -308,7 +311,8 @@ public abstract class BowlerAbstractServer implements
 	/**
 	 * Push async packet.
 	 *
-	 * @param data the data
+	 * @param data
+	 *            the data
 	 */
 	public synchronized void pushAsyncPacket(BowlerDatagram data) {
 		localServers.clear();
@@ -329,11 +333,11 @@ public abstract class BowlerAbstractServer implements
 					run = true;
 				}
 				if (localServers.get(i).getClass() != BowlerUDPServer.class) {
-					// com.neuronrobotics.sdk.common.Log.error("Sending packet to "+getServers().get(i).getClass());
+					// com.neuronrobotics.sdk.common.Log.error("Sending packet to
+					// "+getServers().get(i).getClass());
 					if (run && localServers.get(i).isConnected()) {
 						// Log.warning("ASYNC<<\r\n"+data );
-						String classString = localServers.get(i).getClass()
-								.toString();
+						String classString = localServers.get(i).getClass().toString();
 						localServers.get(i).sendAsync(data);
 						Log.info("Sent packet to " + classString);
 					}
@@ -349,8 +353,7 @@ public abstract class BowlerAbstractServer implements
 				try {
 					e.printStackTrace();
 					BowlerAbstractConnection abs = localServers.get(i);
-					Log.error("No client connected to this connection "
-							+ abs.getClass());
+					Log.error("No client connected to this connection " + abs.getClass());
 					abs.disconnect();
 
 				} catch (Exception ex) {
@@ -373,10 +376,10 @@ public abstract class BowlerAbstractServer implements
 	/**
 	 * Sets the namespaces.
 	 *
-	 * @param namespaces the new namespaces
+	 * @param namespaces
+	 *            the new namespaces
 	 */
-	public void setNamespaces(
-			ArrayList<BowlerAbstractDeviceServerNamespace> namespaces) {
+	public void setNamespaces(ArrayList<BowlerAbstractDeviceServerNamespace> namespaces) {
 		this.namespaces = namespaces;
 	}
 
@@ -392,12 +395,11 @@ public abstract class BowlerAbstractServer implements
 	/**
 	 * Sets the mac address.
 	 *
-	 * @param macAddress the new mac address
+	 * @param macAddress
+	 *            the new mac address
 	 */
 	public void setMacAddress(MACAddress macAddress) {
 		this.macAddress = macAddress;
 	}
-
-
 
 }

@@ -12,7 +12,8 @@ public class PIDCommandException extends Exception {
 	/**
 	 * Instantiates a new PID command exception.
 	 *
-	 * @param string the string
+	 * @param string
+	 *            the string
 	 */
 	public PIDCommandException(String string) {
 		super(string);

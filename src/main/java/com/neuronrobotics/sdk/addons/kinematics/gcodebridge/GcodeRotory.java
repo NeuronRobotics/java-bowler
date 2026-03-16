@@ -1,38 +1,37 @@
 package com.neuronrobotics.sdk.addons.kinematics.gcodebridge;
 
-import com.neuronrobotics.sdk.addons.kinematics.AbstractPrismaticLink;
 import com.neuronrobotics.sdk.addons.kinematics.AbstractRotoryLink;
 import com.neuronrobotics.sdk.addons.kinematics.LinkConfiguration;
 
 public class GcodeRotory extends AbstractRotoryLink implements IGCodeChannel {
 	private GcodeDevice device;
 	private String axis = "";
-	private double value =0;
+	private double value = 0;
 	public GcodeRotory(LinkConfiguration conf, GcodeDevice device, String linkAxis) {
 		super(conf);
 		// Auto-generated constructor stub
 		this.device = device;
-		axis=linkAxis;
-		//loadCurrent();
+		axis = linkAxis;
+		// loadCurrent();
 	}
 
 	@Override
 	public void cacheTargetValueDevice() {
-		//value
+		// value
 	}
-	
-	private void loadCurrent(){
+
+	private void loadCurrent() {
 		device.loadCurrent();
 	}
 
 	@Override
 	public void flushDevice(double time) {
 		loadCurrent();
-		
-		double distance = getTargetValue()-getValue();
-		if(distance !=0){
-			int feedrate = (int)Math.abs((distance/(time/60)));//mm/min
-			device.runLine("G1 "+getAxis()+""+getTargetValue()+" F"+feedrate);
+
+		double distance = getTargetValue() - getValue();
+		if (distance != 0) {
+			int feedrate = (int) Math.abs((distance / (time / 60)));// mm/min
+			device.runLine("G1 " + getAxis() + "" + getTargetValue() + " F" + feedrate);
 		}
 	}
 
@@ -44,7 +43,7 @@ public class GcodeRotory extends AbstractRotoryLink implements IGCodeChannel {
 	@Override
 	public double getCurrentPosition() {
 
-		return  getValue();
+		return getValue();
 	}
 
 	public String getAxis() {
@@ -61,7 +60,7 @@ public class GcodeRotory extends AbstractRotoryLink implements IGCodeChannel {
 
 	public void setValue(double value) {
 		this.value = value;
-		fireLinkListener( value);
+		fireLinkListener(value);
 	}
 
 }

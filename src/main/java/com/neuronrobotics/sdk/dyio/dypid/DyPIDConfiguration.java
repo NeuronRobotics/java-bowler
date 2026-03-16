@@ -8,55 +8,63 @@ import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
  * The Class DyPIDConfiguration.
  */
 public class DyPIDConfiguration {
-	
+
 	/** The group. */
 	private int group;
-	
+
 	/** The input channel. */
 	private int inputChannel;
-	
+
 	/** The input mode. */
-	private DyIOChannelMode inputMode=DyIOChannelMode.DIGITAL_IN;
-	
+	private DyIOChannelMode inputMode = DyIOChannelMode.DIGITAL_IN;
+
 	/** The output channel. */
 	private int outputChannel;
-	
+
 	/** The output mode. */
-	private DyIOChannelMode outputMode=DyIOChannelMode.DIGITAL_OUT;
-	
+	private DyIOChannelMode outputMode = DyIOChannelMode.DIGITAL_OUT;
+
 	/**
 	 * Instantiates a new dy pid configuration.
 	 *
-	 * @param group the group
+	 * @param group
+	 *            the group
 	 */
-	public DyPIDConfiguration(int group){
+	public DyPIDConfiguration(int group) {
 		setGroup(group);
-		//disabled
+		// disabled
 		setInputChannel(0xff);
 		setOutputChannel(0xff);
 	}
-	
+
 	/**
 	 * Instantiates a new dy pid configuration.
 	 *
-	 * @param group the group
-	 * @param inputChannel the input channel
-	 * @param inputMode the input mode
-	 * @param outputChannel the output channel
-	 * @param outputMode the output mode
+	 * @param group
+	 *            the group
+	 * @param inputChannel
+	 *            the input channel
+	 * @param inputMode
+	 *            the input mode
+	 * @param outputChannel
+	 *            the output channel
+	 * @param outputMode
+	 *            the output mode
 	 */
-	public DyPIDConfiguration(int group,int inputChannel,DyIOChannelMode inputMode,int outputChannel,DyIOChannelMode outputMode){
+	public DyPIDConfiguration(int group, int inputChannel, DyIOChannelMode inputMode, int outputChannel,
+			DyIOChannelMode outputMode) {
 		setGroup(group);
 		setInputChannel(inputChannel);
 		setInputMode(inputMode);
 		setOutputChannel(outputChannel);
 		setOutputMode(outputMode);
 	}
-	
+
 	/**
 	 * Instantiates a new dy pid configuration.
 	 *
-	 * @param conf the conf
+	 * @param conf
+	 *            the conf
 	 */
 	public DyPIDConfiguration(BowlerDatagram conf) {
 		setGroup(conf.getData().getUnsigned(0));
@@ -65,16 +73,17 @@ public class DyPIDConfiguration {
 		setOutputChannel(conf.getData().getUnsigned(3));
 		setOutputMode(DyIOChannelMode.get(conf.getData().get(4)));
 	}
-	
+
 	/**
 	 * Sets the group.
 	 *
-	 * @param group the new group
+	 * @param group
+	 *            the new group
 	 */
 	public void setGroup(int group) {
 		this.group = group;
 	}
-	
+
 	/**
 	 * Gets the group.
 	 *
@@ -83,16 +92,17 @@ public class DyPIDConfiguration {
 	public int getGroup() {
 		return group;
 	}
-	
+
 	/**
 	 * Sets the input channel.
 	 *
-	 * @param inputChannel the new input channel
+	 * @param inputChannel
+	 *            the new input channel
 	 */
 	public void setInputChannel(int inputChannel) {
 		this.inputChannel = inputChannel;
 	}
-	
+
 	/**
 	 * Gets the input channel.
 	 *
@@ -101,16 +111,17 @@ public class DyPIDConfiguration {
 	public int getInputChannel() {
 		return inputChannel;
 	}
-	
+
 	/**
 	 * Sets the input mode.
 	 *
-	 * @param inputMode the new input mode
+	 * @param inputMode
+	 *            the new input mode
 	 */
 	public void setInputMode(DyIOChannelMode inputMode) {
 		this.inputMode = inputMode;
 	}
-	
+
 	/**
 	 * Gets the input mode.
 	 *
@@ -119,16 +130,17 @@ public class DyPIDConfiguration {
 	public DyIOChannelMode getInputMode() {
 		return inputMode;
 	}
-	
+
 	/**
 	 * Sets the output channel.
 	 *
-	 * @param outputChannel the new output channel
+	 * @param outputChannel
+	 *            the new output channel
 	 */
 	public void setOutputChannel(int outputChannel) {
 		this.outputChannel = outputChannel;
 	}
-	
+
 	/**
 	 * Gets the output channel.
 	 *
@@ -137,16 +149,17 @@ public class DyPIDConfiguration {
 	public int getOutputChannel() {
 		return outputChannel;
 	}
-	
+
 	/**
 	 * Sets the output mode.
 	 *
-	 * @param outputMode the new output mode
+	 * @param outputMode
+	 *            the new output mode
 	 */
 	public void setOutputMode(DyIOChannelMode outputMode) {
 		this.outputMode = outputMode;
 	}
-	
+
 	/**
 	 * Gets the output mode.
 	 *

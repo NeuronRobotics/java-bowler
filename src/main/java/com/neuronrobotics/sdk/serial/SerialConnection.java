@@ -3,9 +3,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,86 +26,90 @@ import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.MACAddress;
 import com.neuronrobotics.sdk.common.MissingNativeLibraryException;
 import com.neuronrobotics.sdk.genericdevice.GenericDevice;
-import com.neuronrobotics.sdk.util.ThreadUtil;
 
 //  Auto-generated Javadoc
 /**
- * SerialConnection manages a connection to a serial port on the host system. This class is responsible for
- * abstracting all of the aspects of a serial connection including:
+ * SerialConnection manages a connection to a serial port on the host system.
+ * This class is responsible for abstracting all of the aspects of a serial
+ * connection including:
  * <ul>
  * <li>opening and closing a connection</li>
  * <li>setting the baudrate</li>
  * <li>sending data and reading data both syncronously and asyncronously</li>
  * </ul>
- *  
- * SerialConnection extends SerialPortEventListener to use the RXTX framework for receiving serial 
- * communications efficiently. Remember to disconnect whenever reading and writing to the connection is not
- * necessary as a this class will continue to run a thread to wait for incoming data.
- *  
- *  
+ *
+ * SerialConnection extends SerialPortEventListener to use the RXTX framework
+ * for receiving serial communications efficiently. Remember to disconnect
+ * whenever reading and writing to the connection is not necessary as a this
+ * class will continue to run a thread to wait for incoming data.
+ *
+ *
  */
 public class SerialConnection extends BowlerAbstractConnection {
-	
+
 	/** The sleep time. */
 	private int sleepTime = 1000;
-	
+
 	/** The poll timeout time. */
 	private int pollTimeoutTime = 5;
-	
-	
+
 	/** The port. */
-	private String port=null;
-	
+	private String port = null;
+
 	/** The baud. */
 	private int baud = 115200;
-	
+
 	/** The serial. */
 	private NRSerialPort serial;
-	
+
 	/**
 	 * Default Constructor.
-	 *  
-	 * Using this constructor will require that at least the port be set later on. 
-	 * 
+	 *
+	 * Using this constructor will require that at least the port be set later on.
+	 *
 	 * The baudrate will default to 115200bps.
 	 */
 	public SerialConnection() {
 		setSynchronusPacketTimeoutTime(sleepTime);
 	}
-	
+
 	/**
 	 * Class Constructor for a SerialConnection with a given port.
-	 * 
+	 *
 	 * The baudrate will default to 115200bps.
-	 * 
-	 * @param port the port to connect to (i.e. COM6 or /dev/ttyUSB0)
+	 *
+	 * @param port
+	 *            the port to connect to (i.e. COM6 or /dev/ttyUSB0)
 	 */
 	public SerialConnection(String port) {
-		setPort(port);	
+		setPort(port);
 		setSynchronusPacketTimeoutTime(sleepTime);
 	}
-	
+
 	/**
 	 * Class Constructor for a SerialConnection with a given port and baudrate.
-	 * 
-	 * @param port the port to connect to (i.e. COM6 or /dev/ttyUSB0)
-	 * @param baud the baudrate to use (i.e. 9600 or 115200)
+	 *
+	 * @param port
+	 *            the port to connect to (i.e. COM6 or /dev/ttyUSB0)
+	 * @param baud
+	 *            the baudrate to use (i.e. 9600 or 115200)
 	 */
 	public SerialConnection(String port, int baud) {
 		setPort(port);
 		setBaud(baud);
 		setSynchronusPacketTimeoutTime(sleepTime);
 	}
-	
+
 	/**
 	 * Set the port to use (i.e. COM6 or /dev/ttyUSB0)
-	 * 
-	 * @param port the serial port to use
+	 *
+	 * @param port
+	 *            the serial port to use
 	 */
 	public void setPort(String port) {
 		this.port = port;
 	}
-	
+
 	/**
 	 * Get the port to use (i.e. COM6 or /dev/ttyUSB0)
 	 *
@@ -114,11 +118,12 @@ public class SerialConnection extends BowlerAbstractConnection {
 	public String getPort() {
 		return port;
 	}
-	
+
 	/**
-	 * Set the baudrate for communications with the serial port. Standard baudrates should be used typically
-	 * unless otherwise specififed by the device. The default system baudrate is 115200
-	 * 
+	 * Set the baudrate for communications with the serial port. Standard baudrates
+	 * should be used typically unless otherwise specififed by the device. The
+	 * default system baudrate is 115200
+	 *
 	 * Typical baudrates
 	 * <ul>
 	 * <li>110</li>
@@ -137,147 +142,156 @@ public class SerialConnection extends BowlerAbstractConnection {
 	 * <li>115200</li>
 	 * </ul>
 	 *
-	 * @param baud the new baud
+	 * @param baud
+	 *            the new baud
 	 */
 	public void setBaud(int baud) {
 		this.baud = baud;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see com.neuronrobotics.sdk.common.BowlerAbstractConnection#connect()
 	 */
 	@Override
 	public boolean connect() {
-		if(isConnected()) {
+		if (isConnected()) {
 			Log.error(port + " is already connected.");
 			return true;
 		}
-		
-		try 
-		{
-			if(serial != null)
+
+		try {
+			if (serial != null)
 				serial.disconnect();
 			serial = new NRSerialPort(getPort(), baud);
-			serial.connect();	
+			serial.connect();
 			setDataIns(new DataInputStream(serial.getInputStream()));
 			setDataOuts(new DataOutputStream(serial.getOutputStream()));
 			setConnected(true);
-		}catch(UnsatisfiedLinkError e){
+		} catch (UnsatisfiedLinkError e) {
 			throw new MissingNativeLibraryException(e.getMessage());
-        }catch (Exception e) {
-			Log.error("Failed to connect on port: "+port+" exception: ");
+		} catch (Exception e) {
+			Log.error("Failed to connect on port: " + port + " exception: ");
 			e.printStackTrace();
 			setConnected(false);
 		}
-		
-		if(isConnected()) {
+
+		if (isConnected()) {
 			serial.notifyOnDataAvailable(true);
 		}
-		return isConnected();	
+		return isConnected();
 	}
 
-	
-
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see com.neuronrobotics.sdk.common.BowlerAbstractConnection#disconnect()
 	 */
 	@Override
 	public void disconnect() {
-		if(isConnected())
-			//new RuntimeException().printStackTrace();
+		if (isConnected())
+			// new RuntimeException().printStackTrace();
 			Log.warning("Disconnecting Serial Connection");
-		try{
-			try{
+		try {
+			try {
 				serial.disconnect();
-			}catch(Exception e){
-				//e.printStackTrace();
-				//throw new RuntimeException(e);
+			} catch (Exception e) {
+				// e.printStackTrace();
+				// throw new RuntimeException(e);
 			}
 			serial = null;
 			setConnected(false);
-		} catch(UnsatisfiedLinkError e) {
+		} catch (UnsatisfiedLinkError e) {
 			throw new MissingNativeLibraryException(e.getMessage());
-        }
+		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
 		return port;
 	}
-	
+
 	/**
 	 * Gets the connection by mac address.
 	 *
-	 * @param mac the mac
+	 * @param mac
+	 *            the mac
 	 * @return the connection by mac address
 	 */
-	public static SerialConnection getConnectionByMacAddress(MACAddress mac){
-		
-		List <String> ports = SerialConnection.getAvailableSerialPorts();
-		//Start by searching through all available serial connections for DyIOs connected to the system
-		for(String s: ports){
-			com.neuronrobotics.sdk.common.Log.error("Searching "+s);
+	public static SerialConnection getConnectionByMacAddress(MACAddress mac) {
+
+		List<String> ports = SerialConnection.getAvailableSerialPorts();
+		// Start by searching through all available serial connections for DyIOs
+		// connected to the system
+		for (String s : ports) {
+			com.neuronrobotics.sdk.common.Log.error("Searching " + s);
 		}
-		for(String s: ports){
-				try{
-					SerialConnection connection = new SerialConnection(s);
-					GenericDevice d = new GenericDevice(connection);
-					d.connect();
-					com.neuronrobotics.sdk.common.Log.error("Pinging port: "+connection+" ");
-					if(d.ping()){
-						String addr = d.getAddress().toString();
-						if(addr.equalsIgnoreCase(mac.toString())){
-							connection.disconnect();
-							com.neuronrobotics.sdk.common.Log.error("Device FOUND on port: "+connection+" "+addr);
-							return connection;
-						}
-						com.neuronrobotics.sdk.common.Log.error("Device not on port: "+connection+" "+addr);
+		for (String s : ports) {
+			try {
+				SerialConnection connection = new SerialConnection(s);
+				GenericDevice d = new GenericDevice(connection);
+				d.connect();
+				com.neuronrobotics.sdk.common.Log.error("Pinging port: " + connection + " ");
+				if (d.ping()) {
+					String addr = d.getAddress().toString();
+					if (addr.equalsIgnoreCase(mac.toString())) {
+						connection.disconnect();
+						com.neuronrobotics.sdk.common.Log.error("Device FOUND on port: " + connection + " " + addr);
+						return connection;
 					}
-					connection.disconnect();
-				}catch(Exception EX){
-					EX.printStackTrace();
-					com.neuronrobotics.sdk.common.Log.error("Serial port "+s+" is not a DyIO");
+					com.neuronrobotics.sdk.common.Log.error("Device not on port: " + connection + " " + addr);
 				}
+				connection.disconnect();
+			} catch (Exception EX) {
+				EX.printStackTrace();
+				com.neuronrobotics.sdk.common.Log.error("Serial port " + s + " is not a DyIO");
+			}
 
 		}
-		
+
 		return null;
 	}
-	
+
 	/**
 	 * Gets the available serial ports.
 	 *
 	 * @return the available serial ports
 	 */
 	public static List<String> getAvailableSerialPorts() {
-		ArrayList<String> back = new  ArrayList<String>();
-		for(String s:NRSerialPort.getAvailableSerialPorts()){
+		ArrayList<String> back = new ArrayList<String>();
+		for (String s : NRSerialPort.getAvailableSerialPorts()) {
 			back.add(s);
 		}
-        return back;
-    }
+		return back;
+	}
 
-//	/* (non-Javadoc)
-//	 * @see com.neuronrobotics.sdk.common.BowlerAbstractConnection#reconnect()
-//	 */
-//	@Override
-//	public boolean reconnect() {
-//		Log.warning("Reconnecting in serial");
-//		disconnect();
-//		ThreadUtil.wait(sleepTime);
-//		return connect();
-//	}
+	// /* (non-Javadoc)
+	// * @see com.neuronrobotics.sdk.common.BowlerAbstractConnection#reconnect()
+	// */
+	// @Override
+	// public boolean reconnect() {
+	// Log.warning("Reconnecting in serial");
+	// disconnect();
+	// ThreadUtil.wait(sleepTime);
+	// return connect();
+	// }
 
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.common.BowlerAbstractConnection#waitingForConnection()
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.neuronrobotics.sdk.common.BowlerAbstractConnection#waitingForConnection()
 	 */
 	@Override
 	public boolean waitingForConnection() {
 		// Auto-generated method stub
 		return false;
 	}
-	
+
 }

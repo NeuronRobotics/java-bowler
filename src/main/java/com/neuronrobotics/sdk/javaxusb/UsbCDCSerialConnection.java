@@ -8,8 +8,6 @@ import java.util.List;
 
 import javax.usb.UsbClaimException;
 import javax.usb.UsbConfiguration;
-import javax.usb.UsbConst;
-import javax.usb.UsbControlIrp;
 import javax.usb.UsbDevice;
 import javax.usb.UsbDisconnectedException;
 import javax.usb.UsbEndpoint;
@@ -17,7 +15,6 @@ import javax.usb.UsbException;
 import javax.usb.UsbHostManager;
 import javax.usb.UsbHub;
 import javax.usb.UsbInterface;
-import javax.usb.UsbInterfaceDescriptor;
 import javax.usb.UsbIrp;
 import javax.usb.UsbNotActiveException;
 import javax.usb.UsbNotOpenException;
@@ -53,83 +50,86 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
 /**
  * The Class UsbCDCSerialConnection.
  */
-public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
-		IUsbDeviceEventListener, UsbDeviceListener {
-	
+public class UsbCDCSerialConnection extends BowlerAbstractConnection
+		implements
+			IUsbDeviceEventListener,
+			UsbDeviceListener {
+
 	/** The services. */
 	static UsbServices services = null;
 
 	/** The m device. */
 	private UsbDevice mDevice;
-	
+
 	/** The My device string. */
-	private String MyDeviceString="";
-	
+	private String MyDeviceString = "";
+
 	/** The data interface. */
 	// private UsbInterface controlInterface;
 	private UsbInterface dataInterface;
 
 	/** The data in endpoint. */
 	private UsbEndpoint dataInEndpoint;
-	
+
 	/** The data out endpoint. */
 	private UsbEndpoint dataOutEndpoint;
-	
+
 	/** The device handle. */
 	// private byte [] data = new byte[64];
 	private DeviceHandle deviceHandle;
-	
+
 	/** The interface number. */
 	private int interfaceNumber;
 
 	/** The cam inpipe. */
 	private UsbPipe camInpipe;
-	
+
 	/** The read. */
 	private UsbIrp read = new DefaultUsbIrp();
 
 	/** The cam outpipe. */
 	private UsbPipe camOutpipe;
-	
+
 	/** The write. */
 	private UsbIrp write = new DefaultUsbIrp();
 
 	/** The callback handle. */
 	private static HotplugCallbackHandle callbackHandle;
-	
+
 	/** The usb device event listeners. */
 	private static ArrayList<IUsbDeviceEventListener> usbDeviceEventListeners = new ArrayList<IUsbDeviceEventListener>();
-	
+
 	/** The thread. */
 	private static EventHandlingThread thread;
-	
+
 	/** The data. */
 	byte[] data = new byte[64];
-	
+
 	/**
 	 * Instantiates a new usb cdc serial connection.
 	 *
-	 * @param deviceString the device string
+	 * @param deviceString
+	 *            the device string
 	 */
 	public UsbCDCSerialConnection(String deviceString) {
-		MyDeviceString=deviceString;
+		MyDeviceString = deviceString;
 		setup();
 
 	}
-	
+
 	/**
 	 * Instantiates a new usb cdc serial connection.
 	 *
-	 * @param device the device
+	 * @param device
+	 *            the device
 	 */
 	public UsbCDCSerialConnection(UsbDevice device) {
 		if (device == null)
-			throw new NullPointerException(
-					"A valid USB device is needed to regester this connection.");
-		
+			throw new NullPointerException("A valid USB device is needed to regester this connection.");
+
 		try {
-			MyDeviceString=getUniqueID(device);
-			
+			MyDeviceString = getUniqueID(device);
+
 		} catch (UnsupportedEncodingException e) {
 			// Auto-generated catch block
 			e.printStackTrace();
@@ -145,9 +145,9 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 	}
 
 	/**
-	 * This is the event handling thread. libusb doesn't start threads by its
-	 * own so it is our own responsibility to give libusb time to handle the
-	 * events in our own thread.
+	 * This is the event handling thread. libusb doesn't start threads by its own so
+	 * it is our own responsibility to give libusb time to handle the events in our
+	 * own thread.
 	 */
 	static class EventHandlingThread extends Thread {
 		/** If thread should abort. */
@@ -160,60 +160,55 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 			this.abort = true;
 		}
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 *
 		 * @see java.lang.Thread#run()
 		 */
 		@Override
 		public void run() {
-			//if(!OsInfoUtil.isWindows()){
-				setName("Bowler Platform USB Events thread");
-				while (!this.abort) {
-					// Let libusb handle pending events. This blocks until events
-					// have been handled, a hotplug callback has been deregistered
-					// or the specified time of .1 second (Specified in
-					// Microseconds) has passed.
-					try {
-						int result = LibUsb.handleEventsTimeoutCompleted(null, 0,
-								null);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					ThreadUtil.wait(100);
+			// if(!OsInfoUtil.isWindows()){
+			setName("Bowler Platform USB Events thread");
+			while (!this.abort) {
+				// Let libusb handle pending events. This blocks until events
+				// have been handled, a hotplug callback has been deregistered
+				// or the specified time of .1 second (Specified in
+				// Microseconds) has passed.
+				try {
+					int result = LibUsb.handleEventsTimeoutCompleted(null, 0, null);
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
-			//}
+				ThreadUtil.wait(100);
+			}
+			// }
 		}
 	}
 
 	static {
 		resetUsbSystem();
 	}
-	
+
 	/**
 	 * Reset usb system.
 	 */
-	private static void resetUsbSystem(){
+	private static void resetUsbSystem() {
 		try {
-			
+
 			services = UsbHostManager.getUsbServices();
-			if(!OsInfoUtil.isWindows()){
+			if (!OsInfoUtil.isWindows()) {
 				callbackHandle = new HotplugCallbackHandle();
 				int result = LibUsb.hotplugRegisterCallback(null,
-						LibUsb.HOTPLUG_EVENT_DEVICE_ARRIVED
-								| LibUsb.HOTPLUG_EVENT_DEVICE_LEFT,
-						LibUsb.HOTPLUG_ENUMERATE, LibUsb.HOTPLUG_MATCH_ANY,
-						LibUsb.HOTPLUG_MATCH_ANY, LibUsb.HOTPLUG_MATCH_ANY,
-						new HotplugCallback() {
-	
+						LibUsb.HOTPLUG_EVENT_DEVICE_ARRIVED | LibUsb.HOTPLUG_EVENT_DEVICE_LEFT,
+						LibUsb.HOTPLUG_ENUMERATE, LibUsb.HOTPLUG_MATCH_ANY, LibUsb.HOTPLUG_MATCH_ANY,
+						LibUsb.HOTPLUG_MATCH_ANY, new HotplugCallback() {
+
 							@Override
-							public int processEvent(Context arg0, Device arg1,
-									int arg2, Object arg3) {
+							public int processEvent(Context arg0, Device arg1, int arg2, Object arg3) {
 								DeviceDescriptor descriptor = new DeviceDescriptor();
-								int result = LibUsb.getDeviceDescriptor(arg1,
-										descriptor);
+								int result = LibUsb.getDeviceDescriptor(arg1, descriptor);
 								if (result != LibUsb.SUCCESS)
-									throw new LibUsbException(
-											"Unable to read device descriptor",
-											result);
+									throw new LibUsbException("Unable to read device descriptor", result);
 								if (0x04d8 == descriptor.idVendor()) {
 									for (IUsbDeviceEventListener d : usbDeviceEventListeners) {
 										d.onDeviceEvent(mapLibUsbDevicetoJavaxDevice(arg1));
@@ -233,7 +228,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 			// Auto-generated catch block
 			e.printStackTrace();
 		}
-		if(thread!=null)
+		if (thread != null)
 			thread.abort();
 
 		// Start the event handling thread
@@ -244,7 +239,8 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 	/**
 	 * Adds the usb device event listener.
 	 *
-	 * @param l the l
+	 * @param l
+	 *            the l
 	 */
 	static public void addUsbDeviceEventListener(IUsbDeviceEventListener l) {
 		if (!usbDeviceEventListeners.contains(l))
@@ -254,7 +250,8 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 	/**
 	 * Removes the usb device event listener.
 	 *
-	 * @param l the l
+	 * @param l
+	 *            the l
 	 */
 	static public void removeUsbDeviceEventListener(IUsbDeviceEventListener l) {
 		if (usbDeviceEventListeners.contains(l))
@@ -264,7 +261,8 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 	/**
 	 * Map lib usb deviceto javax device.
 	 *
-	 * @param device the device
+	 * @param device
+	 *            the device
 	 * @return the usb device
 	 */
 	public static UsbDevice mapLibUsbDevicetoJavaxDevice(Device device) {
@@ -273,12 +271,9 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 			LibUsb.getDeviceDescriptor(device, descriptor);
 			ArrayList<UsbDevice> javaxDev = getAllUsbBowlerDevices();
 			for (UsbDevice d : javaxDev) {
-				if (descriptor.iSerialNumber() == d.getUsbDeviceDescriptor()
-						.iSerialNumber()
-						&& descriptor.idProduct() == d.getUsbDeviceDescriptor()
-								.iProduct()
-						&& descriptor.idVendor() == d.getUsbDeviceDescriptor()
-								.idVendor()) {
+				if (descriptor.iSerialNumber() == d.getUsbDeviceDescriptor().iSerialNumber()
+						&& descriptor.idProduct() == d.getUsbDeviceDescriptor().iProduct()
+						&& descriptor.idVendor() == d.getUsbDeviceDescriptor().idVendor()) {
 					return d;
 				}
 			}
@@ -302,26 +297,30 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 	/**
 	 * Dump device.
 	 *
-	 * @param device the device
-	 * @param addrs the addrs
-	 * @throws UnsupportedEncodingException the unsupported encoding exception
-	 * @throws UsbDisconnectedException the usb disconnected exception
-	 * @throws UsbException the usb exception
+	 * @param device
+	 *            the device
+	 * @param addrs
+	 *            the addrs
+	 * @throws UnsupportedEncodingException
+	 *             the unsupported encoding exception
+	 * @throws UsbDisconnectedException
+	 *             the usb disconnected exception
+	 * @throws UsbException
+	 *             the usb exception
 	 */
 	@SuppressWarnings("unchecked")
-	private static void dumpDevice(final UsbDevice device,
-			ArrayList<UsbDevice> addrs) throws UnsupportedEncodingException,
-			UsbDisconnectedException, UsbException {
+	private static void dumpDevice(final UsbDevice device, ArrayList<UsbDevice> addrs)
+			throws UnsupportedEncodingException, UsbDisconnectedException, UsbException {
 		try {
-			if (device.getUsbDeviceDescriptor().idVendor() == 0x04d8 &&
-					(	device.getUsbDeviceDescriptor().idProduct() == 0x0001||
-						device.getUsbDeviceDescriptor().idProduct() == 0x3742
-					)
-				) {// Neuron
-																		// robotics
-																		// devices
-				// Dump information about the device itself
-				// com.neuronrobotics.sdk.common.Log.error("Device: "+device.getProductString());
+			if (device.getUsbDeviceDescriptor().idVendor() == 0x04d8
+					&& (device.getUsbDeviceDescriptor().idProduct() == 0x0001
+							|| device.getUsbDeviceDescriptor().idProduct() == 0x3742)) {// Neuron
+																						// robotics
+																						// devices
+																						// Dump information about the
+																						// device itself
+																						// com.neuronrobotics.sdk.common.Log.error("Device:
+																						// "+device.getProductString());
 				addrs.add(device);
 
 				// Dump device descriptor
@@ -333,8 +332,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 			// Dump child devices if device is a hub
 			if (device.isUsbHub()) {
 				final UsbHub hub = (UsbHub) device;
-				for (UsbDevice child : (List<UsbDevice>) hub
-						.getAttachedUsbDevices()) {
+				for (UsbDevice child : (List<UsbDevice>) hub.getAttachedUsbDevices()) {
 					dumpDevice(child, addrs);
 				}
 			}
@@ -347,14 +345,17 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 	 * Gets the all usb bowler devices.
 	 *
 	 * @return the all usb bowler devices
-	 * @throws UnsupportedEncodingException the unsupported encoding exception
-	 * @throws UsbDisconnectedException the usb disconnected exception
-	 * @throws SecurityException the security exception
-	 * @throws UsbException the usb exception
+	 * @throws UnsupportedEncodingException
+	 *             the unsupported encoding exception
+	 * @throws UsbDisconnectedException
+	 *             the usb disconnected exception
+	 * @throws SecurityException
+	 *             the security exception
+	 * @throws UsbException
+	 *             the usb exception
 	 */
 	public static ArrayList<UsbDevice> getAllUsbBowlerDevices()
-			throws UnsupportedEncodingException, UsbDisconnectedException,
-			SecurityException, UsbException {
+			throws UnsupportedEncodingException, UsbDisconnectedException, SecurityException, UsbException {
 		ArrayList<UsbDevice> addrs = null;
 		if (addrs == null) {
 			addrs = new ArrayList<UsbDevice>();
@@ -367,26 +368,26 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 	/**
 	 * Gets the unique id.
 	 *
-	 * @param d the d
+	 * @param d
+	 *            the d
 	 * @return the unique id
-	 * @throws UnsupportedEncodingException the unsupported encoding exception
-	 * @throws UsbDisconnectedException the usb disconnected exception
-	 * @throws UsbException the usb exception
+	 * @throws UnsupportedEncodingException
+	 *             the unsupported encoding exception
+	 * @throws UsbDisconnectedException
+	 *             the usb disconnected exception
+	 * @throws UsbException
+	 *             the usb exception
 	 */
 	public static String getUniqueID(UsbDevice d)
-			throws UnsupportedEncodingException, UsbDisconnectedException,
-			UsbException {
-		return d.getProductString().trim() + " "
-				+ d.getSerialNumberString().trim();
+			throws UnsupportedEncodingException, UsbDisconnectedException, UsbException {
+		return d.getProductString().trim() + " " + d.getSerialNumberString().trim();
 	}
 
-
-	
 	/**
 	 * Setup.
 	 */
-	private void setup(){
-		
+	private void setup() {
+
 		ArrayList<UsbDevice> devices;
 		try {
 			devices = getAllUsbBowlerDevices();
@@ -412,25 +413,22 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 		}
 
 		if (MyDeviceString == null)
-			throw new NullPointerException(
-					"A valid USB device is needed to regester this connection.");
+			throw new NullPointerException("A valid USB device is needed to regester this connection.");
 	}
-
-
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.neuronrobotics.sdk.common.BowlerAbstractConnection#connect()
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean connect() {
-		try{
+		try {
 			localDisconnect();
 			resetUsbSystem();
 			setup();
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
@@ -439,11 +437,9 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 		// com.neuronrobotics.sdk.common.Log.error(mDevice.getUsbDeviceDescriptor());
 
 		// Process all configurations
-		for (UsbConfiguration configuration : (List<UsbConfiguration>) mDevice
-				.getUsbConfigurations()) {
+		for (UsbConfiguration configuration : (List<UsbConfiguration>) mDevice.getUsbConfigurations()) {
 			// Process all interfaces
-			for (UsbInterface iface : (List<UsbInterface>) configuration
-					.getUsbInterfaces()) {
+			for (UsbInterface iface : (List<UsbInterface>) configuration.getUsbInterfaces()) {
 				// Dump the interface descriptor
 				// com.neuronrobotics.sdk.common.Log.error(iface.getUsbInterfaceDescriptor());
 
@@ -466,10 +462,8 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 						try {
 							dataInterface.claim();
 							// Process all endpoints
-							for (UsbEndpoint endpoint : (List<UsbEndpoint>) dataInterface
-									.getUsbEndpoints()) {
-								if (endpoint.getUsbEndpointDescriptor()
-										.bEndpointAddress() == 0x03) {
+							for (UsbEndpoint endpoint : (List<UsbEndpoint>) dataInterface.getUsbEndpoints()) {
+								if (endpoint.getUsbEndpointDescriptor().bEndpointAddress() == 0x03) {
 									// com.neuronrobotics.sdk.common.Log.error("Data out Endpipe");
 									dataOutEndpoint = endpoint;
 
@@ -506,51 +500,48 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 			mDevice.addUsbDeviceListener(this);
 		}
 
-		
-
 		return isConnected();
 	}
 
 	/**
 	 * Find device.
 	 *
-	 * @param seriualNumber the seriual number
+	 * @param seriualNumber
+	 *            the seriual number
 	 * @return the device
 	 */
 	public Device findDevice(String seriualNumber) {
-		//if(!OsInfoUtil.isWindows()){
-			// Read the USB device list
-			DeviceList list = new DeviceList();
-			int result = LibUsb.getDeviceList(null, list);
-			if (result < 0)
-				throw new LibUsbException("Unable to get device list", result);
-	
-			try {
-				// Iterate over all devices and scan for the right one
-				for (Device device : list) {
-	
-					DeviceDescriptor descriptor = new DeviceDescriptor();
-					result = LibUsb.getDeviceDescriptor(device, descriptor);
-					if (result != LibUsb.SUCCESS)
-						throw new LibUsbException(
-								"Unable to read device descriptor", result);
-					DeviceHandle handle = new DeviceHandle();
-					result = LibUsb.open(device, handle);
-					if (result == LibUsb.SUCCESS) {
-						String sn = LibUsb.getStringDescriptor(handle,
-								descriptor.iSerialNumber()).trim();
-						LibUsb.close(handle);
-						if (sn.contains(seriualNumber.trim())) {
-	
-							return device;
-						}
+		// if(!OsInfoUtil.isWindows()){
+		// Read the USB device list
+		DeviceList list = new DeviceList();
+		int result = LibUsb.getDeviceList(null, list);
+		if (result < 0)
+			throw new LibUsbException("Unable to get device list", result);
+
+		try {
+			// Iterate over all devices and scan for the right one
+			for (Device device : list) {
+
+				DeviceDescriptor descriptor = new DeviceDescriptor();
+				result = LibUsb.getDeviceDescriptor(device, descriptor);
+				if (result != LibUsb.SUCCESS)
+					throw new LibUsbException("Unable to read device descriptor", result);
+				DeviceHandle handle = new DeviceHandle();
+				result = LibUsb.open(device, handle);
+				if (result == LibUsb.SUCCESS) {
+					String sn = LibUsb.getStringDescriptor(handle, descriptor.iSerialNumber()).trim();
+					LibUsb.close(handle);
+					if (sn.contains(seriualNumber.trim())) {
+
+						return device;
 					}
 				}
-			} finally {
-				// Ensure the allocated device list is freed
-				LibUsb.freeDeviceList(list, true);
 			}
-		//}
+		} finally {
+			// Ensure the allocated device list is freed
+			LibUsb.freeDeviceList(list, true);
+		}
+		// }
 		// Device not found
 		return null;
 	}
@@ -558,67 +549,67 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 	/**
 	 * Kernel detatch.
 	 *
-	 * @param mDevice the m device
+	 * @param mDevice
+	 *            the m device
 	 */
-	private void kernelDetatch(UsbDevice mDevice){
-		//if(!OsInfoUtil.isWindows()){
-			Device kDev=null;
-			try {
-				kDev = findDevice(mDevice.getSerialNumberString());
-			} catch (UnsupportedEncodingException e) {
-				// Auto-generated catch block
-				e.printStackTrace();
-			} catch (UsbDisconnectedException e) {
-				// Auto-generated catch block
-				e.printStackTrace();
-			} catch (UsbException e) {
-				// Auto-generated catch block
-				e.printStackTrace();
-			}
-			if (kDev == null)
-				return;
-	
-			deviceHandle = new DeviceHandle();
-			interfaceNumber = dataInterface.getUsbInterfaceDescriptor()
-					.bInterfaceNumber();
-	
-			int result = LibUsb.open(kDev, deviceHandle);
-			if (result != LibUsb.SUCCESS)
-				throw new LibUsbException("Unable to open USB device", result);
-	
-			int r = LibUsb.detachKernelDriver(deviceHandle, interfaceNumber);
-			if (r != LibUsb.SUCCESS && r != LibUsb.ERROR_NOT_SUPPORTED
-					&& r != LibUsb.ERROR_NOT_FOUND)
-				throw new LibUsbException("Unable to detach kernel     driver", r);
-			// com.neuronrobotics.sdk.common.Log.error("Kernel detatched for device "+mDevice);
-		//}
-	}
-	
-	/**
-	 * Local disconnect.
-	 */
-	private void localDisconnect(){
-		mDevice.removeUsbDeviceListener(this);
+	private void kernelDetatch(UsbDevice mDevice) {
+		// if(!OsInfoUtil.isWindows()){
+		Device kDev = null;
 		try {
-			if(camInpipe!=null)
-				camInpipe.close();
-			camInpipe=null;
-			if(camOutpipe!=null)
-				camOutpipe.close();
-			camOutpipe=null;
-		}  catch (UsbDisconnectedException e) {
+			kDev = findDevice(mDevice.getSerialNumberString());
+		} catch (UnsupportedEncodingException e) {
+			// Auto-generated catch block
+			e.printStackTrace();
+		} catch (UsbDisconnectedException e) {
 			// Auto-generated catch block
 			e.printStackTrace();
 		} catch (UsbException e) {
 			// Auto-generated catch block
 			e.printStackTrace();
 		}
-		if(dataInterface!=null){
-			if (dataInterface.isClaimed()){
+		if (kDev == null)
+			return;
+
+		deviceHandle = new DeviceHandle();
+		interfaceNumber = dataInterface.getUsbInterfaceDescriptor().bInterfaceNumber();
+
+		int result = LibUsb.open(kDev, deviceHandle);
+		if (result != LibUsb.SUCCESS)
+			throw new LibUsbException("Unable to open USB device", result);
+
+		int r = LibUsb.detachKernelDriver(deviceHandle, interfaceNumber);
+		if (r != LibUsb.SUCCESS && r != LibUsb.ERROR_NOT_SUPPORTED && r != LibUsb.ERROR_NOT_FOUND)
+			throw new LibUsbException("Unable to detach kernel     driver", r);
+		// com.neuronrobotics.sdk.common.Log.error("Kernel detatched for device
+		// "+mDevice);
+		// }
+	}
+
+	/**
+	 * Local disconnect.
+	 */
+	private void localDisconnect() {
+		mDevice.removeUsbDeviceListener(this);
+		try {
+			if (camInpipe != null)
+				camInpipe.close();
+			camInpipe = null;
+			if (camOutpipe != null)
+				camOutpipe.close();
+			camOutpipe = null;
+		} catch (UsbDisconnectedException e) {
+			// Auto-generated catch block
+			e.printStackTrace();
+		} catch (UsbException e) {
+			// Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (dataInterface != null) {
+			if (dataInterface.isClaimed()) {
 				try {
 					dataInterface.release();
-					dataInterface=null;
-				}  catch (UsbDisconnectedException e) {
+					dataInterface = null;
+				} catch (UsbDisconnectedException e) {
 					// Auto-generated catch block
 					e.printStackTrace();
 				} catch (UsbException e) {
@@ -627,24 +618,23 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 				}
 			}
 		}
-		//if(!OsInfoUtil.isWindows()){
+		// if(!OsInfoUtil.isWindows()){
 		if (deviceHandle != null) {
-				//LibUsb.attachKernelDriver(deviceHandle, interfaceNumber);
-			try{
+			// LibUsb.attachKernelDriver(deviceHandle, interfaceNumber);
+			try {
 				LibUsb.close(deviceHandle);
-				deviceHandle=null;
-			}catch(IllegalStateException e){
+				deviceHandle = null;
+			} catch (IllegalStateException e) {
 				e.printStackTrace();
 			}
 		}
-		//}
-
+		// }
 
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.neuronrobotics.sdk.common.BowlerAbstractConnection#disconnect()
 	 */
 	@Override
@@ -657,8 +647,10 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 	/**
 	 * Prep irp.
 	 *
-	 * @param irp the irp
-	 * @param data the data
+	 * @param irp
+	 *            the irp
+	 * @param data
+	 *            the data
 	 */
 	private void prepIrp(UsbIrp irp, byte[] data) {
 		irp.complete();
@@ -673,8 +665,10 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 	/**
 	 * Write.
 	 *
-	 * @param src the src
-	 * @throws IOException             Signals that an I/O exception has occurred.
+	 * @param src
+	 *            the src
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	// private ByteList outgoing = new ByteList();
 	public void write(byte[] src) throws IOException {
@@ -700,99 +694,96 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 			}
 
 		} catch (Exception e) {// Auto-generated catch block
-			//e.printStackTrace();
+			// e.printStackTrace();
 			disconnect();
-			throw new BowlerRuntimeException(
-				"Connection is no longer available " + e.getLocalizedMessage());
+			throw new BowlerRuntimeException("Connection is no longer available " + e.getLocalizedMessage());
 		}
 
 		return;
 	}
-	
+
 	/**
 	 * The Enum usbControlState.
 	 */
-	enum usbControlState{
-		
+	enum usbControlState {
+
 		/** The init. */
 		init,
-		
+
 		/** The submitted. */
 		submitted,
-		
+
 		/** The done. */
 		done
-	} ;
-	
+	};
+
 	/** The usb read state. */
 	usbControlState usbReadState = usbControlState.init;
 
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.common.BowlerAbstractConnection#loadPacketFromPhy(com.neuronrobotics.sdk.common.ByteList)
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.neuronrobotics.sdk.common.BowlerAbstractConnection#loadPacketFromPhy(com.
+	 * neuronrobotics.sdk.common.ByteList)
 	 */
 	@Override
-	public BowlerDatagram loadPacketFromPhy(ByteList bytesToPacketBuffer)
-			throws NullPointerException, IOException {
+	public BowlerDatagram loadPacketFromPhy(ByteList bytesToPacketBuffer) throws NullPointerException, IOException {
 
 		if (dataInEndpoint == null)
 			return null;
 		int got = 0;
-		
-			
-		switch (usbReadState){
 
-		case init:
-			try {
-				if (camInpipe == null) {
-					camInpipe = dataInEndpoint.getUsbPipe();
-	
-				}
-				if (!camInpipe.isOpen())
-					camInpipe.open();
+		switch (usbReadState) {
 
-				prepIrp(read, data);
-		
-				camInpipe.asyncSubmit(read);
-			
-	
-				read.waitUntilComplete();
-	
-				usbReadState = usbControlState.submitted;
-	
-			} catch ( IllegalArgumentException 
-					e) {
-				//e.printStackTrace();
-				disconnect();
-				return null;
-			} catch (UsbNotActiveException e) {
-				// Auto-generated catch block
-				e.printStackTrace();
-			} catch (UsbNotOpenException e) {
-				// Auto-generated catch block
-				e.printStackTrace();
-			} catch (UsbDisconnectedException e) {
-				// Auto-generated catch block
-				e.printStackTrace();
-			} catch (UsbException e) {
-				// Auto-generated catch block
-				e.printStackTrace();
-			}
-			break;
-		case submitted:
-			if(read.isComplete()){
-				got = read.getActualLength();
-				if (got > 0) {
-					bytesToPacketBuffer.add(Arrays.copyOfRange(data, 0, got));
+			case init :
+				try {
+					if (camInpipe == null) {
+						camInpipe = dataInEndpoint.getUsbPipe();
+
+					}
+					if (!camInpipe.isOpen())
+						camInpipe.open();
+
+					prepIrp(read, data);
+
+					camInpipe.asyncSubmit(read);
+
+					read.waitUntilComplete();
+
+					usbReadState = usbControlState.submitted;
+
+				} catch (IllegalArgumentException e) {
+					// e.printStackTrace();
+					disconnect();
+					return null;
+				} catch (UsbNotActiveException e) {
+					// Auto-generated catch block
+					e.printStackTrace();
+				} catch (UsbNotOpenException e) {
+					// Auto-generated catch block
+					e.printStackTrace();
+				} catch (UsbDisconnectedException e) {
+					// Auto-generated catch block
+					e.printStackTrace();
+				} catch (UsbException e) {
+					// Auto-generated catch block
+					e.printStackTrace();
 				}
-				usbReadState = usbControlState.init;
-			}
-		default:
-			break;	
+				break;
+			case submitted :
+				if (read.isComplete()) {
+					got = read.getActualLength();
+					if (got > 0) {
+						bytesToPacketBuffer.add(Arrays.copyOfRange(data, 0, got));
+					}
+					usbReadState = usbControlState.init;
+				}
+			default :
+				break;
 		}
 
-
-		return BowlerDatagramFactory
-				.build(bytesToPacketBuffer);
+		return BowlerDatagramFactory.build(bytesToPacketBuffer);
 	}
 
 	// /* (non-Javadoc)
@@ -808,7 +799,7 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.neuronrobotics.sdk.common.BowlerAbstractConnection#waitingForConnection
 	 * ()
@@ -819,8 +810,11 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see javax.usb.event.UsbDeviceListener#dataEventOccurred(javax.usb.event.UsbDeviceDataEvent)
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see javax.usb.event.UsbDeviceListener#dataEventOccurred(javax.usb.event.
+	 * UsbDeviceDataEvent)
 	 */
 	@Override
 	public void dataEventOccurred(UsbDeviceDataEvent arg0) {
@@ -828,33 +822,43 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection implements
 
 	}
 
-	/* (non-Javadoc)
-	 * @see javax.usb.event.UsbDeviceListener#errorEventOccurred(javax.usb.event.UsbDeviceErrorEvent)
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see javax.usb.event.UsbDeviceListener#errorEventOccurred(javax.usb.event.
+	 * UsbDeviceErrorEvent)
 	 */
 	@Override
 	public void errorEventOccurred(UsbDeviceErrorEvent arg0) {
-		if(arg0.getUsbDevice() == mDevice){
+		if (arg0.getUsbDevice() == mDevice) {
 			new RuntimeException("Disconnect in USB called").printStackTrace();
 			disconnect();
-			//connect() ;
+			// connect() ;
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see javax.usb.event.UsbDeviceListener#usbDeviceDetached(javax.usb.event.UsbDeviceEvent)
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see javax.usb.event.UsbDeviceListener#usbDeviceDetached(javax.usb.event.
+	 * UsbDeviceEvent)
 	 */
 	@Override
 	public void usbDeviceDetached(UsbDeviceEvent arg0) {
-		
-		if(arg0.getUsbDevice() == mDevice){
-			//new RuntimeException("Disconnect in USB called").printStackTrace();
+
+		if (arg0.getUsbDevice() == mDevice) {
+			// new RuntimeException("Disconnect in USB called").printStackTrace();
 			disconnect();
-			//connect() ;
+			// connect() ;
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.javaxusb.IUsbDeviceEventListener#onDeviceEvent(javax.usb.UsbDevice)
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.neuronrobotics.sdk.javaxusb.IUsbDeviceEventListener#onDeviceEvent(javax.
+	 * usb.UsbDevice)
 	 */
 	@Override
 	public void onDeviceEvent(UsbDevice device) {

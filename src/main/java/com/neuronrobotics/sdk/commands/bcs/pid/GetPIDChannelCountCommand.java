@@ -12,7 +12,7 @@ public class GetPIDChannelCountCommand extends BowlerAbstractCommand {
 	/**
 	 * Instantiates a new gets the pid channel count command.
 	 */
-	public GetPIDChannelCountCommand(){
+	public GetPIDChannelCountCommand() {
 		setOpCode("gpdc");
 		setMethod(BowlerMethod.GET);
 	}

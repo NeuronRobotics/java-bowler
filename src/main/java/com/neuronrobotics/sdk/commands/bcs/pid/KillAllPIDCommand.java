@@ -8,11 +8,11 @@ import com.neuronrobotics.sdk.common.BowlerMethod;
  * The Class KillAllPIDCommand.
  */
 public class KillAllPIDCommand extends BowlerAbstractCommand {
-	
+
 	/**
 	 * Instantiates a new kill all pid command.
 	 */
-	public KillAllPIDCommand (){
+	public KillAllPIDCommand() {
 		setOpCode("kpid");
 		setMethod(BowlerMethod.CRITICAL);
 	}

@@ -10,69 +10,79 @@ import com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace;
  * The Class PIDChannel.
  */
 public class PIDChannel {
-	
+
 	/** The pid. */
 	private IPidControlNamespace pid;
-	
+
 	/** The index. */
 	private int index;
-	
+
 	/** The target value. */
 	private float targetValue;
-	
+
 	/** The current cached position. */
 	private float currentCachedPosition;
-	
+
 	/** The PID event listeners. */
 	private ArrayList<IPIDEventListener> PIDEventListeners = new ArrayList<IPIDEventListener>();
-	
+
 	/**
 	 * Instantiates a new PID channel.
 	 *
-	 * @param p the p
-	 * @param i the i
+	 * @param p
+	 *            the p
+	 * @param i
+	 *            the i
 	 */
 	public PIDChannel(IPidControlNamespace p, int i) {
 		setPid(p);
-		index=i;
+		index = i;
 	}
 
 	/**
 	 * Sets the pid set point.
 	 *
-	 * @param setpoint the setpoint
-	 * @param seconds the seconds
+	 * @param setpoint
+	 *            the setpoint
+	 * @param seconds
+	 *            the seconds
 	 * @return true, if successful
 	 */
-	public boolean SetPIDSetPoint(float setpoint,double seconds){
-		
+	public boolean SetPIDSetPoint(float setpoint, double seconds) {
+
 		return getPid().SetPIDSetPoint(index, setpoint, seconds);
 	}
-	
+
 	/**
 	 * Sets the pid interpolated velocity.
 	 *
-	 * @param unitsPerSecond the units per second
-	 * @param seconds the seconds
+	 * @param unitsPerSecond
+	 *            the units per second
+	 * @param seconds
+	 *            the seconds
 	 * @return true, if successful
-	 * @throws PIDCommandException the PID command exception
+	 * @throws PIDCommandException
+	 *             the PID command exception
 	 */
-	public boolean SetPIDInterpolatedVelocity( int unitsPerSecond, double seconds) throws PIDCommandException {
+	public boolean SetPIDInterpolatedVelocity(int unitsPerSecond, double seconds) throws PIDCommandException {
 		return getPid().SetPIDInterpolatedVelocity(index, unitsPerSecond, seconds);
 	}
-	
+
 	/**
 	 * Sets the pd velocity.
 	 *
-	 * @param unitsPerSecond the units per second
-	 * @param seconds the seconds
+	 * @param unitsPerSecond
+	 *            the units per second
+	 * @param seconds
+	 *            the seconds
 	 * @return true, if successful
-	 * @throws PIDCommandException the PID command exception
+	 * @throws PIDCommandException
+	 *             the PID command exception
 	 */
-	public boolean SetPDVelocity( int unitsPerSecond, double seconds) throws PIDCommandException {
+	public boolean SetPDVelocity(int unitsPerSecond, double seconds) throws PIDCommandException {
 		return getPid().SetPDVelocity(index, unitsPerSecond, seconds);
 	}
-	
+
 	/**
 	 * Gets the pid position.
 	 *
@@ -81,11 +91,12 @@ public class PIDChannel {
 	public float GetPIDPosition() {
 		return getPid().GetPIDPosition(index);
 	}
-	
+
 	/**
 	 * Configure pid controller.
 	 *
-	 * @param config the config
+	 * @param config
+	 *            the config
 	 * @return true, if successful
 	 */
 	public boolean ConfigurePIDController(PIDConfiguration config) {
@@ -93,7 +104,6 @@ public class PIDChannel {
 		return getPid().ConfigurePIDController(config);
 	}
 
-	
 	/**
 	 * Gets the PID configuration.
 	 *
@@ -102,58 +112,58 @@ public class PIDChannel {
 	public PIDConfiguration getPIDConfiguration() {
 		return getPid().getPIDConfiguration(index);
 	}
-	
+
 	/**
 	 * Reset pid channel.
 	 *
 	 * @return true, if successful
 	 */
 	public boolean ResetPIDChannel() {
-		return getPid().ResetPIDChannel(index,0);
+		return getPid().ResetPIDChannel(index, 0);
 	}
 
-	
 	/**
 	 * Reset pid channel.
 	 *
-	 * @param valueToSetCurrentTo the value to set current to
+	 * @param valueToSetCurrentTo
+	 *            the value to set current to
 	 * @return true, if successful
 	 */
-	public boolean ResetPIDChannel( int valueToSetCurrentTo) {
-		return getPid().ResetPIDChannel(index,valueToSetCurrentTo);
+	public boolean ResetPIDChannel(int valueToSetCurrentTo) {
+		return getPid().ResetPIDChannel(index, valueToSetCurrentTo);
 	}
 
 	/**
 	 * Sets the pid.
 	 *
-	 * @param p the new pid
+	 * @param p
+	 *            the new pid
 	 */
 	public void setPid(IPidControlNamespace p) {
 		pid = p;
 		pid.addPIDEventListener(new IPIDEventListener() {
 			@Override
 			public void onPIDReset(int group, float currentValue) {
-				if(group==index){
+				if (group == index) {
 					firePIDResetEvent(index, currentValue);
 				}
 			}
-			
+
 			@Override
 			public void onPIDLimitEvent(PIDLimitEvent e) {
-				if(e.getGroup()==index){
+				if (e.getGroup() == index) {
 					firePIDLimitEvent(e);
 				}
 			}
-			
+
 			@Override
 			public void onPIDEvent(PIDEvent e) {
-				if(e.getGroup()==index){
+				if (e.getGroup() == index) {
 					firePIDEvent(e);
 				}
 			}
 		});
 	}
-
 
 	/**
 	 * Gets the pid.
@@ -163,87 +173,95 @@ public class PIDChannel {
 	public IPidControlNamespace getPid() {
 		return pid;
 	}
-	
+
 	/**
 	 * Removes the pid event listener.
 	 *
-	 * @param l the l
+	 * @param l
+	 *            the l
 	 */
 	public void removePIDEventListener(IPIDEventListener l) {
-			if(PIDEventListeners.contains(l))
-				PIDEventListeners.remove(l);
-		
+		if (PIDEventListeners.contains(l))
+			PIDEventListeners.remove(l);
+
 	}
-	
+
 	/**
 	 * Adds the pid event listener.
 	 *
-	 * @param l the l
+	 * @param l
+	 *            the l
 	 */
 	public void addPIDEventListener(IPIDEventListener l) {
-			if(!PIDEventListeners.contains(l))
-				PIDEventListeners.add(l);
-		
+		if (!PIDEventListeners.contains(l))
+			PIDEventListeners.add(l);
+
 	}
-	
+
 	/**
 	 * Fire pid limit event.
 	 *
-	 * @param e the e
+	 * @param e
+	 *            the e
 	 */
-	public void firePIDLimitEvent(PIDLimitEvent e){
-		for (int i=0;i<PIDEventListeners.size();i++){
+	public void firePIDLimitEvent(PIDLimitEvent e) {
+		for (int i = 0; i < PIDEventListeners.size(); i++) {
 			PIDEventListeners.get(i).onPIDLimitEvent(e);
 		}
 	}
-	
+
 	/**
 	 * Fire pid event.
 	 *
-	 * @param e the e
+	 * @param e
+	 *            the e
 	 */
-	public void firePIDEvent(PIDEvent e){
-		for (int i=0;i<PIDEventListeners.size();i++){
-			
+	public void firePIDEvent(PIDEvent e) {
+		for (int i = 0; i < PIDEventListeners.size(); i++) {
+
 			PIDEventListeners.get(i).onPIDEvent(e);
 		}
 	}
-	
+
 	/**
 	 * Fire pid reset event.
 	 *
-	 * @param group the group
-	 * @param value the value
+	 * @param group
+	 *            the group
+	 * @param value
+	 *            the value
 	 */
-	public void firePIDResetEvent(int group,float value){
-		for (int i=0;i<PIDEventListeners.size();i++){
-			PIDEventListeners.get(i).onPIDReset(group,value);
+	public void firePIDResetEvent(int group, float value) {
+		for (int i = 0; i < PIDEventListeners.size(); i++) {
+			PIDEventListeners.get(i).onPIDReset(group, value);
 		}
 	}
 
 	/**
 	 * Flush.
 	 *
-	 * @param time the time
+	 * @param time
+	 *            the time
 	 */
-	public void flush(double time){
-		SetPIDSetPoint(getCachedTargetValue(),time);
+	public void flush(double time) {
+		SetPIDSetPoint(getCachedTargetValue(), time);
 	}
 
 	/**
 	 * Sets the cached target value.
 	 *
-	 * @param targetValue the new cached target value
+	 * @param targetValue
+	 *            the new cached target value
 	 */
-	public void setCachedTargetValue(float targetValue) {		
-		if(new Double(targetValue).isNaN()) {
+	public void setCachedTargetValue(float targetValue) {
+		if (new Double(targetValue).isNaN()) {
 			new RuntimeException("Setpoint in can not be set to nan").printStackTrace();
-		}else {
-			Log.info("Cacheing PID position group="+getGroup()+", setpoint="+targetValue+" ticks");
+		} else {
+			Log.info("Cacheing PID position group=" + getGroup() + ", setpoint=" + targetValue + " ticks");
 			this.targetValue = targetValue;
 		}
 	}
-	
+
 	/**
 	 * Gets the cached target value.
 	 *
@@ -253,18 +271,15 @@ public class PIDChannel {
 		return targetValue;
 	}
 
-
-
 	/**
 	 * Sets the current cached position.
 	 *
-	 * @param currentCachedPosition the new current cached position
+	 * @param currentCachedPosition
+	 *            the new current cached position
 	 */
 	public void setCurrentCachedPosition(float currentCachedPosition) {
 		this.currentCachedPosition = currentCachedPosition;
 	}
-
-
 
 	/**
 	 * Gets the current cached position.
@@ -294,5 +309,5 @@ public class PIDChannel {
 		// Auto-generated method stub
 		return index;
 	}
-	
+
 }

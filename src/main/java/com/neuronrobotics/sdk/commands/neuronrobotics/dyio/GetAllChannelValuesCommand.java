@@ -8,7 +8,7 @@ import com.neuronrobotics.sdk.common.BowlerMethod;
  * The Class GetAllChannelValuesCommand.
  */
 public class GetAllChannelValuesCommand extends BowlerAbstractCommand {
-	
+
 	/**
 	 * Instantiates a new gets the all channel values command.
 	 */

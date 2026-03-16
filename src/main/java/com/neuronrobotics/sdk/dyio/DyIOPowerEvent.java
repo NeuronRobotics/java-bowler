@@ -5,29 +5,32 @@ package com.neuronrobotics.sdk.dyio;
  * The Class DyIOPowerEvent.
  */
 public class DyIOPowerEvent implements IDyIOEvent {
-	
+
 	/** The bank a state. */
 	private DyIOPowerState bankAState;
-	
+
 	/** The bank b state. */
 	private DyIOPowerState bankBState;
-	
+
 	/** The voltage. */
 	private double voltage;
-	
+
 	/**
 	 * Instantiates a new dy io power event.
 	 *
-	 * @param bankA the bank a
-	 * @param bankB the bank b
-	 * @param batteryVoltage the battery voltage
+	 * @param bankA
+	 *            the bank a
+	 * @param bankB
+	 *            the bank b
+	 * @param batteryVoltage
+	 *            the battery voltage
 	 */
 	public DyIOPowerEvent(DyIOPowerState bankA, DyIOPowerState bankB, double batteryVoltage) {
 		bankAState = bankA;
 		bankBState = bankB;
 		setVoltage(batteryVoltage);
 	}
-	
+
 	/**
 	 * Gets the channel a mode.
 	 *
@@ -36,7 +39,7 @@ public class DyIOPowerEvent implements IDyIOEvent {
 	public DyIOPowerState getChannelAMode() {
 		return bankAState;
 	}
-	
+
 	/**
 	 * Gets the channel b mode.
 	 *
@@ -49,7 +52,8 @@ public class DyIOPowerEvent implements IDyIOEvent {
 	/**
 	 * Sets the voltage.
 	 *
-	 * @param voltage the new voltage
+	 * @param voltage
+	 *            the new voltage
 	 */
 	private void setVoltage(double voltage) {
 		this.voltage = voltage;
@@ -63,14 +67,16 @@ public class DyIOPowerEvent implements IDyIOEvent {
 	public double getVoltage() {
 		return voltage;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see java.lang.Object#toString()
 	 */
-	@Override 
-	public String toString(){
-		String s="";
-		s+="Battery Voltage: "+getVoltage()+"V, Bank A state: "+bankAState+", Bank B state: "+bankBState;
+	@Override
+	public String toString() {
+		String s = "";
+		s += "Battery Voltage: " + getVoltage() + "V, Bank A state: " + bankAState + ", Bank B state: " + bankBState;
 		return s;
 	}
 }

@@ -3,9 +3,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,7 +25,7 @@ import com.neuronrobotics.sdk.common.Log;
  * The Class GetChannelModeCommand.
  */
 public class GetChannelModeCommand extends BowlerAbstractCommand {
-	
+
 	/**
 	 * Instantiates a new gets the channel mode command.
 	 */
@@ -33,38 +33,43 @@ public class GetChannelModeCommand extends BowlerAbstractCommand {
 		setOpCode("gacm");
 		setMethod(BowlerMethod.GET);
 	}
-	
+
 	/**
 	 * Instantiates a new gets the channel mode command.
 	 *
-	 * @param channel the channel
+	 * @param channel
+	 *            the channel
 	 */
 	public GetChannelModeCommand(int channel) {
 		setOpCode("gchm");
 		setMethod(BowlerMethod.GET);
 		getCallingDataStorage().add(channel);
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.common.BowlerAbstractCommand#parseResponse(com.neuronrobotics.sdk.common.BowlerDatagram)
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.neuronrobotics.sdk.common.BowlerAbstractCommand#parseResponse(com.
+	 * neuronrobotics.sdk.common.BowlerDatagram)
 	 */
 	@Override
 	public BowlerDatagram validate(BowlerDatagram data) throws InvalidResponseException {
 		super.validate(data);
-		
-		if(!data.getRPC().equals(getOpCode())) {
+
+		if (!data.getRPC().equals(getOpCode())) {
 			throw new InvalidResponseException("Get Channel Mode did not return with '" + getOpCode() + "'.");
 		}
-		
-		if(!getOpCode().equals("gacm") ) {
-			Log.error("Failed gacm: \r\n"+data);
-			throw new InvalidResponseException("Get All Channel Mode did not return with 24 values."+data);
+
+		if (!getOpCode().equals("gacm")) {
+			Log.error("Failed gacm: \r\n" + data);
+			throw new InvalidResponseException("Get All Channel Mode did not return with 24 values." + data);
 		}
-		
-		if(getOpCode().equals("gchm") && data.getData().size() != 1) {
-			//throw new InvalidResponseException("Get Channel Mode did not return with 1 values.");
+
+		if (getOpCode().equals("gchm") && data.getData().size() != 1) {
+			// throw new InvalidResponseException("Get Channel Mode did not return with 1
+			// values.");
 		}
-		
+
 		return data;
 	}
 }

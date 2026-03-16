@@ -1,10 +1,8 @@
 package com.neuronrobotics.sdk.addons.kinematics;
 
 import java.io.InputStream;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 //import java.util.concurrent.CountDownLatch;
-
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -14,15 +12,11 @@ import org.w3c.dom.NodeList;
 import Jama.Matrix;
 
 import com.neuronrobotics.sdk.addons.kinematics.imu.IMU;
-import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.time.ITimeProvider;
-import com.neuronrobotics.sdk.addons.kinematics.time.TimeKeeper;
 import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
 import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
-import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.common.IDeviceConnectionEventListener;
-import com.neuronrobotics.sdk.common.InvalidConnectionException;
 //import com.neuronrobotics.sdk.addons.kinematics.PidRotoryLink;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.NonBowlerDevice;
@@ -36,19 +30,15 @@ import com.neuronrobotics.sdk.pid.PIDChannel;
 import com.neuronrobotics.sdk.pid.PIDConfiguration;
 import com.neuronrobotics.sdk.pid.PIDEvent;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
-import com.neuronrobotics.sdk.util.ThreadUtil;
 //  Auto-generated Javadoc
 //import javax.swing.JFrame;
 //import javax.swing.JOptionPane;
-
 
 /**
  * The Class AbstractKinematicsNR.
  */
 @SuppressWarnings("restriction")
 public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IPIDEventListener, ILinkListener {
-	
-	
 
 	/** The configurations. */
 	private ArrayList<PIDConfiguration> pidConfigurations = new ArrayList<PIDConfiguration>();
@@ -66,19 +56,19 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	private ArrayList<MobileBase> mobileBases = new ArrayList<MobileBase>();
 
 	/** The dh engine. */
-	private String[] dhEngine = new String[] { "https://github.com/madhephaestus/carl-the-hexapod.git",
-			"DefaultDhSolver.groovy" };
+	private String[] dhEngine = new String[]{"https://github.com/madhephaestus/carl-the-hexapod.git",
+			"DefaultDhSolver.groovy"};
 
 	/** The cad engine. */
-	private String[] cadEngine = new String[] { "https://github.com/madhephaestus/carl-the-hexapod.git",
-			"ThreeDPrintCad.groovy" };
+	private String[] cadEngine = new String[]{"https://github.com/madhephaestus/carl-the-hexapod.git",
+			"ThreeDPrintCad.groovy"};
 
 	/** The current joint space positions. */
 	/* This is in RAW joint level ticks */
-	//protected double[] currentJointSpacePositions = null;
+	// protected double[] currentJointSpacePositions = null;
 
 	/** The current joint space target. */
-//	public double[] currentJointSpaceTarget;
+	// public double[] currentJointSpaceTarget;
 
 	/** The current pose target. */
 	private TransformNR currentPoseTarget = new TransformNR();
@@ -113,9 +103,9 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 * hardware
 	 */
 	private IMU imu = new IMU();
-	
-	private Runnable renderWrangler=null;
-	
+
+	private Runnable renderWrangler = null;
+
 	public int getLinkIndex(AbstractLink l) {
 		for (int i = 0; i < getNumberOfLinks(); i++) {
 			if (getAbstractLink(i) == l)
@@ -143,7 +133,8 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	/**
 	 * Sets the root listener.
 	 *
-	 * @param listener the new root listener
+	 * @param listener
+	 *            the new root listener
 	 */
 	public void setRootListener(Object listener) {
 		this.root = listener;
@@ -165,7 +156,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.neuronrobotics.sdk.common.NonBowlerDevice#getNamespacesImp()
 	 */
 	@Override
@@ -178,7 +169,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.neuronrobotics.sdk.common.NonBowlerDevice#disconnectDeviceImp()
 	 */
 	public void disconnectDeviceImp() {
@@ -192,7 +183,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.neuronrobotics.sdk.common.NonBowlerDevice#connectDeviceImp()
 	 */
 	public boolean connectDeviceImp() {
@@ -203,23 +194,27 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 * Instantiates a new abstract kinematics nr.
 	 */
 	public AbstractKinematicsNR() {
-//		File l = new File("RobotLog_"+getDate()+"_"+System.currentTimeMillis()+".txt");
-//		//File e = new File("RobotError_"+getDate()+"_"+System.currentTimeMillis()+".txt");
-//		try {
-//			PrintStream p =new PrintStream(l);
-//			Log.setOutStream(new PrintStream(p));
-//			Log.setErrStream(new PrintStream(p));						
-//		} catch (FileNotFoundException e1) {
-//			e1.printStackTrace();
-//		}
+		// File l = new
+		// File("RobotLog_"+getDate()+"_"+System.currentTimeMillis()+".txt");
+		// //File e = new
+		// File("RobotError_"+getDate()+"_"+System.currentTimeMillis()+".txt");
+		// try {
+		// PrintStream p =new PrintStream(l);
+		// Log.setOutStream(new PrintStream(p));
+		// Log.setErrStream(new PrintStream(p));
+		// } catch (FileNotFoundException e1) {
+		// e1.printStackTrace();
+		// }
 		setDhParametersChain(new DHChain(this));
 	}
 
 	/**
 	 * Instantiates a new abstract kinematics nr.
 	 *
-	 * @param configFile the config file
-	 * @param f          the f
+	 * @param configFile
+	 *            the config file
+	 * @param f
+	 *            the f
 	 */
 	public AbstractKinematicsNR(InputStream configFile, LinkFactory f) {
 		this();
@@ -239,15 +234,16 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 				Log.info("Not Element Node");
 			}
 		}
-		
 
 	}
 
 	/**
 	 * Instantiates a new abstract kinematics nr.
 	 *
-	 * @param doc the doc
-	 * @param f   the f
+	 * @param doc
+	 *            the doc
+	 * @param f
+	 *            the f
 	 */
 	public AbstractKinematicsNR(Element doc, LinkFactory f) {
 		this();
@@ -262,7 +258,8 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 * Load XML configuration file, then store in LinkConfiguration (ArrayList
 	 * type).
 	 *
-	 * @param doc the doc
+	 * @param doc
+	 *            the doc
 	 * @return the array list
 	 */
 	protected ArrayList<LinkConfiguration> loadConfig(Element doc) {
@@ -279,13 +276,14 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 				localConfigsFromXml.add(newLinkConf);
 
 				NodeList dHParameters = linkNode.getChildNodes();
-				// com.neuronrobotics.sdk.common.Log.error("Link "+newLinkConf.getName()+" has "+dHParameters
+				// com.neuronrobotics.sdk.common.Log.error("Link "+newLinkConf.getName()+" has
+				// "+dHParameters
 				// .getLength()+" children");
 				for (int x = 0; x < dHParameters.getLength(); x++) {
 					Node nNode = dHParameters.item(x);
 					if (nNode.getNodeType() == Node.ELEMENT_NODE && nNode.getNodeName().contentEquals("DHParameters")) {
 						Element dhNode = (Element) nNode;
-						DHLink newLink = new DHLink(dhNode,newLinkConf);
+						DHLink newLink = new DHLink(dhNode, newLinkConf);
 						getDhParametersChain().addLink(newLink);// 0->1
 						NodeList mobileBasesNodeList = dhNode.getChildNodes();
 						for (int j = 0; j < mobileBasesNodeList.getLength(); j++) {
@@ -295,12 +293,12 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 								mobileBases.add(newMobileBase);
 								newLink.setMobileBaseXml(newMobileBase);
 								addConnectionEventListener(new IDeviceConnectionEventListener() {
-									
+
 									@Override
 									public void onDisconnect(BowlerAbstractDevice source) {
 										mobileBases.remove(newMobileBase);
 									}
-									
+
 									@Override
 									public void onConnect(BowlerAbstractDevice source) {
 									}
@@ -356,7 +354,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	 * @return the xml
 	 */
 	/*
-	 * 
+	 *
 	 * Generate the xml configuration to generate an XML of this robot.
 	 */
 	public String getXml() {
@@ -383,7 +381,8 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	/**
 	 * Gets the link configuration.
 	 *
-	 * @param linkIndex the link index
+	 * @param linkIndex
+	 *            the link index
 	 * @return the link configuration
 	 */
 	public LinkConfiguration getLinkConfiguration(int linkIndex) {
@@ -404,7 +403,8 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	/**
 	 * Gets the link current configuration.
 	 *
-	 * @param chan the chan
+	 * @param chan
+	 *            the chan
 	 * @return the link current configuration
 	 */
 	public PIDConfiguration getLinkCurrentConfiguration(int chan) {
@@ -414,8 +414,10 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	/**
 	 * Sets the link current configuration.
 	 *
-	 * @param chan the chan
-	 * @param c    the c
+	 * @param chan
+	 *            the chan
+	 * @param c
+	 *            the c
 	 */
 	public void setLinkCurrentConfiguration(int chan, PIDConfiguration c) {
 		getAxisPidConfiguration().set(chan, c);
@@ -433,7 +435,8 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	/**
 	 * Gets the abstract link.
 	 *
-	 * @param index the index
+	 * @param index
+	 *            the index
 	 * @return the abstract link
 	 */
 	public AbstractLink getAbstractLink(int index) {
@@ -443,8 +446,10 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	/**
 	 * Sets the device.
 	 *
-	 * @param f           the f
-	 * @param linkConfigs the link configs
+	 * @param f
+	 *            the f
+	 * @param linkConfigs
+	 *            the link configs
 	 */
 	protected void setDevice(LinkFactory f, ArrayList<LinkConfiguration> linkConfigs) {
 		Log.info("Loading device: " + f.getClass() + " " + f);
@@ -537,14 +542,14 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 			// Here the RAW values are converted to engineering units
 			try {
 				jointSpaceVect[i] = readLinkValue(i);
-			}catch(Exception e) {
-				jointSpaceVect[i]=0;
+			} catch (Exception e) {
+				jointSpaceVect[i] = 0;
 			}
 		}
 
 		return jointSpaceVect;
 	}
-	
+
 	public double[] getCurrentJointSpaceTarget() {
 
 		double[] currentJointSpaceTarget = new double[getNumberOfLinks()];
@@ -560,11 +565,14 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	/**
 	 * This calculates the target pose .
 	 *
-	 * @param taskSpaceTransform the task space transform
-	 * @param seconds            the time for the transition to take from current
-	 *                           position to target, unit seconds
+	 * @param taskSpaceTransform
+	 *            the task space transform
+	 * @param seconds
+	 *            the time for the transition to take from current position to
+	 *            target, unit seconds
 	 * @return The joint space vector is returned for target arrival referance
-	 * @throws Exception If there is a workspace error
+	 * @throws Exception
+	 *             If there is a workspace error
 	 */
 	public double[] setDesiredTaskSpaceTransform(TransformNR taskSpaceTransform, double seconds) throws Exception {
 		TickToc.tic("setDesiredTaskSpaceTransform start");
@@ -579,13 +587,13 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 			TickToc.tic("checkVector success");
 			if (jointSpaceVect == null)
 				throw new RuntimeException("The kinematics model must return an array, not null");
-			
+
 			_setDesiredJointSpaceVector(jointSpaceVect, seconds, false);
 			TickToc.tic("_setDesiredJointSpaceVector complete");
 			return jointSpaceVect;
 		} else
 			TickToc.tic("checkVector fail");
-		
+
 		double[] currentJointSpaceTarget2 = getCurrentJointSpaceTarget();
 		TickToc.tic("getCurrentJointSpaceTarget");
 		return currentJointSpaceTarget2;
@@ -594,52 +602,59 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	/**
 	 * Checks the desired pose for ability for the IK to calculate a valid pose.
 	 *
-	 * @param taskSpaceTransform the task space transform
+	 * @param taskSpaceTransform
+	 *            the task space transform
 	 * @return True if pose is reachable, false if it is not
 	 */
-	public static boolean checkTaskSpaceTransform(AbstractKinematicsNR dev, TransformNR taskSpaceTransform, double seconds) {
+	public static boolean checkTaskSpaceTransform(AbstractKinematicsNR dev, TransformNR taskSpaceTransform,
+			double seconds) {
 		try {
 			double[] jointSpaceVect = dev.inverseKinematics(dev.inverseOffset(taskSpaceTransform));
-			return checkVector(dev, jointSpaceVect,seconds);
+			return checkVector(dev, jointSpaceVect, seconds);
 		} catch (Throwable ex) {
-			//Log.error(ex);
-			//ex.printStackTrace();
+			// Log.error(ex);
+			// ex.printStackTrace();
 			return false;
 		}
 	}
 	/**
 	 * Checks the desired pose for ability for the IK to calculate a valid pose.
 	 *
-	 * @param taskSpaceTransform the task space transform
+	 * @param taskSpaceTransform
+	 *            the task space transform
 	 * @return True if pose is reachable, false if it is not
 	 */
 	public static boolean checkTaskSpaceTransform(AbstractKinematicsNR dev, TransformNR taskSpaceTransform) {
-		return checkTaskSpaceTransform(dev,taskSpaceTransform,0);
+		return checkTaskSpaceTransform(dev, taskSpaceTransform, 0);
 	}
 	private static boolean checkVector(AbstractKinematicsNR dev, double[] jointSpaceVect, double seconds) {
 		double[] current = dev.getCurrentJointSpaceTarget();
 		for (int i = 0; i < jointSpaceVect.length; i++) {
 			AbstractLink link = dev.factory.getLink(dev.getLinkConfiguration(i));
 			double val = jointSpaceVect[i];
-			
+
 			if (Double.isNaN(val) || Double.isInfinite(val)) {
 				Log.error(dev.getScriptingName() + " Link " + i + " Invalid input " + val);
 				return false;
 			}
 			if (val > link.getMaxEngineeringUnits()) {
-				Log.error(dev.getScriptingName() + " Link " + i + " can not reach " + val + " limited to " + link.getMaxEngineeringUnits());
+				Log.error(dev.getScriptingName() + " Link " + i + " can not reach " + val + " limited to "
+						+ link.getMaxEngineeringUnits());
 				return false;
 			}
 			if (val < link.getMinEngineeringUnits()) {
-				Log.error(dev.getScriptingName() + " Link " + i + " can not reach " + val + " limited to " + link.getMinEngineeringUnits());
+				Log.error(dev.getScriptingName() + " Link " + i + " can not reach " + val + " limited to "
+						+ link.getMinEngineeringUnits());
 				return false;
 			}
 			if (seconds > 0) {
 				double maxVel = Math.abs(link.getMaxVelocityEngineeringUnits());
 				double deltaPosition = Math.abs(current[i] - jointSpaceVect[i]);
-				double computedVelocity = deltaPosition / seconds;		
-				if ((computedVelocity-maxVel)>0.0001) {
-					Log.error("Link " + i + " can not move at rate of " + computedVelocity + " capped at " + maxVel + " requested position of " + jointSpaceVect[i] + " from current position of " + current[i] + " in " + seconds + " seconds");
+				double computedVelocity = deltaPosition / seconds;
+				if ((computedVelocity - maxVel) > 0.0001) {
+					Log.error("Link " + i + " can not move at rate of " + computedVelocity + " capped at " + maxVel
+							+ " requested position of " + jointSpaceVect[i] + " from current position of " + current[i]
+							+ " in " + seconds + " seconds");
 					return false;
 				}
 			}
@@ -647,11 +662,11 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		return true;
 	}
 
-
 	/**
 	 * Checks the desired pose for ability for the IK to calculate a valid pose.
 	 *
-	 * @param taskSpaceTransform the task space transform
+	 * @param taskSpaceTransform
+	 *            the task space transform
 	 * @return True if pose is reachable, false if it is not
 	 */
 	public boolean checkTaskSpaceTransform(TransformNR taskSpaceTransform, double seconds) {
@@ -660,18 +675,21 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	/**
 	 * Checks the desired pose for ability for the IK to calculate a valid pose.
 	 *
-	 * @param taskSpaceTransform the task space transform
+	 * @param taskSpaceTransform
+	 *            the task space transform
 	 * @return True if pose is reachable, false if it is not
 	 */
 	public boolean checkTaskSpaceTransform(TransformNR taskSpaceTransform) {
 		return checkTaskSpaceTransform(this, taskSpaceTransform, 0);
 	}
-	
+
 	/**
 	 * get the best possible time for a translation by checking the joint velocities
-	 * 
-	 * @param currentTaskSpaceTransform new tip location to check
-	 * @return the time of translation at best possible speed based on checking each link
+	 *
+	 * @param currentTaskSpaceTransform
+	 *            new tip location to check
+	 * @return the time of translation at best possible speed based on checking each
+	 *         link
 	 */
 	public double getBestTime(TransformNR currentTaskSpaceTransform) {
 		double[] jointSpaceVect;
@@ -686,9 +704,11 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	}
 	/**
 	 * get the best possible time for a translation by checking the joint velocities
-	 * 
-	 * @param jointSpaceVect new joint pose
-	 * @return the time of translation at best possible speed based on checking each link
+	 *
+	 * @param jointSpaceVect
+	 *            new joint pose
+	 * @return the time of translation at best possible speed based on checking each
+	 *         link
 	 */
 	public double getBestTime(double[] jointSpaceVect) {
 		double best = 0;
@@ -703,30 +723,36 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		}
 		return best;
 	}
-	
-	
+
 	/**
 	 * This calculates the target pose .
 	 *
-	 * @param jointSpaceVect the joint space vect
-	 * @param seconds        the time for the transition to take from current
-	 *                       position to target, unit seconds
+	 * @param jointSpaceVect
+	 *            the joint space vect
+	 * @param seconds
+	 *            the time for the transition to take from current position to
+	 *            target, unit seconds
 	 * @return The joint space vector is returned for target arrival referance
-	 * @throws Exception If there is a workspace error
+	 * @throws Exception
+	 *             If there is a workspace error
 	 */
-	public  double[] setDesiredJointSpaceVector(double[] jointSpaceVect, double seconds) throws Exception {
-		return _setDesiredJointSpaceVector(jointSpaceVect,seconds,true);
+	public double[] setDesiredJointSpaceVector(double[] jointSpaceVect, double seconds) throws Exception {
+		return _setDesiredJointSpaceVector(jointSpaceVect, seconds, true);
 	}
 	/**
 	 * This calculates the target pose .
 	 *
-	 * @param jointSpaceVect the joint space vect
-	 * @param seconds        the time for the transition to take from current
-	 *                       position to target, unit seconds
+	 * @param jointSpaceVect
+	 *            the joint space vect
+	 * @param seconds
+	 *            the time for the transition to take from current position to
+	 *            target, unit seconds
 	 * @return The joint space vector is returned for target arrival referance
-	 * @throws Exception If there is a workspace error
+	 * @throws Exception
+	 *             If there is a workspace error
 	 */
-	private  double[] _setDesiredJointSpaceVector(double[] jointSpaceVect, double seconds, boolean fireTaskUpdate) throws Exception {
+	private double[] _setDesiredJointSpaceVector(double[] jointSpaceVect, double seconds, boolean fireTaskUpdate)
+			throws Exception {
 		if (jointSpaceVect.length != getNumberOfLinks()) {
 			throw new IndexOutOfBoundsException("Vector must be " + getNumberOfLinks()
 					+ " links, actual number of links = " + jointSpaceVect.length);
@@ -734,48 +760,49 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		double best = getBestTime(jointSpaceVect);
 		if (seconds < best)
 			seconds = best;
-		//synchronized(AbstractKinematicsNR.class) {
-			int except = 0;
-			Exception e = null;
-			TickToc.tic("Set hardware values start");
-			do {
-				try {
-					factory.setCachedTargets(jointSpaceVect);
-					TickToc.tic("Cached targets ");
-					if (!isNoFlush()) {
-						//
-						factory.flush(seconds);
-						TickToc.tic("_setDesiredJointSpaceVector flush "+seconds);
-						//
-					}
-					except = 0;
-					e = null;
-				} catch (Exception ex) {
-					except++;
-					e = ex;
-					e.printStackTrace();
+		// synchronized(AbstractKinematicsNR.class) {
+		int except = 0;
+		Exception e = null;
+		TickToc.tic("Set hardware values start");
+		do {
+			try {
+				factory.setCachedTargets(jointSpaceVect);
+				TickToc.tic("Cached targets ");
+				if (!isNoFlush()) {
+					//
+					factory.flush(seconds);
+					TickToc.tic("_setDesiredJointSpaceVector flush " + seconds);
+					//
 				}
-			} while (except > 0 && except < getRetryNumberBeforeFail());
-			if (e != null)
-				throw new RuntimeException("Limit On "+getScriptingName()+" "+e.getMessage());
-
-			TickToc.tic("Copy Vector");
-			TransformNR fwd = forwardKinematics(getCurrentJointSpaceTarget());
-			TickToc.tic("FK from vector");
-			fireTargetJointsUpdate(getCurrentJointSpaceTarget(), fwd);
-			TickToc.tic("Joint space updates");
-			if (fireTaskUpdate) {
-				setCurrentPoseTarget(forwardOffset(fwd));	
-				TickToc.tic("task space updates");
+				except = 0;
+				e = null;
+			} catch (Exception ex) {
+				except++;
+				e = ex;
+				e.printStackTrace();
 			}
-			
-		//}
+		} while (except > 0 && except < getRetryNumberBeforeFail());
+		if (e != null)
+			throw new RuntimeException("Limit On " + getScriptingName() + " " + e.getMessage());
+
+		TickToc.tic("Copy Vector");
+		TransformNR fwd = forwardKinematics(getCurrentJointSpaceTarget());
+		TickToc.tic("FK from vector");
+		fireTargetJointsUpdate(getCurrentJointSpaceTarget(), fwd);
+		TickToc.tic("Joint space updates");
+		if (fireTaskUpdate) {
+			setCurrentPoseTarget(forwardOffset(fwd));
+			TickToc.tic("task space updates");
+		}
+
+		// }
 		return jointSpaceVect;
 	}
 	/**
 	 * Calc forward.
 	 *
-	 * @param jointSpaceVect the joint space vect
+	 * @param jointSpaceVect
+	 *            the joint space vect
 	 * @return the transform nr
 	 */
 	public TransformNR calcForward(double[] jointSpaceVect) {
@@ -798,50 +825,55 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	/**
 	 * Sets an individual target joint position .
 	 *
-	 * @param axis    the joint index to set
-	 * @param value   the value to set it to
-	 * @param seconds the time for the transition to take from current position to
-	 *                target, unit seconds
-	 * @throws Exception If there is a workspace error
+	 * @param axis
+	 *            the joint index to set
+	 * @param value
+	 *            the value to set it to
+	 * @param seconds
+	 *            the time for the transition to take from current position to
+	 *            target, unit seconds
+	 * @throws Exception
+	 *             If there is a workspace error
 	 */
-	public  void setDesiredJointAxisValue(int axis, double value, double seconds) throws Exception {
-		//synchronized(AbstractKinematicsNR.class) {
-			LinkConfiguration c = getLinkConfiguration(axis);
+	public void setDesiredJointAxisValue(int axis, double value, double seconds) throws Exception {
+		// synchronized(AbstractKinematicsNR.class) {
+		LinkConfiguration c = getLinkConfiguration(axis);
 
-			Log.info("Setting single target joint in mm/deg, axis=" + axis + " value=" + value);
-			try {
-				getFactory().getLink(c).setTargetEngineeringUnits(value);
-			} catch (Exception ex) {
-				throw new Exception("Joint hit software bound, index " + axis + " attempted: " + value + " boundes: U="
-						+ c.getUpperLimit() + ", L=" + c.getLowerLimit());
-			}
-			if (!isNoFlush()) {
-				int except = 0;
-				Exception e = null;
-				do {
-					try {
-						getFactory().getLink(c).flush(seconds);
-						except = 0;
-						e = null;
-					} catch (Exception ex) {
-						except++;
-						e = ex;
-					}
-				} while (except > 0 && except < getRetryNumberBeforeFail());
-				if (e != null)
-					throw e;
-			}
-			TransformNR fwd = forwardKinematics(getCurrentJointSpaceTarget());
-			fireTargetJointsUpdate(getCurrentJointSpaceTarget(), fwd);
-			setCurrentPoseTarget(forwardOffset(fwd));
-		//}
+		Log.info("Setting single target joint in mm/deg, axis=" + axis + " value=" + value);
+		try {
+			getFactory().getLink(c).setTargetEngineeringUnits(value);
+		} catch (Exception ex) {
+			throw new Exception("Joint hit software bound, index " + axis + " attempted: " + value + " boundes: U="
+					+ c.getUpperLimit() + ", L=" + c.getLowerLimit());
+		}
+		if (!isNoFlush()) {
+			int except = 0;
+			Exception e = null;
+			do {
+				try {
+					getFactory().getLink(c).flush(seconds);
+					except = 0;
+					e = null;
+				} catch (Exception ex) {
+					except++;
+					e = ex;
+				}
+			} while (except > 0 && except < getRetryNumberBeforeFail());
+			if (e != null)
+				throw e;
+		}
+		TransformNR fwd = forwardKinematics(getCurrentJointSpaceTarget());
+		fireTargetJointsUpdate(getCurrentJointSpaceTarget(), fwd);
+		setCurrentPoseTarget(forwardOffset(fwd));
+		// }
 		return;
 	}
 
 	/**
 	 * Fire pose transform.
 	 *
-	 * @param transform the transform
+	 * @param transform
+	 *            the transform
 	 */
 	protected void firePoseTransform(TransformNR transform) {
 		for (int i = 0; i < taskSpaceUpdateListeners.size(); i++) {
@@ -868,12 +900,13 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	/**
 	 * Fire target joints update.
 	 *
-	 * @param jointSpaceVector the joint space vector
-	 * @param fwd              the fwd
+	 * @param jointSpaceVector
+	 *            the joint space vector
+	 * @param fwd
+	 *            the fwd
 	 */
 	protected void fireTargetJointsUpdate(double[] jointSpaceVector, TransformNR fwd) {
 
-		
 		for (IJointSpaceUpdateListenerNR p : jointSpaceUpdateListeners) {
 			p.onJointSpaceTargetUpdate(this, getCurrentJointSpaceTarget());
 		}
@@ -882,8 +915,10 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	/**
 	 * Fire joint space limit update.
 	 *
-	 * @param axis  the axis
-	 * @param event the event
+	 * @param axis
+	 *            the axis
+	 * @param event
+	 *            the event
 	 */
 	private void fireJointSpaceLimitUpdate(int axis, JointLimit event) {
 		for (IJointSpaceUpdateListenerNR p : jointSpaceUpdateListeners) {
@@ -900,15 +935,15 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		return fiducial2RAS;
 	}
 
-//	/**
-//	 * Sets the base to zframe transform.
-//	 *
-//	 * @param baseToFiducial the new base to zframe transform
-//	 */
-//	@Deprecated
-//	public void setBaseToZframeTransform(TransformNR baseToFiducial) {
-//		setRobotToFiducialTransform(baseToFiducial);
-//	}
+	// /**
+	// * Sets the base to zframe transform.
+	// *
+	// * @param baseToFiducial the new base to zframe transform
+	// */
+	// @Deprecated
+	// public void setBaseToZframeTransform(TransformNR baseToFiducial) {
+	// setRobotToFiducialTransform(baseToFiducial);
+	// }
 	public void setRobotToFiducialTransform(TransformNR baseToFiducial) {
 		if (baseToFiducial == null) {
 			Log.error("Fiducial can not be null " + baseToFiducial);
@@ -920,18 +955,18 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		for (IRegistrationListenerNR r : regListeners) {
 			r.onBaseToFiducialUpdate(this, baseToFiducial);
 		}
-		
+
 		runRenderWrangler();
 	}
-//	/**
-//	 * Sets the zframe to global transform.
-//	 *
-//	 * @param fiducialToRAS the new zframe to global transform
-//	 */
-//	@Deprecated
-//	private void setZframeToGlobalTransform(TransformNR fiducialToRAS) {
-//		setGlobalToFiducialTransform(fiducialToRAS);
-//	}
+	// /**
+	// * Sets the zframe to global transform.
+	// *
+	// * @param fiducialToRAS the new zframe to global transform
+	// */
+	// @Deprecated
+	// private void setZframeToGlobalTransform(TransformNR fiducialToRAS) {
+	// setGlobalToFiducialTransform(fiducialToRAS);
+	// }
 
 	/**
 	 * Gets the robot to fiducial transform.
@@ -945,7 +980,8 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	/**
 	 * Sets the global to fiducial transform.
 	 *
-	 * @param frameToBase the new global to fiducial transform
+	 * @param frameToBase
+	 *            the new global to fiducial transform
 	 */
 	public void setGlobalToFiducialTransform(TransformNR frameToBase, boolean fireUpdate) {
 		if (frameToBase == null) {
@@ -960,14 +996,15 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 			IRegistrationListenerNR r = regListeners.get(i);
 			r.onFiducialToGlobalUpdate(this, frameToBase);
 		}
-		
+
 		runRenderWrangler();
-		
+
 	}
 	/**
 	 * Sets the global to fiducial transform.
 	 *
-	 * @param frameToBase the new global to fiducial transform
+	 * @param frameToBase
+	 *            the new global to fiducial transform
 	 */
 	public void setGlobalToFiducialTransform(TransformNR frameToBase) {
 		setGlobalToFiducialTransform(frameToBase, true);
@@ -975,13 +1012,15 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	/**
 	 * Inverse offset.
 	 *
-	 * @param t the t
+	 * @param t
+	 *            the t
 	 * @return the transform nr
 	 */
 	public TransformNR inverseOffset(TransformNR t) {
 		// com.neuronrobotics.sdk.common.Log.error("RobotToFiducialTransform
 		// "+getRobotToFiducialTransform());
-		// com.neuronrobotics.sdk.common.Log.error("FiducialToRASTransform "+getFiducialToRASTransform());
+		// com.neuronrobotics.sdk.common.Log.error("FiducialToRASTransform
+		// "+getFiducialToRASTransform());
 		Matrix globalToFeducialInverse = getFiducialToGlobalTransform().getMatrixTransform().inverse();
 		Matrix feducialToLimbInverse = getRobotToFiducialTransform().getMatrixTransform().inverse();
 
@@ -994,7 +1033,8 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	/**
 	 * Forward offset.
 	 *
-	 * @param t the t
+	 * @param t
+	 *            the t
 	 * @return the transform nr
 	 */
 	public TransformNR forwardOffset(TransformNR t) {
@@ -1008,7 +1048,8 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	/**
 	 * Adds the joint space listener.
 	 *
-	 * @param l the l
+	 * @param l
+	 *            the l
 	 */
 	public void addJointSpaceListener(IJointSpaceUpdateListenerNR l) {
 		if (jointSpaceUpdateListeners.contains(l) || (l == null))
@@ -1020,7 +1061,8 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	/**
 	 * Removes the joint space update listener.
 	 *
-	 * @param l the l
+	 * @param l
+	 *            the l
 	 */
 	public void removeJointSpaceUpdateListener(IJointSpaceUpdateListenerNR l) {
 		if (jointSpaceUpdateListeners.contains(l))
@@ -1030,7 +1072,8 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	/**
 	 * Adds the registration listener.
 	 *
-	 * @param l the l
+	 * @param l
+	 *            the l
 	 */
 	public void addRegistrationListener(IRegistrationListenerNR l) {
 		if (regListeners.contains(l) || (l == null))
@@ -1043,7 +1086,8 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	/**
 	 * Removes the regestration update listener.
 	 *
-	 * @param l the l
+	 * @param l
+	 *            the l
 	 */
 	public void removeRegestrationUpdateListener(IRegistrationListenerNR l) {
 		if (regListeners.contains(l))
@@ -1053,7 +1097,8 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	/**
 	 * Adds the pose update listener.
 	 *
-	 * @param l the l
+	 * @param l
+	 *            the l
 	 */
 	public void addPoseUpdateListener(ITaskSpaceUpdateListenerNR l) {
 		if (taskSpaceUpdateListeners.contains(l) || (l == null)) {
@@ -1066,7 +1111,8 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	/**
 	 * Removes the pose update listener.
 	 *
-	 * @param l the l
+	 * @param l
+	 *            the l
 	 */
 	public void removePoseUpdateListener(ITaskSpaceUpdateListenerNR l) {
 		if (taskSpaceUpdateListeners.contains(l)) {
@@ -1077,7 +1123,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.neuronrobotics.sdk.addons.kinematics.ILinkListener#onLinkPositionUpdate(
 	 * com.neuronrobotics.sdk.addons.kinematics.AbstractLink, double)
@@ -1087,30 +1133,28 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		for (LinkConfiguration c : getLinkConfigurations()) {
 			AbstractLink tmp = getFactory().getLink(c);
 			if (tmp == source) {// Check to see if this lines up with a known link
-//				// Log.info("Got PID event " + source + " value=" + engineeringUnitsValue);
-//				if (new Double(engineeringUnitsValue).isNaN()) {
-//					new RuntimeException("Link values can not be NaN").printStackTrace();					
-//					engineeringUnitsValue = 0;
-//				}
-//				ArrayList<LinkConfiguration> linkConfigurations = getLinkConfigurations();
-//				if (linkConfigurations!=null) {
-//					int indexOf = linkConfigurations.indexOf(c);
-//					if (currentJointSpacePositions != null)
-//						if ((indexOf >= 0) && (indexOf < currentJointSpacePositions.length))
-//							currentJointSpacePositions[indexOf] = engineeringUnitsValue;
-//				}
+				// // Log.info("Got PID event " + source + " value=" + engineeringUnitsValue);
+				// if (new Double(engineeringUnitsValue).isNaN()) {
+				// new RuntimeException("Link values can not be NaN").printStackTrace();
+				// engineeringUnitsValue = 0;
+				// }
+				// ArrayList<LinkConfiguration> linkConfigurations = getLinkConfigurations();
+				// if (linkConfigurations!=null) {
+				// int indexOf = linkConfigurations.indexOf(c);
+				// if (currentJointSpacePositions != null)
+				// if ((indexOf >= 0) && (indexOf < currentJointSpacePositions.length))
+				// currentJointSpacePositions[indexOf] = engineeringUnitsValue;
+				// }
 				firePoseUpdate();
 				return;
 			}
 		}
 		Log.error("Got UKNOWN PID event " + source);
 	}
-	
-
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.neuronrobotics.sdk.pid.IPIDEventListener#onPIDEvent(com.neuronrobotics.
 	 * sdk.pid.PIDEvent)
@@ -1122,7 +1166,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.neuronrobotics.sdk.pid.IPIDEventListener#onPIDLimitEvent(com.
 	 * neuronrobotics.sdk.pid.PIDLimitEvent)
 	 */
@@ -1136,7 +1180,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.neuronrobotics.sdk.pid.IPIDEventListener#onPIDReset(int, int)
 	 */
 	@Override
@@ -1166,8 +1210,10 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	/**
 	 * Run home.
 	 *
-	 * @param joint the joint
-	 * @param tps   the tps
+	 * @param joint
+	 *            the joint
+	 * @param tps
+	 *            the tps
 	 */
 	private void runHome(PIDChannel joint, int tps) {
 		IPIDEventListener listen = new IPIDEventListener() {
@@ -1201,7 +1247,8 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	/**
 	 * Home link.
 	 *
-	 * @param link the link
+	 * @param link
+	 *            the link
 	 */
 	public void homeLink(int link) {
 		if ((link < 0) || (link >= getNumberOfLinks())) {
@@ -1261,9 +1308,9 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 				getFactory().getPid(lf).killAllPidGroups();
 	}
 
-//	public void setAxisPidConfiguration(ArrayList<PIDConfiguration> conf) {
-//		this.pidConfigurations = conf;
-//	}
+	// public void setAxisPidConfiguration(ArrayList<PIDConfiguration> conf) {
+	// this.pidConfigurations = conf;
+	// }
 
 	/**
 	 * Gets the axis pid configuration.
@@ -1277,16 +1324,19 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	/**
 	 * Inverse kinematics.
 	 *
-	 * @param taskSpaceTransform the task space transform
+	 * @param taskSpaceTransform
+	 *            the task space transform
 	 * @return Nx1 vector in task space, in mm where N is number of links
-	 * @throws Exception the exception
+	 * @throws Exception
+	 *             the exception
 	 */
 	public abstract double[] inverseKinematics(TransformNR taskSpaceTransform) throws Exception;
 
 	/**
 	 * Forward kinematics.
 	 *
-	 * @param jointSpaceVector the joint space vector
+	 * @param jointSpaceVector
+	 *            the joint space vector
 	 * @return 6x1 vector in task space, unit in mm,radians [x,y,z,rotx,rotY,rotZ]
 	 */
 	public abstract TransformNR forwardKinematics(double[] jointSpaceVector);
@@ -1305,7 +1355,8 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	/**
 	 * Sets the current pose target.
 	 *
-	 * @param currentPoseTarget the new current pose target
+	 * @param currentPoseTarget
+	 *            the new current pose target
 	 */
 	public void setCurrentPoseTarget(TransformNR currentPoseTarget) {
 		this.currentPoseTarget = currentPoseTarget;
@@ -1317,7 +1368,8 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	/**
 	 * Sets the factory.
 	 *
-	 * @param factory the new factory
+	 * @param factory
+	 *            the new factory
 	 */
 	public void setFactory(LinkFactory factory) {
 		this.factory = factory;
@@ -1337,7 +1389,8 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	/**
 	 * Sets the no flush.
 	 *
-	 * @param noFlush the new no flush
+	 * @param noFlush
+	 *            the new no flush
 	 */
 	public void setNoFlush(boolean noFlush) {
 		this.noFlush = noFlush;
@@ -1364,7 +1417,8 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	/**
 	 * Sets the retry number before fail.
 	 *
-	 * @param retryNumberBeforeFail the new retry number before fail
+	 * @param retryNumberBeforeFail
+	 *            the new retry number before fail
 	 */
 	public void setRetryNumberBeforeFail(int retryNumberBeforeFail) {
 		this.retryNumberBeforeFail = retryNumberBeforeFail;
@@ -1372,7 +1426,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.neuronrobotics.sdk.addons.kinematics.ILinkListener#onLinkLimit(com.
 	 * neuronrobotics.sdk.addons.kinematics.AbstractLink,
 	 * com.neuronrobotics.sdk.pid.PIDLimitEvent)
@@ -1384,7 +1438,6 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 				fireJointSpaceLimitUpdate(i, new JointLimit(i, arg1, arg0.getLinkConfiguration()));
 		}
 	}
-
 
 	/**
 	 * Gets the dh parameters chain.
@@ -1398,7 +1451,8 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	/**
 	 * Sets the dh parameters chain.
 	 *
-	 * @param dhParametersChain the new dh parameters chain
+	 * @param dhParametersChain
+	 *            the new dh parameters chain
 	 */
 	public void setDhParametersChain(DHChain dhParametersChain) {
 		this.dhParametersChain = dhParametersChain;
@@ -1416,7 +1470,8 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	/**
 	 * Sets the dh engine.
 	 *
-	 * @param dhEngine the new dh engine
+	 * @param dhEngine
+	 *            the new dh engine
 	 */
 	public void setGitDhEngine(String[] dhEngine) {
 		if (dhEngine != null && dhEngine[0] != null && dhEngine[1] != null)
@@ -1435,7 +1490,8 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	/**
 	 * Sets the cad engine.
 	 *
-	 * @param cadEngine the new cad engine
+	 * @param cadEngine
+	 *            the new cad engine
 	 */
 	public void setGitCadEngine(String[] cadEngine) {
 		if (cadEngine != null && cadEngine[0] != null && cadEngine[1] != null)
@@ -1445,8 +1501,10 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	/**
 	 * Gets the code.
 	 *
-	 * @param e   the e
-	 * @param tag the tag
+	 * @param e
+	 *            the e
+	 * @param tag
+	 *            the tag
 	 * @return the code
 	 */
 	protected String getCode(Element e, String tag) {
@@ -1468,8 +1526,10 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	/**
 	 * Gets the gist codes.
 	 *
-	 * @param doc the doc
-	 * @param tag the tag
+	 * @param doc
+	 *            the doc
+	 * @param tag
+	 *            the tag
 	 * @return the gist codes
 	 */
 	protected String[] getGitCodes(Element doc, String tag) {
@@ -1554,11 +1614,12 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 
 		return getAbstractLink(linkIndex).getMinEngineeringUnits();
 	}
-	
+
 	/**
 	 * Sets the max engineering units.
 	 *
-	 * @param maxLimit the max engineering units
+	 * @param maxLimit
+	 *            the max engineering units
 	 */
 	public void setMaxEngineeringUnits(int linkIndex, double maxLimit) {
 		getAbstractLink(linkIndex).setMaxEngineeringUnits(maxLimit);
@@ -1567,25 +1628,26 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	/**
 	 * Sets the min engineering units.
 	 *
-	 * @param minLimit the min engineering units
+	 * @param minLimit
+	 *            the min engineering units
 	 */
 	public void setMinEngineeringUnits(int linkIndex, double minLimit) {
 
 		getAbstractLink(linkIndex).setMinEngineeringUnits(minLimit);
 	}
 	public String getElectroMechanicalType(int linkIndex) {
-		return getLinkConfiguration(linkIndex).getElectroMechanicalType() ;
+		return getLinkConfiguration(linkIndex).getElectroMechanicalType();
 	}
 
-	public void setElectroMechanicalType(int linkIndex,String electroMechanicalType) {
+	public void setElectroMechanicalType(int linkIndex, String electroMechanicalType) {
 		getLinkConfiguration(linkIndex).setElectroMechanicalType(electroMechanicalType);
 	}
 
 	public String getElectroMechanicalSize(int linkIndex) {
-		return getLinkConfiguration(linkIndex).getElectroMechanicalSize() ;
+		return getLinkConfiguration(linkIndex).getElectroMechanicalSize();
 	}
 
-	public void setElectroMechanicalSize(int linkIndex,String electroMechanicalSize) {
+	public void setElectroMechanicalSize(int linkIndex, String electroMechanicalSize) {
 		getLinkConfiguration(linkIndex).setElectroMechanicalSize(electroMechanicalSize);
 	}
 
@@ -1593,7 +1655,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		return getLinkConfiguration(linkIndex).getShaftType();
 	}
 
-	public void setShaftType(int linkIndex,String shaftType) {
+	public void setShaftType(int linkIndex, String shaftType) {
 		getLinkConfiguration(linkIndex).setShaftType(shaftType);
 	}
 
@@ -1603,18 +1665,19 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	/**
 	 * Override this method to specify a larger range
 	 */
-	public void setDeviceMaximumValue(int linkIndex,double max) {
+	public void setDeviceMaximumValue(int linkIndex, double max) {
 		getLinkConfiguration(linkIndex).setDeviceTheoreticalMax(max);
 	}
 	/**
 	 * Override this method to specify a larger range
-
+	 *
 	 */
-	public void setDeviceMinimumValue(int linkIndex,double min) {
+	public void setDeviceMinimumValue(int linkIndex, double min) {
 		getLinkConfiguration(linkIndex).setDeviceTheoreticalMin(min);
 	}
 	/**
 	 * Override this method to specify a larger range
+	 *
 	 * @return the maximum value possible for a link
 	 */
 	public double getDeviceMaximumValue(int linkIndex) {
@@ -1622,29 +1685,28 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	}
 	/**
 	 * Override this method to specify a larger range
+	 *
 	 * @return the minimum value possible for a link
 	 */
 	public double getDeviceMinimumValue(int linkIndex) {
 		return getLinkConfiguration(linkIndex).getDeviceTheoreticalMin();
 	}
-	public void addChangeListener(int linkIndex,ILinkConfigurationChangeListener l) {
+	public void addChangeListener(int linkIndex, ILinkConfigurationChangeListener l) {
 		getLinkConfiguration(linkIndex).addChangeListener(l);
 	}
-	public void removeChangeListener(int linkIndex,ILinkConfigurationChangeListener l) {
+	public void removeChangeListener(int linkIndex, ILinkConfigurationChangeListener l) {
 		getLinkConfiguration(linkIndex).removeChangeListener(l);
 	}
 	public void clearChangeListener(int linkIndex) {
 		getLinkConfiguration(linkIndex).clearChangeListener();
 	}
 
-
-
 	public void runRenderWrangler() {
 		firePoseUpdate();
 		if (renderWrangler != null)
 			try {
 				renderWrangler.run();
-			}catch(Throwable t) {
+			} catch (Throwable t) {
 				t.printStackTrace();
 			}
 	}
@@ -1658,27 +1720,30 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		// create a transform thats a delta from the current pose to the new pose
 		return startingPoint.inverse().times(target);
 	}
-	
-	public TransformNR getTipAlongTrajectory(TransformNR startingPoint,TransformNR deltaToTarget,double unitIncrement) {
+
+	public TransformNR getTipAlongTrajectory(TransformNR startingPoint, TransformNR deltaToTarget,
+			double unitIncrement) {
 		return startingPoint.times(deltaToTarget.scale(unitIncrement));
 	}
-	public void asyncInterpolatedMove(TransformNR target, double seconds, InterpolationType type,IOnInterpolationDone listener, double ...conf ) {
-		new Thread(()->{
+	public void asyncInterpolatedMove(TransformNR target, double seconds, InterpolationType type,
+			IOnInterpolationDone listener, double... conf) {
+		new Thread(() -> {
 			try {
 				InterpolationMoveState s = blockingInterpolatedMove(target, seconds, type, conf);
 				listener.done(s);
-			}catch(Throwable t) {
+			} catch (Throwable t) {
 				t.printStackTrace();
 				listener.done(InterpolationMoveState.FAULT);
 			}
 		}).start();
-		
+
 	}
-	
-	public InterpolationMoveState blockingInterpolatedMove(TransformNR target, double seconds, InterpolationType type, double ...conf ) {
+
+	public InterpolationMoveState blockingInterpolatedMove(TransformNR target, double seconds, InterpolationType type,
+			double... conf) {
 		InterpolationEngine engine = new InterpolationEngine(getTimeProvider());
 		long currentTimeMillis = currentTimeMillis();
-		TransformNR delta =getDeltaToTarget(target);
+		TransformNR delta = getDeltaToTarget(target);
 		TransformNR startingPoint = getCurrentPoseTarget();
 		if (checkTaskSpaceTransform(target)) {
 			if (!checkTaskSpaceTransform(target, seconds)) {
@@ -1689,8 +1754,8 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 					seconds = bestTime;
 				}
 			}
-			
-			engine.setSetpointWithTime(currentTimeMillis,1,seconds,type,conf);
+
+			engine.setSetpointWithTime(currentTimeMillis, 1, seconds, type, conf);
 			double ms = seconds * 1000;
 			double msPerStep = 10;
 			double steps = ms / msPerStep;
@@ -1702,7 +1767,8 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 				// of the translation
 				// the new tip point here calculated is multiplied by the starting point to get
 				// a global space tip target
-				TransformNR nextPoint = getTipAlongTrajectory(startingPoint,delta,engine.getInterpolationUnitIncrement(currentTimeMillis()));
+				TransformNR nextPoint = getTipAlongTrajectory(startingPoint, delta,
+						engine.getInterpolationUnitIncrement(currentTimeMillis()));
 				// now the best time for this increment is calculated
 				double bestTime = getBestTime(nextPoint);
 				// error check for the best time being below the commanded time
@@ -1729,7 +1795,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		return InterpolationMoveState.READY;
 	}
 	@Override
-	public  void setTimeProvider(ITimeProvider t) {
+	public void setTimeProvider(ITimeProvider t) {
 		super.setTimeProvider(t);
 		imu.setTimeProvider(getTimeProvider());
 		for (int i = 0; i < getNumberOfLinks(); i++) {
@@ -1739,6 +1805,6 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	}
 	@Override
 	public String toString() {
-		return "Bowler Device "+getScriptingName();
+		return "Bowler Device " + getScriptingName();
 	}
 }

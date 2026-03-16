@@ -52,7 +52,7 @@ public class LinkConfiguration implements ITransformNRChangeListener, IVitaminHo
 	private double lowerLimit = -100000;// = Double.parseDouble(getTagValue("lowerLimit",eElement));
 
 	/** The k. */
-	private double k[] = new double[] { 1, 0, 0 };
+	private double k[] = new double[]{1, 0, 0};
 
 	/** The inverted. */
 	private boolean inverted = false;
@@ -107,7 +107,8 @@ public class LinkConfiguration implements ITransformNRChangeListener, IVitaminHo
 	/**
 	 * Instantiates a new link configuration.
 	 *
-	 * @param eElement the e element
+	 * @param eElement
+	 *            the e element
 	 */
 	public LinkConfiguration(Element eElement) {
 		setName(XmlFactory.getTagValue("name", eElement));
@@ -213,10 +214,10 @@ public class LinkConfiguration implements ITransformNRChangeListener, IVitaminHo
 					setCenterOfMassFromCentroid(new TransformNR(Double.parseDouble(XmlFactory.getTagValue("x", cntr)),
 							Double.parseDouble(XmlFactory.getTagValue("y", cntr)),
 							Double.parseDouble(XmlFactory.getTagValue("z", cntr)),
-							new RotationNR(new double[] { Double.parseDouble(XmlFactory.getTagValue("rotw", cntr)),
+							new RotationNR(new double[]{Double.parseDouble(XmlFactory.getTagValue("rotw", cntr)),
 									Double.parseDouble(XmlFactory.getTagValue("rotx", cntr)),
 									Double.parseDouble(XmlFactory.getTagValue("roty", cntr)),
-									Double.parseDouble(XmlFactory.getTagValue("rotz", cntr)) })));
+									Double.parseDouble(XmlFactory.getTagValue("rotz", cntr))})));
 				}
 			} catch (Exception e) {
 
@@ -228,10 +229,10 @@ public class LinkConfiguration implements ITransformNRChangeListener, IVitaminHo
 					setimuFromCentroid(new TransformNR(Double.parseDouble(XmlFactory.getTagValue("x", cntr)),
 							Double.parseDouble(XmlFactory.getTagValue("y", cntr)),
 							Double.parseDouble(XmlFactory.getTagValue("z", cntr)),
-							new RotationNR(new double[] { Double.parseDouble(XmlFactory.getTagValue("rotw", cntr)),
+							new RotationNR(new double[]{Double.parseDouble(XmlFactory.getTagValue("rotw", cntr)),
 									Double.parseDouble(XmlFactory.getTagValue("rotx", cntr)),
 									Double.parseDouble(XmlFactory.getTagValue("roty", cntr)),
-									Double.parseDouble(XmlFactory.getTagValue("rotz", cntr)) })));
+									Double.parseDouble(XmlFactory.getTagValue("rotz", cntr))})));
 				}
 			} catch (Exception e) {
 
@@ -256,7 +257,8 @@ public class LinkConfiguration implements ITransformNRChangeListener, IVitaminHo
 	/**
 	 * Instantiates a new link configuration.
 	 *
-	 * @param args the args
+	 * @param args
+	 *            the args
 	 */
 	public LinkConfiguration(Object[] args) {
 		setName((String) args[6]);
@@ -273,7 +275,8 @@ public class LinkConfiguration implements ITransformNRChangeListener, IVitaminHo
 	/**
 	 * Gets the vitamins.
 	 *
-	 * @param doc the doc
+	 * @param doc
+	 *            the doc
 	 */
 	protected void getVitamins(Element doc) {
 
@@ -288,11 +291,14 @@ public class LinkConfiguration implements ITransformNRChangeListener, IVitaminHo
 
 	/**
 	 * Add a vitamin to this link
-	 * 
-	 * @param name the name of this vitamin, if the name already exists, the data
-	 *             will be overwritten.
-	 * @param type the vitamin type, this maps the the json filename
-	 * @param id   the part ID, theis maps to the key in the json for the vitamin
+	 *
+	 * @param name
+	 *            the name of this vitamin, if the name already exists, the data
+	 *            will be overwritten.
+	 * @param type
+	 *            the vitamin type, this maps the the json filename
+	 * @param id
+	 *            the part ID, theis maps to the key in the json for the vitamin
 	 */
 	@Deprecated
 	public void setVitamin(VitaminLocation location) {
@@ -302,11 +308,14 @@ public class LinkConfiguration implements ITransformNRChangeListener, IVitaminHo
 
 	/**
 	 * Add a vitamin to this link
-	 * 
-	 * @param name the name of this vitamin, if the name already exists, the data
-	 *             will be overwritten.
-	 * @param type the vitamin type, this maps the the json filename
-	 * @param id   the part ID, theis maps to the key in the json for the vitamin
+	 *
+	 * @param name
+	 *            the name of this vitamin, if the name already exists, the data
+	 *            will be overwritten.
+	 * @param type
+	 *            the vitamin type, this maps the the json filename
+	 * @param id
+	 *            the part ID, theis maps to the key in the json for the vitamin
 	 */
 	public void addVitaminInternal(VitaminLocation location) {
 		if (vitamins.contains(location))
@@ -325,9 +334,11 @@ public class LinkConfiguration implements ITransformNRChangeListener, IVitaminHo
 
 	/**
 	 * Set a purchasing code for a vitamin
-	 * 
-	 * @param name      name of vitamin
-	 * @param tagValue2 Purchaning code
+	 *
+	 * @param name
+	 *            name of vitamin
+	 * @param tagValue2
+	 *            Purchaning code
 	 */
 	public void setVitaminVariant(String name, String tagValue2) {
 		vitaminVariant.put(name, tagValue2);
@@ -336,8 +347,9 @@ public class LinkConfiguration implements ITransformNRChangeListener, IVitaminHo
 
 	/**
 	 * Get a purchaing code for a vitamin
-	 * 
-	 * @param name name of vitamin
+	 *
+	 * @param name
+	 *            name of vitamin
 	 * @return
 	 */
 	public String getVitaminVariant(String name) {
@@ -384,10 +396,14 @@ public class LinkConfiguration implements ITransformNRChangeListener, IVitaminHo
 	/**
 	 * Instantiates a new link configuration.
 	 *
-	 * @param home   the home
-	 * @param llimit the llimit
-	 * @param ulimit the ulimit
-	 * @param d      the d
+	 * @param home
+	 *            the home
+	 * @param llimit
+	 *            the llimit
+	 * @param ulimit
+	 *            the ulimit
+	 * @param d
+	 *            the d
 	 */
 	public LinkConfiguration(int home, int llimit, int ulimit, double d) {
 		setScale(d);
@@ -399,7 +415,7 @@ public class LinkConfiguration implements ITransformNRChangeListener, IVitaminHo
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
@@ -421,11 +437,12 @@ public class LinkConfiguration implements ITransformNRChangeListener, IVitaminHo
 	 * @return the xml
 	 */
 	/*
-	 * 
+	 *
 	 * Generate the xml configuration to generate a link of this configuration.
 	 */
 	public String getXml() {
-		String DevStr = deviceScriptingName != null ? "<deviceName>" + getDeviceScriptingName() + "</deviceName>\n"
+		String DevStr = deviceScriptingName != null
+				? "<deviceName>" + getDeviceScriptingName() + "</deviceName>\n"
 				: "";
 		String slaves = "";
 		for (int i = 0; i < slaveLinks.size(); i++) {
@@ -451,7 +468,8 @@ public class LinkConfiguration implements ITransformNRChangeListener, IVitaminHo
 	/**
 	 * Sets the name.
 	 *
-	 * @param name the new name
+	 * @param name
+	 *            the new name
 	 */
 	public void setName(String name) {
 		Log.info("Setting controller name: " + name);
@@ -472,7 +490,8 @@ public class LinkConfiguration implements ITransformNRChangeListener, IVitaminHo
 	 * sets the hardware index for maping this kinematics link to its assocaited
 	 * hardware index.
 	 *
-	 * @param index the new hardware index
+	 * @param index
+	 *            the new hardware index
 	 */
 	public void setHardwareIndex(int index) {
 		this.index = index;
@@ -492,7 +511,8 @@ public class LinkConfiguration implements ITransformNRChangeListener, IVitaminHo
 	/**
 	 * Sets the scale.
 	 *
-	 * @param scale the new scale
+	 * @param scale
+	 *            the new scale
 	 */
 	public void setScale(double scale) {
 		this.scale = scale;
@@ -529,7 +549,8 @@ public class LinkConfiguration implements ITransformNRChangeListener, IVitaminHo
 	/**
 	 * Sets the upper limit.
 	 *
-	 * @param upperLimit the new upper limit
+	 * @param upperLimit
+	 *            the new upper limit
 	 */
 	public void setUpperLimit(double upperLimit) {
 		this.upperLimit = upperLimit;
@@ -555,7 +576,8 @@ public class LinkConfiguration implements ITransformNRChangeListener, IVitaminHo
 	/**
 	 * Sets the lower limit.
 	 *
-	 * @param lowerLimit the new lower limit
+	 * @param lowerLimit
+	 *            the new lower limit
 	 */
 	public void setLowerLimit(double lowerLimit) {
 		this.lowerLimit = lowerLimit;
@@ -609,7 +631,8 @@ public class LinkConfiguration implements ITransformNRChangeListener, IVitaminHo
 	/**
 	 * Sets the kp.
 	 *
-	 * @param kP the new kp
+	 * @param kP
+	 *            the new kp
 	 */
 	public void setKP(double kP) {
 		k[0] = kP;
@@ -619,7 +642,8 @@ public class LinkConfiguration implements ITransformNRChangeListener, IVitaminHo
 	/**
 	 * Sets the ki.
 	 *
-	 * @param kI the new ki
+	 * @param kI
+	 *            the new ki
 	 */
 	public void setKI(double kI) {
 		k[1] = kI;
@@ -629,7 +653,8 @@ public class LinkConfiguration implements ITransformNRChangeListener, IVitaminHo
 	/**
 	 * Sets the kd.
 	 *
-	 * @param kD the new kd
+	 * @param kD
+	 *            the new kd
 	 */
 	public void setKD(double kD) {
 		k[2] = kD;
@@ -639,7 +664,8 @@ public class LinkConfiguration implements ITransformNRChangeListener, IVitaminHo
 	/**
 	 * Sets the inverted.
 	 *
-	 * @param inverted the new inverted
+	 * @param inverted
+	 *            the new inverted
 	 */
 	public void setInverted(boolean inverted) {
 		this.inverted = inverted;
@@ -658,7 +684,8 @@ public class LinkConfiguration implements ITransformNRChangeListener, IVitaminHo
 	/**
 	 * Sets the index latch.
 	 *
-	 * @param indexLatch the new index latch
+	 * @param indexLatch
+	 *            the new index latch
 	 */
 	public void setIndexLatch(double indexLatch) {
 
@@ -682,7 +709,8 @@ public class LinkConfiguration implements ITransformNRChangeListener, IVitaminHo
 	/**
 	 * Sets the latch.
 	 *
-	 * @param isLatch the new latch
+	 * @param isLatch
+	 *            the new latch
 	 */
 	public void setLatch(boolean isLatch) {
 		this.isLatch = isLatch;
@@ -700,7 +728,8 @@ public class LinkConfiguration implements ITransformNRChangeListener, IVitaminHo
 	/**
 	 * Sets the stop on latch.
 	 *
-	 * @param isStopOnLatch the new stop on latch
+	 * @param isStopOnLatch
+	 *            the new stop on latch
 	 */
 	public void setStopOnLatch(boolean isStopOnLatch) {
 		this.isStopOnLatch = isStopOnLatch;
@@ -719,7 +748,8 @@ public class LinkConfiguration implements ITransformNRChangeListener, IVitaminHo
 	/**
 	 * Sets the homing ticks per second.
 	 *
-	 * @param homingTicksPerSecond the new homing ticks per second
+	 * @param homingTicksPerSecond
+	 *            the new homing ticks per second
 	 */
 	public void setHomingTicksPerSecond(int homingTicksPerSecond) {
 		this.homingTicksPerSecond = homingTicksPerSecond;
@@ -747,7 +777,8 @@ public class LinkConfiguration implements ITransformNRChangeListener, IVitaminHo
 	/**
 	 * Sets the upper velocity.
 	 *
-	 * @param upperVelocity the new upper velocity
+	 * @param upperVelocity
+	 *            the new upper velocity
 	 */
 	public void setUpperVelocity(double upperVelocity) {
 		this.velocityLimit = upperVelocity;
@@ -784,7 +815,8 @@ public class LinkConfiguration implements ITransformNRChangeListener, IVitaminHo
 	/**
 	 * This sets the index of the link in itts kinematic chain.
 	 *
-	 * @param linkIndex the new link index
+	 * @param linkIndex
+	 *            the new link index
 	 */
 	public void setLinkIndex(int linkIndex) {
 		this.linkIndex = linkIndex;
@@ -803,7 +835,8 @@ public class LinkConfiguration implements ITransformNRChangeListener, IVitaminHo
 	/**
 	 * Sets the totla number of links.
 	 *
-	 * @param totlaNumberOfLinks the new totla number of links
+	 * @param totlaNumberOfLinks
+	 *            the new totla number of links
 	 */
 	public void setTotlaNumberOfLinks(int totlaNumberOfLinks) {
 		this.totlaNumberOfLinks = totlaNumberOfLinks;
@@ -830,7 +863,8 @@ public class LinkConfiguration implements ITransformNRChangeListener, IVitaminHo
 	/**
 	 * Sets the pid configuration.
 	 *
-	 * @param pid the new pid configuration
+	 * @param pid
+	 *            the new pid configuration
 	 */
 	public void setPidConfiguration(IPidControlNamespace pid) {
 		PIDConfiguration conf = pid.getPIDConfiguration(getHardwareIndex());
@@ -846,8 +880,10 @@ public class LinkConfiguration implements ITransformNRChangeListener, IVitaminHo
 		indexLatch = (int) conf.getIndexLatch();
 		isStopOnLatch = conf.isStopOnIndex();
 		fireChangeEvent();
-//    	if(indexLatch>getUpperLimit() || indexLatch<getLowerLimit() )
-//    	    throw new RuntimeException("PID group "+getHardwareIndex()+" Index latch is "+indexLatch+" but needs to be between "+getUpperLimit()+" and "+getLowerLimit());
+		// if(indexLatch>getUpperLimit() || indexLatch<getLowerLimit() )
+		// throw new RuntimeException("PID group "+getHardwareIndex()+" Index latch is
+		// "+indexLatch+" but needs to be between "+getUpperLimit()+" and
+		// "+getLowerLimit());
 
 	}
 
@@ -863,7 +899,8 @@ public class LinkConfiguration implements ITransformNRChangeListener, IVitaminHo
 	/**
 	 * Sets the device scripting name.
 	 *
-	 * @param deviceScriptingName the new device scripting name
+	 * @param deviceScriptingName
+	 *            the new device scripting name
 	 */
 	public void setDeviceScriptingName(String deviceScriptingName) {
 		this.deviceScriptingName = deviceScriptingName;
@@ -882,7 +919,8 @@ public class LinkConfiguration implements ITransformNRChangeListener, IVitaminHo
 	/**
 	 * Sets the static offset.
 	 *
-	 * @param staticOffset the new static offset
+	 * @param staticOffset
+	 *            the new static offset
 	 */
 	public void setStaticOffset(double staticOffset) {
 		if (staticOffset > getUpperLimit())
@@ -944,10 +982,10 @@ public class LinkConfiguration implements ITransformNRChangeListener, IVitaminHo
 		fireChangeEvent();
 	}
 
-//	private String electroMechanicalType = "hobbyServo";
-//	private String electroMechanicalSize = "standardMicro";
-//	private String shaftType = "hobbyServoHorn";
-//	private String shaftSize = "standardMicro1";
+	// private String electroMechanicalType = "hobbyServo";
+	// private String electroMechanicalSize = "standardMicro";
+	// private String shaftType = "hobbyServoHorn";
+	// private String shaftSize = "standardMicro1";
 	public ArrayList<VitaminLocation> getNonActuatorVitamins() {
 		ArrayList<VitaminLocation> back = new ArrayList<>();
 		back.addAll(vitamins);
@@ -961,7 +999,8 @@ public class LinkConfiguration implements ITransformNRChangeListener, IVitaminHo
 			if (loc.getName().contentEquals("shaft"))
 				return loc;
 		if (makeNew) {
-			VitaminLocation e = new VitaminLocation(false,"shaft", "hobbyServoHorn", "standardMicro1", new TransformNR());
+			VitaminLocation e = new VitaminLocation(false, "shaft", "hobbyServoHorn", "standardMicro1",
+					new TransformNR());
 			e.setFrame(VitaminFrame.LinkOrigin);
 			vitamins.add(e);
 			return e;
@@ -974,7 +1013,8 @@ public class LinkConfiguration implements ITransformNRChangeListener, IVitaminHo
 			if (loc.getName().contentEquals("electroMechanical"))
 				return loc;
 		if (makeNew) {
-			VitaminLocation e = new VitaminLocation(false,"electroMechanical", "hobbyServo", "mg92b", new TransformNR());
+			VitaminLocation e = new VitaminLocation(false, "electroMechanical", "hobbyServo", "mg92b",
+					new TransformNR());
 			e.setFrame(VitaminFrame.previousLinkTip);
 			vitamins.add(e);
 			return e;
@@ -1013,8 +1053,7 @@ public class LinkConfiguration implements ITransformNRChangeListener, IVitaminHo
 	}
 
 	public void setShaftType(String shaftType) {
-		getShaftVitamin().setType(shaftType);
-		;
+		getShaftVitamin().setType(shaftType);;
 		fireChangeEvent();
 	}
 
@@ -1069,15 +1108,15 @@ public class LinkConfiguration implements ITransformNRChangeListener, IVitaminHo
 	public boolean isVirtual() {
 		switch (getTypeEnum()) {
 
-		case DUMMY:
-		case VIRTUAL:
-			return true;
-		case USERDEFINED:
-			if (getTypeString().toLowerCase().contains("virtual")) {
+			case DUMMY :
+			case VIRTUAL :
 				return true;
-			}
-		default:
-			return false;
+			case USERDEFINED :
+				if (getTypeString().toLowerCase().contains("virtual")) {
+					return true;
+				}
+			default :
+				return false;
 		}
 	}
 
@@ -1088,16 +1127,16 @@ public class LinkConfiguration implements ITransformNRChangeListener, IVitaminHo
 	 */
 	public boolean isTool() {
 		switch (getTypeEnum()) {
-		case PID_TOOL:
-		case GCODE_STEPPER_TOOL:
-		case GCODE_HEATER_TOOL:
-			return true;
-		case USERDEFINED:
-			if (getTypeString().toLowerCase().contains("tool")) {
+			case PID_TOOL :
+			case GCODE_STEPPER_TOOL :
+			case GCODE_HEATER_TOOL :
 				return true;
-			}
-		default:
-			return false;
+			case USERDEFINED :
+				if (getTypeString().toLowerCase().contains("tool")) {
+					return true;
+				}
+			default :
+				return false;
 
 		}
 	}
@@ -1109,16 +1148,16 @@ public class LinkConfiguration implements ITransformNRChangeListener, IVitaminHo
 	 */
 	public boolean isPrismatic() {
 		switch (getTypeEnum()) {
-		case ANALOG_PRISMATIC:
-		case PID_PRISMATIC:
-		case GCODE_STEPPER_PRISMATIC:
-			return true;
-		case USERDEFINED:
-			if (getTypeString().toLowerCase().contains("prismatic")) {
+			case ANALOG_PRISMATIC :
+			case PID_PRISMATIC :
+			case GCODE_STEPPER_PRISMATIC :
 				return true;
-			}
-		default:
-			return false;
+			case USERDEFINED :
+				if (getTypeString().toLowerCase().contains("prismatic")) {
+					return true;
+				}
+			default :
+				return false;
 
 		}
 	}

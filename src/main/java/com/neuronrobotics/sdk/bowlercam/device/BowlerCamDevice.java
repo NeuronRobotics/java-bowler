@@ -1,6 +1,5 @@
 package com.neuronrobotics.sdk.bowlercam.device;
 
-
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -19,137 +18,148 @@ import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
 import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.Log;
-import com.neuronrobotics.sdk.util.ThreadUtil;
 
 //  Auto-generated Javadoc
 /**
  * The Class BowlerCamDevice.
  */
 public class BowlerCamDevice extends BowlerAbstractDevice {
-	
+
 	/** The tmp. */
 	private ByteList tmp = new ByteList();
-	
+
 	/** The image listeners. */
-	//private String srvUrl = null;
-	private ArrayList<IWebcamImageListener> imageListeners 	= new ArrayList<IWebcamImageListener>();
-	
+	// private String srvUrl = null;
+	private ArrayList<IWebcamImageListener> imageListeners = new ArrayList<IWebcamImageListener>();
+
 	/** The captures. */
-	private ArrayList<highSpeedAutoCapture> captures= new ArrayList<highSpeedAutoCapture> ();
-	
+	private ArrayList<highSpeedAutoCapture> captures = new ArrayList<highSpeedAutoCapture>();
+
 	/** The images. */
-	private ArrayList<BufferedImage>		images	= new ArrayList<BufferedImage>();
-	
+	private ArrayList<BufferedImage> images = new ArrayList<BufferedImage>();
+
 	/** The urls. */
-	private ArrayList<String> 				urls	= new ArrayList<String> ();
-	
+	private ArrayList<String> urls = new ArrayList<String>();
+
 	/** The mark. */
-	private ArrayList<ItemMarker> mark = new  ArrayList<ItemMarker> ();
-	
+	private ArrayList<ItemMarker> mark = new ArrayList<ItemMarker>();
+
 	/** The got last mark. */
 	private boolean gotLastMark = false;
-	
+
 	/**
 	 * Adds the webcam image listener.
 	 *
-	 * @param l the l
+	 * @param l
+	 *            the l
 	 */
-	//private highSpeedAutoCapture hsac = null;
-	public void addWebcamImageListener(IWebcamImageListener l){
-		if(!imageListeners.contains(l))
+	// private highSpeedAutoCapture hsac = null;
+	public void addWebcamImageListener(IWebcamImageListener l) {
+		if (!imageListeners.contains(l))
 			imageListeners.add(l);
 	}
-	
+
 	/**
 	 * Fire i webcam image listener event.
 	 *
-	 * @param camera the camera
-	 * @param im the im
+	 * @param camera
+	 *            the camera
+	 * @param im
+	 *            the im
 	 */
-	private void fireIWebcamImageListenerEvent(int camera,BufferedImage im){
-		for(IWebcamImageListener l:imageListeners){
-			l.onNewImage(camera,im);
+	private void fireIWebcamImageListenerEvent(int camera, BufferedImage im) {
+		for (IWebcamImageListener l : imageListeners) {
+			l.onNewImage(camera, im);
 		}
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.common.BowlerAbstractDevice#onAllResponse(com.neuronrobotics.sdk.common.BowlerDatagram)
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.neuronrobotics.sdk.common.BowlerAbstractDevice#onAllResponse(com.
+	 * neuronrobotics.sdk.common.BowlerDatagram)
 	 */
 	public void onAllResponse(BowlerDatagram data) {
 		// Auto-generated method stub
 
 	}
-	
+
 	/**
 	 * Gets the high speed image.
 	 *
-	 * @param cam the cam
+	 * @param cam
+	 *            the cam
 	 * @return the high speed image
-	 * @throws MalformedURLException the malformed url exception
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws MalformedURLException
+	 *             the malformed url exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public BufferedImage getHighSpeedImage(int cam) throws MalformedURLException, IOException {
-		//com.neuronrobotics.sdk.common.Log.error("Getting HighSpeedImage");
-		while(urls.size()<(cam+1) && isAvailable()){
-			Log.info("Adding dummy url: "+urls.size());
+		// com.neuronrobotics.sdk.common.Log.error("Getting HighSpeedImage");
+		while (urls.size() < (cam + 1) && isAvailable()) {
+			Log.info("Adding dummy url: " + urls.size());
 			urls.add(null);
 		}
-		while(images.size() <(cam+1) && isAvailable()){
-			Log.info("Adding dummy image: "+images);
+		while (images.size() < (cam + 1) && isAvailable()) {
+			Log.info("Adding dummy image: " + images);
 			images.add(null);
 		}
-		if(urls.get(cam) == null){
-			//com.neuronrobotics.sdk.common.Log.error("URL List element is empty: "+urls);
-			urls.set(cam,getImageServerURL(cam));
+		if (urls.get(cam) == null) {
+			// com.neuronrobotics.sdk.common.Log.error("URL List element is empty: "+urls);
+			urls.set(cam, getImageServerURL(cam));
 		}
 		try {
-			//com.neuronrobotics.sdk.common.Log.error("Reading: "+urls.get(cam) );
+			// com.neuronrobotics.sdk.common.Log.error("Reading: "+urls.get(cam) );
 			ImageReader ir = new ImageReader(cam);
 			ir.start();
 			long start = currentTimeMillis();
-			while(((currentTimeMillis()-start)<200) && ir.isDone()==false){
+			while (((currentTimeMillis() - start) < 200) && ir.isDone() == false) {
 				wait(5);
 			}
-			if(!ir.isDone())
+			if (!ir.isDone())
 				Log.error("Image read timed out");
-		}catch(Exception ex) {
-			//Log.error("Image capture failed");	
+		} catch (Exception ex) {
+			// Log.error("Image capture failed");
 		}
 		return images.get(cam);
 	}
-	
+
 	/**
 	 * The Class ImageReader.
 	 */
-	private class ImageReader extends Thread{
-		
+	private class ImageReader extends Thread {
+
 		/** The cam. */
 		int cam;
-		
+
 		/** The done. */
-		private boolean done=false;
-		
+		private boolean done = false;
+
 		/**
 		 * Instantiates a new image reader.
 		 *
-		 * @param cam the cam
+		 * @param cam
+		 *            the cam
 		 */
-		public ImageReader(int cam){
-			this.cam=cam;
+		public ImageReader(int cam) {
+			this.cam = cam;
 		}
-		
-		/* (non-Javadoc)
+
+		/*
+		 * (non-Javadoc)
+		 *
 		 * @see java.lang.Thread#run()
 		 */
-		public void run(){
-				try {
-					images.set(cam,ImageIO.read(new URL(urls.get(cam))));
-				} catch (Exception e) {
-					Log.error("Image Read threw an exception: "+e.getMessage());
-				}
-				done=(true);
+		public void run() {
+			try {
+				images.set(cam, ImageIO.read(new URL(urls.get(cam))));
+			} catch (Exception e) {
+				Log.error("Image Read threw an exception: " + e.getMessage());
+			}
+			done = (true);
 		}
-		
+
 		/**
 		 * Checks if is done.
 		 *
@@ -159,150 +169,169 @@ public class BowlerCamDevice extends BowlerAbstractDevice {
 			return done;
 		}
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.common.IBowlerDatagramListener#onAsyncResponse(com.neuronrobotics.sdk.common.BowlerDatagram)
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.neuronrobotics.sdk.common.IBowlerDatagramListener#onAsyncResponse(com.
+	 * neuronrobotics.sdk.common.BowlerDatagram)
 	 */
 	public void onAsyncResponse(BowlerDatagram data) {
-		if(data.getRPC().contains("_img")){
+		if (data.getRPC().contains("_img")) {
 			ByteList d = data.getData();
 			int camera = ByteList.convertToInt(d.popList(2));
 			int index = ByteList.convertToInt(d.popList(2));
 			int total = ByteList.convertToInt(d.popList(2));
-			byte [] imgData = d.popList(d.size());
-			Log.info("Got image chunk\n"+data+"\nindex: "+index+", total: "+total+", len: "+imgData.length);
-			synchronized(tmp) {
+			byte[] imgData = d.popList(d.size());
+			Log.info("Got image chunk\n" + data + "\nindex: " + index + ", total: " + total + ", len: "
+					+ imgData.length);
+			synchronized (tmp) {
 				tmp.add(imgData);
 			}
-			if(index == (total)){
-				////com.neuronrobotics.sdk.common.Log.error("Making image");
-		        BufferedImage image=null;
+			if (index == (total)) {
+				//// com.neuronrobotics.sdk.common.Log.error("Making image");
+				BufferedImage image = null;
 				try {
-					synchronized(tmp) {
+					synchronized (tmp) {
 						image = ByteArrayToImage(tmp.getBytes());
 					}
 				} catch (IOException e1) {
 					// Auto-generated catch block
 					e1.printStackTrace();
-					image=null;
+					image = null;
 				}
-				synchronized(tmp) {
+				synchronized (tmp) {
 					tmp.clear();
 				}
 				images.set(camera, image);
-				fireIWebcamImageListenerEvent(camera,images.get(camera));
-				//com.neuronrobotics.sdk.common.Log.error("Image OK");
+				fireIWebcamImageListenerEvent(camera, images.get(camera));
+				// com.neuronrobotics.sdk.common.Log.error("Image OK");
 			}
-			
+
 		}
-		if(data.getRPC().contains("blob")){
+		if (data.getRPC().contains("blob")) {
 			int x = ByteList.convertToInt(data.getData().getBytes(0, 4));
 			int y = ByteList.convertToInt(data.getData().getBytes(4, 4));
 			int r = ByteList.convertToInt(data.getData().getBytes(8, 4));
-			if(x==0 && y == 0 && r == 0){
+			if (x == 0 && y == 0 && r == 0) {
 				gotLastMark = true;
-				return;	
+				return;
 			}
-			mark.add(new ItemMarker(x,y,r));
+			mark.add(new ItemMarker(x, y, r));
 		}
 
 	}
-	
+
 	/**
 	 * Update image.
 	 *
-	 * @param chan the chan
-	 * @param scale the scale
+	 * @param chan
+	 *            the chan
+	 * @param scale
+	 *            the scale
 	 * @return true, if successful
 	 */
-	public boolean updateImage(int chan, double scale){
-		return send(new ImageCommand(chan, scale))==null;
+	public boolean updateImage(int chan, double scale) {
+		return send(new ImageCommand(chan, scale)) == null;
 	}
-	
+
 	/**
 	 * Gets the image server url.
 	 *
-	 * @param chan the chan
+	 * @param chan
+	 *            the chan
 	 * @return the image server url
 	 */
-	public String getImageServerURL(int chan){
-		//Log.info("Requesting image server URL");
-		while(urls.size() < (chan+1) && isAvailable()){
+	public String getImageServerURL(int chan) {
+		// Log.info("Requesting image server URL");
+		while (urls.size() < (chan + 1) && isAvailable()) {
 			urls.add(null);
 		}
-		if(urls.get(chan) != null)
+		if (urls.get(chan) != null)
 			return urls.get(chan);
-		BowlerDatagram b=send(new ImageURLCommand(chan));
-		urls.set(chan,b.getData().asString());
+		BowlerDatagram b = send(new ImageURLCommand(chan));
+		urls.set(chan, b.getData().asString());
 		return urls.get(chan);
 	}
-	
+
 	/**
 	 * Gets the image.
 	 *
-	 * @param chan the chan
+	 * @param chan
+	 *            the chan
 	 * @return the image
 	 */
 	public BufferedImage getImage(int chan) {
 		return images.get(chan);
 	}
-	
+
 	/**
 	 * Start high speed auto capture.
 	 *
-	 * @param cam the cam
-	 * @param scale the scale
-	 * @param fps the fps
+	 * @param cam
+	 *            the cam
+	 * @param scale
+	 *            the scale
+	 * @param fps
+	 *            the fps
 	 */
-	public void startHighSpeedAutoCapture(int cam,double scale,int fps) {
+	public void startHighSpeedAutoCapture(int cam, double scale, int fps) {
 		stopAutoCapture(cam);
-		while((captures.size() <= cam)&& isAvailable())
+		while ((captures.size() <= cam) && isAvailable())
 			captures.add(null);
-		captures.set(cam,new highSpeedAutoCapture(cam,scale,fps));
+		captures.set(cam, new highSpeedAutoCapture(cam, scale, fps));
 		captures.get(cam).start();
 	}
-	
+
 	/**
 	 * Stop auto capture.
 	 *
-	 * @param cam the cam
+	 * @param cam
+	 *            the cam
 	 */
 	public void stopAutoCapture(int cam) {
-		try{
+		try {
 			captures.get(cam).kill();
-			captures.set(cam,null);
-		}catch (Exception e){}
+			captures.set(cam, null);
+		} catch (Exception e) {
+		}
 	}
-	
+
 	/**
 	 * Update filter.
 	 *
-	 * @param c the c
-	 * @param threshhold the threshhold
-	 * @param within the within
-	 * @param minBlobSize the min blob size
-	 * @param maxBlobSize the max blob size
+	 * @param c
+	 *            the c
+	 * @param threshhold
+	 *            the threshhold
+	 * @param within
+	 *            the within
+	 * @param minBlobSize
+	 *            the min blob size
+	 * @param maxBlobSize
+	 *            the max blob size
 	 * @return true, if successful
 	 */
-	public boolean updateFilter(Color c, int threshhold,boolean within,int minBlobSize,int maxBlobSize){
+	public boolean updateFilter(Color c, int threshhold, boolean within, int minBlobSize, int maxBlobSize) {
 		boolean back = false;
-		try{
-			back = send(new BlobCommand(c, threshhold, within, minBlobSize, maxBlobSize))==null;
-		}catch (Exception e){
+		try {
+			back = send(new BlobCommand(c, threshhold, within, minBlobSize, maxBlobSize)) == null;
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return back;
 	}
-	
+
 	/**
 	 * Gets the blobs.
 	 *
 	 * @return the blobs
 	 */
-	public ArrayList<ItemMarker> getBlobs(){
+	public ArrayList<ItemMarker> getBlobs() {
 		mark.clear();
 		send(new BlobCommand());
-		while(gotLastMark == false && isAvailable()){
+		while (gotLastMark == false && isAvailable()) {
 			try {
 				sleep(10);
 			} catch (InterruptedException e) {
@@ -312,116 +341,127 @@ public class BowlerCamDevice extends BowlerAbstractDevice {
 		}
 		return mark;
 	}
-	
+
 	/**
 	 * The Class highSpeedAutoCapture.
 	 */
-	private class highSpeedAutoCapture extends Thread{
-		
+	private class highSpeedAutoCapture extends Thread {
+
 		/** The cam. */
 		int cam;
-		
+
 		/** The scale. */
 		double scale;
-		
+
 		/** The mspf. */
 		int mspf;
-		
+
 		/** The running. */
 		boolean running = true;
-		
+
 		/**
 		 * Instantiates a new high speed auto capture.
 		 *
-		 * @param cam the cam
-		 * @param scale the scale
-		 * @param fps the fps
+		 * @param cam
+		 *            the cam
+		 * @param scale
+		 *            the scale
+		 * @param fps
+		 *            the fps
 		 */
-		public highSpeedAutoCapture(int cam,double scale,int fps){
-			this.cam=cam;
-			this.scale=scale;
-			if(fps == 0) {
+		public highSpeedAutoCapture(int cam, double scale, int fps) {
+			this.cam = cam;
+			this.scale = scale;
+			if (fps == 0) {
 				mspf = 0;
 				return;
 			}
-			mspf = (int)(1000.0/((double)fps));
-			//com.neuronrobotics.sdk.common.Log.error("MS/frame: "+mspf);
+			mspf = (int) (1000.0 / ((double) fps));
+			// com.neuronrobotics.sdk.common.Log.error("MS/frame: "+mspf);
 		}
-		
-		/* (non-Javadoc)
+
+		/*
+		 * (non-Javadoc)
+		 *
 		 * @see java.lang.Thread#run()
 		 */
 		public void run() {
-			//com.neuronrobotics.sdk.common.Log.error("Starting auto capture on: "+getImageServerURL(cam));
+			// com.neuronrobotics.sdk.common.Log.error("Starting auto capture on:
+			// "+getImageServerURL(cam));
 			long st = currentTimeMillis();
-			while(running && isAvailable()) {
-				//com.neuronrobotics.sdk.common.Log.error("Getting image from: "+getImageServerURL(cam));
+			while (running && isAvailable()) {
+				// com.neuronrobotics.sdk.common.Log.error("Getting image from:
+				// "+getImageServerURL(cam));
 				try {
-					//com.neuronrobotics.sdk.common.Log.error("Capturing");
-					BufferedImage im =getHighSpeedImage(cam);
-					if(scale>1.01||scale<.99)
+					// com.neuronrobotics.sdk.common.Log.error("Capturing");
+					BufferedImage im = getHighSpeedImage(cam);
+					if (scale > 1.01 || scale < .99)
 						im = resize(im, scale);
-					if(im!=null){
-						//com.neuronrobotics.sdk.common.Log.error("Fireing");
-						fireIWebcamImageListenerEvent(cam,im);
+					if (im != null) {
+						// com.neuronrobotics.sdk.common.Log.error("Fireing");
+						fireIWebcamImageListenerEvent(cam, im);
 					}
-					//com.neuronrobotics.sdk.common.Log.error("ok");
+					// com.neuronrobotics.sdk.common.Log.error("ok");
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				if(mspf != 0) {
+				if (mspf != 0) {
 					long diff = currentTimeMillis() - st;
-					////System.out.print("\nMS diff: "+diff);
-					if(diff<mspf) {
+					//// System.out.print("\nMS diff: "+diff);
+					if (diff < mspf) {
 						try {
-							////System.out.print(" sleeping: "+(mspf-diff));
-							getTimeProvider().sleep(mspf-diff);
+							//// System.out.print(" sleeping: "+(mspf-diff));
+							getTimeProvider().sleep(mspf - diff);
 						} catch (InterruptedException e) {
 						}
 					}
-					st =  currentTimeMillis() ;
+					st = currentTimeMillis();
 				}
 			}
 		}
-		
+
 		/**
 		 * Kill.
 		 */
 		public void kill() {
-			//com.neuronrobotics.sdk.common.Log.error("Killing auto capture on cam: "+cam);
+			// com.neuronrobotics.sdk.common.Log.error("Killing auto capture on cam: "+cam);
 			running = false;
 		}
 	}
-	
+
 	/**
 	 * Resize.
 	 *
-	 * @param image the image
-	 * @param scale the scale
+	 * @param image
+	 *            the image
+	 * @param scale
+	 *            the scale
 	 * @return the buffered image
 	 */
 	public BufferedImage resize(BufferedImage image, double scale) {
-		if(image == null)
+		if (image == null)
 			return null;
-		if (scale<.01)
+		if (scale < .01)
 			scale = .01;
-		int width =  (int)(((double)image.getWidth())*scale);
-		int height = (int)(((double)image.getHeight())*scale);
-		BufferedImage resizedImage = new BufferedImage(width, height,image.getType());
+		int width = (int) (((double) image.getWidth()) * scale);
+		int height = (int) (((double) image.getHeight()) * scale);
+		BufferedImage resizedImage = new BufferedImage(width, height, image.getType());
 		Graphics2D g = resizedImage.createGraphics();
 		g.drawImage(image, 0, 0, width, height, null);
 		g.dispose();
 		return resizedImage;
 	}
-	
+
 	/**
 	 * Byte array to image.
 	 *
-	 * @param array the array
+	 * @param array
+	 *            the array
 	 * @return the buffered image
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
-	public BufferedImage ByteArrayToImage(byte [] array) throws IOException{
+	public BufferedImage ByteArrayToImage(byte[] array) throws IOException {
 		BufferedImage image = null;
 		image = ImageIO.read(new ByteArrayInputStream(array));
 		return image;

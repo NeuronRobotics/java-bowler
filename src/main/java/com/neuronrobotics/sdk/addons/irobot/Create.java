@@ -3,9 +3,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,46 +27,47 @@ import com.neuronrobotics.sdk.dyio.peripherals.UARTChannel;
 /**
  * The Class Create.
  */
-public class Create implements IUARTStreamListener{
-	
+public class Create implements IUARTStreamListener {
+
 	/** The my angle. */
 	private short myAngle;
-	
+
 	/** The my distance. */
 	private short myDistance;
-	//private boolean packetRecieved;
-	
+	// private boolean packetRecieved;
+
 	/** The previous rad. */
-	private short previousRad=0;
-	
+	private short previousRad = 0;
+
 	/** The previous vel. */
-	private short previousVel=0;
-	
+	private short previousVel = 0;
+
 	/** The channel. */
 	private UARTChannel channel;
-	
+
 	/** The led state. */
-	private byte []ledState={(byte) 139,0,0,0};
-	
+	private byte[] ledState = {(byte) 139, 0, 0, 0};
+
 	/** The sensor. */
-	private byte []sensor  = new byte[26];
-	
+	private byte[] sensor = new byte[26];
+
 	/** The sen req. */
-	private CreateSensorRequest senReq=CreateSensorRequest.NONE;
-	
+	private CreateSensorRequest senReq = CreateSensorRequest.NONE;
+
 	/** The listeners. */
 	private ArrayList<ICreateSensorListener> listeners = new ArrayList<ICreateSensorListener>();
-	
+
 	/**
 	 * Instantiates a new creates the.
 	 *
-	 * @param chan the chan
+	 * @param chan
+	 *            the chan
 	 */
-	public Create(UARTChannel chan){
-		channel= chan;
+	public Create(UARTChannel chan) {
+		channel = chan;
 		channel.setUARTBaudrate(57600);
 		channel.addUARTStreamListener(this);
-		byte [] init = {(byte) 128,(byte) 131};
+		byte[] init = {(byte) 128, (byte) 131};
 		try {
 			send(init);
 		} catch (Exception e) {
@@ -74,39 +75,40 @@ public class Create implements IUARTStreamListener{
 		}
 		requestSensors();
 	}
-	
+
 	/**
 	 * Sets the full mode.
 	 */
-	public void setFullMode(){
-		byte [] init = {(byte) 128,(byte) 132};
+	public void setFullMode() {
+		byte[] init = {(byte) 128, (byte) 132};
 		try {
 			send(init);
 		} catch (Exception e) {
 			throw new DyIOPeripheralException("Failed to initialize iRobot Create in Full Mode");
 		}
 	}
-	
+
 	/**
 	 * Inits the create.
 	 */
-	public void InitCreate(){
-		byte [] init = {(byte) 128,(byte) 131};
+	public void InitCreate() {
+		byte[] init = {(byte) 128, (byte) 131};
 		try {
 			send(init);
 		} catch (Exception e) {
 			throw new DyIOPeripheralException("Failed to initialize iRobot Create in Full Mode");
 		}
 	}
-	
+
 	/**
 	 * Inits the create blocking.
 	 *
-	 * @param timeout the timeout
+	 * @param timeout
+	 *            the timeout
 	 */
-	public void InitCreateBlocking(int timeout){
-		byte [] init = {(byte) 128,(byte) 131};
-		while(true){
+	public void InitCreateBlocking(int timeout) {
+		byte[] init = {(byte) 128, (byte) 131};
+		while (true) {
 			try {
 				Thread.sleep(500);
 				Log.info("Initializing Create..");
@@ -117,84 +119,89 @@ public class Create implements IUARTStreamListener{
 			}
 		}
 	}
-	
-	/**
-	 * wrapper for the drive command
-	 * NOTE, this is not a positional, only velocity. It will run forever until you tell it to stop
-	 *	  Special cases for radius param: 
-	 	  straight = 32768 = hex 8000
-		  Turn in place clockwise = -1
-		  Turn in place counter-clockwise = 1
 
-	 * @param velocity  mm/s 32768 to -32768
-	 * @param radius	mm	 32768 to -32768
+	/**
+	 * wrapper for the drive command NOTE, this is not a positional, only velocity.
+	 * It will run forever until you tell it to stop Special cases for radius param:
+	 * straight = 32768 = hex 8000 Turn in place clockwise = -1 Turn in place
+	 * counter-clockwise = 1
+	 *
+	 * @param velocity
+	 *            mm/s 32768 to -32768
+	 * @param radius
+	 *            mm 32768 to -32768
 	 */
-	public void move(short velocity,short radius){
-		if((velocity == previousVel) &&(radius == previousRad) )
+	public void move(short velocity, short radius) {
+		if ((velocity == previousVel) && (radius == previousRad))
 			return;
 		previousRad = radius;
-		previousVel = velocity; 
-		byte[] drv = {(byte) 137,(byte) (velocity>>8),(byte) velocity,(byte) (radius>>8),(byte) radius};
+		previousVel = velocity;
+		byte[] drv = {(byte) 137, (byte) (velocity >> 8), (byte) velocity, (byte) (radius >> 8), (byte) radius};
 		try {
 			send(drv);
 		} catch (Exception e) {
 			throw new DyIOPeripheralException("Failed to send drive command");
 		}
 	}
-	
+
 	/**
 	 * Drive straight.
 	 *
-	 * @param distance mm Distance from current location to drive
+	 * @param distance
+	 *            mm Distance from current location to drive
 	 */
-	public void driveStraight(short distance){
-		driveStraight((short)0x7fff,distance);
+	public void driveStraight(short distance) {
+		driveStraight((short) 0x7fff, distance);
 	}
 	/**
 	 * Driving macro. This will drive for a distance and stop.
-	 * @param velocity mm/s
-	 * @param distance mm
+	 *
+	 * @param velocity
+	 *            mm/s
+	 * @param distance
+	 *            mm
 	 */
-	public void driveStraight(short velocity,short distance){
-		if((distance > 0 && velocity < 0) || (distance < 0 && velocity > 0)){
+	public void driveStraight(short velocity, short distance) {
+		if ((distance > 0 && velocity < 0) || (distance < 0 && velocity > 0)) {
 			velocity *= -1;
 		}
-		byte[] drv = {(byte) 152,13,
-					  (byte) 137,(byte) (velocity>>8),(byte) velocity,(byte) (128),0,
-					  (byte) 156,(byte) (distance>>8),(byte) (distance),
-					  (byte) 137,0,0,0,0,
-					  (byte) 153};
+		byte[] drv = {(byte) 152, 13, (byte) 137, (byte) (velocity >> 8), (byte) velocity, (byte) (128), 0, (byte) 156,
+				(byte) (distance >> 8), (byte) (distance), (byte) 137, 0, 0, 0, 0, (byte) 153};
 		try {
 			send(drv);
 		} catch (Exception e) {
 			throw new DyIOPeripheralException("Failed to send drive command");
-			
+
 		}
 	}
-	
+
 	/**
 	 * Drive straight blocking.
 	 *
-	 * @param timeout the timeout
-	 * @param velocity mm/s
-	 * @param distance mm
+	 * @param timeout
+	 *            the timeout
+	 * @param velocity
+	 *            mm/s
+	 * @param distance
+	 *            mm
 	 * @return true, if successful
-	 * @throws InterruptedException the interrupted exception
+	 * @throws InterruptedException
+	 *             the interrupted exception
 	 */
-	public boolean driveStraightBlocking(int timeout,short velocity,short distance) throws InterruptedException{
-		int tries=0;
+	public boolean driveStraightBlocking(int timeout, short velocity, short distance) throws InterruptedException {
+		int tries = 0;
 		Log.info("Driving...");
 		try {
-			driveStraight(velocity,distance);
+			driveStraight(velocity, distance);
 		} catch (Exception e) {
 			Log.error(e.toString());
 		}
-		myDistance=0;
-		while (myDistance==0) {
+		myDistance = 0;
+		while (myDistance == 0) {
 			tries++;
 			// try to get a good sensor reading. break on sucsess
-			while(true){
-				try{
+			while (true) {
+				try {
 					Log.info("Trying to get a good sensor reading");
 					Thread.sleep(1000);
 					this.requestSensors();
@@ -203,77 +210,82 @@ public class Create implements IUARTStreamListener{
 					Log.error(e.toString());
 				}
 			}
-			Log.info("Driving Attempt "+Integer.toBinaryString(tries));
-			if (tries==10){
+			Log.info("Driving Attempt " + Integer.toBinaryString(tries));
+			if (tries == 10) {
 				Log.info("Re attempting to send command");
-				tries=0;
-				try{
-					driveStraight(velocity,distance);
+				tries = 0;
+				try {
+					driveStraight(velocity, distance);
 				} catch (Exception e) {
 					Log.error(e.toString());
 				}
 				Thread.sleep(1000);
 			}
 		}
-		
+
 		return false;
-		
+
 	}
-	
+
 	/**
 	 * Turn.
 	 *
-	 * @param angle degrees Distance from current location to drive
+	 * @param angle
+	 *            degrees Distance from current location to drive
 	 */
-	public void turn(short angle){
-		turn((short)0x7fff,angle);
+	public void turn(short angle) {
+		turn((short) 0x7fff, angle);
 	}
 	/**
 	 * Driving macro. This will drive for a distance and stop.
-	 * @param velocity mm/s
-	 * @param angle degrees
+	 *
+	 * @param velocity
+	 *            mm/s
+	 * @param angle
+	 *            degrees
 	 */
-	public void turn(short velocity,short angle){
-		if(velocity<0){
+	public void turn(short velocity, short angle) {
+		if (velocity < 0) {
 			velocity *= -1;
 		}
-		short turn = (short) ((angle>0)? 1:-1);
-		byte[] drv = {(byte) 152,13,
-					  (byte) 137,(byte) (velocity>>8),(byte) velocity,(byte) (turn>>8),(byte) (turn),
-					  (byte) 157,(byte) (angle>>8),(byte) (angle),
-					  (byte) 137,0,0,0,0,
-					  (byte) 153};
-		//Log.info("Turning: "+new ByteList(drv));
+		short turn = (short) ((angle > 0) ? 1 : -1);
+		byte[] drv = {(byte) 152, 13, (byte) 137, (byte) (velocity >> 8), (byte) velocity, (byte) (turn >> 8),
+				(byte) (turn), (byte) 157, (byte) (angle >> 8), (byte) (angle), (byte) 137, 0, 0, 0, 0, (byte) 153};
+		// Log.info("Turning: "+new ByteList(drv));
 		try {
 			send(drv);
 		} catch (Exception e) {
 			throw new DyIOPeripheralException("Failed to send drive command");
 		}
 	}
-	
+
 	/**
 	 * Turn blocking.
 	 *
-	 * @param timeout the timeout
-	 * @param velocity the velocity
-	 * @param angle the angle
+	 * @param timeout
+	 *            the timeout
+	 * @param velocity
+	 *            the velocity
+	 * @param angle
+	 *            the angle
 	 * @return true, if successful
-	 * @throws InterruptedException the interrupted exception
+	 * @throws InterruptedException
+	 *             the interrupted exception
 	 */
-	public boolean turnBlocking(int timeout,short velocity,short angle) throws InterruptedException{
-		int tries=0;
+	public boolean turnBlocking(int timeout, short velocity, short angle) throws InterruptedException {
+		int tries = 0;
 		Log.info("Driving...");
 		try {
-			turn(velocity,angle);
+			turn(velocity, angle);
 		} catch (Exception e) {
 			Log.error(e.toString());
 		}
-		myAngle=0;
-		while (myAngle==0) {
+		myAngle = 0;
+		while (myAngle == 0) {
 			tries++;
 			// try to get a good sensor reading. break on sucsess
-			while(true){
-				try{
+			while (true) {
+				try {
 					Log.info("Trying to get a good sensor reading");
 					Thread.sleep(1000);
 					this.requestSensors();
@@ -283,93 +295,103 @@ public class Create implements IUARTStreamListener{
 				}
 				Thread.sleep(1000);
 			}
-			Log.info("Driving Attempt "+Integer.toBinaryString(tries));
-			if (tries==10){
+			Log.info("Driving Attempt " + Integer.toBinaryString(tries));
+			if (tries == 10) {
 				Log.info("Re attempting to send command");
-				tries=0;
-				try{
-					turn(velocity,angle);
+				tries = 0;
+				try {
+					turn(velocity, angle);
 				} catch (Exception e) {
 					Log.error(e.toString());
 				}
 				Thread.sleep(1000);
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * Sets the led.
 	 *
-	 * @param max sets the state of the "max" led
-	 * @param spot sets the state of the "spot" led
+	 * @param max
+	 *            sets the state of the "max" led
+	 * @param spot
+	 *            sets the state of the "spot" led
 	 */
-	public void setLed(boolean max,boolean spot){
-		int led=0;
-		led+=max?			(1<<1):0;
-		led+=spot?			(1<<3):0;
-		ledState[1]=(byte)led;
+	public void setLed(boolean max, boolean spot) {
+		int led = 0;
+		led += max ? (1 << 1) : 0;
+		led += spot ? (1 << 3) : 0;
+		ledState[1] = (byte) led;
 		setLed();
 	}
-	
+
 	/**
 	 * Sets the status led.
 	 *
-	 * @param color Power Color (0 – 255), 0 = green, 255 = red
-	 * @param intensity Power Intensity (0 – 255), 0 = off, 255 = full intensity
+	 * @param color
+	 *            Power Color (0 – 255), 0 = green, 255 = red
+	 * @param intensity
+	 *            Power Intensity (0 – 255), 0 = off, 255 = full intensity
 	 */
-	public void setStatusLed(int color,int intensity){
-		ledState[2]=(byte)color;
-		ledState[3]=(byte)intensity;
+	public void setStatusLed(int color, int intensity) {
+		ledState[2] = (byte) color;
+		ledState[3] = (byte) intensity;
 		setLed();
 	}
-	
+
 	/**
 	 * Request sensors.
 	 */
-	public void requestSensors(){
+	public void requestSensors() {
 		requestSensors(CreateSensorRequest.ALL);
 	}
-	
+
 	/**
 	 * Request sensors.
 	 *
-	 * @param req the req
+	 * @param req
+	 *            the req
 	 */
-	public void requestSensors(CreateSensorRequest req){
-		senReq=req;
-		byte []all={(byte)142,req.getValue()};
+	public void requestSensors(CreateSensorRequest req) {
+		senReq = req;
+		byte[] all = {(byte) 142, req.getValue()};
 		try {
 			send(all);
 		} catch (Exception e) {
 			throw new DyIOPeripheralException("Failed to send sensor request");
 		}
 	}
-	
+
 	/**
 	 * Sets the led.
 	 */
-	private void setLed(){
+	private void setLed() {
 		try {
 			send(ledState);
 		} catch (Exception e) {
 			// ignore
 		}
 	}
-	
+
 	/**
 	 * Send.
 	 *
-	 * @param b the b
-	 * @throws Exception the exception
+	 * @param b
+	 *            the b
+	 * @throws Exception
+	 *             the exception
 	 */
-	private void send(byte[]b) throws Exception{
+	private void send(byte[] b) throws Exception {
 		channel.sendBytes(new ByteList(b));
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.dyio.IChannelEventListener#onChannelEvent(com.neuronrobotics.sdk.dyio.DyIOChannelEvent)
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.neuronrobotics.sdk.dyio.IChannelEventListener#onChannelEvent(com.
+	 * neuronrobotics.sdk.dyio.DyIOChannelEvent)
 	 */
 	public void onChannelEvent(DyIOChannelEvent e) {
 		try {
@@ -377,108 +399,109 @@ public class Create implements IUARTStreamListener{
 		} catch (InterruptedException e1) {
 			// ignore
 		}
-		byte [] in = channel.getBytes();
-		switch(senReq){
-		case ALL:
-			if(in.length==26){
-				//Log.info("Got ALL packet from Create");
-				for (int i=0;i<26;i++){
-					sensor[i]=in[i];
+		byte[] in = channel.getBytes();
+		switch (senReq) {
+			case ALL :
+				if (in.length == 26) {
+					// Log.info("Got ALL packet from Create");
+					for (int i = 0; i < 26; i++) {
+						sensor[i] = in[i];
+					}
+				} else {
+					Log.error("malformed ALL packet from Create" + new ByteList(in));
+					return;
 				}
-			}else{
-				Log.error("malformed ALL packet from Create"+new ByteList(in));
-				return;
-			}
-			break;
-		case IO:
-			if(in.length==10){
-				//Log.info("Got IO packet from Create");
-				for (int i=0;i<10;i++){
-					sensor[i]=in[i];
+				break;
+			case IO :
+				if (in.length == 10) {
+					// Log.info("Got IO packet from Create");
+					for (int i = 0; i < 10; i++) {
+						sensor[i] = in[i];
+					}
+				} else {
+					Log.error("malformed IO packet from Create" + new ByteList(in));
+					return;
 				}
-			}else{
-				Log.error("malformed IO packet from Create"+new ByteList(in));
-				return;
-			}
-			
-			break;
-		case DRIVE:
-			if(in.length==6){
-				//Log.info("Got DRIVE packet from Create");
-				for (int i=0;i<6;i++){
-					sensor[i+10]=in[i];
+
+				break;
+			case DRIVE :
+				if (in.length == 6) {
+					// Log.info("Got DRIVE packet from Create");
+					for (int i = 0; i < 6; i++) {
+						sensor[i + 10] = in[i];
+					}
+				} else {
+					Log.error("malformed DRIVE packet from Create" + new ByteList(in));
+					return;
 				}
-			}else{
-				Log.error("malformed DRIVE packet from Create"+new ByteList(in));
-				return;
-			}
-			break;
-		case BATTERY:
-			if(in.length==10){
-				//Log.info("Got BATTERY packet from Create");
-				for (int i=0;i<10;i++){
-					sensor[i+16]=in[i];
+				break;
+			case BATTERY :
+				if (in.length == 10) {
+					// Log.info("Got BATTERY packet from Create");
+					for (int i = 0; i < 10; i++) {
+						sensor[i + 16] = in[i];
+					}
+				} else {
+					Log.error("malformed BATTERY packet from Create" + new ByteList(in));
+					return;
 				}
-			}else{
-				Log.error("malformed BATTERY packet from Create"+new ByteList(in));
-				return;
-			}
-			break;
-		case NONE:
-			Log.error("Create sent packet upstream unexpectedally: "+new ByteList(in));
+				break;
+			case NONE :
+				Log.error("Create sent packet upstream unexpectedally: " + new ByteList(in));
 		}
 		fireCreatePacket(new CreateSensors(sensor));
-		senReq=CreateSensorRequest.NONE;
+		senReq = CreateSensorRequest.NONE;
 	}
-	
+
 	/**
 	 * removeAllCreateSensorListeners clears the list of async packet listeners.
 	 */
 	public void removeAllCreateSensorListeners() {
 		listeners.clear();
 	}
-	
+
 	/**
 	 * removeCreateSensorListener.
-	 * 
+	 *
 	 * @param l
 	 *            remove the specified listener
 	 */
 	public void removeCreateSensorListener(ICreateSensorListener l) {
-		if(!listeners.contains(l)) {
+		if (!listeners.contains(l)) {
 			return;
 		}
-		
+
 		listeners.remove(l);
 	}
-	
+
 	/**
 	 * addCreateSensorListener.
-	 * 
+	 *
 	 * @param l
 	 *            add the specified listener
 	 */
 	public void addCreateSensorListener(ICreateSensorListener l) {
-		if(listeners.contains(l)) {
+		if (listeners.contains(l)) {
 			return;
 		}
 		listeners.add(l);
 	}
-	
+
 	/**
 	 * Fire create packet.
 	 *
-	 * @param packet the packet
+	 * @param packet
+	 *            the packet
 	 */
 	private void fireCreatePacket(CreateSensors packet) {
 		// for the blocking drive funcs
-		myAngle=packet.angle;
+		myAngle = packet.angle;
 		myDistance = packet.distance;
-		//packetRecieved = true;
-		
-		for(ICreateSensorListener l : listeners) {
+		// packetRecieved = true;
+
+		for (ICreateSensorListener l : listeners) {
 			l.onCreateSensor(packet);
 		}
 	}
-	
+
 }

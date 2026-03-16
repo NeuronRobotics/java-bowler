@@ -5,7 +5,7 @@ package com.neuronrobotics.sdk.util;
  * The Class OsInfoUtil.
  */
 public class OsInfoUtil {
-	
+
 	/**
 	 * Checks if is 64 bit.
 	 *
@@ -13,8 +13,7 @@ public class OsInfoUtil {
 	 */
 	public static boolean is64Bit() {
 		// //com.neuronrobotics.sdk.common.Log.error("Arch: "+getOsArch());
-		return getOsArch().startsWith("x86_64")
-				|| getOsArch().startsWith("amd64");
+		return getOsArch().startsWith("x86_64") || getOsArch().startsWith("amd64");
 	}
 
 	/**
@@ -55,8 +54,7 @@ public class OsInfoUtil {
 	 */
 	public static boolean isWindows() {
 		// //com.neuronrobotics.sdk.common.Log.error("OS name: "+getOsName());
-		return getOsName().toLowerCase().startsWith("windows")
-				|| getOsName().toLowerCase().startsWith("microsoft")
+		return getOsName().toLowerCase().startsWith("windows") || getOsName().toLowerCase().startsWith("microsoft")
 				|| getOsName().toLowerCase().startsWith("ms");
 	}
 

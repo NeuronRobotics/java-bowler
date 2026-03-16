@@ -12,21 +12,23 @@ public class SafeModeCommand extends BowlerAbstractCommand {
 	/**
 	 * Instantiates a new safe mode command.
 	 */
-	public SafeModeCommand(){
+	public SafeModeCommand() {
 		setOpCode("safe");
 		setMethod(BowlerMethod.GET);
 	}
-	
+
 	/**
 	 * Instantiates a new safe mode command.
 	 *
-	 * @param enable the enable
-	 * @param msTime the ms time
+	 * @param enable
+	 *            the enable
+	 * @param msTime
+	 *            the ms time
 	 */
-	public SafeModeCommand(boolean enable,int msTime){
+	public SafeModeCommand(boolean enable, int msTime) {
 		setOpCode("safe");
 		setMethod(BowlerMethod.POST);
-		getCallingDataStorage().add(enable?1:0);
+		getCallingDataStorage().add(enable ? 1 : 0);
 		getCallingDataStorage().addAs16(msTime);
 	}
 }

@@ -11,8 +11,7 @@ import java.io.InputStreamReader;
  */
 public class SDKBuildInfo {
 	/** The Constant NAME. */
-	private static final String NAME = "Neuron Robotics SDK "
-			+ getProtocolVersion() + "." + getSDKVersion() + "("
+	private static final String NAME = "Neuron Robotics SDK " + getProtocolVersion() + "." + getSDKVersion() + "("
 			+ getBuildVersion() + ")";
 
 	/**
@@ -72,7 +71,8 @@ public class SDKBuildInfo {
 	/**
 	 * Gets the tag.
 	 *
-	 * @param target the target
+	 * @param target
+	 *            the target
 	 * @return the tag
 	 */
 	private static String getTag(String target) {
@@ -107,8 +107,7 @@ public class SDKBuildInfo {
 	 */
 	public static String getBuildDate() {
 		String s = "";
-		InputStream is = SDKBuildInfo.class
-				.getResourceAsStream("/META-INF/MANIFEST.MF");
+		InputStream is = SDKBuildInfo.class.getResourceAsStream("/META-INF/MANIFEST.MF");
 		BufferedReader br = new BufferedReader(new InputStreamReader(is));
 		String line;
 		try {

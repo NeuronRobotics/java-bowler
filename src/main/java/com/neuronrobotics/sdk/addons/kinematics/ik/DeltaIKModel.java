@@ -12,24 +12,19 @@ public class DeltaIKModel implements DhInverseSolver {
 
 	boolean debug = false;
 
-	int limbIndex =0;
+	int limbIndex = 0;
 
 	@Override
 	public double[] inverseKinematics(TransformNR target, double[] jointSpaceVector, DHChain chain) {
-		return inverseKinematics6dof(target,jointSpaceVector,chain);
+		return inverseKinematics6dof(target, jointSpaceVector, chain);
 	}
 	TransformNR linkOffset(DHLink link) {
 		return new TransformNR(link.DhStep(0));
 	}
 	double length(TransformNR tr) {
-		return Math.sqrt(
-			Math.pow(tr.getX(), 2)+
-			Math.pow(tr.getY(), 2)+
-			Math.pow(tr.getZ(), 2)
-			);
+		return Math.sqrt(Math.pow(tr.getX(), 2) + Math.pow(tr.getY(), 2) + Math.pow(tr.getZ(), 2));
 	}
-	
-	
+
 	public double[] inverseKinematics6dof(TransformNR target, double[] jointSpaceVector, DHChain chain) {
 
 		ArrayList<DHLink> links = chain.getLinks();
@@ -42,20 +37,20 @@ public class DeltaIKModel implements DhInverseSolver {
 		double z = target.getZ();
 		double y = target.getY();
 		double x = target.getX();
-		TransformNR targetNoRot =new TransformNR(x,y,z,new RotationNR());
-		
+		TransformNR targetNoRot = new TransformNR(x, y, z, new RotationNR());
+
 		RotationNR q = target.getRotation();
-		TransformNR newCenter =target.copy();
+		TransformNR newCenter = target.copy();
 		// Start by finding the IK to the wrist center
-		if(linkNum>=6) {
-			//offset for tool
-			//if(debug)com.neuronrobotics.sdk.common.Log.error( "Offestting for tool"
+		if (linkNum >= 6) {
+			// offset for tool
+			// if(debug)com.neuronrobotics.sdk.common.Log.error( "Offestting for tool"
 			TransformNR tool = new TransformNR();
-			if(linkNum==7)
-				tool=linkOffset(links.get(6));
+			if (linkNum == 7)
+				tool = linkOffset(links.get(6));
 			// compute the transform from tip to wrist center
 			TransformNR wristCenterOffsetTransform = linkOffset(links.get(5)).times(tool);
-			//com.neuronrobotics.sdk.common.Log.error( wristCenterOffsetTransform
+			// com.neuronrobotics.sdk.common.Log.error( wristCenterOffsetTransform
 			// take off the tool from the target to get the center of the wrist
 			newCenter = target.times(wristCenterOffsetTransform.inverse());
 		}
@@ -64,163 +59,152 @@ public class DeltaIKModel implements DhInverseSolver {
 		z = newCenter.getZ();
 		y = newCenter.getY();
 		x = newCenter.getX();
-		//xyz now are at the wrist center
+		// xyz now are at the wrist center
 		// Compute the xy plane projection of the tip
 		// this is the angle of the tipto the base link
-		if(x==0&&y==0) {
-			com.neuronrobotics.sdk.common.Log.error( "Singularity! try something else");
-			return inverseKinematics6dof(target.copy().translateX(0.01),jointSpaceVector,chain);
+		if (x == 0 && y == 0) {
+			com.neuronrobotics.sdk.common.Log.error("Singularity! try something else");
+			return inverseKinematics6dof(target.copy().translateX(0.01), jointSpaceVector, chain);
 		}
-		if(debug)com.neuronrobotics.sdk.common.Log.error( "Wrist center for IK "+x+","+y+","+z);
-		double baseVectorAngle = Math.toDegrees(Math.atan2(y , x));
+		if (debug)
+			com.neuronrobotics.sdk.common.Log.error("Wrist center for IK " + x + "," + y + "," + z);
+		double baseVectorAngle = Math.toDegrees(Math.atan2(y, x));
 		double elbowLink1CompositeLength = length(l1Offset);
-		double elbowLink2CompositeLength=length(l3Offset);
+		double elbowLink2CompositeLength = length(l3Offset);
 		double wristVect = length(newCenter);
-		if(debug)com.neuronrobotics.sdk.common.Log.error( "elbowLink1CompositeLength "+elbowLink1CompositeLength);
-		if(debug)com.neuronrobotics.sdk.common.Log.error( "elbowLink2CompositeLength "+elbowLink2CompositeLength);
-		if(debug)com.neuronrobotics.sdk.common.Log.error( "Elbo Hypotinuse "+wristVect);
-		double elbowTiltAngle =-( Math.toDegrees(
-			Math.acos(
-			(
-				Math.pow(elbowLink2CompositeLength,2)+
-				Math.pow(elbowLink1CompositeLength,2)
-				-Math.pow(wristVect,2)
-				)
-			/
-			(2 * elbowLink2CompositeLength * elbowLink1CompositeLength)
-			)
-			));
-		if(debug)com.neuronrobotics.sdk.common.Log.error( "Elbow angle " + elbowTiltAngle);
+		if (debug)
+			com.neuronrobotics.sdk.common.Log.error("elbowLink1CompositeLength " + elbowLink1CompositeLength);
+		if (debug)
+			com.neuronrobotics.sdk.common.Log.error("elbowLink2CompositeLength " + elbowLink2CompositeLength);
+		if (debug)
+			com.neuronrobotics.sdk.common.Log.error("Elbo Hypotinuse " + wristVect);
+		double elbowTiltAngle = -(Math
+				.toDegrees(Math.acos((Math.pow(elbowLink2CompositeLength, 2) + Math.pow(elbowLink1CompositeLength, 2)
+						- Math.pow(wristVect, 2)) / (2 * elbowLink2CompositeLength * elbowLink1CompositeLength))));
+		if (debug)
+			com.neuronrobotics.sdk.common.Log.error("Elbow angle " + elbowTiltAngle);
 		jointSpaceVector[2] = elbowTiltAngle - Math.toDegrees(links.get(2).getTheta());
-		
-		TransformNR local = new TransformNR(0,0,0,new RotationNR(0, -baseVectorAngle, 0));
+
+		TransformNR local = new TransformNR(0, 0, 0, new RotationNR(0, -baseVectorAngle, 0));
 		TransformNR tipOnXVect = local.times(newCenter);
 		double elZ = tipOnXVect.getZ();
 		double elX = tipOnXVect.getX();
 		double L1 = length(l1Offset);
 		double L2 = length(l3Offset);
-		
-		if(debug)com.neuronrobotics.sdk.common.Log.error( "L1 "+L1+" l2 "+L2+" z "+elZ+" x "+elX);
-		/** 
-		 * System of equasions 
-		 * Theta2 = asin(z/wristVect)
-		 * l3 = wristVect * cos( theta2)
+
+		if (debug)
+			com.neuronrobotics.sdk.common.Log.error("L1 " + L1 + " l2 " + L2 + " z " + elZ + " x " + elX);
+		/**
+		 * System of equasions Theta2 = asin(z/wristVect) l3 = wristVect * cos( theta2)
 		 * theta1 = acos(l1^2+x^2-l3^2/2*l1*x)
-		 * 
+		 *
 		 */
-		double asinVal = elZ/L2;
-		if(asinVal>1 || asinVal<-1)
-			throw new RuntimeException("Target outside workspace, passive links too short to reach "+L2);
+		double asinVal = elZ / L2;
+		if (asinVal > 1 || asinVal < -1)
+			throw new RuntimeException("Target outside workspace, passive links too short to reach " + L2);
 		double theta2 = Math.asin(asinVal);
-		
-		double L3 = L2*Math.cos(theta2);
-		double theta1 = Math.acos(
-			(
-				Math.pow(L1, 2) + 
-				Math.pow(elX, 2)-
-				Math.pow(L3, 2)
-				 )/
-			(2 * L1 *elX)	
-		);
-		jointSpaceVector[0]=-(90-(Math.toDegrees(theta1)+baseVectorAngle));
+
+		double L3 = L2 * Math.cos(theta2);
+		double theta1 = Math.acos((Math.pow(L1, 2) + Math.pow(elX, 2) - Math.pow(L3, 2)) / (2 * L1 * elX));
+		jointSpaceVector[0] = -(90 - (Math.toDegrees(theta1) + baseVectorAngle));
 		TransformNR reorient;
 		try {
-			reorient =new TransformNR(0,0,0,new RotationNR(0, -jointSpaceVector[0], 0));
-		}catch (Throwable t){
-			//t.printStackTrace()
-			throw new RuntimeException( "error calculating base angle: \nL1 "+L1+
-				" \nl2 "+L2+
-				" \nz "+elZ+
-				" \nx "+elX+
-				" \nl3 "+L3+
-				" \ntheta2 "+Math.toDegrees(theta2)+
-				" \nasinVal "+asinVal
-				
-				);
+			reorient = new TransformNR(0, 0, 0, new RotationNR(0, -jointSpaceVector[0], 0));
+		} catch (Throwable t) {
+			// t.printStackTrace()
+			throw new RuntimeException("error calculating base angle: \nL1 " + L1 + " \nl2 " + L2 + " \nz " + elZ
+					+ " \nx " + elX + " \nl3 " + L3 + " \ntheta2 " + Math.toDegrees(theta2) + " \nasinVal " + asinVal
+
+			);
 		}
 		TransformNR sphericalElbowTartget = reorient.times(newCenter);
-		//com.neuronrobotics.sdk.common.Log.error( newCenter 
-		//com.neuronrobotics.sdk.common.Log.error( 	sphericalElbowTartget
-		sphericalElbowTartget = new TransformNR(0.0,-sphericalElbowTartget.getY(), 0.0, new RotationNR()).times(sphericalElbowTartget);
-		//com.neuronrobotics.sdk.common.Log.error( 	sphericalElbowTartget
+		// com.neuronrobotics.sdk.common.Log.error( newCenter
+		// com.neuronrobotics.sdk.common.Log.error( sphericalElbowTartget
+		sphericalElbowTartget = new TransformNR(0.0, -sphericalElbowTartget.getY(), 0.0, new RotationNR())
+				.times(sphericalElbowTartget);
+		// com.neuronrobotics.sdk.common.Log.error( sphericalElbowTartget
 		double theta3 = Math.atan2(sphericalElbowTartget.getZ(), sphericalElbowTartget.getX());
-		jointSpaceVector[1] = -Math.toDegrees(theta3) ;
-		
-		//return jointSpaceVector
+		jointSpaceVector[1] = -Math.toDegrees(theta3);
+
+		// return jointSpaceVector
 
 		/**
-		// compute the top of the wrist now that the first 3 links are calculated
-		 * 
+		 * // compute the top of the wrist now that the first 3 links are calculated
+		 *
 		 */
-		double[] wristLinks=new double[jointSpaceVector.length];
-		for (int i = 0;i < 3; i++) 
-			wristLinks[i]=jointSpaceVector[i];
+		double[] wristLinks = new double[jointSpaceVector.length];
+		for (int i = 0; i < 3; i++)
+			wristLinks[i] = jointSpaceVector[i];
 
 		for (int i = 3; i < jointSpaceVector.length; i++)
 			wristLinks[i] = 0;
 
-		ArrayList<TransformNR> chainToLoad =new ArrayList<>();
-		chain.forwardKinematicsMatrix(wristLinks,chainToLoad);
-		TransformNR	startOfWristSet=chain.kin.inverseOffset(chainToLoad.get(2));
-		TransformNR virtualcenter = newCenter.times(new TransformNR(0, 0, 10,
-			new RotationNR(Math.toDegrees(links.get(5).getAlpha()),0 ,0)));
-		TransformNR wristMOvedToCenter0 =startOfWristSet
-											.inverse()// move back from base ot wrist to world home
-											.times(virtualcenter);// move forward to target, leaving the angle between the tip and the start of the rotation 
-		//if(debug)com.neuronrobotics.sdk.common.Log.error( 	wristMOvedToCenter0								
-		RotationNR qWrist=wristMOvedToCenter0.getRotation();
+		ArrayList<TransformNR> chainToLoad = new ArrayList<>();
+		chain.forwardKinematicsMatrix(wristLinks, chainToLoad);
+		TransformNR startOfWristSet = chain.kin.inverseOffset(chainToLoad.get(2));
+		TransformNR virtualcenter = newCenter
+				.times(new TransformNR(0, 0, 10, new RotationNR(Math.toDegrees(links.get(5).getAlpha()), 0, 0)));
+		TransformNR wristMOvedToCenter0 = startOfWristSet.inverse()// move back from base ot wrist to world home
+				.times(virtualcenter);// move forward to target, leaving the angle between the tip and the start of
+										// the rotation
+		// if(debug)com.neuronrobotics.sdk.common.Log.error( wristMOvedToCenter0
+		RotationNR qWrist = wristMOvedToCenter0.getRotation();
 		if ((wristMOvedToCenter0.getX() == 0) && (wristMOvedToCenter0.getY() == 0)) {
-			com.neuronrobotics.sdk.common.Log.error( "Singularity! try something else");
-			return inverseKinematics6dof(target.copy().translateX(0.01),jointSpaceVector,chain);
+			com.neuronrobotics.sdk.common.Log.error("Singularity! try something else");
+			return inverseKinematics6dof(target.copy().translateX(0.01), jointSpaceVector, chain);
 		}
-		double closest = (Math.toDegrees(Math.atan2(wristMOvedToCenter0.getY(), wristMOvedToCenter0.getX())) - Math.toDegrees(links.get(3).getTheta()));
+		double closest = (Math.toDegrees(Math.atan2(wristMOvedToCenter0.getY(), wristMOvedToCenter0.getX()))
+				- Math.toDegrees(links.get(3).getTheta()));
 
 		jointSpaceVector[3] = closest;
 		wristLinks[3] = jointSpaceVector[3];
-		if(jointSpaceVector.length == 4)
+		if (jointSpaceVector.length == 4)
 			return jointSpaceVector;
-		
+
 		chainToLoad = new ArrayList<>();
 		/**
-		// Calculte the second angle
-		 * 
+		 * // Calculte the second angle
+		 *
 		 */
 		chainToLoad.clear();
-		chain.forwardKinematicsMatrix(wristLinks,chainToLoad);
-		TransformNR	startOfWristSet2=chain.kin.inverseOffset(chainToLoad.get(3));
+		chain.forwardKinematicsMatrix(wristLinks, chainToLoad);
+		TransformNR startOfWristSet2 = chain.kin.inverseOffset(chainToLoad.get(3));
 
-		TransformNR wristMOvedToCenter1 =startOfWristSet2
-											.inverse()// move back from base ot wrist to world home
-											.times(virtualcenter);// move forward to target, leaving the angle between the tip and the start of the rotation
-		//if(debug)com.neuronrobotics.sdk.common.Log.error( " Middle link ="	+wristMOvedToCenter1
+		TransformNR wristMOvedToCenter1 = startOfWristSet2.inverse()// move back from base ot wrist to world home
+				.times(virtualcenter);// move forward to target, leaving the angle between the tip and the start of
+										// the rotation
+		// if(debug)com.neuronrobotics.sdk.common.Log.error( " Middle link ="
+		// +wristMOvedToCenter1
 		RotationNR qWrist2 = wristMOvedToCenter1.getRotation();
-		if (wristMOvedToCenter1.getX()==0&&wristMOvedToCenter1.getY() == 0) {
-			com.neuronrobotics.sdk.common.Log.error( "Singularity! try something else");
-			return inverseKinematics6dof(target.copy().translateX(0.01),jointSpaceVector,chain);
+		if (wristMOvedToCenter1.getX() == 0 && wristMOvedToCenter1.getY() == 0) {
+			com.neuronrobotics.sdk.common.Log.error("Singularity! try something else");
+			return inverseKinematics6dof(target.copy().translateX(0.01), jointSpaceVector, chain);
 		}
-		jointSpaceVector[4] = (Math.toDegrees(Math.atan2(wristMOvedToCenter1.getY(), wristMOvedToCenter1.getX())) -
-			Math.toDegrees(links.get(4).getTheta()) - 90);
+		jointSpaceVector[4] = (Math.toDegrees(Math.atan2(wristMOvedToCenter1.getY(), wristMOvedToCenter1.getX()))
+				- Math.toDegrees(links.get(4).getTheta()) - 90);
 		wristLinks[4] = jointSpaceVector[4];
 		if (jointSpaceVector.length == 5)
 			return jointSpaceVector;
 
 		chainToLoad = new ArrayList<>();
 		/**
-		// Calculte the last angle
-		 * 
+		 * // Calculte the last angle
+		 *
 		 */
-		chain.forwardKinematicsMatrix(wristLinks,chainToLoad);
-		TransformNR	startOfWristSet3=chain.kin.inverseOffset(chainToLoad.get(4));
+		chain.forwardKinematicsMatrix(wristLinks, chainToLoad);
+		TransformNR startOfWristSet3 = chain.kin.inverseOffset(chainToLoad.get(4));
 		TransformNR tool = new TransformNR();
 		if (linkNum == 7)
-			tool=linkOffset(links.get(6));
-		TransformNR wristMOvedToCenter2 =startOfWristSet3
-											.inverse()// move back from base ot wrist to world home
-											.times(target.times(tool.inverse()));// move forward to target, leaving the angle between the tip and the start of the rotation
-		//if(debug)com.neuronrobotics.sdk.common.Log.error( "\n\nLastLink "	+wristMOvedToCenter2
+			tool = linkOffset(links.get(6));
+		TransformNR wristMOvedToCenter2 = startOfWristSet3.inverse()// move back from base ot wrist to world home
+				.times(target.times(tool.inverse()));// move forward to target, leaving the angle between the tip and
+														// the start of the rotation
+		// if(debug)com.neuronrobotics.sdk.common.Log.error( "\n\nLastLink "
+		// +wristMOvedToCenter2
 		RotationNR qWrist3 = wristMOvedToCenter2.getRotation();
-		jointSpaceVector[5] = (Math.toDegrees(qWrist3.getRotationAzimuthRadians()) - Math.toDegrees(links.get(5).getTheta()));
-		
+		jointSpaceVector[5] = (Math.toDegrees(qWrist3.getRotationAzimuthRadians())
+				- Math.toDegrees(links.get(5).getTheta()));
+
 		return jointSpaceVector;
 	}
 

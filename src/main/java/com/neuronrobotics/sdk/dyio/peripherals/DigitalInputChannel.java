@@ -3,9 +3,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,132 +28,145 @@ import com.neuronrobotics.sdk.dyio.IChannelEventListener;
  * The Class DigitalInputChannel.
  */
 public class DigitalInputChannel extends DyIOAbstractPeripheral implements IChannelEventListener {
-	
+
 	/** The listeners. */
 	private ArrayList<IDigitalInputListener> listeners = new ArrayList<IDigitalInputListener>();
-	
+
 	/**
 	 * DigitalInputChannel.
-	 * 
+	 *
 	 * @param channel
 	 *            The channel object to set up as a Digital Input
 	 * @param async
 	 *            if this should be in async mode
 	 */
-	public DigitalInputChannel(DyIOChannel channel, boolean async){
-		super(channel,DyIOChannelMode.DIGITAL_IN,async);
-		channel.addChannelEventListener(this); 
-		if(!setMode( async)) {
-			throw new DyIOPeripheralException("Could not set channel " + getChannel() + " to " + DyIOChannelMode.DIGITAL_IN + " mode.");
-		}	
+	public DigitalInputChannel(DyIOChannel channel, boolean async) {
+		super(channel, DyIOChannelMode.DIGITAL_IN, async);
+		channel.addChannelEventListener(this);
+		if (!setMode(async)) {
+			throw new DyIOPeripheralException(
+					"Could not set channel " + getChannel() + " to " + DyIOChannelMode.DIGITAL_IN + " mode.");
+		}
 	}
-	
+
 	/**
-	 * Constructor.
-	 * Creates an counter input input channel that is syncronous only by default.
-	 * 
-	 * @param channel - the channel object requested from the DyIO
-	 */
-	public  DigitalInputChannel(int channel){
-		this(((DyIO) DeviceManager.getSpecificDevice(DyIO.class, null)).getChannel(channel));	
-	}
-	
-	/**
-	 * Constructor.
-	 * Creates an counter input input channel that is syncronous only by default.
+	 * Constructor. Creates an counter input input channel that is syncronous only
+	 * by default.
 	 *
-	 * @param dyio the dyio
-	 * @param channel - the channel object requested from the DyIO
+	 * @param channel
+	 *            - the channel object requested from the DyIO
 	 */
-	public  DigitalInputChannel(DyIO dyio,int channel){
-		this(dyio.getChannel(channel));	
+	public DigitalInputChannel(int channel) {
+		this(((DyIO) DeviceManager.getSpecificDevice(DyIO.class, null)).getChannel(channel));
 	}
-	
+
 	/**
-	 * Constructor.
-	 * Creates an counter input input channel that is syncronous only by default.
-	 * 
-	 * @param channel - the channel object requested from the DyIO
+	 * Constructor. Creates an counter input input channel that is syncronous only
+	 * by default.
+	 *
+	 * @param dyio
+	 *            the dyio
+	 * @param channel
+	 *            - the channel object requested from the DyIO
 	 */
-	public  DigitalInputChannel(DyIOChannel channel){
-		this(channel,true);	
+	public DigitalInputChannel(DyIO dyio, int channel) {
+		this(dyio.getChannel(channel));
 	}
-	
+
+	/**
+	 * Constructor. Creates an counter input input channel that is syncronous only
+	 * by default.
+	 *
+	 * @param channel
+	 *            - the channel object requested from the DyIO
+	 */
+	public DigitalInputChannel(DyIOChannel channel) {
+		this(channel, true);
+	}
+
 	/**
 	 * isHigh.
-	 * 
+	 *
 	 * @return Checks to see if the pin is at logic high
 	 */
 	public boolean isHigh() {
 		return getValue() != 0;
 	}
-	
+
 	/**
 	 * Set the channel to be asynchronous or synchronous.
-	 * 
-	 * @param isAsync - true if the channel should be set to asynchronous and synchronous, false if synchronous only
+	 *
+	 * @param isAsync
+	 *            - true if the channel should be set to asynchronous and
+	 *            synchronous, false if synchronous only
 	 */
 	public void setAsync(boolean isAsync) {
 		setMode(DyIOChannelMode.DIGITAL_IN, isAsync);
 	}
-	
+
 	/**
 	 * removeAllDigitalInputListeners remove all the listeners.
 	 */
 	public void removeAllDigitalInputListeners() {
 		listeners.clear();
 	}
-	
+
 	/**
 	 * removeDigitalInputListener.
-	 * 
+	 *
 	 * @param l
 	 *            remove the specified listener
 	 */
 	public void removeDigitalInputListener(IDigitalInputListener l) {
-		if(!listeners.contains(l)) {
+		if (!listeners.contains(l)) {
 			return;
 		}
-		
+
 		listeners.remove(l);
 	}
-	
+
 	/**
 	 * addDigitalInputListener.
-	 * 
+	 *
 	 * @param l
 	 *            add the specified listener
 	 */
 	public void addDigitalInputListener(IDigitalInputListener l) {
-		if(listeners.contains(l)) {
+		if (listeners.contains(l)) {
 			return;
 		}
-		
+
 		listeners.add(l);
 	}
-	
+
 	/**
 	 * Fire value changed.
 	 *
-	 * @param value the value
+	 * @param value
+	 *            the value
 	 */
 	private void fireValueChanged(boolean value) {
-		for(IDigitalInputListener l : listeners) {
+		for (IDigitalInputListener l : listeners) {
 			l.onDigitalValueChange(this, value);
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.dyio.IChannelEventListener#onChannelEvent(com.neuronrobotics.sdk.dyio.DyIOChannelEvent)
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.neuronrobotics.sdk.dyio.IChannelEventListener#onChannelEvent(com.
+	 * neuronrobotics.sdk.dyio.DyIOChannelEvent)
 	 */
-	 
+
 	public void onChannelEvent(DyIOChannelEvent e) {
 		fireValueChanged(e.getUnsignedValue() != 0);
 	}
 
-	 
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.dyio.peripherals.DyIOAbstractPeripheral#hasAsync()
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.neuronrobotics.sdk.dyio.peripherals.DyIOAbstractPeripheral#hasAsync()
 	 */
 	public boolean hasAsync() {
 		return true;

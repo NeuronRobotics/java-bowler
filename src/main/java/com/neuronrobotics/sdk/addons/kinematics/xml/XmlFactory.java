@@ -20,29 +20,32 @@ import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
  * A factory for creating Xml objects.
  */
 public class XmlFactory {
-	
+
 	/**
 	 * Gets the default configuration stream.
 	 *
-	 * @param file the file
+	 * @param file
+	 *            the file
 	 * @return the default configuration stream
 	 */
 	public static InputStream getDefaultConfigurationStream(String file) {
 		return XmlFactory.class.getResourceAsStream(file);
 	}
-	
+
 	/**
 	 * Gets the all nodes document.
 	 *
-	 * @param config the config
+	 * @param config
+	 *            the config
 	 * @return the all nodes document
 	 */
 	public static Document getAllNodesDocument(InputStream config) {
-		//InputStream config = XmlFactory.getDefaultConfigurationStream("DyioServo.xml");
+		// InputStream config =
+		// XmlFactory.getDefaultConfigurationStream("DyioServo.xml");
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-	    DocumentBuilder dBuilder;
-	    Document doc = null;
-	    try {
+		DocumentBuilder dBuilder;
+		Document doc = null;
+		try {
 			dBuilder = dbFactory.newDocumentBuilder();
 			doc = dBuilder.parse(config);
 			doc.getDocumentElement().normalize();
@@ -53,61 +56,66 @@ public class XmlFactory {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-	    return doc;
+		return doc;
 	}
-	
+
 	public static TransformNR getTransform(Element eElement) {
-		return new TransformNR(
-				Double.parseDouble(XmlFactory.getTagValue("x", eElement)),
+		return new TransformNR(Double.parseDouble(XmlFactory.getTagValue("x", eElement)),
 				Double.parseDouble(XmlFactory.getTagValue("y", eElement)),
 				Double.parseDouble(XmlFactory.getTagValue("z", eElement)),
-				new RotationNR(new double[] { Double.parseDouble(XmlFactory.getTagValue("rotw", eElement)),
+				new RotationNR(new double[]{Double.parseDouble(XmlFactory.getTagValue("rotw", eElement)),
 						Double.parseDouble(XmlFactory.getTagValue("rotx", eElement)),
 						Double.parseDouble(XmlFactory.getTagValue("roty", eElement)),
-						Double.parseDouble(XmlFactory.getTagValue("rotz", eElement)) }));
+						Double.parseDouble(XmlFactory.getTagValue("rotz", eElement))}));
 	}
-	
-	
+
 	/**
 	 * Gets the all nodes from tag.
 	 *
-	 * @param sTag the s tag
-	 * @param config the config
+	 * @param sTag
+	 *            the s tag
+	 * @param config
+	 *            the config
 	 * @return the all nodes from tag
 	 */
-	public static NodeList getAllNodesFromTag(String sTag, InputStream config){
-		Document doc =getAllNodesDocument(config);
-		//Parsing XML File and store in LinkConfiguration
+	public static NodeList getAllNodesFromTag(String sTag, InputStream config) {
+		Document doc = getAllNodesDocument(config);
+		// Parsing XML File and store in LinkConfiguration
 		return doc.getElementsByTagName(sTag);
 	}
-	
+
 	/**
 	 * Gets the tag value.
 	 *
-	 * @param sTag the s tag
-	 * @param eElement the e element
+	 * @param sTag
+	 *            the s tag
+	 * @param eElement
+	 *            the e element
 	 * @return the tag value
 	 */
-	public static String getTagValue(String sTag, Element eElement){
-		
-	    NodeList nlList= eElement.getElementsByTagName(sTag).item(0).getChildNodes();
-	    Node nValue = (Node) nlList.item(0); 
-	   // com.neuronrobotics.sdk.common.Log.error("\t\t"+sTag+" = "+nValue.getNodeValue());
-	    return nValue.getNodeValue();    
+	public static String getTagValue(String sTag, Element eElement) {
+
+		NodeList nlList = eElement.getElementsByTagName(sTag).item(0).getChildNodes();
+		Node nValue = (Node) nlList.item(0);
+		// com.neuronrobotics.sdk.common.Log.error("\t\t"+sTag+" =
+		// "+nValue.getNodeValue());
+		return nValue.getNodeValue();
 	}
-	
+
 	/**
 	 * Gets the tag value double.
 	 *
-	 * @param sTag the s tag
-	 * @param eElement the e element
+	 * @param sTag
+	 *            the s tag
+	 * @param eElement
+	 *            the e element
 	 * @return the tag value double
 	 */
-	public static Double getTagValueDouble(String sTag, Element eElement){
-	    NodeList nlList= eElement.getElementsByTagName(sTag).item(0).getChildNodes();
-	    Node nValue = (Node) nlList.item(0); 
-	   // com.neuronrobotics.sdk.common.Log.error("\t\t"+sTag+" = "+nValue.getNodeValue());
-	    return Double.parseDouble(nValue.getNodeValue());    
+	public static Double getTagValueDouble(String sTag, Element eElement) {
+		NodeList nlList = eElement.getElementsByTagName(sTag).item(0).getChildNodes();
+		Node nValue = (Node) nlList.item(0);
+		// com.neuronrobotics.sdk.common.Log.error("\t\t"+sTag+" =
+		// "+nValue.getNodeValue());
+		return Double.parseDouble(nValue.getNodeValue());
 	}
 }
-

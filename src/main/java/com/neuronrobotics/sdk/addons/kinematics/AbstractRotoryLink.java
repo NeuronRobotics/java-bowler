@@ -9,49 +9,53 @@ public abstract class AbstractRotoryLink extends AbstractLink {
 	/**
 	 * Instantiates a new abstract rotory link.
 	 *
-	 * @param conf the conf
+	 * @param conf
+	 *            the conf
 	 */
 	public AbstractRotoryLink(LinkConfiguration conf) {
 		super(conf);
 		// Auto-generated constructor stub
 	}
-	
+
 	/**
 	 * Increment angle.
 	 *
-	 * @param inc the inc
+	 * @param inc
+	 *            the inc
 	 */
-	public void incrementAngle(double inc){
+	public void incrementAngle(double inc) {
 		incrementEngineeringUnits(inc);
 	}
-	
+
 	/**
 	 * Sets the target angle.
 	 *
-	 * @param pos the new target angle
+	 * @param pos
+	 *            the new target angle
 	 */
 	public void setTargetAngle(double pos) {
 		setTargetEngineeringUnits(pos);
 	}
-	
+
 	/**
 	 * Sets the current as angle.
 	 *
-	 * @param angle the new current as angle
+	 * @param angle
+	 *            the new current as angle
 	 */
 	public void setCurrentAsAngle(double angle) {
 		setCurrentEngineeringUnits(angle);
 	}
-	
+
 	/**
 	 * Gets the current angle.
 	 *
 	 * @return the current angle
 	 */
-	public double getCurrentAngle(){
+	public double getCurrentAngle() {
 		return getCurrentEngineeringUnits();
 	}
-	
+
 	/**
 	 * Gets the target angle.
 	 *
@@ -60,7 +64,7 @@ public abstract class AbstractRotoryLink extends AbstractLink {
 	public double getTargetAngle() {
 		return getTargetEngineeringUnits();
 	}
-	
+
 	/**
 	 * Gets the max angle.
 	 *
@@ -69,7 +73,7 @@ public abstract class AbstractRotoryLink extends AbstractLink {
 	public double getMaxAngle() {
 		return getMaxEngineeringUnits();
 	}
-	
+
 	/**
 	 * Gets the min angle.
 	 *
@@ -78,7 +82,7 @@ public abstract class AbstractRotoryLink extends AbstractLink {
 	public double getMinAngle() {
 		return getMinEngineeringUnits();
 	}
-	
+
 	/**
 	 * Checks if is max angle.
 	 *
@@ -87,7 +91,7 @@ public abstract class AbstractRotoryLink extends AbstractLink {
 	public boolean isMaxAngle() {
 		return isMaxEngineeringUnits();
 	}
-	
+
 	/**
 	 * Checks if is min angle.
 	 *

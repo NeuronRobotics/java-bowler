@@ -3,9 +3,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,23 +23,24 @@ package com.neuronrobotics.sdk.common;
  */
 @Deprecated
 public class SDKInfo {
-	
+
 	/** The Constant isVM64bit. */
-	//public static final boolean isVM64bit = (System.getProperty("sun.arch.data.model").indexOf("64") != -1);
-	
+	// public static final boolean isVM64bit =
+	// (System.getProperty("sun.arch.data.model").indexOf("64") != -1);
+
 	/** The Constant isOS64bit. */
 	public static final boolean isOS64bit = (System.getProperty("os.arch").indexOf("x86_64") != -1);
-	
+
 	/** The Constant isLinux. */
-	public static final boolean isLinux = (System.getProperty("os.name").toLowerCase().indexOf("linux")!=-1);
-	
+	public static final boolean isLinux = (System.getProperty("os.name").toLowerCase().indexOf("linux") != -1);
+
 	/** The Constant isWindows. */
-	public static final boolean isWindows = (System.getProperty("os.name").toLowerCase().indexOf("win")!=-1);
-	
+	public static final boolean isWindows = (System.getProperty("os.name").toLowerCase().indexOf("win") != -1);
+
 	/** The Constant isMac. */
-	public static final boolean isMac = (System.getProperty("os.name").toLowerCase().indexOf("mac")!=-1);
-	
+	public static final boolean isMac = (System.getProperty("os.name").toLowerCase().indexOf("mac") != -1);
+
 	/** The is unix. */
-	public static boolean isUnix =(isLinux || isMac);
-	
+	public static boolean isUnix = (isLinux || isMac);
+
 }

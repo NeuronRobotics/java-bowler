@@ -5,14 +5,14 @@ package com.neuronrobotics.sdk.util;
  * The Interface IMonitorable.
  */
 public interface IMonitorable {
-	
+
 	/**
 	 * Gets the percentage.
 	 *
 	 * @return the percentage
 	 */
 	public double getPercentage();
-	
+
 	/**
 	 * Checks if is complete.
 	 *

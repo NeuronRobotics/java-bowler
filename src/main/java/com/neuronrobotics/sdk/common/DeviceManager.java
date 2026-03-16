@@ -3,8 +3,6 @@ package com.neuronrobotics.sdk.common;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.management.RuntimeErrorException;
-
 import com.neuronrobotics.sdk.bootloader.NRBootLoader;
 import com.neuronrobotics.sdk.bowlercam.device.BowlerCamDevice;
 import com.neuronrobotics.sdk.dyio.DyIO;
@@ -34,7 +32,7 @@ public class DeviceManager {
 	 *            the name
 	 */
 	public static void addConnection(final Object newDevice, String name) {
-		
+
 		if (BowlerAbstractDevice.class.isInstance(newDevice)) {
 			addConnectionBAD((BowlerAbstractDevice) newDevice, name);
 		} else if (DMDevice.wrappable(newDevice)) {
@@ -61,21 +59,22 @@ public class DeviceManager {
 			com.neuronrobotics.sdk.common.Log.error("Device " + name + " is already in the manager");
 			return;
 		}
-		if ( DMDevice.class.isInstance(newDevice)) {
+		if (DMDevice.class.isInstance(newDevice)) {
 			DMDevice incoming = (DMDevice) newDevice;
-			for(String s:listConnectedDevice() ){
+			for (String s : listConnectedDevice()) {
 				Object sDev = DeviceManager.getSpecificDevice(s);
-				if(DMDevice.class.isInstance(sDev)) {
+				if (DMDevice.class.isInstance(sDev)) {
 					DMDevice inside = (DMDevice) sDev;
 					if (inside.getWrapped() == incoming.getWrapped()) {
-						com.neuronrobotics.sdk.common.Log.error("Wrapped Device " + name + " is already in the manager");
+						com.neuronrobotics.sdk.common.Log
+								.error("Wrapped Device " + name + " is already in the manager");
 						return;
 					}
 				}
 			}
 
 		}
-		
+
 		if (!newDevice.isAvailable())
 			newDevice.connect();
 		if (!newDevice.isAvailable()) {
@@ -107,8 +106,8 @@ public class DeviceManager {
 			public void onConnect(BowlerAbstractDevice source) {
 			}
 		});
-		
-		for (int i=0;i< deviceAddedListener.size();i++) {
+
+		for (int i = 0; i < deviceAddedListener.size(); i++) {
 			IDeviceAddedListener l = deviceAddedListener.get(i);
 			l.onNewDeviceAdded(newDevice);
 		}
@@ -153,7 +152,7 @@ public class DeviceManager {
 
 			addConnection(dyio, name);
 
-		}else if (gen.hasNamespace("bcs.pid.*")) {
+		} else if (gen.hasNamespace("bcs.pid.*")) {
 			GenericPIDDevice delt = new GenericPIDDevice();
 			delt.setConnection(gen.getConnection());
 			delt.connect();
@@ -241,13 +240,13 @@ public class DeviceManager {
 	 * @return the specific device
 	 */
 	public static Object getSpecificDevice(String name, IDeviceProvider provider) {
-		if(name.contains("*")) {
+		if (name.contains("*")) {
 			name = name.split("\\*")[0];
 		}
 		for (int i = 0; i < devices.size(); i++) {
 			if (devices.get(i).getScriptingName().contains(name)) {
-				if(DMDevice.class.isInstance(devices.get(i))) {
-					return ((DMDevice)devices.get(i)).getWrapped();
+				if (DMDevice.class.isInstance(devices.get(i))) {
+					return ((DMDevice) devices.get(i)).getWrapped();
 				}
 				return devices.get(i);
 			}
@@ -256,10 +255,10 @@ public class DeviceManager {
 		// the fly
 		Object newDev = provider.call();
 		addConnection(newDev, name);
-		Object dev= getSpecificDevice(name);
-		
-		if(DMDevice.class.isInstance(dev)) {
-			return ((DMDevice)dev).getWrapped();
+		Object dev = getSpecificDevice(name);
+
+		if (DMDevice.class.isInstance(dev)) {
+			return ((DMDevice) dev).getWrapped();
 		}
 		return dev;
 	}
@@ -272,15 +271,15 @@ public class DeviceManager {
 	 * @return the specific device
 	 */
 	public static Object getSpecificDevice(String name) {
-		if(name.contains("*")) {
+		if (name.contains("*")) {
 			name = name.split("\\*")[0];
 		}
 		for (int i = 0; i < devices.size(); i++) {
 			String devname = devices.get(i).getScriptingName();
 			if (devname.contains(name)) {
 				BowlerAbstractDevice dev = devices.get(i);
-				if(DMDevice.class.isInstance(dev)) {
-					return ((DMDevice)dev).getWrapped();
+				if (DMDevice.class.isInstance(dev)) {
+					return ((DMDevice) dev).getWrapped();
 				}
 				return dev;
 			}
@@ -298,7 +297,7 @@ public class DeviceManager {
 	 * @return the specific device
 	 */
 	public static Object getSpecificDevice(Class<?> class1, String name) {
-		if(name.contains("*")) {
+		if (name.contains("*")) {
 			name = name.split("\\*")[0];
 		}
 		if (class1 == null)

@@ -3,9 +3,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,88 +26,92 @@ import com.neuronrobotics.sdk.dyio.InvalidChannelOperationException;
 /**
  * The Class SetChannelValueCommand.
  */
-public class SetChannelValueCommand extends BowlerAbstractCommand {	
-	
+public class SetChannelValueCommand extends BowlerAbstractCommand {
+
 	/**
 	 * Instantiates a new sets the channel value command.
 	 *
-	 * @param channel the channel
-	 * @param value the value
-	 * @param mode the mode
+	 * @param channel
+	 *            the channel
+	 * @param value
+	 *            the value
+	 * @param mode
+	 *            the mode
 	 */
 	public SetChannelValueCommand(int channel, int value, DyIOChannelMode mode) {
 		setMethod(BowlerMethod.POST);
 		setOpCode("schv");
 		getCallingDataStorage().add(channel);
-		switch(mode) {
-		case ANALOG_OUT:
-			getCallingDataStorage().addAs16(value);
-			break;
-		case COUNT_OUT_INT:
-		case COUNT_OUT_DIR:
-		case COUNT_OUT_HOME:
-			getCallingDataStorage().addAs32(value);
-			getCallingDataStorage().addAs32(0);
-			break;
-		default:
-			getCallingDataStorage().add(value);
-			break;
+		switch (mode) {
+			case ANALOG_OUT :
+				getCallingDataStorage().addAs16(value);
+				break;
+			case COUNT_OUT_INT :
+			case COUNT_OUT_DIR :
+			case COUNT_OUT_HOME :
+				getCallingDataStorage().addAs32(value);
+				getCallingDataStorage().addAs32(0);
+				break;
+			default :
+				getCallingDataStorage().add(value);
+				break;
 		}
 	}
-	
+
 	/**
 	 * SetChannelValueCommand.
-	 * 
+	 *
 	 * @param channel
 	 *            the DyIO pin to use
 	 * @param value
 	 *            the value to set the pin to
 	 * @param time
-	 *            the time it should take for the action to be performed in
-	 *            seconds
+	 *            the time it should take for the action to be performed in seconds
 	 * @param mode
 	 *            the mode the channel is in
 	 */
 	public SetChannelValueCommand(int channel, int value, float time, DyIOChannelMode mode) {
 		setMethod(BowlerMethod.POST);
 		setOpCode("schv");
-		
+
 		getCallingDataStorage().add(channel);
-		switch(mode){
-		case COUNT_OUT_INT:
-		case COUNT_OUT_DIR:
-		case COUNT_OUT_HOME:
-			getCallingDataStorage().addAs32(value);
-			//Time is in seconds, the converts to Ms then sends as 16 bit value
-			getCallingDataStorage().addAs32((int)(time*1000));
-			break;
-		case SERVO_OUT:
-			getCallingDataStorage().add(value);
-			//Time is in seconds, the converts to Ms then sends as 16 bit value
-			getCallingDataStorage().addAs16((int)(time*1000));
-			break;
-		default:
-			getCallingDataStorage().add(value);
+		switch (mode) {
+			case COUNT_OUT_INT :
+			case COUNT_OUT_DIR :
+			case COUNT_OUT_HOME :
+				getCallingDataStorage().addAs32(value);
+				// Time is in seconds, the converts to Ms then sends as 16 bit value
+				getCallingDataStorage().addAs32((int) (time * 1000));
+				break;
+			case SERVO_OUT :
+				getCallingDataStorage().add(value);
+				// Time is in seconds, the converts to Ms then sends as 16 bit value
+				getCallingDataStorage().addAs16((int) (time * 1000));
+				break;
+			default :
+				getCallingDataStorage().add(value);
 		}
 	}
-	
+
 	/**
 	 * Instantiates a new sets the channel value command.
 	 *
-	 * @param channel the channel
-	 * @param data the data
+	 * @param channel
+	 *            the channel
+	 * @param data
+	 *            the data
 	 */
 	public SetChannelValueCommand(int channel, ISendable data) {
 		setMethod(BowlerMethod.POST);
 		setOpCode("schv");
-		
+
 		getCallingDataStorage().add(channel);
 		getCallingDataStorage().add(data);
 	}
-	
+
 	/**
 	 * SetChannelValueCommand.
-	 * 
+	 *
 	 * @param channel
 	 *            the DyIO pin to use
 	 * @param value
@@ -118,56 +122,61 @@ public class SetChannelValueCommand extends BowlerAbstractCommand {
 	 *            if true, the value is saved as the starting position for the
 	 *            channel
 	 */
-	public SetChannelValueCommand(int channel, int value, DyIOChannelMode mode,boolean saveTheValue) {
-		switch(mode) {
-		case SERVO_OUT:
-		case PWM_OUT:
-			if(saveTheValue)
-				setMethod(BowlerMethod.CRITICAL);
-			else
-				setMethod(BowlerMethod.POST);
-			setOpCode("schv");
-			getCallingDataStorage().add(channel);
-			getCallingDataStorage().add(value);
-			break;
-		default:
-			throw new InvalidChannelOperationException();
+	public SetChannelValueCommand(int channel, int value, DyIOChannelMode mode, boolean saveTheValue) {
+		switch (mode) {
+			case SERVO_OUT :
+			case PWM_OUT :
+				if (saveTheValue)
+					setMethod(BowlerMethod.CRITICAL);
+				else
+					setMethod(BowlerMethod.POST);
+				setOpCode("schv");
+				getCallingDataStorage().add(channel);
+				getCallingDataStorage().add(value);
+				break;
+			default :
+				throw new InvalidChannelOperationException();
 		}
 	}
-	
+
 	/**
 	 * SetChannelValueCommand.
 	 *
-	 * @param channel            the DyIO pin to use
-	 * @param value            the value to set the pin to
-	 * @param mode            the mode the channel is in
+	 * @param channel
+	 *            the DyIO pin to use
+	 * @param value
+	 *            the value to set the pin to
+	 * @param mode
+	 *            the mode the channel is in
 	 */
-	public SetChannelValueCommand(int channel, int [] value, DyIOChannelMode mode) {
-		switch(mode) {
-		case PPM_IN:
-			setMethod(BowlerMethod.POST);
-			setOpCode("schv");
-			getCallingDataStorage().add(channel);
-			getCallingDataStorage().add(value);
-			break;
-		default:
-			throw new InvalidChannelOperationException();
+	public SetChannelValueCommand(int channel, int[] value, DyIOChannelMode mode) {
+		switch (mode) {
+			case PPM_IN :
+				setMethod(BowlerMethod.POST);
+				setOpCode("schv");
+				getCallingDataStorage().add(channel);
+				getCallingDataStorage().add(value);
+				break;
+			default :
+				throw new InvalidChannelOperationException();
 		}
 	}
-	
-	
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.common.BowlerAbstractCommand#parseResponse(com.neuronrobotics.sdk.common.BowlerDatagram)
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.neuronrobotics.sdk.common.BowlerAbstractCommand#parseResponse(com.
+	 * neuronrobotics.sdk.common.BowlerDatagram)
 	 */
 	@Override
 	public BowlerDatagram validate(BowlerDatagram data) throws InvalidResponseException {
 		super.validate(data);
-		if (data==null)
+		if (data == null)
 			throw new InvalidResponseException("Set Channel Value did not respond");
-		if(!data.getRPC().equals("_rdy") && !data.getRPC().equals("schv") ) {
+		if (!data.getRPC().equals("_rdy") && !data.getRPC().equals("schv")) {
 			throw new InvalidResponseException("Set Channel Value did not return '_rdy'.");
 		}
-		
+
 		return data;
 	}
 

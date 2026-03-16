@@ -4,11 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public interface IHardwareSyncPulseProvider {
-	HashMap<IHardwareSyncPulseProvider,ArrayList<IHardwareSyncPulseReciver>>syncPulse=new HashMap<>();
+	HashMap<IHardwareSyncPulseProvider, ArrayList<IHardwareSyncPulseReciver>> syncPulse = new HashMap<>();
 
-	
 	default public void addIHardwareSyncPulseReciver(IHardwareSyncPulseReciver r) {
-		if (getListeners().contains(r) || r==this)
+		if (getListeners().contains(r) || r == this)
 			return;
 		getListeners().add(r);
 	}
@@ -20,13 +19,13 @@ public interface IHardwareSyncPulseProvider {
 
 	default public void doSync() {
 		for (IHardwareSyncPulseReciver r : getListeners()) {
-			if(r!=this)
+			if (r != this)
 				r.sync();
 		}
 	}
-	
-	default public ArrayList<IHardwareSyncPulseReciver> getListeners(){
-		if(syncPulse.get(this)==null)
+
+	default public ArrayList<IHardwareSyncPulseReciver> getListeners() {
+		if (syncPulse.get(this) == null)
 			syncPulse.put(this, new ArrayList<>());
 		return syncPulse.get(this);
 	}

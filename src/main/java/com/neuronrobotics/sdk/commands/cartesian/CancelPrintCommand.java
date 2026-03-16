@@ -8,7 +8,7 @@ import com.neuronrobotics.sdk.common.BowlerMethod;
  * The Class CancelPrintCommand.
  */
 public class CancelPrintCommand extends BowlerAbstractCommand {
-	
+
 	/**
 	 * Instantiates a new cancel print command.
 	 */

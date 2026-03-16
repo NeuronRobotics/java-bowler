@@ -3,9 +3,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -44,52 +44,53 @@ public class BluetoothConnectionPanel extends AbstractConnectionPanel {
 
 	/** The connection. */
 	private BluetoothSerialConnection connection;
-	
+
 	/** The blue. */
 	private BlueCoveManager blue = null;
-	
+
 	/** The display warning. */
 	private boolean displayWarning = false;
-	
+
 	/** The connection cbo. */
 	private JComboBox connectionCbo;
-	
+
 	/** The search. */
 	private JButton search;
-	
+
 	/** The progress. */
 	private JProgressBar progress = new JProgressBar();
-	
+
 	/** The message. */
 	private JLabel message = new JLabel();
-	
+
 	/**
 	 * Instantiates a new bluetooth connection panel.
 	 *
-	 * @param connectionDialog the connection dialog
+	 * @param connectionDialog
+	 *            the connection dialog
 	 */
 	public BluetoothConnectionPanel(ConnectionDialog connectionDialog) {
-		super("Bluetooth", ConnectionImageIconFactory.getIcon("images/bluetooth-icon.png"),connectionDialog);
+		super("Bluetooth", ConnectionImageIconFactory.getIcon("images/bluetooth-icon.png"), connectionDialog);
 
-		if(displayWarning) {
+		if (displayWarning) {
 			return;
 		}
-		
+
 		search = new JButton("Search for Devices");
 		search.addActionListener(new ActionListener() {
-			
+
 			public void actionPerformed(ActionEvent arg0) {
 				refresh();
 			}
 		});
-		
-		setLayout(new MigLayout("",	// Layout Constraints
-				 "[right][left]", // Column constraints with default align
-				 "[center][center]"	// Row constraints with default align
-				));
-		
+
+		setLayout(new MigLayout("", // Layout Constraints
+				"[right][left]", // Column constraints with default align
+				"[center][center]" // Row constraints with default align
+		));
+
 		connectionCbo = new JComboBox();
-				
+
 		add(new JLabel("Connection:"), "cell 0 0");
 		add(connectionCbo);
 		add(search, "wrap");
@@ -97,52 +98,50 @@ public class BluetoothConnectionPanel extends AbstractConnectionPanel {
 		add(message, "spanx, growx");
 	}
 
-	
-
-
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see com.neuronrobotics.sdk.ui.AbstractConnectionPanel#getConnection()
 	 */
 	public BluetoothSerialConnection getConnection() {
 		try {
 			String port = connectionCbo.getSelectedItem().toString();
 			RemoteDevice dev = blue.getDevice(port);
-			connection = new BluetoothSerialConnection(blue,dev.getBluetoothAddress());
-			Log.info("Using device:"+port+"\n");
-		} catch(Exception e) {
+			connection = new BluetoothSerialConnection(blue, dev.getBluetoothAddress());
+			Log.info("Using device:" + port + "\n");
+		} catch (Exception e) {
 			Log.warning("Unable to connect with bluetooth connection");
 		}
 		return connection;
 	}
-	
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see com.neuronrobotics.sdk.ui.AbstractConnectionPanel#refresh()
 	 */
 	public void refresh() {
 		Log.info("Searching for devices over bluetooth...");
-		
+
 		search.setEnabled(false);
-		
+
 		connectionCbo.removeAllItems();
 		connectionCbo.setEnabled(false);
 
 		progress.setIndeterminate(true);
-		
+
 		message.setText("Searching...");
-		
+
 		BluetoothSearchProcess bsp = new BluetoothSearchProcess();
-		
+
 		ProcessMonitor pm = new ProcessMonitor(bsp);
 		pm.addProcessMonitorListener(new IProgressMonitorListener() {
-			
-			
+
 			public void onUpdate(double value) {
 				// Auto-generated method stub
-				
+
 			}
-			
-			
+
 			public void onComplete() {
 				progress.setIndeterminate(false);
 				search.setEnabled(true);
@@ -153,16 +152,18 @@ public class BluetoothConnectionPanel extends AbstractConnectionPanel {
 		bsp.start();
 		getConnectionDialog().pack();
 	}
-	
+
 	/**
 	 * The Class BluetoothSearchProcess.
 	 */
 	private class BluetoothSearchProcess extends Thread implements IMonitorable {
-		
+
 		/** The is running. */
 		private boolean isRunning = false;
-		
-		/* (non-Javadoc)
+
+		/*
+		 * (non-Javadoc)
+		 *
 		 * @see java.lang.Thread#run()
 		 */
 		public void run() {
@@ -172,20 +173,20 @@ public class BluetoothConnectionPanel extends AbstractConnectionPanel {
 				if (blue == null)
 					blue = new BlueCoveManager();
 				message.setText("Searching for bluetooth devices, please wait...");
-				String [] devices = blue.getAvailableSerialDevices(true);
+				String[] devices = blue.getAvailableSerialDevices(true);
 				connectionCbo.removeAllItems();
-				for(String s: devices) {
-					Log.info("Adding: "+s);
+				for (String s : devices) {
+					Log.info("Adding: " + s);
 					message.setText("Adding " + s);
 					connectionCbo.addItem(s);
 				}
-				if(devices.length == 0) {
+				if (devices.length == 0) {
 					message.setText("No devices found");
 				}
-			} catch(Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 				displayWarning = true;
-				String m = "BlueCove not installed properly, native library not found or missing dependancy\n\n";		
+				String m = "BlueCove not installed properly, native library not found or missing dependancy\n\n";
 				JTextArea tx = new JTextArea();
 				tx.setBorder(null);
 				tx.setLineWrap(true);
@@ -193,33 +194,36 @@ public class BluetoothConnectionPanel extends AbstractConnectionPanel {
 				tx.setText(m);
 				tx.setColumns(20);
 				removeAll();
-				add(new JLabel(ConnectionImageIconFactory.getIcon("images/dialog-error.png")), "cell 0 0,ax center, ay center");
+				add(new JLabel(ConnectionImageIconFactory.getIcon("images/dialog-error.png")),
+						"cell 0 0,ax center, ay center");
 				add(tx, "cell 1 0");
 			} finally {
-				if (connection!=null) {
+				if (connection != null) {
 					connection.disconnect();
 				}
-				
+
 				connection = null;
 				isRunning = false;
 			}
 		}
-		
-		
-		/* (non-Javadoc)
+
+		/*
+		 * (non-Javadoc)
+		 *
 		 * @see com.neuronrobotics.sdk.util.IMonitorable#getPercentage()
 		 */
 		public double getPercentage() {
 			return 0;
 		}
 
-		
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 *
 		 * @see com.neuronrobotics.sdk.util.IMonitorable#isComplete()
 		 */
 		public boolean isComplete() {
 			return !isRunning;
 		}
-		
+
 	}
 }

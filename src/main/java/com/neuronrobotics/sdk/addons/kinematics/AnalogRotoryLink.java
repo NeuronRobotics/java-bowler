@@ -3,57 +3,69 @@ package com.neuronrobotics.sdk.addons.kinematics;
 import com.neuronrobotics.sdk.dyio.peripherals.AnalogInputChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.IAnalogInputListener;
 
-
 //  Auto-generated Javadoc
 /**
  * The Class AnalogRotoryLink.
  */
-public class AnalogRotoryLink  extends AbstractRotoryLink implements IAnalogInputListener{
-	
+public class AnalogRotoryLink extends AbstractRotoryLink implements IAnalogInputListener {
+
 	/** The channel. */
 	private AnalogInputChannel channel;
-	
+
 	/**
 	 * Instantiates a new analog rotory link.
 	 *
-	 * @param c the c
-	 * @param conf the conf
+	 * @param c
+	 *            the c
+	 * @param conf
+	 *            the conf
 	 */
-	public AnalogRotoryLink(AnalogInputChannel c,LinkConfiguration conf) {
+	public AnalogRotoryLink(AnalogInputChannel c, LinkConfiguration conf) {
 		super(conf);
 		setAnalogChannel(c);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractLink#cacheTargetValueDevice()
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.neuronrobotics.sdk.addons.kinematics.AbstractLink#cacheTargetValueDevice(
+	 * )
 	 */
 	@Override
 	public void cacheTargetValueDevice() {
-		//ignore, input only
+		// ignore, input only
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractLink#flush(double)
 	 */
 	@Override
 	public void flushDevice(double time) {
-		//ignore, input only
+		// ignore, input only
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractLink#flushAll(double)
 	 */
 	@Override
 	public void flushAllDevice(double time) {
-		//ignore, input only
+		// ignore, input only
 	}
 
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractLink#getCurrentPosition()
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.neuronrobotics.sdk.addons.kinematics.AbstractLink#getCurrentPosition()
 	 */
 	@Override
 	public double getCurrentPosition() {
-		int val=getChannel().getValue();
+		int val = getChannel().getValue();
 		fireLinkListener(val);
 		return val;
 	}
@@ -61,12 +73,13 @@ public class AnalogRotoryLink  extends AbstractRotoryLink implements IAnalogInpu
 	/**
 	 * Sets the analog channel.
 	 *
-	 * @param channel the new analog channel
+	 * @param channel
+	 *            the new analog channel
 	 */
 	public void setAnalogChannel(AnalogInputChannel channel) {
 		channel.addAnalogInputListener(this);
 		channel.configAdvancedAsyncNotEqual(10);
-		//new RuntimeException().printStackTrace();
+		// new RuntimeException().printStackTrace();
 		this.channel = channel;
 	}
 
@@ -79,12 +92,16 @@ public class AnalogRotoryLink  extends AbstractRotoryLink implements IAnalogInpu
 		return channel;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.dyio.peripherals.IAnalogInputListener#onAnalogValueChange(com.neuronrobotics.sdk.dyio.peripherals.AnalogInputChannel, double)
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.neuronrobotics.sdk.dyio.peripherals.IAnalogInputListener#
+	 * onAnalogValueChange(com.neuronrobotics.sdk.dyio.peripherals.
+	 * AnalogInputChannel, double)
 	 */
 	@Override
 	public void onAnalogValueChange(AnalogInputChannel chan, double value) {
-		if(chan == getChannel() ) {
+		if (chan == getChannel()) {
 			fireLinkListener((int) value);
 		}
 	}

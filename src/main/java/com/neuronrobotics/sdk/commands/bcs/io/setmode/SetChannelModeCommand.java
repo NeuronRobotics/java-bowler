@@ -3,9 +3,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,12 +26,13 @@ import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
  */
 public class SetChannelModeCommand extends BowlerAbstractCommand {
 
-	
 	/**
 	 * Instantiates a new sets the channel mode command.
 	 *
-	 * @param channel the channel
-	 * @param mode the mode
+	 * @param channel
+	 *            the channel
+	 * @param mode
+	 *            the mode
 	 */
 	public SetChannelModeCommand(int channel, DyIOChannelMode mode) {
 		setOpCode("schm");
@@ -40,32 +41,38 @@ public class SetChannelModeCommand extends BowlerAbstractCommand {
 		getCallingDataStorage().add(mode);
 		getCallingDataStorage().add(0);
 	}
-	
+
 	/**
 	 * Instantiates a new sets the channel mode command.
 	 *
-	 * @param channel the channel
-	 * @param mode the mode
-	 * @param isAsync the is async
+	 * @param channel
+	 *            the channel
+	 * @param mode
+	 *            the mode
+	 * @param isAsync
+	 *            the is async
 	 */
-	public SetChannelModeCommand(int channel, DyIOChannelMode mode,boolean isAsync) {
+	public SetChannelModeCommand(int channel, DyIOChannelMode mode, boolean isAsync) {
 		setOpCode("schm");
 		setMethod(BowlerMethod.POST);
 		getCallingDataStorage().add(channel);
 		getCallingDataStorage().add(mode);
-		getCallingDataStorage().add((isAsync?1:0));
+		getCallingDataStorage().add((isAsync ? 1 : 0));
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.common.BowlerAbstractCommand#parseResponse(com.neuronrobotics.sdk.common.BowlerDatagram)
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.neuronrobotics.sdk.common.BowlerAbstractCommand#parseResponse(com.
+	 * neuronrobotics.sdk.common.BowlerDatagram)
 	 */
 	@Override
 	public BowlerDatagram validate(BowlerDatagram data) throws InvalidResponseException {
 		super.validate(data);
-		if(!(data.getRPC().equals("_rdy") || data.getRPC().equals("schm")||data.getRPC().equals("gacm"))) {
+		if (!(data.getRPC().equals("_rdy") || data.getRPC().equals("schm") || data.getRPC().equals("gacm"))) {
 			throw new InvalidResponseException("Set Channel Mode did not return '_rdy' or 'schm'.");
 		}
-		
+
 		return data;
 	}
 }

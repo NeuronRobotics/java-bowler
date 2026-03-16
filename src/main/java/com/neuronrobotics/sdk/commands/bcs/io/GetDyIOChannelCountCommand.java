@@ -8,11 +8,11 @@ import com.neuronrobotics.sdk.common.BowlerMethod;
  * The Class GetDyIOChannelCountCommand.
  */
 public class GetDyIOChannelCountCommand extends BowlerAbstractCommand {
-	
+
 	/**
 	 * Instantiates a new gets the dy io channel count command.
 	 */
-	public GetDyIOChannelCountCommand(){
+	public GetDyIOChannelCountCommand() {
 		setOpCode("gchc");
 		setMethod(BowlerMethod.GET);
 	}

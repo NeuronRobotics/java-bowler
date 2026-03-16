@@ -2,81 +2,88 @@ package com.neuronrobotics.sdk.common;
 
 import java.util.ArrayList;
 
-import com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace;
-
 //  Auto-generated Javadoc
 /**
  * The Class NonBowlerDevice.
  */
-public abstract class  NonBowlerDevice extends BowlerAbstractDevice {
+public abstract class NonBowlerDevice extends BowlerAbstractDevice {
 	boolean connectedYet = false;
 	/**
-	 * This method tells the connection object to disconnect its pipes and close out the connection. Once this is called, it is safe to remove your device.
+	 * This method tells the connection object to disconnect its pipes and close out
+	 * the connection. Once this is called, it is safe to remove your device.
 	 */
-	
+
 	public abstract void disconnectDeviceImp();
-	
+
 	/**
 	 * Connect device imp.
 	 *
 	 * @return true, if successful
 	 */
-	public abstract  boolean connectDeviceImp();
-	
+	public abstract boolean connectDeviceImp();
+
 	/**
 	 * Gets the namespaces imp.
 	 *
 	 * @return the namespaces imp
 	 */
-	public abstract  ArrayList<String>  getNamespacesImp();
-	
-	/* (non-Javadoc)
+	public abstract ArrayList<String> getNamespacesImp();
+
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see com.neuronrobotics.sdk.common.BowlerAbstractDevice#connect()
 	 */
 	@Override
-	public boolean connect(){
+	public boolean connect() {
 		fireConnectEvent();
-		connectedYet= connectDeviceImp();
+		connectedYet = connectDeviceImp();
 		return isAvailable();
 	}
-	
+
 	/**
 	 * Determines if the device is available.
 	 *
 	 * @return true if the device is avaiable, false if it is not
-	 * @throws InvalidConnectionException the invalid connection exception
+	 * @throws InvalidConnectionException
+	 *             the invalid connection exception
 	 */
 	@Override
-	public boolean isAvailable() throws InvalidConnectionException{
+	public boolean isAvailable() throws InvalidConnectionException {
 		return connectedYet;
 	}
-	
+
 	/**
-	 * This method tells the connection object to disconnect its pipes and close out the connection. Once this is called, it is safe to remove your device.
+	 * This method tells the connection object to disconnect its pipes and close out
+	 * the connection. Once this is called, it is safe to remove your device.
 	 */
 	@Override
-	public void disconnect(){
+	public void disconnect() {
 		fireDisconnectEvent();
 		disconnectDeviceImp();
 		connectedYet = false;
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.common.IBowlerDatagramListener#onAsyncResponse(com.neuronrobotics.sdk.common.BowlerDatagram)
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.neuronrobotics.sdk.common.IBowlerDatagramListener#onAsyncResponse(com.
+	 * neuronrobotics.sdk.common.BowlerDatagram)
 	 */
 	@Override
 	public void onAsyncResponse(BowlerDatagram data) {
 		// Auto-generated method stub
-		
+
 	}
-	
+
 	/**
 	 * Get all the namespaces.
 	 *
 	 * @return the namespaces
 	 */
 	@Override
-	public ArrayList<String>  getNamespaces(){
-		return getNamespacesImp();	
+	public ArrayList<String> getNamespaces() {
+		return getNamespacesImp();
 	}
 }

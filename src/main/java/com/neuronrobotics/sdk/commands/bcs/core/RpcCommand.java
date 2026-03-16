@@ -12,9 +12,10 @@ public class RpcCommand extends BowlerAbstractCommand {
 	/**
 	 * Instantiates a new rpc command.
 	 *
-	 * @param namespace the namespace
+	 * @param namespace
+	 *            the namespace
 	 */
-	public RpcCommand(int namespace){
+	public RpcCommand(int namespace) {
 		setOpCode("_rpc");
 		setMethod(BowlerMethod.GET);
 		getCallingDataStorage().add(namespace);
@@ -24,10 +25,12 @@ public class RpcCommand extends BowlerAbstractCommand {
 	/**
 	 * Instantiates a new rpc command.
 	 *
-	 * @param namespace the namespace
-	 * @param rpc the rpc
+	 * @param namespace
+	 *            the namespace
+	 * @param rpc
+	 *            the rpc
 	 */
-	public RpcCommand(int namespace,int rpc) {
+	public RpcCommand(int namespace, int rpc) {
 		setOpCode("_rpc");
 		setMethod(BowlerMethod.GET);
 		getCallingDataStorage().add(namespace);

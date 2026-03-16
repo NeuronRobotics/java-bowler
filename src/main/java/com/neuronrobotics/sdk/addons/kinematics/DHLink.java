@@ -2,7 +2,6 @@ package com.neuronrobotics.sdk.addons.kinematics;
 
 import java.util.ArrayList;
 
-
 import org.w3c.dom.Element;
 
 import Jama.Matrix;
@@ -15,82 +14,86 @@ import com.neuronrobotics.sdk.addons.kinematics.xml.XmlFactory;
  * The Class DHLink.
  */
 public class DHLink {
-	
+
 	/** The d. */
 	private double d;
-	
+
 	/** The theta. */
 	private double theta;
-	
+
 	/** The radius. */
 	private double radius;
-	
+
 	/** The alpha. */
 	private double alpha;
-	
+
 	/** The trans x. */
 	private Matrix transX;
-	
+
 	/** The rot x. */
 	private Matrix rotX;
-	
+
 	/** The trans z. */
 	private Matrix transZ;
-	
+
 	/** The rot z. */
 	private Matrix rotZ;
-	
+
 	/** The trans x_ j. */
 	private Matrix transX_J;
-	
+
 	/** The rot x_ j. */
 	private Matrix rotX_J;
-	
+
 	/** The trans z_ j. */
 	private Matrix transZ_J;
-	
+
 	/** The rot z_ j. */
 	private Matrix rotZ_J;
-	
+
 	/** The listener. */
-	private Object listener=null;
-	
+	private Object listener = null;
+
 	/** The root. */
-	private Object root=null;
-	
+	private Object root = null;
+
 	/** The type. */
 	private DhLinkType type = DhLinkType.ROTORY;
-	
+
 	/** The dhlisteners. */
 	private ArrayList<IDhLinkPositionListener> dhlisteners = new ArrayList<IDhLinkPositionListener>();
-	
+
 	/** The embedable xml. */
-	private MobileBase slaveMobileBase=null;
+	private MobileBase slaveMobileBase = null;
 
 	private LinkConfiguration newLinkConf;
-	
-	
+
 	/**
 	 * Instantiates a new DH link.
 	 *
-	 * @param d the d
-	 * @param theta the theta
-	 * @param r the r
-	 * @param alpha the alpha
+	 * @param d
+	 *            the d
+	 * @param theta
+	 *            the theta
+	 * @param r
+	 *            the r
+	 * @param alpha
+	 *            the alpha
 	 */
-	public DHLink(double d, double theta,double r, double alpha) {
+	public DHLink(double d, double theta, double r, double alpha) {
 		this.setDelta(d);
 		this.setTheta(theta);
 		this.setRadius(r);
 		this.setAlpha(alpha);
-		
+
 	}
 
 	/**
 	 * Instantiates a new DH link.
 	 *
-	 * @param nNode the n node
-	 * @param newLinkConf 
+	 * @param nNode
+	 *            the n node
+	 * @param newLinkConf
 	 */
 	public DHLink(Element nNode, LinkConfiguration newLinkConf) {
 		this.newLinkConf = newLinkConf;
@@ -98,9 +101,9 @@ public class DHLink {
 		setTheta(Math.toRadians(XmlFactory.getTagValueDouble("Theta", nNode)));
 		setRadius(XmlFactory.getTagValueDouble("Radius", nNode));
 		setAlpha(Math.toRadians(XmlFactory.getTagValueDouble("Alpha", nNode)));
-		
+
 	}
-	
+
 	public DHLink(DHLink dhl) {
 		setDelta(dhl.getDelta());
 		setTheta(dhl.getTheta());
@@ -111,56 +114,55 @@ public class DHLink {
 	/**
 	 * Fire on link global position change.
 	 *
-	 * @param newPose the new pose
+	 * @param newPose
+	 *            the new pose
 	 */
-	public void fireOnLinkGlobalPositionChange(TransformNR newPose){
-		if(slaveMobileBase!=null)
+	public void fireOnLinkGlobalPositionChange(TransformNR newPose) {
+		if (slaveMobileBase != null)
 			slaveMobileBase.setGlobalToFiducialTransform(newPose);
-		for(IDhLinkPositionListener l:dhlisteners){
+		for (IDhLinkPositionListener l : dhlisteners) {
 			l.onLinkGlobalPositionChange(newPose);
 		}
 	}
-	
+
 	/**
 	 * Adds the dh link position listener.
 	 *
-	 * @param l the l
+	 * @param l
+	 *            the l
 	 */
-	public void addDhLinkPositionListener(IDhLinkPositionListener l){
-		if(!dhlisteners.contains(l))
+	public void addDhLinkPositionListener(IDhLinkPositionListener l) {
+		if (!dhlisteners.contains(l))
 			dhlisteners.add(l);
 	}
-	
+
 	/**
 	 * Removes the dh link position listener.
 	 *
-	 * @param l the l
+	 * @param l
+	 *            the l
 	 */
-	public void removeDhLinkPositionListener(IDhLinkPositionListener l){
-		if(dhlisteners.contains(l))
+	public void removeDhLinkPositionListener(IDhLinkPositionListener l) {
+		if (dhlisteners.contains(l))
 			dhlisteners.remove(l);
 	}
-	
+
 	/**
 	 * Gets the xml.
 	 *
 	 * @return the xml
 	 */
 	/*
-	 * 
-	 * Generate the xml configuration to generate a link of this configuration. 
+	 *
+	 * Generate the xml configuration to generate a link of this configuration.
 	 */
-	public String getXml(){
-		String mb = getSlaveMobileBase()==null?"":"\n\t\t"+getSlaveMobileBase().getEmbedableXml() +"\n";
-		return "\n\t<DHParameters>\n"+
-		    "\t\t<Delta>"+d+"</Delta>\n"+
-		    "\t\t<Theta>"+Math.toDegrees(theta)+"</Theta>\n"+
-		   "\t\t<Radius>"+radius+"</Radius>\n"+
-		   "\t\t<Alpha>"+Math.toDegrees(alpha)+"</Alpha>\n"+
-		   mb+
-		"\t</DHParameters>\n";
+	public String getXml() {
+		String mb = getSlaveMobileBase() == null ? "" : "\n\t\t" + getSlaveMobileBase().getEmbedableXml() + "\n";
+		return "\n\t<DHParameters>\n" + "\t\t<Delta>" + d + "</Delta>\n" + "\t\t<Theta>" + Math.toDegrees(theta)
+				+ "</Theta>\n" + "\t\t<Radius>" + radius + "</Radius>\n" + "\t\t<Alpha>" + Math.toDegrees(alpha)
+				+ "</Alpha>\n" + mb + "\t</DHParameters>\n";
 	}
-	
+
 	/**
 	 * Gets the d.
 	 *
@@ -196,128 +198,135 @@ public class DHLink {
 	public double getAlpha() {
 		return alpha;
 	}
-	
 
 	/**
 	 * Dh step inverse .
 	 *
-	 * @param end the end
-	 * @param jointValue the joint value
+	 * @param end
+	 *            the end
+	 * @param jointValue
+	 *            the joint value
 	 * @return the matrix
 	 */
-	public Matrix DhStepInverse(Matrix end, double jointValue) {	
-		switch(type){
-		case PRISMATIC:
-			return DhStepInverse(end,0,jointValue);
-		case ROTORY:
-			return  DhStepInverse(end,jointValue,0);
-		default:
-		case TOOL:
-			return  DhStepInverse(end,0,0);
+	public Matrix DhStepInverse(Matrix end, double jointValue) {
+		switch (type) {
+			case PRISMATIC :
+				return DhStepInverse(end, 0, jointValue);
+			case ROTORY :
+				return DhStepInverse(end, jointValue, 0);
+			default :
+			case TOOL :
+				return DhStepInverse(end, 0, 0);
 		}
 
 	}
-	
+
 	/**
 	 * Dh step prismatic.
 	 *
-	 * @param radians the joint value in radians
+	 * @param radians
+	 *            the joint value in radians
 	 * @return the matrix
 	 */
 	public Matrix DhStep(double radians) {
-		switch(type){
-		case PRISMATIC:
-			return DhStep(0,radians);
-		case ROTORY:
-			return DhStep(radians,0);
-		default:
-		case TOOL:
-			return DhStep(0,0);
+		switch (type) {
+			case PRISMATIC :
+				return DhStep(0, radians);
+			case ROTORY :
+				return DhStep(radians, 0);
+			default :
+			case TOOL :
+				return DhStep(0, 0);
 		}
 	}
-	
-	
+
 	/**
 	 * Dh step.
 	 *
-	 * @param rotory the rotory value in radians
-	 * @param prismatic the prismatic
+	 * @param rotory
+	 *            the rotory value in radians
+	 * @param prismatic
+	 *            the prismatic
 	 * @return the matrix
 	 */
-	public Matrix DhStep(double rotory,double prismatic) {
+	public Matrix DhStep(double rotory, double prismatic) {
 
 		setMatrix(rotory, prismatic);
-		
+
 		Matrix step = getTransZ();
 		step = step.times(getRotZ());
 		step = step.times(getTransX());
 		step = step.times(getRotX());
-		
 
 		return step;
 	}
-	
+
 	/**
 	 * Dh step inverse.
 	 *
-	 * @param end the end
-	 * @param rotory the rotory
-	 * @param prismatic the prismatic
+	 * @param end
+	 *            the end
+	 * @param rotory
+	 *            the rotory
+	 * @param prismatic
+	 *            the prismatic
 	 * @return the matrix
 	 */
-	public Matrix DhStepInverse(Matrix end,double rotory,double prismatic) {
+	public Matrix DhStepInverse(Matrix end, double rotory, double prismatic) {
 		setMatrix(rotory, prismatic);
-		
+
 		Matrix step = end.times(getRotX().inverse());
 		step = step.times(getTransX().inverse());
 		step = step.times(getRotZ().inverse());
 		step = step.times(getTransZ().inverse());
-		
+
 		return step;
 	}
-	
+
 	/**
 	 * Dh step inverse.
 	 *
-	 * @param rotory the rotory
-	 * @param prismatic the prismatic
+	 * @param rotory
+	 *            the rotory
+	 * @param prismatic
+	 *            the prismatic
 	 * @return the matrix
 	 */
-	public Matrix DhStepInverse(double rotory,double prismatic) {
-		
-		Matrix end=new TransformNR().getMatrixTransform();
-		
-		return DhStepInverse(end,rotory,prismatic);
+	public Matrix DhStepInverse(double rotory, double prismatic) {
+
+		Matrix end = new TransformNR().getMatrixTransform();
+
+		return DhStepInverse(end, rotory, prismatic);
 	}
 
-	
 	/**
 	 * Dh step inverse.
 	 *
-	 * @param prismatic the prismatic
+	 * @param prismatic
+	 *            the prismatic
 	 * @return the matrix
 	 */
 	public Matrix DhStepInversePrismatic(double prismatic) {
-		
-		return DhStepInverse(0,prismatic);
+
+		return DhStepInverse(0, prismatic);
 	}
 
-	
 	/**
 	 * Dh step inverse.
 	 *
-	 * @param rotory the rotory
+	 * @param rotory
+	 *            the rotory
 	 * @return the matrix
 	 */
 	public Matrix DhStepInverseRotory(double rotory) {
-		return DhStepInverse(rotory,0);
+		return DhStepInverse(rotory, 0);
 	}
-
 
 	/**
 	 * Sets the trans x.
 	 *
-	 * @param transX the new trans x
+	 * @param transX
+	 *            the new trans x
 	 */
 	public void setTransX(Matrix transX) {
 		this.transX = transX;
@@ -326,46 +335,37 @@ public class DHLink {
 	/**
 	 * Sets the rot x.
 	 *
-	 * @param rotX the new rot x
+	 * @param rotX
+	 *            the new rot x
 	 */
 	public void setRotX(Matrix rotX) {
 		this.rotX = rotX;
 	}
-	
-	
+
 	/**
 	 * Sets the matrix.
 	 *
-	 * @param rotory the rotory value in radians
-	 * @param prismatic the prismatic
+	 * @param rotory
+	 *            the rotory value in radians
+	 * @param prismatic
+	 *            the prismatic
 	 */
-	private void setMatrix(double rotory,double prismatic){
-		transZ = new Matrix( new double [][] {	
-				{1,0,0,0},
-				{0,1,0,0},
-				{0,0,1,getD()+prismatic},
-				{0,0,0,1}});
-		
-		rotZ=new Matrix( new double [][] {	
-				{Math.cos(getTheta()+rotory),	 -Math.sin(getTheta()+rotory),	0,	0},
-				{Math.sin(getTheta()+rotory),	  Math.cos(getTheta()+rotory),	0,	0},
-				{0,															0,	1,	0},
-				{0,															0,	0,	1}});
+	private void setMatrix(double rotory, double prismatic) {
+		transZ = new Matrix(new double[][]{{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, getD() + prismatic}, {0, 0, 0, 1}});
+
+		rotZ = new Matrix(new double[][]{{Math.cos(getTheta() + rotory), -Math.sin(getTheta() + rotory), 0, 0},
+				{Math.sin(getTheta() + rotory), Math.cos(getTheta() + rotory), 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}});
 	}
-	
+
 	/**
 	 * Gets the trans x.
 	 *
 	 * @return the trans x
 	 */
 	public Matrix getTransX() {
-		 if(transX == null){
-			 transX=new Matrix( new double [][] {	
-					{1,0,0,getR()},
-					{0,1,0,0},
-					{0,0,1,0},
-					{0,0,0,1}});
-		}	
+		if (transX == null) {
+			transX = new Matrix(new double[][]{{1, 0, 0, getR()}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}});
+		}
 		return transX;
 	}
 
@@ -375,16 +375,13 @@ public class DHLink {
 	 * @return the rot x
 	 */
 	public Matrix getRotX() {
-		 if(rotX == null){
-			 rotX=new Matrix( new double [][] {	
-				{1,	0,						0,							0},
-				{0,	Math.cos(getAlpha()),	-Math.sin(getAlpha()),		0},
-				{0,	Math.sin(getAlpha()),	Math.cos(getAlpha()),		0},
-				{0,	0,						0,							1}});
-		 }
+		if (rotX == null) {
+			rotX = new Matrix(new double[][]{{1, 0, 0, 0}, {0, Math.cos(getAlpha()), -Math.sin(getAlpha()), 0},
+					{0, Math.sin(getAlpha()), Math.cos(getAlpha()), 0}, {0, 0, 0, 1}});
+		}
 		return rotX;
 	}
-	
+
 	/**
 	 * Gets the trans z.
 	 *
@@ -402,79 +399,67 @@ public class DHLink {
 	public Matrix getRotZ() {
 		return rotZ;
 	}
-	
+
 	/**
 	 * Gets a jacobian matrix of this link.
 	 *
-	 * @param rotoryVelocity the rotory velocity
-	 * @param prismaticVelocity the prismatic velocity
+	 * @param rotoryVelocity
+	 *            the rotory velocity
+	 * @param prismaticVelocity
+	 *            the prismatic velocity
 	 * @return the Jacobian
 	 */
-	public Matrix DhStepJacobian(double rotoryVelocity,double prismaticVelocity) {
+	public Matrix DhStepJacobian(double rotoryVelocity, double prismaticVelocity) {
 
 		setJacobianMatrix(rotoryVelocity, prismaticVelocity);
-		
+
 		Matrix step = getTransZ_J();
 		step = step.times(getRotZ_J());
 		step = step.times(getTransX_J());
 		step = step.times(getRotX_J());
-		
+
 		return step;
 	}
-	
+
 	/**
 	 * Sets up the 2 alterable Jacobian matrixs .
 	 *
-	 * @param rotory the rotory velocity of the Theta link
-	 * @param prismatic the linear velocity of the D link
+	 * @param rotory
+	 *            the rotory velocity of the Theta link
+	 * @param prismatic
+	 *            the linear velocity of the D link
 	 */
-	private void setJacobianMatrix(double rotory,double prismatic){
-		rotZ_J = new Matrix( new double [][] {	
-				{1,0,0,					0	},
-				{0,1,0,					0	},
-				{0,0,1,	getD()+prismatic	},
-				{0,0,0,					1	}});
-		
-		transZ_J  = new Matrix( new double [][] {	
-				{Math.cos(getTheta()+rotory),-Math.sin(getTheta()+rotory),	0,	0},
-				{Math.sin(getTheta()+rotory), Math.cos(getTheta()+rotory),	0,	0},
-				{0,														0,	1,	0},
-				{0,														0,	0,	1}});
+	private void setJacobianMatrix(double rotory, double prismatic) {
+		rotZ_J = new Matrix(new double[][]{{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, getD() + prismatic}, {0, 0, 0, 1}});
+
+		transZ_J = new Matrix(new double[][]{{Math.cos(getTheta() + rotory), -Math.sin(getTheta() + rotory), 0, 0},
+				{Math.sin(getTheta() + rotory), Math.cos(getTheta() + rotory), 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}});
 	}
-	
+
 	/**
 	 * Gets the rot x_ j.
 	 *
 	 * @return the rot x_ j
 	 */
 	public Matrix getRotX_J() {
-		 if(rotX_J == null){
-			 rotX_J = new Matrix( new double [][] {	
-				{1,	0,						0,							0},
-				{0,	Math.cos(getAlpha()),	-Math.sin(getAlpha()),		0},
-				{0,	Math.sin(getAlpha()),	Math.cos(getAlpha()),		0},
-				{0,	0,						0,							1}});
-		 }
+		if (rotX_J == null) {
+			rotX_J = new Matrix(new double[][]{{1, 0, 0, 0}, {0, Math.cos(getAlpha()), -Math.sin(getAlpha()), 0},
+					{0, Math.sin(getAlpha()), Math.cos(getAlpha()), 0}, {0, 0, 0, 1}});
+		}
 		return rotX_J;
 	}
-	
+
 	/**
 	 * Gets the trans x_ j.
 	 *
 	 * @return the trans x_ j
 	 */
 	public Matrix getTransX_J() {
-		 if(transX_J == null){
-			 transX_J= new Matrix( new double [][] {	
-					{1,0,0,getR()},
-					{0,1,0,0},
-					{0,0,1,0},
-					{0,0,0,1}});
-		 }	
+		if (transX_J == null) {
+			transX_J = new Matrix(new double[][]{{1, 0, 0, getR()}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}});
+		}
 		return transX_J;
 	}
-
-
 
 	/**
 	 * Gets the trans z_ j.
@@ -484,7 +469,7 @@ public class DHLink {
 	public Matrix getTransZ_J() {
 		return transZ_J;
 	}
-	
+
 	/**
 	 * Gets the rot z_ j.
 	 *
@@ -493,17 +478,19 @@ public class DHLink {
 	public Matrix getRotZ_J() {
 		return rotZ_J;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see java.lang.Object#toString()
 	 */
-	@Override 
-	public String toString(){
-		String s="";
-		s+=" Delta = "+getDelta();
-		s+=" Theta = "+Math.toDegrees(getTheta())+" deg";
-		s+=" Radius = "+getRadius();
-		s+=" Alpha = "+Math.toDegrees(getAlpha())+" deg";
+	@Override
+	public String toString() {
+		String s = "";
+		s += " Delta = " + getDelta();
+		s += " Theta = " + Math.toDegrees(getTheta()) + " deg";
+		s += " Radius = " + getRadius();
+		s += " Alpha = " + Math.toDegrees(getAlpha()) + " deg";
 		return s;
 	}
 
@@ -519,12 +506,13 @@ public class DHLink {
 	/**
 	 * Sets the listener.
 	 *
-	 * @param listener the new listener
+	 * @param listener
+	 *            the new listener
 	 */
 	public void setListener(Object listener) {
 		this.listener = listener;
 	}
-	
+
 	/**
 	 * Gets the root listener.
 	 *
@@ -537,12 +525,13 @@ public class DHLink {
 	/**
 	 * Sets the root listener.
 	 *
-	 * @param listener the new root listener
+	 * @param listener
+	 *            the new root listener
 	 */
 	void setRootListener(Object listener) {
 		this.root = listener;
 	}
-	
+
 	/**
 	 * Gets the delta.
 	 *
@@ -555,11 +544,13 @@ public class DHLink {
 	/**
 	 * Sets the delta.
 	 *
-	 * @param d the new delta
+	 * @param d
+	 *            the new delta
 	 */
 	public void setDelta(double d) {
 		this.d = d;
-		if(newLinkConf!=null)newLinkConf.fireChangeEvent();
+		if (newLinkConf != null)
+			newLinkConf.fireChangeEvent();
 	}
 
 	/**
@@ -574,35 +565,41 @@ public class DHLink {
 	/**
 	 * Sets the radius.
 	 *
-	 * @param radius the new radius
+	 * @param radius
+	 *            the new radius
 	 */
 	public void setRadius(double radius) {
 		this.radius = radius;
-		transX_J=null;
-		transX=null;
-		if(newLinkConf!=null)newLinkConf.fireChangeEvent();
+		transX_J = null;
+		transX = null;
+		if (newLinkConf != null)
+			newLinkConf.fireChangeEvent();
 	}
 
 	/**
 	 * Sets the theta.
 	 *
-	 * @param theta the new theta
+	 * @param theta
+	 *            the new theta
 	 */
 	public void setTheta(double theta) {
 		this.theta = theta;
-		if(newLinkConf!=null)newLinkConf.fireChangeEvent();
+		if (newLinkConf != null)
+			newLinkConf.fireChangeEvent();
 	}
 
 	/**
 	 * Sets the alpha.
 	 *
-	 * @param alpha the new alpha
+	 * @param alpha
+	 *            the new alpha
 	 */
 	public void setAlpha(double alpha) {
 		this.alpha = alpha;
-		rotX=null;
-		rotX_J=null;
-		if(newLinkConf!=null)newLinkConf.fireChangeEvent();
+		rotX = null;
+		rotX_J = null;
+		if (newLinkConf != null)
+			newLinkConf.fireChangeEvent();
 	}
 
 	/**
@@ -617,7 +614,8 @@ public class DHLink {
 	/**
 	 * Sets the type.
 	 *
-	 * @param type the new type
+	 * @param type
+	 *            the new type
 	 */
 	public void setLinkType(DhLinkType type) {
 		this.type = type;
@@ -626,7 +624,8 @@ public class DHLink {
 	/**
 	 * Sets the mobile base xml.
 	 *
-	 * @param embedableXml the new mobile base xml
+	 * @param embedableXml
+	 *            the new mobile base xml
 	 */
 	public void setMobileBaseXml(MobileBase embedableXml) {
 		this.setSlaveMobileBase(embedableXml);

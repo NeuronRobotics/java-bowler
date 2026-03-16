@@ -6,9 +6,9 @@ public interface IVitaminHolder {
 	ArrayList<VitaminLocation> getVitamins();
 
 	default void addVitamin(VitaminLocation location) {
-		if(hasVitamin(location)) 
-			throw new RuntimeException("Vitamin Name "+location.getName()+"already exists");
-		addVitaminInternal( location);
+		if (hasVitamin(location))
+			throw new RuntimeException("Vitamin Name " + location.getName() + "already exists");
+		addVitaminInternal(location);
 	}
 
 	default boolean hasVitamin(VitaminLocation location) {

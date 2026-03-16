@@ -3,9 +3,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,7 +24,7 @@ import com.neuronrobotics.sdk.common.InvalidResponseException;
  * The Class NamespaceCommand.
  */
 public class NamespaceCommand extends BowlerAbstractCommand {
-	
+
 	/**
 	 * Instantiates a new namespace command.
 	 */
@@ -32,91 +32,100 @@ public class NamespaceCommand extends BowlerAbstractCommand {
 		setOpCode("_nms");
 		setMethod(BowlerMethod.GET);
 	}
-	
+
 	/**
 	 * Instantiates a new namespace command.
 	 *
-	 * @param name the name
+	 * @param name
+	 *            the name
 	 */
 	public NamespaceCommand(int name) {
 		setOpCode("_nms");
 		setMethod(BowlerMethod.GET);
 		getCallingDataStorage().add(name);
 	}
-	
+
 	/**
 	 * Jan 7, 2011.
 	 *
-	 * @param name the number of namespaces
-	 * @param upstream the upstream
+	 * @param name
+	 *            the number of namespaces
+	 * @param upstream
+	 *            the upstream
 	 */
-	public NamespaceCommand(int name,boolean upstream) {
+	public NamespaceCommand(int name, boolean upstream) {
 		setOpCode("_nms");
-		if(upstream)
+		if (upstream)
 			setMethod(BowlerMethod.POST);
 		else
 			setMethod(BowlerMethod.GET);
 		getCallingDataStorage().add(name);
 	}
-	
+
 	/**
 	 * Instantiates a new namespace command.
 	 *
-	 * @param index the index
-	 * @param name the name
+	 * @param index
+	 *            the index
+	 * @param name
+	 *            the name
 	 */
-	public NamespaceCommand(int index,String name) {
+	public NamespaceCommand(int index, String name) {
 		setOpCode("_nms");
 		setMethod(BowlerMethod.POST);
 		getCallingDataStorage().add(name);
 		getCallingDataStorage().add(0);// null terminate the string
 		getCallingDataStorage().add(index);// set the size of the list of namespaces
 	}
-	
+
 	/**
-	 * Determine if the return response was successful; throw an InvalidResponseExpection otherwise. Commands
-	 * with more complicated validation should override this method and provide more specific checking. 
+	 * Determine if the return response was successful; throw an
+	 * InvalidResponseExpection otherwise. Commands with more complicated validation
+	 * should override this method and provide more specific checking.
 	 *
-	 * @param data the data
+	 * @param data
+	 *            the data
 	 * @return the incoming response
-	 * @throws InvalidResponseException the invalid response exception
+	 * @throws InvalidResponseException
+	 *             the invalid response exception
 	 */
 	@Override
 	public BowlerDatagram validate(BowlerDatagram data) throws InvalidResponseException {
-		if (data==null){
+		if (data == null) {
 			// TODO: Correct this with JSDK-8
-			 throw new InvalidResponseException("No response from device");
+			throw new InvalidResponseException("No response from device");
 		}
-		// throws 
-		if( data.getRPC().equals("_err")) {
-			Integer zone=Integer.valueOf(data.getData().getByte(0));
-			Integer section=Integer.valueOf(data.getData().getByte(1));
-			
-			switch(zone) {
-			default:
-				throw new InvalidResponseException("Unknown error. (" + zone + " " + section + ")");
-			case 0:
-				switch(section) {
-				default:
-					throw new InvalidResponseException("Unknow error in the communications stack. (" + zone + " " + section + ")");
-				case 0x7f:
-					throw new InvalidResponseException("The method provided is invalid.");
-				case 0:
-					throw new InvalidResponseException("The packet was not sent syncronously.");
-				case 1:
-					throw new InvalidResponseException("The RPC sent in undefined with GET method.");
-				case 2:
-					throw new InvalidResponseException("The RPC sent in undefined with POST method.");
-				case 3:
-					throw new InvalidResponseException("The RPC sent in undefined with CRITICAL method.");
-				case 4:
-					throw new InvalidResponseException("Invalid namespace request");
-				case 5:
-					throw new InvalidResponseException("Invalid namespace index requested");
-				}
+		// throws
+		if (data.getRPC().equals("_err")) {
+			Integer zone = Integer.valueOf(data.getData().getByte(0));
+			Integer section = Integer.valueOf(data.getData().getByte(1));
+
+			switch (zone) {
+				default :
+					throw new InvalidResponseException("Unknown error. (" + zone + " " + section + ")");
+				case 0 :
+					switch (section) {
+						default :
+							throw new InvalidResponseException(
+									"Unknow error in the communications stack. (" + zone + " " + section + ")");
+						case 0x7f :
+							throw new InvalidResponseException("The method provided is invalid.");
+						case 0 :
+							throw new InvalidResponseException("The packet was not sent syncronously.");
+						case 1 :
+							throw new InvalidResponseException("The RPC sent in undefined with GET method.");
+						case 2 :
+							throw new InvalidResponseException("The RPC sent in undefined with POST method.");
+						case 3 :
+							throw new InvalidResponseException("The RPC sent in undefined with CRITICAL method.");
+						case 4 :
+							throw new InvalidResponseException("Invalid namespace request");
+						case 5 :
+							throw new InvalidResponseException("Invalid namespace index requested");
+					}
 			}
 		}
-		
+
 		return data;
 	}
 }

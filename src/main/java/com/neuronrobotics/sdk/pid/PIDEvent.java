@@ -8,32 +8,36 @@ import com.neuronrobotics.sdk.common.ByteList;
  * The Class PIDEvent.
  */
 public class PIDEvent {
-	
+
 	/** The channel. */
 	private int channel;
-	
+
 	/** The ticks. */
-	private float ticks; 
-	
+	private float ticks;
+
 	/** The time stamp. */
 	private long timeStamp;
-	
+
 	/** The velocity. */
 	private int velocity;
-	
-	public PIDEvent(){
-		
+
+	public PIDEvent() {
+
 	}
-	
+
 	/**
 	 * Instantiates a new PID event.
 	 *
-	 * @param chan the chan
-	 * @param tick the tick
-	 * @param time the time
-	 * @param velocity the velocity
+	 * @param chan
+	 *            the chan
+	 * @param tick
+	 *            the tick
+	 * @param time
+	 *            the time
+	 * @param velocity
+	 *            the velocity
 	 */
-	public PIDEvent(int chan,float tick,long time,int velocity){
+	public PIDEvent(int chan, float tick, long time, int velocity) {
 		setGroup(chan);
 		setValue(tick);
 		setTimeStamp(time);
@@ -42,12 +46,16 @@ public class PIDEvent {
 	/**
 	 * Sets new PID event.
 	 *
-	 * @param chan the chan
-	 * @param tick the tick
-	 * @param time the time
-	 * @param velocity the velocity
+	 * @param chan
+	 *            the chan
+	 * @param tick
+	 *            the tick
+	 * @param time
+	 *            the time
+	 * @param velocity
+	 *            the velocity
 	 */
-	public void set(int chan,float tick,long time,int velocity){
+	public void set(int chan, float tick, long time, int velocity) {
 		setGroup(chan);
 		setValue(tick);
 		setTimeStamp(time);
@@ -56,27 +64,28 @@ public class PIDEvent {
 	/**
 	 * Instantiates a new PID event.
 	 *
-	 * @param data the data
+	 * @param data
+	 *            the data
 	 */
-	public PIDEvent(BowlerDatagram data, long timestamp){
-		if(!data.getRPC().contains("_pid"))
+	public PIDEvent(BowlerDatagram data, long timestamp) {
+		if (!data.getRPC().contains("_pid"))
 			throw new RuntimeException("Datagram is not a PID event");
 		setGroup(data.getData().getByte(0));
-		setValue(ByteList.convertToInt(data.getData().getBytes(1, 4),true));
+		setValue(ByteList.convertToInt(data.getData().getBytes(1, 4), true));
 		setTimeStamp(timestamp);
-		setVelocity(ByteList.convertToInt(data.getData().getBytes(9, 4),true));
+		setVelocity(ByteList.convertToInt(data.getData().getBytes(9, 4), true));
 	}
-	
-	
+
 	/**
 	 * Sets the group.
 	 *
-	 * @param channel the new group
+	 * @param channel
+	 *            the new group
 	 */
 	public void setGroup(int channel) {
 		this.channel = channel;
 	}
-	
+
 	/**
 	 * Gets the group.
 	 *
@@ -85,16 +94,17 @@ public class PIDEvent {
 	public int getGroup() {
 		return channel;
 	}
-	
+
 	/**
 	 * Sets the value.
 	 *
-	 * @param ticks the new value
+	 * @param ticks
+	 *            the new value
 	 */
 	public void setValue(float ticks) {
 		this.ticks = ticks;
 	}
-	
+
 	/**
 	 * Gets the value.
 	 *
@@ -103,16 +113,17 @@ public class PIDEvent {
 	public float getValue() {
 		return ticks;
 	}
-	
+
 	/**
 	 * Sets the time stamp.
 	 *
-	 * @param timeStamp the new time stamp
+	 * @param timeStamp
+	 *            the new time stamp
 	 */
 	public void setTimeStamp(long timeStamp) {
 		this.timeStamp = timeStamp;
 	}
-	
+
 	/**
 	 * Gets the time stamp.
 	 *
@@ -121,24 +132,28 @@ public class PIDEvent {
 	public long getTimeStamp() {
 		return timeStamp;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see java.lang.Object#toString()
 	 */
-	@Override 
-	public String toString(){
-		return "PID Event: \n\tchan = "+channel+"\n\tvalue = "+ticks+"\n\ttime = "+timeStamp+"\n\tvelocity since last packet= "+velocity;
+	@Override
+	public String toString() {
+		return "PID Event: \n\tchan = " + channel + "\n\tvalue = " + ticks + "\n\ttime = " + timeStamp
+				+ "\n\tvelocity since last packet= " + velocity;
 	}
-	
+
 	/**
 	 * Sets the velocity.
 	 *
-	 * @param vel the new velocity
+	 * @param vel
+	 *            the new velocity
 	 */
 	public void setVelocity(int vel) {
 		this.velocity = vel;
 	}
-	
+
 	/**
 	 * Gets the velocity.
 	 *

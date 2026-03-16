@@ -8,7 +8,7 @@ import com.neuronrobotics.sdk.common.BowlerMethod;
  * The Class PowerCommand.
  */
 public class PowerCommand extends BowlerAbstractCommand {
-	
+
 	/**
 	 * Instantiates a new power command.
 	 */
@@ -16,15 +16,16 @@ public class PowerCommand extends BowlerAbstractCommand {
 		setOpCode("_pwr");
 		setMethod(BowlerMethod.GET);
 	}
-	
+
 	/**
 	 * This method will disable the brownout detect for the DyIO.
 	 *
-	 * @param disableBrownOutDetect the disable brown out detect
+	 * @param disableBrownOutDetect
+	 *            the disable brown out detect
 	 */
 	public PowerCommand(boolean disableBrownOutDetect) {
 		setOpCode("_pwr");
 		setMethod(BowlerMethod.CRITICAL);
-		getCallingDataStorage().add(disableBrownOutDetect?1:0);
+		getCallingDataStorage().add(disableBrownOutDetect ? 1 : 0);
 	}
 }

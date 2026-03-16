@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import org.w3c.dom.Element;
 
 import Jama.Matrix;
-import javafx.scene.transform.Affine;
 
 import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 import com.neuronrobotics.sdk.addons.kinematics.time.ITimeProvider;
@@ -22,7 +21,9 @@ import com.neuronrobotics.sdk.common.IDeviceConnectionEventListener;
  * The Class DHParameterKinematics.
  */
 public class DHParameterKinematics extends AbstractKinematicsNR
-		implements ITaskSpaceUpdateListenerNR, IJointSpaceUpdateListenerNR {
+		implements
+			ITaskSpaceUpdateListenerNR,
+			IJointSpaceUpdateListenerNR {
 
 	/** The chain. */
 	private DHChain chain = null;
@@ -42,7 +43,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 		public void onDisconnect(BowlerAbstractDevice source) {
 			if (!disconnecting) {
 				disconnecting = true;
-				//disconnect();
+				// disconnect();
 			}
 
 		}
@@ -71,20 +72,20 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 				return;
 			}
 		addConnectionEventListener(new IDeviceConnectionEventListener() {
-			
+
 			@Override
 			public void onDisconnect(BowlerAbstractDevice source) {
-				for(int i=0;i<getNumberOfLinks();i++) {
+				for (int i = 0; i < getNumberOfLinks(); i++) {
 					MobileBase m = getSlaveMobileBase(i);
-					if(m!=null)
+					if (m != null)
 						m.disconnect();
 				}
 			}
-			
+
 			@Override
 			public void onConnect(BowlerAbstractDevice source) {
 				// Auto-generated method stub
-				
+
 			}
 		});
 		makeDefaultVitamins();
@@ -110,7 +111,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	}
 
 	private void makeDefaultVitamins() {
-		for(int i=0;i<getNumberOfLinks();i++) {
+		for (int i = 0; i < getNumberOfLinks(); i++) {
 			getLinkConfiguration(i).getShaftVitamin(true);
 			getLinkConfiguration(i).getElectroMechanicalVitamin(true);
 		}
@@ -171,7 +172,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	 * Instantiates a new DH parameter kinematics.
 	 */
 	public DHParameterKinematics() {
-		this(null,(InputStream)null);
+		this(null, (InputStream) null);
 	}
 
 	/**
@@ -208,7 +209,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR#
 	 * inverseKinematics(com.neuronrobotics.sdk.addons.kinematics.math.TransformNR)
 	 */
@@ -219,7 +220,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR#
 	 * forwardKinematics(double[])
 	 */
@@ -230,125 +231,132 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 		TransformNR rt = getDhChain().forwardKinematics(jointSpaceVector);
 		return rt;
 	}
-	   /**
-     * Cross product.
-     *
-     * @param a the a
-     * @param b the b
-     * @return the double[]
-     */
-    private double [] crossProduct(double[] a, double[] b){
-        double [] xProd = new double [3];
-        
-        xProd[0]=a[1]*b[2]-a[2]*b[1];
-        xProd[1]=a[2]*b[0]-a[0]*b[2];
-        xProd[2]=a[0]*b[1]-a[1]*b[0];
-        
-        return xProd;
-    }
-        /**
-     * Gets the Jacobian matrix.
-     *
-     * @param jointSpaceVector the joint space vector
-     * @return a matrix representing the Jacobian for the current configuration
-     */
-    public Matrix getJacobian(DHChain chain, double[] jointSpaceVector, int index){
-        int size = chain.getLinks().size();
-        double [][] data = new double[6][size]; 
-        chain.getChain(jointSpaceVector);
-        for(int i=0;i<size;i++){
-            if(i>index) continue;
-            Matrix rotationComponent = forwardOffset(new TransformNR()).getMatrixTransform();
-            for(int j=i;j<size && j<=index;j++) {
-                double value=0;
-                if(chain.getLinks().get(j).getLinkType()==DhLinkType.ROTORY)
-                    value=Math.toRadians(jointSpaceVector[j]);
-                else
-                    value=jointSpaceVector[j];
-                Matrix step = chain.getLinks().get(j).DhStep(value);
-                //Log.info( "Current:\n"+current+"Step:\n"+step);
-                //println i+" Link "+j+" index "+index+" step "+TransformNR.getMatrixString(step)
-                rotationComponent = rotationComponent.times(step);
-            }
-            double [] zVect = new double [3];
-            double [] zVectEnd = new double [3];
-            double [][] rotation=new TransformNR(rotationComponent).getRotationMatrix().getRotationMatrix();
-            zVectEnd[0]=rotation[2][2];
-            zVectEnd[1]=rotation[2][1];
-            zVectEnd[2]=rotation[2][0];
-            if(i==0 && index ==0 ){
-                zVect[0]=0;
-                zVect[1]=0;
-                zVect[2]=1;
-            }else if(i<=index){
-                //println "Link "+index+" "+TransformNR.getMatrixString(new Matrix(rotation))
-                //Get the rz vector from matrix
-                zVect[0]=zVectEnd[0];
-                zVect[1]=zVectEnd[1];
-                zVect[2]=zVectEnd[2];
-            }else{
-                zVect[0]=0;
-                zVect[1]=0;
-                zVect[2]=0;
-            }
-            //Assume all rotational joints
-            //Set to zero if prismatic
-            if(chain.getLinks().get(i).getLinkType()==DhLinkType.ROTORY){
-                data[3][i]=zVect[0];
-                data[4][i]=zVect[1];
-                data[5][i]=zVect[2];
-            }else{
-                data[3][i]=0;
-                data[4][i]=0;
-                data[5][i]=0;
-            }
-            double []rVect = new double [3];            
-            Matrix rComponentmx = forwardOffset(new TransformNR()).getMatrixTransform();
-            for(int j=0;j<i ;j++) {
-                double value=0;
-                if(chain.getLinks().get(j).getLinkType()==DhLinkType.ROTORY)
-                    value=Math.toRadians(jointSpaceVector[j]);
-                else
-                    value=jointSpaceVector[j];
-                Matrix step = chain.getLinks().get(j).DhStep(value);
-                //Log.info( "Current:\n"+current+"Step:\n"+step);
-                //println i+" Link "+j+" index "+index+" step "+TransformNR.getMatrixString(step)
-                rComponentmx = rComponentmx.times(step);
-            }
-            //Figure out the current 
-            Matrix tipOffsetmx =forwardOffset( new TransformNR()).getMatrixTransform();
-            for(int j=0;j<size && j<=index;j++) {
-                double value=0;
-                if(chain.getLinks().get(j).getLinkType()==DhLinkType.ROTORY)
-                    value=Math.toRadians(jointSpaceVector[j]);
-                else
-                    value=jointSpaceVector[j];
-                Matrix step = chain.getLinks().get(j).DhStep(value);
-                //Log.info( "Current:\n"+current+"Step:\n"+step);
-                //println i+" Link "+j+" index "+index+" step "+TransformNR.getMatrixString(step)
-                tipOffsetmx = tipOffsetmx.times(step);
-            }
-            double []tipOffset = new double [3];
-            double []rComponent = new double [3];
-            TransformNR tipOffsetnr = new TransformNR(tipOffsetmx);//.times(myInvertedStarting);
-            tipOffset[0]=tipOffsetnr.getX();
-            tipOffset[1]=tipOffsetnr.getY();
-            tipOffset[2]=tipOffsetnr.getZ();
-            TransformNR rComponentnr = new TransformNR(rComponentmx);//.times(myInvertedStarting);
-            rComponent[0]=rComponentnr.getX();
-            rComponent[1]=rComponentnr.getY();
-            rComponent[2]=rComponentnr.getZ();
-            for(int x=0;x<3;x++)
-                rVect[x]=(tipOffset[x]-rComponent[x]);
-            //Cross product of rVect and Z vect
-            double []xProd = crossProduct( zVect,rVect);
-            data[0][i]=xProd[0];
-            data[1][i]=xProd[1];
-            data[2][i]=xProd[2];
-        }
-        //println "\n\n"
-        return new Matrix(data);
-    }
+	/**
+	 * Cross product.
+	 *
+	 * @param a
+	 *            the a
+	 * @param b
+	 *            the b
+	 * @return the double[]
+	 */
+	private double[] crossProduct(double[] a, double[] b) {
+		double[] xProd = new double[3];
+
+		xProd[0] = a[1] * b[2] - a[2] * b[1];
+		xProd[1] = a[2] * b[0] - a[0] * b[2];
+		xProd[2] = a[0] * b[1] - a[1] * b[0];
+
+		return xProd;
+	}
+	/**
+	 * Gets the Jacobian matrix.
+	 *
+	 * @param jointSpaceVector
+	 *            the joint space vector
+	 * @return a matrix representing the Jacobian for the current configuration
+	 */
+	public Matrix getJacobian(DHChain chain, double[] jointSpaceVector, int index) {
+		int size = chain.getLinks().size();
+		double[][] data = new double[6][size];
+		chain.getChain(jointSpaceVector);
+		for (int i = 0; i < size; i++) {
+			if (i > index)
+				continue;
+			Matrix rotationComponent = forwardOffset(new TransformNR()).getMatrixTransform();
+			for (int j = i; j < size && j <= index; j++) {
+				double value = 0;
+				if (chain.getLinks().get(j).getLinkType() == DhLinkType.ROTORY)
+					value = Math.toRadians(jointSpaceVector[j]);
+				else
+					value = jointSpaceVector[j];
+				Matrix step = chain.getLinks().get(j).DhStep(value);
+				// Log.info( "Current:\n"+current+"Step:\n"+step);
+				// println i+" Link "+j+" index "+index+" step
+				// "+TransformNR.getMatrixString(step)
+				rotationComponent = rotationComponent.times(step);
+			}
+			double[] zVect = new double[3];
+			double[] zVectEnd = new double[3];
+			double[][] rotation = new TransformNR(rotationComponent).getRotationMatrix().getRotationMatrix();
+			zVectEnd[0] = rotation[2][2];
+			zVectEnd[1] = rotation[2][1];
+			zVectEnd[2] = rotation[2][0];
+			if (i == 0 && index == 0) {
+				zVect[0] = 0;
+				zVect[1] = 0;
+				zVect[2] = 1;
+			} else if (i <= index) {
+				// println "Link "+index+" "+TransformNR.getMatrixString(new Matrix(rotation))
+				// Get the rz vector from matrix
+				zVect[0] = zVectEnd[0];
+				zVect[1] = zVectEnd[1];
+				zVect[2] = zVectEnd[2];
+			} else {
+				zVect[0] = 0;
+				zVect[1] = 0;
+				zVect[2] = 0;
+			}
+			// Assume all rotational joints
+			// Set to zero if prismatic
+			if (chain.getLinks().get(i).getLinkType() == DhLinkType.ROTORY) {
+				data[3][i] = zVect[0];
+				data[4][i] = zVect[1];
+				data[5][i] = zVect[2];
+			} else {
+				data[3][i] = 0;
+				data[4][i] = 0;
+				data[5][i] = 0;
+			}
+			double[] rVect = new double[3];
+			Matrix rComponentmx = forwardOffset(new TransformNR()).getMatrixTransform();
+			for (int j = 0; j < i; j++) {
+				double value = 0;
+				if (chain.getLinks().get(j).getLinkType() == DhLinkType.ROTORY)
+					value = Math.toRadians(jointSpaceVector[j]);
+				else
+					value = jointSpaceVector[j];
+				Matrix step = chain.getLinks().get(j).DhStep(value);
+				// Log.info( "Current:\n"+current+"Step:\n"+step);
+				// println i+" Link "+j+" index "+index+" step
+				// "+TransformNR.getMatrixString(step)
+				rComponentmx = rComponentmx.times(step);
+			}
+			// Figure out the current
+			Matrix tipOffsetmx = forwardOffset(new TransformNR()).getMatrixTransform();
+			for (int j = 0; j < size && j <= index; j++) {
+				double value = 0;
+				if (chain.getLinks().get(j).getLinkType() == DhLinkType.ROTORY)
+					value = Math.toRadians(jointSpaceVector[j]);
+				else
+					value = jointSpaceVector[j];
+				Matrix step = chain.getLinks().get(j).DhStep(value);
+				// Log.info( "Current:\n"+current+"Step:\n"+step);
+				// println i+" Link "+j+" index "+index+" step
+				// "+TransformNR.getMatrixString(step)
+				tipOffsetmx = tipOffsetmx.times(step);
+			}
+			double[] tipOffset = new double[3];
+			double[] rComponent = new double[3];
+			TransformNR tipOffsetnr = new TransformNR(tipOffsetmx);// .times(myInvertedStarting);
+			tipOffset[0] = tipOffsetnr.getX();
+			tipOffset[1] = tipOffsetnr.getY();
+			tipOffset[2] = tipOffsetnr.getZ();
+			TransformNR rComponentnr = new TransformNR(rComponentmx);// .times(myInvertedStarting);
+			rComponent[0] = rComponentnr.getX();
+			rComponent[1] = rComponentnr.getY();
+			rComponent[2] = rComponentnr.getZ();
+			for (int x = 0; x < 3; x++)
+				rVect[x] = (tipOffset[x] - rComponent[x]);
+			// Cross product of rVect and Z vect
+			double[] xProd = crossProduct(zVect, rVect);
+			data[0][i] = xProd[0];
+			data[1][i] = xProd[1];
+			data[2][i] = xProd[2];
+		}
+		// println "\n\n"
+		return new Matrix(data);
+	}
 
 	/**
 	 * Gets the Jacobian matrix.
@@ -356,25 +364,25 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	 * @return a matrix representing the Jacobian for the current configuration
 	 */
 	public Matrix getJacobian() {
-		return getJacobian(getDhChain().getLinks().size()-1);
+		return getJacobian(getDhChain().getLinks().size() - 1);
 	}
 	/**
-     * Gets the Jacobian matrix.
-     *
-     * @return a matrix representing the Jacobian for the current configuration
-     */
-    public Matrix getJacobian(int index) {
-        return getJacobian(getCurrentJointSpaceVector() , index) ;
-    }
-    /**
-     * Gets the Jacobian matrix.
-    *
-    * @return a matrix representing the Jacobian for the current configuration
-    */
-   public Matrix getJacobian(double[] jointSpaceVector,int index) {
+	 * Gets the Jacobian matrix.
+	 *
+	 * @return a matrix representing the Jacobian for the current configuration
+	 */
+	public Matrix getJacobian(int index) {
+		return getJacobian(getCurrentJointSpaceVector(), index);
+	}
+	/**
+	 * Gets the Jacobian matrix.
+	 *
+	 * @return a matrix representing the Jacobian for the current configuration
+	 */
+	public Matrix getJacobian(double[] jointSpaceVector, int index) {
 
-       return  getJacobian(getDhChain() ,  jointSpaceVector,  index);
-   }
+		return getJacobian(getDhChain(), jointSpaceVector, index);
+	}
 	/**
 	 * Gets the chain transformations.
 	 *
@@ -421,17 +429,17 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	public void setChain(DHChain chain) {
 		this.chain = chain;
 		ArrayList<DHLink> dhLinks = chain.getLinks();
-//		for (int i = linksListeners.size(); i < dhLinks.size(); i++) {
-//			linksListeners.add(new Object());
-//		}
+		// for (int i = linksListeners.size(); i < dhLinks.size(); i++) {
+		// linksListeners.add(new Object());
+		// }
 		LinkFactory lf = getFactory();
 		configs = lf.getLinkConfigurations();
 		for (int i = 0; i < dhLinks.size(); i++) {
-			//dhLinks.get(i).setListener(linksListeners.get(i));
+			// dhLinks.get(i).setListener(linksListeners.get(i));
 			dhLinks.get(i).setRootListener(getRootListener());
 			// This mapps together the position of the links in the kinematics and the link
 			// actions themselves (used for cameras and tools)
-			//lf.getLink(configs.get(i)).setGlobalPositionListener(linksListeners.get(i));
+			// lf.getLink(configs.get(i)).setGlobalPositionListener(linksListeners.get(i));
 			if (getLinkConfiguration(i).isTool()) {
 				dhLinks.get(i).setLinkType(DhLinkType.TOOL);
 			} else if (getLinkConfiguration(i).isPrismatic())
@@ -445,11 +453,11 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR#getXml()
 	 */
 	/*
-	 * 
+	 *
 	 * Generate the xml configuration to generate an XML of this robot.
 	 */
 	public String getXml() {
@@ -465,7 +473,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	 * @return the embedable xml
 	 */
 	/*
-	 * 
+	 *
 	 * Generate the xml configuration to generate an XML of this robot.
 	 */
 	public String getEmbedableXml() {
@@ -501,7 +509,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR#
 	 * disconnectDevice()
 	 */
@@ -514,7 +522,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR#connectDevice()
 	 */
@@ -526,7 +534,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.neuronrobotics.sdk.addons.kinematics.ITaskSpaceUpdateListenerNR#
 	 * onTaskSpaceUpdate(com.neuronrobotics.sdk.addons.kinematics.
 	 * AbstractKinematicsNR,
@@ -539,7 +547,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.neuronrobotics.sdk.addons.kinematics.ITaskSpaceUpdateListenerNR#
 	 * onTargetTaskSpaceUpdate(com.neuronrobotics.sdk.addons.kinematics.
 	 * AbstractKinematicsNR,
@@ -592,7 +600,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 		// remove the link listener while the number of links could chnage
 		factory.removeLinkListener(this);
 		AbstractLink link = factory.getLink(newLink);// adds new link internally
-		if(dhLink.getListener()==null)
+		if (dhLink.getListener() == null)
 			throw new RuntimeException("FAIL the link listner must be set to 		dhLink.setListener(new Affine());");
 		link.setGlobalPositionListener(dhLink.getListener());
 		DHChain chain = getDhChain();
@@ -634,33 +642,33 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	/**
 	 * Update cad locations.
 	 */
-	public ArrayList<TransformNR>  updateCadLocations() {
-			try {
-				ArrayList<TransformNR> ll = getChain().getChain(getCurrentJointSpaceVector());
-				return ll;
-			} catch (Exception ex) {
-				// ex.printStackTrace();
-			}
+	public ArrayList<TransformNR> updateCadLocations() {
+		try {
+			ArrayList<TransformNR> ll = getChain().getChain(getCurrentJointSpaceVector());
+			return ll;
+		} catch (Exception ex) {
+			// ex.printStackTrace();
+		}
 
-			return null;
+		return null;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.neuronrobotics.sdk.addons.kinematics.IJointSpaceUpdateListenerNR#
 	 * onJointSpaceUpdate(com.neuronrobotics.sdk.addons.kinematics.
 	 * AbstractKinematicsNR, double[])
 	 */
 	@Override
 	public void onJointSpaceUpdate(final AbstractKinematicsNR source, final double[] joints) {
-		ArrayList<TransformNR> cached=updateCadLocations();
-		if(cached!=null)
-			for(int i=0;i<joints.length;i++) {
+		ArrayList<TransformNR> cached = updateCadLocations();
+		if (cached != null)
+			for (int i = 0; i < joints.length; i++) {
 				DHLink dhLink = getChain().getLinks().get(i);
 				TransformNR newPose = cached.get(i);
 				dhLink.fireOnLinkGlobalPositionChange(newPose);
-			}	
+			}
 	}
 
 	/**
@@ -672,12 +680,12 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	@Override
 	public void setGlobalToFiducialTransform(TransformNR frameToBase) {
 		super.setGlobalToFiducialTransform(frameToBase);
-		if(getChain()!=null) {
+		if (getChain() != null) {
 			getChain().setChain(null);// force an update of teh cached locations because base changed
 			try {
-				getChain().getChain(getCurrentJointSpaceVector());//calculate new locations
-			}catch(Exception e) {
-				throw new RuntimeException("Limb "+getScriptingName()+", "+e.getMessage());
+				getChain().getChain(getCurrentJointSpaceVector());// calculate new locations
+			} catch (Exception e) {
+				throw new RuntimeException("Limb " + getScriptingName() + ", " + e.getMessage());
 			}
 		}
 		runRenderWrangler();
@@ -685,7 +693,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.neuronrobotics.sdk.addons.kinematics.IJointSpaceUpdateListenerNR#
 	 * onJointSpaceTargetUpdate(com.neuronrobotics.sdk.addons.kinematics.
 	 * AbstractKinematicsNR, double[])
@@ -698,7 +706,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.neuronrobotics.sdk.addons.kinematics.IJointSpaceUpdateListenerNR#
 	 * onJointSpaceLimit(com.neuronrobotics.sdk.addons.kinematics.
 	 * AbstractKinematicsNR, int,
@@ -711,7 +719,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	}
 
 	// New helper functions
-	
+
 	public TransformNR linkCoM(double linkAngleToClaculate, int linkIndex) {
 		double[] vectortail = getCurrentJointSpaceVector();
 		vectortail[linkIndex] = linkAngleToClaculate;
@@ -719,12 +727,12 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 				.times(getLinkConfiguration(linkIndex).getCenterOfMassFromCentroid());
 
 	}
-	
+
 	public TransformNR linkCoM(int linkIndex) {
-		return linkCoM(getCurrentJointSpaceVector()[linkIndex],linkIndex);
+		return linkCoM(getCurrentJointSpaceVector()[linkIndex], linkIndex);
 	}
 	public Object getLinkObjectManipulator(int index) {
-		 return getChain().getLinks().get(index).getListener();
+		return getChain().getLinks().get(index).getListener();
 	}
 	/**
 	 * Gets the theta.
@@ -744,8 +752,6 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 		return getChain().getLinks().get(index).getDelta();
 	}
 
-
-
 	/**
 	 * Gets the r.
 	 *
@@ -763,43 +769,41 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	public double getDH_Alpha(int index) {
 		return getChain().getLinks().get(index).getAlpha();
 	}
-	
+
 	/**
 	 * Gets the theta.
 	 *
-	 * 
+	 *
 	 */
 
 	public void setDH_Theta(int index, double value) {
-		 getChain().getLinks().get(index).setTheta(value);
+		getChain().getLinks().get(index).setTheta(value);
 	}
 	/**
 	 * Gets the d.
 	 *
-	 * 
+	 *
 	 */
 	public void setDH_D(int index, double value) {
-		 getChain().getLinks().get(index).setDelta(value);
+		getChain().getLinks().get(index).setDelta(value);
 	}
-
-
 
 	/**
 	 * Gets the r.
 	 *
-	 * 
+	 *
 	 */
 	public void setDH_R(int index, double value) {
-		 getChain().getLinks().get(index).setRadius(value);
+		getChain().getLinks().get(index).setRadius(value);
 	}
 
 	/**
 	 * Gets the alpha.
 	 *
-	 * 
+	 *
 	 */
 	public void setDH_Alpha(int index, double value) {
-		 getChain().getLinks().get(index).setAlpha(value);
+		getChain().getLinks().get(index).setAlpha(value);
 	}
 
 	public DHLink getDhLink(int i) {
@@ -817,13 +821,14 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	/**
 	 * Sets the robot to fiducial transform.
 	 *
-	 * @param newTrans the new robot to fiducial transform
+	 * @param newTrans
+	 *            the new robot to fiducial transform
 	 */
 	@Override
 	public void setRobotToFiducialTransform(TransformNR newTrans) {
 		super.setRobotToFiducialTransform(newTrans);
 	}
-	
+
 	public void refreshPose() {
 		runRenderWrangler();
 	}
@@ -831,14 +836,15 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 		return getDhLink(index).getSlaveMobileBase();
 	}
 	/**
-	 * THis disables the exception being thrown on joint limits
-	 * normal mode is to throw an exception when a joint is commanded to a value beyond its limits
-	 * 
-	 * when exceptions are disabled, the joint just goes to the limit instead. 
+	 * THis disables the exception being thrown on joint limits normal mode is to
+	 * throw an exception when a joint is commanded to a value beyond its limits
+	 *
+	 * when exceptions are disabled, the joint just goes to the limit instead.
+	 *
 	 * @param b
 	 */
 	public void throwExceptionOnJointLimit(boolean b) {
-		for(int i=0;i<getNumberOfLinks();i++) {
+		for (int i = 0; i < getNumberOfLinks(); i++) {
 			getAbstractLink(i).setUseLimits(b);
 		}
 	}
@@ -847,18 +853,18 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 		return getChain().getCachedChain().get(linkIndex);
 	}
 	public MobileBase getFollowerMobileBase(int linkIndex) {
-		if(getDhChain().getLinks().size()<=linkIndex)
+		if (getDhChain().getLinks().size() <= linkIndex)
 			return null;
-		return  getDhLink(linkIndex).getSlaveMobileBase();
-		
+		return getDhLink(linkIndex).getSlaveMobileBase();
+
 	}
 	public MobileBase getFollowerMobileBase(AbstractLink myLink) {
-		return  getDhLink(myLink).getSlaveMobileBase();
+		return getDhLink(myLink).getSlaveMobileBase();
 	}
 	public MobileBase getFollowerMobileBase(LinkConfiguration myLink) {
-		return  getDhLink(myLink).getSlaveMobileBase();
+		return getDhLink(myLink).getSlaveMobileBase();
 	}
-	
+
 	public TransformNR getDHStep(int myLink) {
 		return new TransformNR(getDhLink(myLink).DhStep(0));
 	}
@@ -869,11 +875,11 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 		return new TransformNR(getDhLink(myLink).DhStep(0));
 	}
 	@Override
-	public  void setTimeProvider(ITimeProvider t) {
+	public void setTimeProvider(ITimeProvider t) {
 		super.setTimeProvider(t);
 		getDhChain().setTimeProvider(t);
 	}
-	
+
 	public VitaminLocation getShaftVitamin(int index) {
 		return getLinkConfiguration(index).getShaftVitamin();
 	}
@@ -884,25 +890,25 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	public ArrayList<VitaminLocation> getVitamins(int index) {
 		return getVitaminHolder(index).getVitamins();
 	}
-	public ArrayList<VitaminLocation>getNonActuatorVitamins(int index){
+	public ArrayList<VitaminLocation> getNonActuatorVitamins(int index) {
 		return getLinkConfiguration(index).getNonActuatorVitamins();
 	}
-	public void addVitamin(int index,VitaminLocation location) {
+	public void addVitamin(int index, VitaminLocation location) {
 		getVitaminHolder(index).addVitamin(location);
 	}
-	public void removeVitamin(int index,VitaminLocation loc) {
+	public void removeVitamin(int index, VitaminLocation loc) {
 		getVitaminHolder(index).removeVitamin(loc);
 	}
 	public IVitaminHolder getVitaminHolder(int index) {
 		return getLinkConfiguration(index);
 	}
-	
+
 	@Override
 	public boolean connect() {
 		boolean back = super.connect();
-		for(int i=0;i<getNumberOfLinks();i++) {
-			MobileBase mb =getFollowerMobileBase(i);
-			if(mb!=null) {
+		for (int i = 0; i < getNumberOfLinks(); i++) {
+			MobileBase mb = getFollowerMobileBase(i);
+			if (mb != null) {
 				mb.connect();
 			}
 		}
@@ -911,13 +917,13 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 
 	public void zero() throws Exception {
 		double[] vect = getCurrentJointSpaceTarget();
-		for(int i=0;i<getNumberOfLinks();i++) {
-			vect[i]=0;
-			MobileBase mb =getFollowerMobileBase(i);
-			if(mb!=null) {
+		for (int i = 0; i < getNumberOfLinks(); i++) {
+			vect[i] = 0;
+			MobileBase mb = getFollowerMobileBase(i);
+			if (mb != null) {
 				mb.zero();
 			}
 		}
-		setDesiredJointSpaceVector(vect,0);
+		setDesiredJointSpaceVector(vect, 0);
 	}
 }

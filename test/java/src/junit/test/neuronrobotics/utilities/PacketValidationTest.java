@@ -25,10 +25,10 @@ public class PacketValidationTest {
 		Log.enableInfoPrint();
 		BowlerDatagram bd = BowlerDatagramFactory.build(new MACAddress(), new PingCommand());
 		com.neuronrobotics.sdk.common.Log.error(bd.toString());
-		
+
 		ByteList data = new ByteList(bd.getBytes());
 		com.neuronrobotics.sdk.common.Log.error(data.toString());
-		
+
 		BowlerDatagram back = BowlerDatagramFactory.build(data);
 		if (back == null)
 			fail();

@@ -9,30 +9,33 @@ import com.neuronrobotics.sdk.common.BowlerMethod;
  */
 @Deprecated
 public class AsyncCommand extends BowlerAbstractCommand {
-	
+
 	/**
 	 * Instantiates a new async command.
 	 *
-	 * @param channel the channel
+	 * @param channel
+	 *            the channel
 	 */
 	public AsyncCommand(int channel) {
 		setOpCode("asyn");
 		setMethod(BowlerMethod.GET);
 		getCallingDataStorage().add(channel);
 	}
-	
+
 	/**
 	 * Instantiates a new async command.
 	 *
-	 * @param channel the channel
-	 * @param isAsync the is async
+	 * @param channel
+	 *            the channel
+	 * @param isAsync
+	 *            the is async
 	 */
-	public AsyncCommand(int channel,boolean isAsync) {
+	public AsyncCommand(int channel, boolean isAsync) {
 		setOpCode("asyn");
 		setMethod(BowlerMethod.POST);
 		getCallingDataStorage().add(channel);
-		getCallingDataStorage().add((isAsync?1:0));
-		
+		getCallingDataStorage().add((isAsync ? 1 : 0));
+
 	}
-	
+
 }

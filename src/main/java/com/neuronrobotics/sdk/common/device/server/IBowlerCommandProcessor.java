@@ -1,18 +1,17 @@
 package com.neuronrobotics.sdk.common.device.server;
 
-import com.neuronrobotics.sdk.common.BowlerMethod;
-
 //  Auto-generated Javadoc
 /**
  * The Interface IBowlerCommandProcessor.
  */
 public interface IBowlerCommandProcessor {
-	
+
 	/**
 	 * Process.
 	 *
-	 * @param data the data
+	 * @param data
+	 *            the data
 	 * @return the object[]
 	 */
-	public Object [] process(Object [] data);
+	public Object[] process(Object[] data);
 }

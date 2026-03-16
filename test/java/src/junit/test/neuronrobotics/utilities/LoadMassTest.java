@@ -18,9 +18,9 @@ public class LoadMassTest {
 		File f = new File("carlRobot.xml");
 		if (f.exists()) {
 			MobileBase pArm = new MobileBase(new FileInputStream(f));
-			com.neuronrobotics.sdk.common.Log.error("Mass = "+pArm.getMassKg());
-			assertEquals(99, pArm.getMassKg(),0.1);
-			assertEquals(pArm.getLegs().get(0).getScriptingName(),"Carl_One");
+			com.neuronrobotics.sdk.common.Log.error("Mass = " + pArm.getMassKg());
+			assertEquals(99, pArm.getMassKg(), 0.1);
+			assertEquals(pArm.getLegs().get(0).getScriptingName(), "Carl_One");
 		}
 	}
 

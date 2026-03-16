@@ -8,42 +8,46 @@ import com.neuronrobotics.sdk.pid.PIDLimitEventType;
  * The Class JointLimit.
  */
 public class JointLimit {
-	
+
 	/** The axis. */
 	private int axis;
-	
+
 	/** The value. */
-	private double value; 
-	
+	private double value;
+
 	/** The time stamp. */
 	private long timeStamp;
-	
+
 	/** The limit type. */
 	private PIDLimitEventType limitType;
-	
+
 	/**
 	 * Instantiates a new joint limit.
 	 *
-	 * @param axis the axis
-	 * @param e the e
-	 * @param linkConfiguration the link configuration
+	 * @param axis
+	 *            the axis
+	 * @param e
+	 *            the e
+	 * @param linkConfiguration
+	 *            the link configuration
 	 */
 	public JointLimit(int axis, PIDLimitEvent e, LinkConfiguration linkConfiguration) {
 		setAxis(axis);
-		setValue(e.getValue()*linkConfiguration.getScale());
+		setValue(e.getValue() * linkConfiguration.getScale());
 		setTimeStamp(e.getTimeStamp());
 		setLimitType(e.getLimitType());
 	}
-	
+
 	/**
 	 * Sets the axis.
 	 *
-	 * @param axis the new axis
+	 * @param axis
+	 *            the new axis
 	 */
 	public void setAxis(int axis) {
 		this.axis = axis;
 	}
-	
+
 	/**
 	 * Gets the axis.
 	 *
@@ -52,16 +56,17 @@ public class JointLimit {
 	public int getAxis() {
 		return axis;
 	}
-	
+
 	/**
 	 * Sets the value.
 	 *
-	 * @param value the new value
+	 * @param value
+	 *            the new value
 	 */
 	public void setValue(double value) {
 		this.value = value;
 	}
-	
+
 	/**
 	 * Gets the value.
 	 *
@@ -70,16 +75,17 @@ public class JointLimit {
 	public double getValue() {
 		return value;
 	}
-	
+
 	/**
 	 * Sets the time stamp.
 	 *
-	 * @param timeStamp the new time stamp
+	 * @param timeStamp
+	 *            the new time stamp
 	 */
 	public void setTimeStamp(long timeStamp) {
 		this.timeStamp = timeStamp;
 	}
-	
+
 	/**
 	 * Gets the time stamp.
 	 *
@@ -88,16 +94,17 @@ public class JointLimit {
 	public long getTimeStamp() {
 		return timeStamp;
 	}
-	
+
 	/**
 	 * Sets the limit type.
 	 *
-	 * @param limitType the new limit type
+	 * @param limitType
+	 *            the new limit type
 	 */
 	public void setLimitType(PIDLimitEventType limitType) {
 		this.limitType = limitType;
 	}
-	
+
 	/**
 	 * Gets the limit type.
 	 *
@@ -106,11 +113,13 @@ public class JointLimit {
 	public PIDLimitEventType getLimitType() {
 		return limitType;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see java.lang.Object#toString()
 	 */
-	public String toString(){
-		return "Axis="+getAxis()+" "+getLimitType().toString();
+	public String toString() {
+		return "Axis=" + getAxis() + " " + getLimitType().toString();
 	}
 }

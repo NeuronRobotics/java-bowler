@@ -4,19 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.neuronrobotics.sdk.addons.kinematics.gcodebridge.GcodeDevice;
-import com.neuronrobotics.sdk.addons.kinematics.gcodebridge.GcodePrismatic;
 import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
 import com.neuronrobotics.sdk.common.DeviceManager;
 import com.neuronrobotics.sdk.common.IFlushable;
-import com.neuronrobotics.sdk.common.Log;
-import com.neuronrobotics.sdk.common.TickToc;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.peripherals.AnalogInputChannel;
-import com.neuronrobotics.sdk.dyio.peripherals.CounterOutputChannel;
-import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 import com.neuronrobotics.sdk.namespace.bcs.pid.IExtendedPIDControl;
 import com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace;
-import com.neuronrobotics.sdk.pid.GenericPIDDevice;
 import com.neuronrobotics.sdk.pid.ILinkFactoryProvider;
 import com.neuronrobotics.sdk.pid.VirtualGenericPIDDevice;
 
@@ -35,10 +29,11 @@ public class LinkFactory implements IHardwareSyncPulseReciver, IHardwareSyncPuls
 
 	/**
 	 * Add a new link provider
-	 * 
-	 * @param typeTag  a string to link it to the string in the XML that determines
-	 *                 type
-	 * @param provider the provider module
+	 *
+	 * @param typeTag
+	 *            a string to link it to the string in the XML that determines type
+	 * @param provider
+	 *            the provider module
 	 */
 	public static void addLinkProvider(String typeTag, INewLinkProvider provider) {
 		userLinkProviders.put(typeTag, provider);
@@ -47,7 +42,7 @@ public class LinkFactory implements IHardwareSyncPulseReciver, IHardwareSyncPuls
 
 	/**
 	 * Check to see if link provider is already defined
-	 * 
+	 *
 	 * @param typeTag
 	 * @return
 	 */
@@ -65,7 +60,8 @@ public class LinkFactory implements IHardwareSyncPulseReciver, IHardwareSyncPuls
 	/**
 	 * Instantiates a new link factory.
 	 *
-	 * @param bad the bad
+	 * @param bad
+	 *            the bad
 	 */
 	public LinkFactory(BowlerAbstractDevice bad) {
 		if (bad != null)
@@ -75,8 +71,10 @@ public class LinkFactory implements IHardwareSyncPulseReciver, IHardwareSyncPuls
 	/**
 	 * Instantiates a new link factory.
 	 *
-	 * @param connection the connection
-	 * @param d          the d
+	 * @param connection
+	 *            the connection
+	 * @param d
+	 *            the d
 	 */
 	public LinkFactory(ILinkFactoryProvider connection, IExtendedPIDControl d) {
 		this(null);
@@ -97,7 +95,8 @@ public class LinkFactory implements IHardwareSyncPulseReciver, IHardwareSyncPuls
 	/**
 	 * Gets the link.
 	 *
-	 * @param name the name
+	 * @param name
+	 *            the name
 	 * @return the link
 	 */
 	public AbstractLink getLink(String name) {
@@ -115,7 +114,8 @@ public class LinkFactory implements IHardwareSyncPulseReciver, IHardwareSyncPuls
 	/**
 	 * Gets the link.
 	 *
-	 * @param c the c
+	 * @param c
+	 *            the c
 	 * @return the link
 	 */
 	public AbstractLink getLink(LinkConfiguration c) {
@@ -129,7 +129,8 @@ public class LinkFactory implements IHardwareSyncPulseReciver, IHardwareSyncPuls
 	/**
 	 * Refresh hardware layer.
 	 *
-	 * @param c the c
+	 * @param c
+	 *            the c
 	 */
 	public void refreshHardwareLayer(LinkConfiguration c) {
 		// retreive the old link
@@ -146,7 +147,8 @@ public class LinkFactory implements IHardwareSyncPulseReciver, IHardwareSyncPuls
 	/**
 	 * Gets the link local.
 	 *
-	 * @param c the c
+	 * @param c
+	 *            the c
 	 * @return the link local
 	 */
 	private AbstractLink getLinkLocal(LinkConfiguration c) {
@@ -157,59 +159,60 @@ public class LinkFactory implements IHardwareSyncPulseReciver, IHardwareSyncPuls
 		try {
 			switch (c.getTypeEnum()) {
 
-			case ANALOG_PRISMATIC:
-				if (getDyio(c) != null) {
-					tmp = new AnalogPrismaticLink(new AnalogInputChannel(getDyio(c).getChannel(c.getHardwareIndex())),
-							c);
-					tmp.setUseLimits(false);
-				}
-				break;
-			case ANALOG_ROTORY:
-				if (getDyio(c) != null) {
-					tmp = new AnalogRotoryLink(new AnalogInputChannel(getDyio(c).getChannel(c.getHardwareIndex())), c);
-					tmp.setUseLimits(false);
-				}
-				break;
-			case PID_TOOL:
-			case PID:
-				if (getPid(c) != null) {
-					tmp = new PidRotoryLink(getPid(c).getPIDChannel(c.getHardwareIndex()), c, false);
-				}
-				break;
-			case PID_PRISMATIC:
-				if (getPid(c) != null) {
-					tmp = new PidPrismaticLink(getPid(c).getPIDChannel(c.getHardwareIndex()), c, false);
-				}
-				break;
-			case DUMMY:
-			case VIRTUAL:
-				String myVirtualDevName = c.getDeviceScriptingName();
-				tmp = new PidRotoryLink(getVirtual(myVirtualDevName).getPIDChannel(c.getHardwareIndex()), c, true);
-				break;
-			case GCODE_HEATER_TOOL:
-				if (getGCODE(c) != null) {
-					tmp = getGCODE(c).getHeater(c);
-				}
-				break;
-			case GCODE_STEPPER_PRISMATIC:
-			case GCODE_STEPPER_ROTORY:
-			case GCODE_STEPPER_TOOL:
-				if (getGCODE(c) != null) {
-					tmp = getGCODE(c).getLink(c);
-				}
-				break;
-			case USERDEFINED:
-				if (userLinkProviders.containsKey(c.getTypeString())) {
-					INewLinkProvider iNewLinkProvider = userLinkProviders.get(c.getTypeString());
-					tmp = iNewLinkProvider.generate(c);
-					if (IHardwareSyncPulseProvider.class.isInstance(iNewLinkProvider)) {
-						IHardwareSyncPulseProvider r = (IHardwareSyncPulseProvider) iNewLinkProvider;
-						r.addIHardwareSyncPulseReciver(this);
+				case ANALOG_PRISMATIC :
+					if (getDyio(c) != null) {
+						tmp = new AnalogPrismaticLink(
+								new AnalogInputChannel(getDyio(c).getChannel(c.getHardwareIndex())), c);
+						tmp.setUseLimits(false);
 					}
-				}
-				break;
-			default:
-				break;
+					break;
+				case ANALOG_ROTORY :
+					if (getDyio(c) != null) {
+						tmp = new AnalogRotoryLink(new AnalogInputChannel(getDyio(c).getChannel(c.getHardwareIndex())),
+								c);
+						tmp.setUseLimits(false);
+					}
+					break;
+				case PID_TOOL :
+				case PID :
+					if (getPid(c) != null) {
+						tmp = new PidRotoryLink(getPid(c).getPIDChannel(c.getHardwareIndex()), c, false);
+					}
+					break;
+				case PID_PRISMATIC :
+					if (getPid(c) != null) {
+						tmp = new PidPrismaticLink(getPid(c).getPIDChannel(c.getHardwareIndex()), c, false);
+					}
+					break;
+				case DUMMY :
+				case VIRTUAL :
+					String myVirtualDevName = c.getDeviceScriptingName();
+					tmp = new PidRotoryLink(getVirtual(myVirtualDevName).getPIDChannel(c.getHardwareIndex()), c, true);
+					break;
+				case GCODE_HEATER_TOOL :
+					if (getGCODE(c) != null) {
+						tmp = getGCODE(c).getHeater(c);
+					}
+					break;
+				case GCODE_STEPPER_PRISMATIC :
+				case GCODE_STEPPER_ROTORY :
+				case GCODE_STEPPER_TOOL :
+					if (getGCODE(c) != null) {
+						tmp = getGCODE(c).getLink(c);
+					}
+					break;
+				case USERDEFINED :
+					if (userLinkProviders.containsKey(c.getTypeString())) {
+						INewLinkProvider iNewLinkProvider = userLinkProviders.get(c.getTypeString());
+						tmp = iNewLinkProvider.generate(c);
+						if (IHardwareSyncPulseProvider.class.isInstance(iNewLinkProvider)) {
+							IHardwareSyncPulseProvider r = (IHardwareSyncPulseProvider) iNewLinkProvider;
+							r.addIHardwareSyncPulseReciver(this);
+						}
+					}
+					break;
+				default :
+					break;
 			}
 		} catch (Throwable t) {
 			t.printStackTrace();
@@ -229,8 +232,9 @@ public class LinkFactory implements IHardwareSyncPulseReciver, IHardwareSyncPuls
 
 	/**
 	 * THis interface lets the user add a link after instantiation
-	 * 
-	 * @param link the link to be added in order
+	 *
+	 * @param link
+	 *            the link to be added in order
 	 */
 	public void addLink(AbstractLink link) {
 		links.add(link);
@@ -267,7 +271,8 @@ public class LinkFactory implements IHardwareSyncPulseReciver, IHardwareSyncPuls
 	/**
 	 * Adds the link listener.
 	 *
-	 * @param l the l
+	 * @param l
+	 *            the l
 	 */
 	public void addLinkListener(ILinkListener l) {
 		for (AbstractLink lin : links) {
@@ -278,7 +283,8 @@ public class LinkFactory implements IHardwareSyncPulseReciver, IHardwareSyncPuls
 	/**
 	 * Flush.
 	 *
-	 * @param seconds the seconds
+	 * @param seconds
+	 *            the seconds
 	 */
 	public void flush(final double seconds) {
 		HashMap<String, Boolean> flushed = new HashMap<String, Boolean>();
@@ -302,7 +308,8 @@ public class LinkFactory implements IHardwareSyncPulseReciver, IHardwareSyncPuls
 			// TickToc.tic("Done Checking "+name+" for flush ");
 
 		}
-		// com.neuronrobotics.sdk.common.Log.error("Flush Took "+(System.currentTimeMillis()-time)+"ms");
+		// com.neuronrobotics.sdk.common.Log.error("Flush Took
+		// "+(System.currentTimeMillis()-time)+"ms");
 	}
 
 	/**
@@ -342,7 +349,8 @@ public class LinkFactory implements IHardwareSyncPulseReciver, IHardwareSyncPuls
 	/**
 	 * Sets the cached targets.
 	 *
-	 * @param jointSpaceVect the new cached targets
+	 * @param jointSpaceVect
+	 *            the new cached targets
 	 */
 	public void setCachedTargets(double[] jointSpaceVect) {
 		if (jointSpaceVect.length != links.size())
@@ -390,7 +398,8 @@ public class LinkFactory implements IHardwareSyncPulseReciver, IHardwareSyncPuls
 	/**
 	 * Removes the link listener.
 	 *
-	 * @param l the l
+	 * @param l
+	 *            the l
 	 */
 	public void removeLinkListener(AbstractKinematicsNR l) {
 		// Auto-generated method stub
@@ -402,7 +411,8 @@ public class LinkFactory implements IHardwareSyncPulseReciver, IHardwareSyncPuls
 	/**
 	 * Delete link.
 	 *
-	 * @param i the i
+	 * @param i
+	 *            the i
 	 */
 	public void deleteLink(int i) {
 		links.remove(i);

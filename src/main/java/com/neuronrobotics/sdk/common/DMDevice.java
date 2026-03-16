@@ -1,6 +1,5 @@
 package com.neuronrobotics.sdk.common;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
@@ -11,10 +10,10 @@ public class DMDevice extends NonBowlerDevice {
 	boolean hasGetName = false;
 	boolean hasIsAvailable = false;
 	Method methodGetName = null;
-	Method isAvaibleMeth=null;
+	Method isAvaibleMeth = null;
 
 	public DMDevice(Object o) throws NoSuchMethodException, SecurityException {
-		if(!wrappable(o))
+		if (!wrappable(o))
 			throw new RuntimeException("This object is not wrappable! ");
 		setWrapped(o);
 		methodConnect = getWrapped().getClass().getMethod("connect", null);
@@ -31,7 +30,7 @@ public class DMDevice extends NonBowlerDevice {
 			if (methodGetName == null)
 				try {
 					methodGetName = getWrapped().getClass().getMethod("getName", null);
-					
+
 				} catch (Exception e) {
 					return super.getScriptingName();
 				}
@@ -41,7 +40,7 @@ public class DMDevice extends NonBowlerDevice {
 		if (methodGetName == null)
 			return super.getScriptingName();
 		try {
-			super.setScriptingName( (String) methodGetName.invoke(getWrapped(), null));
+			super.setScriptingName((String) methodGetName.invoke(getWrapped(), null));
 		} catch (Exception e) {
 			return super.getScriptingName();
 		}
@@ -67,22 +66,23 @@ public class DMDevice extends NonBowlerDevice {
 	 * Determines if the device is available.
 	 *
 	 * @return true if the device is avaiable, false if it is not
-	 * @throws InvalidConnectionException the invalid connection exception
+	 * @throws InvalidConnectionException
+	 *             the invalid connection exception
 	 */
 	@Override
-	public boolean isAvailable() throws InvalidConnectionException{
+	public boolean isAvailable() throws InvalidConnectionException {
 		if (hasIsAvailable) {
 			if (isAvaibleMeth == null) {
 				try {
-					isAvaibleMeth = getWrapped().getClass().getMethod("isAvailable", null);	
+					isAvaibleMeth = getWrapped().getClass().getMethod("isAvailable", null);
 				} catch (Exception e) {
-					//true
+					// true
 				}
 			}
 			try {
 				return (boolean) isAvaibleMeth.invoke(getWrapped(), null);
 			} catch (Exception e) {
-				//true
+				// true
 			}
 		}
 		return true;
@@ -105,11 +105,10 @@ public class DMDevice extends NonBowlerDevice {
 		return false;
 	}
 	public static boolean wrappable(Object o) {
-		if(o==null)
+		if (o == null)
 			return false;
-		return methodExists(o, "connect") &&
-				   methodExists(o, "disconnect");
-		
+		return methodExists(o, "connect") && methodExists(o, "disconnect");
+
 	}
 	public static boolean methodExists(Object clazz, String methodName) {
 		for (Method method : clazz.getClass().getMethods()) {

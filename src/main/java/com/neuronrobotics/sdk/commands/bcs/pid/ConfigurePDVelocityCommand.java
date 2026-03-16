@@ -13,25 +13,27 @@ public class ConfigurePDVelocityCommand extends BowlerAbstractCommand {
 	/**
 	 * Instantiates a new configure pd velocity command.
 	 *
-	 * @param group the group
+	 * @param group
+	 *            the group
 	 */
-	public ConfigurePDVelocityCommand(int group){
+	public ConfigurePDVelocityCommand(int group) {
 		setOpCode("cpdv");
 		setMethod(BowlerMethod.GET);
 		getCallingDataStorage().add(group);
 	}
-	
+
 	/**
 	 * Instantiates a new configure pd velocity command.
 	 *
-	 * @param config the config
+	 * @param config
+	 *            the config
 	 */
-	public ConfigurePDVelocityCommand(PDVelocityConfiguration config){
+	public ConfigurePDVelocityCommand(PDVelocityConfiguration config) {
 		setOpCode("cpdv");
 		setMethod(BowlerMethod.CRITICAL);
 		getCallingDataStorage().add(config.getGroup());
-		getCallingDataStorage().addAs32((int) (config.getKP()*100));
-		getCallingDataStorage().addAs32((int) (config.getKD()*100));
+		getCallingDataStorage().addAs32((int) (config.getKP() * 100));
+		getCallingDataStorage().addAs32((int) (config.getKD() * 100));
 	}
 
 }

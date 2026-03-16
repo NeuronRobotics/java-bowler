@@ -12,10 +12,12 @@ public class RpcArgumentsCommand extends BowlerAbstractCommand {
 	/**
 	 * Instantiates a new rpc arguments command.
 	 *
-	 * @param namespace the namespace
-	 * @param rpc the rpc
+	 * @param namespace
+	 *            the namespace
+	 * @param rpc
+	 *            the rpc
 	 */
-	public RpcArgumentsCommand(int namespace,int rpc) {
+	public RpcArgumentsCommand(int namespace, int rpc) {
 		setOpCode("args");
 		setMethod(BowlerMethod.GET);
 		getCallingDataStorage().add(namespace);

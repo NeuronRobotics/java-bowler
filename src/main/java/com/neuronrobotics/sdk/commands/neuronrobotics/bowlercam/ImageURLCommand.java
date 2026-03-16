@@ -8,24 +8,26 @@ import com.neuronrobotics.sdk.common.BowlerMethod;
  * The Class ImageURLCommand.
  */
 public class ImageURLCommand extends BowlerAbstractCommand {
-	
+
 	/**
 	 * Instantiates a new image url command.
 	 *
-	 * @param camera the camera
+	 * @param camera
+	 *            the camera
 	 */
-	public ImageURLCommand(int camera){
+	public ImageURLCommand(int camera) {
 		setMethod(BowlerMethod.GET);
 		setOpCode("imsv");
 		getCallingDataStorage().add(camera);
 	}
-	
+
 	/**
 	 * Instantiates a new image url command.
 	 *
-	 * @param url the url
+	 * @param url
+	 *            the url
 	 */
-	public ImageURLCommand(String url){
+	public ImageURLCommand(String url) {
 		setMethod(BowlerMethod.POST);
 		setOpCode("imsv");
 		getCallingDataStorage().add(url);

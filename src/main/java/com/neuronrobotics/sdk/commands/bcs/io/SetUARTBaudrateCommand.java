@@ -3,9 +3,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,12 +25,14 @@ import com.neuronrobotics.sdk.common.InvalidResponseException;
  * The Class SetUARTBaudrateCommand.
  */
 public class SetUARTBaudrateCommand extends BowlerAbstractCommand {
-	
+
 	/**
 	 * Instantiates a new sets the uart baudrate command.
 	 *
-	 * @param channel the channel
-	 * @param baudrate the baudrate
+	 * @param channel
+	 *            the channel
+	 * @param baudrate
+	 *            the baudrate
 	 */
 	public SetUARTBaudrateCommand(int channel, int baudrate) {
 		setMethod(BowlerMethod.CRITICAL);
@@ -38,18 +40,21 @@ public class SetUARTBaudrateCommand extends BowlerAbstractCommand {
 		getCallingDataStorage().add(channel);
 		getCallingDataStorage().add(ByteList.convertTo32(baudrate));
 	}
-		
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.common.BowlerAbstractCommand#parseResponse(com.neuronrobotics.sdk.common.BowlerDatagram)
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.neuronrobotics.sdk.common.BowlerAbstractCommand#parseResponse(com.
+	 * neuronrobotics.sdk.common.BowlerDatagram)
 	 */
 	@Override
 	public BowlerDatagram validate(BowlerDatagram data) throws InvalidResponseException {
 		super.validate(data);
-		
-		if(!data.getRPC().equals("_rdy")) {
+
+		if (!data.getRPC().equals("_rdy")) {
 			throw new InvalidResponseException("Could not set the UART passthough baudrate.");
 		}
-		//com.neuronrobotics.sdk.common.Log.error("Baudrate set return: \n"+data);
+		// com.neuronrobotics.sdk.common.Log.error("Baudrate set return: \n"+data);
 		return data;
 	}
 }

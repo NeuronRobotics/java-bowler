@@ -26,8 +26,14 @@ import com.neuronrobotics.sdk.common.Log;
 /**
  * The Class MobileBase.
  */
-public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurationChangeListener,
-		IOnMobileBaseRenderChange, IJointSpaceUpdateListenerNR, IHardwareSyncPulseReciver, IHardwareSyncPulseProvider,IVitaminHolder {
+public class MobileBase extends AbstractKinematicsNR
+		implements
+			ILinkConfigurationChangeListener,
+			IOnMobileBaseRenderChange,
+			IJointSpaceUpdateListenerNR,
+			IHardwareSyncPulseReciver,
+			IHardwareSyncPulseProvider,
+			IVitaminHolder {
 
 	/** The legs. */
 	private final ArrayList<DHParameterKinematics> legs = new ArrayList<DHParameterKinematics>();
@@ -48,8 +54,8 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	private IDriveEngine walkingDriveEngine = new WalkingDriveEngine();
 
 	/** The walking engine. */
-	private String[] walkingEngine = new String[] { "https://github.com/madhephaestus/carl-the-hexapod.git",
-			"WalkingDriveEngine.groovy" };
+	private String[] walkingEngine = new String[]{"https://github.com/madhephaestus/carl-the-hexapod.git",
+			"WalkingDriveEngine.groovy"};
 
 	private ArrayList<VitaminLocation> vitamins = new ArrayList<>();
 	private HashMap<String, String> vitaminVariant = new HashMap<String, String>();
@@ -64,7 +70,8 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 
 	private HashMap<String, ParallelGroup> parallelGroups = new HashMap<String, ParallelGroup>();
 	private ICalcLimbHomeProvider homeProvider = null;
-	private Runnable configurationUpdate = ()->{};
+	private Runnable configurationUpdate = () -> {
+	};
 
 	/**
 	 * Instantiates a new mobile base.
@@ -73,10 +80,10 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	}// used for building new bases live
 
 	public void fireConfigurationUpdate() {
-		if(configurationUpdate!=null)
+		if (configurationUpdate != null)
 			try {
 				configurationUpdate.run();
-			}catch(Throwable t) {
+			} catch (Throwable t) {
 				t.printStackTrace();
 			}
 	}
@@ -104,8 +111,8 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 		return tipList;
 	}
 	public DHParameterKinematics getLimb(AbstractLink l) {
-		for(DHParameterKinematics k:getAllDHChains()) {
-			if(k.getLinkIndex(l)>=0)
+		for (DHParameterKinematics k : getAllDHChains()) {
+			if (k.getLinkIndex(l) >= 0)
 				return k;
 		}
 		return null;
@@ -149,7 +156,8 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	/**
 	 * Instantiates a new mobile base.
 	 *
-	 * @param configFile the config file
+	 * @param configFile
+	 *            the config file
 	 */
 	public MobileBase(InputStream configFile) {
 		this();
@@ -176,7 +184,8 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	/**
 	 * Instantiates a new mobile base.
 	 *
-	 * @param doc the doc
+	 * @param doc
+	 *            the doc
 	 */
 	public MobileBase(Element doc) {
 
@@ -238,7 +247,8 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	/**
 	 * Load configs.
 	 *
-	 * @param doc the doc
+	 * @param doc
+	 *            the doc
 	 */
 	private void loadConfigs(Element doc) {
 		setScriptingName(XmlFactory.getTagValue("name", doc));
@@ -272,7 +282,7 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 			setIMUFromCentroid(IMUcenter);
 		TransformNR baseToZframe = loadTransform("baseToZframe", doc);
 		setRobotToFiducialTransform(baseToZframe);
-		
+
 		fireBaseUpdates();
 	}
 
@@ -306,10 +316,10 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 					return new TransformNR(Double.parseDouble(XmlFactory.getTagValue("x", cntr)),
 							Double.parseDouble(XmlFactory.getTagValue("y", cntr)),
 							Double.parseDouble(XmlFactory.getTagValue("z", cntr)),
-							new RotationNR(new double[] { Double.parseDouble(XmlFactory.getTagValue("rotw", cntr)),
+							new RotationNR(new double[]{Double.parseDouble(XmlFactory.getTagValue("rotw", cntr)),
 									Double.parseDouble(XmlFactory.getTagValue("rotx", cntr)),
 									Double.parseDouble(XmlFactory.getTagValue("roty", cntr)),
-									Double.parseDouble(XmlFactory.getTagValue("rotz", cntr)) }));
+									Double.parseDouble(XmlFactory.getTagValue("rotz", cntr))}));
 				}
 			}
 
@@ -323,8 +333,10 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	/**
 	 * Gets the name.
 	 *
-	 * @param e   the e
-	 * @param tag the tag
+	 * @param e
+	 *            the e
+	 * @param tag
+	 *            the tag
 	 * @return the name
 	 */
 	private String getname(Element e) {
@@ -337,22 +349,24 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	/**
 	 * Gets the contents in the group.
 	 *
-	 * @param e   the e
-	 * @param tag the tag
+	 * @param e
+	 *            the e
+	 * @param tag
+	 *            the tag
 	 * @return the name
 	 */
 	private String getParallelGroup(Element e) {
 		return getTag(e, "parallelGroup");
 	}
-	
+
 	private String findNameTag(Node e) {
 		NodeList firstLevelList = e.getChildNodes();
-		for(int i=0;i<firstLevelList.getLength();i++) {
+		for (int i = 0; i < firstLevelList.getLength(); i++) {
 			Node tester = firstLevelList.item(i);
-			if(tester.getNodeType()!=Node.ELEMENT_NODE)
+			if (tester.getNodeType() != Node.ELEMENT_NODE)
 				continue;
-			Element elementTester = (Element)tester;
-			if(elementTester.getNodeName().contentEquals("name"))
+			Element elementTester = (Element) tester;
+			if (elementTester.getNodeName().contentEquals("name"))
 				return elementTester.getChildNodes().item(0).getNodeValue();
 		}
 		return "parentNoName";
@@ -361,28 +375,31 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	/**
 	 * Gets the localTag
 	 *
-	 * @param e   the e
-	 * @param tag the tag
+	 * @param e
+	 *            the e
+	 * @param tag
+	 *            the tag
 	 * @return the name
 	 */
 	private String getTag(Element e, String tagname) {
 		try {
 			String nameOfElement = findNameTag(e);
-			if(tagname.contentEquals("name"))
+			if (tagname.contentEquals("name"))
 				return nameOfElement;
-			//com.neuronrobotics.sdk.common.Log.error("Searching for "+tagname+" in "+nameOfElement);
+			// com.neuronrobotics.sdk.common.Log.error("Searching for "+tagname+" in
+			// "+nameOfElement);
 			NodeList nodListofLinks = e.getElementsByTagName(tagname);
 			for (int i = 0; i < nodListofLinks.getLength(); i++) {
-				boolean isDirectChild=true;
+				boolean isDirectChild = true;
 				Node linkNode = nodListofLinks.item(i);
 				Node parentNode = linkNode.getParentNode();
 				String parentName = findNameTag(parentNode);
-				isDirectChild=nameOfElement.contentEquals(parentName);
-				if(!isDirectChild)
+				isDirectChild = nameOfElement.contentEquals(parentName);
+				if (!isDirectChild)
 					continue;
-				if(linkNode.getNodeType() != Node.ELEMENT_NODE)
+				if (linkNode.getNodeType() != Node.ELEMENT_NODE)
 					continue;
-				if(!linkNode.getNodeName().contentEquals(tagname))
+				if (!linkNode.getNodeName().contentEquals(tagname))
 					continue;
 				String nodeValue = linkNode.getChildNodes().item(0).getNodeValue();
 				return nodeValue;
@@ -396,9 +413,12 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	/**
 	 * Load limb.
 	 *
-	 * @param doc  the doc
-	 * @param tag  the tag
-	 * @param list the list
+	 * @param doc
+	 *            the doc
+	 * @param tag
+	 *            the tag
+	 * @param list
+	 *            the list
 	 */
 	private void loadLimb(Element doc, String tag, ArrayList<DHParameterKinematics> list) {
 		NodeList nodListofLinks = doc.getChildNodes();
@@ -431,9 +451,9 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 					ParallelGroup parallelGroup = getParallelGroup(parallel);
 					parallelGroup.setScriptingName(parallel);
 					parallelGroup.setupReferencedLimbStartup(kin, paraOffset, relativeName, index);
-//					if(!list.contains(parallelGroup)) {
-//						list.add(parallelGroup);
-//					}
+					// if(!list.contains(parallelGroup)) {
+					// list.add(parallelGroup);
+					// }
 				}
 				// else {
 				list.add(kin);
@@ -444,7 +464,7 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR#
 	 * disconnectDevice()
 	 */
@@ -457,7 +477,7 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR#
 	 * connectDevice()
 	 */
@@ -474,7 +494,7 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR#
 	 * inverseKinematics(com.neuronrobotics.sdk.addons.kinematics.math. TransformNR)
 	 */
@@ -486,7 +506,7 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR#
 	 * forwardKinematics(double[])
 	 */
@@ -540,9 +560,12 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	/**
 	 * Load limb.
 	 *
-	 * @param doc  the doc
-	 * @param tag  the tag
-	 * @param list the list
+	 * @param doc
+	 *            the doc
+	 * @param tag
+	 *            the tag
+	 * @param list
+	 *            the list
 	 */
 	private void loadVitamins(Element doc) {
 		NodeList nodListofLinks = doc.getChildNodes();
@@ -565,14 +588,15 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	/**
 	 * Gets the vitamins.
 	 *
-	 * @param doc the doc
+	 * @param doc
+	 *            the doc
 	 */
 	private void getVitamins(Element doc) {
 
 		try {
 			vitamins = VitaminLocation.getVitamins(doc);
-			for(VitaminLocation vl:vitamins) {
-				vl.addChangeListener(()->{
+			for (VitaminLocation vl : vitamins) {
+				vl.addChangeListener(() -> {
 					fireConfigurationUpdate();
 				});
 			}
@@ -585,45 +609,53 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 
 	/**
 	 * Add a vitamin to this link
-	 * 
-	 * @param name the name of this vitamin, if the name already exists, the data
-	 *             will be overwritten.
-	 * @param type the vitamin type, this maps the the json filename
-	 * @param id   the part ID, theis maps to the key in the json for the vitamin
+	 *
+	 * @param name
+	 *            the name of this vitamin, if the name already exists, the data
+	 *            will be overwritten.
+	 * @param type
+	 *            the vitamin type, this maps the the json filename
+	 * @param id
+	 *            the part ID, theis maps to the key in the json for the vitamin
 	 */
 	@Deprecated
 	public void setVitamin(VitaminLocation location) {
 		addVitamin(location);
-		
+
 	}
 	/**
 	 * Add a vitamin to this link
-	 * 
-	 * @param name the name of this vitamin, if the name already exists, the data
-	 *             will be overwritten.
-	 * @param type the vitamin type, this maps the the json filename
-	 * @param id   the part ID, theis maps to the key in the json for the vitamin
+	 *
+	 * @param name
+	 *            the name of this vitamin, if the name already exists, the data
+	 *            will be overwritten.
+	 * @param type
+	 *            the vitamin type, this maps the the json filename
+	 * @param id
+	 *            the part ID, theis maps to the key in the json for the vitamin
 	 */
 	public void addVitaminInternal(VitaminLocation location) {
-		if(vitamins.contains(location))
+		if (vitamins.contains(location))
 			return;
 		vitamins.add(location);
-		location.addChangeListener(()->{
+		location.addChangeListener(() -> {
 			fireConfigurationUpdate();
 		});
 		fireConfigurationUpdate();
 	}
 	public void removeVitamin(VitaminLocation loc) {
-		if(vitamins.contains(loc))
+		if (vitamins.contains(loc))
 			vitamins.remove(loc);
-		fireConfigurationUpdate();//fireChangeEvent();
+		fireConfigurationUpdate();// fireChangeEvent();
 	}
 
 	/**
 	 * Set a purchasing code for a vitamin
-	 * 
-	 * @param name      name of vitamin
-	 * @param tagValue2 Purchaning code
+	 *
+	 * @param name
+	 *            name of vitamin
+	 * @param tagValue2
+	 *            Purchaning code
 	 */
 	public void setVitaminVariant(String name, String tagValue2) {
 		vitaminVariant.put(name, tagValue2);
@@ -631,8 +663,9 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 
 	/**
 	 * Get a purchaing code for a vitamin
-	 * 
-	 * @param name name of vitamin
+	 *
+	 * @param name
+	 *            name of vitamin
 	 * @return
 	 */
 	public String getVitaminVariant(String name) {
@@ -641,11 +674,11 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR#getXml()
 	 */
 	/*
-	 * 
+	 *
 	 * Generate the xml configuration to generate an XML of this robot.
 	 */
 	public String getXml() {
@@ -661,23 +694,24 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	 * @return the embedable xml
 	 */
 	/*
-	 * 
+	 *
 	 * Generate the xml configuration to generate an XML of this robot.
 	 */
 	public String getEmbedableXml() {
 		TransformNR location = getFiducialToGlobalTransform();
 
-//		String allVitamins = "";
-//		for (String key : getVitamins().keySet()) {
-//			String v = "\t\t<vitamin>\n";
-//			v += "\t\t\t<name>" + key + "</name>\n" + "\t\t\t<type>" + getVitamins().get(key)[0] + "</type>\n"
-//					+ "\t\t\t<id>" + getVitamins().get(key)[1] + "</id>\n";
-//			if (getVitaminVariant(key) != null) {
-//				v += "\t\t\t<variant>" + getVitamins().get(key)[1] + "</variant>\n";
-//			}
-//			v += "\t\t</vitamin>\n";
-//			allVitamins += v;
-//		}
+		// String allVitamins = "";
+		// for (String key : getVitamins().keySet()) {
+		// String v = "\t\t<vitamin>\n";
+		// v += "\t\t\t<name>" + key + "</name>\n" + "\t\t\t<type>" +
+		// getVitamins().get(key)[0] + "</type>\n"
+		// + "\t\t\t<id>" + getVitamins().get(key)[1] + "</id>\n";
+		// if (getVitaminVariant(key) != null) {
+		// v += "\t\t\t<variant>" + getVitamins().get(key)[1] + "</variant>\n";
+		// }
+		// v += "\t\t</vitamin>\n";
+		// allVitamins += v;
+		// }
 		String xml = "<mobilebase>\n";
 
 		xml += "\t<cadEngine>\n";
@@ -760,39 +794,39 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 		xml += l.getEmbedableXml();
 		return xml;
 	}
-	
+
 	public boolean isWheel(AbstractLink link) {
-		ArrayList<DHParameterKinematics> possible= new ArrayList<>();
+		ArrayList<DHParameterKinematics> possible = new ArrayList<>();
 		possible.addAll(getSteerable());
 		possible.addAll(getDrivable());
-		for(DHParameterKinematics kin:possible) {
-			for(int i=0;i<kin.getNumberOfLinks();i++) {
-			
+		for (DHParameterKinematics kin : possible) {
+			for (int i = 0; i < kin.getNumberOfLinks(); i++) {
+
 				MobileBase mb = kin.getFollowerMobileBase(i);
-				if(mb!=null) {
-					if(mb.isWheel(link))
+				if (mb != null) {
+					if (mb.isWheel(link))
 						return true;
 				}
 			}
-			if(kin.getAbstractLink(kin.getNumberOfLinks()-1)==link){
+			if (kin.getAbstractLink(kin.getNumberOfLinks() - 1) == link) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
+
 	public boolean isFoot(AbstractLink link) {
-		ArrayList<DHParameterKinematics> possible= new ArrayList<>();
+		ArrayList<DHParameterKinematics> possible = new ArrayList<>();
 		possible.addAll(legs);
-		for(DHParameterKinematics kin:possible) {
-			for(int i=0;i<kin.getNumberOfLinks();i++) {
+		for (DHParameterKinematics kin : possible) {
+			for (int i = 0; i < kin.getNumberOfLinks(); i++) {
 				MobileBase mb = kin.getFollowerMobileBase(i);
-				if(mb!=null) {
-					if(mb.isFoot(link))
+				if (mb != null) {
+					if (mb.isFoot(link))
 						return true;
 				}
 			}
-			if(kin.getAbstractLink(kin.getNumberOfLinks()-1)==link){
+			if (kin.getAbstractLink(kin.getNumberOfLinks() - 1) == link) {
 				return true;
 			}
 
@@ -839,7 +873,8 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	/**
 	 * Sets the walking drive engine.
 	 *
-	 * @param walkingDriveEngine the new walking drive engine
+	 * @param walkingDriveEngine
+	 *            the new walking drive engine
 	 */
 	public void setWalkingDriveEngine(IDriveEngine walkingDriveEngine) {
 		this.walkingDriveEngine = walkingDriveEngine;
@@ -849,8 +884,10 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	/**
 	 * Drive arc.
 	 *
-	 * @param newPose the new pose
-	 * @param seconds the seconds
+	 * @param newPose
+	 *            the new pose
+	 * @param seconds
+	 *            the seconds
 	 */
 	public void DriveArc(TransformNR newPose, double seconds) {
 		getWalkingDriveEngine().DriveArc(this, newPose, seconds);
@@ -860,7 +897,8 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	/**
 	 * Drive velocity straight.
 	 *
-	 * @param cmPerSecond the cm per second
+	 * @param cmPerSecond
+	 *            the cm per second
 	 */
 	public void DriveVelocityStraight(double cmPerSecond) {
 		getWalkingDriveEngine().DriveVelocityStraight(this, cmPerSecond);
@@ -871,8 +909,10 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	/**
 	 * Drive velocity arc.
 	 *
-	 * @param degreesPerSecond the degrees per second
-	 * @param cmRadius         the cm radius
+	 * @param degreesPerSecond
+	 *            the degrees per second
+	 * @param cmRadius
+	 *            the cm radius
 	 */
 	public void DriveVelocityArc(double degreesPerSecond, double cmRadius) {
 		getWalkingDriveEngine().DriveVelocityArc(this, degreesPerSecond, cmRadius);
@@ -900,7 +940,8 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	/**
 	 * Sets the walking engine.
 	 *
-	 * @param walkingEngine the new walking engine
+	 * @param walkingEngine
+	 *            the new walking engine
 	 */
 	public void setGitWalkingEngine(String[] walkingEngine) {
 		if (walkingEngine != null && walkingEngine[0] != null && walkingEngine[1] != null)
@@ -909,9 +950,8 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	}
 
 	/**
-	 * Gets the self source.
-	 * index 0 is GIT url
-	 * index 1 is filename
+	 * Gets the self source. index 0 is GIT url index 1 is filename
+	 *
 	 * @return the self source
 	 */
 	public String[] getGitSelfSource() {
@@ -919,11 +959,10 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	}
 
 	/**
-	 * Sets the self source.
-	 * index 0 is GIT url
-	 * index 1 is filename
+	 * Sets the self source. index 0 is GIT url index 1 is filename
 	 *
-	 * @param selfSource the new self source
+	 * @param selfSource
+	 *            the new self source
 	 */
 	public void setGitSelfSource(String[] selfSource) {
 		this.selfSource = selfSource;
@@ -931,13 +970,13 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	}
 
 	public double getMassKg() {
-		
+
 		return mass;
 	}
 
 	public void setMassKg(double mass) {
 		com.neuronrobotics.sdk.common.Log.error("Mass of device " + getScriptingName() + " is " + mass);
-		//new RuntimeException().printStackTrace();
+		// new RuntimeException().printStackTrace();
 		this.mass = mass;
 		fireConfigurationUpdate();
 	}
@@ -965,10 +1004,8 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 		fireConfigurationUpdate();
 	}
 
-
-	
 	private void fireBaseUpdates() {
-		TransformNR frameToBase = forwardOffset(new TransformNR()); 
+		TransformNR frameToBase = forwardOffset(new TransformNR());
 		for (DHParameterKinematics l : getAllDHChains()) {
 			l.setGlobalToFiducialTransform(frameToBase);
 		}
@@ -1024,17 +1061,17 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 		}
 		kin.addJointSpaceListener(this);
 		kin.getFactory().addIHardwareSyncPulseReciver(this);
-		
+
 	}
 
 	public static void main(String[] args) throws Exception {
 		File f = new File("paralleloutput.xml");
 
 		MobileBase pArm = new MobileBase(new FileInputStream(f));
-//		pArm.isAvailable();
-//		pArm.connect();
-//		pArm.connectDeviceImp();
-//		pArm.connectDevice();
+		// pArm.isAvailable();
+		// pArm.connect();
+		// pArm.connectDeviceImp();
+		// pArm.connectDevice();
 
 		String xmlParsed = pArm.getXml();
 		BufferedWriter writer = null;
@@ -1064,7 +1101,7 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	private void fireIOnMobileBaseRenderChange() {
 		for (int i = 0; i < changeListeners.size(); i++) {
 			IOnMobileBaseRenderChange l = changeListeners.get(i);
-			if(l!=null)
+			if (l != null)
 				l.onIOnMobileBaseRenderChange();
 		}
 	}
@@ -1125,9 +1162,9 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 		doSync();
 	}
 	@Override
-	public  void setTimeProvider(ITimeProvider t) {
+	public void setTimeProvider(ITimeProvider t) {
 		super.setTimeProvider(t);
-		for(DHParameterKinematics k:getAllDHChains()) {
+		for (DHParameterKinematics k : getAllDHChains()) {
 			k.setTimeProvider(getTimeProvider());
 		}
 	}
@@ -1140,21 +1177,22 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	}
 
 	/**
-	 * @param configurationUpdate the configurationUpdate to set
+	 * @param configurationUpdate
+	 *            the configurationUpdate to set
 	 */
 	public void setConfigurationUpdate(Runnable configurationUpdate) {
 		this.configurationUpdate = configurationUpdate;
 	}
 
 	public DHParameterKinematics getLimbByName(String name) {
-		for(DHParameterKinematics d:getAllDHChains()) {
-			if(d.getScriptingName().contentEquals(name))
+		for (DHParameterKinematics d : getAllDHChains()) {
+			if (d.getScriptingName().contentEquals(name))
 				return d;
-			for(int i=0;i<d.getNumberOfLinks();i++) {
-				MobileBase mb= d.getSlaveMobileBase(i);
-				if(mb!=null) {
+			for (int i = 0; i < d.getNumberOfLinks(); i++) {
+				MobileBase mb = d.getSlaveMobileBase(i);
+				if (mb != null) {
 					DHParameterKinematics test = mb.getLimbByName(name);
-					if(test!=null)
+					if (test != null)
 						return test;
 				}
 			}
@@ -1165,20 +1203,20 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 		ArrayList<DHParameterKinematics> allDHChains = getAllDHChains();
 		for (int j = 0; j < allDHChains.size(); j++) {
 			DHParameterKinematics d = allDHChains.get(j);
-			if(d.getScriptingName().contentEquals(name)) {
-				if(legs.contains(d))
+			if (d.getScriptingName().contentEquals(name)) {
+				if (legs.contains(d))
 					legs.remove(d);
-				if(appendages.contains(d))
+				if (appendages.contains(d))
 					appendages.remove(d);
-				if(drivable.contains(d))
+				if (drivable.contains(d))
 					drivable.remove(d);
-				if(steerable.contains(d))
+				if (steerable.contains(d))
 					steerable.remove(d);
-				return ;
+				return;
 			}
-			for(int i=0;i<d.getNumberOfLinks();i++) {
-				MobileBase mb= d.getSlaveMobileBase(i);
-				if(mb!=null) {
+			for (int i = 0; i < d.getNumberOfLinks(); i++) {
+				MobileBase mb = d.getSlaveMobileBase(i);
+				if (mb != null) {
 					mb.deleteLimbByName(name);
 					return;
 				}
@@ -1187,7 +1225,7 @@ public class MobileBase extends AbstractKinematicsNR implements ILinkConfigurati
 	}
 
 	public void zero() throws Exception {
-		for(DHParameterKinematics k:getAllDHChains()) {
+		for (DHParameterKinematics k : getAllDHChains()) {
 			k.zero();
 		}
 	}

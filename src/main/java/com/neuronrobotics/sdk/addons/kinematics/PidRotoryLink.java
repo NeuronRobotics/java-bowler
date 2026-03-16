@@ -9,41 +9,49 @@ import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 /**
  * The Class PidRotoryLink.
  */
-public class PidRotoryLink extends AbstractRotoryLink{
-	
+public class PidRotoryLink extends AbstractRotoryLink {
+
 	/** The channel. */
 	private PIDChannel channel;
-	
+
 	/**
 	 * Instantiates a new pid rotory link.
 	 *
-	 * @param c the c
-	 * @param conf the conf
-	 * @param b 
+	 * @param c
+	 *            the c
+	 * @param conf
+	 *            the conf
+	 * @param b
 	 */
-	public PidRotoryLink(PIDChannel c,LinkConfiguration conf, boolean b) {
+	public PidRotoryLink(PIDChannel c, LinkConfiguration conf, boolean b) {
 		super(conf);
-		if(!b) {
+		if (!b) {
 			conf.setPauseEvents(true);
 			conf.setDeviceTheoreticalMax(Integer.MAX_VALUE);
 			conf.setDeviceTheoreticalMin(Integer.MIN_VALUE);
 			conf.setPauseEvents(false);
-		}else {
-//			conf.setDeviceTheoreticalMax(conf.getUpperLimit());
-//			conf.setDeviceTheoreticalMin(conf.getLowerLimit());
+		} else {
+			// conf.setDeviceTheoreticalMax(conf.getUpperLimit());
+			// conf.setDeviceTheoreticalMin(conf.getLowerLimit());
 		}
 		setPIDChannel(c);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractLink#cacheTargetValueDevice()
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.neuronrobotics.sdk.addons.kinematics.AbstractLink#cacheTargetValueDevice(
+	 * )
 	 */
 	@Override
 	public void cacheTargetValueDevice() {
-		channel.setCachedTargetValue((float)getTargetValue());
+		channel.setCachedTargetValue((float) getTargetValue());
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractLink#flush(double)
 	 */
 	@Override
@@ -51,8 +59,10 @@ public class PidRotoryLink extends AbstractRotoryLink{
 		channel.flush(time);
 		fireLinkListener(getCurrentPosition());
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractLink#flushAll(double)
 	 */
 	@Override
@@ -61,20 +71,24 @@ public class PidRotoryLink extends AbstractRotoryLink{
 		fireLinkListener(getCurrentPosition());
 	}
 
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractLink#getCurrentPosition()
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.neuronrobotics.sdk.addons.kinematics.AbstractLink#getCurrentPosition()
 	 */
 	@Override
 	public double getCurrentPosition() {
-		float val=channel.GetPIDPosition();
-		
+		float val = channel.GetPIDPosition();
+
 		return val;
 	}
 
 	/**
 	 * Sets the PID channel.
 	 *
-	 * @param channel the new PID channel
+	 * @param channel
+	 *            the new PID channel
 	 */
 	public void setPIDChannel(PIDChannel channel) {
 		channel.addPIDEventListener(new IPIDEventListener() {
@@ -82,15 +96,15 @@ public class PidRotoryLink extends AbstractRotoryLink{
 			public void onPIDReset(int group, float currentValue) {
 				fireLinkListener(currentValue);
 			}
-			
+
 			@Override
 			public void onPIDLimitEvent(PIDLimitEvent e) {
 				fireLinkLimitEvent(e);
 			}
-			
+
 			@Override
 			public void onPIDEvent(PIDEvent e) {
-				//Log.debug("\nRotory Link Async<<"+e);
+				// Log.debug("\nRotory Link Async<<"+e);
 				fireLinkListener(e.getValue());
 			}
 		});

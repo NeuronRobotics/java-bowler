@@ -2,23 +2,15 @@ package junit.test.neuronrobotics.utilities;
 
 import static org.junit.Assert.*;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
 
 import org.apache.commons.math3.geometry.euclidean.threed.RotationConvention;
 import org.apache.commons.math3.geometry.euclidean.threed.RotationOrder;
 import org.junit.Test;
 
-import com.neuronrobotics.sdk.addons.kinematics.DHParameterKinematics;
-import com.neuronrobotics.sdk.addons.kinematics.MobileBase;
 import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
 import com.neuronrobotics.sdk.addons.kinematics.math.RotationNRLegacy;
 import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
-import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
-import com.neuronrobotics.sdk.addons.kinematics.parallel.ParallelGroup;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
@@ -28,7 +20,7 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
  */
 public class RotationNRTest {
 
-	private RotationOrder[] list = new RotationOrder[] { RotationOrder.ZYX
+	private RotationOrder[] list = new RotationOrder[]{RotationOrder.ZYX
 			// RotationOrder.XZY,
 			// RotationOrder.YXZ,
 			// RotationOrder.YZX,
@@ -38,11 +30,11 @@ public class RotationNRTest {
 
 	};;
 
-	RotationConvention[] conventions = { RotationConvention.VECTOR_OPERATOR };
+	RotationConvention[] conventions = {RotationConvention.VECTOR_OPERATOR};
 
 	/**
 	 * Test.
-	 * 
+	 *
 	 * @throws FileNotFoundException
 	 */
 	@Test
@@ -66,31 +58,36 @@ public class RotationNRTest {
 						RotationNR rotTest = new RotationNR(Math.toDegrees(tilt), Math.toDegrees(azumus),
 								Math.toDegrees(elevation));
 						com.neuronrobotics.sdk.common.Log.error("\n\nTest #" + i);
-						com.neuronrobotics.sdk.common.Log.error("Testing Az=" + Math.toDegrees(azumus) + " El=" + Math.toDegrees(elevation)
-								+ " Tl=" + Math.toDegrees(tilt));
-						com.neuronrobotics.sdk.common.Log.error("Got     Az=" + Math.toDegrees(rotTest.getRotationAzimuthRadians()) + " El="
-								+ Math.toDegrees(rotTest.getRotationElevationRadians()) + " Tl="
-								+ Math.toDegrees(rotTest.getRotationTiltRadians()));
+						com.neuronrobotics.sdk.common.Log.error("Testing Az=" + Math.toDegrees(azumus) + " El="
+								+ Math.toDegrees(elevation) + " Tl=" + Math.toDegrees(tilt));
+						com.neuronrobotics.sdk.common.Log
+								.error("Got     Az=" + Math.toDegrees(rotTest.getRotationAzimuthRadians()) + " El="
+										+ Math.toDegrees(rotTest.getRotationElevationRadians()) + " Tl="
+										+ Math.toDegrees(rotTest.getRotationTiltRadians()));
 
 						if (!RotationNR.bound(tilt - .01, tilt + .01, rotTest.getRotationTiltRadians())) {
 							failCount++;
-							com.neuronrobotics.sdk.common.Log.error("Rotation Tilt is not consistant. expected " + Math.toDegrees(tilt)
-									+ " got " + Math.toDegrees(rotTest.getRotationTiltRadians()) + " \t\tOff By "
+							com.neuronrobotics.sdk.common.Log.error("Rotation Tilt is not consistant. expected "
+									+ Math.toDegrees(tilt) + " got " + Math.toDegrees(rotTest.getRotationTiltRadians())
+									+ " \t\tOff By "
 									+ (Math.toDegrees(tilt) - Math.toDegrees(rotTest.getRotationTiltRadians())));
 						}
-						if (!RotationNR.bound(elevation - .01, elevation + .01, rotTest.getRotationElevationRadians())) {
+						if (!RotationNR.bound(elevation - .01, elevation + .01,
+								rotTest.getRotationElevationRadians())) {
 							failCount++;
-							com.neuronrobotics.sdk.common.Log.error("Rotation Elevation is not consistant. expected "
-									+ Math.toDegrees(elevation) + " got "
-									+ Math.toDegrees(rotTest.getRotationElevationRadians()) + " \t\tOff By "
-									+ (Math.toDegrees(elevation) + Math.toDegrees(rotTest.getRotationElevationRadians()))
+							com.neuronrobotics.sdk.common.Log
+									.error("Rotation Elevation is not consistant. expected " + Math.toDegrees(elevation)
+											+ " got " + Math.toDegrees(rotTest.getRotationElevationRadians())
+											+ " \t\tOff By " + (Math.toDegrees(elevation)
+													+ Math.toDegrees(rotTest.getRotationElevationRadians()))
 
-							);
+									);
 						}
 						if (!RotationNR.bound(azumus - .01, azumus + .01, rotTest.getRotationAzimuthRadians())) {
 							failCount++;
-							com.neuronrobotics.sdk.common.Log.error("Rotation azumus is not consistant. expected " + Math.toDegrees(azumus)
-									+ " got " + Math.toDegrees(rotTest.getRotationAzimuthRadians()) + " \t\tOff By "
+							com.neuronrobotics.sdk.common.Log.error("Rotation azumus is not consistant. expected "
+									+ Math.toDegrees(azumus) + " got "
+									+ Math.toDegrees(rotTest.getRotationAzimuthRadians()) + " \t\tOff By "
 									+ (Math.toDegrees(azumus) - Math.toDegrees(rotTest.getRotationAzimuthRadians())));
 						}
 						ThreadUtil.wait(20);
@@ -116,7 +113,7 @@ public class RotationNRTest {
 
 	/**
 	 * Test.
-	 * 
+	 *
 	 * @throws FileNotFoundException
 	 */
 	@Test
@@ -154,10 +151,11 @@ public class RotationNRTest {
 					RotationNR newRot = new RotationNR(rotation);
 					RotationNRLegacy oldRot = new RotationNRLegacy(rotation);
 					double[][] rotationMatrix = newRot.getRotationMatrix();
-					com.neuronrobotics.sdk.common.Log.error("Testing pure azumeth \nrotation " + rotationAngleDegrees + "\n as radian "
-							+ Math.toRadians(rotationAngleDegrees) + "\n     Az " + oldRot.getRotationAzimuthRadians()
-							+ "\n     El " + oldRot.getRotationElevationRadians() + "\n     Tl " + oldRot.getRotationTiltRadians()
-							+ "\n New Az " + newRot.getRotationAzimuthRadians() + "\n New El " + newRot.getRotationElevationRadians()
+					com.neuronrobotics.sdk.common.Log.error("Testing pure azumeth \nrotation " + rotationAngleDegrees
+							+ "\n as radian " + Math.toRadians(rotationAngleDegrees) + "\n     Az "
+							+ oldRot.getRotationAzimuthRadians() + "\n     El " + oldRot.getRotationElevationRadians()
+							+ "\n     Tl " + oldRot.getRotationTiltRadians() + "\n New Az "
+							+ newRot.getRotationAzimuthRadians() + "\n New El " + newRot.getRotationElevationRadians()
 							+ "\n New Tl " + newRot.getRotationTiltRadians());
 					assertArrayEquals(rotation[0], rotationMatrix[0], 0.001);
 					assertArrayEquals(rotation[1], rotationMatrix[1], 0.001);
@@ -173,35 +171,37 @@ public class RotationNRTest {
 									+ newRot.getRotationMatrix2QuaturnionY() + "\nNEW  qz "
 									+ newRot.getRotationMatrix2QuaturnionZ());
 					assertArrayEquals(
-							new double[] { Math.abs(oldRot.getRotationMatrix2QuaturnionW()),
+							new double[]{Math.abs(oldRot.getRotationMatrix2QuaturnionW()),
 									Math.abs(oldRot.getRotationMatrix2QuaturnionX()),
 									Math.abs(oldRot.getRotationMatrix2QuaturnionY()),
-									Math.abs(oldRot.getRotationMatrix2QuaturnionZ()), },
-							new double[] { Math.abs(newRot.getRotationMatrix2QuaturnionW()),
+									Math.abs(oldRot.getRotationMatrix2QuaturnionZ()),},
+							new double[]{Math.abs(newRot.getRotationMatrix2QuaturnionW()),
 									Math.abs(newRot.getRotationMatrix2QuaturnionX()),
 									Math.abs(newRot.getRotationMatrix2QuaturnionY()),
-									Math.abs(newRot.getRotationMatrix2QuaturnionZ()), },
+									Math.abs(newRot.getRotationMatrix2QuaturnionZ()),},
 							0.001);
 					// Check Euler angles
 					// this check is needed to work around a known bug in the
 					// legact implementation
 					if (!(rotationAngleDegrees >= 90 || rotationAngleDegrees <= -90)) {
 						assertArrayEquals(
-								new double[] { oldRot.getRotationAzimuthRadians(), oldRot.getRotationElevationRadians(),
-										oldRot.getRotationTiltRadians() },
-								new double[] { newRot.getRotationAzimuthRadians(), newRot.getRotationElevationRadians(),
-										newRot.getRotationTiltRadians() },
+								new double[]{oldRot.getRotationAzimuthRadians(), oldRot.getRotationElevationRadians(),
+										oldRot.getRotationTiltRadians()},
+								new double[]{newRot.getRotationAzimuthRadians(), newRot.getRotationElevationRadians(),
+										newRot.getRotationTiltRadians()},
 								0.001);
 						// Check the old rotation against the known value
-						assertArrayEquals(new double[] { Math.toRadians(rotationAngleDegrees), 0, 0 }, new double[] {
-								oldRot.getRotationAzimuthRadians(), oldRot.getRotationElevationRadians(), oldRot.getRotationTiltRadians() },
+						assertArrayEquals(new double[]{Math.toRadians(rotationAngleDegrees), 0, 0},
+								new double[]{oldRot.getRotationAzimuthRadians(), oldRot.getRotationElevationRadians(),
+										oldRot.getRotationTiltRadians()},
 								0.001);
 					} else {
 						com.neuronrobotics.sdk.common.Log.error("Legacy angle would fail here " + rotationAngleDegrees);
 					}
 					// Check the new rotation against the known value
-					assertArrayEquals(new double[] { Math.toRadians(rotationAngleDegrees), 0, 0 }, new double[] {
-							newRot.getRotationAzimuthRadians(), newRot.getRotationElevationRadians(), newRot.getRotationTiltRadians() },
+					assertArrayEquals(new double[]{Math.toRadians(rotationAngleDegrees), 0, 0},
+							new double[]{newRot.getRotationAzimuthRadians(), newRot.getRotationElevationRadians(),
+									newRot.getRotationTiltRadians()},
 							0.001);
 				}
 				// frame();
@@ -214,7 +214,7 @@ public class RotationNRTest {
 
 	/**
 	 * Test.
-	 * 
+	 *
 	 * @throws FileNotFoundException
 	 */
 	@Test
@@ -251,10 +251,11 @@ public class RotationNRTest {
 					RotationNR newRot = new RotationNR(rotation);
 					RotationNRLegacy oldRot = new RotationNRLegacy(rotation);
 					double[][] rotationMatrix = newRot.getRotationMatrix();
-					com.neuronrobotics.sdk.common.Log.error("Testing pure elevation \nrotation " + rotationAngleDegrees + "\n as radian "
-							+ Math.toRadians(rotationAngleDegrees) + "\n     Az " + oldRot.getRotationAzimuthRadians()
-							+ "\n     El " + oldRot.getRotationElevationRadians() + "\n     Tl " + oldRot.getRotationTiltRadians()
-							+ "\n New Az " + newRot.getRotationAzimuthRadians() + "\n New El " + newRot.getRotationElevationRadians()
+					com.neuronrobotics.sdk.common.Log.error("Testing pure elevation \nrotation " + rotationAngleDegrees
+							+ "\n as radian " + Math.toRadians(rotationAngleDegrees) + "\n     Az "
+							+ oldRot.getRotationAzimuthRadians() + "\n     El " + oldRot.getRotationElevationRadians()
+							+ "\n     Tl " + oldRot.getRotationTiltRadians() + "\n New Az "
+							+ newRot.getRotationAzimuthRadians() + "\n New El " + newRot.getRotationElevationRadians()
 							+ "\n New Tl " + newRot.getRotationTiltRadians());
 					assertArrayEquals(rotation[0], rotationMatrix[0], 0.001);
 					assertArrayEquals(rotation[1], rotationMatrix[1], 0.001);
@@ -270,32 +271,33 @@ public class RotationNRTest {
 									+ newRot.getRotationMatrix2QuaturnionY() + "\nNEW  qz "
 									+ newRot.getRotationMatrix2QuaturnionZ());
 					assertArrayEquals(
-							new double[] { Math.abs(oldRot.getRotationMatrix2QuaturnionW()),
+							new double[]{Math.abs(oldRot.getRotationMatrix2QuaturnionW()),
 									Math.abs(oldRot.getRotationMatrix2QuaturnionX()),
 									Math.abs(oldRot.getRotationMatrix2QuaturnionY()),
-									Math.abs(oldRot.getRotationMatrix2QuaturnionZ()), },
-							new double[] { Math.abs(newRot.getRotationMatrix2QuaturnionW()),
+									Math.abs(oldRot.getRotationMatrix2QuaturnionZ()),},
+							new double[]{Math.abs(newRot.getRotationMatrix2QuaturnionW()),
 									Math.abs(newRot.getRotationMatrix2QuaturnionX()),
 									Math.abs(newRot.getRotationMatrix2QuaturnionY()),
-									Math.abs(newRot.getRotationMatrix2QuaturnionZ()), },
+									Math.abs(newRot.getRotationMatrix2QuaturnionZ()),},
 							0.001);
 					// Check Euler angles
 					assertArrayEquals(
-							new double[] { oldRot.getRotationAzimuthRadians(), oldRot.getRotationElevationRadians(),
-									oldRot.getRotationTiltRadians() },
-							new double[] { newRot.getRotationAzimuthRadians(), newRot.getRotationElevationRadians(),
-									newRot.getRotationTiltRadians() },
+							new double[]{oldRot.getRotationAzimuthRadians(), oldRot.getRotationElevationRadians(),
+									oldRot.getRotationTiltRadians()},
+							new double[]{newRot.getRotationAzimuthRadians(), newRot.getRotationElevationRadians(),
+									newRot.getRotationTiltRadians()},
 							0.001);
 					// Check the old rotation against the known value
-					assertArrayEquals(new double[] {
+					assertArrayEquals(new double[]{
 
-							0, Math.toRadians(rotationAngleDegrees), 0 },
-							new double[] { oldRot.getRotationAzimuthRadians(), oldRot.getRotationElevationRadians(),
-									oldRot.getRotationTiltRadians() },
+							0, Math.toRadians(rotationAngleDegrees), 0},
+							new double[]{oldRot.getRotationAzimuthRadians(), oldRot.getRotationElevationRadians(),
+									oldRot.getRotationTiltRadians()},
 							0.001);
 					// Check the new rotation against the known value
-					assertArrayEquals(new double[] { 0, Math.toRadians(rotationAngleDegrees), 0 }, new double[] {
-							newRot.getRotationAzimuthRadians(), newRot.getRotationElevationRadians(), newRot.getRotationTiltRadians() },
+					assertArrayEquals(new double[]{0, Math.toRadians(rotationAngleDegrees), 0},
+							new double[]{newRot.getRotationAzimuthRadians(), newRot.getRotationElevationRadians(),
+									newRot.getRotationTiltRadians()},
 							0.001);
 				}
 				// frame();
@@ -308,7 +310,7 @@ public class RotationNRTest {
 
 	/**
 	 * Test.
-	 * 
+	 *
 	 * @throws FileNotFoundException
 	 */
 	@Test
@@ -345,10 +347,11 @@ public class RotationNRTest {
 					RotationNR newRot = new RotationNR(rotation);
 					RotationNRLegacy oldRot = new RotationNRLegacy(rotation);
 					double[][] rotationMatrix = newRot.getRotationMatrix();
-					com.neuronrobotics.sdk.common.Log.error("Testing pure tilt \nrotation " + rotationAngleDegrees + "\n as radian "
-							+ Math.toRadians(rotationAngleDegrees) + "\n     Az " + oldRot.getRotationAzimuthRadians()
-							+ "\n     El " + oldRot.getRotationElevationRadians() + "\n     Tl " + oldRot.getRotationTiltRadians()
-							+ "\n New Az " + newRot.getRotationAzimuthRadians() + "\n New El " + newRot.getRotationElevationRadians()
+					com.neuronrobotics.sdk.common.Log.error("Testing pure tilt \nrotation " + rotationAngleDegrees
+							+ "\n as radian " + Math.toRadians(rotationAngleDegrees) + "\n     Az "
+							+ oldRot.getRotationAzimuthRadians() + "\n     El " + oldRot.getRotationElevationRadians()
+							+ "\n     Tl " + oldRot.getRotationTiltRadians() + "\n New Az "
+							+ newRot.getRotationAzimuthRadians() + "\n New El " + newRot.getRotationElevationRadians()
 							+ "\n New Tl " + newRot.getRotationTiltRadians());
 					assertArrayEquals(rotation[0], rotationMatrix[0], 0.001);
 					assertArrayEquals(rotation[1], rotationMatrix[1], 0.001);
@@ -364,29 +367,31 @@ public class RotationNRTest {
 									+ newRot.getRotationMatrix2QuaturnionY() + "\nNEW  qz "
 									+ newRot.getRotationMatrix2QuaturnionZ());
 					assertArrayEquals(
-							new double[] { Math.abs(oldRot.getRotationMatrix2QuaturnionW()),
+							new double[]{Math.abs(oldRot.getRotationMatrix2QuaturnionW()),
 									Math.abs(oldRot.getRotationMatrix2QuaturnionX()),
 									Math.abs(oldRot.getRotationMatrix2QuaturnionY()),
-									Math.abs(oldRot.getRotationMatrix2QuaturnionZ()), },
-							new double[] { Math.abs(newRot.getRotationMatrix2QuaturnionW()),
+									Math.abs(oldRot.getRotationMatrix2QuaturnionZ()),},
+							new double[]{Math.abs(newRot.getRotationMatrix2QuaturnionW()),
 									Math.abs(newRot.getRotationMatrix2QuaturnionX()),
 									Math.abs(newRot.getRotationMatrix2QuaturnionY()),
-									Math.abs(newRot.getRotationMatrix2QuaturnionZ()), },
+									Math.abs(newRot.getRotationMatrix2QuaturnionZ()),},
 							0.001);
 					// Check Euler angles
 					assertArrayEquals(
-							new double[] { oldRot.getRotationAzimuthRadians(), oldRot.getRotationElevationRadians(),
-									oldRot.getRotationTiltRadians() },
-							new double[] { newRot.getRotationAzimuthRadians(), newRot.getRotationElevationRadians(),
-									newRot.getRotationTiltRadians() },
+							new double[]{oldRot.getRotationAzimuthRadians(), oldRot.getRotationElevationRadians(),
+									oldRot.getRotationTiltRadians()},
+							new double[]{newRot.getRotationAzimuthRadians(), newRot.getRotationElevationRadians(),
+									newRot.getRotationTiltRadians()},
 							0.001);
 					// Check the old rotation against the known value
-					assertArrayEquals(new double[] { 0, 0, Math.toRadians(rotationAngleDegrees) }, new double[] {
-							oldRot.getRotationAzimuthRadians(), oldRot.getRotationElevationRadians(), oldRot.getRotationTiltRadians() },
+					assertArrayEquals(new double[]{0, 0, Math.toRadians(rotationAngleDegrees)},
+							new double[]{oldRot.getRotationAzimuthRadians(), oldRot.getRotationElevationRadians(),
+									oldRot.getRotationTiltRadians()},
 							0.001);
 					// Check the new rotation against the known value
-					assertArrayEquals(new double[] { 0, 0, Math.toRadians(rotationAngleDegrees) }, new double[] {
-							newRot.getRotationAzimuthRadians(), newRot.getRotationElevationRadians(), newRot.getRotationTiltRadians() },
+					assertArrayEquals(new double[]{0, 0, Math.toRadians(rotationAngleDegrees)},
+							new double[]{newRot.getRotationAzimuthRadians(), newRot.getRotationElevationRadians(),
+									newRot.getRotationTiltRadians()},
 							0.001);
 				}
 				// frame();
@@ -404,16 +409,22 @@ public class RotationNRTest {
 				0.7071067811865476);
 		RotationNR tester3 = new RotationNR(0.7064894449532356, 1.0769850738285257E-7, 0.7077235789272859,
 				1.0769850738285257E-7);
-		assertArrayEquals(new double[] { 0, 90, 0 }, new double[] { Math.toDegrees(tester1.getRotationAzimuthRadians()),
-				Math.toDegrees(tester1.getRotationElevationRadians()), Math.toDegrees(tester1.getRotationTiltRadians()) },
+		assertArrayEquals(new double[]{0, 90, 0},
+				new double[]{Math.toDegrees(tester1.getRotationAzimuthRadians()),
+						Math.toDegrees(tester1.getRotationElevationRadians()),
+						Math.toDegrees(tester1.getRotationTiltRadians())},
 
 				0.001);
-		assertArrayEquals(new double[] { 0, 90, 180 }, new double[] { Math.toDegrees(tester2.getRotationAzimuthRadians()),
-				Math.toDegrees(tester2.getRotationElevationRadians()), Math.toDegrees(tester2.getRotationTiltRadians()) },
+		assertArrayEquals(new double[]{0, 90, 180},
+				new double[]{Math.toDegrees(tester2.getRotationAzimuthRadians()),
+						Math.toDegrees(tester2.getRotationElevationRadians()),
+						Math.toDegrees(tester2.getRotationTiltRadians())},
 
 				0.001);
-		assertArrayEquals(new double[] { 179.99, 89.9, 179.99 }, new double[] { Math.toDegrees(tester3.getRotationAzimuthRadians()),
-				Math.toDegrees(tester3.getRotationElevationRadians()), Math.toDegrees(tester3.getRotationTiltRadians()) },
+		assertArrayEquals(new double[]{179.99, 89.9, 179.99},
+				new double[]{Math.toDegrees(tester3.getRotationAzimuthRadians()),
+						Math.toDegrees(tester3.getRotationElevationRadians()),
+						Math.toDegrees(tester3.getRotationTiltRadians())},
 
 				0.001);
 	}

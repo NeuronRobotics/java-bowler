@@ -3,9 +3,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -37,264 +36,287 @@ import com.neuronrobotics.sdk.common.MACAddress;
 /**
  * The Class UDPBowlerConnection.
  */
-public class UDPBowlerConnection extends BowlerAbstractConnection{
-	
+public class UDPBowlerConnection extends BowlerAbstractConnection {
+
 	/** The sleep time. */
 	private int sleepTime = 5000;
 
 	/** The port. */
 	private int port = 1865;
 
-	
 	/** The IP address set. */
-	private InetAddress IPAddressSet=null;
-	
+	private InetAddress IPAddressSet = null;
+
 	/** The addrs. */
-	private ArrayList<InetAddress>  addrs=null;
-	
+	private ArrayList<InetAddress> addrs = null;
+
 	/** The udp sock. */
-	//private ByteList internalReceiveBuffer= new ByteList();
+	// private ByteList internalReceiveBuffer= new ByteList();
 	private DatagramSocket udpSock = null;
-	
+
 	/**
 	 * Instantiates a new UDP bowler connection.
 	 */
-	public UDPBowlerConnection(){
+	public UDPBowlerConnection() {
 		init();
 	}
-	
-	/**
-	 * Instantiates a new UDP bowler connection.
-	 *
-	 * @param set the set
-	 */
-	public UDPBowlerConnection(InetAddress set){
-		init();
-		setAddress(set);
-	}
-	
+
 	/**
 	 * Instantiates a new UDP bowler connection.
 	 *
-	 * @param set the set
-	 * @param port the port
+	 * @param set
+	 *            the set
 	 */
-	public UDPBowlerConnection(InetAddress set,int port){
-		this.port=port;
+	public UDPBowlerConnection(InetAddress set) {
 		init();
 		setAddress(set);
 	}
-	
+
+	/**
+	 * Instantiates a new UDP bowler connection.
+	 *
+	 * @param set
+	 *            the set
+	 * @param port
+	 *            the port
+	 */
+	public UDPBowlerConnection(InetAddress set, int port) {
+		this.port = port;
+		init();
+		setAddress(set);
+	}
+
 	/**
 	 * Sets the address.
 	 *
-	 * @param set the new address
+	 * @param set
+	 *            the new address
 	 */
-	public void setAddress(InetAddress set){
-		IPAddressSet=set;
-    }
-	
+	public void setAddress(InetAddress set) {
+		IPAddressSet = set;
+	}
+
 	/**
 	 * Instantiates a new UDP bowler connection.
 	 *
-	 * @param port the port
+	 * @param port
+	 *            the port
 	 */
-	public UDPBowlerConnection(int port){
-		this.port=port;
+	public UDPBowlerConnection(int port) {
+		this.port = port;
 		init();
 	}
-	
-	
+
 	/**
 	 * Gets the data ins.
 	 *
 	 * @return the data ins
-	 * @throws NullPointerException the null pointer exception
+	 * @throws NullPointerException
+	 *             the null pointer exception
 	 */
 	@Override
-	public DataInputStream getDataIns() throws NullPointerException{
+	public DataInputStream getDataIns() throws NullPointerException {
 		new RuntimeException("This method should not be called").printStackTrace();
-		while(true);
+		while (true);
 	}
 
 	/**
 	 * Gets the data outs.
 	 *
 	 * @return the data outs
-	 * @throws NullPointerException the null pointer exception
+	 * @throws NullPointerException
+	 *             the null pointer exception
 	 */
 	@Override
-	public DataOutputStream getDataOuts() throws NullPointerException{
+	public DataOutputStream getDataOuts() throws NullPointerException {
 		new RuntimeException("This method should not be called").printStackTrace();
-		while(true);
+		while (true);
 	}
-	
+
 	/**
 	 * Write.
 	 *
-	 * @param data the data
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @param data
+	 *            the data
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
-	//private ByteList outgoing = new ByteList();
+	// private ByteList outgoing = new ByteList();
 	public void write(byte[] data) throws IOException {
-		//waitForConnectioToBeReady();
+		// waitForConnectioToBeReady();
 		setLastWrite(System.currentTimeMillis());
-		
+
 		DatagramPacket sendPacket = new DatagramPacket(data, data.length, IPAddressSet, port);
-		//Log.info("Sending UDP packet: "+sendPacket);
+		// Log.info("Sending UDP packet: "+sendPacket);
 		udpSock.send(sendPacket);
-		
+
 	}
-	
+
 	/** The receive data. */
-	byte[] receiveData=new byte[4096];
-	
+	byte[] receiveData = new byte[4096];
+
 	/** The receive packet. */
 	DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
-	
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.common.BowlerAbstractConnection#loadPacketFromPhy(com.neuronrobotics.sdk.common.ByteList)
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.neuronrobotics.sdk.common.BowlerAbstractConnection#loadPacketFromPhy(com.
+	 * neuronrobotics.sdk.common.ByteList)
 	 */
 	@Override
-	public BowlerDatagram loadPacketFromPhy(ByteList bytesToPacketBuffer) throws NullPointerException, IOException{
-		
+	public BowlerDatagram loadPacketFromPhy(ByteList bytesToPacketBuffer) throws NullPointerException, IOException {
+
 		long start = System.currentTimeMillis();
-		//Log.info("Waiting for UDP packet");
+		// Log.info("Waiting for UDP packet");
 		udpSock.setSoTimeout(1);// Timeout the socket after 1 ms
-		//com.neuronrobotics.sdk.common.Log.error("Timeout set "+(System.currentTimeMillis()-start));
+		// com.neuronrobotics.sdk.common.Log.error("Timeout set
+		// "+(System.currentTimeMillis()-start));
 		start = System.currentTimeMillis();
-		try{
+		try {
 			udpSock.receive(receivePacket);
-			
-		}catch(SocketTimeoutException ste){
+
+		} catch (SocketTimeoutException ste) {
 			return null;
-		}catch(Exception ex){
+		} catch (Exception ex) {
 			// disconnect called
-			//Log. warning("Receive bailed out because of close");
+			// Log. warning("Receive bailed out because of close");
 			ex.printStackTrace();
 			return null;
 		}
-		//com.neuronrobotics.sdk.common.Log.error("Recv "+(System.currentTimeMillis()-start));
+		// com.neuronrobotics.sdk.common.Log.error("Recv
+		// "+(System.currentTimeMillis()-start));
 		start = System.currentTimeMillis();
 		Log.info("Got UDP packet");
-		if(addrs== null)
-			addrs=new ArrayList<InetAddress>();
+		if (addrs == null)
+			addrs = new ArrayList<InetAddress>();
 		getAllAddresses().add(receivePacket.getAddress());
-		
-		byte [] data = receivePacket.getData();
-		
-		for (int i=0;i<receivePacket.getLength();i++){
+
+		byte[] data = receivePacket.getData();
+
+		for (int i = 0; i < receivePacket.getLength(); i++) {
 			bytesToPacketBuffer.add(data[i]);
 		}
-		//com.neuronrobotics.sdk.common.Log.error("copy "+(System.currentTimeMillis()-start));
+		// com.neuronrobotics.sdk.common.Log.error("copy
+		// "+(System.currentTimeMillis()-start));
 		start = System.currentTimeMillis();
-		BowlerDatagram bd= BowlerDatagramFactory.build(bytesToPacketBuffer);
-		//com.neuronrobotics.sdk.common.Log.error("build "+(System.currentTimeMillis()-start));
+		BowlerDatagram bd = BowlerDatagramFactory.build(bytesToPacketBuffer);
+		// com.neuronrobotics.sdk.common.Log.error("build
+		// "+(System.currentTimeMillis()-start));
 		return bd;
 	}
-	
-	
 
-	
 	/**
 	 * Inits the.
 	 */
-	private void init(){
+	private void init() {
 		setSynchronusPacketTimeoutTime(sleepTime);
 		setChunkSize(5210);
 		try {
-			if(IPAddressSet == null)
-				IPAddressSet=InetAddress.getByAddress(new byte[]{(byte) 255,(byte) 255,(byte) 255,(byte) 255});
+			if (IPAddressSet == null)
+				IPAddressSet = InetAddress.getByAddress(new byte[]{(byte) 255, (byte) 255, (byte) 255, (byte) 255});
 		} catch (UnknownHostException e1) {
 			// Auto-generated catch block
 			e1.printStackTrace();
 		}
-		if(connect()){
-			
-		}else{
+		if (connect()) {
+
+		} else {
 			Log.error("Connection failed");
 			throw new RuntimeException("UDP Connection failed");
 		}
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see com.neuronrobotics.sdk.common.BowlerAbstractConnection#disconnect()
 	 */
-	public void disconnect(){
-		if(udpSock!=null){
+	public void disconnect() {
+		if (udpSock != null) {
 			udpSock.close();
-			udpSock=null;
+			udpSock = null;
 		}
 		setConnected(false);
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see com.neuronrobotics.sdk.common.BowlerAbstractConnection#connect()
 	 */
 	@Override
 	public boolean connect() {
-		if(isConnected()){
+		if (isConnected()) {
 			Log.info("already connected..");
 			return true;
 		}
 		setConnected(false);
 		try {
-			udpSock =  new DatagramSocket();
-			
+			udpSock = new DatagramSocket();
+
 			setConnected(true);
 		} catch (Exception e) {
 			// Auto-generated catch block
 			e.printStackTrace();
 			setConnected(false);
 		}
-		return isConnected();	
+		return isConnected();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see com.neuronrobotics.sdk.common.BowlerAbstractConnection#reconnect()
 	 */
 	/**
 	 * Reconnect.
 	 *
 	 * @return true, if successful
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
-	//@Override
+	// @Override
 	public boolean reconnect() throws IOException {
 		disconnect();
 		connect();
 		return true;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.neuronrobotics.sdk.common.BowlerAbstractConnection#waitingForConnection()
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.neuronrobotics.sdk.common.BowlerAbstractConnection#waitingForConnection()
 	 */
 	@Override
 	public boolean waitingForConnection() {
 		// Auto-generated method stub
 		return false;
 	}
-	
-	
-	
+
 	/**
 	 * Gets the all addresses.
 	 *
 	 * @return the all addresses
 	 */
-	public ArrayList<InetAddress>  getAllAddresses(){
-		if(addrs== null){
-			addrs=new ArrayList<InetAddress>();
+	public ArrayList<InetAddress> getAllAddresses() {
+		if (addrs == null) {
+			addrs = new ArrayList<InetAddress>();
 			try {
-				
-				//Generate a ping command
+
+				// Generate a ping command
 				BowlerDatagram ping = BowlerDatagramFactory.build(new MACAddress(), new PingCommand());
 				ping.setUpstream(false);
-				Log.info("Sending synchronization ping: \n"+ping);
-				//send it to the UDP socket
+				Log.info("Sending synchronization ping: \n" + ping);
+				// send it to the UDP socket
 				write(ping.getBytes());
-				//wait for all devices to report back
-				try {Thread.sleep(3000);} catch (InterruptedException e) {}
+				// wait for all devices to report back
+				try {
+					Thread.sleep(3000);
+				} catch (InterruptedException e) {
+				}
 			} catch (IOException e) {
 				// Auto-generated catch block
 				e.printStackTrace();
@@ -306,15 +328,16 @@ public class UDPBowlerConnection extends BowlerAbstractConnection{
 	/**
 	 * Sets the address.
 	 *
-	 * @param address the new address
+	 * @param address
+	 *            the new address
 	 */
 	public void setAddress(String address) {
-		for (InetAddress in: getAllAddresses()) {
-			if(in.getHostAddress().contains(address)) {
-				 setAddress(in);
-				 return;
+		for (InetAddress in : getAllAddresses()) {
+			if (in.getHostAddress().contains(address)) {
+				setAddress(in);
+				return;
 			}
-				
+
 		}
 		throw new RuntimeException("Unknown address");
 	}

@@ -20,15 +20,14 @@ import com.neuronrobotics.sdk.common.Log;
  * can register additional handlers using addGHandler and addMHandler, which
  * compose with, rather than replacing, the previous implementations.
  * {@link GCodeInterpreter#addDefaultHandlers}
- * 
+ *
  * To use, bind handlers to at least G00 and G01, and feed in a stream of
- * G-code. An example can be found in 
- * 
+ * G-code. An example can be found in
+ *
  * @author Jonathan D.K. Gibbons
  * @version 1
  */
 public class GCodeInterpreter {
-
 
 	/**
 	 * The list of currently active M-codes. This defines what handlers will be
@@ -45,13 +44,13 @@ public class GCodeInterpreter {
 															// implementations
 															// are allowed to
 															// modify the line.
-	
+
 	/** The error handler. */
-															private CodeHandler errorHandler=null;
+	private CodeHandler errorHandler = null;
 	/**
-	 * The list of handlers for G codes. gHandlers[0] is the list of handlers
-	 * for G0. The handlers must be called from last to first, to preserve
-	 * composition semantics.
+	 * The list of handlers for G codes. gHandlers[0] is the list of handlers for
+	 * G0. The handlers must be called from last to first, to preserve composition
+	 * semantics.
 	 */
 	List<CodeHandler> gHandlers[];
 
@@ -62,37 +61,36 @@ public class GCodeInterpreter {
 	List<Integer> gClearOnSet[];
 
 	/**
-	 * The list of one-shot G codes. These are codes such as cycle times or
-	 * setting offsets, which happen exactly once when they are in the stream.
+	 * The list of one-shot G codes. These are codes such as cycle times or setting
+	 * offsets, which happen exactly once when they are in the stream.
 	 */
 	List<Integer> gOneShot;
 
 	/**
-	 * The list of handlers for M codes. This is stored and handled the same as
-	 * for G codes.
+	 * The list of handlers for M codes. This is stored and handled the same as for
+	 * G codes.
 	 */
 	List<CodeHandler> mHandlers[];
 
 	/**
-	 * A comparator to define G code ordering. This gives the order in which G
-	 * codes must be interpreted in a line - units conversion happens before
-	 * conversion to absolute, which happens before motion modes.
+	 * A comparator to define G code ordering. This gives the order in which G codes
+	 * must be interpreted in a line - units conversion happens before conversion to
+	 * absolute, which happens before motion modes.
 	 */
 	Comparator<Integer> gCodeOrdering;
 	/**
-	 * What axes are motion - this mostly defines which axes get
-	 * relative/absolute and units conversion.
+	 * What axes are motion - this mostly defines which axes get relative/absolute
+	 * and units conversion.
 	 */
-	char motion_axes[] = { 'X', 'Y', 'Z' };
+	char motion_axes[] = {'X', 'Y', 'Z'};
 
 	/**
-	 * Stores the previous position and other data for the previous line of G
-	 * code.
+	 * Stores the previous position and other data for the previous line of G code.
 	 */
 	GCodeLineData lastLine;
 	/**
-	 * Stores the currently in-progress position and other data for this line of
-	 * G code.
+	 * Stores the currently in-progress position and other data for this line of G
+	 * code.
 	 */
 	GCodeLineData nextLine;
 
@@ -105,13 +103,12 @@ public class GCodeInterpreter {
 
 	/** The executing lock. */
 	ReentrantLock executingLock;
-	
+
 	/** The line number. */
-	private int lineNumber=0;
+	private int lineNumber = 0;
 	/**
-	 * Default Constructor. This builds an interpreter and adds the default set
-	 * of handlers and configuration to it. @see
-	 * GCodeInterpreter#addDefaultHandlers
+	 * Default Constructor. This builds an interpreter and adds the default set of
+	 * handlers and configuration to it. @see GCodeInterpreter#addDefaultHandlers
 	 */
 	@SuppressWarnings("unchecked")
 	public GCodeInterpreter() {
@@ -126,123 +123,126 @@ public class GCodeInterpreter {
 		addDefaultHandlers();
 		executingLock = new ReentrantLock();
 	}
-	
-	
+
 	/**
 	 * Process single gcode line.
 	 *
-	 * @param line the line
-	 * @throws Exception the exception
+	 * @param line
+	 *            the line
+	 * @throws Exception
+	 *             the exception
 	 */
-	public void processSingleGCODELine(String line) throws Exception{
+	public void processSingleGCODELine(String line) throws Exception {
 		String delims;
 		String[] tokens;
-		
+
 		delims = "[ ]+";
 		tokens = line.split(delims);
 		nextLine.storeWord('G', 0);
 		nextLine.storeWord('M', 0);
 		nextLine.storeWord('P', lineNumber);
-		com.neuronrobotics.sdk.common.Log.error("GCODE: "+line);
-		
-		for(int i=0;i<tokens.length;i++){
+		com.neuronrobotics.sdk.common.Log.error("GCODE: " + line);
+
+		for (int i = 0; i < tokens.length; i++) {
 			tokens[i] = tokens[i].trim();
-			if(!tokens[i].isEmpty()){
+			if (!tokens[i].isEmpty()) {
 				double val = Double.parseDouble(tokens[i].substring(1));
 				char code = tokens[i].charAt(0);
-				if(code == 'M'){
+				if (code == 'M') {
 					mcodes.add((int) val);
 				}
-				if(code == 'G'){
+				if (code == 'G') {
 					int theCode = (int) val;
 					if (gClearOnSet[theCode] != null)
 						gcodes.removeAll(gClearOnSet[theCode]);
 					gcodes.add(theCode);
 				}
-				Log.debug("Code Token: "+tokens[i]+" "+code+" "+val);
+				Log.debug("Code Token: " + tokens[i] + " " + code + " " + val);
 				nextLine.storeWord(code, val);
 			}
 		}
-		//com.neuronrobotics.sdk.common.Log.error(nextLine);
+		// com.neuronrobotics.sdk.common.Log.error(nextLine);
 		executeLine(line);
 	}
 
 	/**
 	 * Parses the line.
 	 *
-	 * @param r the r
-	 * @throws Exception the exception
+	 * @param r
+	 *            the r
+	 * @throws Exception
+	 *             the exception
 	 */
-	private void parseLine(InputStream r) throws Exception { 
+	private void parseLine(InputStream r) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(r));
 		String line;
 		boolean inCommentSection = false;
-		lineNumber=0;
+		lineNumber = 0;
 		while ((line = br.readLine()) != null) {
 			lineNumber++;// lines in the file
 			String delims;
 			String[] tokens;
-			if(line.indexOf(';')>-1){
-				//this line contains a comment
-				if(line.indexOf(';') ==0){
+			if (line.indexOf(';') > -1) {
+				// this line contains a comment
+				if (line.indexOf(';') == 0) {
 					// this is just a comment
 					line = null;
-				}else{
+				} else {
 					delims = "[;]+";
 					tokens = line.split(delims);
-					//strip the comment and place the rest of the line 
+					// strip the comment and place the rest of the line
 					// in the to-be-parsed variable
 					line = tokens[0];
 				}
-			}else{
+			} else {
 				// no comment on this line
 			}
-			//Check for the block comment case
-			if(line != null){
-				if(line.indexOf('(')>-1){
+			// Check for the block comment case
+			if (line != null) {
+				if (line.indexOf('(') > -1) {
 					// block comment section
 					inCommentSection = true;
 					line = null;
 				}
-				
+
 			}
-			if(line != null){
-				if(line.indexOf(')')>-1){
+			if (line != null) {
+				if (line.indexOf(')') > -1) {
 					// end block comment section
 					inCommentSection = false;
 					line = null;
 				}
 			}
-			if(inCommentSection)
+			if (inCommentSection)
 				line = null;
-			
+
 			// Check for the empty line case
-			if(line != null){
-				if (line.trim().isEmpty()){
-					//empty line detect
+			if (line != null) {
+				if (line.trim().isEmpty()) {
+					// empty line detect
 					line = null;
 				}
 			}
 			// OK, now we have a valid line
-			if(line !=null){
-				
-				
-				processSingleGCODELine( line);
+			if (line != null) {
+
+				processSingleGCODELine(line);
 			}
-			
+
 		}
 		br.close();
 	}
 
-
 	/**
 	 * Execute the action(s) specified by the already built-up line of G-code.
 	 *
-	 * @param rawLine the raw line
-	 * @throws Exception the exception
+	 * @param rawLine
+	 *            the raw line
+	 * @throws Exception
+	 *             the exception
 	 */
 	private void executeLine(String rawLine) throws Exception {
-		
+
 		Log.debug("Next Gcode Line " + nextLine);
 		Log.debug("Active Gcodes: " + gcodes);
 		Log.debug("Active Mcodes: " + mcodes);
@@ -253,9 +253,9 @@ public class GCodeInterpreter {
 				}
 			} else {
 				// Log.debug("No implementation found for M"+m);
-				if(getErrorHandler() ==null)
+				if (getErrorHandler() == null)
 					throw new RuntimeException("No implementation found for M" + m);
-				else{
+				else {
 					getErrorHandler().execute(lastLine, nextLine);
 				}
 			}
@@ -265,9 +265,9 @@ public class GCodeInterpreter {
 					handler.execute(lastLine, nextLine);
 				}
 			} else {
-				if(getErrorHandler() ==null)
+				if (getErrorHandler() == null)
 					throw new RuntimeException("No implementation found for G" + g);
-				else{
+				else {
 					getErrorHandler().execute(lastLine, nextLine);
 				}
 			}
@@ -282,26 +282,30 @@ public class GCodeInterpreter {
 	 * Main entry point; take an InputStream of G code and run the sequence of
 	 * actions it describes.
 	 *
-	 * @param in the in
-	 * @throws Exception the exception
+	 * @param in
+	 *            the in
+	 * @throws Exception
+	 *             the exception
 	 */
 	public void interpretStream(InputStream in) throws Exception {
 		executingLock.lock();
 
 		interpretingThread = Thread.currentThread();
-		
+
 		parseLine(in);
 
 		interpretingThread = null;
 		executingLock.unlock();
-		
+
 	}
 
 	/**
 	 * Nonblocking version of interpretStream(); fails rather than waiting.
 	 *
-	 * @param in the in
-	 * @throws Exception the exception
+	 * @param in
+	 *            the in
+	 * @throws Exception
+	 *             the exception
 	 */
 
 	public void tryInterpretStream(InputStream in) throws Exception {
@@ -312,13 +316,13 @@ public class GCodeInterpreter {
 				executingLock.unlock();
 			}
 		} else {
-			throw(new RuntimeException("Printer not ready"));
+			throw (new RuntimeException("Printer not ready"));
 		}
 	}
 
 	/**
-	 * Cancel a run of a G-code stream. This interrupts the thread that is
-	 * currently parsing a G-code stream, canceling its execution.
+	 * Cancel a run of a G-code stream. This interrupts the thread that is currently
+	 * parsing a G-code stream, canceling its execution.
 	 *
 	 * @return true, if successful
 	 */
@@ -331,13 +335,12 @@ public class GCodeInterpreter {
 	}
 
 	/**
-	 * Add a handler for a G code. The new handler executes before any
-	 * previously installed handler for the code, to permit composition; for
-	 * instance, where the first-installed G01 handler specifies motion and
-	 * flushes the commands to device, a handler installed later could handle
-	 * tool behavior without flushing the device, and provide coordinated
-	 * behavior.
-	 * 
+	 * Add a handler for a G code. The new handler executes before any previously
+	 * installed handler for the code, to permit composition; for instance, where
+	 * the first-installed G01 handler specifies motion and flushes the commands to
+	 * device, a handler installed later could handle tool behavior without flushing
+	 * the device, and provide coordinated behavior.
+	 *
 	 * @param code
 	 *            the G code to bind this handler to.
 	 * @param handler
@@ -355,9 +358,9 @@ public class GCodeInterpreter {
 
 	/**
 	 * Clear any previous handlers for a code, and install a new one. This is
-	 * usually unneccessary, but it allows you to clear a handler set and start
-	 * from scratch.
-	 * 
+	 * usually unneccessary, but it allows you to clear a handler set and start from
+	 * scratch.
+	 *
 	 * @param code
 	 *            the G code to bind this handler to.
 	 * @param handler
@@ -373,13 +376,12 @@ public class GCodeInterpreter {
 	}
 
 	/**
-	 * Add a handler for an M code. The new handler executes before any
-	 * previously installed handler for the code, to permit composition; for
-	 * instance, where the first-installed G01 handler specifies motion and
-	 * flushes the commands to device, a handler installed later could handle
-	 * tool behavior without flushing the device, and provide coordinated
-	 * behavior.
-	 * 
+	 * Add a handler for an M code. The new handler executes before any previously
+	 * installed handler for the code, to permit composition; for instance, where
+	 * the first-installed G01 handler specifies motion and flushes the commands to
+	 * device, a handler installed later could handle tool behavior without flushing
+	 * the device, and provide coordinated behavior.
+	 *
 	 * @param code
 	 *            the G code to bind this handler to.
 	 * @param handler
@@ -397,9 +399,9 @@ public class GCodeInterpreter {
 
 	/**
 	 * Clear any previous handlers for a code, and install a new one. This is
-	 * usually unneccessary, but it allows you to clear a handler set and start
-	 * from scratch.
-	 * 
+	 * usually unneccessary, but it allows you to clear a handler set and start from
+	 * scratch.
+	 *
 	 * @param code
 	 *            the G code to bind this handler to.
 	 * @param handler
@@ -416,12 +418,12 @@ public class GCodeInterpreter {
 
 	/**
 	 * Add rules for how to sort G codes before executing them. The new and old
-	 * Comparators are combined; whenever the new comparator returns equal, the
-	 * old comparator is consulted, permitting straightforward overridability.
-	 * 
+	 * Comparators are combined; whenever the new comparator returns equal, the old
+	 * comparator is consulted, permitting straightforward overridability.
+	 *
 	 * For instance, to add a rule stating that the handlers for code G07 should
 	 * always execute after those for G09:
-	 * 
+	 *
 	 * <pre>
 	 * interp.addGSorting(new Comparator&lt;Integer&gt;() {
 	 * 	public int compare(Integer c1, Integer c2) {
@@ -433,11 +435,10 @@ public class GCodeInterpreter {
 	 * 	}
 	 * });
 	 * </pre>
-	 * 
-	 * Note: this does <em>not</em> implement any sort of transitivity, that is
-	 * left to the new comparator, and is required for the contract of a
-	 * comparator.
-	 * 
+	 *
+	 * Note: this does <em>not</em> implement any sort of transitivity, that is left
+	 * to the new comparator, and is required for the contract of a comparator.
+	 *
 	 * @param c
 	 *            the comparator implementing the new ordering rules.
 	 */
@@ -472,10 +473,9 @@ public class GCodeInterpreter {
 	}
 
 	/**
-	 * Override the default sort for G codes. Not recommended unless all G codes
-	 * are being written by the user; this can break dependencies between
-	 * handlers.
-	 * 
+	 * Override the default sort for G codes. Not recommended unless all G codes are
+	 * being written by the user; this can break dependencies between handlers.
+	 *
 	 * @param c
 	 *            the new comparator.
 	 */
@@ -486,7 +486,7 @@ public class GCodeInterpreter {
 
 	/**
 	 * Add the default set of handlers to this interpreter.
-	 * 
+	 *
 	 * <!-- describe the full set of handlers here -->
 	 */
 	public void addDefaultHandlers() {
@@ -496,8 +496,7 @@ public class GCodeInterpreter {
 		// G0 - no handler.
 		addGHandler(0, new CodeHandler() {
 			public void execute(GCodeLineData prev, GCodeLineData next) {
-				Log.debug("Rapid move to " + next.getWord('X') + ", "
-						+ next.getWord('Y') + ", " + next.getWord('Z'));
+				Log.debug("Rapid move to " + next.getWord('X') + ", " + next.getWord('Y') + ", " + next.getWord('Z'));
 			}
 		});
 		// G1 - no handler.
@@ -505,8 +504,7 @@ public class GCodeInterpreter {
 			public void execute(GCodeLineData prev, GCodeLineData next) {
 				if (next.getWord('F') == 0.0)
 					Log.error("Zero feedrate; action will never complete.");
-				Log.debug("Feed move to " + next.getWord('X') + ", "
-						+ next.getWord('Y') + ", " + next.getWord('Z')
+				Log.debug("Feed move to " + next.getWord('X') + ", " + next.getWord('Y') + ", " + next.getWord('Z')
 						+ " at feed " + next.getWord('F'));
 			}
 		});
@@ -515,7 +513,7 @@ public class GCodeInterpreter {
 		// G22 - program in in - convert to mm. Only on xyz for now.
 		addGHandler(22, new CodeHandler() {
 			public void execute(GCodeLineData prev, GCodeLineData next) {
-				char axes[] = { 'X', 'Y', 'Z' };
+				char axes[] = {'X', 'Y', 'Z'};
 				for (char c : axes) {
 					next.storeWord(c, next.getWord(c) * 25.4);
 				}
@@ -527,7 +525,7 @@ public class GCodeInterpreter {
 		// xyz by default.
 		addGHandler(91, new CodeHandler() {
 			public void execute(GCodeLineData prev, GCodeLineData next) {
-				char axes[] = { 'X', 'Y', 'Z' };
+				char axes[] = {'X', 'Y', 'Z'};
 				for (char c : axes) {
 					next.storeWord(c, next.getWord(c) + prev.getWord(c));
 				}
@@ -538,7 +536,7 @@ public class GCodeInterpreter {
 		addGHandler(92, new CodeHandler() {
 			public void execute(GCodeLineData prev, GCodeLineData next) {
 				Log.debug("G92 is not complete");
-				char axes[] = { 'X', 'Y', 'Z' };
+				char axes[] = {'X', 'Y', 'Z'};
 				for (char c : axes) {
 					next.storeWord(c, next.getWord(c) + curOffset[c - 'A']);
 				}
@@ -570,10 +568,11 @@ public class GCodeInterpreter {
 		});
 
 		@SuppressWarnings("unchecked")
-		List<Integer>[] exclGroups = (List<Integer>[]) new List<?>[] {
-				Arrays.asList(0, 1, 4, 28), // All of these might need to change
-											// to be mutable later.
-				Arrays.asList(20, 21), Arrays.asList(90, 91) };
+		List<Integer>[] exclGroups = (List<Integer>[]) new List<?>[]{Arrays.asList(0, 1, 4, 28), // All of these might
+																									// need to change
+																									// to be mutable
+																									// later.
+				Arrays.asList(20, 21), Arrays.asList(90, 91)};
 		for (List<Integer> group : exclGroups) {
 			for (int code : group) {
 				gClearOnSet[code] = group;
@@ -586,11 +585,13 @@ public class GCodeInterpreter {
 	}
 
 	/**
-	 * Default executable; runs as a pipe, parsing standard input with the
-	 * default handlers.
+	 * Default executable; runs as a pipe, parsing standard input with the default
+	 * handlers.
 	 *
-	 * @param args the arguments
-	 * @throws Exception the exception
+	 * @param args
+	 *            the arguments
+	 * @throws Exception
+	 *             the exception
 	 */
 	public static void main(String args[]) throws Exception {
 		GCodeInterpreter interp = new GCodeInterpreter();
@@ -609,7 +610,8 @@ public class GCodeInterpreter {
 	/**
 	 * Sets the error handler.
 	 *
-	 * @param errorHandler the new error handler
+	 * @param errorHandler
+	 *            the new error handler
 	 */
 	public void setErrorHandler(CodeHandler errorHandler) {
 		this.errorHandler = errorHandler;

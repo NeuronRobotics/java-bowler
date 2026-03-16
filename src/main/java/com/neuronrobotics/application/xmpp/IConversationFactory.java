@@ -5,7 +5,7 @@ package com.neuronrobotics.application.xmpp;
  * A factory for creating IConversation objects.
  */
 public interface IConversationFactory {
-	
+
 	/**
 	 * Gets the conversation.
 	 *
