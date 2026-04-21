@@ -346,6 +346,7 @@ public class RotationNR {
 		setStorage(new Rotation(getOrder(), getConvention(), Math.toRadians(azimuth), Math.toRadians(elevation),
 				Math.toRadians(tilt)));
 	}
+
 	/**
 	 * Gets the rotation tilt.
 	 *
@@ -528,6 +529,36 @@ public class RotationNR {
 		x = storage.getQ1();
 		y = storage.getQ2();
 		z = storage.getQ3();
+		normalize();
+
+	}
+
+	public boolean isValid() {
+		// Check for NaN or Infinite values
+		if (!Double.isFinite(w) || !Double.isFinite(x) || !Double.isFinite(y) || !Double.isFinite(z)) {
+			w=1;
+			x=0;
+			y=0;
+			z=0;
+			return false;
+		}
+
+		// Check unit norm: sqrt(w² + x² + y² + z²) ≈ 1.0
+		double norm = Math.sqrt(w * w + x * x + y * y + z * z);
+		return Math.abs(norm - 1.0) < 1.0e-7;
+	}
+
+	public void normalize() {
+		if (isValid()) {
+			return;
+		}
+		double norm = Math.sqrt(w * w + x * x + y * y + z * z);
+		if (norm == 0)
+			throw new IllegalArgumentException("Cannot normalize a zero quaternion");
+		w = w / norm;
+		x = x / norm;
+		y = y / norm;
+		z = z / norm;
 	}
 
 	public void set(double[][] poseRot) {
