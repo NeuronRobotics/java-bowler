@@ -536,10 +536,10 @@ public class RotationNR {
 	public boolean isValid() {
 		// Check for NaN or Infinite values
 		if (!Double.isFinite(w) || !Double.isFinite(x) || !Double.isFinite(y) || !Double.isFinite(z)) {
-			w=1;
-			x=0;
-			y=0;
-			z=0;
+			w = 1;
+			x = 0;
+			y = 0;
+			z = 0;
 			return false;
 		}
 
