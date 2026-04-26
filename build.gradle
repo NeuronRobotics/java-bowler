@@ -1,168 +1,128 @@
-apply plugin: 'java'
-apply plugin: 'eclipse'
-if (project == rootProject) {
-	apply plugin: 'maven'
+plugins {
+    id 'java'
+    id 'eclipse'
+    id 'java-library'
+    id 'signing'
+    id 'maven-publish'
+    id 'com.diffplug.spotless'
 }
-apply plugin: 'java-library'
-apply plugin: 'signing'
-apply plugin: 'com.diffplug.spotless' 
 
-	
 spotless {
-	java {
-		lineEndings = com.diffplug.spotless.LineEnding.UNIX
-		// Eclipse formatter with your config file
-		eclipse('4.26')  // Uses Eclipse's built-in default profile — no XML needed!
-		// Optional but recommended additions:
-		removeUnusedImports()
-		trimTrailingWhitespace()
-		endWithNewline()
-	}
+    java {
+        lineEndings = com.diffplug.spotless.LineEnding.UNIX
+        eclipse('4.26')
+        removeUnusedImports()
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
 }
-[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
-File buildDir = file(".");
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+File buildDir = file(".")
 
 Properties props = new Properties()
-props.load(new FileInputStream(buildDir.getAbsolutePath()+"/src/main/resources/com/neuronrobotics/sdk/config/build.properties"))
+props.load(new FileInputStream(buildDir.getAbsolutePath() + "/src/main/resources/com/neuronrobotics/sdk/config/build.properties"))
+
 sourceSets {
-	
-	test {
-		java {
-			srcDirs = ["test/java/src" ]  
-		}
-	}
+    test {
+        java {
+            srcDirs = ["test/java/src"]
+        }
+    }
 }
 
-manifest {
-    attributes(	
-    			"Manifest-Version": "1.0",
-    			"Created-By": "Neuron Robotics Cooperative",
-    			"Specification-Title": props."app.name",
-    			"Specification-Version": props."app.version",
-    			"Specification-Vendor": "Neuron Robotics Cooperative",
-    			"Implementation-Title": props."app.name",
-    			"Implementation-Version" : props."app.version",
-    			"Implementation-Vendor": "Neuron Robotics Cooperative"
-        		
-    )
+jar {
+    manifest {
+        attributes(
+            "Manifest-Version": "1.0",
+            "Created-By": "Neuron Robotics Cooperative",
+            "Specification-Title": props."app.name",
+            "Specification-Version": props."app.version",
+            "Specification-Vendor": "Neuron Robotics Cooperative",
+            "Implementation-Title": props."app.name",
+            "Implementation-Version": props."app.version",
+            "Implementation-Vendor": "Neuron Robotics Cooperative"
+        )
+    }
+    if (project == rootProject) {
+        archiveFileName.set("nrsdk-${props.'app.version'}-jar-with-dependencies.jar")
+    }
 }
-if (project == rootProject)
-jar.archiveName = "nrsdk-"+props."app.version"+"-jar-with-dependencies.jar"
-
-//apply from: 'http://gradle-plugins.mihosoft.eu/latest/vlicenseheader.gradle'
-//repairHeaders.licenseHeaderText = new File(projectDir,'./license-template.txt')
-
 
 repositories {
-	mavenCentral()
-//	maven {
-//		url "https://repository.ow2.org/nexus/content/repositories/public/"
-//	}
+    mavenCentral()
 }
-	
+
 dependencies {
-	//TODO change as many of these as possible to Maven repositories
-    api fileTree (dir: 'libs', includes: ['*.jar'])
-	testImplementation 'junit:junit:4.12'
-	implementation 'com.google.code.gson:gson:2.5'
-	
-	api 'gov.nist.math:jama:1.0.2'
-	implementation 'com.miglayout:miglayout-swing:4.1'
-	implementation 'org.igniterealtime.smack:smack:3.2.1'
+    api fileTree(dir: 'libs', includes: ['*.jar'])
+    testImplementation 'junit:junit:4.12'
+    implementation 'com.google.code.gson:gson:2.5'
 
-	implementation 'org.igniterealtime.smack:smackx:3.2.1'
-	implementation 'org.apache.commons:commons-lang3:3.2.1'
-	api 'org.usb4java:usb4java:1.2.0'
-	api 'org.usb4java:usb4java-javax:1.2.0'
-
-	//compile fileTree (dir: '../doychinNRJAVASERISL/nrjavaserial/build/libs', includes: ['*.jar'])
-	api "com.neuronrobotics:nrjavaserial:5.1.1"
-	// https://mvnrepository.com/artifact/org.apache.commons/commons-math3
-	api group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
-	// https://mvnrepository.com/artifact/net.sf.bluecove/bluecove-gpl
-	api group: 'net.sf.bluecove', name: 'bluecove-gpl', version: '2.1.0'
-	api group: 'io.ultreia', name: 'bluecove', version: '2.1.1'
-	// https://mvnrepository.com/artifact/motej/motej
-	//api group: 'motej', name: 'motej', version: '0.9-2008.02.05-patched', ext: 'pom'
-	
-	
+    api 'gov.nist.math:jama:1.0.2'
+    implementation 'com.miglayout:miglayout-swing:4.1'
+    implementation 'org.igniterealtime.smack:smack:3.2.1'
+    implementation 'org.igniterealtime.smack:smackx:3.2.1'
+    implementation 'org.apache.commons:commons-lang3:3.2.1'
+    api 'org.usb4java:usb4java:1.2.0'
+    api 'org.usb4java:usb4java-javax:1.2.0'
+    api 'com.neuronrobotics:nrjavaserial:5.1.1'
+    api group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
+    api group: 'net.sf.bluecove', name: 'bluecove-gpl', version: '2.1.0'
+    api group: 'io.ultreia', name: 'bluecove', version: '2.1.1'
 }
-
-// create a fat-jar (class files plus dependencies
-// excludes VRL.jar (plugin jar files must not start with 'vrl-\\d+')
-
 
 group = "com.neuronrobotics"
-archivesBaseName = "java-bowler"
 version = props."app.version"
 
-task javadocJar(type: Jar) {
-	if (project == rootProject)
-	classifier = 'javadoc'
-	from javadoc
+base {
+    archivesName = "java-bowler"
 }
 
-task sourcesJar(type: Jar) {
-	if (project == rootProject)
-	classifier = 'sources'
-	from sourceSets.main.allSource
-}
-/*
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifactId = 'java-bowler'
 
-*/
-artifacts {
-	archives javadocJar
-	archives  sourcesJar
-	archives  jar
+            pom {
+                name = 'Java Bowler'
+                packaging = 'jar'
+                description = 'A command line utility for accessing the bowler framework.'
+                url = 'http://neuronrobotics.com'
+
+                scm {
+                    connection = 'scm:git:https://github.com/NeuronRobotics/java-bowler.git'
+                    developerConnection = 'scm:git:git@github.com:NeuronRobotics/java-bowler.git'
+                    url = 'https://github.com/NeuronRobotics/java-bowler'
+                }
+
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = 'madhephaestus'
+                        name = 'Kevin Harrington'
+                        email = 'kharrington@neuronrobotics.com'
+                    }
+                }
+            }
+        }
+    }
 }
 
-/*
 signing {
-	sign configurations.archives
+    sign publishing.publications.mavenJava
 }
-uploadArchives {
-	repositories {
-	  mavenDeployer {
-		beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-  
-		repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-		  authentication(userName: ossrhUsername, password: ossrhPassword)
-		}
-  
-		snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-		  authentication(userName: ossrhUsername, password: ossrhPassword)
-		}
-  
-		pom.project {
-		  name 'Java Bowler'
-		  packaging 'jar'
-		  // optionally artifactId can be defined here
-		  description 'A command line utility for accesing the bowler framework.'
-		  url 'http://neuronrobotics.com'
-  
-		  scm {
-			connection 			'scm:git:https://github.com/NeuronRobotics/java-bowler.git'
-			developerConnection 'scm:git:git@github.com:NeuronRobotics/java-bowler.git'
-			url 'https://github.com/NeuronRobotics/java-bowler'
-		  }
-  
-		  licenses {
-			license {
-			  name 'The Apache License, Version 2.0'
-			  url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-			}
-		  }
-  
-		  developers {
-			developer {
-			  id 'madhephaestus'
-			  name 'Kevin Harrington'
-			  email 'kharrington@neuronrobotics.com'
-			}
-		  }
-		}
-	  }
-	}
-  }
-*/
