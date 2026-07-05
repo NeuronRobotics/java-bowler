@@ -62,6 +62,7 @@ public class DMDevice extends NonBowlerDevice {
 			e.printStackTrace();
 		}
 	}
+
 	/**
 	 * Determines if the device is available.
 	 *
@@ -104,12 +105,14 @@ public class DMDevice extends NonBowlerDevice {
 		}
 		return false;
 	}
+
 	public static boolean wrappable(Object o) {
 		if (o == null)
 			return false;
 		return methodExists(o, "connect") && methodExists(o, "disconnect");
 
 	}
+
 	public static boolean methodExists(Object clazz, String methodName) {
 		for (Method method : clazz.getClass().getMethods()) {
 			if (method.getName().equals(methodName)) {

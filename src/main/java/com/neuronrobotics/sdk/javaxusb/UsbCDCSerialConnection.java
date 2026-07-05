@@ -312,15 +312,14 @@ public class UsbCDCSerialConnection extends BowlerAbstractConnection
 	private static void dumpDevice(final UsbDevice device, ArrayList<UsbDevice> addrs)
 			throws UnsupportedEncodingException, UsbDisconnectedException, UsbException {
 		try {
-			if (device.getUsbDeviceDescriptor().idVendor() == 0x04d8
-					&& (device.getUsbDeviceDescriptor().idProduct() == 0x0001
-							|| device.getUsbDeviceDescriptor().idProduct() == 0x3742)) {// Neuron
-																						// robotics
-																						// devices
-																						// Dump information about the
-																						// device itself
-																						// com.neuronrobotics.sdk.common.Log.error("Device:
-																						// "+device.getProductString());
+			if (device.getUsbDeviceDescriptor().idVendor() == 0x04d8 && (device.getUsbDeviceDescriptor()
+					.idProduct() == 0x0001 || device.getUsbDeviceDescriptor().idProduct() == 0x3742)) {// Neuron
+																																																	// robotics
+																																																	// devices
+																																																	// Dump information about the
+																																																	// device itself
+																																																	// com.neuronrobotics.sdk.common.Log.error("Device:
+																																																	// "+device.getProductString());
 				addrs.add(device);
 
 				// Dump device descriptor

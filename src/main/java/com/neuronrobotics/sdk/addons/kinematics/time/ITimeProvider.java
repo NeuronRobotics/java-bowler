@@ -5,9 +5,11 @@ public interface ITimeProvider {
 	default long currentTimeMillis() {
 		return System.currentTimeMillis();
 	}
+
 	default void sleep(long time) throws InterruptedException {
 		Thread.sleep(time);
 	}
+
 	default void sleep(long ms, int ns) throws InterruptedException {
 		Thread.sleep(ms, ns);
 	}

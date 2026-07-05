@@ -493,7 +493,7 @@ public class GCodeInterpreter {
 		final double curOffset[] = new double[26]; // Yes, we'll let them offset
 													// on any axis they feel
 													// like.
-		// G0 - no handler.
+													// G0 - no handler.
 		addGHandler(0, new CodeHandler() {
 			public void execute(GCodeLineData prev, GCodeLineData next) {
 				Log.debug("Rapid move to " + next.getWord('X') + ", " + next.getWord('Y') + ", " + next.getWord('Z'));
@@ -569,9 +569,9 @@ public class GCodeInterpreter {
 
 		@SuppressWarnings("unchecked")
 		List<Integer>[] exclGroups = (List<Integer>[]) new List<?>[]{Arrays.asList(0, 1, 4, 28), // All of these might
-																									// need to change
-																									// to be mutable
-																									// later.
+				// need to change
+				// to be mutable
+				// later.
 				Arrays.asList(20, 21), Arrays.asList(90, 91)};
 		for (List<Integer> group : exclGroups) {
 			for (int code : group) {

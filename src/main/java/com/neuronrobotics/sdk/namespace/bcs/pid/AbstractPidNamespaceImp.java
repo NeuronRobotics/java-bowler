@@ -43,8 +43,10 @@ public abstract class AbstractPidNamespaceImp implements IExtendedPIDControl {
 		addPIDEventListener(new IPIDEventListener() {
 			public void onPIDReset(int group, float currentValue) {
 			}
+
 			public void onPIDLimitEvent(PIDLimitEvent e) {
 			}
+
 			public void onPIDEvent(PIDEvent e) {
 				getPIDChannel(e.getGroup()).setCurrentCachedPosition(e.getValue());
 			}
@@ -90,6 +92,7 @@ public abstract class AbstractPidNamespaceImp implements IExtendedPIDControl {
 		Log.info("Flushing in " + time + "ms");
 		SetAllPIDSetPoint(data, time);
 	}
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -131,6 +134,7 @@ public abstract class AbstractPidNamespaceImp implements IExtendedPIDControl {
 				PIDEventListeners.add(l);
 		}
 	}
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -215,6 +219,7 @@ public abstract class AbstractPidNamespaceImp implements IExtendedPIDControl {
 	public void setDevice(BowlerAbstractDevice device) {
 		this.device = device;
 	}
+
 	/*
 	 * (non-Javadoc)
 	 *

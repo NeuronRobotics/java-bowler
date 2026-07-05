@@ -43,6 +43,7 @@ public class SPIChannel implements IChannelEventListener {
 		dyio = d;
 		dyio.getChannel(0).addChannelEventListener(this);
 	}
+
 	/**
 	 * THis method sends a byte array our the SPI peripheral. It uses another DyIO
 	 * channel as its slave select pin.
@@ -63,6 +64,7 @@ public class SPIChannel implements IChannelEventListener {
 		return dyio.send(new SetChannelValueCommand(0, b));
 
 	}
+
 	/**
 	 * This performs a dumb read. The data sent out by the host is junk data.
 	 *
@@ -80,6 +82,7 @@ public class SPIChannel implements IChannelEventListener {
 		}
 		return write(ss, stream);
 	}
+
 	/**
 	 * This performs a full read/write transaction. The data is sent down, and the
 	 * corosponding data is read back in.

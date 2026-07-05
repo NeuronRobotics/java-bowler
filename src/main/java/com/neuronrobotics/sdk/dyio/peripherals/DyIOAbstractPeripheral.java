@@ -293,6 +293,7 @@ public abstract class DyIOAbstractPeripheral implements IDyIOChannel {
 	public boolean configAdvancedAsyncAutoSample() {
 		return getChannel().configAdvancedAsyncAutoSample(100);
 	}
+
 	/**
 	 * This method configures the advanced async mode for a given DyIO channel to
 	 * trigger on any event where the values are not equal.

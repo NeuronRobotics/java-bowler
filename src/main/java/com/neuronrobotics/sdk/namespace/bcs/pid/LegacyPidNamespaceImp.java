@@ -195,6 +195,7 @@ public class LegacyPidNamespaceImp extends AbstractPidNamespaceImp {
 				4), // number of bytes
 				true);// True for signed data
 	}
+
 	@Override
 	/*
 	 * (non-Javadoc)

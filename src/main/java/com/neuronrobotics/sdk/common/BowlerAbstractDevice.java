@@ -366,6 +366,7 @@ public abstract class BowlerAbstractDevice extends TimeKeeper implements IBowler
 	public boolean ping(boolean switchParser) {
 		return connection.ping(getAddress(), switchParser);
 	}
+
 	/**
 	 * Gets the revisions.
 	 *
@@ -466,6 +467,7 @@ public abstract class BowlerAbstractDevice extends TimeKeeper implements IBowler
 		}
 
 	}
+
 	/**
 	 * On all response.
 	 *

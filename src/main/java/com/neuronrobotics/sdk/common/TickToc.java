@@ -15,6 +15,7 @@ public class TickToc {
 			integer = timestamp;
 			this.message = message;
 		}
+
 		public void print(Pair start, Pair previous) {
 			double tookms = integer - start.integer;
 			String m = " took " + df.format(tookms / 1000.0) + " seconds ";
@@ -38,6 +39,7 @@ public class TickToc {
 	public static void clear() {
 		events.clear();
 	}
+
 	public static void toc() {
 		if (!isEnabled())
 			return;

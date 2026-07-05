@@ -86,6 +86,7 @@ public class InterpolationEngine extends TimeKeeper {
 	public void StartLinearMotion(double setpoint, double seconds, long startTimeMs) {
 		setSetpointWithTime(startTimeMs, setpoint, seconds, InterpolationType.LINEAR);
 	}
+
 	/**
 	 * Sets the pid set point.
 	 *
@@ -123,6 +124,7 @@ public class InterpolationEngine extends TimeKeeper {
 
 		// setPause(false);
 	}
+
 	public void StartTrapezoidalMotion(double setpoint, double seconds, double trapazoidalTime, long startTimeMs) {
 
 		if (trapazoidalTime * 2 > seconds) {
@@ -131,6 +133,7 @@ public class InterpolationEngine extends TimeKeeper {
 		}
 		setSetpointWithTime(startTimeMs, setpoint, seconds, InterpolationType.TRAPEZOIDAL, trapazoidalTime);
 	}
+
 	/**
 	 * SetSetpoint in degrees with time Set the setpoint for the motor in degrees
 	 *

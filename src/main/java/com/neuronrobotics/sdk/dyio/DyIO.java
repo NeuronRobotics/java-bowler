@@ -256,6 +256,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace, 
 	public boolean setValue(int channel, ByteList value) {
 		return getChannel(channel).setValue(value);
 	}
+
 	/**
 	 * This method is a simple value set for a DyIO channel. This method is
 	 * unit-less and will clip data to fit the channel modes requirements.
@@ -269,6 +270,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace, 
 	public boolean setValue(int channel, java.math.BigDecimal value) {
 		return setValue(channel, value.intValue());
 	}
+
 	/**
 	 * This method is used to get the value of a given channel. The data units will
 	 * be determined by DyIO channel mode, and so should be treated by this method
@@ -653,6 +655,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace, 
 	public boolean getCachedMode() {
 		return cachedMode;
 	}
+
 	/**
 	 * This method enables the DyIO cache/flush system. When enabled, the system
 	 * will interrupt all set value method calls and prevent them from sending
@@ -729,6 +732,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace, 
 		return getConnection().isConnected();
 
 	}
+
 	// /* (non-Javadoc)
 	// * @see
 	// com.neuronrobotics.sdk.common.IBowlerDatagramListener#onAllResponse(com.neuronrobotics.sdk.common.BowlerDatagram)
@@ -928,6 +932,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace, 
 	public boolean ResetPIDChannel(int group) {
 		return getPid().ResetPIDChannel(group, 0);
 	}
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -936,6 +941,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace, 
 	public boolean SetPIDSetPoint(int group, float setpoint, double seconds) {
 		return getPid().SetPIDSetPoint(group, setpoint, seconds);
 	}
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -944,6 +950,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace, 
 	public boolean SetAllPIDSetPoint(float[] setpoints, double seconds) {
 		return getPid().SetAllPIDSetPoint(setpoints, seconds);
 	}
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -952,6 +959,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace, 
 	public float GetPIDPosition(int group) {
 		return getPid().GetPIDPosition(group);
 	}
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -960,6 +968,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace, 
 	public float[] GetAllPIDPosition() {
 		return getPid().GetAllPIDPosition();
 	}
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -968,6 +977,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace, 
 	public boolean ConfigurePIDController(PIDConfiguration config) {
 		return getPid().ConfigurePIDController(config);
 	}
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -976,6 +986,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace, 
 	public PIDConfiguration getPIDConfiguration(int group) {
 		return getPid().getPIDConfiguration(group);
 	}
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -984,6 +995,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace, 
 	public void addPIDEventListener(IPIDEventListener l) {
 		getPid().addPIDEventListener(l);
 	}
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -992,6 +1004,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace, 
 	public void removePIDEventListener(IPIDEventListener l) {
 		getPid().removePIDEventListener(l);
 	}
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -1001,6 +1014,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace, 
 	public void flushPIDChannels(double time) {
 		getPid().flushPIDChannels(time);
 	}
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -1011,6 +1025,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace, 
 		return getPid().getPIDChannel(group);
 
 	}
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -1021,6 +1036,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace, 
 			throws PIDCommandException {
 		return getPid().SetPIDInterpolatedVelocity(group, unitsPerSecond, seconds);
 	}
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -1030,6 +1046,7 @@ public class DyIO extends BowlerAbstractDevice implements IPidControlNamespace, 
 	public boolean SetPDVelocity(int group, int unitsPerSecond, double seconds) throws PIDCommandException {
 		return getPid().SetPDVelocity(group, unitsPerSecond, seconds);
 	}
+
 	/*
 	 * (non-Javadoc)
 	 *

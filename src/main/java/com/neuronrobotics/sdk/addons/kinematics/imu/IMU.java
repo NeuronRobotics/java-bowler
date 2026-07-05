@@ -15,6 +15,7 @@ public class IMU extends TimeKeeper {
 		if (!hardwareListeneras.contains(l))
 			hardwareListeneras.add(l);
 	}
+
 	public void addvirtualListeners(IMUUpdateListener l) {
 		if (!virtualListeneras.contains(l))
 			virtualListeneras.add(l);
@@ -24,32 +25,39 @@ public class IMU extends TimeKeeper {
 		if (hardwareListeneras.contains(l))
 			hardwareListeneras.remove(l);
 	}
+
 	public void removevirtualListeners(IMUUpdateListener l) {
 		if (virtualListeneras.contains(l))
 			virtualListeneras.remove(l);
 	}
+
 	public void clearhardwareListeners() {
 
 		hardwareListeneras.clear();;
 	}
+
 	public void clearvirtualListeners() {
 
 		virtualListeneras.clear();
 	}
+
 	public IMUUpdate getVirtualState() {
 
 		return virtualState;
 	}
+
 	public void setVirtualState(IMUUpdate virtualState) {
 		this.virtualState = virtualState;
 		for (int i = 0; i < virtualListeneras.size(); i++) {
 			virtualListeneras.get(i).onIMUUpdate(virtualState);
 		}
 	}
+
 	public IMUUpdate getHardwareState() {
 
 		return hardwareState;
 	}
+
 	public void setHardwareState(IMUUpdate hardwareState) {
 		this.hardwareState = hardwareState;
 		for (int i = 0; i < hardwareListeneras.size(); i++) {

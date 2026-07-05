@@ -38,6 +38,7 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter, IFlu
 		this.serial = serial;
 
 	}
+
 	public AbstractLink getHeater(LinkConfiguration axis) {
 		String gcodeAxis;
 		switch (axis.getHardwareIndex()) {
@@ -56,6 +57,7 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter, IFlu
 		}
 
 	}
+
 	public AbstractLink getLink(LinkConfiguration axis) {
 		if (links.get(axis) != null)
 			return (AbstractLink) links.get(axis);
@@ -166,6 +168,7 @@ public class GcodeDevice extends NonBowlerDevice implements IGcodeExecuter, IFlu
 		// Auto-generated method stub
 		return new ArrayList<String>();
 	}
+
 	@SuppressWarnings("resource")
 	private String getLine() {
 

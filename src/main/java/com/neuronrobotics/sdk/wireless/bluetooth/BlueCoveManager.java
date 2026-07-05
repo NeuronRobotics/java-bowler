@@ -233,6 +233,7 @@ public class BlueCoveManager implements DiscoveryListener {
 		Log.info("Disconnected");
 
 	}
+
 	/*
 	 * public boolean reconnect(){ find(); if(!deviceList.contains(selected)) return
 	 * false; disconnect(); return connect(); }

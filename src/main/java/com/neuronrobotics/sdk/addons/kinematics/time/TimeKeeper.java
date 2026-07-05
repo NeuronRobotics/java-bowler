@@ -23,6 +23,7 @@ public class TimeKeeper {
 
 		}
 	}
+
 	public ITimeProvider getTimeProvider() {
 		return clock;
 	}
@@ -32,6 +33,7 @@ public class TimeKeeper {
 			return;
 		timebaseChangeListener.add(r);
 	}
+
 	public void removeTimeBaseChangeListener(Runnable r) {
 		if (timebaseChangeListener.contains(r))
 			timebaseChangeListener.remove(r);
@@ -40,9 +42,11 @@ public class TimeKeeper {
 	public void cleaarTimeBaseChangeListener() {
 		timebaseChangeListener.clear();
 	}
+
 	public void sleep(long time) throws InterruptedException {
 		getTimeProvider().sleep(time);
 	}
+
 	public void sleep(long ms, int ns) throws InterruptedException {
 		getTimeProvider().sleep(ms, ns);
 	}
@@ -80,6 +84,7 @@ public class TimeKeeper {
 	public long currentTimeMillis() {
 		return getTimeProvider().currentTimeMillis();
 	}
+
 	/**
 	 * @return the mostRecent
 	 */
@@ -90,6 +95,7 @@ public class TimeKeeper {
 		}
 		return mostRecent;
 	}
+
 	/**
 	 * @param mostRecent
 	 *            the mostRecent to set

@@ -389,6 +389,7 @@ public class BowlerDatagram implements ISendable, IthreadedTimoutListener {
 		checkValidPacket();
 		return getCrc();
 	}
+
 	/**
 	 * Gets the String representation of the datagram's RPC.
 	 *
@@ -425,6 +426,7 @@ public class BowlerDatagram implements ISendable, IthreadedTimoutListener {
 		checkValidPacket();
 		return new ByteList(data.getBytes(4));
 	}
+
 	/*
 	 * (non-Javadoc)
 	 *

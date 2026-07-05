@@ -23,6 +23,7 @@ public interface IPidControlNamespace {
 	 * @return true if success
 	 */
 	public boolean ResetPIDChannel(int group, float valueToSetCurrentTo);
+
 	/**
 	 * This method sends a PID configuration object to the device. THe controller
 	 * can be enabled/disabled with this method All PID parameters are stored in the
@@ -34,6 +35,7 @@ public interface IPidControlNamespace {
 	 * @return true if success
 	 */
 	public boolean ConfigurePIDController(PIDConfiguration config);
+
 	/**
 	 * Gets the current state of the PID group. The PIDConfiguration object will
 	 * contain the current configuration state of the requested PID controller.
@@ -55,6 +57,7 @@ public interface IPidControlNamespace {
 	 * @return true if success
 	 */
 	public boolean ConfigurePDVelovityController(PDVelocityConfiguration config);
+
 	/**
 	 * Gets the current state of the PID group. The PIDConfiguration object will
 	 * contain the current configuration state of the requested PID controller.
@@ -71,6 +74,7 @@ public interface IPidControlNamespace {
 	 * @return the PID channel count
 	 */
 	public int getPIDChannelCount();
+
 	/**
 	 * This method sets the target setpoint for the specified PID controller group.
 	 * This method will set up a linear interpolation from current position to
@@ -88,6 +92,7 @@ public interface IPidControlNamespace {
 	 * @return true if no errors occur
 	 */
 	public boolean SetPIDSetPoint(int group, float setpoint, double seconds);
+
 	/**
 	 * Same as SetPIDSetPoint, but will set all setpoints at once. This can be used
 	 * for co-ordinated motion of independant PID control groups.
@@ -102,6 +107,7 @@ public interface IPidControlNamespace {
 	 * @return true if no errors occur
 	 */
 	public boolean SetAllPIDSetPoint(float[] setpoints, double seconds);
+
 	/**
 	 * This method requests a single PID controller group value. The value returned
 	 * represents the current state of the PID controller's input sensor in raw
@@ -112,6 +118,7 @@ public interface IPidControlNamespace {
 	 * @return The current value of the sensor input
 	 */
 	public float GetPIDPosition(int group);
+
 	/**
 	 * This method requests all PID controllers to report back their current value
 	 * of their input sensors. This method is also used to determine dynamically how
@@ -150,6 +157,7 @@ public interface IPidControlNamespace {
 	 *            the time
 	 */
 	public void flushPIDChannels(double time);
+
 	/**
 	 * This method will use the linear interpolation system to set an output
 	 * velocity of the PID controller. This method can be bounded by the maximum
@@ -183,6 +191,7 @@ public interface IPidControlNamespace {
 	 *             If the values are out of range with the given data
 	 */
 	public boolean SetPDVelocity(int group, int unitsPerSecond, double seconds) throws PIDCommandException;
+
 	/**
 	 * Gets the PID channel wrapper for a specific channel. The channel wrappers can
 	 * be used to cache values for use with the cache/flush system. This wrapper

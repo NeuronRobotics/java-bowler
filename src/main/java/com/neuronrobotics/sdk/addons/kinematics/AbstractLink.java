@@ -49,15 +49,19 @@ public abstract class AbstractLink extends TimeKeeper implements IFlushable, IVi
 	public VitaminLocation getElectroMechanicalVitamin() {
 		return conf.getElectroMechanicalVitamin();
 	}
+
 	public ArrayList<VitaminLocation> getVitamins() {
 		return conf.getVitamins();
 	}
+
 	public void addVitaminInternal(VitaminLocation location) {
 		conf.addVitamin(location);
 	}
+
 	public void removeVitamin(VitaminLocation loc) {
 		conf.removeVitamin(loc);
 	}
+
 	public ArrayList<VitaminLocation> getNonActuatorVitamins() {
 		return conf.getNonActuatorVitamins();
 	}
@@ -70,6 +74,7 @@ public abstract class AbstractLink extends TimeKeeper implements IFlushable, IVi
 	public double getDeviceMaximumValue() {
 		return conf.getDeviceTheoreticalMax();
 	}
+
 	/**
 	 * Override this method to specify a larger range
 	 *
@@ -78,12 +83,14 @@ public abstract class AbstractLink extends TimeKeeper implements IFlushable, IVi
 	public double getDeviceMinimumValue() {
 		return conf.getDeviceTheoreticalMin();
 	}
+
 	/**
 	 * Override this method to specify a larger range
 	 */
 	public void setDeviceMaximumValue(double max) {
 		conf.setDeviceTheoreticalMax(max);
 	}
+
 	/**
 	 * Override this method to specify a larger range
 	 *
@@ -91,6 +98,7 @@ public abstract class AbstractLink extends TimeKeeper implements IFlushable, IVi
 	public void setDeviceMinimumValue(double min) {
 		conf.setDeviceTheoreticalMin(min);
 	}
+
 	/**
 	 * Gets the max engineering units.
 	 *
@@ -114,6 +122,7 @@ public abstract class AbstractLink extends TimeKeeper implements IFlushable, IVi
 		else
 			return toEngineeringUnits(getDeviceMaximumValue());
 	}
+
 	/**
 	 * Instantiates a new abstract link.
 	 *
@@ -130,6 +139,7 @@ public abstract class AbstractLink extends TimeKeeper implements IFlushable, IVi
 			getSlaveFactory().getLink(c);
 		}
 	}
+
 	/**
 	 * This method is called in order to take the target value and pass it to the
 	 * implementation's target value This method should not alter the position of
@@ -421,6 +431,7 @@ public abstract class AbstractLink extends TimeKeeper implements IFlushable, IVi
 	public double getMaxVelocityEngineeringUnits() {
 		return Math.abs(toEngineeringUnits(conf.getUpperVelocity()));
 	}
+
 	/**
 	 * Gets the max engineering units.
 	 *
@@ -711,9 +722,11 @@ public abstract class AbstractLink extends TimeKeeper implements IFlushable, IVi
 	public Object getGlobalPositionListener() {
 		return linksLocation;
 	}
+
 	public LinkFactory getSlaveFactory() {
 		return slaveFactory;
 	}
+
 	public void setSlaveFactory(LinkFactory slaveFactory) {
 		this.slaveFactory = slaveFactory;
 	}
@@ -721,20 +734,25 @@ public abstract class AbstractLink extends TimeKeeper implements IFlushable, IVi
 	public IMU getImu() {
 		return imu;
 	}
+
 	public void addChangeListener(ILinkConfigurationChangeListener l) {
 		conf.addChangeListener(l);
 	}
+
 	public void removeChangeListener(ILinkConfigurationChangeListener l) {
 		conf.removeChangeListener(l);
 	}
+
 	public void clearChangeListener() {
 		conf.clearChangeListener();
 	}
+
 	@Override
 	public void setTimeProvider(ITimeProvider t) {
 		super.setTimeProvider(t);
 		imu.setTimeProvider(getTimeProvider());
 	}
+
 	@Override
 	public String toString() {
 		return "Bowler Link " + getLinkConfiguration().getDeviceScriptingName() + " "

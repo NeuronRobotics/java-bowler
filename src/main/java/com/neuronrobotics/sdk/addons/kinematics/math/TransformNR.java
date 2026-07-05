@@ -43,6 +43,7 @@ public class TransformNR {
 		this.setZ(m.get(2, 3));
 		this.setRotation(new RotationNR(m));
 	}
+
 	/**
 	 * Instantiates a new transform nr.
 	 *
@@ -126,6 +127,7 @@ public class TransformNR {
 		this.setZ(z);
 		this.setRotation(q);
 	}
+
 	/**
 	 * Instantiates a new transform nr.
 	 *
@@ -144,6 +146,7 @@ public class TransformNR {
 		this.setZ(z);
 		this.setRotation(new RotationNR());
 	}
+
 	/**
 	 * Instantiates a new transform nr.
 	 *
@@ -156,6 +159,7 @@ public class TransformNR {
 		this.setZ(0);
 		this.setRotation(rot);
 	}
+
 	/**
 	 * Instantiates a new transform nr.
 	 *
@@ -574,14 +578,17 @@ public class TransformNR {
 		if (!getListeners().contains(l))
 			getListeners().add(l);
 	}
+
 	public void removeChangeListener(ITransformNRChangeListener l) {
 		if (getListeners().contains(l))
 			getListeners().remove(l);
 	}
+
 	public void clearChangeListener() {
 		getListeners().clear();
 		listeners = null;
 	}
+
 	public ArrayList<ITransformNRChangeListener> getListeners() {
 		if (listeners == null)
 			listeners = new ArrayList<ITransformNRChangeListener>();

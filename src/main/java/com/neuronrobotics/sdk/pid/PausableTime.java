@@ -13,6 +13,7 @@ public class PausableTime extends TimeKeeper {
 	public PausableTime(ITimeProvider t) {
 		setTimeProvider(t);
 	}
+
 	public long currentTimeMillis() {
 		if (!paused)
 			return super.currentTimeMillis() - durationPaused;
@@ -59,6 +60,7 @@ public class PausableTime extends TimeKeeper {
 			return;
 		listeners.add(l);
 	}
+
 	public void removeIPauseTimeListener(IPauseTimeListener l) {
 		if (listeners.contains(l))
 			listeners.remove(l);

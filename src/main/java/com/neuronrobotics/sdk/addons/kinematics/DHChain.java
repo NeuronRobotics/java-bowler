@@ -190,6 +190,7 @@ public class DHChain extends TimeKeeper {
 	public Matrix forwardKinematicsMatrix(double[] jointSpaceVector, boolean store) {
 		return forwardKinematicsMatrix(jointSpaceVector, store ? getCachedChain() : null);
 	}
+
 	public Matrix forwardKinematicsMatrix(double[] jointSpaceVector, ArrayList<TransformNR> chainToLoad) {
 		if (getLinks() == null)
 			return new TransformNR().getMatrixTransform();
@@ -487,6 +488,7 @@ public class DHChain extends TimeKeeper {
 		lowerLimits = factory.getLowerLimits();
 		this.factory = factory;
 	}
+
 	@Override
 	public void setTimeProvider(ITimeProvider t) {
 		super.setTimeProvider(t);

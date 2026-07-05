@@ -87,6 +87,7 @@ public class MobileBase extends AbstractKinematicsNR
 				t.printStackTrace();
 			}
 	}
+
 	/**
 	 * Calc home.
 	 *
@@ -110,6 +111,7 @@ public class MobileBase extends AbstractKinematicsNR
 		}
 		return tipList;
 	}
+
 	public DHParameterKinematics getLimb(AbstractLink l) {
 		for (DHParameterKinematics k : getAllDHChains()) {
 			if (k.getLinkIndex(l) >= 0)
@@ -117,6 +119,7 @@ public class MobileBase extends AbstractKinematicsNR
 		}
 		return null;
 	}
+
 	public boolean pose(TransformNR newAbsolutePose) throws Exception {
 		HashMap<DHParameterKinematics, TransformNR> tipLocations = getTipLocations();
 
@@ -623,6 +626,7 @@ public class MobileBase extends AbstractKinematicsNR
 		addVitamin(location);
 
 	}
+
 	/**
 	 * Add a vitamin to this link
 	 *
@@ -643,6 +647,7 @@ public class MobileBase extends AbstractKinematicsNR
 		});
 		fireConfigurationUpdate();
 	}
+
 	public void removeVitamin(VitaminLocation loc) {
 		if (vitamins.contains(loc))
 			vitamins.remove(loc);
@@ -842,6 +847,7 @@ public class MobileBase extends AbstractKinematicsNR
 	public ArrayList<DHParameterKinematics> getSteerable() {
 		return steerable;
 	}
+
 	/**
 	 * Gets the drivable.
 	 *
@@ -1161,6 +1167,7 @@ public class MobileBase extends AbstractKinematicsNR
 	public void sync() {
 		doSync();
 	}
+
 	@Override
 	public void setTimeProvider(ITimeProvider t) {
 		super.setTimeProvider(t);
@@ -1199,6 +1206,7 @@ public class MobileBase extends AbstractKinematicsNR
 		}
 		return null;
 	}
+
 	public void deleteLimbByName(String name) {
 		ArrayList<DHParameterKinematics> allDHChains = getAllDHChains();
 		for (int j = 0; j < allDHChains.size(); j++) {

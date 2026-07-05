@@ -38,12 +38,14 @@ public class VitaminLocation implements ITransformNRChangeListener {
 		new RuntimeException("@Deprecated, please specifiy if this is a script, assuming it is not for now")
 				.printStackTrace();
 	}
+
 	@Deprecated
 	public VitaminLocation(String name, String type, String size, TransformNR location, IVitaminHolder h) {
 		this(false, name, type, size, location, h);
 		new RuntimeException("@Deprecated, please specifiy if this is a script, assuming it is not for now")
 				.printStackTrace();
 	}
+
 	public VitaminLocation(boolean isScript, String name, String type, String size, TransformNR location) {
 		this.setName(name);
 		this.setType(type);
@@ -51,6 +53,7 @@ public class VitaminLocation implements ITransformNRChangeListener {
 		this.setLocation(location);
 		setScript(isScript);
 	}
+
 	public VitaminLocation(VitaminLocation loc, String name2) {
 		this.setName(name2);
 		this.setType(loc.type);
@@ -58,6 +61,7 @@ public class VitaminLocation implements ITransformNRChangeListener {
 		this.setLocation(loc.location);
 		setScript(loc.isScript);
 	}
+
 	public VitaminLocation(boolean isScript, String name, String type, String size, TransformNR location,
 			IVitaminHolder h) {
 		this(isScript, name, type, size, location);
@@ -67,6 +71,7 @@ public class VitaminLocation implements ITransformNRChangeListener {
 			com.neuronrobotics.sdk.common.Log.error("Vitamin " + name + " exists in " + h);
 		}
 	}
+
 	public VitaminLocation(Element vitamins) {
 		setName(XmlFactory.getTagValue("name", vitamins));
 		setType(XmlFactory.getTagValue("type", vitamins));
@@ -112,10 +117,12 @@ public class VitaminLocation implements ITransformNRChangeListener {
 			return;
 		listeners.add(r);
 	}
+
 	public void removeChangeListener(Runnable r) {
 		if (listeners.contains(r))
 			listeners.remove(r);
 	}
+
 	void fireChangeEvent() {
 		if (listeners != null) {
 			for (int i = 0; i < listeners.size(); i++) {
@@ -128,6 +135,7 @@ public class VitaminLocation implements ITransformNRChangeListener {
 		}
 
 	}
+
 	public String getXML() {
 
 		return "\n\t\t<vitamin>\n" + "\t\t\t<name>" + name + "</name>\n" + "\t\t\t<type>" + type + "</type>\n"
@@ -135,6 +143,7 @@ public class VitaminLocation implements ITransformNRChangeListener {
 				+ "\t\t\t<frame>" + getFrame().getText() + "</frame>\n" + "\t\t\t<script>" + isScript() + "</script>\n"
 				+ "\t\t</vitamin>\n";
 	}
+
 	public static ArrayList<VitaminLocation> getVitamins(Element doc) {
 		ArrayList<VitaminLocation> locations = new ArrayList<>();
 		try {
@@ -161,6 +170,7 @@ public class VitaminLocation implements ITransformNRChangeListener {
 		return vitamins + "\n\t</vitamins>\n";
 
 	}
+
 	public String toString() {
 		return getXML();
 	}
@@ -284,9 +294,11 @@ public class VitaminLocation implements ITransformNRChangeListener {
 		fireChangeEvent();
 
 	}
+
 	public boolean isScript() {
 		return isScript;
 	}
+
 	public void setScript(boolean isScript) {
 		this.isScript = isScript;
 		fireChangeEvent();

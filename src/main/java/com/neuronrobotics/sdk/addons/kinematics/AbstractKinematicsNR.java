@@ -113,6 +113,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		}
 		return -1;
 	}
+
 	public int getLinkIndex(LinkConfiguration l) {
 		for (int i = 0; i < getNumberOfLinks(); i++) {
 			if (getAbstractLink(i).getLinkConfiguration() == l)
@@ -522,12 +523,15 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		// Log.info("Getting global task space "+taskSpaceTransform);
 		return taskSpaceTransform;
 	}
+
 	public double readLinkValue(int index) {
 		return getFactory().getLink(getLinkConfiguration(index)).getCurrentEngineeringUnits();
 	}
+
 	public double readLinkTarget(int index) {
 		return getFactory().getLink(getLinkConfiguration(index)).getTargetEngineeringUnits();
 	}
+
 	/**
 	 * This takes a reading of the robots position and converts it to a joint pace
 	 * vector This vector is converted to Joint space and returned .
@@ -558,6 +562,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		}
 		return currentJointSpaceTarget;
 	}
+
 	public double getCurrentLinkEngineeringUnits(int linkIndex) {
 		return getFactory().getLink(getLinkConfiguration(linkIndex)).getCurrentEngineeringUnits();
 	}
@@ -617,6 +622,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 			return false;
 		}
 	}
+
 	/**
 	 * Checks the desired pose for ability for the IK to calculate a valid pose.
 	 *
@@ -627,6 +633,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	public static boolean checkTaskSpaceTransform(AbstractKinematicsNR dev, TransformNR taskSpaceTransform) {
 		return checkTaskSpaceTransform(dev, taskSpaceTransform, 0);
 	}
+
 	private static boolean checkVector(AbstractKinematicsNR dev, double[] jointSpaceVect, double seconds) {
 		double[] current = dev.getCurrentJointSpaceTarget();
 		for (int i = 0; i < jointSpaceVect.length; i++) {
@@ -672,6 +679,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	public boolean checkTaskSpaceTransform(TransformNR taskSpaceTransform, double seconds) {
 		return AbstractKinematicsNR.checkTaskSpaceTransform(this, taskSpaceTransform, seconds);
 	}
+
 	/**
 	 * Checks the desired pose for ability for the IK to calculate a valid pose.
 	 *
@@ -702,6 +710,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		}
 		return best;
 	}
+
 	/**
 	 * get the best possible time for a translation by checking the joint velocities
 	 *
@@ -739,6 +748,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	public double[] setDesiredJointSpaceVector(double[] jointSpaceVect, double seconds) throws Exception {
 		return _setDesiredJointSpaceVector(jointSpaceVect, seconds, true);
 	}
+
 	/**
 	 * This calculates the target pose .
 	 *
@@ -798,6 +808,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		// }
 		return jointSpaceVect;
 	}
+
 	/**
 	 * Calc forward.
 	 *
@@ -1000,6 +1011,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		runRenderWrangler();
 
 	}
+
 	/**
 	 * Sets the global to fiducial transform.
 	 *
@@ -1009,6 +1021,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	public void setGlobalToFiducialTransform(TransformNR frameToBase) {
 		setGlobalToFiducialTransform(frameToBase, true);
 	}
+
 	/**
 	 * Inverse offset.
 	 *
@@ -1635,6 +1648,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 
 		getAbstractLink(linkIndex).setMinEngineeringUnits(minLimit);
 	}
+
 	public String getElectroMechanicalType(int linkIndex) {
 		return getLinkConfiguration(linkIndex).getElectroMechanicalType();
 	}
@@ -1662,12 +1676,14 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	public String getShaftSize(int linkIndex) {
 		return getLinkConfiguration(linkIndex).getShaftSize();
 	}
+
 	/**
 	 * Override this method to specify a larger range
 	 */
 	public void setDeviceMaximumValue(int linkIndex, double max) {
 		getLinkConfiguration(linkIndex).setDeviceTheoreticalMax(max);
 	}
+
 	/**
 	 * Override this method to specify a larger range
 	 *
@@ -1675,6 +1691,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	public void setDeviceMinimumValue(int linkIndex, double min) {
 		getLinkConfiguration(linkIndex).setDeviceTheoreticalMin(min);
 	}
+
 	/**
 	 * Override this method to specify a larger range
 	 *
@@ -1683,6 +1700,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	public double getDeviceMaximumValue(int linkIndex) {
 		return getLinkConfiguration(linkIndex).getDeviceTheoreticalMax();
 	}
+
 	/**
 	 * Override this method to specify a larger range
 	 *
@@ -1691,12 +1709,15 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 	public double getDeviceMinimumValue(int linkIndex) {
 		return getLinkConfiguration(linkIndex).getDeviceTheoreticalMin();
 	}
+
 	public void addChangeListener(int linkIndex, ILinkConfigurationChangeListener l) {
 		getLinkConfiguration(linkIndex).addChangeListener(l);
 	}
+
 	public void removeChangeListener(int linkIndex, ILinkConfigurationChangeListener l) {
 		getLinkConfiguration(linkIndex).removeChangeListener(l);
 	}
+
 	public void clearChangeListener(int linkIndex) {
 		getLinkConfiguration(linkIndex).clearChangeListener();
 	}
@@ -1725,6 +1746,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 			double unitIncrement) {
 		return startingPoint.times(deltaToTarget.scale(unitIncrement));
 	}
+
 	public void asyncInterpolatedMove(TransformNR target, double seconds, InterpolationType type,
 			IOnInterpolationDone listener, double... conf) {
 		new Thread(() -> {
@@ -1794,6 +1816,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 		}
 		return InterpolationMoveState.READY;
 	}
+
 	@Override
 	public void setTimeProvider(ITimeProvider t) {
 		super.setTimeProvider(t);
@@ -1803,6 +1826,7 @@ public abstract class AbstractKinematicsNR extends NonBowlerDevice implements IP
 			l.setTimeProvider(getTimeProvider());
 		}
 	}
+
 	@Override
 	public String toString() {
 		return "Bowler Device " + getScriptingName();

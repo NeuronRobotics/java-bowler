@@ -67,6 +67,7 @@ public enum LinkType {
 		return back;
 
 	}
+
 	/**
 	 * Only classes in this package should add types, and only from LinkFactory
 	 *

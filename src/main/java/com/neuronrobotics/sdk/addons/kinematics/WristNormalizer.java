@@ -56,6 +56,7 @@ public class WristNormalizer {
 			return current;
 		throw new RuntimeException("No Wrist Solution! ");
 	}
+
 	private static double[] option(double w1, double w2, double w3) {
 		return new double[]{w1, w2, w3};
 	}
@@ -85,9 +86,11 @@ public class WristNormalizer {
 	public static boolean isStrictMode() {
 		return strictMode;
 	}
+
 	public static void setBoundLinkValueMode() {
 		WristNormalizer.strictMode = false;
 	}
+
 	public static void setStrictMode() {
 		WristNormalizer.strictMode = true;
 	}

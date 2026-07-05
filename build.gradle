@@ -1,29 +1,58 @@
+buildscript {
+
+	dependencies {
+		classpath 'org.eclipse.jdt:org.eclipse.jdt.core:3.35.0'
+		classpath 'org.eclipse.platform:org.eclipse.text:3.14.0'
+	}
+}
+import groovy.xml.XmlSlurper
+import org.eclipse.jdt.core.ToolFactory
+import org.eclipse.jdt.core.formatter.CodeFormatter
+import org.eclipse.jface.text.Document
 plugins {
-    id 'java'
-    id 'eclipse'
-    id 'java-library'
-    id 'signing'
-    id 'maven-publish'
-    id 'com.diffplug.spotless'
+	id 'java'
+	id 'eclipse'
+	id 'java-library'
+	id 'signing'
+	id 'maven-publish'
+	id 'com.diffplug.spotless'
 }
 
 spotless {
-    java {
-        lineEndings = com.diffplug.spotless.LineEnding.UNIX
-        eclipse('4.26')
-        removeUnusedImports()
-        trimTrailingWhitespace()
-        endWithNewline()
-    }
+	java {
+		lineEndings = com.diffplug.spotless.LineEnding.UNIX
+		custom('eclipseFormatterDirect') { String source ->
+			def configFile = new File(projectDir, 'config/eclipse-formatter.xml')
+			def options = new HashMap<String, String>()
+			def xml = new XmlSlurper().parse(configFile)
+			xml.profile.setting.each { setting ->
+				options[setting.@id.text()] = setting.@value.text()
+			}
+			def formatter = ToolFactory.createCodeFormatter(options, ToolFactory.M_FORMAT_EXISTING)
+			def edit = formatter.format(
+					CodeFormatter.K_COMPILATION_UNIT,
+					source, 0, source.length(), 0, System.lineSeparator()
+					)
+			if (edit == null) {
+				throw new GradleException("Eclipse formatter returned null — source may have a syntax error")
+			}
+			def doc = new Document(source)
+			edit.apply(doc)
+			doc.get()
+		}
+		removeUnusedImports()
+		trimTrailingWhitespace()
+		endWithNewline()
+	}
 }
 
 java {
-    withJavadocJar()
-    withSourcesJar()
+	withJavadocJar()
+	withSourcesJar()
 }
 
 tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8'
+	options.encoding = 'UTF-8'
 }
 
 File buildDir = file(".")
@@ -32,97 +61,97 @@ Properties props = new Properties()
 props.load(new FileInputStream(buildDir.getAbsolutePath() + "/src/main/resources/com/neuronrobotics/sdk/config/build.properties"))
 
 sourceSets {
-    test {
-        java {
-            srcDirs = ["test/java/src"]
-        }
-    }
+	test {
+		java {
+			srcDirs = ["test/java/src"]
+		}
+	}
 }
 
 jar {
-    manifest {
-        attributes(
-            "Manifest-Version": "1.0",
-            "Created-By": "Neuron Robotics Cooperative",
-            "Specification-Title": props."app.name",
-            "Specification-Version": props."app.version",
-            "Specification-Vendor": "Neuron Robotics Cooperative",
-            "Implementation-Title": props."app.name",
-            "Implementation-Version": props."app.version",
-            "Implementation-Vendor": "Neuron Robotics Cooperative"
-        )
-    }
-    if (project == rootProject) {
-        archiveFileName.set("nrsdk-${props.'app.version'}-jar-with-dependencies.jar")
-    }
+	manifest {
+		attributes(
+		"Manifest-Version": "1.0",
+		"Created-By": "Neuron Robotics Cooperative",
+		"Specification-Title": props."app.name",
+		"Specification-Version": props."app.version",
+		"Specification-Vendor": "Neuron Robotics Cooperative",
+		"Implementation-Title": props."app.name",
+		"Implementation-Version": props."app.version",
+		"Implementation-Vendor": "Neuron Robotics Cooperative"
+		)
+	}
+	if (project == rootProject) {
+		archiveFileName.set("nrsdk-${props.'app.version'}-jar-with-dependencies.jar")
+	}
 }
 
 repositories {
-    mavenCentral()
+	mavenCentral()
 }
 
 dependencies {
-    api fileTree(dir: 'libs', includes: ['*.jar'])
-    testImplementation 'junit:junit:4.12'
-    implementation 'com.google.code.gson:gson:2.5'
+	api fileTree(dir: 'libs', includes: ['*.jar'])
+	testImplementation 'junit:junit:4.12'
+	implementation 'com.google.code.gson:gson:2.5'
 
-    api 'gov.nist.math:jama:1.0.2'
-    implementation 'com.miglayout:miglayout-swing:4.1'
-    implementation 'org.igniterealtime.smack:smack:3.2.1'
-    implementation 'org.igniterealtime.smack:smackx:3.2.1'
-    implementation 'org.apache.commons:commons-lang3:3.2.1'
-    api 'org.usb4java:usb4java:1.2.0'
-    api 'org.usb4java:usb4java-javax:1.2.0'
-    api 'com.neuronrobotics:nrjavaserial:5.1.1'
-    api group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
-    api group: 'net.sf.bluecove', name: 'bluecove-gpl', version: '2.1.0'
-    api group: 'io.ultreia', name: 'bluecove', version: '2.1.1'
+	api 'gov.nist.math:jama:1.0.2'
+	implementation 'com.miglayout:miglayout-swing:4.1'
+	implementation 'org.igniterealtime.smack:smack:3.2.1'
+	implementation 'org.igniterealtime.smack:smackx:3.2.1'
+	implementation 'org.apache.commons:commons-lang3:3.2.1'
+	api 'org.usb4java:usb4java:1.2.0'
+	api 'org.usb4java:usb4java-javax:1.2.0'
+	api 'com.neuronrobotics:nrjavaserial:5.1.1'
+	api group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
+	api group: 'net.sf.bluecove', name: 'bluecove-gpl', version: '2.1.0'
+	api group: 'io.ultreia', name: 'bluecove', version: '2.1.1'
 }
 
 group = "com.neuronrobotics"
 version = props."app.version"
 
 base {
-    archivesName = "java-bowler"
+	archivesName = "java-bowler"
 }
 
 publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-            artifactId = 'java-bowler'
+	publications {
+		mavenJava(MavenPublication) {
+			from components.java
+			artifactId = 'java-bowler'
 
-            pom {
-                name = 'Java Bowler'
-                packaging = 'jar'
-                description = 'A command line utility for accessing the bowler framework.'
-                url = 'http://neuronrobotics.com'
+			pom {
+				name = 'Java Bowler'
+				packaging = 'jar'
+				description = 'A command line utility for accessing the bowler framework.'
+				url = 'http://neuronrobotics.com'
 
-                scm {
-                    connection = 'scm:git:https://github.com/NeuronRobotics/java-bowler.git'
-                    developerConnection = 'scm:git:git@github.com:NeuronRobotics/java-bowler.git'
-                    url = 'https://github.com/NeuronRobotics/java-bowler'
-                }
+				scm {
+					connection = 'scm:git:https://github.com/NeuronRobotics/java-bowler.git'
+					developerConnection = 'scm:git:git@github.com:NeuronRobotics/java-bowler.git'
+					url = 'https://github.com/NeuronRobotics/java-bowler'
+				}
 
-                licenses {
-                    license {
-                        name = 'The Apache License, Version 2.0'
-                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    }
-                }
+				licenses {
+					license {
+						name = 'The Apache License, Version 2.0'
+						url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+					}
+				}
 
-                developers {
-                    developer {
-                        id = 'madhephaestus'
-                        name = 'Kevin Harrington'
-                        email = 'kharrington@neuronrobotics.com'
-                    }
-                }
-            }
-        }
-    }
+				developers {
+					developer {
+						id = 'madhephaestus'
+						name = 'Kevin Harrington'
+						email = 'kharrington@neuronrobotics.com'
+					}
+				}
+			}
+		}
+	}
 }
 
 signing {
-    sign publishing.publications.mavenJava
+	sign publishing.publications.mavenJava
 }

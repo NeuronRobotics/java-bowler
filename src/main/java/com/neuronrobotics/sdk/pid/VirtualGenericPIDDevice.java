@@ -328,6 +328,7 @@ public class VirtualGenericPIDDevice extends GenericPIDDevice implements IHardwa
 		}
 		return backs;
 	}
+
 	@Override
 	public void setTimeProvider(ITimeProvider t) {
 		super.setTimeProvider(t);

@@ -231,6 +231,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 		TransformNR rt = getDhChain().forwardKinematics(jointSpaceVector);
 		return rt;
 	}
+
 	/**
 	 * Cross product.
 	 *
@@ -249,6 +250,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 
 		return xProd;
 	}
+
 	/**
 	 * Gets the Jacobian matrix.
 	 *
@@ -366,6 +368,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	public Matrix getJacobian() {
 		return getJacobian(getDhChain().getLinks().size() - 1);
 	}
+
 	/**
 	 * Gets the Jacobian matrix.
 	 *
@@ -374,6 +377,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	public Matrix getJacobian(int index) {
 		return getJacobian(getCurrentJointSpaceVector(), index);
 	}
+
 	/**
 	 * Gets the Jacobian matrix.
 	 *
@@ -383,6 +387,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 
 		return getJacobian(getDhChain(), jointSpaceVector, index);
 	}
+
 	/**
 	 * Gets the chain transformations.
 	 *
@@ -731,9 +736,11 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	public TransformNR linkCoM(int linkIndex) {
 		return linkCoM(getCurrentJointSpaceVector()[linkIndex], linkIndex);
 	}
+
 	public Object getLinkObjectManipulator(int index) {
 		return getChain().getLinks().get(index).getListener();
 	}
+
 	/**
 	 * Gets the theta.
 	 *
@@ -743,6 +750,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	public double getDH_Theta(int index) {
 		return getChain().getLinks().get(index).getTheta();
 	}
+
 	/**
 	 * Gets the d.
 	 *
@@ -779,6 +787,7 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	public void setDH_Theta(int index, double value) {
 		getChain().getLinks().get(index).setTheta(value);
 	}
+
 	/**
 	 * Gets the d.
 	 *
@@ -809,15 +818,19 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	public DHLink getDhLink(int i) {
 		return getDhChain().getLinks().get(i);
 	}
+
 	public DHLink getDhLink(AbstractLink myLink) {
 		return getDhChain().getLinks().get(getLinkIndex(myLink));
 	}
+
 	public DHLink getDhLink(LinkConfiguration myLink) {
 		return getDhChain().getLinks().get(getLinkIndex(myLink));
 	}
+
 	public Object getListener(int i) {
 		return getDhChain().getLinks().get(i).getListener();
 	}
+
 	/**
 	 * Sets the robot to fiducial transform.
 	 *
@@ -832,9 +845,11 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	public void refreshPose() {
 		runRenderWrangler();
 	}
+
 	public MobileBase getSlaveMobileBase(int index) {
 		return getDhLink(index).getSlaveMobileBase();
 	}
+
 	/**
 	 * THis disables the exception being thrown on joint limits normal mode is to
 	 * throw an exception when a joint is commanded to a value beyond its limits
@@ -852,15 +867,18 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	public TransformNR getLinkTip(int linkIndex) {
 		return getChain().getCachedChain().get(linkIndex);
 	}
+
 	public MobileBase getFollowerMobileBase(int linkIndex) {
 		if (getDhChain().getLinks().size() <= linkIndex)
 			return null;
 		return getDhLink(linkIndex).getSlaveMobileBase();
 
 	}
+
 	public MobileBase getFollowerMobileBase(AbstractLink myLink) {
 		return getDhLink(myLink).getSlaveMobileBase();
 	}
+
 	public MobileBase getFollowerMobileBase(LinkConfiguration myLink) {
 		return getDhLink(myLink).getSlaveMobileBase();
 	}
@@ -868,12 +886,15 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	public TransformNR getDHStep(int myLink) {
 		return new TransformNR(getDhLink(myLink).DhStep(0));
 	}
+
 	public TransformNR getDHStep(AbstractLink myLink) {
 		return new TransformNR(getDhLink(myLink).DhStep(0));
 	}
+
 	public TransformNR getDHStep(LinkConfiguration myLink) {
 		return new TransformNR(getDhLink(myLink).DhStep(0));
 	}
+
 	@Override
 	public void setTimeProvider(ITimeProvider t) {
 		super.setTimeProvider(t);
@@ -887,18 +908,23 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 	public VitaminLocation getElectroMechanicalVitamin(int index) {
 		return getLinkConfiguration(index).getElectroMechanicalVitamin();
 	}
+
 	public ArrayList<VitaminLocation> getVitamins(int index) {
 		return getVitaminHolder(index).getVitamins();
 	}
+
 	public ArrayList<VitaminLocation> getNonActuatorVitamins(int index) {
 		return getLinkConfiguration(index).getNonActuatorVitamins();
 	}
+
 	public void addVitamin(int index, VitaminLocation location) {
 		getVitaminHolder(index).addVitamin(location);
 	}
+
 	public void removeVitamin(int index, VitaminLocation loc) {
 		getVitaminHolder(index).removeVitamin(loc);
 	}
+
 	public IVitaminHolder getVitaminHolder(int index) {
 		return getLinkConfiguration(index);
 	}

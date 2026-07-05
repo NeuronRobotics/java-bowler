@@ -33,6 +33,7 @@ public class MACAddress implements ISendable {
 	 */
 	public MACAddress() {
 	}
+
 	/**
 	 * Construct a new MAC address object with a given MAC address represented as a
 	 * string of 6 bytes in hex deliminated by semicolons.

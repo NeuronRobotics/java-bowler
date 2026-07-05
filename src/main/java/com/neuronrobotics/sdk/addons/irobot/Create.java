@@ -153,6 +153,7 @@ public class Create implements IUARTStreamListener {
 	public void driveStraight(short distance) {
 		driveStraight((short) 0x7fff, distance);
 	}
+
 	/**
 	 * Driving macro. This will drive for a distance and stop.
 	 *
@@ -236,6 +237,7 @@ public class Create implements IUARTStreamListener {
 	public void turn(short angle) {
 		turn((short) 0x7fff, angle);
 	}
+
 	/**
 	 * Driving macro. This will drive for a distance and stop.
 	 *

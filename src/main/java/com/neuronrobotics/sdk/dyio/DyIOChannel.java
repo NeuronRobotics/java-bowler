@@ -293,6 +293,7 @@ public class DyIOChannel implements IDyIOChannel {
 		}
 		return false;
 	}
+
 	/**
 	 * Checks the current mode of this channel and checks if it is possible for it
 	 * to have async.
@@ -608,6 +609,7 @@ public class DyIOChannel implements IDyIOChannel {
 			return dap.flush();
 		return flush();
 	}
+
 	/**
 	 * This method performs a single channel flush. This method will take the cached
 	 * value, or the current value if none were cached, and send it to the device.
@@ -670,6 +672,7 @@ public class DyIOChannel implements IDyIOChannel {
 	public int getCachedValue() {
 		return cachedValue;
 	}
+
 	/**
 	 * This method checks if this channel is in cache/flush mode.
 	 *

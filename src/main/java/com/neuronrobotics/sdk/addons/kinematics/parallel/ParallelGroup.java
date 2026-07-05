@@ -205,10 +205,12 @@ public class ParallelGroup extends DHParameterKinematics {
 			// currentPoseTarget);
 		}
 	}
+
 	public double[] getCurrentJointSpaceVector(DHParameterKinematics k) {
 		// Auto-generated method stub
 		return null;
 	}
+
 	@Override
 	public double[] inverseKinematics(TransformNR taskSpaceTransform) throws Exception {
 
@@ -232,11 +234,13 @@ public class ParallelGroup extends DHParameterKinematics {
 		IKvalues.clear();
 		return linkValues;
 	}
+
 	public void printError(TransformNR taskSpaceTransform) throws Exception {
 		printError(taskSpaceTransform, t -> {
 			com.neuronrobotics.sdk.common.Log.error(t);
 		});
 	}
+
 	public void printError(TransformNR taskSpaceTransform, Consumer<String> printer) throws Exception {
 		int numBerOfLinks = 0;
 		for (DHParameterKinematics l : getConstituantLimbs()) {

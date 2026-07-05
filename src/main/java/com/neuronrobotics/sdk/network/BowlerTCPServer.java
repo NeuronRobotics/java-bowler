@@ -90,6 +90,7 @@ public class BowlerTCPServer extends BowlerAbstractConnection {
 
 		return super.isConnected();
 	}
+
 	/*
 	 * (non-Javadoc)
 	 *

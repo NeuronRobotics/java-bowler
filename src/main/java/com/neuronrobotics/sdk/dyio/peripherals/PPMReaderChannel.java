@@ -73,6 +73,7 @@ public class PPMReaderChannel extends DyIOAbstractPeripheral implements IChannel
 		}
 		setCrossLink(crossLinks);
 	}
+
 	/**
 	 * This sets up the PPM cross link. For each PPM channel you can assign it one
 	 * DyIO output channel as its direct control. Indecies in the array corospond to

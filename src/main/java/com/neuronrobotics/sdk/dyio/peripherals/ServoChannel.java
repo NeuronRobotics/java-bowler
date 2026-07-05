@@ -83,6 +83,7 @@ public class ServoChannel extends DyIOAbstractPeripheral implements IChannelEven
 	public boolean SetPosition(int pos) {
 		return SetPosition(pos, 0);
 	}
+
 	/**
 	 * Steps the servo though a transformation over a given amount of time.
 	 *

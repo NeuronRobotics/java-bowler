@@ -43,6 +43,7 @@ public class PIDEvent {
 		setTimeStamp(time);
 		setVelocity(velocity);
 	}
+
 	/**
 	 * Sets new PID event.
 	 *
@@ -61,6 +62,7 @@ public class PIDEvent {
 		setTimeStamp(time);
 		setVelocity(velocity);
 	}
+
 	/**
 	 * Instantiates a new PID event.
 	 *
