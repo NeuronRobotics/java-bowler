@@ -472,6 +472,24 @@ public class DHParameterKinematics extends AbstractKinematicsNR
 		return xml;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR#getXml()
+	 */
+	/*
+	 *
+	 * Generate the xml configuration to generate an XML of this robot.
+	 */
+	public String getAppendageXml() {
+		String xml = "<root>\n";
+		xml += "<appendage>\n";
+		xml += getEmbedableXml();
+		xml += "\n</appendage>\n";
+		xml += "\n</root>";
+		return xml;
+	}
+
 	/**
 	 * Gets the embedable xml.
 	 *
