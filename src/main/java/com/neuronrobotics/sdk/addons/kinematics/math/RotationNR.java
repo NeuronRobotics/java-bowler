@@ -79,7 +79,8 @@ public class RotationNR {
 			throw new RuntimeException("Value can not be " + elevation);
 
 		if ((elevation > 90) || (elevation < -90))
-			throw new RuntimeException("Elevation can not be greater than 90 nor less than -90, "+elevation+" is invalid");
+			throw new RuntimeException(
+					"Elevation can not be greater than 90 nor less than -90, " + elevation + " is invalid");
 
 		loadFromAngles(tilt, azimuth, elevation);
 		if (Double.isNaN(getRotationMatrix2QuaturnionW()) || Double.isNaN(getRotationMatrix2QuaturnionX())
