@@ -569,6 +569,8 @@ public class TransformNR {
 	 *            the new rotation
 	 */
 	public TransformNR setRotation(RotationNR rotation) {
+		if (rotation == null)
+			throw new RuntimeException("Rotation can not be set to null");
 		this.rotation = rotation;
 		fireChangeEvent();
 		return this;

@@ -83,8 +83,9 @@ public class RotationNR {
 					"Elevation can not be greater than 90 nor less than -90, " + elevation + " is invalid");
 
 		loadFromAngles(tilt, azimuth, elevation);
-		if (Double.isNaN(getRotationMatrix2QuaturnionW()) || Double.isNaN(getRotationMatrix2QuaturnionX())
-				|| Double.isNaN(getRotationMatrix2QuaturnionY()) || Double.isNaN(getRotationMatrix2QuaturnionZ())) {
+		if (!Double.isFinite(getRotationMatrix2QuaturnionW()) || !Double.isFinite(getRotationMatrix2QuaturnionX())
+				|| !Double.isFinite(getRotationMatrix2QuaturnionY())
+				|| !Double.isFinite(getRotationMatrix2QuaturnionZ())) {
 			Log.error("Failing to set proper angle, jittering");
 			loadFromAngles(tilt + Math.random() * .02 + .001, azimuth + Math.random() * .02 + .001,
 					elevation + Math.random() * .02 + .001);
@@ -93,6 +94,7 @@ public class RotationNR {
 	}
 
 	public RotationNR(EulerAxis axis, double rot) {
+
 		this((axis == EulerAxis.tilt) ? rot : 0, (axis == EulerAxis.azimuth) ? rot : 0,
 				(axis == EulerAxis.elevation) ? rot : 0);
 	}
@@ -125,6 +127,8 @@ public class RotationNR {
 	 * @return the static matrix
 	 */
 	public static RotationNR getRotationX(double rotationAngleDegrees) {
+		if (!Double.isFinite(rotationAngleDegrees))
+			throw new RuntimeException("Value can not be " + rotationAngleDegrees);
 		double[][] rotation = new double[3][3];
 		double rotationAngleRadians = rotationAngleDegrees * Math.PI / 180;
 
@@ -152,6 +156,8 @@ public class RotationNR {
 	 * @return the static matrix
 	 */
 	public static RotationNR getRotationY(double rotationAngleDegrees) {
+		if (!Double.isFinite(rotationAngleDegrees))
+			throw new RuntimeException("Value can not be " + rotationAngleDegrees);
 		double[][] rotation = new double[3][3];
 		double rotationAngleRadians = rotationAngleDegrees * Math.PI / 180;
 
@@ -179,6 +185,8 @@ public class RotationNR {
 	 * @return the static matrix
 	 */
 	public static RotationNR getRotationZ(double rotationAngleDegrees) {
+		if (!Double.isFinite(rotationAngleDegrees))
+			throw new RuntimeException("Value can not be " + rotationAngleDegrees);
 		double[][] rotation = new double[3][3];
 		double rotationAngleRadians = rotationAngleDegrees * Math.PI / 180;
 
@@ -240,9 +248,15 @@ public class RotationNR {
 		if (rotM.length != 3)
 			throw new RuntimeException("Must be 3x3 rotation matrix");
 
-		for (int i = 0; i < 3; i++)
+		for (int i = 0; i < 3; i++) {
 			if (rotM[i].length != 3)
 				throw new RuntimeException("Must be 3x3 rotation matrix");
+			for (int j = 0; j < 3; j++) {
+				double rot = rotM[i][j];
+				if (!Double.isFinite(rot))
+					throw new RuntimeException("Value can not be " + rot);
+			}
+		}
 
 		setStorage(new Rotation(rotM, 0.00001));
 	}
@@ -309,17 +323,16 @@ public class RotationNR {
 	 *            the z
 	 */
 	protected void quaternion2RotationMatrix(double w, double x, double y, double z) {
-
-		if (Double.isNaN(w))
+		if (!Double.isFinite(w))
 			throw new RuntimeException("Value can not be NaN");
 
-		if (Double.isNaN(x))
+		if (!Double.isFinite(x))
 			throw new RuntimeException("Value can not be NaN");
 
-		if (Double.isNaN(y))
+		if (!Double.isFinite(y))
 			throw new RuntimeException("Value can not be NaN");
 
-		if (Double.isNaN(z))
+		if (!Double.isFinite(z))
 			throw new RuntimeException("Value can not be NaN");
 
 		this.w = w;
@@ -344,6 +357,12 @@ public class RotationNR {
 	}
 
 	private void loadFromAngles(double tilt, double azimuth, double elevation) {
+		if (!Double.isFinite(tilt))
+			throw new RuntimeException("Value can not be " + tilt);
+		if (!Double.isFinite(azimuth))
+			throw new RuntimeException("Value can not be " + azimuth);
+		if (!Double.isFinite(elevation))
+			throw new RuntimeException("Value can not be " + elevation);
 		setStorage(new Rotation(getOrder(), getConvention(), Math.toRadians(azimuth), Math.toRadians(elevation),
 				Math.toRadians(tilt)));
 	}
