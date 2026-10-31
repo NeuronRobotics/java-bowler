@@ -1,0 +1,13 @@
+// build.gradle applies com.diffplug.spotless by id without a version; the
+// parent build supplies it, but standalone it must come from pluginManagement.
+pluginManagement {
+	plugins {
+		id 'com.diffplug.spotless' version '6.25.0'
+	}
+	repositories {
+		gradlePluginPortal()
+		mavenCentral()
+	}
+}
+
+rootProject.name = 'java-bowler'
